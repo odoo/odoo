@@ -8,7 +8,7 @@
             parent='base.menu_administration'/>
 
         <record id="acquirer_form" model="ir.ui.view">
-            <field name="name">acquirer.form</field>
+            <field name="name">payment.acquirer.form</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer" version="7.0">
@@ -63,6 +63,7 @@
         </record>
 
         <record id="acquirer_list" model="ir.ui.view">
+            <field name="name">payment.acquirer.list</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <tree string="Payment Acquirers">
@@ -75,6 +76,7 @@
         </record>
 
         <record id="acquirer_search" model="ir.ui.view">
+            <field name="name">payment.acquirer.search</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <search>
@@ -101,6 +103,7 @@
             sequence='10' />
 
         <record id="transaction_form" model="ir.ui.view">
+            <field name="name">payment.transaction.form</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <form string="Payment Transactions" version="7.0">
@@ -144,6 +147,7 @@
         </record>
 
         <record id="transaction_list" model="ir.ui.view">
+            <field name="name">payment.transaction.list</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <tree string="Payment Transactions">
@@ -157,6 +161,7 @@
         </record>
 
         <record id="transaction" model="ir.ui.view">
+            <field name="name">payment.transaction.search</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <search>
