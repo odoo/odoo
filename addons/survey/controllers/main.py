@@ -309,7 +309,7 @@ class WebsiteSurvey(http.Controller):
         for page in survey.page_ids:
             page_dict = {'page': page, 'question_ids': []}
             for question in page.question_ids:
-                question_dict = { 'question':question, 'input_summary':survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context),'prepare_result':survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)}
+                question_dict = {'question':question, 'input_summary':survey_obj.get_input_summary(request.cr, request.uid, question, current_filters, context=request.context), 'prepare_result':survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context), 'graph_data': self.get_graph_data(question, current_filters)}
                 page_dict['question_ids'].append(question_dict)
             result['page_ids'].append(page_dict)
         return result
@@ -332,13 +332,9 @@ class WebsiteSurvey(http.Controller):
         total = ceil(total_record / float(limit))
         return range(1, int(total + 1))
 
-    @http.route(['/survey/results/graph/<int:question>'],
-                type='http', auth='user', multilang=True, website=True)
-    def get_graph_data(self, question, **post):
+    def get_graph_data(self, question, current_filters=[]):
         '''Returns appropriate formated data required by graph library on basis of filter'''
-        question = request.registry['survey.question'].browse(request.cr, request.uid, question)
         survey_obj = request.registry['survey.survey']
-        current_filters = safe_eval(post.get('current_filters', '[]'))
         result = []
         if question.type == 'multiple_choice':
             result.append({'key': str(question.question),

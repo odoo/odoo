@@ -105,34 +105,25 @@ $(document).ready(function () {
     $.each(survey_graphs, function(index, graph){
         var question_id = $(graph).attr("data-question_id");
         var graph_type = $(graph).attr("data-graph_type");
-        var current_filters = $(graph).attr("data-current_filters");
-        console.log(current_filters);
-        $.ajax({
-            url: '/survey/results/graph/'+question_id,
-            type: 'POST',
-            dataType: 'json',
-            data:{'current_filters': current_filters},
-            success: function(response, status, xhr, wfe){
-                if(graph_type == 'multi_bar'){
-                    nv.addGraph(function(){
-                        var chart = init_multibar_chart();
-                        return load_chart(chart,response,question_id,25);
-                    });
-                }
-                else if(graph_type == 'bar'){
-                    nv.addGraph(function() {
-                        var chart = init_bar_chart();
-                        return load_chart(chart,response,question_id,35);
-                    });
-                }
-                else if(graph_type == 'pie'){
-                    nv.addGraph(function() {
-                        var chart = init_pie_chart();
-                        return load_chart(chart,response,question_id,25,'pie');
-                    });
-                }
-            }
-        });
+        var graph_data = JSON.parse($(graph).attr("graph-data"));
+        if(graph_type == 'multi_bar'){
+            nv.addGraph(function(){
+                var chart = init_multibar_chart();
+                return load_chart(chart, graph_data, question_id,25);
+            });
+        }
+        else if(graph_type == 'bar'){
+            nv.addGraph(function() {
+                var chart = init_bar_chart();
+                return load_chart(chart, graph_data, question_id,35);
+            });
+        }
+        else if(graph_type == 'pie'){
+            nv.addGraph(function() {
+                var chart = init_pie_chart();
+                return load_chart(chart, graph_data, question_id,25,'pie');
+            });
+        }
     });
 
     // Script for filter
@@ -165,7 +156,7 @@ $(document).ready(function () {
             window.location.href = document.URL+'?'+encodeURI('finished');
         }
         else if (document.URL.indexOf("finished") == -1){
-        	window.location.href = document.URL+'&'+encodeURI('finished');
+            window.location.href = document.URL+'&'+encodeURI('finished');
         }
     });
 
