@@ -709,7 +709,8 @@ class Ecommerce(http.Controller):
                 message = '<p>The payment seems to have been canceled.</p>'
             elif state == 'pending' and tx.acquirer_id.validation == 'manual':
                 message = '<p>Your transaction is waiting confirmation.</p>'
-                message += tx.acquirer_id.post_msg
+                if tx.acquirer_id.post_msg:
+                    message += tx.acquirer_id.post_msg
             else:
                 message = '<p>Your transaction is waiting confirmation.</p>'
             validation = tx.acquirer_id.validation
