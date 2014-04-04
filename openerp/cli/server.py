@@ -29,6 +29,7 @@ GNU Public Licence.
 (c) 2003-TODAY, Fabien Pinckaers - OpenERP SA
 """
 
+import atexit
 import logging
 import os
 import signal
@@ -78,16 +79,22 @@ def report_configuration():
                         ('database user', config['db_user'])]:
         _logger.info("%s: %s", name, value)
 
+def rm_pid_file():
+    config = openerp.tools.config
+    if not openerp.evented and os.path.exists(config['pidfile']):
+        os.unlink(config['pidfile'])
+
 def setup_pid_file():
     """ Create a file with the process id written in it.
 
     This function assumes the configuration has been initialized.
     """
     config = openerp.tools.config
-    if config['pidfile']:
+    if not openerp.evented and config['pidfile']:
         with open(config['pidfile'], 'w') as fd:
             pidtext = "%d" % (os.getpid())
             fd.write(pidtext)
+        atexit.register(rm_pid_file)
 
 def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
@@ -189,13 +196,8 @@ def main(args):
     if not config["stop_after_init"]:
         setup_pid_file()
         openerp.service.server.start()
-        if config['pidfile']:
-            os.unlink(config['pidfile'])
     else:
         sys.exit(rc)
-
-    _logger.info('OpenERP server is running, waiting for connections...')
-    quit_on_signals()
 
 class Server(Command):
     def run(self, args):

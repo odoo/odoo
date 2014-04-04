@@ -429,7 +429,7 @@ class PreforkServer(CommonServer):
             sys.exit(0)
 
     def long_polling_spawn(self):
-        nargs = stripped_sys_argv('--pidfile','--workers')
+        nargs = stripped_sys_argv()
         cmd = nargs[0]
         cmd = os.path.join(os.path.dirname(cmd), "openerp-gevent")
         nargs[0] = cmd
@@ -814,10 +814,10 @@ def start():
     """
     global server
     load_server_wide_modules()
-    if config['workers']:
-        server = PreforkServer(openerp.service.wsgi_server.application)
-    elif openerp.evented:
+    if openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
+    elif config['workers']:
+        server = PreforkServer(openerp.service.wsgi_server.application)
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
