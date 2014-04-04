@@ -29,6 +29,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import pooler, tools
 from openerp.osv import osv, fields
+from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 from openerp.tools.yaml_import import is_comment
 
@@ -610,27 +611,32 @@ class res_partner(osv.osv, format_address):
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
 
+            unaccent = get_unaccent_wrapper(cr)
+
             # TODO: simplify this in trunk with `display_name`, once it is stored
             # Perf note: a CTE expression (WITH ...) seems to have an even higher cost
             #            than this query with duplicated CASE expressions. The bulk of
             #            the cost is the ORDER BY, and it is inevitable if we want
             #            relevant results for the next step, otherwise we'd return
             #            a random selection of `limit` results.
-            query = ('''SELECT res_partner.id FROM res_partner
-                                          LEFT JOIN res_partner company
-                                               ON res_partner.parent_id = company.id'''
-                        + where_str + ''' (res_partner.email ''' + operator + ''' %s OR
-                              CASE
-                                   WHEN company.id IS NULL OR res_partner.is_company
-                                       THEN res_partner.name
-                                   ELSE company.name || ', ' || res_partner.name
-                              END ''' + operator + ''' %s)
-                        ORDER BY
-                              CASE
-                                   WHEN company.id IS NULL OR res_partner.is_company
-                                       THEN res_partner.name
-                                   ELSE company.name || ', ' || res_partner.name
-                              END''')
+
+            display_name = """CASE WHEN company.id IS NULL OR res_partner.is_company
+                                   THEN {partner_name}
+                                   ELSE {company_name} || ', ' || {partner_name}
+                               END""".format(partner_name=unaccent('res_partner.name'),
+                                             company_name=unaccent('company.name'))
+
+            query = """SELECT res_partner.id
+                         FROM res_partner
+                    LEFT JOIN res_partner company
+                           ON res_partner.parent_id = company.id
+                      {where} ({email} {operator} {percent}
+                           OR {display_name} {operator} {percent})
+                     ORDER BY {display_name}
+                    """.format(where=where_str, operator=operator,
+                               email=unaccent('res_partner.email'),
+                               percent=unaccent('%s'),
+                               display_name=display_name)
 
             where_clause_params += [search_name, search_name]
             if limit:
