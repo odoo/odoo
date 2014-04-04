@@ -32,7 +32,6 @@ from openerp.osv import osv
 
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
-    _inherits = {'mail.alias': 'alias_id'}
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Teams"
     _order = "complete_name"

@@ -41,7 +41,6 @@
                     <field name="user_id"/>
                     <field name="member_ids"/>
                     <field name="note"/>
-                    <field name="alias_id"/>
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -56,9 +55,6 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4 class="oe_center"><field name="name"/></h4>
-                                   <div class="oe_kanban_alias oe_center" t-if="record.alias_id.value">
-                                        <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
-                                    </div>
                                     <div class="oe_clear"></div>
                                     <div class="oe_kanban_salesteams_avatars">
                                         <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
@@ -137,21 +133,6 @@
                                 <field name="parent_id"/>
                                 <field name="change_responsible"/>
                                 <field name="active"/>
-                            </group>
-                            <group>
-                                <label for="alias_name" string="Email Alias"
-                                        attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                                <div name="alias_def"
-                                        attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_id" class="oe_read_only oe_inline"
-                                            string="Email Alias" required="0"/>
-                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                    </div>
-                                </div>
-                                <field name="alias_contact" class="oe_inline"
-                                        string="Accept Emails From"
-                                        attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
