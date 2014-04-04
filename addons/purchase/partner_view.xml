@@ -76,12 +76,12 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}"
-                        groups="purchase.group_purchase_user" icon="fa-list-alt">
-                        <field string="Purchase Order" name="purchase_order_count" widget="statinfo"/>
+                        groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                        <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
                     </button>
                     <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
-                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o">
-                        <field string="Supplier Invoices" name="supplier_invoice_count" widget="statinfo"/>
+                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Invoices">
+                        <field string="Pay Invoices" name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </xpath>
             </field>
