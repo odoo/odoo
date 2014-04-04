@@ -219,35 +219,13 @@
                         </div>
                         <group>
                             <group>
-                                <field name="name"/>
-                                <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"/>
-                                <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
-                                <field name="mailing_model" string="Perform Mailing on" class="oe_inline" widget="radio"
-                                        on_change='on_change_mailing_model(mailing_model, context)'/>
-                                <label for="template_id"/>
-                                <div style="max-height: 200px; overflow: hidden !important;">
-                                    <field name="template_id" string="Select Template" nolabel="1"
-                                        options="{'no_create': True, 'no_open': True}"
-                                        on_change="on_change_template_id(template_id, context)"/>
-                                    <button string='Create a New Template' class='oe_inline oe_link oe_edit_only'
-                                        type='action' name='%(action_mailing_email_template)d'
-                                        attrs="{'invisible': [('template_id', '!=', False)]}"
-                                        context="{'default_mass_mailing_id': active_id}"/>
-                                    <div style="max-width: 300px !important;"> 
-                                        <field name="body_html" class="form_html_preview" nolabel="1"
-                                            attrs="{'invisible': [('template_id', '=', False)]}"/>
-                                    <button string='Edit this Email' class='oe_inline oe_link oe_edit_only'
-                                        type='action' name='%(action_mailing_email_template)d'
-                                        attrs="{'invisible': [('template_id', '=', False)]}"
-                                        context="{'default_mass_mailing_id': active_id, 'default_template_id': template_id}"/>
-                                    </div>
-                                </div>
                                 <field name="email_from"/>
-                                <field name="reply_to"/>
+                                <field name="name"/>
                             </group>
                             <group>
-                                <field name="total"/>
-                                <div class="oe_right oe_button_box" name="buttons">
+                                <field name="total" invisible="1"/>
+                                <div class="oe_right oe_button_box" name="buttons"
+                                    attrs="{'invisible': [('total', '=', 0)]}">
                                     <button name="%(action_mail_mass_mailing_report)d"
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="received_ratio" widget="percentpie"/>
@@ -263,38 +241,59 @@
                                         <field name="replied_ratio" widget="percentpie"/>
                                         <span>Replied</span>
                                     </button>
+
+                                    <button name="%(action_mail_mass_mailing_report)d"
+                                        string="cacaprout"
+                                        type="action" class="oe_stat_button oe_inline">
+                                        <field name="opened_dayly" widget="barchart"/>
+                                        <!-- <span>Opened Daily</span> -->
+                                    </button>
+                                    <!-- <p colspan="2">Here be some bar charts</p> -->
+                                    <!-- <field name="opened_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
+                                    <field name="replied_dayly" attrs="{'invisible': [('total', '=', 0)]}"/> -->
                                 </div>
-                                <!-- <p colspan="2">Here be some bar charts</p> -->
-                                <!-- <field name="opened_dayly" attrs="{'invisible': [('total', '=', 0)]}"/>
-                                <field name="replied_dayly" attrs="{'invisible': [('total', '=', 0)]}"/> -->
                             </group>
                         </group>
                         <group>
-                            <label for="contact_list_ids" string="Recipients"/>
+                            <field name="reply_to"/>
+                            <label for="mailing_model" string="Recipients"/>
                             <div>
-                                <group>
-                                    <label for="contact_list_choice" string="Mailing List"/>
-                                    <div>
-                                        <field name="contact_list_choice" widget="radio"/>
-                                        <field name="contact_list_ids" widget="many2many_tags" options="{'no_create': True}"
-                                            attrs="{'invisible': [('contact_list_choice', '=', 'new')]}"/>
-                                        <button string='Create a New List' class="oe_inline oe_link" type='object' name='action_new_list'
-                                            attrs="{'invisible': [('contact_list_choice', '=', 'existing')]}"/>
-                                    </div>
-                                    <label for="contact_nbr" string="Contacts"/>
-                                    <div>
-                                        <field name="contact_nbr" nolabel="1" class="oe_inline" readonly="True"/> contacts selected
-                                        <button name="action_see_recipients" type="object" string="See Recipients" class="oe_link" style='margin-left: 8px;'/>
-                                    </div>
-                                    <label for="contact_ab_pc" string="AB Testing"
-                                        groups="mass_mailing.group_mass_mailing_campaign"/>
-                                    <div groups="mass_mailing.group_mass_mailing_campaign">
-                                        <field name="ab_testing" invisible="1"/>
-                                        <field name="contact_ab_pc" class="oe_inline"/>%, <field name="contact_ab_nbr" class="oe_inline"/> contacts to mail<br />
+                                <field name="mailing_model" widget="radio"
+                                    on_change='on_change_mailing_model(mailing_model, context)'/>
+
+                                <label for="contact_list_ids" string="Mailing Lists"/>
+                                <field name="contact_list_ids" widget="many2many_tags" options="{'no_create': True}"
+                                    class="oe_inline"
+                                    placeholder="Choose mailing lists"/><span style="margin-left: 8px; margin-right: 8px">or</span>
+                                <button string='Create a New List' class="oe_link" type='object' name='action_new_list'/><br />
+
+                                <label for="contact_nbr" string="Total"/><field name="contact_nbr" nolabel="1" class="oe_inline" readonly="True"/> recipients
+                                <button name="action_see_recipients" type="object" string="See Recipients" class="oe_inline oe_link" style='margin-left: 8px;'/><br />
+
+                                <div groups="mass_mailing.group_mass_mailing_campaign" style="display: inline;">
+                                    <field name="ab_testing" invisible="1"/>
+                                    <label for="contact_ab_pc" string="AB Testing"/>
+                                    <field name="contact_ab_pc" class="oe_inline"/>%, <field name="contact_ab_nbr" class="oe_inline"/> contacts to mail
+                                    <div attrs="{'invisible': [('ab_testing', '=', False)]}" style="display: inline;">
+                                        <span>(</span>
                                         <field name="contact_ab_done" class="oe_inline"
                                             attrs="{'invisible': [('ab_testing', '=', False)]}"/> already mailed
+                                        <span>)</span>
                                     </div>
-                                </group>
+                                </div>
+
+                            </div>
+                            <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <label for="template_id"/>
+                            <div style="max-height: 200px; overflow: hidden !important;">
+                                <field name="template_id" string="Select Template" nolabel="1"
+                                    class="oe_inline"
+                                    options="{'no_create': True, 'no_open': True}"
+                                    on_change="on_change_template_id(template_id, context)"/>
+                                <field name="edit_link" widget='html' radonly='1'
+                                    style='margin: 0px; padding: 0px;'/>
+                                <field name="body_html" readonly="1"/>
                             </div>
                         </group>
                     </sheet>
@@ -327,16 +326,14 @@
                                         <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="date"/>
                                     </div>
                                     <div>
-                                        <field name="total" widget="gauge" style="width:120px; height: 90px;"
-                                            options="{'max_field': 'total'}"/>
+                                    <div style="display: inline-block">
                                         <field name="delivered" widget="gauge" style="width:120px; height: 90px;"
                                             options="{'max_field': 'total'}"/>
                                     </div>
-                                    <div>
-                                        <field name="opened" widget="gauge" style="width:120px; height: 90px;"
-                                            options="{'max_field': 'total'}"/>
-                                        <field name="replied" widget="gauge" style="width:120px; height: 90px;"
-                                            options="{'max_field': 'total'}"/>
+                                    <div style="display: inline-block; vertical-align: top;">
+                                        <strong>Opened</strong> <field name="opened_ratio"/> %<br />
+                                        <strong>Replied</strong> <field name="replied_ratio"/> %
+                                    </div>
                                     </div>
                                 </div>
                                 <div class="oe_clear"></div>

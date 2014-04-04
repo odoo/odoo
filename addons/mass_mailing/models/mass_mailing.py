@@ -448,6 +448,9 @@ class MassMailing(osv.Model):
             res[mailing.id] = val
         return res
 
+    def _get_edit_link(self, cr, uid, ids, name, args, context=None):
+        return dict((id, _('<a href="website_mail/email_designer?model=mail.mass_mailing&res_id=%s">Open with Visual Editor</a>') % id) for id in ids)
+
     def _get_mailing_model(self, cr, uid, context=None):
         return [
             ('res.partner', 'Customers'),
@@ -471,10 +474,11 @@ class MassMailing(osv.Model):
             'email.template', 'Email Template',
             domain="[('use_in_mass_mailing', '=', True), ('model', '=', mailing_model)]",
         ),
-        'body_html': fields.related(
-            'template_id', 'body_html', type='html',
-            string='Body', readonly='True',
-            help='Technical field: used only to display a view of the template in the form view',
+        'body_html': fields.html('Body'),
+        'edit_link': fields.function(
+            _get_edit_link, type='text',
+            string='Visual Editor',
+            help='Link to the website',
         ),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
@@ -492,10 +496,10 @@ class MassMailing(osv.Model):
         'email_from': fields.char('From'),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
-        'contact_list_choice': fields.selection(
-            [('existing', 'Use existing lists'), ('new', 'Create a new list')],
-            string='Contact List Choice', required=True
-        ),
+        # 'reply_to_mode': fields.selection(
+        #     [('existing', 'Use existing lists'), ('new', 'Create a new list')],
+        #     string='Contact List Choice', required=True
+        # ),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
@@ -580,7 +584,6 @@ class MassMailing(osv.Model):
         'date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'res.partner',
-        'contact_list_choice': 'existing',
         'contact_ab_pc': 100,
     }
 

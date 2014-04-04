@@ -37,6 +37,7 @@ professional emails and reuse templates in a few clicks.
         'marketing',
         'web_kanban_gauge',
         'web_kanban_sparkline',
+        'website',
     ],
     'data': [
         'data/mail_data.xml',
