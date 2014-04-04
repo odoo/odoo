@@ -5,7 +5,7 @@
             <!-- Category name -->
             <t t-if="p['category']">
                 <tr>
-                    <td colspan="100" class="active" style="font-weight: bold; padding-left: 10px; border-bottom: 1px solid black;">
+                    <td colspan="100" class="active" style="font-weight: bold; border-bottom: 1px solid black;">&gt; 
                         <t t-if="p['category'].name">
                             <t t-esc="p['category'].name"></t>
                         </t>
@@ -22,7 +22,7 @@
                     <tr class="text-right">
                         <td colspan="100">
                             <strong>Subtotal: </strong>
-                            <t t-esc="p['subtotal']"></t>
+                            <t t-esc="formatLang(p['subtotal'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"></t>
                         </td>
                     </tr>
                 </t>
@@ -31,7 +31,7 @@
                 <!-- Separator -->
                 <t t-if="'separator' in p['category'] and p['category'].separator is True">
                     <tr class="text-center">
-                        <td colspan="100" class="active">
+                        <td colspan="100">
                             ***
                         </td>
                     </tr>

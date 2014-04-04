@@ -23,6 +23,7 @@ from openerp.osv import osv
 from openerp.tools import config
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
+from openerp.report.formatter import Formatter
 
 import os
 import time
@@ -137,6 +138,16 @@ class Report(osv.Model):
         website = None
         if request and hasattr(request, 'website'):
             website = request.website
+
+        # formatLang method
+        if not values.get('formatLang'):
+            formatter = Formatter(cr, uid, self.pool, lang=user.lang)
+            values.update({
+                'formatLang': formatter.formatLang,
+                'digits_fmt': formatter.digits_fmt,
+                'get_digits': formatter.get_digits,
+            })
+
         values.update({
             'time': time,
             'render_doc': render_doc,
