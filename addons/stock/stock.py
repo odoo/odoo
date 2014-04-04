@@ -1021,7 +1021,7 @@ class stock_picking(osv.osv):
                 product_putaway_strats[product.id] = putaway_strat
             if putaway_strat:
                 location = self._picking_putaway_resolution(cr, uid, picking, product, putaway_strat, context=context)
-            return location or picking.picking_type_id.default_location_dest_id.id or picking.location_dest_id.id
+            return location or picking.location_dest_id.id
 
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
