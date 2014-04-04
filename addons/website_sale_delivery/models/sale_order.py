@@ -69,10 +69,12 @@ class SaleOrder(orm.Model):
         else: 
             carrier_id = force_carrier_id or order.carrier_id.id
             carrier_ids = self._get_delivery_methods(cr, uid, order, context=context)
-            if carrier_id not in carrier_ids:
-                carrier_id = False
-            else:
-                carrier_ids.insert(0, carrier_ids.pop(carrier_id))
+            if carrier_id:
+                if carrier_id not in carrier_ids:
+                    carrier_id = False
+                else:
+                    carrier_ids.remove(carrier_id)
+                    carrier_ids.insert(0, carrier_id)
             if force_carrier_id or not carrier_id or not carrier_id in carrier_ids:
                 for delivery_id in carrier_ids:
                     grid_id = carrier_obj.grid_get(cr, SUPERUSER_ID, [delivery_id], order.partner_shipping_id.id)
