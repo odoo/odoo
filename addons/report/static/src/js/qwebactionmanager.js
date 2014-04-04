@@ -1,6 +1,15 @@
 openerp.report = function(instance) {
     var wkhtmltopdf_state;
 
+    var trigger_download = function(session, response, c) {
+        session.get_file({
+            url: '/report/download',
+            data: {data: JSON.stringify(response)},
+            complete: openerp.web.unblockUI,
+            error: c.rpc_error.bind(c)
+        });
+    }
+
     instance.web.ActionManager = instance.web.ActionManager.extend({
         ir_actions_report_xml: function(action, options) {
             var self = this;
@@ -37,15 +46,16 @@ openerp.report = function(instance) {
                     report_url += "&context=" + encodeURIComponent(JSON.stringify(action.context));
                 }
 
+                var response = new Array();
+                response[0] = report_url;
+                response[1] = action.report_type;
+                var c = openerp.webclient.crashmanager;
+
                 if (action.report_type == 'qweb-html') {
                     window.open(report_url, '_blank', 'height=900,width=1280');
                     instance.web.unblockUI();
                 } else {
                     // Trigger the download of the pdf/controller report
-                    var c = openerp.webclient.crashmanager;
-                    var response = new Array();
-                    response[0] = report_url;
-                    response[1] = action.report_type;
 
                     if (action.report_type == 'qweb-pdf') {
                         (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
@@ -54,7 +64,8 @@ openerp.report = function(instance) {
                                 self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
     system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
     wkhtmltopdf.org</a>'), true);
-                                window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
+                                report_url = report_url.substring(12)
+                                window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
                                 instance.web.unblockUI();
                                 return;
                             } else {
@@ -65,14 +76,12 @@ openerp.report = function(instance) {
      target="_blank">wkhtmltopdf.org</a>'), true);
                                 }
                             }
+                            return trigger_download(self.session, response, c);
                         });
                     }
-                    self.session.get_file({
-                        url: '/report/download',
-                        data: {data: JSON.stringify(response)},
-                        complete: openerp.web.unblockUI,
-                        error: c.rpc_error.bind(c)
-                    });          
+                    else if (action.report_type == 'controller') {
+                        return trigger_download(self.session, response, c);
+                    }
                 }                     
             } else {
                 return self._super(action, options);
