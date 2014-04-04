@@ -108,12 +108,6 @@ class event_track(osv.osv):
         'stage_id': _default_stage_id,
         'priority': '2'
     }
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:context = {}
-        res = super(event_track, self).default_get(cr, uid, fields, context=context)
-        if res.get('event_id'):
-            res['date'] = self.pool.get('event.event').browse(cr, uid, res.get('event_id'), context=context).date_begin
-        return res
 
     def _check_if_track_overlap(self, cr, uid, ids, context=None):
         for track in self.browse(cr, uid, ids, context=context):
