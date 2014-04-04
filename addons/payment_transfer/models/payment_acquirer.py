@@ -16,7 +16,7 @@ class TransferPaymentAcquirer(osv.Model):
 
     def _get_providers(self, cr, uid, context=None):
         providers = super(TransferPaymentAcquirer, self)._get_providers(cr, uid, context=context)
-        providers.append(['transfer', 'Transfer'])
+        providers.append(['transfer', 'Wire Transfer'])
         return providers
 
     def transfer_get_form_action_url(self, cr, uid, id, context=None):
