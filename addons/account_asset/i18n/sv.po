@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-03-27 12:09+0000\n"
+"PO-Revision-Date: 2014-04-03 22:23+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-28 06:44+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-04-04 07:07+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -440,12 +440,17 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"När en inventarie har skapats, är statusen \"Utkast\".\n"
+"Om inventarien är bekräftad, går status i \"Aktiv\" och avskrivningslraderna "
+"kan postas i redovisningen.\n"
+"Du kan stänga manuellt en inventarie när avskrivningen är över. Om den sista "
+"raden i avskrivning postas, går tillgången automatiskt i denna status."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -492,7 +497,7 @@ msgstr "Beräkna"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Inventariehistorik"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -605,6 +610,7 @@ msgstr "Aktuellt"
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
 msgstr ""
+"Du kan inte ta bort en inventarie som innehåller bokförda avskrivningsrader."
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -614,12 +620,12 @@ msgstr "Avskrivningsmetod"
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Aktuell avskrivningsgrad"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Inventarienamn"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -679,6 +685,14 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"             Ur denna rapport kan du få en överblick på alla avskrivningar. "
+"Den\n"
+"             verktygsökning kan också användas för att anpassa dina "
+"inventarierapporter och\n"
+"             så, matcha denna analys till dina behov;\n"
+"           </ p>\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -736,7 +750,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Nummerserie"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0

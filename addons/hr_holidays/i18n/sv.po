@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-03-31 17:00+0000\n"
+"PO-Revision-Date: 2014-04-03 07:21+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-01 06:52+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-04-04 07:07+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -39,6 +39,8 @@ msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
 "resource manager."
 msgstr ""
+"Du kan inte ändra ett redan godkänt frånvaroönskemål. Kontakta "
+"personalansvarig."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,remaining_leaves:0
@@ -75,7 +77,7 @@ msgstr "Avdelning"
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr ""
+msgstr "Frånvaroönskemål att godkänna"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
@@ -112,12 +114,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
 msgid "Request refused"
-msgstr ""
+msgstr "Önskemål tillbakavisat"
 
 #. module: hr_holidays
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Allocation"
-msgstr "Allokering"
+msgstr "Tilldelning"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -132,7 +134,7 @@ msgstr "Ljus cyan"
 #. module: hr_holidays
 #: constraint:hr.holidays:0
 msgid "You can not have 2 leaves that overlaps on same day!"
-msgstr ""
+msgstr "Du kan inte ha två ledigheter som överlappar samma dag!"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -233,7 +235,7 @@ msgstr "Granskning"
 #. module: hr_holidays
 #: help:hr.holidays,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -263,6 +265,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning "
+"presenteras i html-format för att kunna sättas in i kanban vyer."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:249
@@ -283,12 +287,12 @@ msgstr "Magenta"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_leave_request_to_meeting
 msgid "Leave Meetings"
-msgstr ""
+msgstr "Frånvaromöten"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2013"
-msgstr ""
+msgstr "Lagstadgad ledighet 2013"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -322,7 +326,7 @@ msgstr "Summa"
 #: view:hr.holidays.status:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 msgid "Leave Types"
-msgstr ""
+msgstr "Frånvarotyper"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -332,7 +336,7 @@ msgstr "Återstående ledighet"
 #. module: hr_holidays
 #: field:hr.holidays,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Följare"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
@@ -395,6 +399,10 @@ msgid ""
 "   \n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"Statusen är satt till \"att skicka in\", när en semesterbegäran skapas.\n"
+"Statusen är \"godkännd\", när semesterbegäran bekräftas av användaren.\n"
+"Statusen \"Avvisad\", när semestern begäran avslås av chef.\n"
+"Statusen \"Godkänd\", när semestern ansökan godkänns av chef."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -417,10 +425,10 @@ msgstr ""
 "Funktionen bakom fältet 'Kvarvarande Semester' kan endast användas när det "
 "bara finns en ledighetstyp med alternativet 'Tillåt att överskrida gränsen' "
 "ej är markerad. (%s hittades). Annars är uppdateringen tvetydig eftersom vi "
-"inte kan besluta om vilken ledighetstyp uppdateringen måste göras för.\n"
-"Du kanske föredrar att använda de vanliga menyerna 'Ledighetsbegäran' och "
+"inte kan besluta om vilken ledighetstyp uppdateringen måste göras för. \n"
+"Du kanske föredrar att använda de klassiska menyer 'Ledighetsbegäran' och "
 "'Tilldela Ledighet' som ligger i 'Personal \\ Frånvaro' för att hantera "
-"semesterdagar för de anställda, om konfigurationen inte tillåter att använda "
+"semesterdagar för de anställda om konfigurationen inte tillåter att använda "
 "detta fält."
 
 #. module: hr_holidays
@@ -436,7 +444,7 @@ msgstr "Väntar på godkännande"
 #. module: hr_holidays
 #: field:hr.holidays,category_id:0
 msgid "Employee Tag"
-msgstr ""
+msgstr "Anställds etikett"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
@@ -460,6 +468,13 @@ msgid ""
 "             </p>\n"
 "           "
 msgstr ""
+"<p>\n"
+"                Du kan tilldela återstående lagstadgad ledighetför varje "
+"anställd, OpenERP\n"
+"                kommer automatiskt att skapa och validera "
+"ledighetsförfrågningar.\n"
+"              </p>\n"
+"           "
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -472,7 +487,7 @@ msgstr ""
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "You have to select at least one Department. And try again."
-msgstr ""
+msgstr "Åtminstonde en avdelning måste vara vald, försök igen."
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
@@ -492,7 +507,7 @@ msgstr "Månad"
 #. module: hr_holidays
 #: field:hr.holidays,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olästa meddelanden"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -524,7 +539,7 @@ msgstr ""
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "or"
-msgstr ""
+msgstr "eller"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -539,6 +554,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att skapa en ny ledighetsbegäran.\n"
+"               </p><p>\n"
+"                 När du har spelat in din ledighetsförfrågan, skickas det\n"
+"                 till en chef för validering. Se till att ställa rätt "
+"frånvarotyp\n"
+"                 typ (återhämtning, helgdagar, sjukdom) och den exakta\n"
+"                 antal öppna dagar relaterade till din frånvaro.\n"
+"               </p>\n"
+"            "
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -565,7 +590,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Reset to New"
-msgstr ""
+msgstr "Återställ till ny"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -580,7 +605,7 @@ msgstr "Ljus Coral"
 #. module: hr_holidays
 #: field:hr.employee,leave_date_to:0
 msgid "To Date"
-msgstr ""
+msgstr "Till datum"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -595,7 +620,7 @@ msgstr "Tilldela ledighet för personal"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leaves Types"
-msgstr ""
+msgstr "Frånvarotyp"
 
 #. module: hr_holidays
 #: field:hr.holidays,meeting_id:0
@@ -613,7 +638,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: field:hr.holidays,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -638,7 +663,7 @@ msgstr "Ledigheten redan förbrukad"
 #. module: hr_holidays
 #: field:hr.holidays,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Är en följare"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -661,7 +686,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Add a reason..."
-msgstr ""
+msgstr "Lägg till orsak..."
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -671,7 +696,7 @@ msgstr "Första godkännande"
 #. module: hr_holidays
 #: field:hr.holidays,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sammandrag"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
@@ -692,7 +717,7 @@ msgstr "Ledighetssummering"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Skicka till chef"
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -775,7 +800,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr "Ledighetstilldelning"
+msgstr "Ledighetsönskemål"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
@@ -799,7 +824,7 @@ msgstr "Applicera Dubbel validering"
 #: view:hr.employee:0
 #: view:hr.holidays:0
 msgid "days"
-msgstr ""
+msgstr "dagar"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -827,7 +852,7 @@ msgstr "Avdelning(ar)"
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
 msgid "To Submit"
-msgstr ""
+msgstr "Att skicka"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:354
@@ -853,7 +878,7 @@ msgstr "Återstående Semester"
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
-msgstr ""
+msgstr "Per anställdsetikett"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -865,7 +890,7 @@ msgstr "Nekad"
 #. module: hr_holidays
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting Type"
-msgstr ""
+msgstr "Mötestyp"
 
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
@@ -875,7 +900,7 @@ msgstr "Återstående ledighet"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Allocated Days"
-msgstr ""
+msgstr "Dagar med frånvaro"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -924,13 +949,13 @@ msgstr "Läge"
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Approved and Confirmed"
-msgstr ""
+msgstr "Både godkända och bekräftade"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:451
 #, python-format
 msgid "Request approved, waiting second validation."
-msgstr ""
+msgstr "Förfrågan godkänd, väntar sekundär validering."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -940,7 +965,7 @@ msgstr "Godkänn"
 #. module: hr_holidays
 #: help:hr.holidays,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Meddelande- och kommunikationshistorik"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:260
@@ -948,7 +973,7 @@ msgstr ""
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
-msgstr ""
+msgstr "Startdatum måste föregå slutdatum."
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -967,7 +992,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr "Ledighetstilldening"
+msgstr "Ledighetsönskemål"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -981,6 +1006,9 @@ msgid ""
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
 msgstr ""
+"Totalt antal lagstadgad ledighet för den anställde, ändra detta värde för "
+"att skapa frånvaro / ledighetsbegäran. Totalt baserat på alla frånvarotyper "
+"utan tvingande gräns."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -990,7 +1018,7 @@ msgstr "Ljusrosa"
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "leaves."
-msgstr ""
+msgstr "Frånvaro"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -1010,7 +1038,7 @@ msgstr "År"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Duration"
-msgstr ""
+msgstr "Varaktighet"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -1022,7 +1050,7 @@ msgstr "Att godkänna"
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_approved
 msgid "Request approved"
-msgstr ""
+msgstr "Önskemål accepterat"
 
 #. module: hr_holidays
 #: field:hr.holidays,notes:0
@@ -1032,4 +1060,4 @@ msgstr "Anledningar"
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
-msgstr ""
+msgstr "Välj frånvarotyp"
