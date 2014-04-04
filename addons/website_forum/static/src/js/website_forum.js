@@ -5,7 +5,7 @@ $(document).ready(function () {
         var $link = $(ev.currentTarget);
         var value = $link.attr("value")
         
-        openerp.jsonRpc("/forum/post_vote/", 'call', {
+        openerp.jsonRpc("/forum/post_vote", 'call', {
                 'post_id': $link.attr("id"),
                 'vote': value})
             .then(function (data) {
@@ -52,7 +52,7 @@ $(document).ready(function () {
     $('.delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/post_delete/", 'call', {
+        openerp.jsonRpc("/forum/post_delete", 'call', {
             'post_id': $link.attr("id")})
             .then(function (data) {
                 $link.parents('#answer').remove();
@@ -60,10 +60,10 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.fa-check').on('click', function (ev) {
+    $('.fa-check-circle').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/correct_answer/", 'call', {
+        openerp.jsonRpc("/forum/correct_answer", 'call', {
             'post_id': $link.attr("id")})
             .then(function (data) {
                 if (data['error']) {
@@ -93,7 +93,7 @@ $(document).ready(function () {
     $('.comment_delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/message_delete/", 'call', {
+        openerp.jsonRpc("/forum/message_delete", 'call', {
             'message_id': $link.attr("id")})
             .then(function (data) {
                 $link.parents('#comment').remove();
@@ -104,7 +104,7 @@ $(document).ready(function () {
     $('.notification_close').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/notification_read/", 'call', {
+        openerp.jsonRpc("/forum/notification_read", 'call', {
             'notification_id': $link.attr("id")})
         return true;
     });

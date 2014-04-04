@@ -28,6 +28,7 @@
                 <div class="pull-left text-center">
                     <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
                         <span t-esc="question.child_count"/>
+                        <span t-if="question.correct" class="fa fa-2x fa-check-circle"/>
                         <div t-if="question.child_count&gt;1">Answers</div>
                         <div t-if="question.child_count&lt;=1">Answer</div>
                     </div>
@@ -124,7 +125,7 @@
                             <t t-raw="0"/>
                         </div>
                         <div class="col-sm-3" id="right-column">
-                            <a class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{ slug(forum) }/ask">Ask a Question</a>
+                            <a t-if="not ask_question" class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{ slug(forum) }/ask">Ask a Question</a>
                             <div t-field="forum.right_column"/>
                             <div t-if="question_data">
                                 <div class="panel panel-default">
@@ -273,7 +274,7 @@
                     <li> provide enough details and, if possible, give an example </li>
                     <li> be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...) </li>
                 </ul>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/ask/" method="post" role="form" class="tag_text">
+                <form t-attf-action="/forum/#{ slug(forum) }/question/ask" method="post" role="form" class="tag_text">
                     <input type="text" name="question_name" required="True" t-attf-value="#{question_name}"
                         class="form-control" placeholder="Enter your Question"/>
                     <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
@@ -333,7 +334,7 @@
         <template id="close_question">
             <t t-call="website_forum.header">
                 <h3 class=""><b>Close question</b></h3><br/>
-                <form t-attf-action="/forum/#{ slug(forum) }/question/close/" method="post" role="form">
+                <form t-attf-action="/forum/#{ slug(forum) }/question/close" method="post" role="form">
                     <input name="post_id" t-att-value="post.id" type="hidden"/>
                     <span class="pull-left">Close the question:</span>
                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
@@ -362,7 +363,7 @@
                 - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
                 - it really helps to select the best questions and answers!
             </p>
-            <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer/" method="post" role="form">
+            <form t-attf-action="/forum/#{ slug(forum) }/question/postanswer" method="post" role="form">
                 <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                 <textarea name="content" class="form-control load_editor" required="True"/>
                 <input name="post_id" t-att-value="question.id" type="hidden"/>
@@ -466,8 +467,8 @@
                             <t t-set="post" t-value="answer"/>
                         </t>
                         <div class="text-muted">
-                            <a t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check oe_answer_true"/>
-                            <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check oe_answer_false"/>
+                            <a t-attf-id="#{answer.id}" t-if="answer.correct" class="fa fa-2x fa-check-circle oe_answer_true"/>
+                            <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="fa fa-2x fa-check-circle oe_answer_false"/>
                         </div>
                     </div>
                     <div style="margin-left: 95px;" class="clearfix">
@@ -513,7 +514,7 @@
         <template id="comments">
             <div class="row clearfix">
                 <div class="col-sm-10 col-sm-offset-2">
-                    <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_grey" style="padding: 4px;">
+                    <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_comment_grey" style="padding: 4px;">
                         <small class="text-muted">
                             <button type="button" t-if="user.id == message.create_uid.id or user.karma&gt;=750" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
                             <span t-field="message.body"/>
@@ -523,7 +524,7 @@
                                 t-attf-href="/forum/#{ slug(forum) }/post/#{ object.id }/commet/#{ message.id }/converttoanswer">Convert as an answer</a>
                         </small>
                     </div>
-                    <div class="css_editable_mode_hidden oe_grey">
+                    <div class="css_editable_mode_hidden">
                         <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse" t-attf-action="/forum/#{ slug(forum) }/comment" method="POST">
                             <input name="post_id" t-att-value="object.id" type="hidden"/>
                             <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
@@ -639,7 +640,7 @@
                     <div class="col-md-2">
                         <span t-field="user.image" t-field-options='{"widget": "image", "class": "img img-responsive img-circle"}'/>
                     </div>
-                    <form t-attf-action="/forum/#{ slug(forum) }/save/profile/" method="post" role="form" class="form-horizontal">
+                    <form t-attf-action="/forum/#{ slug(forum) }/save/profile" method="post" role="form" class="form-horizontal">
                         <input name="user_id" t-att-value="user.id" type="hidden"/>
                         <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
                         <div class="col-md-7 mb16">

@@ -40,7 +40,7 @@ controllers = controllers()
 
 class website_forum(http.Controller):
 
-    @http.route(['/forum/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum'], type='http', auth="public", website=True, multilang=True)
     def forum(self, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum']
@@ -48,7 +48,7 @@ class website_forum(http.Controller):
         forums = Forum.browse(cr, uid, obj_ids, context=context)
         return request.website.render("website_forum.forum_index", { 'forums': forums })
 
-    @http.route('/forum/add_forum/', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/add_forum', type='http', auth="user", multilang=True, website=True)
     def add_forum(self, forum_name="New Forum", **kwargs):
         forum_id = request.registry['website.forum'].create(request.cr, request.uid, {
             'name': forum_name,
@@ -128,7 +128,7 @@ class website_forum(http.Controller):
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
         return {"user": user, "notifications": notifications}
 
-    @http.route('/forum/notification_read/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/notification_read', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def notification_read(self, **kwarg):
         request.registry['mail.message'].set_message_read(request.cr, request.uid, [int(kwarg.get('notification_id'))], read=True, context=request.context)
         return True
@@ -292,11 +292,12 @@ class website_forum(http.Controller):
             'searches': {},
             'forum': forum,
             'user': user,
+            'ask_question': True,
             'notifications': self._get_notifications(),
         }
         return request.website.render("website_forum.ask_question", values)
 
-    @http.route('/forum/<model("website.forum"):forum>/question/ask/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/<model("website.forum"):forum>/question/ask', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def register_question(self, forum, **question):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context)
@@ -305,7 +306,7 @@ class website_forum(http.Controller):
         tags = question.get('question_tags').strip('[]').replace('"','').split(",")
         question_tags = []
         for tag in tags:
-            tag_ids = Tag.search(cr, uid, [('name', 'like', tag)], context=context)
+            tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
             if tag_ids:
                 question_tags.append((4,tag_ids[0]))
             else:
@@ -323,7 +324,7 @@ class website_forum(http.Controller):
             }, context=create_context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),new_question_id))
 
-    @http.route('/forum/<model("website.forum"):forum>/question/postanswer/', type='http', auth="public", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/<model("website.forum"):forum>/question/postanswer', type='http', auth="public", multilang=True, methods=['POST'], website=True)
     def post_answer(self, forum , post_id, **question):
         if not request.session.uid:
             return login_redirect()
@@ -395,12 +396,13 @@ class website_forum(http.Controller):
             tags = post.get('question_tag').strip('[]').replace('"','').split(",")
             question_tags = []
             for tag in tags:
-                tag_ids = Tag.search(cr, uid, [('name', 'like', tag)], context=context)
+                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
                 if tag_ids:
-                    question_tags.append((6, 0, tag_ids))
+                    question_tags += tag_ids
                 else:
-                    question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
-            vals.update({'tags': question_tags, 'name': post.get('question_name')})
+                    new_tag = Tag.create(cr, uid, {'name' : tag,'forum_id' : forum.id}, context=context)
+                    question_tags.append(new_tag)
+            vals.update({'tags': [(6, 0, question_tags)], 'name': post.get('question_name')})
 
         post_id = post.get('answer_id') if post.get('answer_id') else post.get('question_id')
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
@@ -471,7 +473,7 @@ class website_forum(http.Controller):
 
         return request.website.render("website_forum.users", values)
 
-    @http.route('/forum/post_vote/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/post_vote', type='json', auth="public", multilang=True, methods=['POST'], website=True)
     def post_vote(self, **post):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
@@ -479,7 +481,7 @@ class website_forum(http.Controller):
         Vote = request.registry['website.forum.post.vote']
         return Vote.vote(cr, uid, post_id, post.get('vote'), context)
 
-    @http.route('/forum/post_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/post_delete', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_answer(self, **kwarg):
         request.registry['website.forum.post'].unlink(request.cr, request.uid, [int(kwarg.get('post_id'))], context=request.context)
         return True
@@ -499,7 +501,7 @@ class website_forum(http.Controller):
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
 
-    @http.route('/forum/message_delete/', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/message_delete', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_comment(self, **kwarg):
         request.registry['mail.message'].unlink(request.cr, SUPERUSER_ID, [int(kwarg.get('message_id'))], context=request.context)
         return True
@@ -518,7 +520,7 @@ class website_forum(http.Controller):
         }
         return data
 
-    @http.route('/forum/correct_answer/', type='json', auth="public", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/correct_answer', type='json', auth="public", multilang=True, methods=['POST'], website=True)
     def correct_answer(self, **kwarg):
         cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
@@ -556,7 +558,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.close_question", values)
 
-    @http.route('/forum/<model("website.forum"):forum>/question/close/', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/forum/<model("website.forum"):forum>/question/close', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def close(self, forum, **post):
         request.registry['website.forum.post'].write( request.cr, request.uid, [int(post.get('post_id'))], {
             'state': 'close',
@@ -588,7 +590,7 @@ class website_forum(http.Controller):
         }
         return request.website.render("website_forum.edit_profile", values)
 
-    @http.route('/forum/<model("website.forum"):forum>/save/profile/', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("website.forum"):forum>/save/profile', type='http', auth="user", multilang=True, website=True)
     def save_edited_profile(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, uid, int(post.get('user_id')),context=context)
@@ -605,7 +607,7 @@ class website_forum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/post/<model("website.forum.post"):post>/commet/<model("mail.message"):comment>/converttoanswer', type='http', auth="public", multilang=True, website=True)
     def convert_to_answer(self, forum, post, comment, **kwarg):
         values = {
-            'answer_content': comment.body,
+            'content': comment.body,
         }
         request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
         return self.post_answer(forum, post.parent_id and post.parent_id.id or post.id, **values)
@@ -644,4 +646,3 @@ class website_forum(http.Controller):
         post_ids.append(post.id)
         request.registry['website.forum.post'].message_unsubscribe( cr, uid, post_ids, [partner_id], context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.id))
-
