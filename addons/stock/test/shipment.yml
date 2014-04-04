@@ -1,9 +1,14 @@
 -
-  I confirm outgoing shipment of 130 kgm Ice-cream.
+   Stock manager can only test whole process related to Shipment, so let's check data with stock manager.
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
+  I confirm outgoing shipment of 130 Unit 15” LCD Monitor.
 -
   !workflow {model: stock.picking, action: button_confirm, ref: outgoing_shipment}
 -
-  I check shipment details after confirmed.
+  I check shipment details after confirmation.
 -
   !python {model: stock.picking}: |
     shipment = self.browse(cr, uid, ref("outgoing_shipment"))
@@ -12,121 +17,25 @@
         assert move_line.state == "confirmed", "Move should be confirmed."
 
 -
-  Now I check vitual stock of Ice-cream after confirmed outgoing shipment.
+  Now, I check virtual stock of 15” LCD Monitor after confirming outgoing shipment.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    product.virtual_available == -30, "Vitual stock is not updated."
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert product.virtual_available == -30, "Virtual stock is not updated."
 
 -
-  I confirm incomming shipment of 50 kgm Ice-cream.
+  I confirm incoming shipment of 50 Unit 15” LCD Monitor.
 -
   !workflow {model: stock.picking, action: button_confirm, ref: incomming_shipment}
 -
-  I receive 40kgm Ice-cream so I make backorder of incomming shipment for 40 kgm.
--
-  !python {model: stock.partial.picking}: |
-    context.update({'active_model': 'stock.picking', 'active_id': ref('incomming_shipment'), 'active_ids': [ref('incomming_shipment')]})
--
-  !record {model: stock.partial.picking, id: partial_incomming}:
-    move_ids:
-        - quantity: 40
-          product_id: product_icecream
-          product_uom: product.product_uom_kgm
-          move_id: incomming_shipment_icecream
-          location_id: location_convenience_shop
-          location_dest_id: location_refrigerator
--
-  !python {model: stock.partial.picking }: |
-    self.do_partial(cr, uid, [ref('partial_incomming')], context=context)
--
-  I check backorder shipment after received partial shipment.
+  I split incoming shipment into lots. each lot contain 10 Unit 15” LCD Monitor.
 -
   !python {model: stock.picking}: |
     shipment = self.browse(cr, uid, ref("incomming_shipment"))
-    backorder = shipment.backorder_id
-    assert backorder, "Backorder should be created after partial shipment."
-    assert backorder.state == 'done', "Backorder should be close after received."
-    for move_line in backorder.move_lines:
-        assert move_line.product_qty == 40, "Qty in backorder does not correspond."
-        assert move_line.state == 'done', "Move line of backorder should be closed."
--
-  I receive another 10kgm Ice-cream.
--
-  !record {model: stock.partial.picking, id: partial_incomming}:
-    move_ids:
-        - quantity: 10
-          product_id: product_icecream
-          product_uom: product.product_uom_kgm
-          move_id: incomming_shipment_icecream
-          location_id: location_convenience_shop
-          location_dest_id: location_refrigerator
--
-  !python {model: stock.partial.picking }: |
-    self.do_partial(cr, uid, [ref('partial_incomming')], context=context)
-
--
-  I check incomming shipment after received.
--
-  !python {model: stock.picking}: |
-    shipment = self.browse(cr, uid, ref("incomming_shipment"))
-    assert shipment.state == 'done', "shipment should be close after received."
-    for move_line in shipment.move_lines:
-        assert move_line.product_qty == 10, "Qty does not correspond."
-        assert move_line.product_id.virtual_available == 20, "Virtual stock does not correspond."
-        assert move_line.state == 'done', "Move line should be closed."
-
--
-  I return last incomming shipment for 10 kgm Ice-cream.
--
-  !record {model: stock.return.picking, id: return_incomming}:
-    invoice_state: none
--
-  !python {model: stock.return.picking }: |
-    # this work without giving the id of the picking to return, magically, thanks to the context
-    self.create_returns(cr, uid, [ref('return_incomming')], context=context)
--
-  I cancel incomming shipment after return it.
--
-  !python {model: stock.picking}: |
-    # the cancel is not on the return, but on the incomming shipment (which now has a quantity of 10, thanks to the 
-    # backorder). This situation is a little weird as we returned a move that we finally cancelled... As result, only
-    # 30Kg from the original 50Kg will be counted in the stock (50 - 10 (cancelled quantity) - 10 (returned quantity))
-    self.action_cancel(cr, uid, [ref("incomming_shipment")], context=context)
--
-  I make invoice of backorder of incomming shipment.
--
-  !python {model: stock.invoice.onshipping}: |
-    shipment = self.pool.get('stock.picking').browse(cr, uid, ref("incomming_shipment"))
-    context.update({'active_model': 'stock.picking', 'active_id': shipment.backorder_id.id, 'active_ids': [shipment.backorder_id.id]})
--
-  !record {model: stock.invoice.onshipping, id: invoice_incomming}:
-    group: False
--
-  !python {model: stock.invoice.onshipping }: |
-    self.create_invoice(cr, uid, [ref('invoice_incomming')], context=context)
--
-  I check invoice state of backorder of incomming shipment.
--
-  !python {model: stock.picking}: |
-    shipment = self.browse(cr, uid, ref("incomming_shipment"))
-    assert shipment.backorder_id.invoice_state == 'invoiced', 'Invoice state is not upadted.'
--
-  I check available stock after received incomming shipping.
--
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert product.qty_available == 140, "Stock does not correspond."
-    assert product.virtual_available == 0, "Vitual stock does not correspond."
--
-  I split incomming shipment into lots. each lot contain 10 kgm Ice-cream.
--
-  !python {model: stock.picking}: |
-    shipment = self.browse(cr, uid, ref("incomming_shipment"))
-    move_ids = [x.id for x in shipment.backorder_id.move_lines]
+    move_ids = [x.id for x in shipment.move_lines]
     context.update({'active_model': 'stock.move', 'active_id': move_ids[0], 'active_ids': move_ids})
 -
-  !record {model: stock.move.split, id: split_lot_incomming}:
+  !record {model: stock.move.split, id: split_lot_incoming}:
     line_ids:
         - name: incoming_lot0
           quantity: 10
@@ -136,23 +45,123 @@
           quantity: 10
         - name: incoming_lot3
           quantity: 10
-        
 -
  !python {model: stock.move.split }: |
-    self.split_lot(cr, uid, [ref('split_lot_incomming')], context=context)
+    self.split_lot(cr, uid, [ref('split_lot_incoming')], context=context)
 -
-  I check move lines after spliting
+  I check move lines after splitting.
 -
   !python {model: stock.move}: |
-    lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incomming'), context=context)
+    mm = self.browse(cr, uid, ref("incomming_shipment_monitor"))
+    lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incoming'), context=context)
     lot_ids = self.pool.get('stock.production.lot').search(cr, uid, [('name','in',[x.name for x in lot.line_ids])])
-    assert len(lot_ids) == 4, 'lots of incomming shipment are not correspond.'
-    move_ids = self.search(cr, uid, [('location_dest_id','=',ref('location_refrigerator')),('prodlot_id','in',lot_ids)])
-    assert len(move_ids) == 4, 'move lines are not correspond per prodcution lot after splited.'
+    assert len(lot_ids) == 4, 'lots of incoming shipment are not correspond.'
+    move_ids = self.search(cr, uid, [('location_dest_id','=',ref('location_monitor')),('prodlot_id','in',lot_ids)])
+    assert len(move_ids) == 4, 'move lines are not correspond per production lot after splitting.'
     for move in self.browse(cr, uid, move_ids, context=context):
         assert move.prodlot_id.name in ['incoming_lot0', 'incoming_lot1', 'incoming_lot2', 'incoming_lot3'], "lot does not correspond." 
         assert move.product_qty == 10, "qty does not correspond per production lot."
-    context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
+-
+  I receive 40 units of  15” LCD Monitor.
+-
+  !python {model: stock.partial.picking}: |
+    context.update({'active_model': 'stock.picking', 'active_id': ref('incomming_shipment'), 'active_ids': [ref('incomming_shipment')]})
+-
+  !python {model: stock.partial.picking}: |
+    partial = []
+    for move in self.pool.get('stock.picking').browse(cr, uid, ref("incomming_shipment")).move_lines:
+        if move.prodlot_id:
+            partial.append((0, 0, {
+              'quantity': move.product_qty,
+              'product_id': move.product_id.id,
+              'product_uom': move.product_uom.id,
+              'move_id': move.id,
+              'location_id': move.location_id.id,
+              'location_dest_id': move.location_dest_id.id,
+              'prodlot_id': move.prodlot_id.id,
+              'cost': move.product_id.standard_price
+            }))
+    partial_id = self.create(cr, uid, {'move_ids': partial}, context=context)
+    self.do_partial(cr, uid, [partial_id], context=context)
+-
+  I check backorder shipment after receiving partial shipment.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("incomming_shipment"))
+    backorder = shipment.backorder_id
+    assert backorder, "Backorder should be created after partial shipment."
+    assert backorder.state == 'done', "Backorder should be closed after received."
+    qty = 0
+    for move_line in backorder.move_lines:
+        assert move_line.state == 'done', "Move line of backorder should be closed."
+        qty += move_line.product_qty
+    assert qty == 40, "Qty in backorder does not correspond."
+-
+  I receive another 10 units of 15” LCD Monitor.
+-
+  !record {model: stock.partial.picking, id: partial_incoming}:
+    move_ids:
+        - quantity: 10
+          product_id: product_product_6
+          product_uom: product.product_uom_unit
+          move_id: incomming_shipment_monitor
+          location_id: stock_location_3
+          location_dest_id: location_monitor
+-
+  !python {model: stock.partial.picking }: |
+    self.do_partial(cr, uid, [ref('partial_incoming')], context=context)
+-
+  I check incoming shipment after receiving it.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("incomming_shipment"))
+    assert shipment.state == 'done', "shipment should be closed after receiving."
+    for move_line in shipment.move_lines:
+        assert move_line.product_qty == 10, "Qty does not correspond."
+        assert move_line.product_id.virtual_available == 20, "Virtual stock does not correspond."
+        assert move_line.state == 'done', "Move line should be closed."
+-
+  I return last incoming shipment for 10 Unit 15” LCD Monitor.
+-
+  !record {model: stock.return.picking, id: return_incoming}:
+    invoice_state: none
+-
+  !python {model: stock.return.picking }: |
+    # this work without giving the id of the picking to return, magically, thanks to the context
+    self.create_returns(cr, uid, [ref('return_incoming')], context=context)
+-
+  I cancel incoming shipment after returning it.
+-
+  !python {model: stock.picking}: |
+    # the cancel is not on the return, but on the incoming shipment (which now has a quantity of 10, thanks to the 
+    # backorder). This situation is a little weird as we returned a move that we finally cancelled... As result, only
+    # 30Unit from the original 50Unit will be counted in the stock (50 - 10 (cancelled quantity) - 10 (returned quantity))
+    self.action_cancel(cr, uid, [ref("incomming_shipment")], context=context)
+-
+  I make invoice of backorder of incoming shipment.
+-
+  !python {model: stock.invoice.onshipping}: |
+    shipment = self.pool.get('stock.picking').browse(cr, uid, ref("incomming_shipment"))
+    context.update({'active_model': 'stock.picking', 'active_id': shipment.backorder_id.id, 'active_ids': [shipment.backorder_id.id]})
+-
+  !record {model: stock.invoice.onshipping, id: invoice_incoming}:
+    group: False
+-
+  !python {model: stock.invoice.onshipping }: |
+    self.create_invoice(cr, uid, [ref('invoice_incoming')], context=context)
+-
+  I check invoice status of backorder of incoming shipment.
+-
+  !python {model: stock.picking}: |
+    shipment = self.browse(cr, uid, ref("incomming_shipment"))
+    assert shipment.backorder_id.invoice_state == 'invoiced', 'Invoice state is not updated.'
+-
+  I check available stock after receiving incoming shipping.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert product.qty_available == 140, "Stock does not correspond."
+    assert product.virtual_available == 0, "Virtual stock does not correspond."
 -
   I check the stock valuation account entries.
 -
@@ -161,91 +170,90 @@
     account_move_ids = self.search(cr, uid, [('ref','=',incomming_shipment.name)])
     assert len(account_move_ids), "account move should be created."
     account_move = self.browse(cr, uid, account_move_ids[0], context=context)
-    assert len(account_move.line_id) == len(incomming_shipment.move_lines) + 1, 'accuont entries are not correspond.'
+    assert len(account_move.line_id) == len(incomming_shipment.move_lines) + 1, 'Accounting entries does not correspond.'
     for account_move_line in account_move.line_id:
         for stock_move in incomming_shipment.move_lines:
             if account_move_line.account_id.id == stock_move.product_id.property_stock_account_input.id:
-                assert account_move_line.credit == 800.0, "Credit amount does not correspond."
+                assert account_move_line.credit == 14000.0, "Credit amount does not correspond."
                 assert account_move_line.debit == 0.0, "Debit amount does not correspond."
             else:
                 assert account_move_line.credit == 0.0, "Credit amount does not correspond."
-                assert account_move_line.debit == 800.0, "Debit amount does not correspond."
--
-  I consume 1 kgm ice-cream from each incoming lots into internal production.
--
-  !record {model: stock.move.consume, id: consume_lot_incomming}:
-    product_qty: 1
-    location_id: location_refrigerator
--
-  !python {model: stock.move.consume}: |
-    self.do_move_consume(cr, uid, [ref('consume_lot_incomming')], context=context)
--
-  I scrap 10 gm ice-cream from each incoming lots into scrap location.
--
-  !record {model: stock.move.scrap, id: scrap_lot_incomming}:
-    product_qty: 0.010
--
-  !python {model: stock.move.scrap}: |
-    self.move_scrap(cr, uid, [ref('scrap_lot_incomming')], context=context)
--
-  I check stock in scrap location and refrigerator location.
--
-  !python {model: stock.location}: |
-    ctx = {'product_id': ref('product_icecream')}
-    refrigerator_location = self.pool.get('stock.location').browse(cr, uid, ref('location_refrigerator'), context=ctx)
-    assert refrigerator_location.stock_real == 135.96, 'stock does not correspond in refrigerator location.'
-    scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
-    assert scrapped_location.stock_real == 0.010*4, 'scraped stock does not correspond in scrap location.'
-    
--
-  I check availabile stock after consumed and scraped.
--
-  !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert product.qty_available == 135.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == -4.04, "Vitual stock does not correspond."
+                assert account_move_line.debit == 14000.0, "Debit amount does not correspond."
 -
   I trace all incoming lots.
 -
   !python {model: stock.production.lot }: |
-    lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incomming'), context=context)
+    lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incoming'), context=context)
     lot_ids = self.search(cr, uid, [('name', 'in', [x.name for x in lot.line_ids])])
     self.action_traceability(cr, uid, lot_ids, context=context)
 -
-  I check outgoing shipment after stock availablity in refrigerator.
+  I check outgoing shipment after stock availability in Chicago shop.
 -
   !python {model: stock.picking}: |
     shipment = self.browse(cr, uid, ref("outgoing_shipment"), context=context)
-    self.pool.get('stock.move').action_assign(cr, uid, [x.id for x in shipment.move_lines]) #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
-    #TOFIX: shipment should be assigned if stock available
-    #assert shipment.state == "assigned", "Shipment should be assigned."
-    #for move_line in shipment.move_lines:
-    #    assert move_line.state == "assigned", "Move should be assigned."
+    self.pool.get('stock.move').action_assign(cr, uid, [x.id for x in shipment.move_lines]) 
+    assert shipment.state == "assigned", "Shipment should be assigned."
+    for move_line in shipment.move_lines:
+        assert move_line.state == "assigned", "Move should be assigned."
     self.force_assign(cr, uid, [shipment.id])
+    context.update({'active_model':'stock.move', 'active_id':shipment.move_lines[0].id,'active_ids': [shipment.move_lines[0].id]})
 -
-  I deliver 5kgm Ice-cream to customer so I make partial deliver
+  I scrap 4 units of 15” LCD Monitor into scrap location.
+-
+  !record {model: stock.move.scrap, id: scrap_monitor1}:
+    product_qty: 4
+-
+  !python {model: stock.move.scrap}: |
+    self.move_scrap(cr, uid, [ref('scrap_monitor1')], context=context)
+-
+  I consume 4 units of 15” LCD Monitor.
+-
+  !record {model: stock.move.consume, id: consume_monitor1}:
+    product_qty: 4
+    location_id: location_monitor
+-
+  !python {model: stock.move.consume}: |
+    self.do_move_consume(cr, uid, [ref('consume_monitor1')], context=context)
+-
+  I check stock in scrap location and stock location.
+-
+  !python {model: stock.location}: |
+    ctx = {'product_id': ref('product_product_6')}
+    monitor_location = self.pool.get('stock.location').browse(cr, uid, ref('location_monitor'), context=ctx)
+    assert monitor_location.stock_real == 132.0, 'stock does not correspond in stock location shop0.'
+    scrapped_location = self.browse(cr, uid, ref('stock_location_scrapped'), context=ctx)
+    assert scrapped_location.stock_real == 4, 'scraped stock does not correspond in scrap location.'
+-
+  I check available stock after consumed and scraped move.
+-
+  !python {model: product.product}: |
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert product.qty_available == 132.0, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == -4.00, "Virtual stock does not correspond."
+-
+  I deliver 5 Unit 15” LCD Monitor to customer partially.
 -
   !python {model: stock.partial.move}: |
-    context.update({'active_model': 'stock.move', 'active_id': ref('outgoing_shipment_icecream'), 'active_ids': [ref('outgoing_shipment_icecream')]})
+    context.update({'active_model': 'stock.move', 'active_id': ref('outgoing_shipment_monitor'), 'active_ids': [ref('outgoing_shipment_monitor')]})
 -
-  !record {model: stock.partial.move, id: partial_outgoing_icecream}:
+  !record {model: stock.partial.move, id: partial_outgoing_monitor}:
     move_ids:
         - quantity: 5
-          product_id: product_icecream
-          product_uom: product.product_uom_kgm
-          move_id: outgoing_shipment_icecream
-          location_id: location_refrigerator
-          location_dest_id: location_delivery_counter
+          product_id: product_product_6
+          product_uom: product.product_uom_unit
+          move_id: outgoing_shipment_monitor
+          location_id: location_monitor
+          location_dest_id: stock_location_output
 -
   !python {model: stock.partial.move }: |
-    self.do_partial(cr, uid, [ref('partial_outgoing_icecream')], context=context)
+    self.do_partial(cr, uid, [ref('partial_outgoing_monitor')], context=context)
 
 -
-  I packing outgoing shipment into box per 10kgm with unique tracking lot.
+  I pack outgoing shipment into box of 10 Unit with unique tracking lot.
 -
   !python {model: stock.move}: |
     stock_split = self.pool.get('stock.split.into')
-    move = self.browse(cr, uid, ref('outgoing_shipment_icecream'), context=context)
+    move = self.browse(cr, uid, ref('outgoing_shipment_monitor'), context=context)
     context.update({'active_model': 'stock.move', 'active_id': move.id, 'active_ids': [move.id]})
     total_qty = move.product_qty
     split_qty = 10
@@ -254,7 +262,7 @@
         stock_split.split(cr, uid, [split_id], context=context)
         total_qty -= split_qty
 -
-  I deliver outgoing shipment.
+  I deliver the outgoing shipment.
 -
   !python {model: stock.partial.picking}: |
     context.update({'active_model': 'stock.picking', 'active_id': ref('outgoing_shipment'), 'active_ids': [ref('outgoing_shipment')]})
@@ -266,7 +274,7 @@
     self.do_partial(cr, uid, [ref('partial_outgoing')], context=context)
 
 -
-  I check outgoing shipment after deliver.
+  I check outgoing shipment after delivery.
 -
   !python {model: stock.picking}: |
     shipment = self.browse(cr, uid, ref("outgoing_shipment"), context=context)
@@ -274,9 +282,9 @@
     for move_line in shipment.move_lines:
         assert move_line.state == "done", "Move should be closed."
 -
-  I check availaible stock after deliver.
+  I check available stock after delivery.
 -
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref('product_icecream'), context=context)
-    assert round(product.qty_available, 2) == 5.96, "Stock does not correspond."
-    assert round(product.virtual_available, 2) == -4.04, "Vitual stock does not correspond."
+    product = self.browse(cr, uid, ref('product_product_6'), context=context)
+    assert round(product.qty_available, 2) == 6, "Stock does not correspond."
+    assert round(product.virtual_available, 2) == -4.00, "Virtual stock does not correspond."
