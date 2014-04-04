@@ -1,7 +1,7 @@
 Stock Module
 ++++++++++++
 
-This module can be applied for the simplest case where you are only interested in knowing the quantity of each product in your stock as for a complex warehouse(s) management case, where for example each product gets a specific location in the stock and upon delivery it needs to be picked at a certain location and the products need to be packed in boxes and put on a pallet.  
+This module can be applied for the simplest stock management case where you are only interested in knowing the quantity of each product in your stock as for a complex warehouse(s) management case, where for example each product gets a specific location in the stock and upon delivery it needs to be picked at a certain location and the products need to be packed in boxes and put on a pallet.  
 
 Because of this huge difference in application, the main principles briefly will be explained first, whereafter we will dedicate one chapter on how to use the warehouse management in its simplest form.  From the third chapter on, we will explain every step in more detail, allowing you to discover the full potential of the module.  
 
@@ -17,7 +17,7 @@ A stock move is the elementary model in OpenERP that can move stock between 2 lo
 
 In order to make it easy to move multiple products at once and pass that as an assignment to a warehouse operator, we use pickings that group these stock moves.  
 
-We want to categorize the pickings in picking types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. by default, in the default warehouse, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.  
+We want to categorize the pickings in picking types.  As a warehouse manager you want to follow up the progress of the operations between the same (kind of) locations.  E.g. in the standard warehouse, not configuring anything, you will have 3 picking types: the incoming, internal and outgoing, but it is possible to create a picking type for all the packing operations that need to happen at the packing table.  The Warehouse > All Operations dashboard allows to see the progress of the pickings for each picking type.  
 
 You might have a weird feeling talking about moving from location A to location B, even for deliveries and incoming shipments.  That is because OpenERP uses a double-entry concept similar to double-entry accounting.  In OpenERP you do not talk of disappearance, consumption or loss of products: instead you speak only about stock moves from one place to another.
 
@@ -41,18 +41,18 @@ In OpenERP, locations are structured hierarchically. You can structure your loca
 Warehouse
 =========
 
-A warehouse represents the building where we stock our goods.  In case of multiple warehouses, you can enter the warehouse on your purchase orders and sale orders, such that your transporter knows where to deliver or pick it up.   That is why a warehouse also has an address and a name.  
+A warehouse represents the building where we stock our goods.  In case of multiple warehouses, you can enter the warehouse on your purchase orders and sale orders, such that your transporter knows where to deliver the goods or pick them up.   That is why a warehouse also has an address and a name.  
 
-A warehouse corresponds also to a location.  As the locations are hierarchical, OpenERP links a warehouse with one parent location that contains all the different sublocations in the warehouse.  
+A warehouse corresponds also to a location.  As the locations are hierarchical, OpenERP will create one parent location for the warehouse that contains all the different locations in it.  
 
 When you create a warehouse, the system will create the necessary picking types and parent locations in the background.  
 
 
-============
-MTO and MTS
-============
+===========================================
+MTO (Make to Order) and MTS (Make To Stock)
+===========================================
 
-A product can be MTO or MTS.  When a product is handled MTO, it means we will handle each order (e.g. sale order) individually and procure what is necessary, separately for every order.  When a product is handled MTS, we wait until there are sufficient orders and then we order everything at once taking into account a minimum stock (or a stock forecast) into account.  In OpenERP, we can automate minimum stock rules through orderpoints as shown in the next chapter. 
+A product can be MTO or MTS.  When a product is handled MTO, it means we will handle each order (e.g. sale order) individually and procure what is necessary, separately for every order.  When a product is handled MTS, we wait until there are sufficient orders and then we order everything at once taking into account a minimum stock (or a stock forecast) into account.  In OpenERP, we can automate minimum stock rules through reordering rules (or orderpoints) as shown in the next chapter. 
 
 ================
 States of moves
@@ -65,21 +65,23 @@ States of moves
 * Done (Transferred)
 * Cancel (Cancelled)
 
-When we start to create a move, it will be in draft state.  This means, it will have no influence on even the virtual stock of the product.  It is only when we confirm the move that we make clear to the system that this move will be executed and should be taken into account for ordering new products.  The next state will however be different according to the scenario.  For example, if the product is MTO, in the stock location, it will wait for a specific purchase order and will have the Waiting Another Move state.  In case of an MTS product, the move will be configured as such that it will look for available stock in the source location itself and it will go to the Confirmed state.  
+When we create a move, it will be in draft state.  It will have no influence on the virtual stock of the product.  It is only when we confirm the move that we make clear to the system that this move will be executed and should be taken into account for ordering new products.  The next state will however be different according to the scenario.  
 
-In these states it is possible to do "Check Availability".  If it can find the necessary stock, the state goes to Assigned.  In this state it is possible to effectively execute the move and transfer the products.  Incoming shipments are automatically available.  Effectively executing the move, brings it to the done state and makes it adapt the stock available on hand.  (quantity on hand)
+For example, if the product is MTO and we have a delivery order from Stock to Customers, it will wait for a specific purchase order and will have the waiting (Waiting Another Move) state.  In case of an MTS product, the move will be configured as such that it will look for available stock in the source location itself and it will stay in the Confirmed (Waiting Availability) state.  
+
+In these confirmed or waiting states it is possible to do "Check Availability".  If it can find the necessary stock, the state goes to Assigned.  In this state it is possible to effectively execute the move and transfer the products.  Incoming shipments are automatically available.  Effectively executing the move, brings it to the done state and makes it adapt the quantity available on hand.  
 
 Normally, the picking associated to the move, will have the same state as it moves, but the picking can also have a partially available state.  It is possible that some products in the picking are available and some are not.  On a sales order or delivery order picking, you can specify if you want your customer to be delivered as soon as possible when only a part of the products is  available (partial delivery) or only all at once when everything is available (in order to save on transport costs for example).  So, if you can do a partial delivery, the picking state will be partially available when only some of the products are available.  
 
-==============================================
-Orderpoints, procurement and procurement group
-==============================================
+===================================================
+Reordering rules, procurement and procurement group
+===================================================
 
 Procurements represent needs that need to be solved.  For example, every sales order line will create a procurement in Customers.  This will be solved by a move for the delivery, which will, in case of a MTO product in buy configuration, create a new procurement (need) in Stock, which will be solved by a purchase order. 
 
-It is not required however, to have this need in stock created by a move.  In case of MTS, the move will not create a procurement (need), but the the procurement will originate from an orderpoint created for this product in stock.  
+It is not required however, to have this need in stock created by a move.  In case of MTS, the move will not create a procurement (need), but the the procurement will originate from a reordering rule created for this product in stock.  
 
-An orderpoint applies the following rule: if the virtual stock for the given location is lower than the minimum stock indicated in the rule, the system will automatically propose a procurement to increase the level of virtual stock to the maximum level given in the rule.  We underline that the rule is based on virtual quantities and not just on real quantities. It takes into account the calculation of orders and receipts to come.
+An reordering rule (= minimum stock rule) applies the following rule: if the virtual stock for the given location is lower than the minimum stock indicated in the rule, the system will automatically propose a procurement to increase the level of virtual stock to the maximum level given in the rule.  We underline that the rule is based on virtual quantities and not just on real quantities. It takes into account the calculation of orders and receipts to come.
 
 You can also set multiple quantities in the minimum stock rules. If you set a multiple quantity of 3 the system will propose procurement of 15 pieces, and not the 13 it really needs. In this case, it automatically rounds the quantity upwards.
 
@@ -87,21 +89,27 @@ Pay attention to the fact that the maximum quantity is not the maximum you will 
 
 Scheduler: 
 
-In order for the orderpoint to create the procurement, we need to launch the scheduler.  This can be done manually in Warehouse > ..., but will normally be automated by a scheduled action.  (by default it is automated on a daily basis)
+In order for the reordering rule to create the procurement, we need to launch the scheduler.  This can be done manually in Warehouse > Schedulers > Run Scheduler, but will normally be automated by a scheduled action.  (by default it is automated on a daily basis)
 
 Procurement groups: 
 
-Suppose you have multiple lines in your sales order, then you want one delivery order with all the lines of the sales order.  In order to do that, we group the different procurements of this sale order into the same procurement group we create for the sales order.  That way the moves of a delivery order are together.  
+Even when you have multiple lines in your sales order, you want one delivery order with all the lines of the sales order.  In order to do that, we group the different procurements of this sale order into the same procurement group we create for the sales order.  That way, the moves of a delivery order stay together by putting moves of the same group in the same picking.  
+
+=================================
+Consumables vs stockable products
+=================================
+
+Consumables will not be valued in the inventory valuation as they will have 0 value.  It is not possible to create reordering rules for consumables.  It is also not necessary to reserve stock for it as the move will go to the available state anyways.  
 
 
 2 Standard configuration
 ************************
 
-In this chapter, we want to show how to work with the simplest warehouse configuration.  (product MTO, product MTS with orderpoint, ...)
+In this chapter, we want to show how to work with the simplest warehouse configuration.  (product MTO, product MTS with reordering rule, ...)
 
 Suppose we have a little Apple Store.  The warehouse will be Apple Store and we manage only one location (no child locations).  We put a minimum stock of 10 iPad mini and 5 iPod nano.  We don't have stock for iBooks, but when a customer wants one, he can order one and will get it after a week.  
 
-We will create an orderpoint for every product with minimum stock.  These orders could also be created by the point of sale.  The maximum of the orderpoint, we will take 15 and 10 and .  This orderpoint will need to be created in the Stock location.  
+We will create a reordering rule for every product with minimum stock.  These orders could also be created by the point of sale.  The maximum of the orderpoint, we will take 15 and 10 and .  This orderpoint will need to be created in the Stock location.  
 
 
 <<Show where we put supplier info>>
@@ -120,9 +128,9 @@ Assigning stock moves to pickings
 
 When you want to give an assignment to a warehouse operator manually, you will create a picking and create the moves in it by specifying the different products and quantities.   When confirming a sale order however, OpenERP will create the moves automatically.  In these cases, it will create the stock moves without picking first.  In a second step, they will be attributed to an existing picking or a picking will be created.  
 
-In order to assign the move to a picking, OpenERP will check if the move was assigned a picking type (e.g. Your Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the right state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination.  If no picking can be found, it will create a new one. 
+In order to assign the move to a picking, OpenERP will check if the move was assigned a picking type (e.g. Your Company: Delivery Orders) and if it does, it will search for a picking to assign the move to.  This picking should be in the right state, picking type, procurement group (=group of procurements related to e.g. the same sale order) and source and destination locations.  If no picking can be found, it will create a new one. 
 
-This mechanism allows for a lot of flexibility when for example some products have to be packed and some don't.  That way, the packing order will still group the moves that need packing from the sale order and the direct moves will be grouped in a separate picking also.  For the delivery order, everything will be together in one picking again.  
+This mechanism allows for a lot of flexibility when for example some products have to go through the Packing zone for packing and some don't.  That way, the packing order will still group the moves that need packing from the sale order and the direct moves will be grouped in a separate picking also.  For the delivery order, everything will be together in one picking again.  
 
 A picking is almost entirely determined by the moves in it.  The state depends on the moves and the picking type, the source and destination location are those of the moves.  The scheduled date is calculated as a minimum date for the stock moves.  
 
@@ -144,11 +152,11 @@ Procurement (=pull) rules and push rules to create chained moves
 
 Push rules:
 
-A rule that trigger another stock.move based on a stock.move based on its destination location.  
+A rule that triggers another stock move based on the destination location of the original move.  The new move has as source location the destination location of the original move.  
 
-Example: When products arrive manually in the “Input” location, you want to move them to “stock” directly with a push rule.  
+Example: When products arrive manually in the “Input” location, you want to move them to “Stock” with a push rule afterwards.  
 
-So, when a stock.move “Supplier → Input” is confirmed, this rule will create another stock.move: “Input → Stock”. It allows for 3 modes: automatic (the second operation will be validated automatically), manual (the second operation must be validated manually), manual no step added. (the destination of the first move is replaced instead of creating another stock.move.
+So, when a stock move “Supplier → Input” is confirmed, this rule will create another stock move: “Input → Stock”. It allows for 3 modes: automatic (the second operation will be validated automatically), manual (the second operation must be validated manually), manual no step added. (the destination of the first move is replaced instead of creating another stock move.
 
 Push rules should typically only be used on incoming side when a purchase order is created manually and the goods need to be transferred to stock.  
 
@@ -158,9 +166,9 @@ Pull rules are not the opposite of push rules! It’s very different as push rul
 
 When a stock move is confirmed and its procurement method is 'Advanced: Apply procurement rules', it will create a procurement in the source location for the quantity of the move.  To fulfill this procurement, a procurement rule needs to be applied on this procurement.  There are several types of procurement rules with different results: move products from another location to the source location, purchase to the source location, produce towards the source location.  
 
-A procurement does not need to be created by a stock move.  A user can create a procurement manually and from v8, a sale order creates a procurement in Customer.  When we run this procurement, it will create the delivery order based on the application of procurement rules.  
+A procurement does not need to be created by a stock move however.  A user can create a procurement manually and when we confirm a sale order, OpenERP will create a procurement per sale order line in the Customers location.  Actually, this system of procurements, stock moves and procurement rules is used consistently throughout OpenERP.  Even in the simplest warehouse configuration, when we run the procurements generated from the sale order, these procurement rules will generate the delivery order.  
 
-When everything goes well, the procurement will pass through the following states: 
+Procurements will pass through the following states when everything goes well:
 
 - Confirmed: State when the procurement after the creation of the procurement
 - Running: A procurement rule has been applied successfully (=> created a move or quotation or manufacturing order)
@@ -168,7 +176,7 @@ When everything goes well, the procurement will pass through the following state
 
 It is however possible that the procurement goes into Exception when no procurement rule can be found or when it is not possible to apply the rule (e.g. no supplier defined for the product).  When the products are no longer necessary, it is possible to Cancel the procurement.  
 
-By default, the JIT scheduler is installed and the system will try to check the procurement immediately when it is confirmed.  If this would give performance issues, it is possible to uninstall this and then it will only run the procurements immediately generated by the sales order.  This will result in a delivery order, but the procurements generated by the delivery orders, will not be run.  This will however be done by the Scheduler.  
+By default, the JIT scheduler is installed and the system will try to check the procurement immediately when it is confirmed.  If this would give performance issues, it is possible to uninstall this and then it will only run the procurements immediately generated by the sales order.  This will result in a delivery order, but the procurements generated by the stock moves in the delivery order, will not be run.  This will however be done by the Scheduler.  
 
 A push rule can not be applied anymore when the rule was created from a pull rule, so pull rules kind of have priority over the push rules.  
 
@@ -177,20 +185,23 @@ A push rule can not be applied anymore when the rule was created from a pull rul
 Procurement method of stock moves and procurement rules
 =======================================================
 
-Whether a confirmed stock move created a procurement in the source location and applied the procurement rules, depends on its procurement method.  It has to be 'Advanced: apply procurement rules and wait for availability'
+Whether a confirmed stock move created a procurement in the source location and applied the procurement rules, depends on its procurement method.  It has to be 'Advanced: apply procurement rules'
 
-When a user creates a stock move in a picking, the stock move will have its procurement method 'Default: Take from stock when available'.  This means it will not create a procurement in the source location created to the move and will try to find the products in the available stock of the source location.  This is also the most logical thing to do when some goods need to be transferred internally for example to put not much requested products to the back of the warehouse.  
+When a user creates a stock move in a picking, the stock move will have its procurement method 'Default: Take from stock'.  This means it will not create a procurement in the source location created to the move and will try to find the products in the available stock of the source location.  This is also the most logical thing to do when some goods need to be transferred internally for example to move death stock to the back of the warehouse.  
 
-If the user chooses however to change the procurement method to 'Advanced: Apply procurement rules', a procurement will be created in the source location.  And for example, creating a delivery order could lead in the simplest case (with purchase) to creating a purchase order the delivery order will be waiting for.  This is also only interesting for internal or outgoing pickings.  Incoming shipments do not need to reserve stock, so they are always 'Default: take from stock'
+If the user chooses however to change the procurement method to 'Advanced: Apply procurement rules', a procurement will be created in the source location.  And for example, creating a delivery order could lead in the simplest case (with purchase) to creating a purchase order the delivery order will be waiting for.  
 
-So, on itself, this is not too interesting.  However, when a procurement rule creates another move, it can determine the procurement method of the new move.  In other words, it can determine if the new move will again look for procurement rules or will take from the stock.  
+When you have procurement rules in a Pick > Pack > Ship configuration, it might be interesting to apply the procurement rules as it will generate the moves from stock to pack.  That way you can send something from the stock manually and still go through the pick/pack steps.  
+
+The procurement method is also only interesting for internal or outgoing pickings.  Incoming shipments do not need to reserve stock, so they are always 'Default: take from stock'.  
+
+
+Maybe you wonder how it is possible to create chains of more than two moves this way.  When a procurement rule creates another move, it can determine the procurement method of the new move.  In other words, it can determine if the new move will again look for procurement rules or will take from the stock.  
 
 This makes it possible to create long chains.  For example, an MTS product with pick pack ship, will start with the confirmation of a sales order.  This will create a procurement, which will create a move from Output to Customers with procurement method "Advanced: Apply procurement rules".  This will create procurement in Output.  This will continue like this until the procurement in Pack creates a stock move, which will have "Default: Take from stock" instead.  
 
 << Illustrate one from the chains from the Google Doc>>
 
-
-<!--When we create a sale order for an MTO product, a procurement will be created in Customers.  The rules will tell that this should be solved by a move with procure method "Create Procurement" from Stock to Customers.  This move will create a procurement in its source location that will be solved by a rule telling to buy from a supplier.  That way a chain is created of moves waiting for each other.  -->
 
 
 ========================
@@ -202,16 +213,12 @@ It is clear that the push and procurement rules allow to create long chain of mo
 * Destination move: The next move in the chain starting in the destination location of this move
 * Original moves: The previous move(s) in the chain all arriving in the source location
 
-When a move has original moves, it can only reserve stock that passed the original moves.  This is also why the state for these moves will go to Waiting Another Move instead.  
+When a move has original moves, it can only reserve stock that passed the original moves.  This is also why the state for these moves will go to Waiting Another Move instead of Waiting Availability.  
 
-A move can only have one destination move, but multiple orginal moves.  Suppose you have two moves that are chained.  When the first one is split, the second one has 2 original move and both moves have the same destination moves.  
+A move can only have one destination move, but multiple orginal moves.  Suppose you have two moves that are chained.  When the first one is split, the second one has 2 original moves and both moves have the same destination move.  
 
 If the second one is split however, the split move, won't have any original moves on itself, but will check if it has not been split from a move with original moves, and might as such also take the Waiting for Another Move state.  
 
-
-<!--Chained moves can be created with procurement rules, but another type of rule exists.  Push rules can be defined on destination locations.  When a move is confirmed and a push rules is defined on its destination location, it will create a move from the previous destination location towards a new destination location.  These rules come in handy when creating purchase orders manually and we want to receive in an Input location at the gates first, before transferring them to the stock in the racks.  Push rules will not be applied when the move was created from procurement rules.  On outgoing side, push rules will normally not be used.  
-
-One move can have several original moves, but only one destination move.  When confirming a move with original moves (or split from a move with original moves), the move will go to the waiting state (Waiting Another Move) as it will wait for its previous moves to be executed.  -->
 
 ========================================================
 Applied to MTO and MTS products and sale order and dates
@@ -319,7 +326,7 @@ A Route is a collection of procurement rules and push rules.  Routes can be appl
 * Warehouse
 * Sale Order Line (activated through setting Settings > Configuration > Sales > Choose MTO, Dropship, ... on sale order lines)
 
-If they can be applied on these models can be specified on the route itself.  For example, you could create a route 'buy' with the purchase procurement rule from stock in it allowed to be selected on Product Category.  Then you could go to the product category e.g. Purchased Goods and add it there. When a procurement is made in stock for the products in this category, the system will try to create purchase orders for it.  
+On the route itself you can specify if you let the user change it on one of the above models.  For example, MTO and buy routes will simply be configured on the product level and then the user can choose the routes he want in the product form.  
 
 
 
@@ -337,7 +344,7 @@ When OpenERP needs to find a procurement/push rule, it will check the routes tha
 * If it does not find any, it will try to find a rule from the route(s) on the product and product category (+ its parents)
 * If it does not find any there, it will try to find a rule from the route(s) on the warehouse
 
-If in any of these cases, multiple rules are found, it will select the rule with the highest sequence.  This sequence can be changed in Warehouse > Routes (drag/drop the lines).  Normally, this will play almost no role.  
+If in any of these cases, multiple rules are found, it will select the rule with the highest priority.  This sequence can be changed in Warehouse > Routes (drag/drop the lines).  Normally, this will play almost no role.  
 
 Actually, when you select MTO on a product, this is a route that is chosen.  As in the basic configuration, it is defined on the product. (it is shown in the product form in a special widget that shows all the possible elements it could have in the one2many and you can select them)  As such, this route will be chosen over the standard route and will have a rule that puts procure method "Create Procurement on Source" to stock. In the route MTO all such rules for all warehouses will be put in the standard configuration.  
 
@@ -348,14 +355,14 @@ The reason behind such a configuration is that in most situations, the routes fo
 How does the system choose the correct push rule
 ================================================
 
-Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category and afterwards it will search among all the routes. (???)
+Searching for a push rule is quite similar as for the pull rule.  It will however just search for the routes in the product and product category, then on those of the warehouse passed to the move or of the picking type of the move and then it will search anywhere.  
 
 
 =======================
 Simple Warehouse config
 =======================
 
-When you activate setting <<Activate push/pull rules >> and go to Warehouse > Warehouse and select a Warehouse (or create a new), you will have a simplified way to configure these routes without worrying about its complexity.  
+When you activate setting <<Advanced routes>> and go to Warehouse > Warehouse and select a Warehouse (or create a new), you will have a simplified way to configure these routes without worrying about its complexity.  
 
 For the incoming and outgoing shipments, you can supply how many steps are needed to receive or ship goods.  This allows you e.g. to receive at the docks, and move the goods later on into a precise location in your racks.  It can also be interesting to do some quality control.  For shipping, you can also put your products at the gates first, but you might also want to package them at a separate location before bringing them at the gates. These routes will be directly related to the warehouse.  
 
@@ -400,26 +407,31 @@ The removal strategy determines the order which stock gets reserved first.  By d
 
 A different removal strategy can be defined by product category and location.  For example, for a certain category of products LIFO (Last In First Out) could be chosen when taking products from its stock location.  
 
-
+Quants are a technical object defining the actual stock.  If you have for example 70 pieces of product A in location A, you can have one quant of 70 pieces, but it is also possible to have several quants where the quantities sum to 70.  This way it is easy for the system to reserve stock, by reserving the quants.  If it does not need the whole quant, it can be split. 
 
 ==================
 Packages and lots
 ==================
 
-Quants (stock) can be put in a package and a package can be put in another package.  The same hierarchical structure can be used as for locations.  When pack A is put in pack B, its full name becomes PACK B / PACK A.  
+Products can be put in a package and a package can be put in another package.  The same hierarchical system is used as is the case for the locations.  When pack A is put in pack B, its full name becomes PACK B / PACK A.  
 
+Lots are always linked to a certain product and can be put as being required depending on the incoming/outgoing/full traceability selected on the product. If a warehouse operator selects no lot (which you can only do if traceability is disabled), it can take any lot or without lot.  If he selects a lot, he has to take it. 
 
-Lots are always linked to a certain product and can be put as being required depending on the incoming/outgoing/full traceability selected on the product. If in a picking you do not select a lot, it can take any lot (or even without lot).  If you select a lot, it has to take it. 
+=============================
+Packaging and logistic units
+=============================
+Every package can have a packaging and a logistic unit.  The logistic unit determines the package itself e.g. it is a box 20x20x40 cm.  It is possible to put different products into the package. 
 
+A packaging is however related to one product and should be applied on homogeneous packages (with only one product).  It describes how the products are put on each other e.g. you can put 20 pieces in box 20x20x40cm and on pallet 0.80m x 1.20m you will have 3 layers of 24 boxes.  
 
 
 =======================
 Pack operations
 =======================
 
-In order to define the operations that can be proposed / executed by the bar code interface, we create / process pack operations.  The stock moves itself will tell nothing about (from) which package / location/lot to take, in which location / package to put the goods.  That is the job of the pack operations.  
+In order to define the operations that can be proposed / executed by the bar code interface, we create / process pack operations.  The stock moves itself will tell nothing about (from) which package / (specific)location/lot to take, in which (specific) location / package to put the goods.  That is the job of the pack operations.  
 
-There are actually 2 types of pack operation: 
+This is the model used by the bar code interface.  There are actually 2 types of pack operation: 
 
 * Take entire package
 * Take products from a certain package or not in a package
@@ -431,7 +443,7 @@ Preparing pack operations
 
 If a picking will be processed by the bar code scanner, OpenERP will propose the pack operations that need to be executed.  If it is an incoming shipment, it will be based on the moves, otherwise it will use the stock that has been reserved already.  
 
-The moves or reserved stock (quants) will be grouped by:
+Before creating the actual pack operations, OpenERP will group the moves or reserved stock (quants) by:
 
 * Lot: lot of the quant or empty if from stock move
 * Product: product of the quant or stock move
@@ -474,7 +486,8 @@ When using the bar code interface, the pack operations will be prepared as expla
 - Afterwards, the operator can process the products and mark as done.  That way they will get into operations done, instead of todo.  
 - The operator can also change source/destination location
 
-- If everything has been done, he can do "Create backorder", and then he needs to check if all the products have been done or not.  If only part has been done, OpenERP needs to create a backorder for it.  It is however more complicated than that.  The operator could have chosen other source/destination location or even create new pack operations with new products.  
+- If everything has been done and the operator took the correct products, it will also finish the picking.  
+If this is not the case, he can do "Create backorder", and then he needs to check if all the products have been done or not.  If only part has been done, OpenERP needs to create a backorder for it.  It is however more complicated than that.  The operator could have chosen other source/destination location or even create new pack operations with new products.  
 
 In order to manage all these possible changes, in the background, OpenERP is going to do a matching between the pack operations executed by the warehouse operator and the moves given as assignment beforehand.  
 It is also possible that the operator chooses other stock than was reserved at forehand.  In that case, OpenERP will need to redo the reservation of the stock.  
@@ -523,7 +536,7 @@ Cancellation
 
 When you cancel a procurement, it will cancel everything in the backwards direction. When you cancel a move itself, it will cancel in the forward direction. 
 
-This will happen only if the move has the attribute 'Propagate Cancel and Split' set to true.  Also, when a procurement rule (or a push rule) is applied to create another move, it will copy its 'Propagate Cancel and Split' on the move.  
+This will happen only if the move has the attribute 'Propagate Cancel and Split' set to true.  Also, when a procurement rule (or a push rule) is applied to create another move, it will copy its 'Propagate Cancel and Split' on the move.  On the procurement rules, it is actually true by default.  
 
 
 8 Inventory
@@ -537,8 +550,67 @@ You can decide to do a certain product or a certain location.  So, you are not r
 
 
 
-9 Examples pick pack ship
-**************************
+9 Use case: Small distribution Centre for a Warehouse Chain AllStore
+********************************************************************
+
+A use case can make a lot of concepts real. That is also why it might be interesting to think a while or to try to solve it yourself before reading the solution after the description of the use case.  
+
+===========
+Description
+===========
+
+AllStore wants to implement a small warehouse for 5 nearby shops.  These shops will be using the Point of Sale.  1 shop is rather big, the 4 others are really small.  Everyday a truck will go to the 5 shops as the fresh products need to be delivered every day.  Also a separate compartment in the truck is foreseen for the frozen products.  
+
+In the warehouse itself, we have docks for Input and Output.  The fresh goods will be crossdocked as much as possible as they will arrive early in the morning from the supplier and will then be processed and transferred to the stores on the same day.  
+
+The frozen goods will be received at the docks, but not far from the fresh products as it is a little colder over there.  Once processed, they will go into the freezer, where they will be taken from their pallets.  
+
+The frozen and fresh goods will be delivered from the supplier.  The frozen goods have a lot and expiry date on their individual packages and we won't enter them in the system as they expire that fast, but for the fresh goods, we need to supply the dates.  
+
+There also a lot of dry products, that are sometimes bought from a supplier and will sometimes arrive weekly from a truck from the main warehouse of AllStore.  
+
+For outbound, the dry products will be packaged before being shipped.  Also the frozen goods need to be picked for that.  The consolidation zone for frozen goods is however different than that for the normal dry goods.  
+
+The distribution centre is also used as a manufacturing plant for coffee.  The coffee will be supplied to the main warehouse and the material necessary will come from the stock.  The production manager will input the necessary production orders when necessary.  For every manufacturing order a separate order will be made for the raw coffee, but some secret ingredients will come from stock.  It is important to know which coffee is made from which lots.  
+
+
+
+========
+Solution
+========
+
+As modules, it is clear we need stock, point of sale, purchase, sale and manufacturing.  For the settings for the warehouse, we want to use multiple locations and advanced routes.  We also need packages, lots and expiry dates on those lots.  It is also in handy to see the UoMs as Apples and Pears will be measured by kg instead of by unit.  
+
+When we want to configure this in OpenERP, we will typically start by configuring the warehouses.  The logic for choosing the routes in OpenERP, is to first check those of the warehouse and then those of the product and product categories.  So, the logic for configuring, is to put the generic routes on the warehouses and to put exceptions on these general rules on product and product categories.  
+
+The default “Your Company” warehouse can be the main warehouse.  We skip this configuration as it is not our goal.  The only thing we know is that the coffee might be supplied from our distribution centre. 
+ 
+Then we configure the “Distribution Centre”.  As products always pass through the docks, by default it will be two step input and 3-step output (pick-pack-ship).  Dry products will follow this simple flow.  
+
+We will also manufacture and purchase in this warehouse.  (Will only be done when it is configured on the product, even if we check the checkbox).  We will not supply a default resupply warehouse as it might be bought, but the main warehouse will be one of the supply warehouses.  
+
+The shops can be created by using single step incoming/ outgoing  and each time the Distribution Centre as default resupply warehouse as the goods are always delivered to the shop from the Distribution Centre.  2-step incoming might be in handy for the bigger shop as it can be in handy to scan the goods upon arrival before putting everything into the store itself.  
+
+As fresh products are always crossdocked, we can create a category with fresh products and put the CrossDock route on it which was created.  This crossdock route, created by default, will always apply the procurement rules..  
+
+As it is not logical to run between the freezers and the dry products, their stocks should be separated and should be handled by different pull flows.  Frozen goods and dry products should be on different pickings when handled inside the warehouse.  (not for shipping)
+
+This means we will need to alter the routes and locations and provide 2 extra product categories (Frozen and Dry).  We can start by creating two child locations of Stock: Stock / Freezer and Stock /  Dry.  For the warehouse DC, 2 routes were created that need to be changed: 2 step inbound and 3-step pick pack ship.  We can duplicate those two routes for the frozen.  In the 4 routes we need to change the stock location to the stock/Freezer or stock/Dry accordingly.  
+
+On the product category Frozen Goods we will need to put the two duplicated routes.  That way, only the frozen goods will be sent to the freezer.  
+
+For the manufacturing of the coffee, production orders will be created manually upon need in dry stock, but the raw coffee beans as raw materials will 'apply the procurement rules' and need the MTO route.  The secret ingredients will be taken from the stock.  We should not forget to create a BoM for the Coffee with the Raw Coffee Beans and the Secret Ingredients in it.  
+
+As the routes have been configured, we can create products.  As the products will be handled by the PoS in the shops, it would be nice if at least some of them can have minimum stock rules in order to replenish them there.  So we need to define reordering rules (= minimum stock rules) for these products in the Shop1 / Stock location and Shop2 / Stock location.  For the fresh products, this is all we need to do as they will be crossdocked in the Distribution Centre and this will work MTO.  For the frozen and dry products, we need to define an orderpoint in the stock of the Distribution Centre also.  Take care that the orderpoint is defined in DC/Stock/Freezer and not DC/Stock for example.  No rule will be found in Stock.  
+
+Putaway strategies can be interesting in order to find back our products easier and to give them a fixed location.  For example we can create a sub-category Stock / Freezer / Freezer A with a putaway strategy in Stock / Freezer with fixed location Freezer A.  
+
+For the fresh products, we need to supply a lot.  This can be done by selecting “Track All Lots” on the product form.  
+
+By default, products will have the buy route, but if they get resupplied from the main warehouse, it is possible to change on the product form.  Suppose even that you don't know for certain products as both strategies are possible.  So, if you uncheck buy, no route is active on the product form, the procurement will go into exception.  Then you can put the right route (buy or supply from main warehouse) as preferred route on the procurement.  
+
+
+
 
 
 
