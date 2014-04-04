@@ -375,6 +375,7 @@
                             <field name="posx"/>
                             <field name="posy"/>
                             <field name="posz"/>
+                            <field name="loc_barcode"/>
                         </group>
                     </group>
                     <separator string="Removal Strategies" groups="stock.group_adv_location"/>
@@ -585,11 +586,7 @@
         <menuitem action="action_location_form" id="menu_action_location_form" groups="stock.group_locations"
             parent="menu_stock_configuration" sequence="5"/>
 
-        <record model="ir.actions.act_window" id="action_product_location_tree">
-            <field name="context">{'product_id': active_id}</field>
-            <field name="name">Stock by Location</field>
-            <field name="res_model">stock.location</field>
-        </record>
+
         <record id="act_product_stock_move_open" model="ir.actions.act_window">
             <field name="context">{'search_default_done': 1,'search_default_product_id': active_id, 'default_product_id': active_id}</field>
             <field name="name">Moves</field>
@@ -719,12 +716,11 @@
                 <form string="Transfer" version="7.0">
                 <header>
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_assign" states="confirmed,partially_available" string="Check Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="force_assign" states="confirmed,partially_available" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="do_transfer" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="do_transfer" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', False), ('state', '!=', 'partially_available')]}"/>
-                    <button name="do_prepare_partial" string="Enter Transfer Details" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"/>
-                    <button name="do_print_delivery" string="Print Delivery Order" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '!=', 'outgoing'), ('state', '!=', 'done')]}"/>
+                    <button name="do_transfer" states="assigned" string="Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('pack_operation_exist', '=', True)]}"/>
+                    <button name="do_partial_open_barcode" string="Enter Transfer Details" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', True),('state','not in',('assigned', 'partially_available'))]}"/>
+                    <button name="open_barcode_interface" string="Open Barcode interface" groups="stock.group_stock_user" type="object" class="oe_highlight" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state','not in',('assigned', 'partially_available'))]}"/>
                     <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('state', '!=', 'assigned')]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="action_cancel" states="assigned,confirmed,partially_available,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
@@ -757,6 +753,7 @@
                     <notebook>
                         <page string="Products">
                             <separator string="Stock Moves" attrs="{'invisible': [('pack_operation_exist', '=', False)]}"/>
+<!-- 
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
                             <group>
                                 <group col="3"> 
@@ -782,6 +779,9 @@
                                     <field name="result_package_id" groups="stock.group_tracking_lot"/>
                                 </tree>
                             </field>
+-->
+                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
+                            <field name="pack_operation_exist" invisible="1"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
@@ -1249,12 +1249,6 @@
 
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 
-        <record id="action_stock_stock_ui" model="ir.actions.client">
-            <field name="name">Stock picking</field>
-            <field name="tag">stock.ui</field>
-            <field name="res_model">stock</field>
-        </record>
-
         <!--
             Reception Picking (By Stock Move)
             From stock_partial_move_view
@@ -1361,29 +1355,6 @@
 
         <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="1"/>
 
-        <act_window
-            context="{'location': active_id}"
-            domain="[('type','&lt;&gt;','service')]"
-            id="act_product_location_open"
-            name="Products"
-            res_model="product.product"
-            src_model="stock.location"/>
-
-        <record id="ir_act_product_location_open" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">stock.location</field>
-            <field name="name">Products</field>
-            <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
-        </record>
-
-
-        <record id="ir_act_product_location_open" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">stock.location</field>
-            <field name="name">Open Products</field>
-            <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
-        </record>
-
 
          <record id="view_pickingtype_filter" model="ir.ui.view">
             <field name="name">stock.picking.type.filter</field>
@@ -1465,7 +1436,7 @@
                                 <div class="oe_kanban_content">
                                     <h4 class="oe_center"><field name="complete_name"/></h4>
                                     <div class="oe_right">
-                                        <a name="%(action_stock_stock_ui)d" type="action">
+                                        <a name="open_barcode_interface" type="object">
                                             <img src="/stock/static/src/img/scan.png" 
                                                 alt="Click to launch the barcode interface"
                                                 class="oe_stock_scan_image" title="Click to launch the barcode interface"/>
@@ -1615,7 +1586,6 @@
                                 <field name="qty_multiple" string="Quantity Multiple"/>
                             </group>
                             <group string="Misc">
-                                <field name="procurement_id" readonly="1"/>
                                 <field name="active" />
                             </group>
                         </group>                        
@@ -1646,14 +1616,6 @@
             src_model="stock.warehouse"
             groups="stock.group_stock_user"/>
 
-        <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
-            id="act_procurement_2_stock_warehouse_orderpoint"
-            name="Reordering Rules"
-            res_model="stock.warehouse.orderpoint"
-            src_model="procurement.order"
-            groups="stock.group_stock_user"/>
-
         <!-- Procurements -->
 
         <record id="view_procurement_form_stock_inherit" model="ir.ui.view">
@@ -1673,6 +1635,7 @@
                 </xpath>
                 <xpath expr="//field[@name='rule_id']" position="replace">
                     <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
+                    <field name="partner_dest_id"/>
                 </xpath>
             </field>
         </record>
@@ -1753,8 +1716,8 @@
                        <filter string='Owner' context="{'group_by' : 'owner_id'}" groups="stock.group_tracking_owner"/>
                        <filter string='Lot' context="{'group_by' : 'lot_id'}" groups="stock.group_production_lot"/>
                        <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
-                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Package' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
@@ -1970,7 +1933,8 @@
                         </div>
                         <group>
                             <group>
-                            <field name="packaging_id"/>
+                               <field name="ul_id"/>
+                               <field name="packaging_id"/>
                                <field name='company_id' groups="base.group_multi_company"/>
                                <field name='owner_id' groups="stock.group_tracking_owner"/>
                             </group>
@@ -1978,7 +1942,6 @@
                             <field name="location_id"/>
                             <field name="parent_id"/>
                             </group>
-                            
                         </group>
                         <notebook>
                             <page string="Content">
@@ -1999,6 +1962,7 @@
                                 <field name="children_ids">
                                     <tree string="Contained Packages">
                                         <field name="complete_name"/>
+                                        <field name="ul_id"/>
                                         <field name="packaging_id"/>
                                         <field name="location_id"/>
                                     </tree>
@@ -2006,7 +1970,6 @@
                             </page>
                         </notebook> 
                     </sheet>
-
                 </form>
             </field>
         </record>
@@ -2019,6 +1982,7 @@
             <field name="arch" type="xml">
                 <tree string="Package">
                     <field name="complete_name"/>
+                    <field name="ul_id"/>
                     <field name="packaging_id"/>
                     <field name="location_id"/>
                     <field name="company_id"/>
@@ -2028,11 +1992,12 @@
         <record id="quant_package_search_view" model="ir.ui.view">
             <field name="name">stock.quant.package.search</field>
             <field name="model">stock.quant.package</field>
-            <field eval="10" name="priority"/>            
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Package">
                     <field name="name" string="Package Name"/>
                     <field name="location_id"/>
+                    <field name="ul_id"/>
                     <field name="packaging_id"/>
                     <group  expand='0' string='Group by...'>
                        <filter string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
@@ -2051,7 +2016,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="product.group_stock_packaging"/>
+        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view" groups="stock.group_tracking_lot"/>
         
         
         <!--Routes-->
@@ -2145,7 +2110,7 @@
             <field name="res_model">stock.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-        <field name="domain">[('group_id','=',active_id)]</field>            
+        <field name="domain">[('group_id','=',active_id)]</field>
         </record>
         <record id="procurement_group_form_view_herited" model="ir.ui.view">
             <field name="name">procurement.group.form.herited</field>

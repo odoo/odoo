@@ -59,7 +59,7 @@
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':['|', ('is_only_child', '=', False), '&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
-                            type="action" attrs="{'invisible':['|', |', ('is_only_child', '=', False), ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                            type="action" attrs="{'invisible':['|', '|', ('is_only_child', '=', False), ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
                             class="oe_link" groups="product.group_costing_method"/>
                     </div>
                 </field>

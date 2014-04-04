@@ -210,8 +210,6 @@ class EscposDriver(Thread):
             eprint.text(receipt['company']['name'] + '\n')
 
         eprint.set(align='center',type='b')
-        if check(receipt['shop']['name']):
-            eprint.text(receipt['shop']['name'] + '\n')
         if check(receipt['company']['contact_address']):
             eprint.text(receipt['company']['contact_address'] + '\n')
         if check(receipt['company']['phone']):
@@ -287,6 +285,7 @@ class EscposDriver(Thread):
                     +'/'+ str(receipt['date']['year']).zfill(4)
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
+
 
 driver = EscposDriver()
 

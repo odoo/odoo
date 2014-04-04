@@ -155,6 +155,8 @@ class purchase_order(osv.osv):
 
     def _get_picking_ids(self, cr, uid, ids, field_names, args, context=None):
         res = {}
+        for po_id in ids:
+            res[po_id] = []
         query = """
         SELECT picking_id, po.id FROM stock_picking p, stock_move m, purchase_order_line pol, purchase_order po
             WHERE po.id in %s and po.id = pol.order_id and pol.id = m.purchase_line_id and m.picking_id = p.id
@@ -164,10 +166,7 @@ class purchase_order(osv.osv):
         cr.execute(query, (tuple(ids), ))
         picks = cr.fetchall()
         for pick_id, po_id in picks:
-            if not res.get(po_id):
-                res[po_id] = [pick_id]
-            else:
-                res[po_id].append(pick_id)
+            res[po_id].append(pick_id)
         return res
 
     STATE_SELECTION = [
@@ -785,7 +784,7 @@ class purchase_order(osv.osv):
 
     def action_picking_create(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids):
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.partner_id.id}, context=context)
+            picking_id = self.pool.get('stock.picking').create(cr, uid, {'picking_type_id': order.picking_type_id.id, 'partner_id': order.dest_address_id.id or order.partner_id.id}, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
 
     def picking_done(self, cr, uid, ids, context=None):
@@ -1133,9 +1132,13 @@ class procurement_order(osv.osv):
 
     def propagate_cancel(self, cr, uid, procurement, context=None):
         if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
-            self.pool.get('purchase.order.line').action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
+            purchase_line_obj = self.pool.get('purchase.order.line')
+            if procurement.purchase_line_id.product_qty > procurement.product_qty and procurement.purchase_line_id.order_id.state == 'draft':
+                purchase_line_obj.write(cr, uid, [procurement.purchase_line_id.id], {'product_qty': procurement.purchase_line_id.product_qty - procurement.product_qty}, context=context)
+            else:
+                purchase_line_obj.action_cancel(cr, uid, [procurement.purchase_line_id.id], context=context)
         return super(procurement_order, self).propagate_cancel(cr, uid, procurement, context=context)
-        
+
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'buy':
             #make a purchase order for the procurement
@@ -1259,8 +1262,10 @@ class procurement_order(osv.osv):
         }
 
     def make_po(self, cr, uid, ids, context=None):
-        """ Make purchase order from procurement
-        @return: New created Purchase Orders procurement wise
+        """ Resolve the purchase from procurement, which may result in a new PO creation, a new PO line creation or a quantity change on existing PO line.
+        Note that some operations (as the PO creation) are made as SUPERUSER because the current user may not have rights to do it (mto product launched by a sale for example)
+
+        @return: dictionary giving for each procurement its related resolving PO line.
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
@@ -1281,19 +1286,19 @@ class procurement_order(osv.osv):
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
                 available_draft_po_ids = po_obj.search(cr, uid, [
                     ('partner_id', '=', partner.id), ('state', '=', 'draft'), ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id)], context=context)
+                    ('location_id', '=', procurement.location_id.id), ('company_id', '=', procurement.company_id.id), ('dest_address_id', '=', procurement.partner_dest_id.id)], context=context)
                 if available_draft_po_ids:
                     po_id = available_draft_po_ids[0]
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
                     available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
                     if available_po_line_ids:
                         po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
-                        po_line_obj.write(cr, uid, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)
+                        po_line_obj.write(cr, SUPERUSER_ID, po_line.id, {'product_qty': po_line.product_qty + line_vals['product_qty']}, context=context)
                         po_line_id = po_line.id
                         sum_po_line_ids.append(procurement.id)
                     else:
                         line_vals.update(order_id=po_id)
-                        po_line_id = po_line_obj.create(cr, uid, line_vals, context=context)
+                        po_line_id = po_line_obj.create(cr, SUPERUSER_ID, line_vals, context=context)
                         linked_po_ids.append(procurement.id)
                 else:
                     purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
@@ -1309,8 +1314,9 @@ class procurement_order(osv.osv):
                         'company_id': procurement.company_id.id,
                         'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
+                        'dest_address_id': procurement.partner_dest_id.id,
                     }
-                    po_id = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
+                    po_id = self.create_procurement_purchase_order(cr, SUPERUSER_ID, procurement, po_vals, line_vals, context=context)
                     po_line_id = po_obj.browse(cr, uid, po_id, context=context).order_line[0].id
                     pass_ids.append(procurement.id)
                 res[procurement.id] = po_line_id
@@ -1322,12 +1328,6 @@ class procurement_order(osv.osv):
         if sum_po_line_ids:
             self.message_post(cr, uid, sum_po_line_ids, body=_("Quantity added in existing Purchase Order Line"), context=context)
         return res
-
-    def _product_virtual_get(self, cr, uid, order_point):
-        procurement = order_point.procurement_id
-        if procurement and procurement.state != 'exception' and procurement.purchase_line_id and procurement.purchase_line_id.order_id.state in ('draft', 'confirmed'):
-            return None
-        return super(procurement_order, self)._product_virtual_get(cr, uid, order_point)
 
 
 class mail_mail(osv.Model):

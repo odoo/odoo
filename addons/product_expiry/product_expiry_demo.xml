@@ -19,6 +19,7 @@
             <field name="categ_id" search="[]" model="product.category"/>
             <field name="image" type="base64" file="product_expiry/static/img/product_product_jambon-image.jpg"/>
         </record>
+        
         <record id="product_package_jambon" model="product.packaging">
             <field name="name">box of 10</field>
             <field name="qty">12</field>
@@ -28,7 +29,6 @@
             <field name="product_id" ref="product_product_jambon" />
             <field name="ean"></field>
             <field name="weight">10</field>
-            <field name="weight_ul">240</field>
         </record>
 
         <record id="product_product_from" model="product.product">
@@ -57,7 +57,6 @@
             <field name="product_id" ref="product_product_from" />
             <field name="ean"></field>
             <field name="weight">10</field>
-            <field name="weight_ul">240</field>
         </record>
 
         <record id="product_product_pain" model="product.product">
@@ -86,7 +85,6 @@
             <field name="product_id" ref="product_product_pain" />
             <field name="ean"></field>
             <field name="weight">10</field>
-            <field name="weight_ul">240</field>
         </record>
 
         <record id="product_product_lait" model="product.product">
@@ -115,7 +113,6 @@
             <field name="product_id" ref="product_product_lait" />
             <field name="ean"></field>
             <field name="weight">10</field>
-            <field name="weight_ul">240</field>
         </record>
     </data>
 </openerp>

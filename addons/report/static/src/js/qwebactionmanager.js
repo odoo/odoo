@@ -6,8 +6,6 @@ openerp.report = function(instance) {
             var self = this;
             instance.web.blockUI();
             action = _.clone(action);
-            var eval_contexts = ([instance.session.user_context] || []).concat([action.context]);
-            action.context = instance.web.pyeval.eval('contexts',eval_contexts);
             _t =  instance.web._t;
 
             // QWeb reports
