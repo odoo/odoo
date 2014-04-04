@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $('.fa-thumbs-up ,.fa-thumbs-down').on('click', function (ev) {
+    $('.vote_up ,.vote_down').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var value = $link.attr("value")
@@ -34,7 +34,7 @@ $(document).ready(function () {
                     }
                 } else {
                     $link.parent().find("#vote_count").html(data['vote_count']);
-                    if (data == 0) {
+                    if (data['vote_count'] == 0) {
                         $link.parent().find(".text-success").removeClass("text-success");
                         $link.parent().find(".text-warning").removeClass("text-warning");
                     } else {
@@ -60,7 +60,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.fa-check-circle').on('click', function (ev) {
+    $('.accept_answer').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         openerp.jsonRpc("/forum/correct_answer", 'call', {
@@ -83,8 +83,11 @@ $(document).ready(function () {
                         $link.parent().append($warning);
                     }
                 } else {
-                    $link.parents().find(".oe_answer_true").removeClass("oe_answer_true").addClass('oe_answer_false');
-                    $link.removeClass("oe_answer_false").addClass('oe_answer_true');
+                    if (data) {
+                        $link.parents().find(".oe_answer_false").removeClass("oe_answer_false").addClass('oe_answer_true');
+                    } else {
+                        $link.parents().find(".oe_answer_true").removeClass("oe_answer_true").addClass('oe_answer_false');
+                    }
                 }
             });
         return true;

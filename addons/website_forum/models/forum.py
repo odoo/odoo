@@ -72,7 +72,7 @@ class Post(osv.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     def _get_votes(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, False)
+        res = dict.fromkeys(ids, 0)
         # Note: read_group is not returning all fields which we passed in list.when it will work uncomment this code and remove remaining code 
         #Vote = self.pool['website.forum.post.vote']
         #data = Vote.read_group(cr, uid, [('post_id','in', ids), ('user_id', '=', uid)], [ "post_id", "vote"], groupby=["post_id"], context=context)
@@ -84,7 +84,7 @@ class Post(osv.Model):
                     if vote.user_id.id == uid:
                         if vote.vote == '1':
                             res[post.id] = 1
-                        else:
+                        elif vote.vote == '-1':
                             res[post.id] = -1
         return res
 
@@ -177,7 +177,7 @@ class Post(osv.Model):
             help="Comments on forum post",
         ),
 
-        'user_vote':fields.function(_get_votes, string="My Vote", type='boolean',
+        'user_vote':fields.function(_get_votes, string="My Vote", type='integer',
             store={
                 'website.forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
                 'website.forum.post.vote': (_get_vote, [], 10),
