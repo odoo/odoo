@@ -2233,6 +2233,31 @@ class BaseModel(object):
                              self._name, order_part)
         return groupby_terms, orderby_terms
 
+    def _read_group_process_groupby(self, gb, fget, query):
+        print "==="*20
+        print gb
+        split = gb.split(':')
+        field_type = fget[split[0]]['type'] 
+        gb_function = split[1] if len(split) == 2 else None
+        temporal = field_type in ('date', 'datetime')
+        tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
+        qualified_field = self._inherits_join_calc(split[0], query)
+        if temporal:
+            if tz_convert:
+                qualified_field = "timezone('%s', timezone('UTC',%s))" % (context.get('tz', 'UTC'), qualified_field)
+            qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
+        if field_type == 'boolean':
+            qualified_field = "coalesce(%s,false)" % qualified_field
+        return {
+            'field': split[0],
+            'groupby': gb,
+            'type': field_type, 
+            'display_format': display_formats[gb_function or 'month'] if temporal else None,
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'tz_convert': tz_convert,
+            'qualified_field': qualified_field
+        }
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context={}, orderby=False, lazy=True):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2286,30 +2311,9 @@ class BaseModel(object):
             'year': dateutil.relativedelta.relativedelta(years=1)
         }
 
-        def process_groupby (gb):
-            split = gb.split(':')
-            field_type = fget[split[0]]['type'] 
-            gb_function = split[1] if len(split) == 2 else None
-            temporal = field_type in ('date', 'datetime')
-            tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
-            qualified_field = self._inherits_join_calc(split[0], query)
-            if temporal:
-                if tz_convert:
-                    qualified_field = "timezone('%s', timezone('UTC',%s))" % (context.get('tz', 'UTC'), qualified_field)
-                qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
-            if field_type == 'boolean':
-                qualified_field = "coalesce(%s,false)" % qualified_field
-            return {
-                'field': split[0],
-                'groupby': gb,
-                'type': field_type, 
-                'display_format': display_formats[gb_function or 'month'] if temporal else None,
-                'interval': time_intervals[gb_function or 'month'] if temporal else None,                
-                'tz_convert': tz_convert,
-                'qualified_field': qualified_field
-            }
-
-        annotated_groupbys = map(process_groupby, groupby[:1] if lazy else groupby)
+        groupby_list = groupby[:1] if lazy else groupby
+        annotated_groupbys = [self._read_group_process_groupby(gb, fget, query) 
+                                    for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
         order = orderby or ','.join([g['groupby'] for g in annotated_groupbys])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
@@ -2339,7 +2343,10 @@ class BaseModel(object):
 
         groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query, fget)
         from_clause, where_clause, where_clause_params = query.get_sql()
-        count_field = groupby_fields[0] if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')) else '_'
+        if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')):
+            count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
+        else:
+            count_field = '_'
 
         prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
