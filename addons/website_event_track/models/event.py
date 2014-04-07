@@ -25,12 +25,14 @@ from openerp.addons.website.models.website import slug
 
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
+    _order = 'name'
     _columns = {
         'name': fields.char('Event Track Tag')
     }
 
 class event_tag(osv.osv):
     _name = "event.tag"
+    _order = 'name'
     _columns = {
         'name': fields.char('Event Tag')
     }
