@@ -383,10 +383,10 @@
 
         <template id="vote">
             <div t-attf-class="box oe_grey">
-                <a t-attf-class="vote_up fa fa-thumbs-up #{post.user_vote == 1 and 'text-success' or ''}" 
+                <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''}" 
                     t-attf-id="#{post.id}" t-attf-value="1"/>
                 <span id="vote_count" t-esc="post.vote_count"/>
-                <a t-attf-class="vote_down fa fa-thumbs-down #{post.user_vote == -1 and 'text-warning' or ''}" 
+                <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
                     t-attf-id="#{post.id}" t-attf-value="-1"/>
                 <div>
                     votes
@@ -406,6 +406,9 @@
                             <span t-esc="question.child_count"/>
                             <span t-if="question.child_count&gt;1">Answers</span>
                             <span t-if="question.child_count&lt;=1">Answer</span>
+                        </div>
+                        <div>
+                            <a t-attf-id="#{question.id}" t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                         </div>
                     </div>
                     <div style="margin-left: 95px;">
@@ -477,8 +480,8 @@
                                 <t t-set="post" t-value="answer"/>
                             </t>
                             <div class="text-muted">
-                                <a t-attf-id="#{answer.id}" t-if="answer.correct" class="accept_answer fa fa-2x fa-check-circle oe_answer_true"/>
-                                <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="accept_answer fa fa-2x fa-check-circle oe_answer_false"/>
+                                <a t-attf-id="#{answer.id}" t-if="answer.correct" class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_true"/>
+                                <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_false"/>
                             </div>
                         </div>
                         <div style="margin-left: 95px;" class="clearfix">
@@ -739,7 +742,7 @@
                             <td>
                                 <span class="fa fa-thumbs-up"/>
                                 <span t-esc="up_votes"/>
-                                <span class="fa fa-thumbs-down "/>
+                                <span class="fa fa-thumbs-down"/>
                                 <span t-esc="down_votes"/>
                             </td>
                         </tr>

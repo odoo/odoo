@@ -71,23 +71,6 @@ class Post(osv.Model):
     _description = "Question"
     _inherit = ['mail.thread', 'website.seo.metadata']
 
-    def _get_votes(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        # Note: read_group is not returning all fields which we passed in list.when it will work uncomment this code and remove remaining code 
-        #Vote = self.pool['website.forum.post.vote']
-        #data = Vote.read_group(cr, uid, [('post_id','in', ids), ('user_id', '=', uid)], [ "post_id", "vote"], groupby=["post_id"], context=context)
-        #for rec in data:
-        #    res[rec[post_id][0]] = rec['vote']
-        for post in self.browse(cr, uid, ids, context=context):
-            if post.vote_ids:
-                for vote in post.vote_ids:
-                    if vote.user_id.id == uid:
-                        if vote.vote == '1':
-                            res[post.id] = 1
-                        elif vote.vote == '-1':
-                            res[post.id] = -1
-        return res
-
     def _get_vote_count(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
         for post in self.browse(cr, uid, ids, context=context):
@@ -134,6 +117,30 @@ class Post(osv.Model):
             result[statistic.post_id.id] = True
         return result.keys()
 
+    def _get_user_vote(self, cr, uid, ids, field_name, arg, context):
+        res = dict.fromkeys(ids, 0)
+        # Note: read_group is not returning all fields which we passed in list.when it will work uncomment this code and remove remaining code 
+        #Vote = self.pool['website.forum.post.vote']
+        #data = Vote.read_group(cr, uid, [('post_id','in', ids), ('user_id', '=', uid)], [ "post_id", "vote"], groupby=["post_id"], context=context)
+        #for rec in data:
+        #    res[rec[post_id][0]] = rec['vote']
+        for post in self.browse(cr, uid, ids, context=context):
+            for vote in post.vote_ids:
+                if vote.user_id.id == uid:
+                    if vote.vote == '1':
+                        res[post.id] = 1
+                    elif vote.vote == '-1':
+                        res[post.id] = -1
+        return res
+
+    def _get_user_favourite(self, cr, uid, ids, field_name, arg, context):
+        res = dict.fromkeys(ids, False)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        for post in self.browse(cr, uid, ids, context=context):
+            if user in post.favourite_ids:
+                res[post.id] = True
+        return res
+
     _columns = {
         'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('website.forum', 'Forum', required=True),
@@ -144,9 +151,11 @@ class Post(osv.Model):
         'write_uid': fields.many2one('res.users', 'Update by', select=True, readonly=True),
 
         'tags': fields.many2many('website.forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tag'),
-        'vote_ids':fields.one2many('website.forum.post.vote', 'post_id', 'Vote'),
+        'vote_ids':fields.one2many('website.forum.post.vote', 'post_id', 'Votes'),
+        'user_vote':fields.function(_get_user_vote, string="My Vote", type='integer'),
 
         'favourite_ids': fields.many2many('res.users', 'forum_favourite_rel', 'forum_id', 'user_id', 'Favourite'),
+        'user_favourite':fields.function(_get_user_favourite, string="My Favourite", type='boolean'),
 
         'state': fields.selection([('active', 'Active'), ('close', 'Close'),('offensive', 'Offensive')], 'Status'),
         'active': fields.boolean('Active'),
@@ -175,13 +184,6 @@ class Post(osv.Model):
             ],
             string='Post Messages',
             help="Comments on forum post",
-        ),
-
-        'user_vote':fields.function(_get_votes, string="My Vote", type='integer',
-            store={
-                'website.forum.post': (lambda self, cr, uid, ids, c={}: ids, ['vote_ids'], 10),
-                'website.forum.post.vote': (_get_vote, [], 10),
-            }
         ),
 
         'vote_count':fields.function(_get_vote_count, string="Votes", type='integer',

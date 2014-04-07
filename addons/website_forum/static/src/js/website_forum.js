@@ -95,6 +95,21 @@ $(document).ready(function () {
         return true;
     });
 
+    $('.favourite_question').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        openerp.jsonRpc("/forum/favourite_question", 'call', {
+            'post_id': $link.attr("id")})
+            .then(function (data) {
+                if (data) {
+                    $link.addClass("forum_favourite_question")
+                } else {
+                    $link.removeClass("forum_favourite_question")
+                }
+            });
+        return true;
+    });
+
     $('.comment_delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);

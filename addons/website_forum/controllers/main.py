@@ -542,6 +542,18 @@ class website_forum(http.Controller):
         Post.write( cr, uid, [post.id, post.parent_id.id], { 'correct': correct }, context=context)
         return correct
 
+    @http.route('/forum/favourite_question', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def favourite_question(self, **kwarg):
+        cr, uid, context = request.cr, request.uid, request.context
+        Post = request.registry['website.forum.post']
+        post = Post.browse(cr, uid, int(kwarg.get('post_id')), context=context)
+        favourite = False if post.user_favourite else True
+        favourite_ids = [(4, uid)]
+        if post.user_favourite:
+            favourite_ids = [(3, uid)]
+        Post.write( cr, uid, [post.id], { 'favourite_ids': favourite_ids }, context=context)
+        return favourite
+
     @http.route('/forum/<model("website.forum"):forum>/close/question/<model("website.forum.post"):post>', type='http', auth="user", multilang=True, website=True)
     def close_question(self, forum, post, **kwarg):
         cr, uid, context = request.cr, request.uid, request.context
