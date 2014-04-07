@@ -987,6 +987,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     hour: date.getHours(), 
                     minute: date.getMinutes() ,
                     isostring: date.toISOString(),
+                    localestring: date.toLocaleString(),
                 }, 
                 company:{
                     email: company.email,

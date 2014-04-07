@@ -206,7 +206,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -240,6 +240,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'source': initial_content,
                         'value': new_content,
                     }
+                    if t.get('gengo_translation'):
+                        new_trans['gengo_translation'] = t.get('gengo_translation')
+                        new_trans['gengo_comment'] = t.get('gengo_comment')
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
@@ -296,7 +299,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Helpers
     #------------------------------------------------------
-    @http.route(['/website/kanban/'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/website/kanban'], type='http', auth="public", methods=['POST'], website=True)
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
