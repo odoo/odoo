@@ -22,7 +22,7 @@
                             <td><span t-esc="line['s_date']"/></td>
                             <td><span t-esc="line['j_code']"/></td>
                             <td class="text-right">
-                                <span t-esc="formatLang(line['s_balance'], digits=2)"/>
+                                <span t-esc="formatLang(line['s_balance'] or 0, digits=2)"/>
                             </td>
                         </tr>
                     </tbody>
