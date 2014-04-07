@@ -14,6 +14,7 @@ import hashlib
 import os
 import re
 import simplejson
+import sys
 import time
 import urllib2
 import zlib
@@ -37,10 +38,14 @@ from openerp.http import request, serialize_exception as _serialize_exception
 
 _logger = logging.getLogger(__name__)
 
-env = jinja2.Environment(
-    loader=jinja2.PackageLoader('openerp.addons.web', "views"),
-    autoescape=True
-)
+if hasattr(sys, 'frozen'):
+    # When running on compiled windows binary, we don't have access to package loader.
+    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
+    loader = jinja2.FileSystemLoader(path)
+else:
+    loader = jinja2.PackageLoader('openerp.addons.web', "views")
+
+env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = simplejson.dumps
 
 #----------------------------------------------------------
@@ -359,7 +364,13 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((None, pattern))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):])))
+                    # Hack for IE, who limit 288Ko, 4095 rules, 31 sheets
+                    # http://support.microsoft.com/kb/262161/en
+                    if pattern == "static/lib/bootstrap/css/bootstrap.css":
+                        if include_remotes:
+                            r.insert(0, (None, fs2web(path[len(addons_path):])))
+                    else:
+                        r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(extension, mods=None, db=None, debug=False):
@@ -423,6 +434,15 @@ def set_cookie_and_redirect(redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
+
+def login_redirect():
+    url = '/web/login?'
+    if request.debug:
+        url += 'debug&'
+    return """<html><head><script>
+        window.location = '%sredirect=' + encodeURIComponent(window.location);
+    </script></head></html>
+    """ % (url,)
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
@@ -622,7 +642,7 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return http.local_redirect('/web', query=request.params)
+        return http.local_redirect('/web', query=request.params, keep_hash=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
@@ -635,7 +655,7 @@ class Home(http.Controller):
             }
             return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
         else:
-            return http.local_redirect('/web/login', query=request.params)
+            return login_redirect()
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -930,10 +950,11 @@ class Database(http.Controller):
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
-    def restore(self, db_file, restore_pwd, new_db):
+    def restore(self, db_file, restore_pwd, new_db, mode):
         try:
+            copy = mode == 'copy'
             data = base64.b64encode(db_file.read())
-            request.session.proxy("db").restore(restore_pwd, new_db, data)
+            request.session.proxy("db").restore(restore_pwd, new_db, data, copy)
             return ''
         except openerp.exceptions.AccessDenied, e:
             raise Exception("AccessDenied")
@@ -1589,8 +1610,8 @@ class Export(http.Controller):
             model, map(operator.itemgetter('name'), export_fields_list))
 
         return [
-            {'name': field_name, 'label': fields_data[field_name]}
-            for field_name in fields_data.keys()
+            {'name': field['name'], 'label': fields_data[field['name']]}
+            for field in export_fields_list
         ]
 
     def fields_info(self, model, export_fields):
@@ -1649,6 +1670,8 @@ class Export(http.Controller):
             for k, v in self.fields_info(model, export_fields).iteritems())
 
 class ExportFormat(object):
+    raw_data = False
+
     @property
     def content_type(self):
         """ Provides the format's content type """
@@ -1681,7 +1704,7 @@ class ExportFormat(object):
         ids = ids or Model.search(domain, 0, False, False, request.context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, request.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=request.context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
@@ -1734,6 +1757,8 @@ class CSVExport(ExportFormat, http.Controller):
         return data
 
 class ExcelExport(ExportFormat, http.Controller):
+    # Excel needs raw data to correctly handle numbers and date values
+    raw_data = True
 
     @http.route('/web/export/xls', type='http', auth="user")
     @serialize_exception
@@ -1755,14 +1780,20 @@ class ExcelExport(ExportFormat, http.Controller):
             worksheet.write(0, i, fieldname)
             worksheet.col(i).width = 8000 # around 220 pixels
 
-        style = xlwt.easyxf('align: wrap yes')
+        base_style = xlwt.easyxf('align: wrap yes')
+        date_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD')
+        datetime_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD HH:mm:SS')
 
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
+                cell_style = base_style
                 if isinstance(cell_value, basestring):
                     cell_value = re.sub("\r", " ", cell_value)
-                if cell_value is False: cell_value = None
-                worksheet.write(row_index + 1, cell_index, cell_value, style)
+                elif isinstance(cell_value, datetime.datetime):
+                    cell_style = datetime_style
+                elif isinstance(cell_value, datetime.date):
+                    cell_style = date_style
+                worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
         fp = StringIO()
         workbook.save(fp)
