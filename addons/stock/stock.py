@@ -1794,14 +1794,20 @@ class stock_move(osv.osv):
             #   to receive goods without triggering the push rules again (which would duplicate chained operations)
             if not move.move_dest_id and not move.origin_returned_move_id:
                 domain = [('location_from_id', '=', move.location_dest_id.id)]
-                if move.warehouse_id:
-                    domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]
                 #priority goes to the route defined on the product and product category
                 route_ids = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
                 rules = push_obj.search(cr, uid, domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence', context=context)
                 if not rules:
-                    #but if there's no rule matching, we try without filtering on routes
-                    rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
+                    #then we search on the warehouse if a rule can apply
+                    if move.warehouse_id:
+                        wh_route_ids = [x.id for x in move.warehouse_id.route_ids]
+                    elif move.picking_type_id and move.picking_type_id.warehouse_id:
+                        wh_route_ids = [x.id for x in move.picking_type_id.warehouse_id.route_ids]
+                    if wh_route_ids:
+                        rules = push_obj.search(cr, uid, domain + [('route_id', 'in', wh_route_ids)], order='route_sequence, sequence', context=context)
+                    if not rules:
+                        #if no specialized push rule has been found yet, we try to find a general one
+                        rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
                 if rules:
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
                     push_obj._apply(cr, uid, rule, move, context=context)
@@ -2978,6 +2984,8 @@ class stock_warehouse(osv.osv):
         wh_route_ids.append((4, crossdock_route_id))
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', values, crossdock_route_id, context=context)
         for pull_rule in pull_rules_list:
+            # Fixed cross-dock is logically mto
+            pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         #create route selectable on the product to resupply the warehouse from another one

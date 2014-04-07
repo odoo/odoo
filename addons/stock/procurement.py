@@ -347,7 +347,7 @@ class procurement_order(osv.osv):
         product_obj = self.pool.get('product.product')
         return product_obj._product_available(cr, uid,
                 [order_point.product_id.id],
-                {'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
+                context={'location': order_point.location_id.id})[order_point.product_id.id]['virtual_available']
 
     def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
