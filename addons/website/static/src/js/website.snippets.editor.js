@@ -1452,7 +1452,7 @@
 
             this.$overlay.find('[data-toggle="dropdown"]')
                 .on("mousedown", function () {
-                    self.$target.transfo({ hide: true });
+                    self.$target.transfo("hide");
                 });
         },
         resetTransfo: function () {
@@ -1480,7 +1480,7 @@
             this.resetTransfo();
         },
         onBlur : function () {
-            this.$target.transfo({ hide: true });
+            this.$target.transfo("hide");
         },
     });
 

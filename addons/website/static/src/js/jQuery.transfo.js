@@ -59,6 +59,39 @@ OTHER DEALINGS IN THE SOFTWARE.
                     });
                 },
 
+                toggle : function() {
+                    return this.each(function() {
+                        var $this = $(this);
+                        var transfo = $this.data('transfo');
+                        if (transfo) {
+                            transfo.settings.hide = !transfo.settings.hide;
+                            _showHide($this, transfo);
+                        }
+                    });
+                },
+
+                hide : function() {
+                    return this.each(function() {
+                        var $this = $(this);
+                        var transfo = $this.data('transfo');
+                        if (transfo) {
+                            transfo.settings.hide = true;
+                            _showHide($this, transfo);
+                        }
+                    });
+                },
+
+                show : function() {
+                    return this.each(function() {
+                        var $this = $(this);
+                        var transfo = $this.data('transfo');
+                        if (transfo) {
+                            transfo.settings.hide = false;
+                            _showHide($this, transfo);
+                        }
+                    });
+                },
+
                 settings :  function() {
                     if(this.length > 1) {
                         this.map(function () {
@@ -130,6 +163,8 @@ OTHER DEALINGS IN THE SOFTWARE.
             },0);
 
             _bind($this, transfo);
+            
+            _targetCss($this, transfo);
         }
 
         function _overwriteOptions ($this, transfo, settings) {
@@ -143,8 +178,6 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings = {};
 
             transfo.settings.angle=      transform.indexOf('rotate') != -1 ? parseFloat(transform.match(/rotate\(([^)]+)deg\)/)[1]) : 0;
-            var translatex = transform.match(/translateX\(([0-9.-]+)(%|px)\)/);
-            var translatey = transform.match(/translateY\(([0-9.-]+)(%|px)\)/);
             transfo.settings.scalex=     transform.indexOf('scaleX') != -1 ? parseFloat(transform.match(/scaleX\(([^)]+)\)/)[1]) : 1;
             transfo.settings.scaley=     transform.indexOf('scaleY') != -1 ? parseFloat(transform.match(/scaleY\(([^)]+)\)/)[1]) : 1;
 
@@ -154,6 +187,8 @@ OTHER DEALINGS IN THE SOFTWARE.
             transfo.settings.height = $this.innerHeight();
             transfo.settings.width = $this.innerWidth();
 
+            var translatex = transform.match(/translateX\(([0-9.-]+)(%|px)\)/);
+            var translatey = transform.match(/translateY\(([0-9.-]+)(%|px)\)/);
             transfo.settings.translate = "%";
 
             if (translatex && translatex[2] === "%") {
@@ -320,7 +355,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             }
             if (settings.translatey) {
                 trans = true;
-                transform += " translateY("+(settings.translate === "%" ? settings.translateyp+"%" : settings.translatey+"px")+"%) ";
+                transform += " translateY("+(settings.translate === "%" ? settings.translateyp+"%" : settings.translatey+"px")+") ";
             }
             if (settings.scalex != 1) {
                 trans = true;
@@ -345,7 +380,7 @@ OTHER DEALINGS IN THE SOFTWARE.
                     + "transform:" + transform + ";";
             }
 
-            css = css.replace(/;+/g, ';').replace(/^;+|;+$/g, '');
+            css = css.replace(/(\s*;)+/g, ';').replace(/^\s*;|;\s*$/g, '');
 
             $this.attr("style", css);
         }
@@ -365,19 +400,23 @@ OTHER DEALINGS IN THE SOFTWARE.
                 "left:" + settings.pos.left + "px;" +
                 "width:" + width + "px;" +
                 "height:" + height + "px;" +
-                "z-index:" + (transfo.settings.hide ? "-1" : "1000") + ";" +
                 "cursor: move;",
                 settings);
             transfo.$markup.find(">").css("transform", "scaleX("+(1/settings.scalex)+") scaleY("+(1/settings.scaley)+")");
 
+            _showHide($this, transfo);
+
+            transfo.settings.callback.call($this[0], $this);
+        }
+
+        function _showHide ($this, transfo) {
+            transfo.$markup.css("z-index", transfo.settings.hide ? -1 : 1000);
             if (transfo.settings.hide) {
                 transfo.$markup.find(">").hide();
                 transfo.$markup.find(".transfo-scaler-mc").show();
             } else {
                 transfo.$markup.find(">").show();
             }
-
-            transfo.settings.callback.call($this[0], $this);
         }
 
         function _destroy ($this) {
