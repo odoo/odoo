@@ -9,7 +9,7 @@ class hr_job(osv.osv):
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
         for job in self.browse(cr, uid, ids, context=context):
-            res[job.id] = "/jobs/detail/%s/" % job.id
+            res[job.id] = "/jobs/detail/%s" % job.id
         return res
 
     def job_open(self, cr, uid, ids, context=None):

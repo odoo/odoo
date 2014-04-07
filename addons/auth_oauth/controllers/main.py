@@ -15,6 +15,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 #----------------------------------------------------------
 # helpers
 #----------------------------------------------------------
@@ -30,10 +31,14 @@ def fragment_to_query_string(func):
                     var s = l.search ? (l.search === '?' ? '' : '&') : '?';
                     r = l.pathname + l.search + s + q;
                 }
+                if (r == l.pathname) {
+                    r = '/';
+                }
                 window.location = r;
             </script></head><body></body></html>"""
         return func(self, *a, **kw)
     return wrapper
+
 
 #----------------------------------------------------------
 # Controller
@@ -73,6 +78,9 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
     @http.route()
     def web_login(self, *args, **kw):
         ensure_db()
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
@@ -110,6 +118,7 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
         response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
         response.qcontext.update(providers=providers)
         return response
+
 
 class OAuthController(http.Controller):
 

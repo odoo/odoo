@@ -25,7 +25,7 @@
                 <separator/>
                 <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Pro-forma" icon="terp-gtk-media-pause" domain="['|', ('state','=','proforma'),('state','=','proforma2')]" help = "Pro-forma Invoices"/>
-                <filter string="Invoiced" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel'))]" help = "Open and Paid Invoices"/>
+                <filter string="Invoiced" name="current" icon="terp-check" domain="[('state','not in', ('draft','cancel','proforma','proforma2'))]" help = "Open and Paid Invoices"/>
                 <separator/>
                 <filter icon="terp-personal" string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]" help="Customer Invoices And Refunds"/>
                 <filter icon="terp-personal" string="Supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]" help="Supplier Invoices And Refunds"/>

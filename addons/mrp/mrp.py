@@ -29,6 +29,7 @@ from openerp.tools import float_compare
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp import SUPERUSER_ID
+from openerp.addons.product import _common
 
 #----------------------------------------------------------
 # Work Centers
@@ -322,7 +323,7 @@ class mrp_bom(osv.osv):
         """
         routing_obj = self.pool.get('mrp.routing')
         factor = factor / (bom.product_efficiency or 1.0)
-        factor = rounding(factor, bom.product_rounding)
+        factor = _common.ceiling(factor, bom.product_rounding)
         if factor < bom.product_rounding:
             factor = bom.product_rounding
         result = []
@@ -378,6 +379,8 @@ class mrp_bom(osv.osv):
 
 
 def rounding(f, r):
+    # TODO for trunk: log deprecation warning
+    # _logger.warning("Deprecated rounding method, please use tools.float_round to round floats.")
     import math
     if not r:
         return f

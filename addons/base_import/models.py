@@ -114,6 +114,8 @@ class ir_import(orm.TransientModel):
             elif field['type'] == 'one2many' and depth:
                 f['fields'] = self.get_fields(
                     cr, uid, field['relation'], context=context, depth=depth-1)
+                if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+                    f['fields'].append({'id' : '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': []})
 
             fields.append(f)
 
