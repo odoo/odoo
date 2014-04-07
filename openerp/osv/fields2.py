@@ -384,6 +384,8 @@ class Field(object):
         """ convert `value` from the cache to a valid value for export. The
             parameter `env` is given for managing translations.
         """
+        if env.context.get('export_raw_data'):
+            return value
         return bool(value) and ustr(value)
 
     def convert_to_display_name(self, value):
@@ -573,6 +575,8 @@ class Boolean(Field):
         return bool(value)
 
     def convert_to_export(self, value, env):
+        if env.context.get('export_raw_data'):
+            return value
         return ustr(value)
 
 
@@ -662,6 +666,11 @@ class Date(Field):
             datetime.strptime(value, DATE_FORMAT)
         return value or False
 
+    def convert_to_export(self, value, env):
+        if value and env.context.get('export_raw_data'):
+            return datetime.strptime(value, DATE_FORMAT).date()
+        return bool(value) and ustr(value)
+
 
 class Datetime(Field):
     """ Datetime field. """
@@ -677,6 +686,11 @@ class Datetime(Field):
                 value += " 00:00:00"
             datetime.strptime(value, DATETIME_FORMAT)
         return value or False
+
+    def convert_to_export(self, value, env):
+        if value and env.context.get('export_raw_data'):
+            return datetime.strptime(value, DATETIME_FORMAT)
+        return bool(value) and ustr(value)
 
 
 class Binary(Field):

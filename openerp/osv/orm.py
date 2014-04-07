@@ -1024,15 +1024,18 @@ class BaseModel(object):
         return lines
 
     @api.multi
-    def export_data(self, fields_to_export):
+    def export_data(self, fields_to_export, raw_data=False):
         """ Export fields for selected objects
 
             :param fields_to_export: list of fields
+            :param raw_data: True to return value in native Python type
             :rtype: dictionary with a *datas* matrix
 
             This method is used when exporting data via client menu
         """
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
+        if raw_data:
+            self = self.attach_env(self._env(export_raw_data=True))
         return {'datas': self.__export_rows(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
