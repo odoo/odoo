@@ -114,7 +114,7 @@
                     context: 'a',
                 });
                 //noinspection JSValidateTypes
-                editor.addCommand('image', {
+                editor.addCommand('cimage', {
                     exec: function (editor) {
                         image_dialog(editor);
                         return true;
@@ -131,7 +131,7 @@
                 });
                 editor.ui.addButton('Image', {
                     label: 'Image',
-                    command: 'image',
+                    command: 'cimage',
                     toolbar: 'insert,10',
                 });
 
@@ -1338,6 +1338,7 @@
         },
         start: function () {
             var self = this;
+
             this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
             this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
@@ -1361,37 +1362,48 @@
                 }
             });
 
-            if (this.media.$.nodeName === "IMG") {
-                this.$('[href="#editor-media-image"]').tab('show');
-            } else if (this.media.$.className.match(/(^|\s)media_iframe_video($|\s)/)) {
-                this.$('[href="#editor-media-video"]').tab('show');
-            } else if (this.media.$.className.match(/(^|\s)fa($|\s)/)) {
-                this.$('[href="#editor-media-icon"]').tab('show');
-            }
+            if (this.media) {
+                if (this.media.$.nodeName === "IMG") {
+                    this.$('[href="#editor-media-image"]').tab('show');
+                } else if (this.media.$.className.match(/(^|\s)media_iframe_video($|\s)/)) {
+                    this.$('[href="#editor-media-video"]').tab('show');
+                } else if (this.media.$.className.match(/(^|\s)fa($|\s)/)) {
+                    this.$('[href="#editor-media-icon"]').tab('show');
+                }
 
-            if ($(this.media.$).parent().data("oe-field") === "image") {
-                this.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+                if ($(this.media.$).parent().data("oe-field") === "image") {
+                    this.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+                }
             }
 
             return this._super();
         },
         save: function () {
             var self = this;
+            if (self.media) {
+                this.media.$.innerHTML = "";
+                if (this.active !== this.imageDialog) {
+                    this.imageDialog.clear();
+                }
+                if (this.active !== this.iconDialog) {
+                    this.iconDialog.clear();
+                }
+                if (this.active !== this.videoDialog) {
+                    this.videoDialog.clear();
+                }
+            } else {
+                var selection = this.editor.getSelection();
+                var range = selection.getRanges(true)[0];
+                this.media = new CKEDITOR.dom.element("img");
+                range.insertNode(this.media);
+                range.selectNodeContents(this.media);
+                this.active.media = this.media;
+            }
+
             var $el = $(self.media.$);
             setTimeout(function () {
                 $el.trigger("saved", self.media.$);
             },0);
-
-            this.media.$.innerHTML = "";
-            if (this.active !== this.imageDialog) {
-                this.imageDialog.clear();
-            }
-            if (this.active !== this.iconDialog) {
-                this.iconDialog.clear();
-            }
-            if (this.active !== this.videoDialog) {
-                this.videoDialog.clear();
-            }
 
             this.active.save();
 
@@ -1760,7 +1772,7 @@
          * which may not match the visual look of the element.
          */
         load_data: function () {
-            var classes = (this.media.$.className||"").split(/\s+/);
+            var classes = (this.media&&this.media.$.className||"").split(/\s+/);
             for (var i = 0; i < classes.length; i++) {
                 var cls = classes[i];
                 switch(cls) {
@@ -1813,7 +1825,7 @@
                         .attr('data-size', size)
                         .addClass(size)
                         .addClass(no_sizes);
-                if ((size && _.contains(classes, size)) || !selected) {
+                if ((size && _.contains(classes, size)) || (classes[2] === "" && !selected)) {
                     this.$preview.append($p.clone());
                     this.$('#fa-size').val(size);
                     $p.addClass('font-icons-selected');
@@ -1835,7 +1847,7 @@
         }),
         start: function () {
             this.$iframe = this.$("iframe");
-            var $media = $(this.media.$);
+            var $media = $(this.media && this.media.$);
             if ($media.hasClass("media_iframe_video")) {
                 var src = $media.data('src');
                 this.$("input#urlvideo").val(src);
@@ -1868,7 +1880,7 @@
             return false;
         },
         get_video: function (event) {
-            event.preventDefault();
+            if (event) event.preventDefault();
             var needle = this.$("input#urlvideo").val();
             var video_id;
             var video_type;
