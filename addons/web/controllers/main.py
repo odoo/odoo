@@ -1109,11 +1109,14 @@ class DataSet(openerpweb.Controller):
 
     def _call_kw(self, req, model, method, args, kwargs):
         # Temporary implements future display_name special field for model#read()
-        if method == 'read' and kwargs.get('context', {}).get('future_display_name'):
+        if method in ('read', 'search_read') and kwargs.get('context', {}).get('future_display_name'):
             if 'display_name' in args[1]:
-                names = dict(req.session.model(model).name_get(args[0], **kwargs))
+                if method == 'read':
+                    names = dict(req.session.model(model).name_get(args[0], **kwargs))
+                else:
+                    names = dict(req.session.model(model).name_search('', args[0], **kwargs))
                 args[1].remove('display_name')
-                records = req.session.model(model).read(*args, **kwargs)
+                records = getattr(req.session.model(model), method)(*args, **kwargs)
                 for record in records:
                     record['display_name'] = \
                         names.get(record['id']) or "%s#%d" % (model, (record['id']))
