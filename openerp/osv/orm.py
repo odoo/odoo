@@ -2233,7 +2233,7 @@ class BaseModel(object):
                              self._name, order_part)
         return groupby_terms, orderby_terms
 
-    def _read_group_process_groupby(self, gb, fget, query):
+    def _read_group_process_groupby(self, gb, fget, query, context):
         split = gb.split(':')
         field_type = fget[split[0]]['type'] 
         gb_function = split[1] if len(split) == 2 else None
@@ -2270,7 +2270,7 @@ class BaseModel(object):
             'qualified_field': qualified_field
         }
 
-    def _read_group_prepare_data(self, key, value, groupby_dict):
+    def _read_group_prepare_data(self, key, value, groupby_dict, context):
         """
             Helper method to sanitize the data received by read_group. The None
             values are converted to False, and the date/datetime are formatted,
@@ -2361,7 +2361,7 @@ class BaseModel(object):
         fget = self.fields_get(cr, uid, fields)
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
         groupby_list = groupby[:1] if lazy else groupby
-        annotated_groupbys = [self._read_group_process_groupby(gb, fget, query) 
+        annotated_groupbys = [self._read_group_process_groupby(gb, fget, query, context) 
                                     for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
         order = orderby or ','.join([g['groupby'] for g in annotated_groupbys])
@@ -2433,7 +2433,7 @@ class BaseModel(object):
             for d in fetched_data:
                 d.update(data_dict[d['id']])
 
-        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.iteritems()}, fetched_data)
+        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
         if lazy and groupby_fields[0] in self._group_by_full:
             # Right now, read_group only fill results in lazy mode (by default).
