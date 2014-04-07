@@ -332,7 +332,9 @@ class QWeb(orm.AbstractModel):
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
     def render_tag_esc(self, element, template_attributes, generated_attributes, qwebcontext):
-        inner = werkzeug.utils.escape(self.eval_str(template_attributes["esc"], qwebcontext))
+        options = json.loads(template_attributes.get('esc-options') or '{}')
+        widget = self.get_widget_for(options.get('widget', ''))
+        inner = widget.format(template_attributes['esc'], options, qwebcontext)
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
     def render_tag_foreach(self, element, template_attributes, generated_attributes, qwebcontext):
@@ -418,6 +420,9 @@ class QWeb(orm.AbstractModel):
     def get_converter_for(self, field_type):
         return self.pool.get('ir.qweb.field.' + field_type,
                              self.pool['ir.qweb.field'])
+
+    def get_widget_for(self, widget):
+        return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -839,6 +844,38 @@ class Contact(orm.AbstractModel):
         html = self.pool["ir.ui.view"].render(cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
 
         return HTMLSafe(html)
+
+class QwebWidget(osv.AbstractModel):
+    _name = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        return self.pool['ir.qweb'].eval_str(inner, qwebcontext)
+
+    def format(self, inner, options, qwebcontext):
+        return werkzeug.utils.escape(self._format(inner, options, qwebcontext))
+
+class QwebWidgetMonetary(osv.AbstractModel):
+    _name = 'ir.qweb.widget.monetary'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
+        precision = int(round(math.log10(display.rounding)))
+        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        lang_code = qwebcontext.context.get('lang') or 'en_US'
+        formatted_amount = self.pool['res.lang'].format(
+            qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
+        )
+        pre = post = u''
+        if display.position == 'before':
+            pre = u'{symbol} '
+        else:
+            post = u' {symbol}'
+
+        return u'{pre}{0}{post}'.format(
+            formatted_amount, pre=pre, post=post
+        ).format(symbol=display.symbol,)
 
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for
