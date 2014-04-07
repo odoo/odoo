@@ -1211,7 +1211,7 @@ class DataSet(http.Controller):
                 if method == 'read':
                     names = dict(request.session.model(model).name_get(args[0], **kwargs))
                 else:
-                    names = dict(request.session.model(model).name_search(args=args[0], **kwargs))
+                    names = dict(request.session.model(model).name_search('', args[0], **kwargs))
                 args[1].remove('display_name')
                 records = getattr(request.session.model(model), method)(*args, **kwargs)
                 for record in records:
