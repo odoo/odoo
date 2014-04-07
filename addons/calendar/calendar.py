@@ -714,7 +714,7 @@ class calendar_event(osv.Model):
         """
             Return date and time (from to from) based on duration with timezone in string :
             eg.
-            1) if user add duration for 2 hours, return : August-23-2013 at ( 04-30 To 06-30) (Europe/Brussels)
+            1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
             2) if event all day ,return : AllDay, July-31-2013
         """
         if context is None:
@@ -733,7 +733,7 @@ class calendar_event(osv.Model):
             time = _("AllDay , %s") % (event_date)
         elif meeting.duration < 24:
             duration = date + timedelta(hours=meeting.duration)
-            time = ("%s at ( %s To %s) (%s)") % (event_date, display_time, duration.strftime('%H-%M'), tz)
+            time = ("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime('%H-%M'), tz)
         else:
             time = ("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
         return time
