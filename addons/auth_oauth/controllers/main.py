@@ -2,6 +2,7 @@ import functools
 import logging
 
 import simplejson
+import urlparse
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
@@ -117,7 +118,8 @@ class OAuthController(http.Controller):
                 menu = state.get('m')
                 redirect = state.get('r')
                 url = '/web'
-                if redirect:
+                if redirect and not redirect.startswith('/auth_oauth/signin') and \
+                (not redirect.startswith('/web/login') or 'redirect' in urlparse.urlsplit(redirect).query):
                     url = redirect
                 elif action:
                     url = '/web#action=%s' % action
