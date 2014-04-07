@@ -1491,7 +1491,8 @@
 
             website.snippet.start_animation(true, this.$target);
 
-            this.$target.on("saved", self, function (event, item) {
+            $(document.body).on("media-saved", self, function (event, prev , item) {
+                self.editor.onBlur();
                 self.BuildingBlock.make_active($(item));
             });
 

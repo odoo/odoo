@@ -1400,14 +1400,16 @@
                 this.active.media = this.media;
             }
 
-            var $el = $(self.media.$);
-            setTimeout(function () {
-                $el.trigger("saved", self.media.$);
-            },0);
+            var $el = $(self.active.media.$);
 
             this.active.save();
 
             this.media.$.className = this.media.$.className.replace(/\s+/g, ' ');
+
+            setTimeout(function () {
+                $el.trigger("saved", self.active.media.$);
+                $(document.body).trigger("media-saved", [$el[0], self.active.media.$]);
+            },0);
 
             this._super();
         },
@@ -1918,6 +1920,7 @@
                     '<iframe src="'+this.get_url()+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>'+
                 '</div>');
             $(this.media.$).replaceWith($iframe);
+            this.media.$ = $iframe[0];
             this._super();
         },
         clear: function () {
