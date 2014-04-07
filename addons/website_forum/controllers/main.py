@@ -308,15 +308,16 @@ class website_forum(http.Controller):
         create_context = dict(context)
 
         Tag = request.registry['website.forum.tag']
-        tags = question.get('question_tags').strip('[]').replace('"','').split(",")
         question_tags = []
-        for tag in tags:
-            tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
-            if tag_ids:
-                question_tags.append((4,tag_ids[0]))
-            else:
-                question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
-
+        if question.get('question_tags').strip('[]'):
+            tags = question.get('question_tags').strip('[]').replace('"','').split(",")
+            for tag in tags:
+                tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
+                if tag_ids:
+                    question_tags.append((4,tag_ids[0]))
+                else:
+                    question_tags.append((0,0,{'name' : tag,'forum_id' : forum.id}))
+    
         new_question_id = request.registry['website.forum.post'].create(
             request.cr, request.uid, {
                 'user_id': uid,
@@ -396,10 +397,10 @@ class website_forum(http.Controller):
         vals = {
             'content': post.get('content'),
         }
-        if post.get('question_tag'):
+        question_tags = []
+        if post.get('question_tag').strip('[]'):
             Tag = request.registry['website.forum.tag']
             tags = post.get('question_tag').strip('[]').replace('"','').split(",")
-            question_tags = []
             for tag in tags:
                 tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
                 if tag_ids:
@@ -407,7 +408,7 @@ class website_forum(http.Controller):
                 else:
                     new_tag = Tag.create(cr, uid, {'name' : tag,'forum_id' : forum.id}, context=context)
                     question_tags.append(new_tag)
-            vals.update({'tags': [(6, 0, question_tags)], 'name': post.get('question_name')})
+        vals.update({'tags': [(6, 0, question_tags)], 'name': post.get('question_name')})
 
         post_id = post.get('answer_id') if post.get('answer_id') else post.get('question_id')
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
