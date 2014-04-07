@@ -109,32 +109,25 @@
 
         <!-- SURVEY -->
         <record model="ir.ui.view" id="survey_form">
-            <field name="name">survey_form</field>
+            <field name="name">Form view for survey</field>
             <field name="model">survey.survey</field>
-            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                     <header groups="base.group_survey_manager">
-                        <button name="action_test_survey" string="Test Survey" states="draft,open" type="object"/>
-                        <button name="action_send_survey" string="Invite people" states="open" type="object" class="oe_highlight" />
+                        <button name="action_test_survey" string="Test Survey" type="object"/>
                         <button name="action_print_survey" string="Print Survey" type="object"/>
-                        <button name="action_result_survey" string="View results" states="open,close,cancel" type="object" class="oe_highlight"/>
-                        <field name="stage_id" widget="statusbar" clickable="True" /> <!-- options="{'fold_field': 'fold'}" -->
-                        <field name="state" invisible="True" />
+                        <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight" />
+                        <button name="action_result_survey" string="View results" type="object" class="oe_highlight" />
+                        <field name="stage_id" widget="statusbar" clickable="True" />
                     </header>
-                    <sheet class="oe_survey">
-                        <div class="oe_title">
+                    <sheet>
+                        <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title" /></h1>
                         </div>
                         <notebook>
-                            <page string="Share">
-                                <field name="visible_to_user" />
-                                <field name="auth_required" />
-                                <field name="public_url" widget="url" attrs="{'invisible': [('visible_to_user', '=', False)]}"/>
-                            </page>
                             <page string="Edit Pages and Questions">
-                                <field name="page_ids" mode="tree" attrs="{'readonly':[('state','=','close')]}" context="{'default_survey_id': active_id}" nolabel="1">
+                                <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
                                     <tree>
                                         <field name="sequence" widget="handle"/>
                                         <field name="title"/>
@@ -143,28 +136,13 @@
                                 </field>
                             </page>
                             <page string="Select Options">
-                                <group nolabel="1" col="4">
-                                    <field name="user_input_limit" attrs="{'readonly':[('state','=','close')]}"/>
-                                    <label string="completed surveys" colspan="2"/>
-                                    <field name="users_can_go_back" colspan="4" />
-                                    <field name="res_model" attrs="{'invisible': True}"/>
+                                <group colspan="4">
+                                    <field name="users_can_go_back" string="User can come back in the previous page" />
+                                    <field name="auth_required" />
+                                    <field name="res_model" groups="base.group_no_one"/>
                                 </group>
                             </page>
-<!--                             <page string="User inputs">
-                                <field name="user_input_ids" mode="tree">
-                                    <tree>
-                                        <field name="date_create"/>
-                                        <field name="deadline"/>
-                                        <field name="type"/>
-                                        <field name="state"/>
-                                        <field name="token"/>
-                                        <field name="partner_id"/>
-                                        <field name="email"/>
-                                        <field name="user_input_line_ids"/>
-                                    </tree>
-                                </field>
-                            </page> -->
-                    </notebook>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -174,40 +152,20 @@
             </field>
         </record>
         <record model="ir.ui.view" id= "survey_tree">
-            <field name="name">survey_tree</field>
+            <field name="name">Tree view for survey</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'close';grey:state == 'draft';red:state == 'cancel'" string="Survey">
+                <tree string="Survey">
                     <field name="title" />
-                    <field name="state" />
-                    <field name="date_open" string="Opening date" />
-                    <field name="date_close" string="Closing date" />
+                    <field name="stage_id" />
                     <field name="tot_sent_survey" string="Invitations sent" />
                     <field name="tot_start_survey" string="Started" />
                     <field name="tot_comp_survey" string="Completed" />
                 </tree>
             </field>
         </record>
-        <record id="survey_search" model="ir.ui.view">
-            <field name="name">survey_search</field>
-            <field name="model">survey.survey</field>
-            <field name="arch" type="xml">
-                <search string="Search Survey">
-                    <field name="title" string="Survey"/>
-                    <filter string="Draft" domain="[('state','=', 'draft')]"/>
-                    <filter string="Open" domain="[('state','=','open')]"/>
-                    <filter string="Closed" domain="[('state','=','close')]"/>
-                    <filter string="Cancelled" domain="[('state','=','cancel')]"/>
-                    <separator/>
-                    <filter string="Not completed yet" name="unread_message" domain="[('user_input_ids.state', 'in', ['new', 'skip'])]"/>
-                    <group expand="1" string="Group by...">
-                        <filter string="Status" name="group_status" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_survey_kanban">
-            <field name="name">survey.kanban</field>
+        <record model="ir.ui.view" id="survey_kanban">
+            <field name="name">Kanban view for survey</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
@@ -229,11 +187,7 @@
                             <div class="oe_dropdown_toggle oe_dropdown_kanban" t-if="widget.view.is_action_enabled('edit')">
                                 <span class="oe_e">í</span> <!-- icon for dropdown menu -->
                                 <ul class="oe_dropdown_menu">
-                                    <!-- <li t-if="record.state.raw_value === 'open' &amp;&amp; record.visible_to_user.raw_value === true"><a name="action_start_survey" type="object">Start Survey...</a></li> -->
-                                    <!-- <li><a name="action_print_survey" type="object">Print Survey...</a></li> -->
-                                    <!-- <li><a name="%(action_selected_survey_user_input)d" type="action">View Answers...</a></li> -->
                                     <li><a type="edit">Survey Options</a></li>
-<!--                                     <li><a type="object" name="action_kanban_duplicate">Duplicate</a></li> -->
                                     <li t-if="widget.view.is_action_enabled('delete')"><a type="delete">Delete!</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -249,43 +203,26 @@
                                         <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
                                     </li>
                                     <li>
-                                        <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Send Invitations</a></t>
-                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Send Invitations</a></t>
+                                        <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Share &amp;amp; Invite</a></t>
+                                        <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
                                     </li>
                                     <li>
                                         <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyse Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
                                         <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyse Answers</a></t>
                                     </li>
                                 </ul></div>
-<!--                                 <div>
-                                    <center><b>
-                                        <a t-if="record.visible_to_user.raw_value === true" name="action_start_survey" type="object"><t t-esc="record.public_url.raw_value"/></a>
-                                        <t t-if="record.visible_to_user.raw_value === false">Survey only on invitation</t>
-                                    </b></center>
-                                </div>
- -->                            </div>
+                            </div>
                         </div>
                     </templates>
                 </kanban>
             </field>
         </record>
-<!--         <record model="ir.ui.view" id="survey_calendar">
-            <field name="name">survey.calendar</field>
-            <field name="model">survey.survey</field>
-            <field name="arch" type="xml">
-                <calendar string="Surveys Calendar" date_start="date_open" date_stop="date_close" color="state">
-                    <field name="title" />
-                </calendar>
-            </field>
-        </record>
- -->
 
         <record model="ir.actions.act_window" id="action_survey_form">
             <field name="name">Surveys</field>
             <field name="res_model">survey.survey</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="search_view_id" ref="survey_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Click to add a survey.</p>
                 <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>
@@ -297,35 +234,29 @@
 
         <!-- PAGES -->
         <record model="ir.ui.view" id="survey_page_form">
-            <field name="name">survey_page_form</field>
+            <field name="name">Form view for survey page</field>
             <field name="model">survey.page</field>
             <field name="arch" type="xml">
                 <form string="Survey Page" version="7.0" create="false">
-                    <sheet class="oe_survey">
-                        <group invisible="context.get('edit')" attrs="{'invisible': [('survey_id','!=',None)]}">
-                            <field name="survey_id"/>
-                        </group>
-                        <div class="oe_title">
+                    <sheet>
+                        <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
                             <h1><field name="title"/></h1>
                         </div>
-                        <field name="description" />
-                        <group nolabel="1">
-                            <field name="question_ids" nolabel="1" mode="tree" context="{'default_page_id': active_id}">
-                                <tree>
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="question"/>
-                                    <field name="type"/>
-                                    <field name="constr_mandatory"/>
-                                </tree>
-                            </field>
-                        </group>
+                        <field name="question_ids" nolabel="1" mode="tree" context="{'default_page_id': active_id}">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="question"/>
+                                <field name="type"/>
+                                <field name="constr_mandatory"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
         </record>
         <record model="ir.ui.view" id="survey_page_tree">
-            <field name="name">survey_page_tree</field>
+            <field name="name">Tree view for survey page</field>
             <field name="model">survey.page</field>
             <field name="arch" type="xml">
                 <tree string="Survey Page" create="false">
@@ -336,13 +267,13 @@
                 </tree>
             </field>
         </record>
-        <record id="view_survey_page_filter" model="ir.ui.view">
-            <field name="name">survey.page.list.select</field>
+        <record model="ir.ui.view" id="survey_page_search" >
+            <field name="name">Search view for survey page</field>
             <field name="model">survey.page</field>
             <field name="arch" type="xml">
-                <search string="Search Survey Page">
+                <search string="Search Page">
                     <field name="title" string="Page"/>
-                    <field name="survey_id"/>
+                    <field name="survey_id" string="Survey"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
@@ -351,121 +282,106 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_page_form">
-            <field name="name">Survey Pages</field>
+            <field name="name">Pages</field>
             <field name="res_model">survey.page</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="survey_page_tree"></field>
+            <field name="search_view_id" ref="survey_page_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
         </record>
         <act_window context="{'search_default_page_id': active_id, 'default_page_id': active_id}" id="act_survey_page_question" name="Questions" res_model="survey.question" src_model="survey.page"/>
-        <record model="ir.ui.view" id="survey_page_wizard_test1">
-            <field name="name">survey_page_wizard_test</field>
-            <field name="model">survey.page</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <form string="Survey Pages">
-                    <field name="title" colspan="4"/>
-                    <separator string="Description" colspan="4"/>
-<!--                     <field name="note" colspan="4" nolabel="1"/>
- -->                    <group colspan="4">
-                        <label string="" colspan="3"/>
-                        <button name="survey_save"  string="Ok" type="object" icon="gtk-go-forward"/>
-                    </group>
-                </form>
-            </field>
-        </record>
 
         <!-- QUESTIONS -->
         <record model="ir.ui.view" id="survey_question_form">
-            <field name="name">survey_question_form</field>
+            <field name="name">Form view for survey question</field>
             <field name="model">survey.question</field>
             <field name="arch" type="xml">
                 <form string="Survey Question" version="7.0" create="false">
-                    <sheet class="oe_survey">
-                        <group col="4">
-                            <!-- The question -->
-                            <group colspan="4">
-                                <field name="type" readonly="context.get('is_comment_question', False)"/>
-                                <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
-                                <field name="question" />
-                                <field name="description" />
-                            </group>
-                            <!-- Labels -->
-                            <group colspan="4" nolabel="1" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice', 'matrix'])]}">
-                                <field name="display_mode" string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
-                                <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
-                                <field name="labels_ids" colspan="4" nolabel="1" context="{'default_question_id': active_id}">
-                                    <tree editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Answer choices"/>
-                                    </tree>
-                                </field>
-                                <field name="labels_ids_2" colspan="4" nolabel="1" context="{'default_question_id_2': active_id}" attrs="{'invisible':[('type','not in',['matrix'])]}">
-                                    <tree editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Rows labels"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            <!-- Question validation -->
-                            <group colspan="4" nolabel="1" invisible="context.get('is_comment_question', False)">
-                                <field name="constr_mandatory" string="Is this question mandatory?"/>
-                                <group colspan="4" attrs="{'invisible':[('constr_mandatory','=',False)]}">
-                                    <group colspan="4" col="4" attrs="{'invisible':[('type','not in',['matrix'])]}">
-                                        <field name="constr_type" string="Users must answer..."/>
-                                        <field name="constr_minimum_req_ans" nolabel="1" attrs="{'invisible':[('constr_type','not in',['at least','a range'])]}" />
-                                        <field name="constr_maximum_req_ans" nolabel="1" attrs="{'invisible':[('constr_type','not in',['at most','a range', 'exactly'])]}" />
-                                    </group>
-                                    <field colspan="2" name="constr_error_msg" string="Error message"/>
-                                </group>
-                            </group>
-                            <!-- Answer validation -->
-                            <group colspan="4" col="4" nolabel="1" attrs="{'invisible':[('type','not in',['textbox'])]}">
-                                <group>
-                                    <field name="validation_required" colspan="2"/>
-
-                                    <group colspan="4" col="4" attrs="{'invisible':[('validation_required','=',False)]}">
-                                        <field name="validation_type" />
-                                        <field name="validation_error_msg" />
-                                        <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','has_length')]}">
-                                            <field name="validation_length_min" string="between"/>
-                                            <field name="validation_length_max" string="and"/>
-                                        </group>
-                                        <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_decimal')]}">
-                                            <field name="validation_min_float_value" string="between"/>
-                                            <field name="validation_max_float_value" string="and"/>
-                                        </group>
-                                        <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_integer')]}">
-                                            <field name="validation_min_int_value" string="between"/>
-                                            <field name="validation_max_int_value" string="and"/>
-                                        </group>
-                                        <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_date')]}">
-                                            <field name="validation_min_date" string="between"/>
-                                            <field name="validation_max_date" string="and"/>
-                                        </group>
-                                    </group>
-                                </group>
-                            </group>
-                            <!-- Comments -->
-                            <group colspan="4" nolabel="1" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
-                                <field name='comments_allowed' />
-                                <group colspan="4" attrs="{'invisible':[('comments_allowed','=',False)]}">
-                                    <field name='comment_count_as_answer' attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice'])]}" />
-                                    <field colspan="4" nolabel="1" name="comment_children_ids" context="{'default_parent_id': active_id, 'default_type': 'textbox', 'is_comment_question': True}" widget="many2man_tags">
-                                        <tree>
-                                            <field name="question" string="Comment question (only one question allowed, others will be ignored)"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                            </group>
+                    <sheet>
+                        <div class="oe_title" style="width: 100%;">
+                            <label for="question" string="Question name" class="oe_edit_only"/>
+                            <h1><field name="question" colspan="4"/></h1>
+                            <separator />
+                        </div>
+                        <group>
+                            <field name="type" widget="radio" />
                         </group>
+                        <notebook>
+                            <page string="Answers">
+
+                                <p>ici nouveau parametre de validation des emails</p>
+
+                                <label for="labels_ids" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}" />
+                                <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="value" string="Answers"/>
+                                    </tree>
+                                </field>
+                                <separator />
+                                <label for="labels_ids_2" attrs="{'invisible': [('type', '!=', 'matrix')]}" />
+                                <field name="labels_ids_2" context="{'default_question_id_2': active_id}" attrs="{'invisible': [('type', '!=', 'matrix')]}">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="value" string="Answers"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Options">
+                                <group string="Constraints" >
+
+                                    <field name="constr_mandatory" string="Mandatory Answer"/>
+                                    <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
+
+                                    <group colspan="4" col="4" nolabel="1" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                        <group>
+                                            <field name="validation_required" colspan="2"/>
+
+                                            <group colspan="4" col="4" attrs="{'invisible':[('validation_required','=',False)]}">
+                                                <field name="validation_type" />
+                                                <field name="validation_error_msg" />
+                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','has_length')]}">
+                                                    <field name="validation_length_min" string="between"/>
+                                                    <field name="validation_length_max" string="and"/>
+                                                </group>
+                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_decimal')]}">
+                                                    <field name="validation_min_float_value" string="between"/>
+                                                    <field name="validation_max_float_value" string="and"/>
+                                                </group>
+                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_integer')]}">
+                                                    <field name="validation_min_int_value" string="between"/>
+                                                    <field name="validation_max_int_value" string="and"/>
+                                                </group>
+                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_date')]}">
+                                                    <field name="validation_min_date" string="between"/>
+                                                    <field name="validation_max_date" string="and"/>
+                                                </group>
+                                            </group>
+                                        </group>
+                                    </group>
+
+
+
+                                    <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
+                                </group>
+                                <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
+                                    <field name="display_mode" string="Format" attrs="{'invisible':[('type','not in',['simple_choice'])]}"/>
+                                    <field name="column_nb" string="Number of columns" attrs="{'invisible':[('display_mode','=','dropdown'), ('type','=','simple_choice')]}"/>
+                                </group>
+                                <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
+                                    <field name='comments_allowed' />
+                                    <field name='comments_message' attrs="{'invisible': [('comments_allowed', '=', False)]}"/>
+                                    <field name='comment_count_as_answer' attrs="{'invisible': [('comments_allowed', '=', False)]}" />
+                                </group>
+
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
         <record model="ir.ui.view" id="survey_question_tree">
-            <field name="name">survey_question_tree</field>
+            <field name="name">Tree view for survey question</field>
             <field name="model">survey.question</field>
             <field name="arch" type="xml">
                 <tree string="Survey Question" create="false">
@@ -477,32 +393,30 @@
                 </tree>
             </field>
         </record>
-        <record id="survey_question_search" model="ir.ui.view">
-            <field name="name">survey_question_search</field>
+        <record model="ir.ui.view" id="survey_question_search">
+            <field name="name">Search view for survey question</field>
             <field name="model">survey.question</field>
             <field name="arch" type="xml">
                 <search string="Search Question">
                     <field name="question" string="Question"/>
-                    <field name="survey_id"/>
-                    <field name="page_id"/>
-                    <field name="type"/>
-                    <group expand="1" string="Group by...">
-<!--                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
- -->                        <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
+                    <field name="survey_id" string="Survey"/>
+                    <field name="page_id" string="Page"/>
+                    <field name="type" string="Type"/>
+                    <group expand="1" string="Group By...">
+                        <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
+                        <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_question_form">
-            <field name="name">Survey Questions</field>
+            <field name="name">Questions</field>
             <field name="res_model">survey.question</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="survey_question_tree"></field>
             <field name="search_view_id" ref="survey_question_search"/>
-<!--             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_page': True}</field>
- -->            <field name="context">{'search_default_group_by_page': True}</field>
+            <field name="context">{'search_default_group_by_page': True}</field>
         </record>
 
         <!-- LABELS -->
@@ -531,7 +445,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_survey_label_form">
-            <field name="name">Survey Labels</field>
+            <field name="name">Labels</field>
             <field name="res_model">survey.label</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -589,7 +503,7 @@
                 <search string="Search User input lines">
                     <field name="user_input_id"/>
                     <field name="survey_id"/>
-                    <group expand="1" string="Group by...">
+                    <group expand="1" string="Group By...">
                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                         <filter name="group_by_user_input" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>
                     </group>
@@ -603,6 +517,22 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_response_line_search"/>
             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
+        </record>
+
+
+        <record model="ir.ui.view" id="survey_stage_form">
+            <field name="name">Form view for survey stage</field>
+            <field name="model">survey.stage</field>
+            <field name="arch" type="xml">
+                <form string="Stage">
+                    <group col='4' colspan='4'>
+                    <field name="name" />
+                    <field name="survey_open" />
+                    <field name="sequence" />
+                    <field name="fold" />
+                    </group>
+                </form>
+            </field>
         </record>
 
         <!-- MENU ELEMENTS -->

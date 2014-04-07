@@ -69,7 +69,7 @@ class survey_mail_compose_message(osv.TransientModel):
     }
 
     _defaults = {
-        'public': 'email_private',
+        'public': 'public_link',
         'survey_id': lambda self, cr, uid, ctx={}: ctx.get('model') == 'survey.survey' and ctx.get('res_id') or None
     }
 

@@ -108,6 +108,13 @@ class survey_survey(osv.Model):
             res[survey.id] = urljoin(base_url, "survey/start/%s" % slug(survey))
         return res
 
+    def _get_public_url_html(self, cr, uid, ids, name, arg, context=None):
+        """ Computes a public URL for the survey (html-embeddable version)"""
+        urls = self._get_public_url(cr, uid, ids, name, arg, context=context)
+        for id, url in urls.iteritems():
+            urls[id] = '<a href="%s">%s</a>' % (url, _("Click here to start survey"))
+        return urls
+
     def _get_print_url(self, cr, uid, ids, name, arg, context=None):
         """ Computes a printing URL for the survey """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid,
@@ -140,7 +147,7 @@ class survey_survey(osv.Model):
         'state': fields.selection(
             [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
             ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
-        'stage_id': fields.many2one('survey.stage', string="Stage"),
+        'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null"),
         'visible_to_user': fields.boolean('Public in website',
             help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
@@ -163,6 +170,8 @@ class survey_survey(osv.Model):
             type="boolean"),
         'public_url': fields.function(_get_public_url,
             string="Public link", type="char"),
+        'public_url_html': fields.function(_get_public_url_html,
+            string="Public link (html version)", type="char"),
         'print_url': fields.function(_get_print_url,
             string="Print link", type="char"),
         'result_url': fields.function(_get_result_url,
@@ -387,13 +396,13 @@ class survey_stage(osv.Model):
 
     _name = 'survey.stage'
     _description = 'Survey Stage'
-    _order = 'sequence'
+    _order = 'sequence asc'
 
     _columns = {
-        'name': fields.text(string="Name", required=True, translate=True),
+        'name': fields.char(string="Name", required=True, translate=True),
         'sequence': fields.integer(string="Sequence"),
-        'survey_open': fields.boolean(string="Display these surveys?"),
-        'fold': fields.boolean(string="Folded column by default")
+        'survey_open': fields.boolean(string="Closed", help="If closed, people won't be able to answer to surveys in this column."),
+        'fold': fields.boolean(string="Folded in kanban view")
     }
     _defaults = {
         'sequence': 1,
@@ -470,25 +479,25 @@ class survey_question(osv.Model):
         'sequence': fields.integer(string='Sequence'),
 
         # Question
-        'question': fields.char('Question', required=1, translate=True),
+        'question': fields.char('Question Name', required=1, translate=True),
         'description': fields.html('Description', help="Use this field to add \
             additional explanations about your question", translate=True,
             oldname='descriptive_text'),
 
         # Answer
-        'type': fields.selection([('free_text', 'Long text zone'),
-                ('textbox', 'Text box'),
-                ('numerical_box', 'Numerical box'),
+        'type': fields.selection([('free_text', 'Long Text Zone'),
+                ('textbox', 'Text Input'),
+                ('numerical_box', 'Numerical Value'),
                 ('datetime', 'Date and Time'),
-                ('simple_choice', 'Multiple choice (one answer)'),
-                ('multiple_choice', 'Multiple choice (multiple answers)'),
-                ('matrix', 'Matrix')], 'Question Type', required=1),
-        'matrix_subtype': fields.selection([('simple', 'One choice per line'),
-            ('multiple', 'Several choices per line')], 'Matrix Type'),
+                ('simple_choice', 'Multiple choice: only one answer'),
+                ('multiple_choice', 'Multiple choice: multiple answers allowed'),
+                ('matrix', 'Matrix')], 'Type of Question', required=1),
+        'matrix_subtype': fields.selection([('simple', 'One choice per row'),
+            ('multiple', 'Multiple choices per row')], 'Matrix Type'),
         'labels_ids': fields.one2many('survey.label',
-            'question_id', 'Suggested answers', oldname='answer_choice_ids'),
+            'question_id', 'Types of answers', oldname='answer_choice_ids'),
         'labels_ids_2': fields.one2many('survey.label',
-            'question_id_2', 'Suggested answers'),
+            'question_id_2', 'Rows of the Matrix'),
         # labels are used for proposed choices
         # if question.type == simple choice | multiple choice
         #                    -> only labels_ids is used
@@ -497,23 +506,24 @@ class survey_question(osv.Model):
         #                    -> labels_ids_2 are the rows of the matrix
 
         # Display options
-        'column_nb': fields.selection([('12', '1 column choices'),
-                                       ('6', '2 columns choices'),
-                                       ('4', '3 columns choices'),
-                                       ('3', '4 columns choices'),
-                                       ('2', '6 columns choices')],
+        'column_nb': fields.selection([('12', '1'),
+                                       ('6', '2'),
+                                       ('4', '3'),
+                                       ('3', '4'),
+                                       ('2', '6')],
             'Number of columns'),
-        'display_mode': fields.selection([('columns', 'Columns'),
-                                          ('dropdown', 'Dropdown menu')],
+        'display_mode': fields.selection([('columns', 'Radio Buttons/Checkboxes'),
+                                          ('dropdown', 'Selection Box')],
                                          'Display mode'),
 
         # Comments
-        'comments_allowed': fields.boolean('Allow comments',
+        'comments_allowed': fields.boolean('Show Comments Field',
             oldname="allow_comment"),
+        'comments_message': fields.char('Comment Message', translate=True),
         'comment_children_ids': fields.many2many('survey.question',
             'question_comment_children_ids', 'comment_id', 'parent_id',
             'Comment question'),  # one2one in fact
-        'comment_count_as_answer': fields.boolean('Comment field is an answer choice',
+        'comment_count_as_answer': fields.boolean('Comment Field is an Answer Choice',
             oldname='make_comment_field'),
 
         # Validation
@@ -539,7 +549,7 @@ class survey_question(osv.Model):
                                             translate=True),
 
         # Constraints on number of answers (matrices)
-        'constr_mandatory': fields.boolean('Mandatory question',
+        'constr_mandatory': fields.boolean('Mandatory Answer',
             oldname="is_require_answer"),
         'constr_type': fields.selection([('all', 'all'),
             ('at least', 'at least'),
@@ -552,18 +562,18 @@ class survey_question(osv.Model):
         'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
             oldname='minimum_req_ans'),
         'constr_error_msg': fields.char("Error message",
-            oldname='req_error_msg'),
+            oldname='req_error_msg', translate=True),
         'user_input_line_ids': fields.one2many('survey.user_input_line',
                                                'question_id', 'Answers',
                                                domain=[('skipped', '=', False)]),
     }
     _defaults = {
-        'page_id': lambda s, cr, uid, c: c.get('page_id'),
+        'page_id': lambda self, cr, uid, context: context.get('page_id'),
         'sequence': 10,
         'type': 'free_text',
         'matrix_subtype': 'simple',
         'column_nb': '12',
-        'display_mode': 'dropdown',
+        'display_mode': 'columns',
         'constr_type': 'at least',
         'constr_minimum_req_ans': 1,
         'constr_maximum_req_ans': 1,
@@ -571,6 +581,7 @@ class survey_question(osv.Model):
                 _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'validation_required': False,
+        'comments_message': lambda s, cr, uid, c: _('If other, precise:'),
     }
     _sql_constraints = [
         ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
