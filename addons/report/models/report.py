@@ -479,11 +479,20 @@ class Report(osv.Model):
             command_args.extend(['--page-width', str(paperformat.page_width) + 'mm'])
             command_args.extend(['--page-height', str(paperformat.page_height) + 'mm'])
 
-        if specific_paperformat_args and specific_paperformat_args['data-report-margin-top']:
-            command_args.extend(['--margin-top',
-                                 str(specific_paperformat_args['data-report-margin-top'])])
+        if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
+            command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
         elif paperformat.margin_top:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
+
+        if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
+            command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
+        elif paperformat.dpi:
+            command_args.extend(['--dpi', str(paperformat.dpi)])
+
+        if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
+            command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
+        elif paperformat.header_spacing:
+            command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
         if paperformat.margin_left:
             command_args.extend(['--margin-left', str(paperformat.margin_left)])
@@ -493,12 +502,8 @@ class Report(osv.Model):
             command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
-        if paperformat.header_spacing:
-            command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
         if paperformat.header_line:
             command_args.extend(['--header-line'])
-        if paperformat.dpi:
-            command_args.extend(['--dpi', str(paperformat.dpi)])
 
         return command_args
 
