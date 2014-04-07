@@ -305,11 +305,10 @@ class TestNewFields(common.TransactionCase):
         """ test default values. """
         fields = ['discussion', 'body', 'author', 'size']
         defaults = self.env['test_new_api.message'].default_get(fields)
+        self.assertEqual(defaults, {'author': self.env.uid, 'size': 0})
 
-        self.assertFalse(defaults.get('discussion'))
-        self.assertFalse(defaults.get('body'))
-        self.assertEqual(defaults['author'], self.env.uid)
-        self.assertEqual(defaults['size'], 0)
+        defaults = self.env['test_new_api.mixed'].default_get(['number'])
+        self.assertEqual(defaults, {'number': 3.14})
 
 
 class TestMagicFields(common.TransactionCase):

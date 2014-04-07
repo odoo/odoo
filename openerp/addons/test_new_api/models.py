@@ -150,7 +150,7 @@ class Talk(Model):
 class MixedModel(Model):
     _name = 'test_new_api.mixed'
 
-    number      = fields.Float(digits=(10, 2))
+    number      = fields.Float(digits=(10, 2), default=3.14)
     date        = fields.Date()
     lang        = fields.Selection(string='Language', selection='_get_lang')
     reference   = fields.Reference(string='Related Document', selection='_reference_models')

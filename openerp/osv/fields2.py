@@ -56,36 +56,12 @@ def _check_value(value):
     return value.get() if isinstance(value, SpecialValue) else value
 
 
-def default(value):
+def default_compute(field, value):
     """ Return a compute function that provides a constant default value. """
-    def compute(field, records):
+    def compute(records):
         for record in records:
             record[field.name] = value
-
-    return compute
-
-
-def compute_related(field, records):
-    """ Compute the related `field` on `records`. """
-    for record in records:
-        # bypass access rights check when traversing the related path
-        value = record.sudo() if record.id else record
-        for name in field.related:
-            value = value[name]
-        record[field.name] = value
-
-def inverse_related(field, records):
-    """ Inverse the related `field` on `records`. """
-    for record in records:
-        other = record
-        for name in field.related[:-1]:
-            other = other[name]
-        if other:
-            other[field.related[-1]] = record[field.name]
-
-def search_related(field, records, operator, value):
-    """ Determine the domain to search on `field`. """
-    return [('.'.join(field.related), operator, value)]
+    return value if callable(value) else compute
 
 
 class MetaField(type):
@@ -113,9 +89,9 @@ class Field(object):
 
     store = True                # whether the field is stored in database
     depends = ()                # collection of field dependencies
-    compute = None              # name of model method that computes value
-    inverse = None              # name of model method that inverses field
-    search = None               # name of model method that searches on field
+    compute = None              # compute(recs) computes field on recs
+    inverse = None              # inverse(recs) inverses field on recs
+    search = None               # search(recs, operator, value) searches on self
     related = None              # sequence of field names, for related fields
 
     string = None               # field label
@@ -205,9 +181,9 @@ class Field(object):
 
         # determine dependencies, compute, inverse, and search
         self.depends = ('.'.join(self.related),)
-        self.compute = compute_related
-        self.inverse = inverse_related
-        self.search = search_related
+        self.compute = self._compute_related
+        self.inverse = self._inverse_related
+        self.search = self._search_related
 
         # copy attributes from field to self (readonly, required, etc.)
         for attr in dir(self):
@@ -217,6 +193,28 @@ class Field(object):
 
         # special case: related fields never have an inverse field!
         self.inverse_field = None
+
+    def _compute_related(self, records):
+        """ Compute the related field `self` on `records`. """
+        for record in records:
+            # bypass access rights check when traversing the related path
+            value = record.sudo() if record.id else record
+            for name in self.related:
+                value = value[name]
+            record[self.name] = value
+
+    def _inverse_related(self, records):
+        """ Inverse the related field `self` on `records`. """
+        for record in records:
+            other = record
+            for name in self.related[:-1]:
+                other = other[name]
+            if other:
+                other[self.related[-1]] = record[self.name]
+
+    def _search_related(self, records, operator, value):
+        """ Determine the domain to search on field `self`. """
+        return [('.'.join(self.related), operator, value)]
 
     # properties used by _setup_related() to copy values from related field
     _related_string = property(attrgetter('string'))
@@ -228,14 +226,23 @@ class Field(object):
 
     def _setup_regular(self, env):
         """ Setup the attributes of a non-related field. """
-        # retrieve dependencies from compute method
-        method = self.compute
-        if isinstance(method, basestring):
-            method = getattr(env[self.model_name], method)
+        recs = env[self.model_name]
 
-        self.depends = getattr(method, '_depends', ())
+        # remap compute, inverse an search to their expected type
+        if isinstance(self.compute, basestring):
+            self.compute = getattr(type(recs), self.compute)
+        elif hasattr(self, 'default'):
+            self.compute = default_compute(self, self.default)
+
+        if isinstance(self.inverse, basestring):
+            self.inverse = getattr(type(recs), self.inverse)
+        if isinstance(self.search, basestring):
+            self.search = getattr(type(recs), self.search)
+
+        # retrieve dependencies from compute method
+        self.depends = getattr(self.compute, '_depends', ())
         if callable(self.depends):
-            self.depends = self.depends(env[self.model_name])
+            self.depends = self.depends(recs)
 
     def _setup_dependency(self, path0, model, path1):
         """ Make `self` depend on `model`; `path0 + path1` is a dependency of
@@ -461,10 +468,8 @@ class Field(object):
         exc = Warning("Field %s is accessed before being computed." % self)
         records._cache[self] = FailedValue(exc)
 
-        if isinstance(self.compute, basestring):
-            return getattr(records, self.compute)()
-        elif callable(self.compute):
-            return self.compute(self, records)
+        if self.compute:
+            self.compute(records)
         else:
             raise Warning("No way to compute field %s" % self)
 
@@ -497,17 +502,13 @@ class Field(object):
 
     def determine_inverse(self, records):
         """ Given the value of `self` on `records`, inverse the computation. """
-        if isinstance(self.inverse, basestring):
-            getattr(records, self.inverse)()
-        elif callable(self.inverse):
-            self.inverse(self, records)
+        if self.inverse:
+            self.inverse(records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on `self`. """
-        if isinstance(self.search, basestring):
-            return getattr(records, self.search)(operator, value)
-        elif callable(self.search):
-            return self.search(self, records, operator, value)
+        if self.search:
+            return self.search(records, operator, value)
         else:
             return [(self.name, operator, value)]
 
