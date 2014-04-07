@@ -743,6 +743,7 @@
 
             this.set_active();
             this.$el.find('li[data-value] a').on('mouseenter mouseleave click', _.bind(this._mouse, this));
+            this.$el.not(':not([data-value])').find("a").on('mouseenter mouseleave click', _.bind(this._mouse, this));
             this.$target.on('snippet-style-reset', _.bind(this.set_active, this));
 
             this.start();

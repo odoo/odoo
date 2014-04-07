@@ -197,6 +197,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 
             transfo.active = {
                 "type": type,
+                "scalex": transfo.settings.scalex,
+                "scaley": transfo.settings.scaley,
                 "pageX": event.pageX,
                 "pageY": event.pageY,
                 "center": transfo.$center.offset(),
@@ -257,16 +259,20 @@ OTHER DEALINGS IN THE SOFTWARE.
                 var angle = settings.angle * rad;
                 var dx =   cdx*Math.cos(angle) - cdy*Math.sin(-angle);
                 var dy = - cdx*Math.sin(angle) + cdy*Math.cos(-angle);
-                if (transfo.active.type.indexOf("t") != -1) {
+                if (transfo.active.type.indexOf("t") != -1 && transfo.active.scaley > 0 ||
+                    transfo.active.type.indexOf("b") != -1 && transfo.active.scaley < 0) {
                     settings.scaley = dy / (settings.height/2);
                 }
-                if (transfo.active.type.indexOf("b") != -1) {
+                if (transfo.active.type.indexOf("b") != -1 && transfo.active.scaley > 0 ||
+                    transfo.active.type.indexOf("t") != -1 && transfo.active.scaley < 0) {
                     settings.scaley = - dy / (settings.height/2);
                 }
-                if (transfo.active.type.indexOf("l") != -1) {
+                if (transfo.active.type.indexOf("l") != -1 && transfo.active.scalex > 0 ||
+                    transfo.active.type.indexOf("r") != -1 && transfo.active.scalex < 0) {
                     settings.scalex = dx / (settings.width/2);
                 }
-                if (transfo.active.type.indexOf("r") != -1) {
+                if (transfo.active.type.indexOf("r") != -1 && transfo.active.scalex > 0 ||
+                    transfo.active.type.indexOf("l") != -1 && transfo.active.scalex < 0) {
                     settings.scalex = - dx / (settings.width/2);
                 }
                 if (settings.scaley > 0 && settings.scaley < 0.05) settings.scaley = 0.05;
