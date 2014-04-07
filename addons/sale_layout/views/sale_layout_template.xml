@@ -22,7 +22,7 @@
                     <tr class="text-right">
                         <td colspan="100">
                             <strong>Subtotal: </strong>
-                            <t t-esc="formatLang(p['subtotal'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"></t>
+                            <t t-esc="p['subtotal']"></t>
                         </td>
                     </tr>
                 </t>
@@ -31,7 +31,7 @@
                 <!-- Separator -->
                 <t t-if="'separator' in p['category'] and p['category'].separator is True">
                     <tr class="text-center">
-                        <td colspan="100">
+                        <td colspan="100" class="active">
                             ***
                         </td>
                     </tr>
