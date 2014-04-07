@@ -70,20 +70,23 @@ class TestNewFields(common.TransactionCase):
         finn = Category.create({'name': 'Finnley'})
         gabe = Category.create({'name': 'Gabriel'})
 
-        beth.parent = cath.parent = abel
-        ewan.parent = finn.parent = beth
-        gabe.parent = cath
+        cath.parent = finn.parent = gabe
+        abel.parent = beth.parent = cath
+        dean.parent = ewan.parent = finn
 
-        self.assertEqual(ewan.display_name, "Abel / Bethany / Ewan")
-        self.assertEqual(finn.display_name, "Abel / Bethany / Finnley")
-        self.assertEqual(beth.display_name, "Abel / Bethany")
-        self.assertEqual(gabe.display_name, "Abel / Catherine / Gabriel")
+        self.assertEqual(abel.display_name, "Gabriel / Catherine / Abel")
+        self.assertEqual(beth.display_name, "Gabriel / Catherine / Bethany")
+        self.assertEqual(cath.display_name, "Gabriel / Catherine")
+        self.assertEqual(dean.display_name, "Gabriel / Finnley / Dean")
+        self.assertEqual(ewan.display_name, "Gabriel / Finnley / Ewan")
+        self.assertEqual(finn.display_name, "Gabriel / Finnley")
+        self.assertEqual(gabe.display_name, "Gabriel")
 
         ewan.parent = cath
-        self.assertEqual(ewan.display_name, "Abel / Catherine / Ewan")
+        self.assertEqual(ewan.display_name, "Gabriel / Catherine / Ewan")
 
-        cath.parent = beth
-        self.assertEqual(ewan.display_name, "Abel / Bethany / Catherine / Ewan")
+        cath.parent = finn
+        self.assertEqual(ewan.display_name, "Gabriel / Finnley / Catherine / Ewan")
 
     def test_13_inverse(self):
         """ test inverse computation of fields """

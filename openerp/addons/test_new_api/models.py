@@ -54,9 +54,8 @@ class Category(Model):
                             inverse='_inverse_display_name')
 
     @one
-    @depends('name', 'parent')
+    @depends('name', 'parent.display_name')     # this definition is recursive
     def _compute_display_name(self):
-        # this definition is recursive
         if self.parent:
             self.display_name = self.parent.display_name + ' / ' + self.name
         else:

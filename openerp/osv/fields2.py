@@ -89,6 +89,7 @@ class Field(object):
 
     store = True                # whether the field is stored in database
     depends = ()                # collection of field dependencies
+    recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
     inverse = None              # inverse(recs) inverses field on recs
     search = None               # search(recs, operator, value) searches on self
@@ -259,6 +260,11 @@ class Field(object):
             fields = [model._fields[head]]
 
         for field in fields:
+            if field == self:
+                _logger.debug("Field %s is recursively defined", self)
+                self.recursive = True
+                continue
+
             field.setup(env)
 
             _logger.debug("Add trigger on %s to recompute %s", field, self)
@@ -491,8 +497,11 @@ class Field(object):
             # execute the compute method in DRAFT mode, so that assigned fields
             # are not written to the database
             with env.do_in_draft():
-                recs = record._in_cache_without(self)
-                self.compute_value(recs, check_exists=True)
+                if self.recursive:
+                    self.compute_value(record)
+                else:
+                    recs = record._in_cache_without(self)
+                    self.compute_value(recs, check_exists=True)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
