@@ -1817,8 +1817,8 @@
     website.editor.VideoDialog = website.editor.Media.extend({
         template: 'website.editor.dialog.video',
         events : _.extend({}, website.editor.Dialog.prototype.events, {
-            'blur input#urlvideo': 'get_video',
-            'blur input#embedvideo': 'get_embed_video',
+            'click input#urlvideo ~ button': 'get_video',
+            'click input#embedvideo ~ button': 'get_embed_video',
         }),
         start: function () {
             this.$iframe = this.$("iframe");
@@ -1845,12 +1845,17 @@
                     return video_id;
             }
         },
-        get_embed_video: function () {
+        get_embed_video: function (event) {
+            event.preventDefault();
             var embedvideo = this.$("input#embedvideo").val().match(/src=["']?([^"']+)["' ]?/);
-            this.$("input#urlvideo").val(embedvideo ? embedvideo[1] : "");
-            this.get_video();
+            if (embedvideo) {
+                this.$("input#urlvideo").val(embedvideo[1]);
+                this.get_video(event);
+            }
+            return false;
         },
-        get_video: function () {
+        get_video: function (event) {
+            event.preventDefault();
             var needle = this.$("input#urlvideo").val();
             var video_id;
             var video_type;
@@ -1876,6 +1881,7 @@
             this.$("#video_type").val(video_type);
 
             this.$iframe.attr("src", this.get_url());
+            return false;
         },
         save: function () {
             var video_id = this.$("#video_id").val();
