@@ -7,7 +7,6 @@
         id: 'event_buy_tickets',
         name: "Try to buy tickets for event",
         path: '/event',
-        testPath: '/(event|shop)',
         init: function () {
             var self = this;
             self.steps = [
@@ -39,12 +38,12 @@
                 {
                     title:     "Order Now",
                     waitFor:   'select[name="ticket-2"] option:contains(3):selected',
-                    element:   'button.btn-primary:contains("Order Now")',
+                    element:   '.btn-primary:contains("Order Now")',
                 },
                 {
                     title:     "Complete checkout",
                     waitFor:   '#top_menu .my_cart_quantity:contains(5)',
-                    element:   'form[action="/shop/confirm_order/"] button',
+                    element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");
@@ -64,7 +63,7 @@
                 {
                     title:     "Pay Now",
                     waitFor:   '#payment_method label:has(input:checked):has(img[title="transfer"])',
-                    element:   '.oe_sale_acquirer_button button[name="submit"]:visible',
+                    element:   '.oe_sale_acquirer_button .btn[name="submit"]:visible',
                 },
                 {
                     title:     "finish",

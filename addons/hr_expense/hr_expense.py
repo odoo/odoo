@@ -263,6 +263,10 @@ class hr_expense_expense(osv.osv):
 
             #convert eml into an osv-valid format
             lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)), eml)
+            journal_id = move_obj.browse(cr, uid, move_id, context).journal_id
+            # post the journal entry if 'Skip 'Draft' State for Manual Entries' is checked
+            if journal_id.entry_posted:
+                move_obj.button_validate(cr, uid, [move_id], context)
             move_obj.write(cr, uid, [move_id], {'line_id': lines}, context=context)
             self.write(cr, uid, ids, {'account_move_id': move_id, 'state': 'done'}, context=context)
         return True

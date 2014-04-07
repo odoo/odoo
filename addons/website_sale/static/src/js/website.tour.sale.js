@@ -7,7 +7,6 @@
         id: 'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
-        testPath: '/shop',
         init: function () {
             var self = this;
             self.steps = [
@@ -22,11 +21,11 @@
                 {
                     title:     "click on add to cart",
                     waitFor:   'input[name="product_id"]:eq(1)[checked]',
-                    element:   'form[action="/shop/add_cart/"] button',
+                    element:   'form[action="/shop/add_cart"] .btn',
                 },
                 {
                     title:     "add suggested",
-                    element:   'form[action="/shop/add_cart/"] button.btn-link:contains("Add to Cart")',
+                    element:   'form[action="/shop/add_cart"] .btn-link:contains("Add to Cart")',
                 },
                 {
                     title:     "add one more iPod",
@@ -47,19 +46,19 @@
                 {
                     title:     "go to checkout",
                     waitFor:   '#mycart_products input.js_quantity[value=1]',
-                    element:   'a[href="/shop/checkout/"]',
+                    element:   'a[href="/shop/checkout"]',
                 },
                 {
                     title:     "test with input error",
-                    element:   'form[action="/shop/confirm_order/"] button',
+                    element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         $("input[name='phone']").val("");
                     },
                 },
                 {
                     title:     "test without input error",
-                    waitFor:   'form[action="/shop/confirm_order/"] .has-error',
-                    element:   'form[action="/shop/confirm_order/"] button',
+                    waitFor:   'form[action="/shop/confirm_order"] .has-error',
+                    element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
                     onload: function (tour) {
                         if ($("input[name='name']").val() === "")
                             $("input[name='name']").val("website_sale-test-shoptest");
@@ -74,12 +73,12 @@
                 },
                 {
                     title:     "select payment",
-                    element:   '#payment_method label:has(img[title="transfer"]) input',
+                    element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
                 },
                 {
                     title:     "Pay Now",
-                    waitFor:   '#payment_method label:has(input:checked):has(img[title="transfer"])',
-                    element:   '.oe_sale_acquirer_button button[name="submit"]:visible',
+                    waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
+                    element:   '.oe_sale_acquirer_button .btn[name="submit"]:visible',
                 },
                 {
                     title:     "finish",

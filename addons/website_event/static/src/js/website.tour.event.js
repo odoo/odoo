@@ -65,7 +65,7 @@
                     popover:   { fixed: true },
                 },
                 {
-                    snippet:   'image-text',
+                    snippet:   '#snippet_structure .oe_snippet:eq(2)',
                     placement: 'bottom',
                     title:     _t("Drag & Drop a block"),
                     content:   _t("Drag the 'Image-Text' block and drop it in your page."),
@@ -80,7 +80,7 @@
                     popover:   { fixed: true },
                 },
                 {
-                    snippet:   'text-block',
+                    snippet:   '#snippet_structure .oe_snippet:eq(4)',
                     placement: 'bottom',
                     title:     _t("Drag & Drop a block"),
                     content:   _t("Drag the 'Text Block' in your event page."),
