@@ -153,14 +153,15 @@
                         <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
                     </div>
                     <span class="text-muted">— or —</span>
-                    <div class="form-group">
-                        <label for="iamgeurl">Image URL</label>
-                        <input type="text" name="url" class="form-control url" style="width: 300px;" id="iamgeurl" placeholder="http://openerp.com"/>
+                    <label for="iamgeurl">Image URL</label>
+                    <div class="form-group btn-group">
+                        <input type="text" name="url" class="form-control url" style="width: 320px; float: left;" id="iamgeurl" placeholder="http://openerp.com"/>
+                        <button class="btn btn-primary" type="submit">Add</button>
                     </div>
                 </div>
                 <input type="hidden" name="func"/>
-                <div class="existing-attachments"/>
                 <div class="help-block"/>
+                <div class="existing-attachments"/>
             </form>
         </div>
         <iframe src="about:blank" name="fileframe" class="hidden"/>

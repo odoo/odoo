@@ -1429,9 +1429,6 @@
                 this.$('input[type=file]').click();
             },
             'change input[type=file]': 'file_selection',
-            'change input[type=text]': function () {
-                this.$('form').submit();
-            },
             'submit form': 'form_submit',
             //'change input.url': 'preview_image',
             //'change select.image-style': 'preview_image',
