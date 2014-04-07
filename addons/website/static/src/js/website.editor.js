@@ -1590,8 +1590,12 @@
         try_remove: function (e) {
             var $help_block = this.$('.help-block').empty();
             var self = this;
-            var id = parseInt($(e.target).data('id'), 10);
+            var $a = $(e.target);
+            var id = parseInt($a.data('id'), 10);
             var attachment = _.findWhere(this.records, {id: id});
+            var $both = $a.parent().children();
+
+            $both.css({borderWidth: "5px", borderColor: "#f00"});
 
             return openerp.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'ir.attachment',
@@ -1607,6 +1611,7 @@
                     self.display_attachments();
                     return;
                 }
+                $both.css({borderWidth: "", borderColor: ""});
                 $help_block.replaceWith(openerp.qweb.render(
                     'website.editor.dialog.image.existing.error', {
                         views: prevented[id]
