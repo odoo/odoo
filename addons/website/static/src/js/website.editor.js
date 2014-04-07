@@ -1348,10 +1348,11 @@
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
                 if ($(event.target).is('[href="#editor-media-image"]')) {
                     self.active = self.imageDialog;
-                    self.$('.nav-tabs li.search').removeClass("hidden");
+                    self.$('li.search, li.previous, li.next').removeClass("hidden");
                 } else if ($(event.target).is('[href="#editor-media-icon"]')) {
                     self.active = self.iconDialog;
-                    self.$('.nav-tabs li.search').removeClass("hidden");
+                    self.$('li.search, li.previous, li.next').removeClass("hidden");
+                    self.$('.nav-tabs li.previous, .nav-tabs li.next').addClass("hidden");
                 } else if ($(event.target).is('[href="#editor-media-video"]')) {
                     self.active = self.videoDialog;
                     self.$('.nav-tabs li.search').addClass("hidden");
