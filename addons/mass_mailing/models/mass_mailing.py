@@ -448,8 +448,14 @@ class MassMailing(osv.Model):
             res[mailing.id] = val
         return res
 
-    def _get_edit_link(self, cr, uid, ids, name, args, context=None):
-        return dict((id, _('<a href="website_mail/email_designer?model=mail.mass_mailing&res_id=%s">Open with Visual Editor</a>') % id) for id in ids)
+    def _get_private_models(self, context=None):
+        return ['res.partner', 'mail.maass_mailing.contact']
+
+    def _get_auto_reply_to_available(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for mailing in self.browse(cr, uid, ids, context=context):
+            res[mailing.id] = mailing.mailing_model not in self._get_private_models(context=context)
+        return res
 
     def _get_mailing_model(self, cr, uid, context=None):
         return [
@@ -475,11 +481,6 @@ class MassMailing(osv.Model):
             domain="[('use_in_mass_mailing', '=', True), ('model', '=', mailing_model)]",
         ),
         'body_html': fields.html('Body'),
-        'edit_link': fields.function(
-            _get_edit_link, type='text',
-            string='Visual Editor',
-            help='Link to the website',
-        ),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',
@@ -494,12 +495,14 @@ class MassMailing(osv.Model):
         ),
         # mailing options
         'email_from': fields.char('From'),
+        'reply_in_thread': fields.boolean('Reply in thread'),
+        'reply_specified': fields.boolean('Specific Reply-To'),
+        'auto_reply_to_available': fields.function(
+            _get_auto_reply_to_available,
+            type='boolean', string='Reply in thread available'
+        ),
         'reply_to': fields.char('Reply To'),
         'mailing_model': fields.selection(_mailing_model, string='Type', required=True),
-        # 'reply_to_mode': fields.selection(
-        #     [('existing', 'Use existing lists'), ('new', 'Create a new list')],
-        #     string='Contact List Choice', required=True
-        # ),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
@@ -633,7 +636,39 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def on_change_mailing_model(self, cr, uid, ids, mailing_model, context=None):
-        return {'value': {'contact_list_ids': [], 'template_id': False, 'contact_nbr': 0}}
+        values = {
+            'contact_list_ids': [],
+            'template_id': False,
+            'contact_nbr': 0,
+            'auto_reply_to_available': not mailing_model in self._get_private_models(context),
+            'reply_in_thread': not mailing_model in self._get_private_models(context),
+            'reply_specified': mailing_model in self._get_private_models(context)
+        }
+        return {'value': values}
+
+    def on_change_reply_specified(self, cr, uid, ids, reply_specified, reply_in_thread, context=None):
+        if reply_specified == reply_in_thread:
+            return {'value': {'reply_in_thread': not reply_specified}}
+        return {}
+
+    def on_change_reply_in_thread(self, cr, uid, ids, reply_specified, reply_in_thread, context=None):
+        if reply_in_thread == reply_specified:
+            return {'value': {'reply_specified': not reply_in_thread}}
+        return {}
+
+    def on_change_contact_list_ids(self, cr, uid, ids, mailing_model, contact_list_ids, context=None):
+        values = {}
+        list_ids = []
+        for command in contact_list_ids:
+            if command[0] == 6:
+                list_ids += command[2]
+        if list_ids:
+            values['contact_nbr'] = self.pool[mailing_model].search(
+                cr, uid,
+                self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, list_ids, context=context)[mailing_model],
+                count=True, context=context
+            )
+        return {'value': values}
 
     def on_change_template_id(self, cr, uid, ids, template_id, context=None):
         values = {}
@@ -714,6 +749,15 @@ class MassMailing(osv.Model):
             'context': ctx,
         }
 
+    def action_edit_html(self, cr, uid, ids, context=None):
+        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d' % ids[0]
+        return {
+            'name': _('Open with Visual Editor'),
+            'type': 'ir.actions.act_url',
+            'url': url,
+            'target': 'self',
+        }
+
     #------------------------------------------------------
     # Email Sending
     #------------------------------------------------------
@@ -758,54 +802,27 @@ class MassMailing(osv.Model):
 
     def send_mail(self, cr, uid, ids, context=None):
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
-        Mail = self.pool['mail.mail']
         for mailing in self.browse(cr, uid, ids, context=context):
-            if not mailing.template_id:
-                raise Warning('Please specify a template to use.')
             if not mailing.contact_nbr:
                 raise Warning('Please select recipients.')
-
-            # get mail and recipints data
+            # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
-            template_values = self.pool['mail.compose.message'].generate_email_for_composer_batch(
-                cr, uid, mailing.template_id.id, res_ids,
-                context=context, fields=['body_html', 'attachment_ids', 'mail_server_id'])
-            recipient_values = self.get_recipients_data(cr, uid, mailing, res_ids, context=context)
-
-            for res_id, mail_values in template_values.iteritems():
-                body = mail_values.get('body')
-                recipient = recipient_values[res_id]
-                unsubscribe_url = self.get_unsubscribe_url(cr, uid, mailing.id, res_id, recipient['email'], context=context)
-                if unsubscribe_url:
-                    body = tools.append_content_to_html(body, unsubscribe_url, plaintext=False, container_tag='p')
-
-                mail_values.update({
-                    'email_from': mailing.email_from,
-                    'reply_to': mailing.reply_to,
-                    'subject': mailing.name,
-                    'record_name': False,
-                    'model': mailing.mailing_model,
-                    'res_id': res_id,
-                    'author_id': author_id,
-                    'body_html': body,
-                    'auto_delete': True,
-                    'notification': True,
-                    'email_to': '"%s" <%s>' % (recipient['name'], recipient['email'])
-                })
-                mail_values['statistics_ids'] = [
-                    (0, 0, {
-                        'model': mailing.mailing_model,
-                        'res_id': res_id,
-                        'mass_mailing_id': mailing.id,
-                    })]
-                m2m_attachment_ids = self.pool['mail.thread']._message_preprocess_attachments(
-                    cr, uid, mail_values.pop('attachments', []),
-                    mail_values.pop('attachment_ids', []),
-                    'mail.message', 0,
-                    context=context)
-                mail_values['attachment_ids'] = m2m_attachment_ids
-
-                Mail.create(cr, uid, mail_values, context=context)
+            comp_ctx = dict(context, active_ids=res_ids)
+            composer_values = {
+                'author_id': author_id,
+                'body': mailing.body_html,
+                'subject': mailing.name,
+                'model': mailing.mailing_model,
+                'email_from': mailing.email_from,
+                'record_name': False,
+                'composition_mode': 'mass_mail',
+                'mass_mailing_id': mailing.id,
+                'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
+            }
+            if mailing.reply_specified:
+                composer_values['reply_to'] = mailing.reply_to
+            composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
+            self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
         return True
 
 
