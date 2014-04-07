@@ -1298,9 +1298,14 @@ class calendar_event(osv.Model):
             invitation['attendee'].append({'name': attendee.cn, 'status': attendee.state})
         return invitation
 
-    def get_interval(self, cr, uid, ids, date, interval, context=None):
+    def get_interval(self, cr, uid, ids, date, interval, tz=None, context=None):
         #Function used only in calendar_event_data.xml for email template
         date = datetime.strptime(date.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+
+        if tz:
+            timezone = pytz.timezone(tz or 'UTC')
+            date = date.replace(tzinfo=pytz.timezone('UTC')).astimezone(timezone)
+
         if interval == 'day':
             res = str(date.day)
         elif interval == 'month':
