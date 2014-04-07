@@ -64,7 +64,7 @@ openerp.report = function(instance) {
                                 self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
     system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
     wkhtmltopdf.org</a>'), true);
-                                window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
+                                window.open(report_url.substring(11), '_blank', 'height=768,width=1024');
                                 instance.web.unblockUI();
                             } else {
                                 if (presence == 'upgrade') {
