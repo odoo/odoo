@@ -1438,10 +1438,25 @@
             this._super();
 
             this.$el.find(".clear-style").click(function (event) {
-                self.$target.removeClass("fa-spin").attr("style", null);
-                self.$target.transfo({ hide: true });
+                self.$target.removeClass("fa-spin").attr("style", "");
+                self.resetTransfo();
             });
 
+            this.$el.find(".style").click(function (event) {
+                var settings = self.$target.data("transfo").settings;
+                self.$target.transfo({ hide: (settings.hide = !settings.hide) });
+            });
+
+            this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
+
+            this.$overlay.find('[data-toggle="dropdown"]')
+                .on("mousedown", function () {
+                    self.$target.transfo({ hide: true });
+                });
+        },
+        resetTransfo: function () {
+            var self = this;
+            this.$target.transfo("destroy");
             this.$target.transfo({
                 hide: true,
                 callback: function () {
@@ -1459,21 +1474,9 @@
                     self.$target.trigger("mouseover");
                 })
                 .mouseover();
-
-            this.$el.find(".style").click(function (event) {
-                var settings = self.$target.data("transfo").settings;
-                self.$target.transfo({ hide: (settings.hide = !settings.hide) });
-            });
-
-            this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-
-            this.$overlay.find('[data-toggle="dropdown"]')
-                .on("mousedown", function () {
-                    self.$target.transfo({ hide: true });
-                });
         },
         onFocus : function () {
-            this.$target.transfo({ hide: true });
+            this.resetTransfo();
         },
         onBlur : function () {
             this.$target.transfo({ hide: true });
@@ -1486,6 +1489,10 @@
             this._super();
 
             website.snippet.start_animation(true, this.$target);
+
+            this.$target.on("saved", self, function (event, item) {
+                self.BuildingBlock.make_active($(item));
+            });
 
             this.$el.find(".edition").click(function (event) {
                 event.preventDefault();

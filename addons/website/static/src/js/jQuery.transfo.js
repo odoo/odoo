@@ -50,6 +50,15 @@ OTHER DEALINGS IN THE SOFTWARE.
                     });
                 },
 
+                reset : function() {
+                    return this.each(function() {
+                        var $this = $(this);
+                        if ($this.data('transfo')) {
+                            _reset($this);
+                        }
+                    });
+                },
+
                 settings :  function() {
                     if(this.length > 1) {
                         this.map(function () {
@@ -84,12 +93,13 @@ OTHER DEALINGS IN THE SOFTWARE.
         function _init ($this, settings) {
             var transfo = {};
             $this.data('transfo', transfo);
+            transfo.settings = settings;
 
             // generate all the controls markup
             var css = "box-sizing: border-box; position: absolute; background-color: #fff; border: 1px solid #ccc; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px;";
             transfo.$markup = $(''
                 + '<div class="transfo-controls">'
-                +   '<div style="cursor: crosshair; position: absolute; margin: -18px; top: -12px; right: -12px; padding: 1px 0 0 1px;" class="transfo-rotator">'
+                +   '<div style="cursor: crosshair; position: absolute; margin: -30px; top: 0; right: 0; padding: 1px 0 0 1px;" class="transfo-rotator">'
                 +     '<span class="fa-stack fa-lg">'
                 +     '<i class="fa fa-circle fa-stack-2x"></i>'
                 +     '<i class="fa fa-repeat fa-stack-1x fa-inverse"></i>'
@@ -213,6 +223,7 @@ OTHER DEALINGS IN THE SOFTWARE.
                 else if (event.pageY < center.top && event.pageX < center.left) ang += 360;
                 
                 ang -= dang;
+                if (settings.scaley < 0 && settings.scalex < 0) ang += 180;
 
                 if (!event.ctrlKey) {
                     settings.angle = Math.round(ang / transfo.settings.rotationStep) * transfo.settings.rotationStep;
@@ -257,8 +268,11 @@ OTHER DEALINGS IN THE SOFTWARE.
                 if (transfo.active.type.indexOf("r") != -1) {
                     settings.scalex = - dx / (settings.width/2);
                 }
-                if (settings.scaley < 0.05) settings.scaley = 0.05;
-                if (settings.scalex < 0.05) settings.scalex = 0.05;
+                if (settings.scaley > 0 && settings.scaley < 0.05) settings.scaley = 0.05;
+                if (settings.scalex > 0 && settings.scalex < 0.05) settings.scalex = 0.05;
+                if (settings.scaley < 0 && settings.scaley > -0.05) settings.scaley = -0.05;
+                if (settings.scalex < 0 && settings.scalex > -0.05) settings.scalex = -0.05;
+
                 if (event.shiftKey &&
                     (transfo.active.type === "tl" || transfo.active.type === "bl" ||
                      transfo.active.type === "tr" || transfo.active.type === "br")) {
@@ -291,11 +305,11 @@ OTHER DEALINGS IN THE SOFTWARE.
                 trans = true;
                 transform += " translateY("+settings.translatey+"px) ";
             }
-            if (settings.scalex != 1 && settings.scalex > 0) {
+            if (settings.scalex != 1) {
                 trans = true;
                 transform += " scaleX("+settings.scalex+") ";
             }
-            if (settings.scaley != 1 && settings.scaley > 0){
+            if (settings.scaley != 1){
                 trans = true;
                 transform += " scaleY("+settings.scaley+") ";
             }
@@ -326,10 +340,16 @@ OTHER DEALINGS IN THE SOFTWARE.
             var settings = Object.create(transfo.settings);
             var w = parseFloat(transfo.settings.css.width);
             var h = parseFloat(transfo.settings.css.height);
-            var width = settings.scalex * w;
-            var height = settings.scaley * h;
-            var top = settings.pos.top + (1-settings.scaley) * h / 2;
-            var left = settings.pos.left + (1-settings.scalex) * w / 2;
+            var width = Math.abs(settings.scalex) * w;
+            var height = Math.abs(settings.scaley) * h;
+            var top = settings.pos.top + (1-Math.abs(settings.scaley)) * h / 2;
+            var left = settings.pos.left + (1-Math.abs(settings.scalex)) * w / 2;
+
+            var $rot = transfo.$markup.find(".transfo-rotator");
+            if (settings.scalex > 0) $rot.css({"right": "0px", "left": "auto"});
+            else $rot.css({"right": "auto", "left": "0px"});
+            if (settings.scaley > 0) $rot.css({"top": "0px", "bottom": "auto"});
+            else $rot.css({"top": "auto", "bottom": "0px"});
 
             settings.scalex = settings.scaley = 1;
 
@@ -354,11 +374,14 @@ OTHER DEALINGS IN THE SOFTWARE.
         }
 
         function _destroy ($this) {
-            var transfo = $this.data('transfo');
-            _setCss($this, transfo.settings.style, transfo.settings);
-            $this.insertAfter(transfo.$wrap);
-            transfo.$markup.remove();
+            $this.data('transfo').$markup.remove();
             $this.removeData('transfo');
+        }
+
+        function _reset ($this) {
+            var transfo = $this.data('transfo');
+            _destroy($this);
+            $this.transfo(transfo.settings);
         }
 
 })(jQuery);

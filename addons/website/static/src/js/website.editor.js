@@ -738,6 +738,7 @@
                 if (current === $link_button[0] || $(current).parent()[0] === $link_button[0]) {
                     return;
                 }
+                $link_button.hide();
                 previous = null;
             });
         }
@@ -1051,6 +1052,7 @@
         },
         save: function () {
             this.close();
+            this.trigger("saved");
         },
         cancel: function () {
         },
@@ -1374,6 +1376,12 @@
             return this._super();
         },
         save: function () {
+            var self = this;
+            var $el = $(self.media.$);
+            setTimeout(function () {
+                $el.trigger("saved", self.media.$);
+            },0);
+
             this.media.$.innerHTML = "";
             if (this.active !== this.imageDialog) {
                 this.imageDialog.clear();
@@ -1384,11 +1392,12 @@
             if (this.active !== this.videoDialog) {
                 this.videoDialog.clear();
             }
+
             this.active.save();
 
             this.media.$.className = this.media.$.className.replace(/\s+/g, ' ');
 
-            return this._super();
+            this._super();
         },
         searchTimer: null,
         search: function () {
@@ -1732,6 +1741,7 @@
          * all the new ones if necessary.
          */
         save: function () {
+            var style = this.media.$.attributes.style ? this.media.$.attributes.style.textContent : '';
             var classes = (this.media.$.className||"").split(/\s+/);
             var non_fa_classes = _.reject(classes, function (cls) {
                 return cls === 'fa' || /^fa-/.test(cls);
@@ -1739,6 +1749,7 @@
             var final_classes = non_fa_classes.concat(this.get_fa_classes());
             this.media.$.className = final_classes.join(' ');
             this.media.renameNode("span");
+            this.media.$.attributes.style.textContent = style;
             this._super();
         },
         /**
@@ -1802,8 +1813,9 @@
                         .attr('data-size', size)
                         .addClass(size)
                         .addClass(no_sizes);
-                if ((size && _.contains(classes, size)) || (!size && !selected)) {
+                if ((size && _.contains(classes, size)) || !selected) {
                     this.$preview.append($p.clone());
+                    this.$('#fa-size').val(size);
                     $p.addClass('font-icons-selected');
                     selected = true;
                 }
@@ -1887,12 +1899,12 @@
         save: function () {
             var video_id = this.$("#video_id").val();
             var video_type = this.$("#video_type").val();
+            var style = this.media.$.attributes.style ? this.media.$.attributes.style.textContent : '';
             var $iframe = $(
-                '<div class="media_iframe_video" data-src="'+this.get_url()+'">'+
+                '<div class="media_iframe_video" data-src="'+this.get_url()+'" style="'+style+'">'+
                     '<div class="css_editable_mode_display">&nbsp;</div>'+
                     '<iframe src="'+this.get_url()+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>'+
                 '</div>');
-            $iframe.attr("style", this.$(this.media.$).attr("style"));
             $(this.media.$).replaceWith($iframe);
             this._super();
         },
