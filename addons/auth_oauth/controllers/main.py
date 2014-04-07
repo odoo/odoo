@@ -68,7 +68,8 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
     def get_state(self, provider):
         return dict(
             d=request.session.db,
-            p=provider['id']
+            p=provider['id'],
+            r=request.httprequest.full_path
         )
 
     @http.route()
@@ -114,8 +115,11 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
+                redirect = state.get('r')
                 url = '/web'
-                if action:
+                if redirect:
+                    url = redirect
+                elif action:
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
