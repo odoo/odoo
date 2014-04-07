@@ -28,7 +28,6 @@
     'installable': True,
     'auto_install': False,
     'js': [
-        'static/lib/gapi/client.js',
         'static/src/js/gdrive.js',
     ],
     'data': [
