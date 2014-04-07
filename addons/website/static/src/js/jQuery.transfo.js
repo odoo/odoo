@@ -199,6 +199,7 @@ OTHER DEALINGS IN THE SOFTWARE.
                 "type": type,
                 "pageX": event.pageX,
                 "pageY": event.pageY,
+                "center": transfo.$center.offset(),
             };
         }
         function _mouseUp($this, div, transfo, event) {
@@ -209,7 +210,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             event.preventDefault();
             if (!transfo.active) return;
             var settings = transfo.settings;
-            var center = transfo.$center.offset();
+            var center = transfo.active.center;
             var cdx = center.left - event.pageX;
             var cdy = center.top - event.pageY;
 
