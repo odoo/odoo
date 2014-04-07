@@ -9,7 +9,10 @@ import os.path
 import platform
 import psutil
 import random
-import resource
+if os.name == 'posix':
+    import resource
+else:
+    resource = None
 import select
 import signal
 import socket
@@ -285,8 +288,9 @@ class ThreadedServer(CommonServer):
         _logger.info("Initiating shutdown")
         _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
 
-        self.httpd.shutdown()
-        self.close_socket(self.httpd.socket)
+        if self.httpd:
+            self.httpd.shutdown()
+            self.close_socket(self.httpd.socket)
 
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
@@ -637,6 +641,8 @@ class Worker(object):
                 raise
 
     def process_limit(self):
+        if resource is None:
+            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
@@ -845,7 +851,8 @@ def load_test_file_py(registry, test_file):
                 stream = openerp.modules.module.TestStream()
                 result = unittest2.TextTestRunner(verbosity=2, stream=stream).run(suite)
                 success = result.wasSuccessful()
-                registry._assertion_report.report_result(success)
+                if hasattr(registry._assertion_report,'report_result'):
+                    registry._assertion_report.report_result(success)
                 if not success:
                     _logger.error('%s: at least one error occurred in a test', test_file)
 

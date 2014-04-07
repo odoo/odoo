@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-04 06:05+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-03-28 05:32+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -411,7 +411,7 @@ msgstr "与信限度"
 #: field:ir.model.data,date_update:0
 #: field:ir.model.relation,date_update:0
 msgid "Update Date"
-msgstr "日付の更新"
+msgstr "更新日"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_action_rule
@@ -4582,7 +4582,7 @@ msgstr "スペイン語（ホンジュラス）/ Español (HN)"
 #. module: base
 #: view:ir.sequence.type:0
 msgid "Sequence Type"
-msgstr "順序タイプ"
+msgstr "付番タイプ"
 
 #. module: base
 #: view:base.language.export:0
@@ -5141,7 +5141,7 @@ msgstr "銀行口座タイプ"
 #. module: base
 #: help:ir.sequence,suffix:0
 msgid "Suffix value of the record for the sequence"
-msgstr "順序のためのレコードのサフィックス値"
+msgstr "この付番定義でレコードに適用するサフィックス値"
 
 #. module: base
 #: help:ir.mail_server,smtp_user:0
@@ -6140,7 +6140,7 @@ msgstr "ショートカット"
 #. module: base
 #: field:ir.model.data,date_init:0
 msgid "Init Date"
-msgstr "整数データ"
+msgstr "作成日"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7630,7 +7630,7 @@ msgstr ""
 #. module: base
 #: help:ir.sequence,number_next:0
 msgid "Next number of this sequence"
-msgstr "この順序の次の番号"
+msgstr "この付番定義の次の番号"
 
 #. module: base
 #: view:res.partner:0
@@ -10135,7 +10135,7 @@ msgstr "発注分析計画"
 #: model:ir.actions.act_window,name:base.ir_sequence_type
 #: model:ir.ui.menu,name:base.menu_ir_sequence_type
 msgid "Sequence Codes"
-msgstr "順序コード"
+msgstr "付番コード"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10790,7 +10790,7 @@ msgstr "国の状態"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
 msgid "Sequences & Identifiers"
-msgstr "順序と識別子"
+msgstr "付番定義とID"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -10925,7 +10925,7 @@ msgstr "連絡先が会社の場合はチェックしてください。チェッ
 #. module: base
 #: view:ir.sequence.type:0
 msgid "Sequences Type"
-msgstr "順序タイプ"
+msgstr "付番タイプ"
 
 #. module: base
 #: view:res.partner:0
@@ -11282,7 +11282,7 @@ msgstr ""
 #: view:ir.sequence:0
 #: model:ir.ui.menu,name:base.menu_ir_sequence_form
 msgid "Sequences"
-msgstr "順序"
+msgstr "付番"
 
 #. module: base
 #: help:res.lang,code:0
@@ -11724,7 +11724,7 @@ msgstr "月：%(month)s"
 #: field:multi_company.default,sequence:0
 #: field:res.partner.bank,sequence:0
 msgid "Sequence"
-msgstr "順序"
+msgstr "付番"
 
 #. module: base
 #: model:res.country,name:base.tn
@@ -12190,7 +12190,7 @@ msgstr "ハード島とマクドナルド諸島"
 msgid ""
 "External Key/Identifier that can be used for data integration with third-"
 "party systems"
-msgstr "サードパーティのシステムとのデータ統合のために利用する外部キー / 識別子"
+msgstr "サードパーティシステムとのデータ統合のために利用する外部キー / ID"
 
 #. module: base
 #: field:ir.actions.act_window,view_id:0
@@ -12519,7 +12519,7 @@ msgstr "CRMポータル"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
 msgid "Low Level Objects"
-msgstr "低レベルのオブジェクト"
+msgstr "低レベルオブジェクト"
 
 #. module: base
 #: help:ir.values,model:0
@@ -12596,7 +12596,7 @@ msgstr ""
 #: view:ir.model.data:0
 #: model:ir.ui.menu,name:base.ir_model_data_menu
 msgid "External Identifiers"
-msgstr "外部識別子"
+msgstr "外部ID"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -13614,7 +13614,7 @@ msgstr ""
 #: view:ir.model.data:0
 #: field:ir.model.data,name:0
 msgid "External Identifier"
-msgstr "外部識別子"
+msgstr "外部ID"
 
 #. module: base
 #: model:ir.module.module,description:base.module_audittrail
@@ -14048,9 +14048,7 @@ msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
 "later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
-msgstr ""
-"２つのシーケンスオブジェクトの実装が提供されます：標準と\"ギャップなし\"です。後者は前者よりも遅いですが、どんな順序のギャップを禁じます（前者は可能で"
-"す）。"
+msgstr "「標準」と「ギャップなし」の2種類の付番定義が可能です。後者の場合、付番ごとにギャップを設けることができません。"
 
 #. module: base
 #: model:res.country,name:base.gn
@@ -14249,7 +14247,7 @@ msgstr "かつ"
 #: help:ir.values,res_id:0
 msgid ""
 "Database identifier of the record to which this applies. 0 = for all records"
-msgstr "これを適用するためのレコードのデータベース識別子。0 = 全てのレコードのため"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,relation:0
@@ -14903,7 +14901,7 @@ msgstr "クック諸島"
 #. module: base
 #: field:ir.model.data,noupdate:0
 msgid "Non Updatable"
-msgstr "更新可能でない"
+msgstr "更新不可"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15311,7 +15309,7 @@ msgstr ""
 #. module: base
 #: help:ir.sequence,prefix:0
 msgid "Prefix value of the record for the sequence"
-msgstr "順序のためのレコードのプレフィックス値"
+msgstr "この付番定義でレコードに適用するプレフィックス値"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -15353,7 +15351,7 @@ msgstr ""
 #. module: base
 #: field:ir.model.data,complete_name:0
 msgid "Complete ID"
-msgstr "完了ID"
+msgstr "完全ID"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
@@ -15447,7 +15445,7 @@ msgstr "製造プロセスを管理し、それらのプロセスのレポート
 #. module: base
 #: help:ir.sequence,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
-msgstr "順序の次の番号はこの数値だけ増加します。"
+msgstr "付番毎にこの数値分だけ番号が増加します。"
 
 #. module: base
 #: selection:workflow.activity,kind:0
