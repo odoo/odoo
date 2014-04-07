@@ -141,6 +141,10 @@ class TestORM(common.TransactionCase):
         self.assertEqual(len(read_group('month')), len(partners_by_month))
         self.assertEqual(len(read_group('year')), len(partners_by_year))
 
+        rg = self.partner.read_group(self.cr, self.uid, [('id', 'in', all_partners)], 
+                        ['date'], ['date:month', 'date:day'], lazy=False)
+        self.assertEqual(len(rg), len(all_partners))
+
 
 class TestInherits(common.TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
