@@ -149,10 +149,10 @@ $(document).ready(function () {
         if(document.URL.indexOf("finished") != -1){
             window.location.href = document.URL.replace('?finished&','?').replace('&finished&','&').replace('?finished','').replace('&finished','');
         }
-    }).hover(function(){if(document.URL.indexOf("finished") == -1){$(this)[0].style.cursor= 'default';}} );
+    }).hover(function(){if(document.URL.indexOf("finished") == -1){$(this)[0].style.cursor= 'default';}});
     $('span.filter-finished').click(function(){
         event.preventDefault();
-        if(document.URL.indexOf("?") == -1 && document.URL.indexOf("filter") == -1){
+        if(document.URL.indexOf("?") == -1){
             window.location.href = document.URL+'?'+encodeURI('finished');
         }
         else if (document.URL.indexOf("finished") == -1){
