@@ -848,7 +848,7 @@ class stock_picking(osv.osv):
         todo = []
         todo_force_assign = []
         for picking in self.browse(cr, uid, ids, context=context):
-            if picking.picking_type_id.auto_force_assign:
+            if picking.location_id.usage == 'supplier':
                 todo_force_assign.append(picking.id)
             for r in picking.move_lines:
                 if r.state == 'draft':
@@ -1069,7 +1069,7 @@ class stock_picking(osv.osv):
             if qty <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(product)
-            key = (product.id, False, False, False, picking.picking_type_id.default_location_src_id.id or picking.location_id.id, suggested_location_id)
+            key = (product.id, False, False, False, picking.location_id.id, suggested_location_id)
             if qtys_grouped.get(key):
                 qtys_grouped[key] += qty
             else:
@@ -2084,7 +2084,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
-            if move.picking_type_id and move.picking_type_id.auto_force_assign:
+            if move.location_id.usage in ('supplier', 'inventory', 'production'):
                 to_assign_moves.append(move.id)
                 #in case the move is returned, we want to try to find quants before forcing the assignment
                 if not move.origin_returned_move_id:
@@ -2135,7 +2135,7 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
-        #force assignation of consumable products and picking type auto_force_assign
+        #force assignation of consumable products and incoming from supplier/inventory/production 
         if to_assign_moves:
             self.force_assign(cr, uid, to_assign_moves, context=context)
 
@@ -3144,7 +3144,6 @@ class stock_warehouse(osv.osv):
             'name': _('Receptions'),
             'warehouse_id': new_id,
             'code': 'incoming',
-            'auto_force_assign': True,
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
             'default_location_dest_id': input_loc.id,
@@ -4107,7 +4106,6 @@ class stock_picking_type(osv.osv):
     _columns = {
         'name': fields.char('Picking Type Name', translate=True, required=True),
         'complete_name': fields.function(_get_name, type='char', string='Name'),
-        'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color'),
         'sequence': fields.integer('Sequence', help="Used to order the 'All Operations' kanban view"),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
