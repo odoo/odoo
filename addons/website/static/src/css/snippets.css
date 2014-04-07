@@ -329,9 +329,10 @@
   margin-left: -50px;
 }
 .oe_overlay .oe_handle.size .oe_handle_button {
+  position: relative;
   z-index: 3;
   text-align: center;
-  margin-left: -32px;
+  margin-left: -52px;
   margin-top: -10px;
   left: 0px;
 }
@@ -343,15 +344,17 @@
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
 .oe_overlay .oe_handle.size .size {
+  position: absolute;
   width: 64px;
   cursor: row-resize;
   top: 9px;
+  margin-left: 52px;
+  padding: 0 5px;
 }
 .oe_overlay .oe_handle.size .auto_size {
+  position: absolute;
   width: 100px;
-  padding: 0 5px;
-  top: 1px;
-  margin-left: 36px;
+  top: 9px;
   cursor: pointer;
 }
 .oe_overlay .oe_handle.readonly {
