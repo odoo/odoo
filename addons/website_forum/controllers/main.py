@@ -237,6 +237,10 @@ class website_forum(http.Controller):
         que_ids = Post.search(cr, uid, [('id', 'in', post_ids), ('forum_id', '=', forum.id), ('parent_id', '=', False)], context=context)
         followed = Post.browse(cr, uid, que_ids, context=context)
 
+        #showing Favourite questions of user.
+        fav_que_ids = Post.search(cr, uid, [('favourite_ids', '=', user.id), ('forum_id', '=', forum.id), ('parent_id', '=', False)], context=context)
+        favourite = Post.browse(cr, uid, fav_que_ids, context=context)
+
         #votes which given on users questions and answers.
         data = Vote.read_group(cr, uid, [('post_id.forum_id', '=', forum.id), ('post_id.user_id', '=', user.id)], ["vote"], groupby=["vote"], context=context)
         up_votes, down_votes = 0, 0
@@ -273,6 +277,7 @@ class website_forum(http.Controller):
             'questions': user_questions,
             'answers': user_answers,
             'followed': followed,
+            'favourite': favourite,
             'total_votes': total_votes,
             'up_votes': up_votes,
             'down_votes': down_votes,

@@ -94,9 +94,6 @@ class Post(osv.Model):
                 res[post.id] = len(post.child_ids)
         return res
 
-    def _get_child(self, cr, uid, ids, context=None):
-        return ids
-
     def _get_view_count(self, cr, uid, ids, field_name=False, arg={}, context=None):
         res = dict.fromkeys(ids, 0)
         for post in self.browse(cr, uid, ids, context=context):
@@ -171,7 +168,7 @@ class Post(osv.Model):
         'child_ids': fields.one2many('website.forum.post', 'parent_id', 'Answers'),
         'child_count':fields.function(_get_child_count, string="Answers", type='integer',
             store={
-                'website.forum.post': (_get_child, [], 10),
+                'website.forum.post': (lambda self, cr, uid, ids, c={}: ids, [], 10),
             }
         ),
 

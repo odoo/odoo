@@ -23,6 +23,11 @@
             <field name="state">open</field>
         </record-->
 
+        <record id="default_allow_auth_signup" model="ir.config_parameter"> 
+            <field name="key">auth_signup.allow_uninvited</field>
+            <field name="value" eval="True"/>
+        </record>
+
         <!-- related subtypes -->
         <record id="mt_question_create" model="mail.message.subtype">
             <field name="name">Asked a question</field>

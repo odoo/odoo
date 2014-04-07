@@ -764,13 +764,16 @@
                         <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
                     </li>
                     <li t-if="uid == user.id">
+                        <a href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
+                    </li>
+                    <li t-if="uid == user.id">
+                        <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Questions</a>
+                    </li>
+                    <li t-if="uid == user.id">
                         <a href="#activity" data-toggle="tab">Activity</a>
                     </li>
                     <li>
                         <a href="#badges" data-toggle="tab">Badges</a>
-                    </li>
-                    <li t-if="uid == user.id">
-                        <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Question</a>
                     </li>
                     <li>
                         <a href="#votes" data-toggle="tab">Votes</a>
@@ -791,6 +794,11 @@
                     </div>
                     <div class="tab-pane" id="badges">
                         <t t-call="website_forum.user_badges"/>
+                    </div>
+                    <div class="tab-pane" id="favourite_question">
+                        <div t-foreach="favourite" t-as="question">
+                            <t t-call="website_forum.post_list"/>
+                        </div>
                     </div>
                     <div class="tab-pane" id="followed_question">
                         <div t-foreach="followed" t-as="question">

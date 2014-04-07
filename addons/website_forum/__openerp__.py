@@ -29,7 +29,7 @@
 Ask questions, get answers, no distractions
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'website_mail', 'gamification', 'website_partner'],
+    'depends': ['website', 'website_mail', 'gamification', 'website_partner', 'auth_signup'],
     'data': [
          'data/forum_data.xml',
          'views/website_forum.xml',
