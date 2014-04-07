@@ -2193,7 +2193,7 @@ class BaseModel(object):
                 r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
-    def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query, fget):
+    def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
         to the query if order should be computed against m2o field. 
@@ -2217,7 +2217,7 @@ class BaseModel(object):
             order_field = order_split[0]
             if order_field in groupby_fields:
 
-                if fget[order_field.split(':')[0]]['type'] == 'many2one':
+                if self._all_columns[order_field.split(':')[0]].column._type == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
@@ -2233,9 +2233,9 @@ class BaseModel(object):
                              self._name, order_part)
         return groupby_terms, orderby_terms
 
-    def _read_group_process_groupby(self, gb, fget, query, context):
+    def _read_group_process_groupby(self, gb, query, context):
         split = gb.split(':')
-        field_type = fget[split[0]]['type'] 
+        field_type = self._all_columns[split[0]].column._type
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
@@ -2358,10 +2358,10 @@ class BaseModel(object):
         self.check_access_rights(cr, uid, 'read')
         query = self._where_calc(cr, uid, domain, context=context) 
         fields = fields or self._columns.keys()
-        fget = self.fields_get(cr, uid, fields)
+
         groupby = [groupby] if isinstance(groupby, basestring) else groupby
         groupby_list = groupby[:1] if lazy else groupby
-        annotated_groupbys = [self._read_group_process_groupby(gb, fget, query, context) 
+        annotated_groupbys = [self._read_group_process_groupby(gb, query, context) 
                                     for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
         order = orderby or ','.join([g['groupby'] for g in annotated_groupbys])
@@ -2372,7 +2372,7 @@ class BaseModel(object):
             assert gb in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
             groupby_def = self._columns.get(gb) or (self._inherit_fields.get(gb) and self._inherit_fields.get(gb)[2])
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
-            if not (gb in fget):
+            if not (gb in self._all_columns):
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
                                  _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(gb,))
@@ -2381,16 +2381,16 @@ class BaseModel(object):
             f for f in fields
             if f not in ('id', 'sequence')
             if f not in groupby_fields
-            if fget[f]['type'] in ('integer', 'float')
-            if (f in self._all_columns and getattr(self._all_columns[f].column, '_classic_write'))]
+            if self._all_columns[f].column._type in ('integer', 'float')
+            if getattr(self._all_columns[f].column, '_classic_write')]
 
-        field_formatter = lambda f: (fget[f].get('group_operator', 'sum'), self._inherits_join_calc(f, query), f)
+        field_formatter = lambda f: (self._all_columns[f].column.group_operator or 'sum', self._inherits_join_calc(f, query), f)
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
             select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
 
-        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query, fget)
+        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
         if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')):
             count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
