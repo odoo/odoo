@@ -49,7 +49,7 @@
                                 <th>Tax</th>
                                 <th>Debit</th>
                                 <th>Credit</th>
-                                <th t-if="display_currency">Currency</th>
+                                <th t-if="display_currency(data)">Currency</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,7 +62,7 @@
                                 <td><span t-esc="line.tax_amount and formatLang(line.tax_amount, currency_obj=res_company.currency_id)"/></td>
                                 <td><span t-esc="formatLang(line.debit, currency_obj=res_company.currency_id)"/></td>
                                 <td><span t-esc="formatLang(line.credit, currency_obj=res_company.currency_id)"/></td>
-                                <td t-if="display_currency">
+                                <td t-if="display_currency(data)">
                                     <span t-esc="formatLang(line.amount_currency, currency_obj=line.currency_id) if line.amount_currency else ''"/>
                                 </td>
                             </tr>

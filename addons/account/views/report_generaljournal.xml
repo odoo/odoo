@@ -53,7 +53,7 @@
                                 <th>Debit</th>
                                 <th>Credit</th>
                                 <th>Balance</th>
-                                <th t-if="display_currency">Currency</th>
+                                <th t-if="display_currency(data)">Currency</th>
                             </tr>
                             <tr>
                                 <th>Total:</th>
@@ -61,7 +61,7 @@
                                 <th><span t-esc="formatLang(sum_debit())"/></th>
                                 <th><span t-esc="formatLang(sum_credit())"/></th>
                                 <th><span t-esc="formatLang(sum_credit() - sum_debit(), currency_obj=res_company.currency_id)"/></th>
-                                <th t-if="display_currency"></th>
+                                <th t-if="display_currency(data)"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,7 +71,7 @@
                                 <td><span t-esc="formatLang(sum_debit_period(o.id))"/></td>
                                 <td><span t-esc="formatLang(sum_credit_period(o.id))"/></td>
                                 <td><span t-esc="formatLang(sum_credit_period(o.id) - sum_debit_period(o.id), currency_obj=res_company.currency_id)"/></td>
-                                <td t-if="display_currency"></td>
+                                <td t-if="display_currency(data)"></td>
                             </tr>
                             <tr t-foreach="lines(o.id)" t-as="line">
                                 <td><span t-esc="line['code']"/></td>
@@ -80,7 +80,7 @@
                                 <td><span t-esc="line['credit']"/></td>
                                 <td><span t-esc="formatLang(line['credit'] - line['debit'], currency_obj=res_company.currency_id)"/></td>
                                 
-                                <td t-if="display_currency">
+                                <td t-if="display_currency(data)">
                                     <t t-if="line['amount_currency']">
                                        <span t-esc="formatLang(line['amount_currency'])"/>
                                        <span t-esc="line['currency_code']"/>
