@@ -55,7 +55,7 @@ import traceback
 import types
 
 import babel.dates
-import dateutil.parser
+import dateutil.relativedelta
 import psycopg2
 from lxml import etree
 
@@ -75,7 +75,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-regex_order = re.compile('^( *([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^( *([a-z0-9:_]+|"[a-z0-9:_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
@@ -2128,7 +2128,7 @@ class BaseModel(object):
             pass
 
 
-    def _read_group_fill_results(self, cr, uid, domain, groupby, groupby_list, aggregated_fields,
+    def _read_group_fill_results(self, cr, uid, domain, groupby, remaining_groupbys, aggregated_fields,
                                  read_group_result, read_group_order=None, context=None):
         """Helper method for filling in empty groups for all possible values of
            the field being grouped by"""
@@ -2148,8 +2148,8 @@ class BaseModel(object):
 
         result_template = dict.fromkeys(aggregated_fields, False)
         result_template[groupby + '_count'] = 0
-        if groupby_list and len(groupby_list) > 1:
-            result_template['__context'] = {'group_by': groupby_list[1:]}
+        if remaining_groupbys:
+            result_template['__context'] = {'group_by': remaining_groupbys}
 
         # Merge the left_side (current results as dicts) with the right_side (all
         # possible values as m2o pairs). Both lists are supposed to be using the
@@ -2198,35 +2198,39 @@ class BaseModel(object):
                 r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
-    def _read_group_prepare(self, orderby, aggregated_fields, groupby, qualified_groupby_field, query, groupby_type=None):
+    def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
         to the query if order should be computed against m2o field. 
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
-        :param groupby: the current groupby field name
-        :param qualified_groupby_field: the fully qualified SQL name for the grouped field
+        :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
+                These dictionaries contains the qualified name of each groupby
+                (fully qualified SQL name for the corresponding field),
+                and the (non raw) field name.
         :param osv.Query query: the query under construction
-        :param groupby_type: the type of the grouped field
         :return: (groupby_terms, orderby_terms)
         """
         orderby_terms = []
-        groupby_terms = [qualified_groupby_field] if groupby else []
+        groupby_terms = [gb['qualified_field'] for gb in annotated_groupbys]
+        groupby_fields = [gb['groupby'] for gb in annotated_groupbys]
         if not orderby:
-            return groupby_terms, orderby_terms    
+            return groupby_terms, orderby_terms
 
         self._check_qorder(orderby)
         for order_part in orderby.split(','):
             order_split = order_part.split()
             order_field = order_split[0]
-            if order_field == groupby:
-                if groupby_type == 'many2one':
+            if order_field in groupby_fields:
+
+                if self._all_columns[order_field.split(':')[0]].column._type == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
                         groupby_terms += [order_term.split()[0] for order_term in order_clause.split(',')]
                 else:
-                    orderby_terms.append(order_part)
+                    order = '"%s" %s' % (order_field, '' if len(order_split) == 1 else order_split[1])
+                    orderby_terms.append(order)
             elif order_field in aggregated_fields:
                 orderby_terms.append(order_part)
             else:
@@ -2235,7 +2239,100 @@ class BaseModel(object):
                              self._name, order_part)
         return groupby_terms, orderby_terms
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+    def _read_group_process_groupby(self, gb, query, context):
+        """
+            Helper method to collect important information about groupbys: raw
+            field name, type, time informations, qualified name, ...
+        """
+        split = gb.split(':')
+        field_type = self._all_columns[split[0]].column._type
+        gb_function = split[1] if len(split) == 2 else None
+        temporal = field_type in ('date', 'datetime')
+        tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
+        qualified_field = self._inherits_join_calc(split[0], query)
+        if temporal:
+            display_formats = {
+                'day': 'dd MMM YYYY', 
+                'week': "'W'w YYYY", 
+                'month': 'MMMM YYYY', 
+                'quarter': 'QQQ YYYY', 
+                'year': 'YYYY'
+            }
+            time_intervals = {
+                'day': dateutil.relativedelta.relativedelta(months=3),
+                'week': datetime.timedelta(days=7),
+                'month': dateutil.relativedelta.relativedelta(months=1),
+                'quarter': dateutil.relativedelta.relativedelta(months=3),
+                'year': dateutil.relativedelta.relativedelta(years=1)
+            }
+            if tz_convert:
+                qualified_field = "timezone('%s', timezone('UTC',%s))" % (context.get('tz', 'UTC'), qualified_field)
+            qualified_field = "date_trunc('%s', %s)" % (gb_function or 'month', qualified_field)
+        if field_type == 'boolean':
+            qualified_field = "coalesce(%s,false)" % qualified_field
+        return {
+            'field': split[0],
+            'groupby': gb,
+            'type': field_type, 
+            'display_format': display_formats[gb_function or 'month'] if temporal else None,
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'tz_convert': tz_convert,
+            'qualified_field': qualified_field
+        }
+
+    def _read_group_prepare_data(self, key, value, groupby_dict, context):
+        """
+            Helper method to sanitize the data received by read_group. The None
+            values are converted to False, and the date/datetime are formatted,
+            and corrected according to the timezones.
+        """
+        value = False if value is None else value
+        gb = groupby_dict.get(key)
+        if gb and gb['type'] in ('date', 'datetime') and value:
+            if isinstance(value, basestring):
+                dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                value = datetime.datetime.strptime(value, dt_format)
+            if gb['tz_convert']:
+                value =  pytz.timezone(context['tz']).localize(value)
+        return value
+
+    def _read_group_get_domain(self, groupby, value):
+        """
+            Helper method to construct the domain corresponding to a groupby and 
+            a given value. This is mostly relevant for date/datetime.
+        """
+        if groupby['type'] in ('date', 'datetime') and value:
+            dt_format = DEFAULT_SERVER_DATETIME_FORMAT if groupby['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+            domain_dt_begin = value
+            domain_dt_end = value + groupby['interval']
+            if groupby['tz_convert']:
+                domain_dt_begin = domain_dt_begin.astimezone(pytz.utc)
+                domain_dt_end = domain_dt_end.astimezone(pytz.utc)
+            return [(groupby['field'], '>=', domain_dt_begin.strftime(dt_format)),
+                   (groupby['field'], '<', domain_dt_end.strftime(dt_format))]
+        if groupby['type'] == 'many2one' and value:
+                value = value[0]
+        return [(groupby['field'], '=', value)]
+
+    def _read_group_format_result(self, data, annotated_groupbys, groupby, groupby_dict, domain, context):
+        """
+            Helper method to format the data contained in the dictianary data by 
+            adding the domain corresponding to its values, the groupbys in the 
+            context and by properly formatting the date/datetime values. 
+        """
+        domain_group = [dom for gb in annotated_groupbys for dom in self._read_group_get_domain(gb, data[gb['groupby']])]
+        for k,v in data.iteritems():
+            gb = groupby_dict.get(k)
+            if gb and gb['type'] in ('date', 'datetime') and v:
+                data[k] = babel.dates.format_date(v, format=gb['display_format'], locale=context.get('lang', 'en_US'))
+
+        data['__domain'] = domain_group + domain 
+        if len(groupby) - len(annotated_groupbys) >= 1:
+            data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
+        del data['id']
+        return data
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context={}, orderby=False, lazy=True):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
@@ -2255,6 +2352,9 @@ class BaseModel(object):
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
+        :param bool lazy: if true, the results are only grouped by the first groupby and the 
+                remaining groupbys are put in the __context key.  If false, all the groupbys are
+                done in one call.
         :return: list of dictionaries(one dictionary for each record) containing:
 
                     * the values of fields grouped by the fields in ``groupby`` argument
@@ -2263,100 +2363,54 @@ class BaseModel(object):
         :rtype: [{'field_name_1': value, ...]
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
-
         """
-        context = context or {}
         self.check_access_rights(cr, uid, 'read')
-        if not fields:
-            fields = self._columns.keys()
+        query = self._where_calc(cr, uid, domain, context=context) 
+        fields = fields or self._columns.keys()
 
-        query = self._where_calc(cr, uid, domain, context=context)
+        groupby = [groupby] if isinstance(groupby, basestring) else groupby
+        groupby_list = groupby[:1] if lazy else groupby
+        annotated_groupbys = [self._read_group_process_groupby(gb, query, context) 
+                                    for gb in groupby_list]
+        groupby_fields = [g['field'] for g in annotated_groupbys]
+        order = orderby or ','.join([g for g in groupby_list])
+        groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
+
         self._apply_ir_rules(cr, uid, query, 'read', context=context)
-
-        # Take care of adding join(s) if groupby is an '_inherits'ed field
-        groupby_list = groupby
-        qualified_groupby_field = groupby
-        if groupby:
-            if isinstance(groupby, list):
-                groupby = groupby[0]
-            splitted_groupby = groupby.split(':')
-            if len(splitted_groupby) == 2:
-                groupby = splitted_groupby[0]
-                groupby_function = splitted_groupby[1]
-            else:
-                groupby_function = False
-            qualified_groupby_field = self._inherits_join_calc(groupby, query)
-
-        if groupby:
-            assert not groupby or groupby in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
-            groupby_def = self._columns.get(groupby) or (self._inherit_fields.get(groupby) and self._inherit_fields.get(groupby)[2])
+        for gb in groupby_fields:
+            assert gb in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
+            groupby_def = self._columns.get(gb) or (self._inherit_fields.get(gb) and self._inherit_fields.get(gb)[2])
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
-
-        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-        fget = self.fields_get(cr, uid, fields)
-        group_by_params = {}
-        select_terms = []
-        groupby_type = None
-        if groupby:
-            if fget.get(groupby):
-                groupby_type = fget[groupby]['type']
-                if groupby_type in ('date', 'datetime'):
-                    if groupby_function:
-                        interval = groupby_function
-                    else:
-                        interval = 'month'
-
-                    if interval == 'day':
-                        display_format = 'dd MMM YYYY' 
-                    elif interval == 'week':
-                        display_format = "'W'w YYYY"
-                    elif interval == 'month':
-                        display_format = 'MMMM YYYY'
-                    elif interval == 'quarter':
-                        display_format = 'QQQ YYYY'
-                    elif interval == 'year':
-                        display_format = 'YYYY'
-
-                    if groupby_type == 'datetime' and context.get('tz') in pytz.all_timezones:
-                        # Convert groupby result to user TZ to avoid confusion!
-                        # PostgreSQL is compatible with all pytz timezone names, so we can use them
-                        # directly for conversion, starting with timestamps stored in UTC. 
-                        timezone = context.get('tz', 'UTC')
-                        qualified_groupby_field = "timezone('%s', timezone('UTC',%s))" % (timezone, qualified_groupby_field)
-                    qualified_groupby_field = "date_trunc('%s', %s)" % (interval, qualified_groupby_field)
-                elif groupby_type == 'boolean':
-                    qualified_groupby_field = "coalesce(%s,false)" % qualified_groupby_field
-                select_terms.append("%s as %s " % (qualified_groupby_field, groupby))
-            else:
+            if not (gb in self._all_columns):
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
-                                 _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(groupby,))
+                                 _('Invalid group_by specification: "%s".\nA group_by specification must be a list of valid fields.')%(gb,))
 
         aggregated_fields = [
             f for f in fields
-            if f not in ('id', 'sequence', groupby)
-            if fget[f]['type'] in ('integer', 'float')
-            if (f in self._all_columns and getattr(self._all_columns[f].column, '_classic_write'))]
-        for f in aggregated_fields:
-            group_operator = fget[f].get('group_operator', 'sum')
-            qualified_field = self._inherits_join_calc(f, query)
-            select_terms.append("%s(%s) AS %s" % (group_operator, qualified_field, f))
+            if f not in ('id', 'sequence')
+            if f not in groupby_fields
+            if self._all_columns[f].column._type in ('integer', 'float')
+            if getattr(self._all_columns[f].column, '_classic_write')]
 
-        order = orderby or groupby or ''
-        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, groupby, qualified_groupby_field, query, groupby_type)
+        field_formatter = lambda f: (self._all_columns[f].column.group_operator or 'sum', self._inherits_join_calc(f, query), f)
+        select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
 
+        for gb in annotated_groupbys:
+            select_terms.append('%s as "%s" ' % (gb['qualified_field'], gb['groupby']))
+
+        groupby_terms, orderby_terms = self._read_group_prepare(order, aggregated_fields, annotated_groupbys, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
-        if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
-            count_field = '_'
+        if lazy and (len(groupby_fields) >= 2 or not context.get('group_by_no_leaf')):
+            count_field = groupby_fields[0] if len(groupby_fields) >= 1 else '_'
         else:
-            count_field = groupby
+            count_field = '_'
 
         prefix_terms = lambda prefix, terms: (prefix + " " + ",".join(terms)) if terms else ''
         prefix_term = lambda prefix, term: ('%s %s' % (prefix, term)) if term else ''
 
         query = """
-            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s_count
-                   %(extra_fields)s
+            SELECT min(%(table)s.id) AS id, count(%(table)s.id) AS %(count_field)s_count %(extra_fields)s
             FROM %(from)s
             %(where)s
             %(groupby)s
@@ -2375,71 +2429,29 @@ class BaseModel(object):
             'offset': prefix_term('OFFSET', int(offset) if limit else None),
         }
         cr.execute(query, where_clause_params)
-        alldata = {}
         fetched_data = cr.dictfetchall()
 
-        data_ids = []
-        for r in fetched_data:
-            for fld, val in r.items():
-                if val is None: r[fld] = False
-            alldata[r['id']] = r
-            data_ids.append(r['id'])
-            del r['id']
+        if not groupby_fields:
+            return {r.pop('id'): r for r in fetched_data}
 
-        if groupby:
-            data = self.read(cr, uid, data_ids, [groupby], context=context)
-            # restore order of the search as read() uses the default _order (this is only for groups, so the footprint of data should be small):
-            data_dict = dict((d['id'], d[groupby] ) for d in data)
-            result = [{'id': i, groupby: data_dict[i]} for i in data_ids]
-        else:
-            result = [{'id': i} for i in data_ids]
+        many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
+        if many2onefields:
+            data_ids = [r['id'] for r in fetched_data]
+            many2onefields = list(set(many2onefields))
+            data_dict = {d['id']: d for d in self.read(cr, uid, data_ids, many2onefields, context=context)} 
+            for d in fetched_data:
+                d.update(data_dict[d['id']])
 
-        for d in result:
-            if groupby:
-                d['__domain'] = [(groupby, '=', alldata[d['id']][groupby] or False)] + domain
-                if not isinstance(groupby_list, (str, unicode)):
-                    if groupby or not context.get('group_by_no_leaf', False):
-                        d['__context'] = {'group_by': groupby_list[1:]}
-            if groupby and groupby in fget:
-                groupby_type = fget[groupby]['type']
-                if d[groupby] and groupby_type in ('date', 'datetime'):
-                    groupby_datetime = alldata[d['id']][groupby]
-                    if isinstance(groupby_datetime, basestring):
-                        _default = datetime.datetime(1970, 1, 1)    # force starts of month
-                        groupby_datetime = dateutil.parser.parse(groupby_datetime, default=_default)
-                    tz_convert = groupby_type == 'datetime' and context.get('tz') in pytz.all_timezones
-                    if tz_convert:
-                        groupby_datetime =  pytz.timezone(context['tz']).localize(groupby_datetime)
-                    d[groupby] = babel.dates.format_date(
-                        groupby_datetime, format=display_format, locale=context.get('lang', 'en_US'))
-                    domain_dt_begin = groupby_datetime
-                    if interval == 'quarter':
-                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=3)
-                    elif interval == 'month':
-                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(months=1)
-                    elif interval == 'week':
-                        domain_dt_end = groupby_datetime + datetime.timedelta(days=7)
-                    elif interval == 'day':
-                        domain_dt_end = groupby_datetime + datetime.timedelta(days=1)
-                    else:
-                        domain_dt_end = groupby_datetime + dateutil.relativedelta.relativedelta(years=1)
-                    if tz_convert:
-                        # the time boundaries were all computed in the apparent TZ of the user,
-                        # so we need to convert them to UTC to have proper server-side values.
-                        domain_dt_begin = domain_dt_begin.astimezone(pytz.utc)
-                        domain_dt_end = domain_dt_end.astimezone(pytz.utc)
-                    dt_format = DEFAULT_SERVER_DATETIME_FORMAT if groupby_type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
-                    d['__domain'] = [(groupby, '>=', domain_dt_begin.strftime(dt_format)),
-                                     (groupby, '<', domain_dt_end.strftime(dt_format))] + domain
-                del alldata[d['id']][groupby]
-            d.update(alldata[d['id']])
-            del d['id']
-
-        if groupby and groupby in self._group_by_full:
-            result = self._read_group_fill_results(cr, uid, domain, groupby, groupby_list,
-                                                   aggregated_fields, result, read_group_order=order,
-                                                   context=context)
-
+        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
+        result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
+        if lazy and groupby_fields[0] in self._group_by_full:
+            # Right now, read_group only fill results in lazy mode (by default).
+            # If you need to have the empty groups in 'eager' mode, then the
+            # method _read_group_fill_results need to be completely reimplemented
+            # in a sane way 
+            result = self._read_group_fill_results(cr, uid, domain, groupby_fields[0], groupby[len(annotated_groupbys):],
+                                                       aggregated_fields, result, read_group_order=order,
+                                                       context=context)
         return result
 
     def _inherits_join_add(self, current_model, parent_model_name, query):
