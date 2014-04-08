@@ -480,9 +480,17 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
             return $.Deferred().resolve([]);
             
         options = options || {};
-        return this._model.call('read',
-                [ids, fields || false],
-                {context: this.get_context(options.context)})
+        var method = 'read';
+        var ids_arg = ids;
+        var context = this.get_context(options.context);
+        if (options.check_access_rule === true){
+            method = 'search_read';
+            ids_arg = [['id', 'in', ids]];
+            context = new instance.web.CompoundContext(context, {active_test: false});
+        }
+        return this._model.call(method,
+                [ids_arg, fields || false],
+                {context: context})
             .then(function (records) {
                 if (records.length <= 1) { return records; }
                 var indexes = {};

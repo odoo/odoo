@@ -217,6 +217,7 @@ openerp.web_calendar = function(instance) {
                 .then(function (create_right) {
                     self.create_right = create_right;
                     self.init_calendar().then(function() {
+                        $(window).trigger('resize');
                         self.trigger('calendar_view_loaded', fv);
                         self.ready.resolve();
                     });

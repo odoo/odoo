@@ -620,29 +620,33 @@ openerp.testing.section('search.completions', {
             {relation: 'dummy.model'}, view);
         return f.complete("bob");
     });
-    test("M2O custom operator", {asserts: 6}, function (instance) {
-        var view = { inputs: [], };
+    test("M2O custom operator", {asserts: 10}, function (instance, $s, mock) {
+        mock('dummy.model:name_search', function (args, kwargs) {
+            deepEqual(args, [], "should have no positional arguments");
+            // the operator is meant for the final search term generation, not the autocompletion
+            equal(kwargs.operator, undefined, "operator should not be used for autocompletion")
+            strictEqual(kwargs.name, 'bob');
+            return [[42, "Match"]];
+        });
+        var view = {inputs: [], dataset: {get_context: function () {}}};
         var f = new instance.web.search.ManyToOneField(
-            {attrs: {string: 'Dummy', operator:'ilike'}},
+            {attrs: {string: 'Dummy', operator: 'ilike'}},
             {relation: 'dummy.model'}, view);
 
         return f.complete('bob')
-            .done(function (completions) {
-                equal(completions.length, 1, "should provide a single completion");
-                var c = completions[0];
-                equal(c.label, "Search <em>Dummy</em> for: <strong>bob</strong>",
-                      "should propose fuzzy searching of the value");
-                ok(c.facet, "should have a facet");
+            .done(function (c) {
+                equal(c.length, 2, "should return result + title");
+                var title = c[0];
+                equal(title.label, f.attrs.string, "title should match field name");
+                ok(!title.facet, "title should not have a facet");
 
-                var facet = new instance.web.search.Facet(c.facet);
-                equal(facet.get('category'), f.attrs.string,
-                      "completion facet should bear the field's name");
-                strictEqual(facet.get('field'), f,
-                            "completion facet should yield the field");
-                deepEqual(facet.values.toJSON(), [{label: 'bob', value: 'bob'}],
-                          "facet should have a single value using the completion item");
+                var f1 = new instance.web.search.Facet(c[1].facet);
+                equal(c[1].label, "Match");
+                equal(f1.get('category'), f.attrs.string);
+                equal(f1.get('field'), f);
+                deepEqual(f1.values.toJSON(), [{label: 'Match', value: 42}]);
             });
-});
+    });
     test('Integer: invalid', {asserts: 1}, function (instance) {
         var view = {inputs: []};
         var f = new instance.web.search.IntegerField(

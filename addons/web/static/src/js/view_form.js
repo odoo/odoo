@@ -967,9 +967,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         context: {
                             'bin_size': true,
                             'future_display_name': true
-                        }
+                        },
+                        check_access_rule: true
                     }).then(function(r) {
                         self.trigger('load_record', r);
+                    }).fail(function (){
+                        self.do_action('history_back');
                     });
             }
         });
@@ -1990,8 +1993,10 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var context = this.build_context();
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
-            this.view.dataset, this.view.datarecord.id, function () {
-                self.view.recursive_reload();
+            this.view.dataset, this.view.datarecord.id, function (reason) {
+                if (!_.isObject(reason)) {
+                    self.view.recursive_reload();
+                }
             });
     },
     check_disable: function() {
@@ -2264,7 +2269,7 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
 /**
     Some hack to make placeholders work in ie9.
 */
-if ($.browser.msie && $.browser.version === "9.0") {
+if (!('placeholder' in document.createElement('input'))) {    
     document.addEventListener("DOMNodeInserted",function(event){
         var nodename =  event.target.nodeName.toLowerCase();
         if ( nodename === "input" || nodename == "textarea" ) {

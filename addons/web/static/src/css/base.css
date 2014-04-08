@@ -1284,11 +1284,13 @@
   width: 100%;
 }
 .openerp .oe_view_manager .oe_view_manager_body {
-  display: table-row;
   height: inherit;
 }
 .openerp .oe_view_manager .oe_view_manager_view_kanban:not(:empty) {
   height: inherit;
+}
+.openerp .oe_view_manager[data-view-type=kanban] .oe_view_manager_body {
+  display: table-row;
 }
 .openerp .oe_view_manager table.oe_view_manager_header {
   border-collapse: separate;
@@ -2398,6 +2400,7 @@
 }
 .openerp .oe_hidden_input_file {
   position: relative;
+  overflow-x: hidden;
 }
 .openerp .oe_hidden_input_file input.oe_form_binary_file {
   z-index: 0;
