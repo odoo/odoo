@@ -102,6 +102,10 @@ class Registry(Mapping):
         """ Return the model with the given name or raise KeyError if it doesn't exist."""
         return self.models[model_name]
 
+    def __call__(self, model_name):
+        """ Same as ``self[model_name]``. """
+        return self.models[model_name]
+
     def do_parent_store(self, cr):
         for o in self._init_parent:
             self.get(o)._parent_store_compute(cr)
