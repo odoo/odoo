@@ -965,7 +965,16 @@
     <div data-snippet-option-id='transform'
         data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa">
         <li><a href="#" class="style">Transform</a></li>
-        <li data-value="fa-spin"><a>Spin</a></li>
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu" name="parallax-scroll">
+                <li data-value="img-rounded"><a>Rounded corners</a></li>
+                <li data-value="img-thumbnail"><a>Box</a></li>
+                <li data-value="img-circle"><a>Circle</a></li>
+                <li data-value="shadow"><a>Shadow</a></li>
+                <li data-value="fa-spin"><a>Spin</a></li>
+            </ul>
+        </li>
         <li><a href="#" class="clear-style">Clear Style</a></li>
     </div>
 
