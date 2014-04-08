@@ -147,17 +147,18 @@
                   target="fileframe"
                   class="form-inline">
                 <div class="well">
-                    <div class="pull-right">
-                        <label for="iamgeurl">Image URL</label>
+                    <div class="form-group pull-left">
+                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
+                    </div>
+                    <div>
+                        <span class="text-muted"> — or — </span>
+                        <label for="iamgeurl">Add an image URL</label>
                         <div class="form-group btn-group">
                             <input type="text" name="url" class="form-control url pull-left" style="width: 320px;" id="iamgeurl" placeholder="http://openerp.com/logo.png"/>
                             <button class="btn btn-default" type="submit">Add</button>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                        <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
-                        <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
                     </div>
                 </div>
                 <input type="hidden" name="func"/>

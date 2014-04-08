@@ -1454,13 +1454,8 @@
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',
-            'change input.url': function (e) {
-                if ($(e.target).val() === "") {
-                    this.$("button").addClass("btn-default").removeClass("btn-primary");
-                } else {
-                    this.$("button").removeClass("btn-default").addClass("btn-primary");
-                }
-            },
+            'change input.url': "change_input",
+            'keyup input.url': "change_input",
             //'change select.image-style': 'preview_image',
             'click .existing-attachments img': 'select_existing',
             'click .existing-attachment-remove': 'try_remove',
@@ -1509,6 +1504,16 @@
         },
         cancel: function () {
             this.trigger('cancel');
+        },
+
+        change_input: function (e) {
+            var $input = $(e.target);
+            var $button = $input.parent().find("button");
+            if ($input.val() === "") {
+                $button.addClass("btn-default").removeClass("btn-primary");
+            } else {
+                $button.removeClass("btn-default").addClass("btn-primary");
+            }
         },
 
         search: function (needle) {
@@ -1861,7 +1866,9 @@
             'click input#urlvideo ~ button': 'get_video',
             'click input#embedvideo ~ button': 'get_embed_video',
             'change input#urlvideo': 'change_input',
-            'change input#embedvideo': 'change_input'
+            'keyup input#urlvideo': 'change_input',
+            'change input#embedvideo': 'change_input',
+            'keyup input#embedvideo': 'change_input'
         }),
         start: function () {
             this.$iframe = this.$("iframe");
