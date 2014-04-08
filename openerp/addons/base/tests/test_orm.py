@@ -134,12 +134,16 @@ class TestORM(common.TransactionCase):
             rg = self.partner.read_group(self.cr, self.uid, domain, ['date'], 'date' + ':' + interval)
             result = {}
             for r in rg:
-                result[r['date']] = set(self.partner.search(self.cr, self.uid, r['__domain']))
+                result[r['date:' + interval]] = set(self.partner.search(self.cr, self.uid, r['__domain']))
             return result
 
         self.assertEqual(len(read_group('day')), len(partners_by_day))
         self.assertEqual(len(read_group('month')), len(partners_by_month))
         self.assertEqual(len(read_group('year')), len(partners_by_year))
+
+        rg = self.partner.read_group(self.cr, self.uid, [('id', 'in', all_partners)], 
+                        ['date'], ['date:month', 'date:day'], lazy=False)
+        self.assertEqual(len(rg), len(all_partners))
 
 
 class TestInherits(common.TransactionCase):
