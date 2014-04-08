@@ -75,7 +75,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-regex_order = re.compile('^( *([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^( *([a-z0-9:_]+|"[a-z0-9:_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
@@ -4442,7 +4442,7 @@ class BaseModel(object):
         return Query(tables, where_clause, where_params)
 
     def _check_qorder(self, word):
-        if not regex_order.match(word.split(':')[0]):
+        if not regex_order.match(word):
             raise except_orm(_('AccessError'), _('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
         return True
 
