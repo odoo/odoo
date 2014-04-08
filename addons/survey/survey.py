@@ -141,17 +141,7 @@ class survey_survey(osv.Model):
         'title': fields.char('Title', required=1, translate=True),
         'res_model': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        # 'date_open': fields.datetime('Opening date', readonly=True),
-        # 'date_close': fields.datetime('Closing date', readonly=True),
-        # 'user_input_limit': fields.integer('Automatic closing limit',
-        #     help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied)",
-        #     oldname='max_response_limit'),
-        # 'state': fields.selection(
-        #     [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
-        #     ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
         'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null"),
-        # 'visible_to_user': fields.boolean('Public in website',
-        #     help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
             help="Users with a public link will be requested to login before taking part to the survey",
             oldname="authenticate"),
@@ -186,17 +176,10 @@ class survey_survey(osv.Model):
     }
 
     _defaults = {
-        # 'user_input_limit': 0,
-        # 'state': 'draft',
-        # 'visible_to_user': True,
         'auth_required': True,
         'users_can_go_back': False,
         'color': 0
     }
-
-    # _sql_constraints = {
-    #     ('positive_user_input_limit', 'CHECK (user_input_limit >= 0)', 'Automatic closing limit must be positive')
-    # }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         """ Read group customization in order to display all the stages in the
@@ -224,27 +207,6 @@ class survey_survey(osv.Model):
     }
 
     # Public methods #
-
-    def write(self, cr, uid, ids, vals, context=None):
-        new_state = vals.get('state')
-        if new_state == 'draft':
-            vals.update({'date_open': None})
-            vals.update({'date_close': None})
-            self.message_post(cr, uid, ids, body="""<p>Survey drafted</p>""", context=context)
-        elif new_state == 'open':
-            if self._has_questions(cr, uid, ids, context=None):
-                vals.update({'date_open': fields.datetime.now(), 'date_close': None})
-                self.message_post(cr, uid, ids, body="""<p>Survey opened</p>""", context=context)
-            else:
-                raise osv.except_osv(_('Error!'), _('You can not open a survey that has no questions.'))
-        elif new_state == 'close':
-            vals.update({'date_close': fields.datetime.now()})
-            self.message_post(cr, uid, ids, body="""<p>Survey closed</p>""", context=context)
-            # Purge the tests records
-            self.pool.get('survey.user_input').purge_tests(cr, uid, context=context)
-        elif new_state == 'cancel':
-            self.message_post(cr, uid, ids, body="""<p>Survey cancelled</p>""", context=context)
-        return super(survey_survey, self).write(cr, uid, ids, vals, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         vals = dict()
@@ -438,7 +400,7 @@ class survey_survey(osv.Model):
             context=context)[0]
         if survey_browse.stage_id.closed:
             raise osv.except_osv(_('Warning!'),
-                _("You cannot send invitations to closed surveys."))
+                _("You cannot send invitations for closed surveys."))
 
         assert len(ids) == 1, 'This option should only be used for a single \
                                 survey at a time.'
