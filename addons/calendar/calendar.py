@@ -714,7 +714,7 @@ class calendar_event(osv.Model):
         """
             Return date and time (from to from) based on duration with timezone in string :
             eg.
-            1) if user add duration for 2 hours, return : August-23-2013 at ( 04-30 To 06-30) (Europe/Brussels)
+            1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
             2) if event all day ,return : AllDay, July-31-2013
         """
         if context is None:
@@ -733,7 +733,7 @@ class calendar_event(osv.Model):
             time = _("AllDay , %s") % (event_date)
         elif meeting.duration < 24:
             duration = date + timedelta(hours=meeting.duration)
-            time = ("%s at ( %s To %s) (%s)") % (event_date, display_time, duration.strftime('%H-%M'), tz)
+            time = ("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime('%H-%M'), tz)
         else:
             time = ("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
         return time
@@ -1298,9 +1298,14 @@ class calendar_event(osv.Model):
             invitation['attendee'].append({'name': attendee.cn, 'status': attendee.state})
         return invitation
 
-    def get_interval(self, cr, uid, ids, date, interval, context=None):
+    def get_interval(self, cr, uid, ids, date, interval, tz=None, context=None):
         #Function used only in calendar_event_data.xml for email template
         date = datetime.strptime(date.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+
+        if tz:
+            timezone = pytz.timezone(tz or 'UTC')
+            date = date.replace(tzinfo=pytz.timezone('UTC')).astimezone(timezone)
+
         if interval == 'day':
             res = str(date.day)
         elif interval == 'month':
@@ -1582,6 +1587,8 @@ class mail_message(osv.Model):
         return super(mail_message, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
+        if context is None:
+            context = {}
         if doc_model == 'calendar.event':
             order = context.get('order', self._order)
             for virtual_id in self.pool[doc_model].get_recurrent_ids(cr, uid, doc_dict.keys(), [], order=order, context=context):
