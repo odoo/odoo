@@ -1457,15 +1457,6 @@
             //'change input.url': 'preview_image',
             //'change select.image-style': 'preview_image',
             'click .existing-attachments img': 'select_existing',
-            'click .pager > li': function (e) {
-                e.preventDefault();
-                var $target = $(e.currentTarget);
-                if ($target.hasClass('disabled')) {
-                    return;
-                }
-                this.page += $target.hasClass('previous') ? -1 : 1;
-                this.display_attachments();
-            },
             'click .existing-attachment-remove': 'try_remove',
         }),
 
@@ -1474,12 +1465,23 @@
             this._super(parent, editor, media);
         },
         start: function () {
+            var self = this;
             var res = this._super();
 
             var o = { url: null };
             // avoid typos, prevent addition of new properties to the object
             Object.preventExtensions(o);
             this.trigger('start', o);
+
+            this.parent.$(".pager > li").click(function (e) {
+                e.preventDefault();
+                var $target = $(e.currentTarget);
+                if ($target.hasClass('disabled')) {
+                    return;
+                }
+                self.page += $target.hasClass('previous') ? -1 : 1;
+                self.display_attachments();
+            });
 
             this.set_image(o.url);
 
@@ -1590,7 +1592,7 @@
             this.$('.existing-attachments').replaceWith(
                 openerp.qweb.render(
                     'website.editor.dialog.image.existing.content', {rows: rows}));
-            this.$('.pager')
+            this.parent.$('.pager')
                 .find('li.previous').toggleClass('disabled', (from === 0)).end()
                 .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
         },
