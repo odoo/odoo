@@ -23,6 +23,7 @@ from openerp.osv import osv
 from openerp.tools import config
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
+from openerp.tools.safe_eval import safe_eval as eval
 
 import os
 import time
@@ -103,17 +104,17 @@ class Report(osv.Model):
 
         view_obj = self.pool['ir.ui.view']
 
-        def render_doc(doc_id, model, template):
-            """Helper used when a report should be translated into the associated
-            partner's lang.
+        def translate_doc(doc_id, model, lang_field, template):
+            """Helper used when a report should be translated into a specific lang.
 
             <t t-foreach="doc_ids" t-as="doc_id">
-                <t t-raw="render_doc(doc_id, doc_model, 'module.templatetocall')"/>
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
             </t>
 
             :param doc_id: id of the record to translate
             :param model: model of the record to translate
-            :param template: name of the template to translate into the partner's lang
+            :param lang_field': field of the record containing the lang
+            :param template: name of the template to translate into the lang_field
             """
             ctx = context.copy()
             doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
@@ -122,15 +123,9 @@ class Report(osv.Model):
             if ctx.get('translatable') is True:
                 qcontext['o'] = doc
             else:
-                # Guessing the lang we want to translate the doc into
-                newlang = None
-                if doc._model._all_columns.get('partner_id'):
-                    newlang = doc.partner_id.lang
-                elif doc._model._all_columns.get('lang'):
-                    newlang = doc.lang
-                if newlang:
-                    ctx['lang'] = newlang
-                    qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
+                # Reach the lang we want to translate the doc into
+                ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
+                qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
             return view_obj.render(cr, uid, template, qcontext, context=ctx)
 
         user = self.pool['res.users'].browse(cr, uid, uid)
@@ -139,7 +134,7 @@ class Report(osv.Model):
             website = request.website
         values.update({
             'time': time,
-            'render_doc': render_doc,
+            'translate_doc': translate_doc,
             'editable': True,  # Will active inherit_branding
             'user': user,
             'res_company': user.company_id,

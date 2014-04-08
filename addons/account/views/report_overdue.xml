@@ -110,7 +110,7 @@
 <template id="report_overdue">
     <t t-call="report.html_container">
         <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="render_doc(doc_id, doc_model, 'account.report_overdue_document')"/>
+            <t t-raw="translate_doc(doc_id, doc_model, 'lang', 'account.report_overdue_document')"/>
         </t>
     </t>
 </template>
