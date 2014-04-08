@@ -88,6 +88,25 @@
             </field>
         </record>
 
+        <!-- Stock Landed Cost Search View -->
+        <record id="view_stock_landed_cost_search" model="ir.ui.view">
+            <field name="name">stock.landed.cost.search</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <search string="Landed Costs">
+                    <field name="name" string="Name"/>
+                    <field name="date"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Open" name="open" domain="[('state','=','open')]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Month" context="{'group_by': 'date'}"/>
+                        <filter string="Status" context="{'group_by': 'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <!-- Stock Landed Cost Action -->
         <record id='action_stock_landed_cost' model='ir.actions.act_window'>
             <field name="name">Landed Costs</field>
