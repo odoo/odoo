@@ -196,7 +196,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
-            return request.redirect("/blog/%s/post/%s" % (blog_post.blog_id.id, blog_post.id))
+            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)))
 
         tags = tag_obj.browse(cr, uid, tag_obj.search(cr, uid, [], context=context), context=context)
 
@@ -209,6 +209,8 @@ class WebsiteBlog(http.Controller):
         next_post_id = blog_post_obj.search(cr, uid, [
             ('id', 'not in', visited_ids),
         ], order='ranking desc', limit=1, context=context)
+        if not next_post_id:
+            next_post_id = blog_post_obj.search(cr, uid, [('id', '!=', blog.id)], order='ranking desc', limit=1, context=context)
         next_post = next_post_id and blog_post_obj.browse(cr, uid, next_post_id[0], context=context) or False
 
         values = {
@@ -223,6 +225,7 @@ class WebsiteBlog(http.Controller):
             'date': date_begin,
             'post_url': post_url,
             'blog_url': blog_url,
+            'pager': pager,
         }
         response = request.website.render("website_blog.blog_post_complete", values)
         response.set_cookie('visited_blogs', ','.join(map(str, visited_ids)))
