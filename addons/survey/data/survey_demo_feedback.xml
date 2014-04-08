@@ -4,10 +4,7 @@
         <!-- User Feedback Form -->
         <record model="survey.survey" id="feedback_form">
             <field name="title">User Feedback Form</field>
-            <field name="state">open</field>
             <field name="stage_id" ref="survey.stage_in_progress" />
-            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
-            <field name="visible_to_user" eval="True"/>
             <field name="auth_required" eval="False" />
             <field name="users_can_go_back" eval="True" />
             <field name="description">&lt;p&gt;This survey should take less than five minutes.&lt;/p&gt;</field>
@@ -101,7 +98,6 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
-            <field name="constr_type">all</field>
         </record>
                 <record model="survey.label" id="fcol_2_1_1">
                     <field name="question_id" ref="feedback_2_1"/>
@@ -155,7 +151,6 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
-            <field name="constr_type">all</field>
         </record>
                 <record model="survey.label" id="fcol_2_2_1">
                     <field name="question_id" ref="feedback_2_2"/>
@@ -238,7 +233,6 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
-            <field name="constr_type">all</field>
         </record>
                 <record model="survey.label" id="fcol_2_5_1">
                     <field name="question_id" ref="feedback_2_5"/>
@@ -316,7 +310,6 @@ what have been your difficulties.&lt;/p&gt;</field>
             <field name="type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
-            <field name="constr_type">all</field>
         </record>
                 <record model="survey.label" id="fcol_2_7_1">
                     <field name="question_id" ref="feedback_2_7"/>

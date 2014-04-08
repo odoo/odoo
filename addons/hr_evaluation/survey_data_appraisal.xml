@@ -4,11 +4,8 @@
         <!-- Appraisal form -->
         <record model="survey.survey" id="appraisal_form">
             <field name="title">Employee Appraisal Form</field>
-            <field name="state">open</field>
             <field name="stage_id" ref="survey.stage_permanent" />
             <field name="res_model">hr_evaluation</field>
-            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
-            <field name="visible_to_user" eval="False"/>
             <field name="auth_required" eval="True" />
             <field name="users_can_go_back" eval="True" />
             <field name="description">&lt;p&gt; &lt;/p&gt;</field>
@@ -122,7 +119,6 @@ below:&lt;ol&gt;
             <field name="type">matrix</field>
             <field name="matrix_subtype">simple</field>
             <field name="constr_mandatory" eval="True" />
-            <field name="constr_type">all</field>
         </record>
                 <record model="survey.label" id="acol_3_1_1">
                     <field name="question_id" ref="appraisal_3_1"/>
@@ -323,11 +319,8 @@ over the coming year.&lt;/p&gt;</field>
         <!-- Employee Opinion form -->
         <record model="survey.survey" id="opinion_form">
             <field name="title">Employee Opinion Form</field>
-            <field name="state">open</field>
             <field name="stage_id" ref="survey.stage_permanent" />
             <field name="res_model">hr_evaluation</field>
-            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')" />
-            <field name="visible_to_user" eval="False"/>
             <field name="auth_required" eval="True" />
             <field name="users_can_go_back" eval="True" />
             <field name="description">&lt;p&gt; &lt;/p&gt;</field>
