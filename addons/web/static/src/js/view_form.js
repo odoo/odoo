@@ -2871,7 +2871,7 @@ instance.web.form.FieldBarChart = instance.web.form.AbstractField.extend({
     template: 'FieldBarChart',
 
     render_value: function() {
-        var value = this.get('value');
+        var value = JSON.parse(this.get('value'));
         var svg = this.$('svg')[0];
         svg.innerHTML = "";
         nv.addGraph(function() {
@@ -5954,9 +5954,16 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
     display a simple string "<value of field> <label of the field>"
 */
 instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
+    is_field_number: true,
     init: function() {
         this._super.apply(this, arguments);
-        this.set("value", 0);
+        this.internal_set_value(0);
+    },
+    set_value: function(value_) {
+        if (value_ === false || value_ === undefined) {
+            value_ = 0;
+        }
+        this._super.apply(this, [value_]);
     },
     render_value: function() {
         var options = {
@@ -5969,6 +5976,7 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
     },
 
 });
+
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
