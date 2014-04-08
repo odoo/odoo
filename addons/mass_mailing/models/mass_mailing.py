@@ -238,13 +238,16 @@ class MassMailingCampaign(osv.Model):
         Statistics = self.pool['mail.mail.statistics']
         results = dict.fromkeys(ids, False)
         for cid in ids:
+            stat_ids = Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], context=context),
+            stats = Statistics.browse(cr, uid, stat_ids, context=context)
             results[cid] = {
-                'total': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], count=True, context=context),
-                'scheduled': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('scheduled', '!=', False), ('sent', '=', False)], count=True, context=context),
-                'sent': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('sent', '!=', False)], count=True, context=context),
-                'opened': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('opened', '!=', False)], count=True, context=context),
-                'replied': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('replied', '!=', False)], count=True, context=context),
-                'bounced': Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid), ('bounced', '!=', False)], count=True, context=context),
+                'total': len(stats),
+                'failed': len([s for s in stats if not s.scheduled is False and s.sent is False and not s.exception is False]),
+                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False]),
+                'sent': len([s for s in stats if not s.sent is False]),
+                'opened': len([s for s in stats if not s.opened is False]),
+                'replied': len([s for s in stats if not s.replied is False]),
+                'bounced': len([s for s in stats if not s.bounced is False]),
             }
             results[cid]['delivered'] = results[cid]['sent'] - results[cid]['bounced']
             results[cid]['received_ratio'] = 100.0 * results[cid]['delivered'] / (results[cid]['sent'] or 1)
@@ -278,7 +281,11 @@ class MassMailingCampaign(osv.Model):
             type='integer', multi='_get_statistics'
         ),
         'scheduled': fields.function(
-            _get_statistics, string='Total',
+            _get_statistics, string='Scheduled',
+            type='integer', multi='_get_statistics'
+        ),
+        'failed': fields.function(
+            _get_statistics, string='Failed',
             type='integer', multi='_get_statistics'
         ),
         'sent': fields.function(
@@ -419,13 +426,16 @@ class MassMailing(osv.Model):
         Statistics = self.pool['mail.mail.statistics']
         results = dict.fromkeys(ids, False)
         for mid in ids:
+            stat_ids = Statistics.search(cr, uid, [('mass_mailing_id', '=', mid)], context=context)
+            stats = Statistics.browse(cr, uid, stat_ids, context=context)
             results[mid] = {
-                'total': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid)], count=True, context=context),
-                'scheduled': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('scheduled', '!=', False), ('sent', '=', False)], count=True, context=context),
-                'sent': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('sent', '!=', False)], count=True, context=context),
-                'opened': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('opened', '!=', False)], count=True, context=context),
-                'replied': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('replied', '!=', False)], count=True, context=context),
-                'bounced': Statistics.search(cr, uid, [('mass_mailing_id', '=', mid), ('bounced', '!=', False)], count=True, context=context),
+                'total': len(stats),
+                'failed': len([s for s in stats if not s.scheduled is False and s.sent is False and not s.exception is False]),
+                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False]),
+                'sent': len([s for s in stats if not s.sent is False]),
+                'opened': len([s for s in stats if not s.opened is False]),
+                'replied': len([s for s in stats if not s.replied is False]),
+                'bounced': len([s for s in stats if not s.bounced is False]),
             }
             results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
             results[mid]['received_ratio'] = 100.0 * results[mid]['delivered'] / (results[mid]['sent'] or 1)
@@ -449,7 +459,7 @@ class MassMailing(osv.Model):
         return res
 
     def _get_private_models(self, context=None):
-        return ['res.partner', 'mail.maass_mailing.contact']
+        return ['res.partner', 'mail.mass_mailing.contact']
 
     def _get_auto_reply_to_available(self, cr, uid, ids, name, arg, context=None):
         res = dict.fromkeys(ids, False)
@@ -535,6 +545,10 @@ class MassMailing(osv.Model):
         ),
         'scheduled': fields.function(
             _get_statistics, string='Scheduled',
+            type='integer', multi='_get_statistics',
+        ),
+        'failed': fields.function(
+            _get_statistics, string='Failed',
             type='integer', multi='_get_statistics',
         ),
         'sent': fields.function(
@@ -868,6 +882,7 @@ class MailMailStats(osv.Model):
         # Bounce and tracking
         'scheduled': fields.datetime('Scheduled', help='Date when the email has been created'),
         'sent': fields.datetime('Sent', help='Date when the email has been sent'),
+        'exception': fields.datetime('Exception', help='Date of technical error leading to the email not being sent'),
         'opened': fields.datetime('Opened', help='Date when the email has been opened the first time'),
         'replied': fields.datetime('Replied', help='Date when this email has been replied for the first time.'),
         'bounced': fields.datetime('Bounced', help='Date when this email has bounced.'),
