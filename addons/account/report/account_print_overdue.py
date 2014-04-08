@@ -22,15 +22,36 @@
 import time
 
 from openerp.report import report_sxw
+from openerp.osv import osv
+
 
 class Overdue(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(Overdue, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        ids = context.get('active_ids')
+        partner_obj = self.pool['res.partner']
+        docs = partner_obj.browse(cr, uid, ids, context)
+
+        due = {}
+        paid = {}
+        mat = {}
+
+        for partner in docs:
+            due[partner.id] = reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['debit'] or 0) or (y['account_id']['type'] == 'payable' and y['credit'] * -1 or 0)), self._lines_get(partner), 0)
+            paid[partner.id] = reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['credit'] or 0) or (y['account_id']['type'] == 'payable' and y['debit'] * -1 or 0)), self._lines_get(partner), 0)
+            mat[partner.id] = reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] < time.strftime('%Y-%m-%d'), self._lines_get(partner)), 0)
+
+        addresses = self.pool['res.partner']._address_display(cr, uid, ids, None, None)
+        self.localcontext.update({
+            'docs': docs,
             'time': time,
             'getLines': self._lines_get,
             'tel_get': self._tel_get,
             'message': self._message,
+            'due': due,
+            'paid': paid,
+            'mat': mat,
+            'addresses': addresses
         })
         self.context = context
 
@@ -41,7 +62,7 @@ class Overdue(report_sxw.rml_parse):
         addresses = res_partner.address_get(self.cr, self.uid, [partner.id], ['invoice'])
         adr_id = addresses and addresses['invoice'] or False
         if adr_id:
-            adr=res_partner_address.read(self.cr, self.uid, [adr_id])[0]
+            adr=res_partner.read(self.cr, self.uid, [adr_id])[0]
             return adr['phone']
         else:
             return partner.phone or False
@@ -62,5 +83,10 @@ class Overdue(report_sxw.rml_parse):
         return message.split('\n')
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class report_overdue(osv.AbstractModel):
+    _name = 'report.account.report_overdue'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_overdue'
+    _wrapped_report_class = Overdue
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

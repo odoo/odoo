@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class payment_order(report_sxw.rml_parse):
 
@@ -70,6 +71,11 @@ class payment_order(report_sxw.rml_parse):
                 return value_name[0][1]
         return False
 
-report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order, header="external")
+
+class report_paymentorder(osv.AbstractModel):
+    _name = 'report.account_payment.report_paymentorder'
+    _inherit = 'report.abstract_report'
+    _template = 'account_payment.report_paymentorder'
+    _wrapped_report_class = payment_order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

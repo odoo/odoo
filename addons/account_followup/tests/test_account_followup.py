@@ -59,7 +59,6 @@ class TestAccountFollowup(TransactionCase):
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id)
         
-        
     def run_wizard_three_times(self):
         cr, uid = self.cr, self.uid
         current_date = datetime.datetime.utcnow()
@@ -131,7 +130,7 @@ class TestAccountFollowup(TransactionCase):
         self.run_wizard_three_times()
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id.id, 
                          self.last_followup_line_id, "Lines are not equal")
-        
+
     def test_06_pay_the_invoice(self):
         """Run wizard until manual action, pay the invoice and check that partner has no follow-up level anymore and after running the wizard the action is empty"""
         cr, uid = self.cr, self.uid
@@ -148,7 +147,6 @@ class TestAccountFollowup(TransactionCase):
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
         self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
-        partner_ref = self.partner.browse(cr, uid, self.partner_id)
         self.assertEqual(0, self.partner.browse(cr, uid, self.partner_id).payment_amount_due, "Amount Due != 0")
         self.assertFalse(self.partner.browse(cr, uid, self.partner_id).payment_next_action_date, "Next action date not cleared")
         
