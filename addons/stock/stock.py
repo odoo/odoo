@@ -1799,6 +1799,7 @@ class stock_move(osv.osv):
                 rules = push_obj.search(cr, uid, domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence', context=context)
                 if not rules:
                     #then we search on the warehouse if a rule can apply
+                    wh_route_ids = []
                     if move.warehouse_id:
                         wh_route_ids = [x.id for x in move.warehouse_id.route_ids]
                     elif move.picking_type_id and move.picking_type_id.warehouse_id:
