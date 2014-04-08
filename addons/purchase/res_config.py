@@ -62,7 +62,7 @@ class purchase_config_settings(osv.osv_memory):
     }
 
     _defaults = {
-        'default_invoice_method': 'manual',
+        'default_invoice_method': 'order',
     }
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
