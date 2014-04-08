@@ -1207,6 +1207,11 @@
         <span></span>
     </span>
 </t>
+<t t-name="FieldPercentPie">
+    <span class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
+        <svg></svg>
+    </span>
+</t>
 <t t-name="FieldStatus">
     <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
@@ -1271,7 +1276,6 @@
                     <td>
                         <t t-call="HiddenInputFile">
                             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                            <t t-set="fileupload_style" t-translation="off">width: 83px;</t>
                             <button class="oe_button oe_field_button" type="button">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
@@ -1370,13 +1374,15 @@
     </div>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" class="oe_button oe_form_button"
+    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button'"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-accesskey="widget.node.attrs.accesskey">
-        <img t-if="widget.node.attrs.icon" t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+        <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
+        <div t-if="widget.is_stat_button" class="stat_button_icon"><t t-if="widget.icon" t-raw="widget.icon"/></div>
+        <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
+        <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
 </t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
@@ -1949,4 +1955,6 @@
 <t t-name="X2ManyCounter">
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
+<t t-name="StatInfo">
+    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
 </templates>
