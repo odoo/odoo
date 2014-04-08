@@ -2311,16 +2311,16 @@ class BaseModel(object):
             context and by properly formatting the date/datetime values. 
         """
         domain_group = [dom for gb in annotated_groupbys for dom in self._read_group_get_domain(gb, data[gb['groupby']])]
-        result = { '__domain': domain_group + domain }
-        if len(groupby) - len(annotated_groupbys) >= 1:
-            result['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
-        result.update(data)
-        for k,v in result.iteritems():
+        for k,v in data.iteritems():
             gb = groupby_dict.get(k)
             if gb and gb['type'] in ('date', 'datetime') and v:
-                result[k] = babel.dates.format_date(v, format=gb['display_format'], locale=context.get('lang', 'en_US'))
-        del result['id']
-        return result
+                data[k] = babel.dates.format_date(v, format=gb['display_format'], locale=context.get('lang', 'en_US'))
+
+        data['__domain'] = domain_group + domain 
+        if len(groupby) - len(annotated_groupbys) >= 1:
+            data['__context'] = { 'group_by': groupby[len(annotated_groupbys):]}
+        del data['id']
+        return data
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context={}, orderby=False, lazy=True):
         """
