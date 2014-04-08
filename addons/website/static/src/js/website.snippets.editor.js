@@ -1493,6 +1493,7 @@
 
             $(document.body).on("media-saved", self, function (event, prev , item) {
                 self.editor.onBlur();
+                self.BuildingBlock.make_active(false);
                 self.BuildingBlock.make_active($(item));
             });
 

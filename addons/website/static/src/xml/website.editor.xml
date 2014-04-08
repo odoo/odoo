@@ -147,16 +147,17 @@
                   target="fileframe"
                   class="form-inline">
                 <div class="well">
+                    <div class="pull-right">
+                        <label for="iamgeurl">Image URL</label>
+                        <div class="form-group btn-group">
+                            <input type="text" name="url" class="form-control url pull-left" style="width: 320px;" id="iamgeurl" placeholder="http://openerp.com/logo.png"/>
+                            <button class="btn btn-default" type="submit">Add</button>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
                         <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
                         <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
-                    </div>
-                    <span class="text-muted">— or —</span>
-                    <label for="iamgeurl">Set an image URL</label>
-                    <div class="form-group btn-group">
-                        <input type="text" name="url" class="form-control url" style="width: 320px; float: left;" id="iamgeurl" placeholder="http://openerp.com"/>
-                        <button class="btn btn-primary" type="submit">Add</button>
                     </div>
                 </div>
                 <input type="hidden" name="func"/>
@@ -303,9 +304,8 @@
                         class="form-control url pull-left"
                         style="width: 400px;"
                         id="urlvideo"
-                        placeholder="http://openerp.com"
-                        value="//www.youtube.com/embed/yws1tbgNV7k"/>
-                    <button class="btn btn-primary">Add</button>
+                        placeholder="//www.youtube.com/embed/yws1tbgNV7k"/>
+                    <button class="btn btn-default">Preview</button>
                 </div>
                 <div class="form-group btn-group">
                     <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left"><span class="text-muted">— or —</span> Embed Video (HTML)</label>
@@ -315,21 +315,21 @@
                         style="width: 400px;"
                         id="embedvideo"
                         placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'/>
-                    <button class="btn btn-primary">Add</button>
+                    <button class="btn btn-default">Preview</button>
                 </div>
             </div>
             
             <div id="video-preview" style="width: 450px; margin: 0 auto;">
                 <div class="media_iframe_video">
                     <iframe
-                        src="//www.youtube.com/embed/yws1tbgNV7k"
+                        src=""
                         frameborder="0"
                         allowfullscreen="allowfullscreen"></iframe>
                 </div>
             </div>
 
-            <input type="hidden" id="video_id" value="yws1tbgNV7k"/>
-            <input type="hidden" id="video_type" value="youtube"/>
+            <input type="hidden" id="video_id" value=""/>
+            <input type="hidden" id="video_type" value=""/>
 
             <div class="text-center mt32">
                 <div class="checkbox">

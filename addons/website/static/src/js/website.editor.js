@@ -1442,7 +1442,7 @@
      *                           originally passed in)
      */
     var IMAGES_PER_ROW = 6;
-    var IMAGES_ROWS = 4;
+    var IMAGES_ROWS = 2;
     website.editor.ImageDialog = website.editor.Media.extend({
         template: 'website.editor.dialog.image',
         events: _.extend({}, website.editor.Dialog.prototype.events, {
@@ -1454,7 +1454,13 @@
             },
             'change input[type=file]': 'file_selection',
             'submit form': 'form_submit',
-            //'change input.url': 'preview_image',
+            'change input.url': function (e) {
+                if ($(e.target).val() === "") {
+                    this.$("button").addClass("btn-default").removeClass("btn-primary");
+                } else {
+                    this.$("button").removeClass("btn-default").addClass("btn-primary");
+                }
+            },
             //'change select.image-style': 'preview_image',
             'click .existing-attachments img': 'select_existing',
             'click .existing-attachment-remove': 'try_remove',
@@ -1488,11 +1494,14 @@
             return res;
         },
         save: function () {
+            if (!this.link) {
+                this.link = this.$(".existing-attachments img:first").attr('src');
+            }
             this.trigger('save', {
-                url: this.$('input.url').val()
+                url: this.link
             });
             this.media.renameNode("img");
-            this.media.$.attributes.src = this.$('input.url').val();
+            this.media.$.attributes.src = this.link;
             return this._super();
         },
         clear: function () {
@@ -1511,7 +1520,8 @@
 
         set_image: function (url, error) {
             var self = this;
-            this.$('input.url').val(error ? null : url || '');
+            if (url) this.link = url;
+            this.$('input.url').val('');
             this.fetch_existing().then(function () {
                 self.selected_existing(url);
             });
@@ -1551,6 +1561,8 @@
                 $button.addClass('btn-danger');
             }
             this.set_image(url, error);
+            // auto save and close popup
+            this.parent.save();
         },
 
         fetch_existing: function (needle) {
@@ -1598,10 +1610,10 @@
         },
         select_existing: function (e) {
             var link = $(e.currentTarget).attr('src');
+            this.link = link;
             this.selected_existing(link);
         },
         selected_existing: function (link) {
-            this.$('input.url').val(link);
             this.$('.existing-attachment-cell.media_selected').removeClass("media_selected");
             var $select = this.$('.existing-attachment-cell img').filter(function () {
                 return $(this).attr("src") == link;
@@ -1848,6 +1860,8 @@
         events : _.extend({}, website.editor.Dialog.prototype.events, {
             'click input#urlvideo ~ button': 'get_video',
             'click input#embedvideo ~ button': 'get_embed_video',
+            'change input#urlvideo': 'change_input',
+            'change input#embedvideo': 'change_input'
         }),
         start: function () {
             this.$iframe = this.$("iframe");
@@ -1859,6 +1873,15 @@
                 this.get_video();
             }
             return this._super();
+        },
+        change_input: function (e) {
+            var $input = $(e.target);
+            var $button = $input.parent().find("button");
+            if ($input.val() === "") {
+                $button.addClass("btn-default").removeClass("btn-primary");
+            } else {
+                $button.removeClass("btn-default").addClass("btn-primary");
+            }
         },
         get_url: function () {
             var video_id = this.$("#video_id").val();
@@ -1914,6 +1937,10 @@
         },
         save: function () {
             var video_id = this.$("#video_id").val();
+            if (!video_id) {
+                this.$("button.btn-primary").click();
+                video_id = this.$("#video_id").val();
+            }
             var video_type = this.$("#video_type").val();
             var style = this.media.$.attributes.style ? this.media.$.attributes.style.textContent : '';
             var $iframe = $(
