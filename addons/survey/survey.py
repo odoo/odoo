@@ -540,8 +540,6 @@ class survey_question(osv.Model):
             ondelete='cascade'),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
             relation='survey.survey', string='Survey'),
-        # 'parent_id': fields.many2one('survey.question', 'Parent question',
-        #     ondelete='cascade'),
         'sequence': fields.integer(string='Sequence'),
 
         # Question
@@ -586,9 +584,6 @@ class survey_question(osv.Model):
         'comments_allowed': fields.boolean('Show Comments Field',
             oldname="allow_comment"),
         'comments_message': fields.char('Comment Message', translate=True),
-        # 'comment_children_ids': fields.many2many('survey.question',
-        #     'question_comment_children_ids', 'comment_id', 'parent_id',
-        #     'Comment question'),  # one2one in fact
         'comment_count_as_answer': fields.boolean('Comment Field is an Answer Choice',
             oldname='make_comment_field'),
 
@@ -596,20 +591,10 @@ class survey_question(osv.Model):
         'validation_required': fields.boolean('Validate entry',
             oldname='is_validation_require'),
         'validation_email': fields.boolean('Input must be an email'),
-        # 'validation_type': fields.selection([
-        #     ('has_length', 'Must have a specific length'),
-        #     ('is_integer', 'Must be an integer'),
-        #     ('is_decimal', 'Must be a decimal number'),
-        #     #('is_date', 'Must be a date'),
-        #     ('is_email', 'Must be an email address')
-        #     ],
-        #     'Validation type', translate=True),
         'validation_length_min': fields.integer('Minimum Text Length'),
         'validation_length_max': fields.integer('Maximum Text Length'),
         'validation_min_float_value': fields.float('Minimum value'),
         'validation_max_float_value': fields.float('Maximum value'),
-        # 'validation_min_int_value': fields.integer('Minimum value'),
-        # 'validation_max_int_value': fields.integer('Maximum value'),
         'validation_min_date': fields.datetime('Minimum Date'),
         'validation_max_date': fields.datetime('Maximum Date'),
         'validation_error_msg': fields.char('Error message',
@@ -619,16 +604,6 @@ class survey_question(osv.Model):
         # Constraints on number of answers (matrices)
         'constr_mandatory': fields.boolean('Mandatory Answer',
             oldname="is_require_answer"),
-        # 'constr_type': fields.selection([('all', 'all'),
-        #     ('at least', 'at least'),
-        #     ('at most', 'at most'),
-        #     ('exactly', 'exactly'),
-        #     ('a range', 'a range')],
-        #     'Constraint on answers number', oldname='required_type'),
-        # 'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
-        #     oldname='maximum_req_ans'),
-        # 'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
-        #     oldname='minimum_req_ans'),
         'constr_error_msg': fields.char("Error message",
             oldname='req_error_msg', translate=True),
         'user_input_line_ids': fields.one2many('survey.user_input_line',
@@ -642,11 +617,7 @@ class survey_question(osv.Model):
         'matrix_subtype': 'simple',
         'column_nb': '12',
         'display_mode': 'columns',
-        # 'constr_type': 'at least',
-        # 'constr_minimum_req_ans': 1,
-        # 'constr_maximum_req_ans': 1,
-        'constr_error_msg': lambda s, cr, uid, c:
-                _('This question requires an answer.'),
+        'constr_error_msg': lambda s, cr, uid, c: _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
         'validation_required': False,
         'comments_message': lambda s, cr, uid, c: _('If other, precise:'),
@@ -656,9 +627,7 @@ class survey_question(osv.Model):
         ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
         ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
         ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
-        # ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
         ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
-        # ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
     ]
 
     def copy_data(self, cr, uid, ids, default=None, context=None):
@@ -674,21 +643,6 @@ class survey_question(osv.Model):
 
         return super(survey_question, self).copy_data(cr, uid, ids, default=vals,
             context=context)
-
-    def survey_save(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        surv_name_wiz = self.pool.get('survey.question.wiz')
-        surv_name_wiz.write(cr, uid, [context.get('wizard_id', False)],
-            {'transfer': True, 'page_no': context.get('page_number', False)})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
 
     # Validation methods
 
@@ -938,11 +892,6 @@ class survey_user_input(osv.Model):
                                            context=context)
         if empty_user_input_ids:
             self.unlink(cr, uid, empty_user_input_ids, context=context)
-
-    def purge_tests(self, cr, uid, context=None):
-        ''' Remove the test entries '''
-        old_tests = self.search(cr, uid, [('test_entry', '=', True)], context=context)
-        return self.unlink(cr, uid, old_tests, context=context)
 
     def action_survey_resent(self, cr, uid, ids, context=None):
         ''' Sent again the invitation '''
