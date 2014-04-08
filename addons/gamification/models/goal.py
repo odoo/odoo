@@ -279,7 +279,7 @@ class gamification_goal(osv.Model):
 
                 if goal.definition_id.computation_mode == 'sum':
                     field_name = goal.definition_id.field_id.name
-                    res = obj.read_group(cr, uid, domain, [field_name], [''], context=context)
+                    res = obj.read_group(cr, uid, domain, [field_name], [field_name], context=context)
                     new_value = res and res[0][field_name] or 0.0
 
                 else:  # computation mode = count
