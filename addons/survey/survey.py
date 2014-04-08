@@ -261,17 +261,17 @@ class survey_survey(osv.Model):
         'title': fields.char('Title', required=1, translate=True),
         'res_model': fields.char('Category'),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages'),
-        'date_open': fields.datetime('Opening date', readonly=True),
-        'date_close': fields.datetime('Closing date', readonly=True),
-        'user_input_limit': fields.integer('Automatic closing limit',
-            help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied)",
-            oldname='max_response_limit'),
-        'state': fields.selection(
-            [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
-            ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
+        # 'date_open': fields.datetime('Opening date', readonly=True),
+        # 'date_close': fields.datetime('Closing date', readonly=True),
+        # 'user_input_limit': fields.integer('Automatic closing limit',
+        #     help="Limits the number of instances of this survey that can be completed (if set to 0, no limit is applied)",
+        #     oldname='max_response_limit'),
+        # 'state': fields.selection(
+        #     [('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'),
+        #     ('cancel', 'Cancelled')], 'Status', required=1, translate=1),
         'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null"),
-        'visible_to_user': fields.boolean('Public in website',
-            help="If unchecked, only invited users will be able to open the survey."),
+        # 'visible_to_user': fields.boolean('Public in website',
+        #     help="If unchecked, only invited users will be able to open the survey."),
         'auth_required': fields.boolean('Login required',
             help="Users with a public link will be requested to login before taking part to the survey",
             oldname="authenticate"),
@@ -306,17 +306,17 @@ class survey_survey(osv.Model):
     }
 
     _defaults = {
-        'user_input_limit': 0,
-        'state': 'draft',
-        'visible_to_user': True,
+        # 'user_input_limit': 0,
+        # 'state': 'draft',
+        # 'visible_to_user': True,
         'auth_required': True,
         'users_can_go_back': False,
         'color': 0
     }
 
-    _sql_constraints = {
-        ('positive_user_input_limit', 'CHECK (user_input_limit >= 0)', 'Automatic closing limit must be positive')
-    }
+    # _sql_constraints = {
+    #     ('positive_user_input_limit', 'CHECK (user_input_limit >= 0)', 'Automatic closing limit must be positive')
+    # }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         """ Read group customization in order to display all the stages in the
@@ -596,8 +596,8 @@ class survey_question(osv.Model):
             ondelete='cascade'),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
             relation='survey.survey', string='Survey'),
-        'parent_id': fields.many2one('survey.question', 'Parent question',
-            ondelete='cascade'),
+        # 'parent_id': fields.many2one('survey.question', 'Parent question',
+        #     ondelete='cascade'),
         'sequence': fields.integer(string='Sequence'),
 
         # Question
@@ -642,9 +642,9 @@ class survey_question(osv.Model):
         'comments_allowed': fields.boolean('Show Comments Field',
             oldname="allow_comment"),
         'comments_message': fields.char('Comment Message', translate=True),
-        'comment_children_ids': fields.many2many('survey.question',
-            'question_comment_children_ids', 'comment_id', 'parent_id',
-            'Comment question'),  # one2one in fact
+        # 'comment_children_ids': fields.many2many('survey.question',
+        #     'question_comment_children_ids', 'comment_id', 'parent_id',
+        #     'Comment question'),  # one2one in fact
         'comment_count_as_answer': fields.boolean('Comment Field is an Answer Choice',
             oldname='make_comment_field'),
 
@@ -652,19 +652,20 @@ class survey_question(osv.Model):
         'validation_required': fields.boolean('Validate entry',
             oldname='is_validation_require'),
         'validation_email': fields.boolean('Input must be an email'),
-        'validation_type': fields.selection([
-            ('has_length', 'Must have a specific length'),
-            ('is_integer', 'Must be an integer'),
-            ('is_decimal', 'Must be a decimal number'),
-            #('is_date', 'Must be a date'),
-            ('is_email', 'Must be an email address')],
-            'Validation type', translate=True),
+        # 'validation_type': fields.selection([
+        #     ('has_length', 'Must have a specific length'),
+        #     ('is_integer', 'Must be an integer'),
+        #     ('is_decimal', 'Must be a decimal number'),
+        #     #('is_date', 'Must be a date'),
+        #     ('is_email', 'Must be an email address')
+        #     ],
+        #     'Validation type', translate=True),
         'validation_length_min': fields.integer('Minimum Text Length'),
         'validation_length_max': fields.integer('Maximum Text Length'),
         'validation_min_float_value': fields.float('Minimum value'),
         'validation_max_float_value': fields.float('Maximum value'),
-        'validation_min_int_value': fields.integer('Minimum value'),
-        'validation_max_int_value': fields.integer('Maximum value'),
+        # 'validation_min_int_value': fields.integer('Minimum value'),
+        # 'validation_max_int_value': fields.integer('Maximum value'),
         'validation_min_date': fields.datetime('Minimum Date'),
         'validation_max_date': fields.datetime('Maximum Date'),
         'validation_error_msg': fields.char('Error message',
@@ -674,16 +675,16 @@ class survey_question(osv.Model):
         # Constraints on number of answers (matrices)
         'constr_mandatory': fields.boolean('Mandatory Answer',
             oldname="is_require_answer"),
-        'constr_type': fields.selection([('all', 'all'),
-            ('at least', 'at least'),
-            ('at most', 'at most'),
-            ('exactly', 'exactly'),
-            ('a range', 'a range')],
-            'Constraint on answers number', oldname='required_type'),
-        'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
-            oldname='maximum_req_ans'),
-        'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
-            oldname='minimum_req_ans'),
+        # 'constr_type': fields.selection([('all', 'all'),
+        #     ('at least', 'at least'),
+        #     ('at most', 'at most'),
+        #     ('exactly', 'exactly'),
+        #     ('a range', 'a range')],
+        #     'Constraint on answers number', oldname='required_type'),
+        # 'constr_maximum_req_ans': fields.integer('Maximum Required Answer',
+        #     oldname='maximum_req_ans'),
+        # 'constr_minimum_req_ans': fields.integer('Minimum Required Answer',
+        #     oldname='minimum_req_ans'),
         'constr_error_msg': fields.char("Error message",
             oldname='req_error_msg', translate=True),
         'user_input_line_ids': fields.one2many('survey.user_input_line',
@@ -697,9 +698,9 @@ class survey_question(osv.Model):
         'matrix_subtype': 'simple',
         'column_nb': '12',
         'display_mode': 'columns',
-        'constr_type': 'at least',
-        'constr_minimum_req_ans': 1,
-        'constr_maximum_req_ans': 1,
+        # 'constr_type': 'at least',
+        # 'constr_minimum_req_ans': 1,
+        # 'constr_maximum_req_ans': 1,
         'constr_error_msg': lambda s, cr, uid, c:
                 _('This question requires an answer.'),
         'validation_error_msg': lambda s, cr, uid, c: _('The answer you entered has an invalid format.'),
@@ -711,9 +712,9 @@ class survey_question(osv.Model):
         ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
         ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
         ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
-        ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
-        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
-        ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
+        # ('validation_int', 'CHECK (validation_min_int_value <= validation_max_int_value)', 'Max value cannot be smaller than min value!'),
+        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!')
+        # ('constr_number', 'CHECK (constr_minimum_req_ans <= constr_maximum_req_ans)', 'Max number of answers cannot be smaller than min number!')
     ]
 
     def copy_data(self, cr, uid, ids, default=None, context=None):
