@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class crossovered_analytic(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -173,7 +174,11 @@ class crossovered_analytic(report_sxw.rml_parse):
                 final.append(item)
         return final
 
-report_sxw.report_sxw('report.account.analytic.account.crossovered.analytic', 'account.analytic.account', 'addons/account_analytic_plans/report/crossovered_analytic.rml',parser = crossovered_analytic, header='internal')
+
+class report_crossoveredanalyticplans(osv.AbstractModel):
+    _name = 'report.account_analytic_plans.report_crossoveredanalyticplans'
+    _inherit = 'report.abstract_report'
+    _template = 'account_analytic_plans.report_crossoveredanalyticplans'
+    _wrapped_report_class = crossovered_analytic
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

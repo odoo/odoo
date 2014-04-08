@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
+import time
 from openerp.osv import fields, osv
+
 
 class account_analytic_cost_ledger_journal_report(osv.osv_memory):
     _name = 'account.analytic.cost.ledger.journal.report'
@@ -42,14 +43,12 @@ class account_analytic_cost_ledger_journal_report(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids)[0]
         datas = {
-             'ids': context.get('active_ids',[]),
-             'model': 'account.analytic.account',
-             'form': data
-                 }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.account.quantity_cost_ledger',
-            'datas': datas,
-            }
+            'ids': context.get('active_ids', []),
+            'model': 'account.analytic.account',
+            'form': data
+        }
+
+        datas['form']['active_ids'] = context.get('active_ids', False)
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_analyticcostledgerquantity', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

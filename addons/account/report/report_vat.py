@@ -19,24 +19,16 @@
 #
 ##############################################################################
 
+import time
 from openerp.osv import osv
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp.report import report_sxw
 from common_report_header import common_report_header
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
-import xlwt
 
 
-class tax_report(osv.AbstractModel, common_report_header):
-    _name = 'report.account.report_vat'
+class tax_report(report_sxw.rml_parse, common_report_header):
 
-    def render_html(self, cr, uid, ids, data=None, context=None):
-        report_obj = request.registry['report']
-        self.cr, self.uid, self.context = cr, uid, context
-
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
         res = {}
         self.period_ids = []
         period_obj = self.pool.get('account.period')
@@ -46,30 +38,42 @@ class tax_report(osv.AbstractModel, common_report_header):
 
         if data['form'].get('period_from', False) and data['form'].get('period_to', False):
             self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
+            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
+            for period in periods_l:
+                if res['periods'] == '':
+                    res['periods'] = period['name']
+                else:
+                    res['periods'] += ", "+ period['name']
+        return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
 
-        docargs = {
-            'fiscalyear': self._get_fiscalyear(data),
-            'account': self._get_account(data),
-            'based_on': self._get_basedon(data),
-            'period_from': self.get_start_period(data),
-            'period_to': self.get_end_period(data),
-            'taxlines': self._get_lines(self._get_basedon(data), company_id=data['form']['company_id'], cr=cr, uid=uid),
-        }
-        return report_obj.render(self.cr, self.uid, [], 'account.report_vat', docargs, context=context)
+    def __init__(self, cr, uid, name, context=None):
+        super(tax_report, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+            'get_codes': self._get_codes,
+            'get_general': self._get_general,
+            'get_currency': self._get_currency,
+            'get_lines': self._get_lines,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_account': self._get_account,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_basedon': self._get_basedon,
+        })
 
     def _get_basedon(self, form):
         return form['form']['based_on']
 
-    def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None, cr=None, uid=None):
+    def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
         period_list = self.period_ids
-        res = self._get_codes(based_on, company_id, parent, level, period_list, cr=cr, uid=uid, context=context)
+        res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
         if period_list:
             res = self._add_codes(based_on, res, period_list, context=context)
         else:
-            cr.execute ("select id from account_fiscalyear")
-            fy = cr.fetchall()
-            cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
-            periods = cr.fetchall()
+            self.cr.execute ("select id from account_fiscalyear")
+            fy = self.cr.fetchall()
+            self.cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
+            periods = self.cr.fetchall()
             for p in periods:
                 period_list.append(p[0])
             res = self._add_codes(based_on, res, period_list, context=context)
@@ -89,7 +93,7 @@ class tax_report(osv.AbstractModel, common_report_header):
             }
 
             top_result.append(res_dict)
-            res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, cr=cr, uid=uid, context=context)
+            res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
             ind_general = 0
             while ind_general < len(res_general):
                 res_general[ind_general]['type'] = 2
@@ -100,14 +104,14 @@ class tax_report(osv.AbstractModel, common_report_header):
             i+=1
         return top_result
 
-    def _get_general(self, tax_code_id, period_list, company_id, based_on, cr=None, uid=None, context=None):
+    def _get_general(self, tax_code_id, period_list, company_id, based_on, context=None):
         if not self.display_detail:
             return []
         res = []
         obj_account = self.pool.get('account.account')
         periods_ids = tuple(period_list)
         if based_on == 'payments':
-            cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
+            self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
                         SUM(line.debit) AS debit, \
                         SUM(line.credit) AS credit, \
                         COUNT(*) AS count, \
@@ -131,7 +135,7 @@ class tax_report(osv.AbstractModel, common_report_header):
                         company_id, periods_ids, 'paid',))
 
         else:
-            cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
+            self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
                         SUM(line.debit) AS debit, \
                         SUM(line.credit) AS credit, \
                         COUNT(*) AS count, \
@@ -148,21 +152,23 @@ class tax_report(osv.AbstractModel, common_report_header):
                         AND account.active \
                     GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
                         company_id, periods_ids,))
-        res = cr.dictfetchall()
+        res = self.cr.dictfetchall()
 
         i = 0
         while i<len(res):
-            res[i]['account'] = obj_account.browse(cr, uid, res[i]['account_id'], context=context)
+            res[i]['account'] = obj_account.browse(self.cr, self.uid, res[i]['account_id'], context=context)
             i+=1
         return res
 
-    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, cr=None, uid=None, context=None):
+    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
-        ids = obj_tc.search(cr, uid, [('parent_id', '=', parent), ('company_id', '=', company_id)], order='sequence', context=context)
+        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
+
         res = []
-        for code in obj_tc.browse(cr, uid, ids, {'based_on': based_on}):
+        for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
             res.append(('.'*2*level, code))
-            res += self._get_codes(based_on, company_id, code.id, level+1, cr=cr, uid=uid, context=context)
+
+            res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
         return res
 
     def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
@@ -184,7 +190,11 @@ class tax_report(osv.AbstractModel, common_report_header):
             res.append((account[0], code))
         return res
 
+    def _get_currency(self, form, context=None):
+        return self.pool.get('res.company').browse(self.cr, self.uid, form['company_id'], context=context).currency_id.name
+
     def sort_result(self, accounts, context=None):
+        # On boucle sur notre rapport
         result_accounts = []
         ind=0
         old_level=0
@@ -200,8 +210,7 @@ class tax_report(osv.AbstractModel, common_report_header):
                 bcl_rup_ind = ind - 1
 
                 while (bcl_current_level >= int(accounts[bcl_rup_ind]['level']) and bcl_rup_ind >= 0 ):
-                    res_tot = {
-                        'code': accounts[bcl_rup_ind]['code'],
+                    res_tot = { 'code': accounts[bcl_rup_ind]['code'],
                         'name': '',
                         'debit': 0,
                         'credit': 0,
@@ -225,40 +234,10 @@ class tax_report(osv.AbstractModel, common_report_header):
         return result_accounts
 
 
-class tax_report_xls(http.Controller):
-
-    @http.route(['/report/account.report_vat_xls'], type='http', auth='user', website=True, multilang=True)
-    def report_account_tax_xls(self, **data):
-
-        # Very ugly lines, only for the proof of concept of 'controller' report
-        taxreport_obj = request.registry['report.account.report_vat']
-        from openerp.addons.report.controllers.main import ReportController
-        eval_params = ReportController()._eval_params
-
-        cr, uid = request.cr, request.uid
-        data = eval_params(data)
-        data = {'form': data}
-
-        taxreport_obj.render_html(cr, uid, [], data=data)
-        lines = taxreport_obj._get_lines(taxreport_obj._get_basedon(data), company_id=data['form']['company_id'], cr=cr, uid=uid)
-
-        if lines:
-            xls = StringIO.StringIO()
-            xls_workbook = xlwt.Workbook()
-            vat_sheet = xls_workbook.add_sheet('report_vat')
-
-            for x in range(0, len(lines)):
-                for y in range(0, len(lines[0])):
-                    vat_sheet.write(x, y, lines[x].values()[y])
-
-            xls_workbook.save(xls)
-            xls.seek(0)
-            content = xls.read()
-
-        response = request.make_response(content, headers=[
-            ('Content-Type', 'application/vnd.ms-excel'),
-            ('Content-Disposition', 'attachment; filename=report_vat.xls;')
-        ])
-        return response
+class report_vat(osv.AbstractModel):
+    _name = 'report.account.report_vat'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_vat'
+    _wrapped_report_class = tax_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
