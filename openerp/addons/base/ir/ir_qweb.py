@@ -8,12 +8,14 @@ import math
 import re
 import sys
 import xml  # FIXME use lxml and etree
+import lxml
 
 import babel
 import babel.dates
 import werkzeug.utils
 from PIL import Image
 
+import openerp.http
 import openerp.tools
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
@@ -384,6 +386,44 @@ class QWeb(orm.AbstractModel):
         uid = d.get('request') and d['request'].uid or None
 
         return self.render(cr, uid, self.eval_format(template_attributes["call"], d), d)
+
+    def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
+        template_attributes['call'] = template_attributes['call-assets']
+        content = self.render_tag_call(element, template_attributes, generated_attributes, qwebcontext)
+        html = lxml.html.fragment_fromstring('<s>%s</s>' % content) # avoid this hack if possible
+
+        tags = dict()
+        current_style = None
+        current_script = None
+
+        for el in html:
+            if el.tag == 'link' and el.attrib.get('rel') == 'stylesheet':
+                cssfile = el.attrib.get('href')
+                if current_style is None:
+                    current_style = el
+                    tags[current_style] = []
+                    el.attrib['href'] = '/web/css/'
+                else:
+                    html.remove(el)
+                tags[current_style].append(cssfile)
+            if el.tag == 'script':
+                if 'src' not in el.attrib:
+                    current_script = None
+                else:
+                    jsfile = el.attrib['src']
+                    if current_script is None:
+                        current_script = el
+                        tags[current_script] = []
+                        el.attrib['src'] = '/web/js/'
+                    else:
+                        html.remove(el)
+                    tags[current_script].append(jsfile)
+
+        for tag, files in tags.items():
+            attr = 'href' if 'href' in tag.attrib else 'src'
+            tag.attrib[attr] += openerp.http.pathlist_to_base64(files)
+        r = lxml.html.tostring(html)[3:-4] # avoid this hack if possible
+        return r
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
