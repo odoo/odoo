@@ -60,6 +60,9 @@ class Registry(Mapping):
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
 
+        # special cursor for test mode; None means "normal" mode
+        self.test_cr = None
+
         # Indicates that the registry is 
         self.ready = False
 
@@ -187,8 +190,28 @@ class Registry(Mapping):
                     r, c)
         return r, c
 
+    def enter_test_mode(self):
+        """ Enter the 'test' mode, where one cursor serves several requests. """
+        assert self.test_cr is None
+        self.test_cr = self.db.test_cursor()
+        RegistryManager.enter_test_mode()
+
+    def leave_test_mode(self):
+        """ Leave the test mode. """
+        assert self.test_cr is not None
+        self.test_cr.close(force=True)          # close the cursor for real
+        self.test_cr = None
+        RegistryManager.leave_test_mode()
+
     def get_cursor(self):
         """ Return a new cursor for the database. """
+        if self.test_cr is not None:
+            # While in test mode, we use one special cursor across requests. The
+            # test cursor uses a reentrant lock to serialize accesses. The lock
+            # is granted here by get_cursor(), and automatically released by the
+            # cursor itself in its method close().
+            self.test_cr.acquire()
+            return self.test_cr
         return self.db.cursor()
 
     @contextmanager

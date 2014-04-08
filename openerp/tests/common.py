@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 import werkzeug
 
 import openerp
+from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
 
@@ -36,25 +37,6 @@ if not DB and hasattr(threading.current_thread(), 'dbname'):
     DB = threading.current_thread().dbname
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
-
-# Magic session_id, unfortunately we have to serialize access to the cursors to
-# serialize requests. We first tried to duplicate the database for each tests
-# but this proved too slow. Any idea to improve this is welcome.
-HTTP_SESSION = {}
-
-def acquire_test_cursor(session_id):
-    if openerp.tools.config['test_enable']:
-        cr = HTTP_SESSION.get(session_id)
-        if cr:
-            cr._test_lock.acquire()
-            return cr
-
-def release_test_cursor(cr):
-    if openerp.tools.config['test_enable']:
-        if hasattr(cr, '_test_lock'):
-            cr._test_lock.release()
-            return True
-    return False
 
 def at_install(flag):
     """ Sets the at-install state of a test, the flag is a boolean specifying
@@ -120,7 +102,7 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        self.registry = openerp.modules.registry.RegistryManager.get(DB)
+        self.registry = RegistryManager.get(DB)
         self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
 
@@ -137,7 +119,7 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.registry = openerp.modules.registry.RegistryManager.get(DB)
+        cls.registry = RegistryManager.get(DB)
         cls.cr = cls.registry.get_cursor()
         cls.uid = openerp.SUPERUSER_ID
 
@@ -161,18 +143,15 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
-        openerp.modules.registry.RegistryManager.enter_test_mode()
+        self.registry.enter_test_mode()
         # setup a magic session_id that will be rollbacked
         self.session = openerp.http.root.session_store.new()
         self.session_id = self.session.sid
         self.session.db = DB
         openerp.http.root.session_store.save(self.session)
-        self.cr._test_lock = threading.RLock()
-        HTTP_SESSION[self.session_id] = self.cr
 
     def tearDown(self):
-        del HTTP_SESSION[self.session_id]
-        openerp.modules.registry.RegistryManager.leave_test_mode()
+        self.registry.leave_test_mode()
         super(HttpCase, self).tearDown()
 
     def url_open(self, url, data=None, timeout=10):

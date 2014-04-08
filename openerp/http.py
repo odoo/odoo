@@ -235,10 +235,7 @@ class WebRequest(object):
         """
         # some magic to lazy create the cr
         if not self._cr:
-            # Test cursors
-            self._cr = openerp.tests.common.acquire_test_cursor(self.session_id)
-            if not self._cr:
-                self._cr = self.registry.get_cursor()
+            self._cr = self.registry.get_cursor()
         return self._cr
 
     def __enter__(self):
@@ -249,14 +246,9 @@ class WebRequest(object):
         _request_stack.pop()
 
         if self._cr:
-            # Dont close test cursors
-            if not openerp.tests.common.release_test_cursor(self._cr):
-                if exc_type is None and not self._failed:
-                    self._cr.commit()
-                else:
-                    # just to be explicit - happens at close() anyway
-                    self._cr.rollback()
-                self._cr.close()
+            if exc_type is None and not self._failed:
+                self._cr.commit()
+            self._cr.close()
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None

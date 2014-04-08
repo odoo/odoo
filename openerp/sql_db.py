@@ -364,6 +364,47 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+class TestCursor(Cursor):
+    """ A cursor to be used for tests. It keeps the transaction open across
+        several requests, and simulates committing, rolling back, and closing.
+    """
+    def __init__(self, *args, **kwargs):
+        # in order to simulate commit and rollback, the cursor maintains a
+        # savepoint at its last commit
+        super(TestCursor, self).__init__(*args, **kwargs)
+        super(TestCursor, self).execute("SAVEPOINT test_cursor")
+        self._lock = threading.RLock()
+        self._auto_commit = False
+
+    def acquire(self):
+        self._lock.acquire()
+
+    def release(self):
+        self._lock.release()
+
+    def execute(self, *args, **kwargs):
+        super(TestCursor, self).execute(*args, **kwargs)
+        if self._auto_commit:
+            self.commit()
+
+    def close(self, force=False):
+        self.rollback()                 # for stuff that has not been committed
+        if force:
+            super(TestCursor, self).close()
+        else:
+            self.release()
+
+    def autocommit(self, on):
+        self._auto_commit = on
+
+    def commit(self):
+        super(TestCursor, self).execute("RELEASE SAVEPOINT test_cursor")
+        super(TestCursor, self).execute("SAVEPOINT test_cursor")
+
+    def rollback(self):
+        super(TestCursor, self).execute("ROLLBACK TO SAVEPOINT test_cursor")
+        super(TestCursor, self).execute("SAVEPOINT test_cursor")
+
 class PsycoConnection(psycopg2.extensions.connection):
     pass
 
@@ -490,6 +531,11 @@ class Connection(object):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dbname)
         return Cursor(self._pool, self.dbname, serialized=serialized)
+
+    def test_cursor(self, serialized=True):
+        cursor_type = serialized and 'serialized ' or ''
+        _logger.debug('create test %scursor to %r', cursor_type, self.dbname)
+        return TestCursor(self._pool, self.dbname, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
