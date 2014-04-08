@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.tools import html2plaintext
 from openerp.tools.translate import _
-from openerp.osv import osv, fields
-
+from openerp.osv import osv, fields, expression
 
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
@@ -63,10 +63,11 @@ class MailMessage(osv.Model):
                 context=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to restrict
         messages to published messages for public users. """
-        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-        if group_user_id in [group.id for group in group_ids]:
-            args = ['&', ('website_published', '=', True)] + list(args)
+        if uid != SUPERUSER_ID:
+            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+            group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
+            if group_user_id in [group.id for group in group_ids]:
+                args = expression.AND([[('website_published', '=', True)], list(args)])
 
         return super(MailMessage, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
                                                 context=context, count=count, access_rights_uid=access_rights_uid)
