@@ -67,6 +67,7 @@ def at_install(flag):
         obj.at_install = flag
         return obj
     return decorator
+
 def post_install(flag):
     """ Sets the post-install state of a test. The flag is a boolean
     specifying whether the test should or should not run after a set of
@@ -166,6 +167,7 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
+        openerp.modules.registry.RegistryManager.enter_test_mode()
         # setup a magic session_id that will be rollbacked
         self.session = openerp.http.root.session_store.new()
         self.session_id = self.session.sid
@@ -176,6 +178,7 @@ class HttpCase(TransactionCase):
 
     def tearDown(self):
         del HTTP_SESSION[self.session_id]
+        openerp.modules.registry.RegistryManager.leave_test_mode()
         super(HttpCase, self).tearDown()
 
     def url_open(self, url, data=None, timeout=10):

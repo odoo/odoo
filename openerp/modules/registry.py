@@ -193,17 +193,12 @@ class Registry(Mapping):
         finally:
             cr.close()
 
-class TestRLock(object):
-    def __init__(self):
-        self._lock = threading.RLock()
+class DummyRLock(object):
+    """ Dummy reentrant lock, to be used while running rpc and js tests """
     def acquire(self):
-        if openerp.tools.config['test_enable']:
-            return
-        return self._lock.acquire()
+        pass
     def release(self):
-        if openerp.tools.config['test_enable']:
-            return
-        return self._lock.release()
+        pass
     def __enter__(self):
         self.acquire()
     def __exit__(self, type, value, traceback):
@@ -219,12 +214,30 @@ class RegistryManager(object):
     # Mapping between db name and model registry.
     # Accessed through the methods below.
     registries = {}
-    registries_lock = TestRLock()
+    _lock = threading.RLock()
+    _saved_lock = None
+
+    @classmethod
+    def lock(cls):
+        """ Return the current registry lock. """
+        return cls._lock
+
+    @classmethod
+    def enter_test_mode(cls):
+        """ Enter the 'test' mode, where the registry is no longer locked. """
+        assert cls._saved_lock is None
+        cls._lock, cls._saved_lock = DummyRLock(), cls._lock
+
+    @classmethod
+    def leave_test_mode(cls):
+        """ Leave the 'test' mode. """
+        assert cls._saved_lock is not None
+        cls._lock, cls._saved_lock = cls._saved_lock, None
 
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Return a registry for a given database name."""
-        with cls.registries_lock:
+        with cls.lock():
             try:
                 return cls.registries[db_name]
             except KeyError:
@@ -244,7 +257,7 @@ class RegistryManager(object):
 
         """
         import openerp.modules
-        with cls.registries_lock:
+        with cls.lock():
             registry = Registry(db_name)
 
             # Initializing a registry will call general code which will in turn
@@ -286,7 +299,7 @@ class RegistryManager(object):
     @classmethod
     def delete(cls, db_name):
         """Delete the registry linked to a given database.  """
-        with cls.registries_lock:
+        with cls.lock():
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
@@ -294,7 +307,7 @@ class RegistryManager(object):
     @classmethod
     def delete_all(cls):
         """Delete all the registries. """
-        with cls.registries_lock:
+        with cls.lock():
             for db_name in cls.registries.keys():
                 cls.delete(db_name)
 
@@ -309,7 +322,7 @@ class RegistryManager(object):
         This method is given to spare you a ``RegistryManager.get(db_name)``
         that would loads the given database if it was not already loaded.
         """
-        with cls.registries_lock:
+        with cls.lock():
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
 
