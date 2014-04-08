@@ -297,19 +297,20 @@ class WebsiteBlog(http.Controller):
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
         id = self._blog_post_message(user, blog_post_id, **post)
         return self._get_discussion_detail([id], publish, **post)
-    
+
     @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         new_blog_post_id = request.registry['blog.post'].create(cr, uid, {
-                'blog_id': blog_id,
-                'name': _("Blog Post Title"),
-                'sub_title': _("Subtitle"),
-                'content': '',
-                'website_published': False,
-            }, context=create_context)
-        return werkzeug.utils.redirect("/blog/%s/post/%s/?enable_editor=1" % (blog_id, new_blog_post_id))
+            'blog_id': blog_id,
+            'name': _("Blog Post Title"),
+            'subtitle': _("Subtitle"),
+            'content': '',
+            'website_published': False,
+        }, context=create_context)
+        new_blog_post = request.registry['blog.post'].browse(cr, uid, new_blog_post_id, context=context)
+        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
     @http.route('/blogpost/duplicate', type='http', auth="public", website=True)
     def blog_post_copy(self, blog_post_id, **post):
@@ -322,8 +323,9 @@ class WebsiteBlog(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)
         nid = request.registry['blog.post'].copy(cr, uid, blog_post_id, {}, context=create_context)
+        new_blog_post = request.registry['blog.post'].browse(cr, uid, nid, context=context)
         post = request.registry['blog.post'].browse(cr, uid, nid, context)
-        return werkzeug.utils.redirect("/blog/%s/post/%s/?enable_editor=1" % (post.blog_id.id, nid))
+        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(post.blog_id), slug(new_blog_post)))
 
     @http.route('/blogpost/get_discussion/', type='json', auth="public", website=True)
     def discussion(self, post_id=0, path=None, count=False, **post):
