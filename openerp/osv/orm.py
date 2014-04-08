@@ -2199,17 +2199,18 @@ class BaseModel(object):
         to the query if order should be computed against m2o field. 
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
-        :param groupby: the current groupby field name
-        :param qualified_field: the fully qualified SQL name for the grouped field
+        :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
+                These dictionaries contains the qualified name of each groupby
+                (fully qualified SQL name for the corresponding field),
+                and the (non raw) field name.
         :param osv.Query query: the query under construction
-        :param groupby_type: the type of the grouped field
         :return: (groupby_terms, orderby_terms)
         """
         orderby_terms = []
         groupby_terms = [gb['qualified_field'] for gb in annotated_groupbys]
         groupby_fields = [gb['groupby'] for gb in annotated_groupbys]
         if not orderby:
-            return groupby_terms, orderby_terms    
+            return groupby_terms, orderby_terms
 
         self._check_qorder(orderby)
         for order_part in orderby.split(','):
@@ -2234,6 +2235,10 @@ class BaseModel(object):
         return groupby_terms, orderby_terms
 
     def _read_group_process_groupby(self, gb, query, context):
+        """
+            Helper method to collect important information about groupbys: raw
+            field name, type, time informations, qualified name, ...
+        """
         split = gb.split(':')
         field_type = self._all_columns[split[0]].column._type
         gb_function = split[1] if len(split) == 2 else None
@@ -2353,7 +2358,6 @@ class BaseModel(object):
         :rtype: [{'field_name_1': value, ...]
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
-
         """
         self.check_access_rights(cr, uid, 'read')
         query = self._where_calc(cr, uid, domain, context=context) 
