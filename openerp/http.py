@@ -270,6 +270,13 @@ class WebRequest(object):
         self.endpoint = endpoint
         self.auth_method = auth
 
+
+    def _handle_exception(self, exception):
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response.""" 
+        raise 
+
     def _call_function(self, *args, **kwargs):
         request = self
         if self.endpoint.routing['type'] != self._request_type:
@@ -421,39 +428,15 @@ class JsonRequest(WebRequest):
         self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
-    def dispatch(self):
-        """ Calls the method asked for by the JSON-RPC2 or JSONP request
-        """
-        if self.jsonp_handler:
-            return self.jsonp_handler()
-        response = {"jsonrpc": "2.0" }
-        error = None
-
-        try:
-            response['id'] = self.jsonrequest.get('id')
-            response["result"] = self._call_function(**self.params)
-        except AuthenticationError, e:
-            _logger.exception("JSON-RPC AuthenticationError in %s.", self.httprequest.path)
-            se = serialize_exception(e)
-            error = {
-                'code': 100,
-                'message': "OpenERP Session Invalid",
-                'data': se
-            }
-            self._failed = e # prevent tx commit
-        except Exception, e:
-            # Mute test cursor error for runbot
-            if not (openerp.tools.config['test_enable'] and isinstance(e, psycopg2.OperationalError)):
-                _logger.exception("JSON-RPC Exception in %s.", self.httprequest.path)
-            se = serialize_exception(e)
-            error = {
-                'code': 200,
-                'message': "OpenERP Server Error",
-                'data': se
-            }
-            self._failed = e # prevent tx commit
-        if error:
-            response["error"] = error
+    def _json_response(self, result=None, error=None):
+        response = {
+            'jsonrpc': '2.0',
+            'id': self.jsonrequest.get('id')
+        }
+        if error is not None:
+            response['error'] = error
+        if result is not None:
+            response['result'] = result
 
         if self.jsonp:
             # If we use jsonp, that's mean we are called from another host
@@ -466,8 +449,36 @@ class JsonRequest(WebRequest):
             mime = 'application/json'
             body = simplejson.dumps(response)
 
-        r = Response(body, headers=[('Content-Type', mime), ('Content-Length', len(body))])
-        return r
+        return Response(
+                    body, headers=[('Content-Type', mime),
+                                   ('Content-Length', len(body))])
+
+    def _handle_exception(self, exception):
+        """Called within an except block to allow converting exceptions
+           to abitrary responses. Anything returned (except None) will
+           be used as response.""" 
+        _logger.exception("Exception during JSON request handling.")
+        self._failed = exception # prevent tx commit            
+        error = {
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': serialize_exception(exception)
+        }
+        if isinstance(exception, AuthenticationError):
+            error['code'] = 100
+            error['message'] = "OpenERP Session Invalid"
+        return self._json_response(error=error)
+
+    def dispatch(self):
+        """ Calls the method asked for by the JSON-RPC2 or JSONP request
+        """
+        if self.jsonp_handler:
+            return self.jsonp_handler()
+        try:
+            result = self._call_function(**self.params)
+            return self._json_response(result)
+        except Exception, e:
+            return self._handle_exception(e)
 
 def serialize_exception(e):
     tmp = {

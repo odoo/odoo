@@ -469,7 +469,12 @@ class browse_record(object):
                         else:
                             new_data[field_name] = browse_null()
                     elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
-                        new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool[field_column._obj], self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
+                        new_data[field_name] = self._list_class(
+                            (browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj),
+                                           self._cache, context=self._context, list_class=self._list_class,
+                                           fields_process=self._fields_process)
+                               for id in result_line[field_name]),
+                            context=self._context)
                     elif field_column._type == 'reference':
                         if result_line[field_name]:
                             if isinstance(result_line[field_name], browse_record):
@@ -1911,7 +1916,7 @@ class BaseModel(object):
         return result
 
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
-        return self['ir.ui.view'].postprocess_and_fields(
+        return self.pool['ir.ui.view'].postprocess_and_fields(
             cr, uid, self._name, node, view_id, context=context)
 
     def search_count(self, cr, user, args, context=None):
@@ -4262,7 +4267,7 @@ class BaseModel(object):
         if isinstance(select, (int, long)):
             return browse_record(cr, uid, select, self, cache, context=context, list_class=self._list_class, fields_process=fields_process)
         elif isinstance(select, list):
-            return self._list_class([browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context=context)
+            return self._list_class((browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select), context=context)
         else:
             return browse_null()
 

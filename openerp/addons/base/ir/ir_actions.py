@@ -944,7 +944,8 @@ class ir_actions_server(osv.osv):
             'uid': uid,
             'user': user,
             'context': context,
-            'workflow': workflow
+            'workflow': workflow,
+            'Warning': openerp.exceptions.Warning,
         }
 
     def run(self, cr, uid, ids, context=None):
