@@ -338,7 +338,7 @@ class stock_quant(osv.osv):
         elif reserved_availability > 0 and not move.partially_available:
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
-    def quants_move(self, cr, uid, quants, move, location_to, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
+    def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
         """Moves all given stock.quant in the given destination location.
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
@@ -354,7 +354,7 @@ class stock_quant(osv.osv):
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
-                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location=location_to, context=context)
+                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location=location_to, force_location_from=location_from, context=context)
             else:
                 self._quant_split(cr, uid, quant, qty, context=context)
                 quant.refresh()
@@ -428,7 +428,8 @@ class stock_quant(osv.osv):
                 raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
         return result
 
-    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, 
+                      force_location=False, force_location_from=False, context=None):
         '''Create a quant in the destination location and create a negative quant in the source location if it's an internal location.
         '''
         if context is None:
@@ -449,10 +450,11 @@ class stock_quant(osv.osv):
         }
 
         if move.location_id.usage == 'internal':
+            location_from = force_location_from or move.location_id
             #if we were trying to move something from an internal location and reach here (quant creation),
             #it means that a negative quant has to be created as well.
             negative_vals = vals.copy()
-            negative_vals['location_id'] = move.location_id.id
+            negative_vals['location_id'] = location_from.id
             negative_vals['qty'] = -qty
             negative_vals['cost'] = price_unit
             negative_vals['negative_move_id'] = move.id
@@ -486,7 +488,7 @@ class stock_quant(osv.osv):
             path.append((4, move.id))
         self.write(cr, SUPERUSER_ID, solved_quant_ids, {'history_ids': path}, context=context)
 
-    def _quant_reconcile_negative(self, cr, uid, quant, move, context=None):
+    def _quant_reconcile_negative(self, cr, uid, quant, move, reserve_move=False, context=None):
         """
             When new quant arrive in a location, try to reconcile it with
             negative quants. If it's possible, apply the cost of the new
@@ -498,7 +500,8 @@ class stock_quant(osv.osv):
             dom += [('lot_id', '=', quant.lot_id.id)]
         dom += [('owner_id', '=', quant.owner_id.id)]
         dom += [('package_id', '=', quant.package_id.id)]
-        if move.move_dest_id:
+        
+        if not reserve_move and move.move_dest_id:
             dom += [('negative_move_id', '=', move.move_dest_id.id)]
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
         for quant_neg, qty in quants:
@@ -542,6 +545,13 @@ class stock_quant(osv.osv):
                 self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
             if move.partially_available:
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
+            #TODO: or split from move with move_orig_ids?
+            if move.location_id.usage == 'internal' and not move.move_orig_ids:
+                if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0), ('location_id', 'child_of', move.location_id.id)], limit=1, context=context):
+                    for quant in move.reserved_quant_ids:
+                        self._quant_reconcile_negative(cr, uid, quant, move, reserve_move = True, context=context)
+                    move.refresh()
+                    related_quants = [x.id for x in move.reserved_quant_ids]
             return self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
 
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
@@ -2200,14 +2210,14 @@ class stock_move(osv.osv):
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
                 self.check_tracking(cr, uid, move, ops.package_id.id or ops.lot_id.id, context=context)
-                if record.reserved_quant_id:
-                    quants = [(record.reserved_quant_id, record.qty)]
-                else:
-                    prefered_domain = [('reservation_id', '=', move.id)]
-                    fallback_domain = [('reservation_id', '=', False)]
-                    dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                    quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, 
-                                                              fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+#                 if record.reserved_quant_id:
+#                     quants = [(record.reserved_quant_id, record.qty)]
+#                 else:
+                prefered_domain = [('reservation_id', '=', move.id)]
+                fallback_domain = [('reservation_id', '=', False)]
+                dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, 
+                                                          fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
 
                 if ops.result_package_id.id:
                     #if a result package is given, all quants go there
@@ -2218,7 +2228,7 @@ class stock_move(osv.osv):
                 else:
                     #otherwise we keep the current pack of the quant, which may mean None
                     quant_dest_package_id = ops.package_id.id
-                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
+                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from = ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)

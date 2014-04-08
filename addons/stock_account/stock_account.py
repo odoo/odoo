@@ -128,8 +128,8 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
-    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
-        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id, owner_id, src_package_id, dest_package_id, force_location, context=context)
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, force_location_from=False, context=None):
+        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id, owner_id, src_package_id, dest_package_id, force_location, force_location_from, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, [quant], move, context)
         return quant
