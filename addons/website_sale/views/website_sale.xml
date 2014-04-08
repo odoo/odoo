@@ -443,14 +443,20 @@
                     </li>
                 </ul>
                 <div class="css_editable_mode_hidden">
-                    <form id="comment" t-attf-action="/shop/product/#{product.id}/comment"
-                            method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
-                        <div class="pull-left mb32" style="width: 75%%">
-                            <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <a class="btn btn-primary mt8 a-submit">Post</a>
-                        </div>
-                    </form>
+                    <t groups="base.group_public">
+                        <a class="btn btn-primary mt8" t-attf-href="/web/login?redirect=/shop/product/#{product.id}%23comment">Log in </a> <span>to post comments</span>
+                    </t>
+                    <t groups="base.group_user,base.group_portal">
+                      <form id="comment" t-attf-action="/shop/product/#{product.id}/comment"
+                              method="POST">
+                          <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
+                          <div class="pull-left mb32" style="width: 75%%">
+                            
+                              <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
+                              <a class="btn btn-primary mt8 a-submit">Post</a>
+                          </div>
+                      </form>
+                    </t>
                 </div>
             </div>
         </section>
@@ -886,6 +892,12 @@
               <li class="text-muted">Confirmation<span class="chevron"></span></li>
           </ul>
           <h1 class="mb32">Validate Order</h1>
+          <t t-foreach="errors" t-as="error">
+            <div class="alert alert-danger" t-if="error">
+              <h4><t t-esc="error[0]"/></h4>
+              <t t-esc="error[1]"/>
+            </div>
+          </t>
           <div class="row">
           <div class="col-lg-8 col-sm-9 oe_mycart">
               <table class='table table-striped table-condensed' id="mycart_products" t-if="website_sale_order and website_sale_order.website_order_line">
@@ -973,7 +985,7 @@
                   </t>
               </div>
           </div>
-          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total and not errors" id="payment_method">
             <div class="col-lg-8 col-sm-8">
               <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                   <a style="width:100px;" class="btn btn-primary a-submit">
