@@ -2373,7 +2373,7 @@ class BaseModel(object):
         annotated_groupbys = [self._read_group_process_groupby(gb, query, context) 
                                     for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
-        order = orderby or ','.join([g['groupby'] for g in annotated_groupbys])
+        order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
         self._apply_ir_rules(cr, uid, query, 'read', context=context)
