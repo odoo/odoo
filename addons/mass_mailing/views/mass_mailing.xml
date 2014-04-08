@@ -228,7 +228,6 @@
                                 <field name="name"/>
                             </group>
                             <group>
-                                <field name="total" invisible="1"/>
                                 <div class="oe_right oe_button_box" name="buttons">
                                     <div>
                                         <button name="action_see_recipients" type="object"
@@ -301,14 +300,13 @@
                                 <span style="margin-left: 8px; margin-right: 8px">or</span>
                                 <button string='Create a New List' class="oe_link" type='object' name='action_new_list'/><br />
 
-                                <!-- <label for="contact_nbr" string="Total" style="display: inline-block; min-width: 90px;"/> -->
-                                <!-- <field name="contact_nbr" nolabel="1" class="oe_inline" readonly="True"/> recipients -->
-                                <!-- <button name="action_see_recipients" type="object" string="See Recipients" class="oe_inline oe_link" style='margin-left: 8px;'/><br /> -->
-
                                 <div groups="mass_mailing.group_mass_mailing_campaign" style="display: inline;">
                                     <field name="ab_testing" invisible="1"/>
-                                    <label for="contact_ab_pc" string="AB Testing"/>
-                                    <field name="contact_ab_pc" class="oe_inline"/>%, <field name="contact_ab_nbr" class="oe_inline"/> contacts to mail
+                                    <label for="contact_ab_pc" string="AB Testing" style="display: inline-block; min-width: 90px;"/>
+                                    Email <field name="contact_ab_pc" class="oe_inline"
+                                            on_change="on_change_contact_ab_pc(contact_ab_pc, contact_nbr, context)"/>
+                                    <strong>%</strong> of recipients
+                                    (<field name="contact_ab_nbr" class="oe_inline"/> recipients)
                                     <div attrs="{'invisible': [('ab_testing', '=', False)]}" style="display: inline;">
                                         <span>(</span>
                                         <field name="contact_ab_done" class="oe_inline"
@@ -318,7 +316,8 @@
                                 </div>
 
                             </div>
-                            <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"/>
+                            <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"
+                                attrs="{'invisible': [('state', '!=', 'done')]}"/>
                             <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                             <label for="body_html" string="Email"/>
                             <div>
@@ -665,6 +664,7 @@
                         <group>
                             <field name="mail_mail_id"/>
                             <field name="message_id"/>
+                            <field name="exception"/>
                             <field name="sent"/>
                             <field name="opened"/>
                             <field name="replied"/>

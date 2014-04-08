@@ -288,11 +288,11 @@ class mail_mail(osv.Model):
 
                 # /!\ can't use mail.state here, as mail.refresh() will cause an error
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
-                if mail_sent:
-                    self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
+                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
             except Exception as e:
                 _logger.exception('failed sending mail.mail %s', mail.id)
                 mail.write({'state': 'exception'})
+                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):
                         # get the args of the original error, wrap into a value and throw a MailDeliveryException

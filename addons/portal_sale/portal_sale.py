@@ -127,7 +127,7 @@ class mail_mail(osv.osv):
     _inherit = 'mail.mail'
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
-        if mail.model == 'sale.order':
+        if mail_sent and mail.model == 'sale.order':
             so_obj = self.pool.get('sale.order')
             order = so_obj.browse(cr, uid, mail.res_id, context=context)
             partner = order.partner_id

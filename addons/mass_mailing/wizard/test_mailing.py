@@ -39,4 +39,5 @@ class TestMassMailing(osv.TransientModel):
                 }
                 mail_ids.append(Mail.create(cr, uid, mail_values, context=context))
             Mail.send(cr, uid, mail_ids, context=context)
+            self.pool['mail.mass_mailing'].write(cr, uid, [mailing.id], {'state': 'test'}, context=context)
         return True

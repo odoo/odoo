@@ -22,6 +22,10 @@
 from datetime import datetime
 from dateutil import relativedelta
 import random
+try:
+    import simplejson as json
+except ImportError:
+    import json
 import urllib
 import urlparse
 
@@ -230,20 +234,18 @@ class MassMailingCampaign(osv.Model):
     """Model of mass mailing campaigns. """
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
-    # number of embedded mailings in kanban view
-    _kanban_mailing_nbr = 4
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
         Statistics = self.pool['mail.mail.statistics']
         results = dict.fromkeys(ids, False)
         for cid in ids:
-            stat_ids = Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], context=context),
+            stat_ids = Statistics.search(cr, uid, [('mass_mailing_campaign_id', '=', cid)], context=context)
             stats = Statistics.browse(cr, uid, stat_ids, context=context)
             results[cid] = {
                 'total': len(stats),
                 'failed': len([s for s in stats if not s.scheduled is False and s.sent is False and not s.exception is False]),
-                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False]),
+                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False and s.exception is False]),
                 'sent': len([s for s in stats if not s.sent is False]),
                 'opened': len([s for s in stats if not s.opened is False]),
                 'replied': len([s for s in stats if not s.replied is False]),
@@ -416,9 +418,9 @@ class MassMailing(osv.Model):
             date_begin_str = date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_end_str = date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             domain = [('mass_mailing_id', '=', id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
-            res[id]['opened_dayly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened:day', context=context)
+            res[id]['opened_dayly'] = json.dumps(self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened:day', context=context))
             domain = [('mass_mailing_id', '=', id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
-            res[id]['replied_dayly'] = self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied:day', context=context)
+            res[id]['replied_dayly'] = json.dumps(self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied:day', context=context))
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
@@ -431,7 +433,7 @@ class MassMailing(osv.Model):
             results[mid] = {
                 'total': len(stats),
                 'failed': len([s for s in stats if not s.scheduled is False and s.sent is False and not s.exception is False]),
-                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False]),
+                'scheduled': len([s for s in stats if not s.scheduled is False and s.sent is False and s.exception is False]),
                 'sent': len([s for s in stats if not s.sent is False]),
                 'opened': len([s for s in stats if not s.opened is False]),
                 'replied': len([s for s in stats if not s.replied is False]),
@@ -699,6 +701,9 @@ class MassMailing(osv.Model):
             values['body_html'] = False
         return {'value': values}
 
+    def on_change_contact_ab_pc(self, cr, uid, ids, contact_ab_pc, contact_nbr, context=None):
+        return {'value': {'contact_ab_nbr': contact_nbr * contact_ab_pc / 100.0}}
+
     def action_duplicate(self, cr, uid, ids, context=None):
         copy_id = None
         for mid in ids:
@@ -837,6 +842,7 @@ class MassMailing(osv.Model):
                 composer_values['reply_to'] = mailing.reply_to
             composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
+            self.write(cr, uid, [mailing.id], {'date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
 
 

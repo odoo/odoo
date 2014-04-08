@@ -6,7 +6,7 @@
             <field name="model">email.template</field>
             <field name="inherit_id" ref="email_template.email_template_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='model']" position="before">
+                <xpath expr="//h1" position="after">
                     <br />
                     <field name="website_link" widget='html' radonly='1'
                         style='margin: 0px; padding: 0px;'/>

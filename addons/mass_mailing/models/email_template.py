@@ -32,5 +32,7 @@ class EmailTemplate(osv.Model):
 
 
 class email_template_preview(osv.TransientModel):
+    """ Reinitialize email template preview model to have access to all email.template
+    new fields. """
     _name = "email_template.preview"
     _inherit = ['email.template', 'email_template.preview']
