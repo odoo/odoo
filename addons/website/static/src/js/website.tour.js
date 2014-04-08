@@ -351,17 +351,18 @@ var T = website.Tour = {
     },
     testRunning: 0,
     running: function () {
-        setTimeout(function () {
-            if ($.ajaxBusy) {
-                $(document).ajaxStop(function() {
-                    var state = T.getState();
-                    T.registerSteps(state.tour);
-                    T.nextStep();
-                });
-            } else {
-                var state = T.getState();
+        function run () {
+            var state = T.getState();
+            if (state) {
                 T.registerSteps(state.tour);
                 T.nextStep();
+            }
+        }
+        setTimeout(function () {
+            if ($.ajaxBusy) {
+                $(document).ajaxStop(run);
+            } else {
+                run();
             }
         },0);
     },
