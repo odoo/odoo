@@ -62,29 +62,38 @@ $(document).ready(function () {
     //initialize discreteBar Chart
     function init_bar_chart(){
         return nv.models.discreteBarChart()
-        .x(function(d) { return d.text; })
-        .y(function(d) { return d.count; })
-        .staggerLabels(true)
-        .tooltips(false)
-        .showValues(true);
+            .x(function(d) { return d.text; })
+            .y(function(d) { return d.count; })
+            .staggerLabels(true)
+            .tooltips(false)
+            .showValues(true);
+    }
+
+    //initialize Pie Chart
+    function init_pie_chart(){
+        return nv.models.pieChart()
+            .x(function(d) { return d.text; })
+            .y(function(d) { return d.count; })
+            .showLabels(false);
     }
 
     //load chart to svg element chart:initialized chart, response:AJAX response, quistion_id:if of survey question, tick_limit:text length limit
-    function load_chart(chart, response, question_id, tick_limit){
+    function load_chart(chart, response, question_id, tick_limit, graph_type){
         // Custom Tick fuction for replacing long text with '...'
         var customtick_function = function(d){
             if(! this || d.length <= tick_limit){
                 return d;
             }
             else{
-                return d.slice(0,tick_limit)+'...';
+                return d.slice(0,tick_limit) + '...';
             }
         };
-        chart.xAxis
-            .tickFormat(customtick_function);
-        chart.yAxis
-            .tickFormat(d3.format('d'));
-
+        if (graph_type != 'pie'){
+            chart.xAxis
+                .tickFormat(customtick_function);
+            chart.yAxis
+                .tickFormat(d3.format('d'));
+        }
         d3.select('#graph_question_' + question_id + ' svg')
             .datum(response)
             .transition().duration(500).call(chart);
@@ -96,48 +105,72 @@ $(document).ready(function () {
     $.each(survey_graphs, function(index, graph){
         var question_id = $(graph).attr("data-question_id");
         var graph_type = $(graph).attr("data-graph_type");
-        var current_filters = $(graph).attr("data-current_filters");
-        console.log(current_filters);
-        $.ajax({
-            url: '/survey/results/graph/'+question_id,
-            type: 'POST',
-            dataType: 'json',
-            data:{'current_filters': current_filters},
-            success: function(response, status, xhr, wfe){
-                if(graph_type == 'multi_bar'){
-                    nv.addGraph(function(){
-                        var chart = init_multibar_chart();
-                        return load_chart(chart,response,question_id,25);
-                    });
-                }
-                else if(graph_type == 'bar'){
-                    nv.addGraph(function() {
-                        var chart = init_bar_chart();
-                        return load_chart(chart,response,question_id,35);
-                    });
-                }
-            }
-        });
+        var graph_data = JSON.parse($(graph).attr("graph-data"));
+        if(graph_type == 'multi_bar'){
+            nv.addGraph(function(){
+                var chart = init_multibar_chart();
+                return load_chart(chart, graph_data, question_id, 25);
+            });
+        }
+        else if(graph_type == 'bar'){
+            nv.addGraph(function() {
+                var chart = init_bar_chart();
+                return load_chart(chart, graph_data, question_id, 35);
+            });
+        }
+        else if(graph_type == 'pie'){
+            nv.addGraph(function() {
+                var chart = init_pie_chart();
+                return load_chart(chart, graph_data, question_id, 25, 'pie');
+            });
+        }
     });
 
     // Script for filter
-    $('td.survey_answer').hover(function(){$(this).find('i.fa-filter').removeClass('invisible');},function(){$(this).find('i.fa-filter').addClass('invisible');});
+    $('td.survey_answer').hover(function(){
+        $(this).find('i.fa-filter').removeClass('invisible');
+    }, function(){
+        $(this).find('i.fa-filter').addClass('invisible');
+    });
     $('td.survey_answer i.fa-filter').click(function(){
-        var cell=$(this);
-        var question_id = cell.attr('data-question_id');
+        var cell = $(this);
         var row_id = cell.attr('data-row_id') | 0;
         var answer_id = cell.attr('data-answer_id');
         if(document.URL.indexOf("?") == -1){
-            window.location.href = document.URL+'?' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+            window.location.href = document.URL + '?' + encodeURI(row_id + ',' + answer_id);
         }
-        else{
-            window.location.href = document.URL+'&' + encodeURI(row_id + ','+answer_id + '=' + question_id);
+        else {
+            window.location.href = document.URL + '&' + encodeURI(row_id + ',' + answer_id);
         }
     });
 
     // for clear all filters
     $('.clear_survey_filter').click(function(){
         window.location.href = document.URL.substring(0,document.URL.indexOf("?"));
+    });
+    $('span.filter-all').click(function(){
+        event.preventDefault();
+        if(document.URL.indexOf("finished") != -1){
+            window.location.href = document.URL.replace('?finished&','?').replace('&finished&','&').replace('?finished','').replace('&finished','');
+        }
+    }).hover(function(){
+        if(document.URL.indexOf("finished") == -1){
+            $(this)[0].style.cursor = 'default';
+        }
+    });
+    // toggle finished/all surveys filter
+    $('span.filter-finished').click(function(){
+        event.preventDefault();
+        if(document.URL.indexOf("?") == -1){
+            window.location.href = document.URL + '?' + encodeURI('finished');
+        }
+        else if(document.URL.indexOf("finished") == -1){
+            window.location.href = document.URL + '&' + encodeURI('finished');
+        }
+    }).hover(function(){
+        if(document.URL.indexOf("finished") != -1){
+            $(this)[0].style.cursor = 'default';
+        }
     });
 
     console.debug("[survey] Survey Result JS loaded!");

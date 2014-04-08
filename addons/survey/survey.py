@@ -24,6 +24,8 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.addons.website.models.website import slug
 from urlparse import urljoin
+from itertools import product
+from collections import Counter
 
 import datetime
 import logging
@@ -132,6 +134,126 @@ class survey_survey(osv.Model):
         for survey in self.browse(cr, uid, ids, context=context):
             res[survey.id] = urljoin(base_url, "survey/results/%s" % slug(survey))
         return res
+
+    def filter_input_ids(self, cr, uid, filters, finished=False, context=None):
+        '''If user applies any filters, then this function returns list of
+           filtered user_input_id and label's strings for display data in web.
+           :param filters: list of dictionary (having: row_id, ansewr_id)
+           :param finished: True for completely filled survey,Falser otherwise.
+           :returns list of filtered user_input_ids.
+        '''
+        if context is None:
+            context = {}
+        if filters:
+            input_line_obj = self.pool.get('survey.user_input_line')
+            domain_filter, choice, filter_display_data = [], [], []
+            for filter in filters:
+                row_id, answer_id = filter['row_id'], filter['answer_id']
+                if row_id == 0:
+                    choice.append(answer_id)
+                else:
+                    domain_filter.extend(['|', ('value_suggested_row.id', '=', row_id), ('value_suggested.id', '=', answer_id)])
+            if choice:
+                domain_filter.insert(0, ('value_suggested.id', 'in', choice))
+            else:
+                domain_filter = domain_filter[1:]
+            line_ids = input_line_obj.search(cr, uid, domain_filter, context=context)
+            filtered_input_ids = [input.user_input_id.id for input in input_line_obj.browse(cr, uid, line_ids, context=context)]
+        else:
+            filtered_input_ids, filter_display_data = [], []
+        if finished:
+            user_input = self.pool.get('survey.user_input')
+            if not filtered_input_ids:
+                current_filters = user_input.search(cr, uid, [], context=context)
+                user_input_objs = user_input.browse(cr, uid, current_filters, context=context)
+            else:
+                user_input_objs = user_input.browse(cr, uid, filtered_input_ids, context=context)
+            return [input.id for input in user_input_objs if input.state == 'done']
+        return filtered_input_ids
+
+    def get_filter_display_data(self, cr, uid, filters, context):
+        '''Returns data to display current filters
+        :param filters: list of dictionary (having: row_id, answer_id)
+        :param finished: True for completely filled survey, False otherwise.
+        :returns list of dict having data to display filters.
+        '''
+        filter_display_data = []
+        if filters:
+            question_obj = self.pool.get('survey.question')
+            label_obj = self.pool.get('survey.label')
+            for filter in filters:
+                row_id, answer_id = filter['row_id'], filter['answer_id']
+                question_id = label_obj.browse(cr, uid, answer_id, context=context).question_id.id
+                question = question_obj.browse(cr, uid, question_id, context=context)
+                if row_id == 0:
+                    labels = label_obj.browse(cr, uid, [answer_id], context=context)
+                else:
+                    labels = label_obj.browse(cr, uid, [row_id, answer_id], context=context)
+                filter_display_data.append({'question_text': question.question, 'labels': [label.value for label in labels]})
+        return filter_display_data
+
+    def prepare_result(self, cr, uid, question, current_filters=[], context=None):
+        ''' Compute statistical data for questions by counting number of vote per choice on basis of filter '''
+        if context is None:
+            context = {}
+        #Calculate and return statistics for choice
+        if question.type in ['simple_choice', 'multiple_choice']:
+            result_summary = {}
+            [result_summary.update({label.id: {'text': label.value, 'count': 0, 'answer_id': label.id}}) for label in question.labels_ids]
+            for input_line in question.user_input_line_ids:
+                if result_summary.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
+                    result_summary[input_line.value_suggested.id]['count'] += 1
+            result_summary = result_summary.values()
+
+        #Calculate and return statistics for matrix
+        if question.type == 'matrix':
+            rows, answers, res = {}, {}, {}
+            [rows.update({label.id: label.value}) for label in question.labels_ids_2]
+            [answers.update({label.id: label.value}) for label in question.labels_ids]
+            for cell in product(rows.keys(), answers.keys()):
+                res[cell] = 0
+            for input_line in question.user_input_line_ids:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
+                    res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
+            result_summary = {'answers': answers, 'rows': rows, 'result': res}
+
+        #Calculate and return statistics for free_text, textbox, datetime
+        if question.type in ['free_text', 'textbox', 'datetime']:
+            result_summary = []
+            for input_line in question.user_input_line_ids:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
+                    result_summary.append(input_line)
+
+        #Calculate and return statistics for numerical_box
+        if question.type == 'numerical_box':
+            result_summary = {'input_lines': []}
+            all_inputs = []
+            for input_line in question.user_input_line_ids:
+                if not(current_filters) or input_line.user_input_id.id in current_filters:
+                    all_inputs.append(input_line.value_number)
+                    result_summary['input_lines'].append(input_line)
+            if all_inputs:
+                result_summary.update({'average': round(sum(all_inputs) / len(all_inputs), 2),
+                                       'max': round(max(all_inputs), 2),
+                                       'min': round(min(all_inputs), 2),
+                                       'most_comman': Counter(all_inputs).most_common(5)})
+        return result_summary
+
+    def get_input_summary(self, cr, uid, question, current_filters=[], context=None):
+        ''' Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter '''
+        if context is None:
+            context = {}
+        result = {}
+        if question.survey_id.user_input_ids:
+            total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
+            result['total_inputs'] = len(total_input_ids)
+            question_input_ids = []
+            for user_input in question.user_input_line_ids:
+                if not user_input.skipped:
+                    question_input_ids.append(user_input.user_input_id.id)
+            result['answered'] = len(set(question_input_ids) & set(total_input_ids))
+            result['skipped'] = result['total_inputs'] - result['answered']
+        return result
 
     # Model fields #
 

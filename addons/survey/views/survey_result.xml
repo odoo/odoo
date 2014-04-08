@@ -13,42 +13,66 @@
             <div class="oe_structure" />
             <div class="container">
                 <div class="jumbotron mt32">
+                    <t t-set="survey" t-value="survey_dict['survey']"/>
                     <h1><span t-field="survey.title"></span> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
                     <h2><span t-field="survey.description"></span></h2>
                 </div>
-                <div t-if="filter_display_data" class="filteres">
-                    <span><h3><span class="fa fa-filter"></span> Filters <small class="pull-right clear_survey_filter"> <i class="fa fa-times"></i> Clear All Filters</small></h3></span>
-                    <span t-foreach="filter_display_data" t-as="filter_data">
-                        <span class="label label-primary only_left_radius"><i class="fa fa-filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
-                    </span>
+                <div class="panel panel-default hidden-print">
+                    <div class="panel-heading"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
+                    <div class="panel-body">
+                        <span t-if="filter_finish == True">
+                            <span class="label label-default only_left_radius filter-all">All surveys</span><span class="label label-primary only_right_radius filter-finished">Finished surveys</span>
+                        </span>
+                        <span t-if="filter_finish == False">
+                            <span class="label label-primary only_left_radius filter-all">All surveys</span><span class="label label-default only_right_radius filter-finished">Finished surveys</span>
+                        </span>
+                        <span t-foreach="filter_display_data" t-as="filter_data">
+                            <span class="label label-primary only_left_radius"><i class="fa fa-filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
+                        </span>
+                    </div>
                 </div>
-                <div t-foreach='survey.page_ids' t-as='page'>
+                <div t-foreach="survey_dict['page_ids']" t-as='page_ids'>
+                    <t t-set="page" t-value="page_ids['page']"/>
                     <h1 class="mt16" t-field='page.title'></h1>
                     <hr/>
-                    <div t-foreach='page.question_ids' t-as='question' class="mt16">
-                        <t t-set="input_summary" t-value="get_input_summary(question, current_filters)"/>
+                    <div t-foreach="page_ids['question_ids']" t-as='question_ids' class="mt16">
+                        <t t-set="input_summary" t-value="question_ids['input_summary']"/>
+                        <t t-set="question" t-value="question_ids['question']"/>
+                        <t t-set="graph_data" t-value="question_ids['graph_data']"/>
+                        <t t-set="prepare_result" t-value="question_ids['prepare_result']"/>
                         <h4>
                             <b>Question </b>
                             <span t-field='question.question'></span>
+                            <t t-if="question.type == 'matrix'">
+                                <small><span class="label label-default">Matrix: <span t-field='question.matrix_subtype'/></span></small>
+                            </t>
+                            <t t-if="question.type in ['simple_choice', 'multiple_choice']">
+                                <small><span t-field='question.type' class="label label-default"></span></small>
+                            </t>
                             <span class="pull-right">
                                 <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span>
                                 <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
                             </span>
                         </h4>
-                        <t t-if="question.description">
-                            <h5><span class="text-muted" t-field="question.description"></span></h5>
+                        <t t-if="input_summary['answered'] != 0">
+                            <t t-if="question.description">
+                                <h5><span class="text-muted" t-field="question.description"></span></h5>
+                            </t>
+                            <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
+                                <t t-call="survey.result_text"></t>
+                            </t>
+                            <t t-if="question.type in ['simple_choice', 'multiple_choice']">
+                                <t t-call="survey.result_choice"></t>
+                            </t>
+                            <t t-if="question.type == 'matrix'">
+                                <t t-call="survey.result_matrix"></t>
+                            </t>
+                            <t t-if="question.type == 'numerical_box'">
+                                <t t-call="survey.result_number"></t>
+                            </t>
                         </t>
-                        <t t-if="question.type in ['textbox', 'free_text', 'datetime']">
-                            <t t-call="survey.result_text"></t>
-                        </t>
-                        <t t-if="question.type in ['simple_choice', 'multiple_choice']">
-                            <t t-call="survey.result_choice"></t>
-                        </t>
-                        <t t-if="question.type == 'matrix'">
-                            <t t-call="survey.result_matrix"></t>
-                        </t>
-                        <t t-if="question.type == 'numerical_box'">
-                            <t t-call="survey.result_number"></t>
+                        <t t-if="input_summary['answered'] == 0">
+                            <h2 style="padding-top:30px;padding-bottom:30px;text-align:center;" class="text-muted">Sorry, No one answered this question.</h2>
                         </t>
                     </div>
                 </div>
@@ -59,78 +83,70 @@
 
     <!-- Result for free_text,textbox and datetime -->
     <template id="result_text" name="Text Result">
-        <t t-if="input_summary['answered'] != 0">
-            <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>User Responses</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <t t-set="text_result" t-value="prepare_result(question, current_filters)"></t>
-                    <tr class="hidden" t-foreach="text_result" t-as="user_input">
-                        <td><t t-esc="user_input_index+1"></t></td>
-                        <t t-if="question.type == 'free_text'">
-                            <td>
-                                <span t-field="user_input.value_free_text"></span><br/>
-                                <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
-                                <span class="pull-right">
-                                    <a t-att-href="user_input.user_input_id.print_url+'/'+user_input.user_input_id.token"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
-                                </span>
-                            </td>
-                        </t>
-                        <t t-if="question.type == 'textbox'">
-                            <td>
-                                <span t-field="user_input.value_text"></span><br/>
-                                <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p>
-                                <span class="pull-right">
-                                    <a t-att-href="user_input.user_input_id.print_url+'/'+user_input.user_input_id.token"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
-                                </span>
-                                </small>
-                            </td>
-                        </t>
-                        <t t-if="question.type == 'datetime'">
-                            <td>
-                                <span  class="oe_date" t-field="user_input.value_date"></span><br/>
-                                <span class="pull-right">
-                                    <a t-att-href="user_input.user_input_id.print_url+'/'+user_input.user_input_id.token"> <i class="fa fa-print"></i> Print respondent's answers</a><br/>
-                                </span>
-                            </td>
-                        </t>
-                    </tr>
-                </tbody>
-            </table>
-            <t t-call="survey.pagination" />
-        </t>
-        <t t-if="input_summary['answered'] == 0">
-            <h2 style="padding-top:30px;padding-bottom:30px;text-align:center;" class="text-muted">Sorry, No one answered this question.</h2>
-        </t>
+        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User Responses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-set="text_result" t-value="prepare_result"/>
+                <tr t-foreach="text_result" t-as="user_input">
+                    <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+                    <t t-if="question.type == 'free_text'">
+                        <td>
+                            <span t-field="user_input.value_free_text"></span><br/>
+                        </td>
+                    </t>
+                    <t t-if="question.type == 'textbox'">
+                        <td>
+                            <span t-field="user_input.value_text"></span><br/>
+                        </td>
+                    </t>
+                    <t t-if="question.type == 'datetime'">
+                        <td>
+                            <span  class="oe_date" t-field="user_input.value_date"></span><br/>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+        <t t-call="survey.pagination" />
     </template>
 
     <!-- Result for simple_choice and multiple_choice -->
     <template id="result_choice" name="Choice Result">
         <div>
             <!-- Tabs -->
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a t-att-href="'#graph_question_'+str(question.id)" data-toggle="tab">
+            <ul class="nav nav-tabs hidden-print">
+                <li class="active" t-if="question.type != 'simple_choice'">
+                    <a t-att-href="'#graph_question_%d' % question.id" data-toggle="tab">
                         <i class="fa fa-bar-chart-o"></i> Graph
                     </a>
                 </li>
+                <li class="active" t-if="question.type == 'simple_choice'">
+                    <a t-att-href="'#graph_question_%d' % question.id" data-toggle="tab">
+                        <i class="fa fa-bar-chart-o"></i> Pie Chart
+                    </a>
+                </li>
                 <li>
-                    <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
+                    <a t-att-href="'#data_question_%d' % question.id" data-toggle="tab">
                         <i class="fa fa-list-alt"></i> Data
                     </a>
                 </li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id="question.id" data-graph_type="bar" t-att-data-current_filters="current_filters">
+                <div class="tab-pane active survey_graph" t-if="question.type != 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="bar" t-att-graph-data="graph_data">
                     <!-- svg element for drawing bar chart -->
                     <svg style="height:20em"></svg>
                 </div>
-                <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
-                    <table class="table table-hover">
+                <div class="tab-pane active survey_graph" t-if="question.type == 'simple_choice'" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id="question.id" data-graph_type="pie" t-att-graph-data="graph_data">
+                    <!-- svg element for drawing pie chart -->
+                    <svg style="height:20em"></svg>
+                </div>
+                <div class="tab-pane" t-att-id="'data_question_%d' % question.id">
+                    <table class="table table-hover table-condensed">
                         <thead>
                             <tr>
                                 <th>Answer Choices</th>
@@ -138,7 +154,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="prepare_result(question, current_filters)" t-as="user_input">
+                            <tr t-foreach="prepare_result" t-as="user_input">
                                 <td>
                                     <p t-esc="user_input['text']"></p>
                                 </td>
@@ -157,29 +173,29 @@
 
     <!-- Result for matrix -->
     <template id="result_matrix" name="Matrix Result">
-        <t t-set="matrix_result" t-value="prepare_result(question, current_filters)" />
+        <t t-set="matrix_result" t-value="prepare_result"/>
         <!-- Tabs -->
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs hidden-print">
             <li class="active">
-                <a t-att-href="'#graph_question_'+str(question.id)" data-toggle="tab">
+                <a t-att-href="'#graph_question_%d' % question.id" data-toggle="tab">
                     <i class="fa fa-bar-chart-o"></i>
                     Graph
                 </a>
             </li>
             <li>
-                <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
+                <a t-att-href="'#data_question_%d' % question.id" data-toggle="tab">
                     <i class="fa fa-list-alt"></i>
                     Data
                 </a>
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_'+str(question.id)" t-att-data-question_id= "question.id" data-graph_type= "multi_bar" t-att-data-current_filters="current_filters">
+            <div class="tab-pane active with-3d-shadow with-transitions survey_graph" t-att-id="'graph_question_%d' % question.id" t-att-data-question_id= "question.id" data-graph_type= "multi_bar" t-att-graph-data="graph_data">
                 <!-- svg element for drawing Multibar chart -->
                 <svg style="height:20em"></svg>
             </div>
-            <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
-                <table class="table table-hover text-right">
+            <div class="tab-pane" t-att-id="'data_question_%d' % question.id">
+                <table class="table table-hover table-condensed text-right">
                     <thead>
                         <tr>
                             <th></th>
@@ -206,30 +222,30 @@
 
     <!-- Result for Numeric Data -->
     <template id="result_number" name="Number Result">
-        <t t-set="number_result" t-value="prepare_result(question, current_filters)" />
+        <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
         <span class="pull-right mt8">
             <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
             <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
             <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
         </span>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs hidden-print">
             <li class="active">
-                <a t-att-href="'#most_common_'+str(question.id)" data-toggle="tab">
+                <a t-att-href="'#most_common_%d' % question.id" data-toggle="tab">
                     <i class="fa fa-list-ol"></i>
                     Most Common <span t-esc="len(number_result['most_comman'])"></span>
                 </a>
             </li>
             <li>
-                <a t-att-href="'#data_question_'+str(question.id)" data-toggle="tab">
+                <a t-att-href="'#data_question_%d' % question.id" data-toggle="tab">
                     <i class="fa fa-list-alt"></i>
                     All Data
                 </a>
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_'+str(question.id)">
-                <table class="table table-hover">
+            <div class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_%d' % question.id">
+                <table class="table table-hover table-condensed">
                      <thead>
                          <tr>
                              <th>User Responce</th>
@@ -248,8 +264,8 @@
                      </tbody>
                 </table>
             </div>
-            <div class="tab-pane" t-att-id="'data_question_'+str(question.id)">
-                <table class="table table-hover" t-att-id="'table_question_'+str(question.id)">
+            <div class="tab-pane" t-att-id="'data_question_%d' % question.id">
+                <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -287,7 +303,7 @@
     </template>
     <!-- Pagination Element -->
     <template id="pagination" name="Survey Result">
-        <t t-set="record_limit" t-value="5"/><!-- Change This record_limit to change number of record  per page-->
+        <t t-set="record_limit" t-value="10"/><!-- Change This record_limit to change number of record  per page-->
         <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="record_limit">
             <t t-if="len(text_result) > record_limit">
                 <li t-foreach="page_range(len(text_result), record_limit)" t-as="num">
