@@ -54,11 +54,10 @@ class EscposDriver(Thread):
         return connected
 
     def lockedstart(self):
-        self.lock.acquire()
-        if not self.isAlive():
-            self.daemon = True
-            self.start()
-        self.lock.release()
+        with self.lock:
+            if not self.isAlive():
+                self.daemon = True
+                self.start()
     
     def get_escpos_printer(self):
         try:
@@ -287,6 +286,7 @@ class EscposDriver(Thread):
                     +'/'+ str(receipt['date']['year']).zfill(4)
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
+
 
 driver = EscposDriver()
 

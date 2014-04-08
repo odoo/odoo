@@ -33,6 +33,8 @@ TXT_FONT_B      = '\x1b\x4d\x01' # Font type B
 TXT_ALIGN_LT    = '\x1b\x61\x00' # Left justification
 TXT_ALIGN_CT    = '\x1b\x61\x01' # Centering
 TXT_ALIGN_RT    = '\x1b\x61\x02' # Right justification
+TXT_COLOR_BLACK = '\x1b\x72\x00' # Default Color
+TXT_COLOR_RED   = '\x1b\x72\x01' # Alternative Color ( Usually Red )
 
 # Text Encoding
 

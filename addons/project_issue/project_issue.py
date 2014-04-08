@@ -264,9 +264,9 @@ class project_issue(osv.Model):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        track_visibility='onchange',
+                        track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]"),
-        'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
+        'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -530,8 +530,8 @@ class account_analytic_account(osv.Model):
         'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
     }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_issues'] = template.use_issues

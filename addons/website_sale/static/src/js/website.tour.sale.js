@@ -50,7 +50,7 @@
             {
                 title:     "test with input error",
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                autoComplete: function (tour) {
+                onload: function (tour) {
                     $("input[name='phone']").val("");
                 },
             },
@@ -58,7 +58,7 @@
                 title:     "test without input error",
                 waitFor:   'form[action="/shop/confirm_order"] .has-error',
                 element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-                autoComplete: function (tour) {
+                onload: function (tour) {
                     if ($("input[name='name']").val() === "")
                         $("input[name='name']").val("website_sale-test-shoptest");
                     if ($("input[name='email']").val() === "")
@@ -72,11 +72,11 @@
             },
             {
                 title:     "select payment",
-                element:   '#payment_method label:has(img[title="transfer"]) input',
+                element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
             },
             {
                 title:     "Pay Now",
-                waitFor:   '#payment_method label:has(input:checked):has(img[title="transfer"])',
+                waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
                 element:   '.oe_sale_acquirer_button .btn[name="submit"]:visible',
             },
             {
