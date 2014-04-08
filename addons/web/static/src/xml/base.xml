@@ -1208,9 +1208,16 @@
     </span>
 </t>
 <t t-name="FieldPercentPie">
-    <span class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
+    <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
         <svg></svg>
-    </span>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </div>
+</t>
+<t t-name="FieldBarChart">
+    <div class="oe_form_field oe_form_field_bar_chart" t-att-style="widget.node.attrs.style">
+        <svg></svg>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </div>
 </t>
 <t t-name="FieldStatus">
     <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
@@ -1380,7 +1387,7 @@
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-accesskey="widget.node.attrs.accesskey">
         <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <div t-if="widget.is_stat_button" class="stat_button_icon"><t t-if="widget.icon" t-raw="widget.icon"/></div>
+        <div t-if="widget.is_stat_button and widget.icon" class="stat_button_icon"><t t-raw="widget.icon"/></div>
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
@@ -1956,5 +1963,6 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+    <strong><t t-esc="value"/></strong>
+    <t t-esc="text"/></t>
 </templates>

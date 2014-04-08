@@ -2834,10 +2834,10 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
 
         svg.innerHTML = "";
         nv.addGraph(function() {
-            var size=43;
+            var width = 42, height = 42;
             var chart = nv.models.pieChart()
-                .width(size)
-                .height(size)
+                .width(width)
+                .height(height)
                 .margin({top: 0, right: 0, bottom: 0, left: 0})
                 .donut(true) 
                 .showLegend(false)
@@ -2850,11 +2850,11 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
                 .transition()
                 .call(chart)
-                .attr({width:size, height:size});
+                .attr('style', 'width: ' + width + 'px; height:' + height + 'px;');
 
             d3.select(svg)
                 .append("text")
-                .attr({x: size/2, y: size/2 + 3, 'text-anchor': 'middle'})
+                .attr({x: width/2, y: height/2 + 3, 'text-anchor': 'middle'})
                 .style({"font-size": "10px", "font-weight": "bold"})
                 .text(formatted_value);
 
@@ -2864,6 +2864,43 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
     }
 });
 
+/**
+    The FieldBarChart expectsa list of values (indeed)
+*/
+instance.web.form.FieldBarChart = instance.web.form.AbstractField.extend({
+    template: 'FieldBarChart',
+
+    render_value: function() {
+        var value = this.get('value');
+        var svg = this.$('svg')[0];
+        svg.innerHTML = "";
+        nv.addGraph(function() {
+            var width = 34, height = 34;
+            var chart = nv.models.discreteBarChart()
+                .x(function (d) { return d.tooltip })
+                .y(function (d) { return d.value })
+                .width(width)
+                .height(height)
+                .margin({top: 0, right: 0, bottom: 0, left: 0})
+                .tooltips(false)
+                .showValues(false)
+                .transitionDuration(350)
+                .showXAxis(false)
+                .showYAxis(false);
+   
+            d3.select(svg)
+                .datum([{key: 'values', values: value}])
+                .transition()
+                .call(chart)
+                .attr('style', 'width: ' + (width + 4) + 'px; height: ' + (height + 8) + 'px;');
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+        });
+   
+    }
+});
 
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
@@ -5924,8 +5961,10 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
     render_value: function() {
         var options = {
             value: this.get("value") || 0,
-            text: this.string,
         };
+        if (! this.node.attrs.nolabel) {
+            options.text = this.string
+        }
         this.$el.html(QWeb.render("StatInfo", options));
     },
 
@@ -5959,6 +5998,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'boolean' : 'instance.web.form.FieldBoolean',
     'float' : 'instance.web.form.FieldFloat',
     'percentpie': 'instance.web.form.FieldPercentPie',
+    'barchart': 'instance.web.form.FieldBarChart',
     'integer': 'instance.web.form.FieldFloat',
     'float_time': 'instance.web.form.FieldFloat',
     'progressbar': 'instance.web.form.FieldProgressBar',
