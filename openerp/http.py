@@ -238,7 +238,7 @@ class WebRequest(object):
             # Test cursors
             self._cr = openerp.tests.common.acquire_test_cursor(self.session_id)
             if not self._cr:
-                self._cr = self.registry.db.cursor()
+                self._cr = self.registry.get_cursor()
         return self._cr
 
     def __enter__(self):
