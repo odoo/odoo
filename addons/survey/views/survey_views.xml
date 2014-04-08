@@ -308,9 +308,9 @@
                         </group>
                         <notebook>
                             <page string="Answers">
-
-                                <p>ici nouveau parametre de validation des emails</p>
-
+                                <field name="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                <label for="validation_email" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                <separator />
                                 <label for="labels_ids" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}" />
                                 <field name="labels_ids" string="Type of answers" context="{'default_question_id': active_id}" attrs="{'invisible': [('type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
                                     <tree editable="bottom">
@@ -329,39 +329,20 @@
                             </page>
                             <page string="Options">
                                 <group string="Constraints" >
-
                                     <field name="constr_mandatory" string="Mandatory Answer"/>
                                     <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
-
-                                    <group colspan="4" col="4" nolabel="1" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
-                                        <group>
-                                            <field name="validation_required" colspan="2"/>
-
-                                            <group colspan="4" col="4" attrs="{'invisible':[('validation_required','=',False)]}">
-                                                <field name="validation_type" />
-                                                <field name="validation_error_msg" />
-                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','has_length')]}">
-                                                    <field name="validation_length_min" string="between"/>
-                                                    <field name="validation_length_max" string="and"/>
-                                                </group>
-                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_decimal')]}">
-                                                    <field name="validation_min_float_value" string="between"/>
-                                                    <field name="validation_max_float_value" string="and"/>
-                                                </group>
-                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_integer')]}">
-                                                    <field name="validation_min_int_value" string="between"/>
-                                                    <field name="validation_max_int_value" string="and"/>
-                                                </group>
-                                                <group colspan="4" col="4" attrs="{'invisible':[('validation_type','!=','is_date')]}">
-                                                    <field name="validation_min_date" string="between"/>
-                                                    <field name="validation_max_date" string="and"/>
-                                                </group>
-                                            </group>
+                                    <group colspan="2" nolabel="1" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                        <field name="validation_required"/>
+                                        <group colspan="2" nolabel="1" attrs="{'invisible': [('validation_required', '=', False)]}">
+                                        <field name="validation_length_min" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                        <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
+                                        <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
+                                        <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
+                                        <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                        <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                        <field name="validation_error_msg" />
                                         </group>
                                     </group>
-
-
-
                                     <field name="matrix_subtype" attrs="{'invisible':[('type','not in',['matrix'])]}"/>
                                 </group>
                                 <group string="Display mode" attrs="{'invisible':[('type','not in',['simple_choice', 'multiple_choice'])]}">
@@ -373,7 +354,6 @@
                                     <field name='comments_message' attrs="{'invisible': [('comments_allowed', '=', False)]}"/>
                                     <field name='comment_count_as_answer' attrs="{'invisible': [('comments_allowed', '=', False)]}" />
                                 </group>
-
                             </page>
                         </notebook>
                     </sheet>
