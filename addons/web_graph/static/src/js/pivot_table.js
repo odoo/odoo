@@ -82,7 +82,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
 	get_values: function (id1, id2, default_values) {
 		var cell = _.findWhere(this.cells, {x: Math.min(id1, id2), y: Math.max(id1, id2)});
-		return (cell !== undefined) ? cell.values : (default_values || new Array(this.measures.length));
+		return (cell !== undefined) ?
+                    cell.values :
+                    (default_values || new Array(this.measures.length));
 	},
 
 	// ----------------------------------------------------------------------
@@ -144,12 +146,16 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     get_ancestors: function (header) {
         var self = this;
         if (!header.children) return [];
-        return  [].concat.apply([], _.map(header.children, function (c) {return self.get_ancestors_and_self(c); }));
+        return  [].concat.apply([], _.map(header.children, function (c) {
+            return self.get_ancestors_and_self(c);
+        }));
     },
 
     get_ancestors_and_self: function (header) {
         var self = this;
-        return [].concat.apply([header], _.map(header.children, function (c) { return self.get_ancestors_and_self(c); }));
+        return [].concat.apply([header], _.map(header.children, function (c) {
+            return self.get_ancestors_and_self(c);
+        }));
     },
 
 	get_total: function (header) {
@@ -205,52 +211,25 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	expand: function (header_id, groupby) {
         var self = this,
             header = this.get_header(header_id),
-			otherRoot = this.get_other_root(header),
-			fields = otherRoot.groupby.concat(this.measures);
+            other_root = this.get_other_root(header),
+            this_gb = [groupby.field],
+            other_gbs = _.pluck(other_root.groupby, 'field');
 
         if (header.path.length === header.root.groupby.length) {
             header.root.groupby.push(groupby);
         }
-        groupby = [groupby].concat(otherRoot.groupby);
-
-        return this.get_groups(groupby, fields, header.domain).then(function (groups) {
-            _.each(groups.reverse(), function (group) {
-                // make header
-                var child = self.make_header(group, header);
-                child.expanded = false;
-                header.children.splice(0,0, child);
-                header.root.headers.splice(header.root.headers.indexOf(header) + 1, 0, child);
-                // make cells
-                _.each(self.get_ancestors_and_self(group), function (data) {
-                    var values = _.map(self.measures, function (m) {
-                        return data.attributes.aggregates[m.field];
-                    });
-                    var other = _.find(otherRoot.headers, function (h) {
-                        if (header.root === self.cols) {
-                            return _.isEqual(data.path.slice(1), h.path);
-                        } else {
-                            return _.isEqual(_.rest(data.path), h.path);
-                            }
-                        });
-                    if (other) {
-                        self.add_cell(child.id, other.id, values);
-                    }
-                });
+        return this.perform_requests(this_gb, other_gbs, header.domain).then(function () {
+            var data = Array.prototype.slice.call(arguments).slice(other_gbs.length + 1);
+            _.each(data, function (data_pt) {
+                self.make_headers_and_cell(
+                    data_pt, header.root.headers, other_root.headers, 1, header.path, true);
             });
             header.expanded = true;
+            header.children.forEach(function (child) {
+                child.expanded = false;
+                child.root = header.root;
+            });
         });
-	},
-
-	make_header: function (group, parent) {
-		var title = parent ? group.attributes.value : _t('Total');
-        return {
-			id: _.uniqueId(),
-			path: parent ? parent.path.concat(title) : [],
-			title: title,
-			children: [],
-			domain: parent ? group.model._domain : this.domain,
-			root: parent ? parent.root : undefined,
-		};
 	},
 
 	swap_axis: function () {
@@ -262,205 +241,190 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	// ----------------------------------------------------------------------
 	// Data updating methods
 	// ----------------------------------------------------------------------
-    // Load the data from the db, using the method this.load_data
     // update_data will try to preserve the expand/not expanded status of each
     // column/row.  If you want to expand all, then set this.cols.headers/this.rows.headers 
     // to null before calling update_data.
-	update_data: function () {
-		var self = this;
+    update_data: function () {
+        var self = this;
+        return this.perform_requests().then (function () {
+            var data = Array.prototype.slice.call(arguments);
+            self.no_data = !data[0][0].attributes.length;
+            if (self.no_data) {
+                return;
+            }
+            var row_headers = [],
+                col_headers = [];
+            self.cells = [];
 
-		return this.load_data().then (function (result) {
-			if (result) {
-				self.no_data = false;
-				self[self.cols.headers ? 'update_headers' : 'expand_headers'](self.cols, result.col_headers);
-				self[self.rows.headers ? 'update_headers' : 'expand_headers'](self.rows, result.row_headers);
-			} else {
-				self.no_data = true;
-			}
-		});
-	},
+            var dim_col = self.cols.groupby.length,
+                i, j, index;
 
-	expand_headers: function (root, new_headers) {
-		root.headers = new_headers;
-		_.each(root.headers, function (header) {
-			header.root = root;
-			header.expanded = (header.children.length > 0);
-		});
-	},
-
-	update_headers: function (root, new_headers) {
-		_.each(root.headers, function (header) {
-			var corresponding_header = _.find(new_headers, function (h) {
-				return _.isEqual(h.path, header.path);
-			});
-			if (corresponding_header && header.expanded) {
-				corresponding_header.expanded = true;
-				_.each(corresponding_header.children, function (c) {
-					c.expanded = false;
-				});
-			}
-			if (corresponding_header && (!header.expanded)) {
-				corresponding_header.expanded = false;
-			}
-		});
-		var updated_headers = _.filter(new_headers, function (header) {
-			return (header.expanded !== undefined);
-		});
-		_.each(updated_headers, function (header) {
-			if (!header.expanded) {
-				header.children = [];
-			}
-			header.root = root;
-		});
-		root.headers = updated_headers;
-	},
-
-    // ----------------------------------------------------------------------
-    // Data loading methods
-    // ----------------------------------------------------------------------
-
-    // To obtain all the values required to draw the full table, we have to do 
-    // at least      2 + min(row.groupby.length, col.groupby.length)
-    // calls to readgroup. To simplify the code, we will always do 
-    // 2 + row.groupby.length calls. For example, if row.groupby = [r1, r2, r3] 
-    // and col.groupby = [c1, c2], then we will make the call with the following 
-    // groupbys: [r1,r2,r3], [c1,r1,r2,r3], [c1,c2,r1,r2,r3], [].
-    load_data: function () {
-        var self = this,
-            cols = this.cols.groupby,
-            rows = this.rows.groupby,
-            visible_fields = rows.concat(cols, self.measures);
-
-        if (this.measures.length === 0) {
-            return $.Deferred.resolve().promise();
-        }
-
-        var groupbys = _.map(_.range(cols.length + 1), function (i) {
-            return cols.slice(0, i).concat(rows);
-        });
-        groupbys.push([]);
-
-        var get_data_requests = _.map(groupbys, function (groupby) {
-            return self.get_groups(groupby, visible_fields, self.domain);
-        });
-
-        return $.when.apply(null, get_data_requests).then(function () {
-            var data = Array.prototype.slice.call(arguments),
-                row_data = data[0],
-                col_data = (cols.length !== 0) ? data[data.length - 2] : [],
-                has_data = data[data.length - 1][0];
-
-            return has_data && self.format_data(col_data, row_data, data);
+            for (i = 0; i < self.rows.groupby.length + 1; i++) {
+                for (j = 0; j < dim_col + 1; j++) {
+                    index = i*(dim_col + 1) + j;
+                    self.make_headers_and_cell(data[index], row_headers, col_headers, i);
+                }
+            }
+            self.set_headers(row_headers, self.rows);
+            self.set_headers(col_headers, self.cols);
         });
     },
 
-	get_groups: function (groupbys, fields, domain, path) {
-		var self = this,
-            groupby = (groupbys.length) ? groupbys[0] : [];
-        path = path || [];
-
-		return this._query_db(groupby, fields, domain, path).then(function (groups) {
-            if (groupbys.length > 1) {
-                var get_subgroups = $.when.apply(null, _.map(groups, function (group) {
-                    return self.get_groups(_.rest(groupbys), fields, group.model._domain, path.concat(group.attributes.value)).then(function (subgroups) {
-                        group.children = subgroups;
-                    });
-                }));
-                 return get_subgroups.then(function () {
-                     return groups;
-                 });
-            } else {
-                return groups;
+    make_headers_and_cell: function (data_pts, row_headers, col_headers, index, prefix, expand) {
+        var self = this;
+        data_pts.forEach(function (data_pt) {
+            var row_value = (prefix || []).concat(data_pt.attributes.value.slice(0,index));
+            var col_value = data_pt.attributes.value.slice(index);
+            
+            if (expand && !_.find(col_headers, function (hdr) {return _.isEqual(col_value, hdr.path);})) {
+                return;
             }
-		});
+            var row = self.find_or_create_header(row_headers, row_value, data_pt);
+            var col = self.find_or_create_header(col_headers, col_value, data_pt);
 
-	},
+            var cell_value = _.map(self.measures, function (m) {
+                return data_pt.attributes.aggregates[m.field];
+            });
+            self.cells.push({
+                x: Math.min(row.id, col.id),
+                y: Math.max(row.id, col.id),
+                values: cell_value
+            });
+        });
+    },
 
-	_query_db: function (groupby, fields, domain, path) {
-		var self = this,
-            field_ids = _.without(_.pluck(fields, 'field'), '__count'),
-            fields = _.map(field_ids, function(f) { return self.raw_field(f); });
+    make_header: function (values) {
+        return _.extend({
+            children: [],
+            domain: this.domain,
+            expanded: undefined,
+            id: _.uniqueId(),
+            path: [],
+            root: undefined,
+            title: undefined
+        }, values || {});
+    },
 
-		return this.model.query(field_ids)
-			.filter(domain)
-			.group_by(groupby.field)
-			.then(function (results) {
-				var groups = _.filter(results, function (group) {
-					return group.attributes.length > 0;
-				});
-				return _.map(groups, function (g) { return self.format_group(g, path); });
-			});
-	},
+    find_or_create_header: function (headers, path, data_pt) {
+        var hdr = _.find(headers, function (header) {
+            return _.isEqual(path, header.path);
+        });
+        if (hdr) {
+            return hdr;
+        }
+        if (!path.length) {
+            hdr = this.make_header({title: _t('Total')});
+            headers.push(hdr);
+            return hdr;
+        }
+        hdr = this.make_header({
+            path:path,
+            domain:data_pt.model._domain,
+            title: _t(_.last(path))
+        });
+        var parent = _.find(headers, function (header) {
+            return _.isEqual(header.path, _.initial(path, 1));
+        });
+
+        var previous = parent.children.length ? _.last(parent.children) : parent;
+        headers.splice(headers.indexOf(previous) + 1, 0, hdr);
+        parent.children.push(hdr);
+        return hdr;
+    },
+
+    perform_requests: function (group1, group2, domain) {
+        var self = this,
+            requests = [],
+            row_gbs = _.pluck(this.rows.groupby, 'field'),
+            col_gbs = _.pluck(this.cols.groupby, 'field'),
+            field_list = row_gbs.concat(col_gbs, _.pluck(this.measures, 'field')),
+            fields = field_list.map(function (f) { return self.raw_field(f); });
+
+        group1 = group1 || row_gbs;
+        group2 = group2 || col_gbs;
+
+        var i,j, groupbys;
+        for (i = 0; i < group1.length + 1; i++) {
+            for (j = 0; j < group2.length + 1; j++) {
+                groupbys = group1.slice(0,i).concat(group2.slice(0,j));
+                requests.push(self.get_groups(groupbys, fields, domain || self.domain));
+            }
+        }
+        return $.when.apply(null, requests);
+    },
+
+    // set the 'expanded' status of new_headers more or less like root.headers, with root as root
+    set_headers: function(new_headers, root) {
+        if (root.headers) {
+            _.each(root.headers, function (header) {
+                var corresponding_header = _.find(new_headers, function (h) {
+                    return _.isEqual(h.path, header.path);
+                });
+                if (corresponding_header && header.expanded) {
+                    corresponding_header.expanded = true;
+                    _.each(corresponding_header.children, function (c) {
+                        c.expanded = false;
+                    });
+                }
+                if (corresponding_header && (!header.expanded)) {
+                    corresponding_header.expanded = false;
+                    corresponding_header.children = [];
+                }
+            });
+            var updated_headers = _.filter(new_headers, function (header) {
+                return (header.expanded !== undefined);
+            });
+            _.each(updated_headers, function (header) {
+                header.root = root;
+            });
+            root.headers = updated_headers;
+        } else {
+            root.headers = new_headers;
+            _.each(root.headers, function (header) {
+                header.root = root;
+                header.expanded = (header.children.length > 0);
+            });
+        }
+        return new_headers;
+    },
+
+    get_groups: function (groupbys, fields, domain) {
+        var self = this;
+        return this.model.query(_.without(fields, '__count'))
+            .filter(domain)
+            .lazy(false)
+            .group_by(groupbys)
+            .then(function (groups) {
+                return groups.filter(function (group) {
+                    return group.attributes.length > 0;
+                }).map(function (group) {
+                    var attrs = group.attributes,
+                        grouped_on = attrs.grouped_on instanceof Array ? attrs.grouped_on : [attrs.grouped_on],
+                        raw_grouped_on = grouped_on.map(function (f) {
+                            return self.raw_field(f);
+                        });
+                    if (grouped_on.length === 1) {
+                        attrs.value = [attrs.value];
+                    }
+                    attrs.value = _.range(grouped_on.length).map(function (i) {
+                        if (attrs.value[i] === false) {
+                            return _t('Undefined');
+                        } else if (attrs.value[i] instanceof Array) {
+                            return attrs.value[i][1];
+                        }
+                        return attrs.value[i];
+                    });
+                    attrs.aggregates.__count = group.attributes.length;
+                    attrs.grouped_on = raw_grouped_on;
+                    return group;
+                });
+            });
+    },
 
     // if field is a fieldname, returns field, if field is field_id:interval, retuns field_id
     raw_field: function (field) {
         return field.split(':')[0];
     },
-
-    // add the path to the group and sanitize the value...
-    format_group: function (group, current_path) {
-        var attrs = group.attributes,
-            value = attrs.value,
-            grouped_on = attrs.grouped_on ? this.raw_field(attrs.grouped_on) : false;
-
-        if (value === false) {
-            group.attributes.value = _t('Undefined');
-        } else if (grouped_on && this.fields[grouped_on].type === 'selection') {
-            var selection = this.fields[grouped_on].selection,
-                value_lookup = _.where(selection, {0:value}); 
-            group.attributes.value = value_lookup ? value_lookup[0][1] : _t('Undefined');
-        } else if (value instanceof Array) {
-            group.attributes.value = value[1];
-        }
-
-        group.path = (value !== undefined) ? (current_path || []).concat(group.attributes.value) : [];
-        group.attributes.aggregates.__count = group.attributes.length;
-
-        return group;
-    },
-
-	format_data: function (col_data, row_data, cell_data) {
-		var self = this,
-			dim_row = this.rows.groupby.length,
-			dim_col = this.cols.groupby.length,
-            col_headers = this.get_ancestors_and_self(this.make_headers(col_data, dim_col)),
-            row_headers = this.get_ancestors_and_self(this.make_headers(row_data, dim_row));
-
-        this.cells = [];
-		_.each(cell_data, function (data, index) {
-			self.make_cells(data, index, [], row_headers, col_headers);
-		}); // not pretty. make it more functional?
-
-		return {col_headers: col_headers, row_headers: row_headers};
-	},
-
-	make_headers: function (data, depth, parent) {
-		var self = this,
-            main = this.make_header(data, parent);
-
-		if (main.path.length < depth) {
-			main.children = _.map(data.children || data, function (data_pt) {
-				return self.make_headers (data_pt, depth, main);
-			});
-		}
-		return main;
-	},
-
-	make_cells: function (data, index, current_path, rows, cols) {
-		var self = this;
-		_.each(data, function (group) {
-			var attr = group.attributes,
-				path = attr.grouped_on ? current_path.concat(attr.value) : current_path,
-				values = _.map(self.measures, function (measure) { return attr.aggregates[measure.field]; }),
-                row = _.find(rows, function (header) { return _.isEqual(header.path, path.slice(index)); }),
-                col = _.find(cols, function (header) { return _.isEqual(header.path, path.slice(0, index)); });
-
-			self.add_cell(row.id, col.id, values);
-			if (group.children) {
-				self.make_cells (group.children, index, path, rows, cols);
-			}
-		});
-	},
 
 });
 
