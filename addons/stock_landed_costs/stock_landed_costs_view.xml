@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+       <!-- Stock Landed Cost Form View -->
+        <record id='view_stock_landed_cost_form' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.form</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <form string="Landed Costs" version="7.0">
+                    <header>
+                        <button name="button_validate" string="Validate" states="draft" class="oe_highlight" type="object"/>
+                        <button name="button_cancel" string="Cancel" states="draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open" statusbar_colors='{"reject":"cancel"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+	                        </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="picking_ids" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Cost Lines">
+                                <field name="cost_lines">
+                                    <form string="Cost Lines" version="7.0">
+                                        <group>
+                                            <group>
+                                                <field name="product_id"
+                                                    on_change="onchange_product_id(product_id, quantity, uom_id, price_unit, account_id)"/>
+                                                <label for="product_uom_qty"/>
+                                                <div>
+                                                    <field name="quantity" class="oe_inline"/>
+                                                    <field name="uom_id" groups="product.group_uom" class="oe_inline oe_no_button"/>
+                                                </div>
+                                                <field name="price_unit"/>
+                                            </group>
+                                            <group>
+                                                <field name="split_method"/>
+                                                <field name="account_id"/>
+                                            </group>
+                                        </group>
+                                        <label for="name"/>
+                                        <field name="name"/>
+                                    </form>
+                                    <tree string="Cost Lines">
+                                        <field name="product_id" on_change="onchange_product_id(product_id, quantity, uom_id, price_unit, account_id)"/>
+                                        <field name="name"/>
+                                        <field name="account_id"/>
+                                        <field name="split_method"/>
+                                        <field name="quantity"/>
+                                        <field name="uom_id"/>
+                                        <field name="price_unit"/>
+                                        <field name="price_subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="amount_total"/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <div class="oe_clear">
+                            <label for="description"/>
+                        </div>
+                        <field name="description" class="oe_inline" placeholder="Additional note..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Stock Landed Cost Tree View -->
+        <record id='view_stock_landed_cost_tree' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.tree</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Landed Costs">
+                    <field name="name"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Stock Landed Cost Action -->
+        <record id='action_stock_landed_cost' model='ir.actions.act_window'>
+            <field name="name">Landed Costs</field>
+            <field name="res_model">stock.landed.cost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new landed cost.
+                </p>
+            </field>
+        </record>
+
+        <!-- Stock Landed Cost Menu -->
+        <menuitem name="Landed Costs" parent="stock.menu_stock_root" id="menu_stock_landed_cost_main" sequence="0"/>
+        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="menu_stock_landed_cost_main" id="menu_stock_landed_cost" sequence="1"/>
+
+    </data>
+</openerp>
