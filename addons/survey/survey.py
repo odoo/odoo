@@ -414,25 +414,6 @@ class survey_survey(osv.Model):
             else:
                 return (pages[current_page_index + 1][1], current_page_index + 1, False)
 
-    # Web client actions
-
-    # def action_kanban_update_state(self, cr, uid, ids, context=None):
-    #     ''' Change the state from the kanban ball '''
-    #     for survey in self.read(cr, uid, ids, ['state'], context=context):
-    #         if survey['state'] == 'draft':
-    #             self.write(cr, uid, [survey['id']], {'state': 'open'}, context=context)
-    #         elif survey['state'] == 'open':
-    #             self.write(cr, uid, [survey['id']], {'state': 'close'}, context=context)
-    #         elif survey['state'] == 'close':
-    #             self.write(cr, uid, [survey['id']], {'state': 'cancel'}, context=context)
-    #         elif survey['state'] == 'cancel':
-    #             self.write(cr, uid, [survey['id']], {'state': 'draft'}, context=context)
-    #     return {}
-
-    # def action_kanban_duplicate(self, cr, uid, ids, context=None):
-    #     ''' Hack in order to provide "duplicate" action to kanban view '''
-    #     return self.copy(cr, uid, ids[0], context=None)
-
     def action_start_survey(self, cr, uid, ids, context=None):
         ''' Open the website page with the survey form '''
         trail = ""
@@ -453,9 +434,9 @@ class survey_survey(osv.Model):
 
         survey_browse = self.pool.get('survey.survey').browse(cr, uid, ids,
             context=context)[0]
-        if survey_browse.state != "open":
+        if survey_browse.stage_id.closed:
             raise osv.except_osv(_('Warning!'),
-                _("You cannot send invitations unless the survey is open."))
+                _("You cannot send invitations to closed surveys."))
 
         assert len(ids) == 1, 'This option should only be used for a single \
                                 survey at a time.'
@@ -470,8 +451,7 @@ class survey_survey(osv.Model):
                     'default_survey_id': ids[0],
                     'default_use_template': bool(template_id),
                     'default_template_id': template_id,
-                    'default_composition_mode': 'comment',
-                    'survey_state': survey_browse.state}
+                    'default_composition_mode': 'comment'}
                    )
         return {
             'type': 'ir.actions.act_window',
@@ -523,12 +503,12 @@ class survey_stage(osv.Model):
     _columns = {
         'name': fields.char(string="Name", required=True, translate=True),
         'sequence': fields.integer(string="Sequence"),
-        'survey_open': fields.boolean(string="Closed", help="If closed, people won't be able to answer to surveys in this column."),
+        'closed': fields.boolean(string="Closed", help="If closed, people won't be able to answer to surveys in this column."),
         'fold': fields.boolean(string="Folded in kanban view")
     }
     _defaults = {
         'sequence': 1,
-        'survey_open': True
+        'closed': False
     }
     _sql_constraints = [
         ('positive_sequence', 'CHECK(sequence >= 0)', 'Sequence number MUST be a natural')
