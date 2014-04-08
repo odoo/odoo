@@ -383,8 +383,8 @@ class Ecommerce(http.Controller):
     def add_cart(self, product_id, remove=None, **kw):
         request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=int(product_id),
-            number=kw.get('number',1), 
-            set_number=kw.get('set_number',-1),
+            number=float(kw.get('number',1)),
+            set_number=float(kw.get('set_number',-1)),
             context=request.context)
         return request.redirect("/shop/mycart/")
 
