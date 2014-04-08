@@ -38,7 +38,7 @@ _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
 
-def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
+def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, report_type=None):
     """ Try to render a report <rname> with contents of ids
     
         This function should also check for common pitfalls of reports.
@@ -114,7 +114,6 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 Eg. 'OK' or 'gtk-print'
         :param our_module: the name of the calling module (string), like 'account'
     """
-
     if not our_module and isinstance(action_id, basestring):
         if '.' in action_id:
             our_module = action_id.split('.', 1)[0]
@@ -161,7 +160,10 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         # Updating the context : Adding the context of action in order to use it on Views called from buttons
         if datas.get('id',False):
             context.update( {'active_id': datas.get('id',False), 'active_ids': datas.get('ids',[]), 'active_model': datas.get('model',False)})
-        context.update(safe_eval(action.get('context','{}'), context.copy()))
+        context1 = action.get('context', {})
+        if isinstance(context1, basestring):
+            context1 = safe_eval(context1, context.copy())
+        context.update(context1)
         if action['type'] in ['ir.actions.act_window', 'ir.actions.submenu']:
             for key in ('res_id', 'res_model', 'view_type', 'view_mode',
                     'limit', 'auto_refresh', 'search_view', 'auto_search', 'search_view_id'):
@@ -272,7 +274,9 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             if 'window' in datas:
                 del datas['window']
             if not datas:
-                datas = action.get('datas',{})
+                datas = action.get('datas')
+                if not datas:
+                    datas = action.get('data')
             datas = datas.copy()
             ids = datas.get('ids')
             if 'ids' in datas:
@@ -302,7 +306,5 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         action = result
 
     return True
-
-#eof
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
