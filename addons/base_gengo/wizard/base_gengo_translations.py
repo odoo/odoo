@@ -71,7 +71,7 @@ class base_gengo_translations(osv.osv_memory):
             gengo = MyGengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
                 private_key=user.company_id.gengo_private_key.encode('ascii'),
-                sandbox = user.company_id.gengo_sandbox,
+                sandbox=user.company_id.gengo_sandbox,
             )
             gengo.getAccountStats()
             return (True, gengo)
@@ -83,7 +83,7 @@ class base_gengo_translations(osv.osv_memory):
         '''
         Function called by the wizard.
         '''
-        if context == None:
+        if context is None:
             context = {}
 
         flag, gengo = self.gengo_authentication(cr, uid, context=context)
@@ -99,16 +99,16 @@ class base_gengo_translations(osv.osv_memory):
             ctx['gengo_language'] = wizard.lang_id.id
             if wizard.sync_limit > 200 or wizard.sync_limit < 1:
                 raise osv.except_osv(_("Warning"), _('Sync limit should between 1 to 200 for Gengo translation services.'))
-            if wizard.sync_type in ['send','both']:
+            if wizard.sync_type in ['send', 'both']:
                 self._sync_request(cr, uid, wizard.sync_limit, context=ctx)
-            if wizard.sync_type in ['receive','both']:
-                self._sync_response( cr, uid, wizard.sync_limit, context=ctx)
+            if wizard.sync_type in ['receive', 'both']:
+                self._sync_response(cr, uid, wizard.sync_limit, context=ctx)
         return {'type': 'ir.actions.act_window_close'}
 
     def _sync_response(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):
         """
         This method will be called by cron services to get translations from
-        Gengo. It will read translated terms and comments from Gengo and will 
+        Gengo. It will read translated terms and comments from Gengo and will
         update respective ir.translation in openerp.
         """
         translation_pool = self.pool.get('ir.translation')
@@ -116,31 +116,38 @@ class base_gengo_translations(osv.osv_memory):
         if not flag:
             _logger.warning("%s", gengo)
         else:
-            translation_id = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', 'in', ('machine','standard','pro','ultra')), ('job_id', "!=",False)], limit=limit, context=context)
-            translation_terms = translation_pool.browse(cr, uid, translation_id, context=context)
-            gengo_job_id = [term.job_id for term in translation_terms]
-            if gengo_job_id:
-                gengo_ids = ','.join(gengo_job_id)
-                job_response = gengo.getTranslationJobBatch(id=gengo_ids)
-                if job_response['opstat'] == 'ok':
-                    job_response_dict = dict([(job['job_id'],job) for job in job_response['response']['jobs']])
-                    for term in translation_terms:
-                        up_term = up_comment = 0
-                        vals={}
-                        if job_response_dict[term.job_id]['status'] == 'approved':
-                            vals.update({'state': 'translated',
-                                'value': job_response_dict[term.job_id]['body_tgt']})
-                            up_term += 1
-                        job_comment = gengo.getTranslationJobComments(id=term.job_id)
-                        if job_comment['opstat']=='ok':
-                            gengo_comments=""
-                            for comment in job_comment['response']['thread']:
-                                gengo_comments += _('%s\n-- Commented on %s by %s.\n\n') % (comment['body'], time.ctime(comment['ctime']), comment['author'])
-                            vals.update({'gengo_comment': gengo_comments})
-                            up_comment += 1
-                        if vals:
-                            translation_pool.write(cr, uid, term.id, vals)
-                        _logger.info("Successfully Updated `%d` terms and %d Comments." % (up_term, up_comment ))
+            offset = 0
+            all_translation_ids = translation_pool.search(cr, uid, [('state', '=', 'inprogress'), ('gengo_translation', 'in', ('machine', 'standard', 'pro', 'ultra')), ('job_id', "!=", False)], context=context)
+            while True:
+                translation_ids = all_translation_ids[offset:offset + limit]
+                if translation_ids:
+                    offset += limit
+                    translation_terms = translation_pool.browse(cr, uid, translation_ids, context=context)
+                    gengo_job_id = [term.job_id for term in translation_terms]
+                    if gengo_job_id:
+                        gengo_ids = ','.join(gengo_job_id)
+                        job_response = gengo.getTranslationJobBatch(id=gengo_ids)
+                        if job_response['opstat'] == 'ok':
+                            job_response_dict = dict([(job['job_id'], job) for job in job_response['response']['jobs']])
+                            for term in translation_terms:
+                                up_term = up_comment = 0
+                                vals = {}
+                                if job_response_dict[term.job_id]['status'] == 'approved':
+                                    vals.update({'state': 'translated',
+                                        'value': job_response_dict[term.job_id]['body_tgt']})
+                                    up_term += 1
+                                job_comment = gengo.getTranslationJobComments(id=term.job_id)
+                                if job_comment['opstat'] == 'ok':
+                                    gengo_comments = ""
+                                    for comment in job_comment['response']['thread']:
+                                        gengo_comments += _('%s\n-- Commented on %s by %s.\n\n') % (comment['body'], time.ctime(comment['ctime']), comment['author'])
+                                    vals.update({'gengo_comment': gengo_comments})
+                                    up_comment += 1
+                                if vals:
+                                    translation_pool.write(cr, uid, term.id, vals)
+                                _logger.info("Successfully Updated `%d` terms and %d Comments." % (up_term, up_comment))
+                if not len(translation_ids) == limit:
+                    break
         return True
 
     def _update_terms(self, cr, uid, response, context=None):
@@ -187,7 +194,7 @@ class base_gengo_translations(osv.osv_memory):
         return {'jobs': jobs}
 
 
-    def _send_translation_terms(self, cr, uid,  term_ids, context=None):
+    def _send_translation_terms(self, cr, uid, term_ids, context=None):
         """
         Send a request to Gengo with all the term_ids in a different job, get the response and update the terms in
         database accordingly.
@@ -223,13 +230,17 @@ class base_gengo_translations(osv.osv_memory):
                 #but if this specific key is given, then we restrict the request on terms of this language only
                 lang_ids = [context.get('gengo_language')]
             langs = [lang.code for lang in language_pool.browse(cr, uid, lang_ids, context=context)]
-            #search for the n first terms to translate
-            term_ids = translation_pool.search(cr, uid, [('state', '=', 'to_translate'), ('gengo_translation', 'in', ('machine','standard','pro','ultra')), ('lang', 'in', langs),('job_id',"=",False)], limit=limit, context=context)
-            if term_ids:
-                self._send_translation_terms(cr, uid, term_ids, context=context)
-                _logger.info("%s Translation terms have been posted to Gengo successfully", len(term_ids))
-            else:
-                _logger.info('No Translation terms to process.')
+            offset = 0
+            all_term_ids = translation_pool.search(cr, uid, [('state', '=', 'to_translate'), ('gengo_translation', 'in', ('machine', 'standard', 'pro', 'ultra')), ('lang', 'in', langs), ('job_id', "=", False)], context=context)
+            while True:
+                #search for the n first terms to translate
+                term_ids = all_term_ids[offset:offset + limit]
+                if term_ids:
+                    offset += limit
+                    self._send_translation_terms(cr, uid, term_ids, context=context)
+                    _logger.info("%s Translation terms have been posted to Gengo successfully", len(term_ids))
+                if not len(term_ids) == limit:
+                    break
         except Exception, e:
             _logger.error("%s", e)
 
