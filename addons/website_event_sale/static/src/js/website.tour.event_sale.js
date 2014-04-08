@@ -18,6 +18,11 @@
                 waitNot:   'a[href*="/event"]:contains("Functional Webinar")',
                 autoComplete:   function () {
                     // use onload if website_event_track is installed
+                    console.log("--------------------------------------------");
+                    console.log($('form:contains("Ticket Type")').size());
+                    console.log("--------------------------------------------");
+                    console.log($('a[href*="/event"][href*="/register"]').attr("href"));
+                    console.log("--------------------------------------------");
                     if (!$('form:contains("Ticket Type")').size()) {
                         window.location.href = $('a[href*="/event"][href*="/register"]').attr("href");
                     }
