@@ -545,8 +545,13 @@ class stock_quant(osv.osv):
                 self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
             if move.partially_available:
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
-            #TODO: or split from move with move_orig_ids?
-            if move.location_id.usage == 'internal' and not move.move_orig_ids:
+            move_orig_ids = []
+            move2 = move
+            while move2:
+                move_orig_ids += [x.id for x in move2.move_orig_ids]
+                #loop on the split_from to find the ancestor of split moves only if the move has not direct ancestor (priority goes to them)
+                move2 = not move2.move_orig_ids and move2.split_from or False
+            if move.location_id.usage == 'internal' and not move_orig_ids:
                 if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0), ('location_id', 'child_of', move.location_id.id)], limit=1, context=context):
                     for quant in move.reserved_quant_ids:
                         self._quant_reconcile_negative(cr, uid, quant, move, reserve_move = True, context=context)
