@@ -5,10 +5,12 @@ import datetime
 import json
 import logging
 import math
+import os
 import re
 import sys
 import xml  # FIXME use lxml and etree
 import lxml
+from urlparse import urlparse
 
 import babel
 import babel.dates
@@ -388,42 +390,18 @@ class QWeb(orm.AbstractModel):
         return self.render(cr, uid, self.eval_format(template_attributes["call"], d), d)
 
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
-        template_attributes['call'] = template_attributes['call-assets']
+        """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
+        name = template_attributes['call-assets']
+        template_attributes['call'] = name
+
+        # Backward compatibility hack for manifest usage
+        qwebcontext['manifest_list'] = openerp.addons.web.controllers.main.manifest_list
+
         content = self.render_tag_call(element, template_attributes, generated_attributes, qwebcontext)
-        html = lxml.html.fragment_fromstring('<s>%s</s>' % content) # avoid this hack if possible
-
-        tags = dict()
-        current_style = None
-        current_script = None
-
-        for el in html:
-            if el.tag == 'link' and el.attrib.get('rel') == 'stylesheet':
-                cssfile = el.attrib.get('href')
-                if current_style is None:
-                    current_style = el
-                    tags[current_style] = []
-                    el.attrib['href'] = '/web/css/'
-                else:
-                    html.remove(el)
-                tags[current_style].append(cssfile)
-            if el.tag == 'script':
-                if 'src' not in el.attrib:
-                    current_script = None
-                else:
-                    jsfile = el.attrib['src']
-                    if current_script is None:
-                        current_script = el
-                        tags[current_script] = []
-                        el.attrib['src'] = '/web/js/'
-                    else:
-                        html.remove(el)
-                    tags[current_script].append(jsfile)
-
-        for tag, files in tags.items():
-            attr = 'href' if 'href' in tag.attrib else 'src'
-            tag.attrib[attr] += openerp.http.pathlist_to_base64(files)
-        r = lxml.html.tostring(html)[3:-4] # avoid this hack if possible
-        return r
+        if qwebcontext.get('debug'):
+            return content
+        bundle = AssetsBundle(name, html=content)
+        return bundle.to_html()
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -848,7 +826,6 @@ class RelativeDatetimeConverter(osv.AbstractModel):
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
 
-
 class Contact(orm.AbstractModel):
     _name = 'ir.qweb.field.contact'
     _inherit = 'ir.qweb.field.many2one'
@@ -922,5 +899,83 @@ def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options
     """
     return options.get('widget', column._type)
+
+class AssetsBundle(object):
+    def __init__(self, xmlid, html=None):
+        self.xmlid = xmlid
+        self.javascripts = []
+        self.stylesheets = []
+        self.remains = []
+        if html:
+            self.parse(html)
+
+    def parse(self, html):
+        fragments = lxml.html.fragments_fromstring(html)
+        for el in fragments:
+            if type(el) is basestring:
+                self.remains.append(el)
+            elif type(el) is lxml.html.HtmlElement:
+                src = el.attrib.get('src')
+                href = el.attrib.get('href')
+                if el.tag == 'style':
+                    self.stylesheets.append(StylesheetAsset(inline=el.text))
+                elif el.tag == 'link' and el.attrib['rel'] == 'stylesheet' and self.is_internal_url(href):
+                    self.stylesheets.append(StylesheetAsset(url=href))
+                elif el.tag == 'script' and not src:
+                    self.javascripts.append(JavascriptAsset(inline=el.text))
+                elif el.tag == 'script' and self.is_internal_url(src):
+                    self.javascripts.append(JavascriptAsset(url=src))
+                else:
+                    self.remains.append(lxml.html.tostring(el))
+            else:
+                try:
+                    self.remains.append(lxml.html.tostring(el))
+                except Exception:
+                    raise NotImplementedError
+
+    def is_internal_url(self, url):
+        return not urlparse(url).netloc
+
+    def to_html(self, sep='\n'):
+        response = list(self.remains)
+        if self.stylesheets:
+            response.insert(0, '<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+        if self.javascripts:
+            response.insert(0, '<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        return sep.join(response)
+
+    def js(self):
+        content = '\n'.join([asset.get_content() for asset in self.javascripts])
+        return content
+
+    def css(self):
+        content = '\n'.join([asset.get_content() for asset in self.stylesheets])
+        return content
+
+class WebAsset(object):
+    def __init__(self, source=None, url=None, filename=None):
+        self.source = source
+        self.filename = filename
+        self.url = url
+
+    def get_content(self):
+        if self.source:
+            return self.source
+        if self.url:
+            module = filter(bool, self.url.split('/'))[0]
+            mpath = openerp.http.addons_manifest[module]['addons_path']
+            self.filename = mpath + self.url.replace('/', os.path.sep)
+        with open(self.filename, 'rb') as fp:
+            data = fp.read().decode('utf-8')
+            return data
+
+class JavascriptAsset(WebAsset):
+    def get_content(self):
+        content = super(JavascriptAsset, self).get_content()
+        return content + ';'
+
+class StylesheetAsset(WebAsset):
+    pass
+
 
 # vim:et:
