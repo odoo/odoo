@@ -58,7 +58,7 @@ class Registry(Mapping):
         self._init_modules = set()
 
         self.db_name = db_name
-        self.db = openerp.sql_db.db_connect(db_name)
+        self._db = openerp.sql_db.db_connect(db_name)
 
         # special cursor for test mode; None means "normal" mode
         self.test_cr = None
@@ -79,7 +79,7 @@ class Registry(Mapping):
         self._any_cache_cleared = False
 
         cr = self.cursor()
-        has_unaccent = openerp.modules.db.has_unaccent(cr)
+        has_unaccent = openerp.modules._db.has_unaccent(cr)
         if openerp.tools.config['unaccent'] and not has_unaccent:
             _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
         self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
@@ -193,7 +193,7 @@ class Registry(Mapping):
     def enter_test_mode(self):
         """ Enter the 'test' mode, where one cursor serves several requests. """
         assert self.test_cr is None
-        self.test_cr = self.db.test_cursor()
+        self.test_cr = self._db.test_cursor()
         RegistryManager.enter_test_mode()
 
     def leave_test_mode(self):
@@ -214,7 +214,7 @@ class Registry(Mapping):
             # cursor itself in its method close().
             self.test_cr.acquire()
             return self.test_cr
-        return self.db.cursor()
+        return self._db.cursor()
 
 class DummyRLock(object):
     """ Dummy reentrant lock, to be used while running rpc and js tests """
@@ -295,7 +295,7 @@ class RegistryManager(object):
                     registry.base_registry_signaling_sequence = seq_registry
                     registry.base_cache_signaling_sequence = seq_cache
                 # This should be a method on Registry
-                openerp.modules.load_modules(registry.db, force_demo, status, update_module)
+                openerp.modules.load_modules(registry._db, force_demo, status, update_module)
             except Exception:
                 del cls.registries[db_name]
                 raise
