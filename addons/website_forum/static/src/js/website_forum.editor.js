@@ -14,7 +14,7 @@
             return res;
         },
         events: _.extend({}, website.EditorBar.prototype.events, {
-            'click a[data-action=new_question]': function (ev) {
+            'click a[data-action=new_forum]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
                     id: "editor_new_forum",

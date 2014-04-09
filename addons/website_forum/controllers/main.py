@@ -41,7 +41,7 @@ class WebsiteForum(http.Controller):
                  '/forum/<model("website.forum"):forum>/page/<int:page>',
                  '/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>/questions'
                  ], type='http', auth="public", website=True, multilang=True)
-    def questions(self, forum, tag='', page=1, filters='', sorting='', **searches):
+    def questions(self, forum, tag='', page=1, filters='', sorting='', search='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
@@ -49,8 +49,8 @@ class WebsiteForum(http.Controller):
         order = "id desc"
 
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
-        if searches.get('search'):
-            domain += ['|', ('name', 'ilike', searches['search']), ('content', 'ilike', searches['search'])]
+        if search:
+            domain += ['|', ('name', 'ilike', search), ('content', 'ilike', search)]
 
         #filter questions for tag.
         if tag:
@@ -91,6 +91,7 @@ class WebsiteForum(http.Controller):
             'tag': tag,
             'filters': filters,
             'sorting': sorting,
+            'search': search,
             'searches': searches,
         }
 

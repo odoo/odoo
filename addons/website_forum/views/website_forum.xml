@@ -17,7 +17,10 @@
             name="Footer Questions Link">
             <xpath expr="//footer//ul[@name='products']" position="inside">
                 <li>
-                    <a t-attf-href="/forum/%(website_forum.forum_help)d/">Q&amp;A</a>
+                    <a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;A</a>
+                </li>
+                <li>
+                    <a href="/forum">Forums</a>
                 </li>
             </xpath>
         </template>
@@ -109,7 +112,7 @@
                                 <div class="form-group">
                                     <input type="search" class="form-control"
                                         name="search" placeholder="Search a question..."
-                                        t-att-value="searches.get('search') or ''"/>
+                                        t-att-value="search or ''"/>
                                     <button type="submit" class="btn btn-default">Search</button>
                                 </div>
                             </form>
@@ -196,11 +199,12 @@
             </t>
         </template>
 
-        <template id="index">
+        <template id="index" name="Forum">
             <t t-call="website_forum.header">
                 <h1 class="page-header mt0">
                     <t t-esc="total_questions"/>
                     <span>Questions</span>
+                    <t t-esc="search"/>
                     <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                           <t t-if="filters == 'all'">All</t>
@@ -215,26 +219,26 @@
                       <ul class="dropdown-menu">
                           <li class="dropdown-header">Filter on</li>
                           <li t-att-class="filters == 'all' and 'active' or '' ">
-                              <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='all')">All</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
                           </li>
                           <li t-att-class="filters == 'unanswered' and 'active' or '' ">
-                              <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='unanswered')">Unanswered</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')">Unanswered</a>
                           </li>
                           <li t-if="uid" t-att-class="filters == 'followed' and 'active' or '' ">
-                              <a t-att-href="url_for('') + '?' + keep_query( 'sorting', filters='followed')">Followed</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
                           </li>
                           <li t-if="tag" t-att-class="tag and 'active' or '' ">
                               <a href=""><t t-esc="tag.name"/> Tag</a>
                           </li>
                           <li class="dropdown-header">Sort by</li>
                           <li t-att-class="sorting == 'date' and 'active' or '' ">
-                              <a t-att-href="url_for('') + '?' + keep_query( 'filters', sorting='date')">Last activity date</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='date')">Last activity date</a>
                           </li>
                           <li t-att-class="sorting == 'answered' and 'active' or '' ">
-                              <a t-att-href="url_for('') + '?' + keep_query( 'filters', sorting='answered')">Most answered</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='answered')">Most answered</a>
                           </li>
                           <li t-att-class="sorting == 'vote' and 'active' or '' ">
-                              <a t-att-href="url_for('') + '?' + keep_query( 'filters', sorting='vote')">Most voted</a>
+                              <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote')">Most voted</a>
                           </li>
                       </ul>
                     </small>
@@ -267,16 +271,16 @@
                     </t>
                     <b><t t-esc="user.karma"/></b>
                     <t t-raw="separator"/>
-                        <div>
-                            <b> badges:</b>
-                            <span class="fa fa-circle badge-gold"/>
-                            <t t-esc="user.gold_badge"/>
-                            <span class="fa fa-circle badge-silver"/>
-                            <t t-esc="user.silver_badge"/>
-                            <span class="fa fa-circle badge-bronze"/>
-                            <t t-esc="user.bronze_badge"/>
-                        </div>
-                        <t t-raw="0"/>
+                    <div>
+                        <b> badges:</b>
+                        <span class="fa fa-circle badge-gold"/>
+                        <t t-esc="user.gold_badge"/>
+                        <span class="fa fa-circle badge-silver"/>
+                        <t t-esc="user.silver_badge"/>
+                        <span class="fa fa-circle badge-bronze"/>
+                        <t t-esc="user.bronze_badge"/>
+                    </div>
+                    <t t-raw="0"/>
                 </div>
             </div>
         </template>
@@ -435,7 +439,7 @@
                                     </t>
                                 </div>
                                 <ul class="list-inline">
-                                    <li>
+                                    <li t-if="user.id == question.user_id.id or user.karma&gt;=50">
                                         <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                               t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
                                             comment
@@ -496,7 +500,7 @@
                             <t t-raw="answer.content"/>
                             <div class="mt16">
                                 <ul class="list-inline pull-right">
-                                    <li>
+                                    <li t-if="user.id == answer.user_id.id or user.karma&gt;=50">
                                         <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                               t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
                                         </a>
@@ -507,7 +511,7 @@
                                     <li t-if="user.id == answer.user_id.id or user.karma&gt;=1000">
                                         <a class="text-muted delete fa fa-trash-o" href="" t-attf-id="#{answer.id}">delete</a>
                                     </li>
-                                    <li t-if="uid">
+                                    <li t-if="user.id == answer.user_id.id">
                                         <a class="text-muted fa fa-magic" t-attf-href="/forum/#{ slug(forum) }/post/#{ answer.id }/converttocomment">Convert as a comment</a>
                                     </li>
                                     <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/#answer-#{ answer.id }">share</a></li>
@@ -783,7 +787,7 @@
                     <li>
                         <a href="#badges" data-toggle="tab">Badges</a>
                     </li>
-                    <li>
+                    <li t-if="uid == user.id">
                         <a href="#votes" data-toggle="tab">Votes</a>
                     </li>
                 </ul>
