@@ -767,6 +767,7 @@ class survey_question(osv.Model):
         if question.constr_mandatory:
             lines_number = len(question.labels_ids_2)
             answer_candidates = dict_keys_startswith(post, answer_tag)
+            comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # Number of lines that have been answered
             if question.matrix_subtype == 'simple':
                 answer_number = len(answer_candidates)
@@ -774,6 +775,9 @@ class survey_question(osv.Model):
                 answer_number = len(set([sk.rsplit('_', 1)[0] for sk in answer_candidates.keys()]))
             else:
                 raise RuntimeError("Invalid matrix subtype")
+            # Validate that each line has been answered
+            if answer_number != lines_number:
+                errors.update({answer_tag: question.constr_error_msg})
         return errors
 
 
