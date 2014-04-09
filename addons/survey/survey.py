@@ -26,7 +26,6 @@ from openerp.addons.website.models.website import slug
 from urlparse import urljoin
 from itertools import product
 from collections import Counter
-from datetime import datetime
 
 import datetime
 import logging
@@ -700,10 +699,14 @@ class survey_question(osv.Model):
             except ValueError:
                 errors.update({answer_tag: _('This is not a number')})
         # Answer validation (if properly defined)
-        if answer and floatanswer and question.validation_required:
+        if answer and question.validation_required:
             # Answer is not in the right range
-            if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
-                errors.update({answer_tag: question.validation_error_msg})
+            try:
+                floatanswer = float(answer)  # check that it is a float has been done hereunder
+                if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
+                    errors.update({answer_tag: question.validation_error_msg})
+            except ValueError:
+                pass
         return errors
 
     def validate_datetime(self, cr, uid, question, post, answer_tag, context=None):
@@ -715,14 +718,19 @@ class survey_question(osv.Model):
         # Checks if user input is a datetime
         if answer:
             try:
-                dateanswer = datetime.strptime(answer, DF)
+                dateanswer = datetime.datetime.strptime(answer, DF)
             except ValueError:
                 errors.update({answer_tag: _('This is not a date/time')})
+                return errors
         # Answer validation (if properly defined)
-        if answer and dateanswer and question.validation_required:
+        if answer and question.validation_required:
             # Answer is not in the right range
-            if not (datetime.strptime(question.validation_min_date, DF) <= dateanswer <= datetime.strptime(question.validation_max_date, DF)):
-                errors.update({answer_tag: question.validation_error_msg})
+            try:
+                dateanswer = datetime.datetime.strptime(answer, DF)
+                if not (datetime.datetime.strptime(question.validation_min_date, DF) <= dateanswer <= datetime.datetime.strptime(question.validation_max_date, DF)):
+                    errors.update({answer_tag: question.validation_error_msg})
+            except ValueError:  # check that it is a datetime has been done hereunder
+                pass
         return errors
 
     def validate_simple_choice(self, cr, uid, question, post, answer_tag, context=None):
@@ -925,7 +933,7 @@ class survey_user_input_line(osv.Model):
                     # 'bool()' is required in order to make '!=' act as XOR with objects
                     return bool(uil.value_text)
                 elif uil.answer_type == 'number':
-                    return uil.value_number != False
+                    return (uil.value_number == 0) or (uil.value_number != False)
                 elif uil.answer_type == 'date':
                     return bool(uil.value_date)
                 elif uil.answer_type == 'free_text':
