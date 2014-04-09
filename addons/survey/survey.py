@@ -982,28 +982,25 @@ class survey_user_input_line(osv.Model):
         (_check_answer_type, "The answer must be in the right type", ['answer_type', 'text', 'number', 'date', 'free_text', 'suggestion'])
     ]
 
+    def __get_mark(self, cr, uid, value_suggested, context=None):
+        try:
+            mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+        except KeyError:
+            mark = 0.0
+        except ValueError:
+            mark = 0.0
+        return mark
+
     def create(self, cr, uid, vals, context=None):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            try:
-                mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
-            except KeyError:
-                mark = 0.0
-            except ValueError:
-                mark = 0.0
-            vals.update({'quizz_mark': mark})
+            vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested)})
         return super(survey_user_input_line, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            try:
-                mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
-            except KeyError:
-                mark = 0.0
-            except ValueError:
-                mark = 0.0
-            vals.update({'quizz_mark': mark})
+            vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
