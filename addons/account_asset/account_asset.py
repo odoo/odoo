@@ -330,7 +330,7 @@ class account_asset_asset(osv.osv):
             default = {}
         if context is None:
             context = {}
-        default.update({'depreciation_line_ids': [], 'state': 'draft'})
+        default.update({'depreciation_line_ids': [], 'account_move_line_ids': [], 'history_ids': [], 'state': 'draft'})
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
 
     def _compute_entries(self, cr, uid, ids, period_id, context=None):
