@@ -28,33 +28,39 @@
             <field name="value" eval="True"/>
         </record>
 
-        <!-- related subtypes -->
-        <record id="mt_question_create" model="mail.message.subtype">
-            <field name="name">Asked a question</field>
+        <!-- Answers subtypes -->
+        <record id="mt_answer_new" model="mail.message.subtype">
+            <field name="name">New Answer</field>
             <field name="res_model">website.forum.post</field>
-            <field name="default" eval="True"/>
-            <field name="description">Asked a question</field>
+            <field name="default" eval="False"/>
+            <field name="description">New Answer</field>
         </record>
-
-        <record id="mt_answer_create" model="mail.message.subtype">
-            <field name="name">Answered a question</field>
-            <field name="res_model">website.forum.post</field>
-            <field name="default" eval="True"/>
-            <field name="description">Answered a question</field>
-        </record>
-
-        <record id="mt_question_edit" model="mail.message.subtype">
-            <field name="name">Question edited</field>
-            <field name="res_model">website.forum.post</field>
-            <field name="default" eval="True"/>
-            <field name="description">Question edited</field>
-        </record>
-
         <record id="mt_answer_edit" model="mail.message.subtype">
-            <field name="name">Answer edited</field>
+            <field name="name">Answer Edited</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Answer Edited</field>
+        </record>
+        <!-- Questions subtypes -->
+        <record id="mt_question_new" model="mail.message.subtype">
+            <field name="name">New Question</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">New Answer</field>
+        </record>
+        <record id="mt_question_edit" model="mail.message.subtype">
+            <field name="name">Question Edited</field>
+            <field name="res_model">website.forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">Answer Edited</field>
+        </record>
+        <!-- Questions subtypes to follow Answers -->
+        <record id="mt_question_answer_new" model="mail.message.subtype">
+            <field name="name">New Answer</field>
             <field name="res_model">website.forum.post</field>
             <field name="default" eval="True"/>
-            <field name="description">Answer edited</field>
+            <field name="parent_id" eval="ref('mt_answer_new')"/>
+            <field name="relation_field">parent_id</field>
         </record>
 
         <!--At this time create_date is not stores in db for administrator only so for that forcefully updating date. -->

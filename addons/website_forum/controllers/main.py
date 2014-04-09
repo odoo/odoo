@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import werkzeug.urls
 import simplejson
@@ -38,7 +19,8 @@ from openerp.addons.web.controllers.main import login_redirect
 
 controllers = controllers()
 
-class website_forum(http.Controller):
+
+class WebsiteForum(http.Controller):
 
     @http.route(['/forum'], type='http', auth="public", website=True, multilang=True)
     def forum(self, **searches):
@@ -46,38 +28,35 @@ class website_forum(http.Controller):
         Forum = request.registry['website.forum']
         obj_ids = Forum.search(cr, uid, [], context=context)
         forums = Forum.browse(cr, uid, obj_ids, context=context)
-        return request.website.render("website_forum.forum_index", { 'forums': forums })
+        return request.website.render("website_forum.forum_index", {'forums': forums})
 
-    @http.route('/forum/add_forum', type='http', auth="user", multilang=True, website=True)
-    def add_forum(self, forum_name="New Forum", **kwargs):
+    @http.route('/forum/new', type='http', auth="user", multilang=True, website=True)
+    def forum_create(self, forum_name="New Forum", **kwargs):
         forum_id = request.registry['website.forum'].create(request.cr, request.uid, {
             'name': forum_name,
         }, context=request.context)
-        return request.redirect("/forum/%s" % forum_id)
+        return request.redirect("/forum/%s" % slug(forum_id))
 
-    @http.route(['/forum/<model("website.forum"):forum>', 
+    @http.route(['/forum/<model("website.forum"):forum>',
                  '/forum/<model("website.forum"):forum>/page/<int:page>',
                  '/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>/questions'
-        ], type='http', auth="public", website=True, multilang=True)
-
+                 ], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, tag='', page=1, filters='', sorting='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
+
         order = "id desc"
 
-        search = searches.get('search',False)
-        if search:
-            domain += ['|',
-                ('name', 'ilike', search),
-                ('content', 'ilike', search)]
+        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
+        if searches.get('search'):
+            domain += ['|', ('name', 'ilike', searches['search']), ('content', 'ilike', searches['search'])]
 
         #filter questions for tag.
         if tag:
             if not filters:
                 filters = 'tag'
-            domain += [ ('tags', '=', tag.id) ]
+            domain += [('tag_ids', 'in', tag.id)]
 
         if not filters:
             filters = 'all'
@@ -147,17 +126,17 @@ class website_forum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
 
         #maintain total views on post.
-        Statistics = request.registry['website.forum.post.statistics']
-        post_obj = request.registry['website.forum.post']
-        if request.session.uid:
-            view_ids = Statistics.search(cr, uid, [('user_id', '=', request.session.uid), ('post_id', '=', question.id)], context=context)
-            if not view_ids:
-                Statistics.create(cr, SUPERUSER_ID, {'user_id': request.session.uid, 'post_id': question.id }, context=context)
-        else:
-            request.session[request.session_id] = request.session.get(request.session_id, [])
-            if not (question.id in request.session[request.session_id]):
-                request.session[request.session_id].append(question.id)
-                post_obj._set_view_count(cr, SUPERUSER_ID, [question.id], 'views', 1, {}, context=context)
+        # Statistics = request.registry['website.forum.post.statistics']
+        # post_obj = request.registry['website.forum.post']
+        # if request.session.uid:
+        #     view_ids = Statistics.search(cr, uid, [('user_id', '=', request.session.uid), ('post_id', '=', question.id)], context=context)
+        #     if not view_ids:
+        #         Statistics.create(cr, SUPERUSER_ID, {'user_id': request.session.uid, 'post_id': question.id }, context=context)
+        # else:
+        #     request.session[request.session_id] = request.session.get(request.session_id, [])
+        #     if not (question.id in request.session[request.session_id]):
+        #         request.session[request.session_id].append(question.id)
+        #         post_obj._set_view_count(cr, SUPERUSER_ID, [question.id], 'views', 1, {}, context=context)
 
         #Check that user have answered question or not.
         answer_done = False
@@ -324,7 +303,7 @@ class website_forum(http.Controller):
                 'forum_id': forum.id,
                 'name': question.get('question_name'),
                 'content': question.get('content'),
-                'tags' : question_tags,
+                'tag_idss' : question_tags,
                 'state': 'active',
                 'active': True,
             }, context=create_context)
@@ -408,7 +387,7 @@ class website_forum(http.Controller):
                 else:
                     new_tag = Tag.create(cr, uid, {'name' : tag,'forum_id' : forum.id}, context=context)
                     question_tags.append(new_tag)
-        vals.update({'tags': [(6, 0, question_tags)], 'name': post.get('question_name')})
+        vals.update({'tag_ids': [(6, 0, question_tags)], 'name': post.get('question_name')})
 
         post_id = post.get('answer_id') if post.get('answer_id') else post.get('question_id')
         new_question_id = request.registry['website.forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
@@ -462,10 +441,10 @@ class website_forum(http.Controller):
         User = request.registry['res.users']
 
         step = 30
-        tag_count = User.search(cr, uid, [('forum','=',True)], count=True, context=context)
+        tag_count = User.search(cr, uid, [('karma', '>', 1)], count=True, context=context)
         pager = request.website.pager(url="/forum/users", total=tag_count, page=page, step=step, scope=30)
 
-        obj_ids = User.search(cr, uid, [('forum','=',True)], limit=step, offset=pager['offset'], context=context)
+        obj_ids = User.search(cr, uid, [('karma', '>', 1)], limit=step, offset=pager['offset'], context=context)
         users = User.browse(cr, uid, obj_ids, context=context)
         searches['users'] = 'True'
 
@@ -484,8 +463,7 @@ class website_forum(http.Controller):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
-        Vote = request.registry['website.forum.post.vote']
-        return Vote.vote(cr, uid, post_id, post.get('vote'), context)
+        return request.registry['website.forum.post'].vote(cr, uid, [post_id], post.get('vote'), context)
 
     @http.route('/forum/post_delete', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_answer(self, **kwarg):

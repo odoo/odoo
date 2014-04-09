@@ -28,7 +28,7 @@
                 <div class="pull-left text-center">
                     <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
                         <span t-esc="question.child_count"/>
-                        <span t-if="question.correct" class="fa fa-2x fa-check-circle"/>
+                        <span t-if="question.is_correct" class="fa fa-2x fa-check-circle"/>
                         <div t-if="question.child_count&gt;1">Answers</div>
                         <div t-if="question.child_count&lt;=1">Answer</div>
                     </div>
@@ -52,7 +52,7 @@
                             <strong>with <span t-esc="question.vote_count"/> votes</strong>
                         </div>
                     </div>
-                    <t t-foreach="question.tags" t-as="tag">
+                    <t t-foreach="question.tag_ids" t-as="tag">
                         <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
                     </t>
                 </div>
@@ -83,7 +83,7 @@
                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
+                                <!-- <span class="icon-bar"></span> -->
                                 <span class="icon-bar"></span>
                             </button>
                             <a class="navbar-brand" t-attf-href="/forum/#{slug(forum)}">
@@ -129,7 +129,15 @@
                         </div>
                         <div class="col-sm-3" id="right-column">
                             <a t-if="not ask_question" class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{ slug(forum) }/ask">Ask a Question</a>
-                            <div t-field="forum.right_column"/>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">About This Forum</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <t t-esc="forum.description"/><br/>
+                                    <a t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
+                                </div>
+                            </div>
                             <div t-if="question_data">
                                 <div class="panel panel-default">
                                     <div class="panel-heading text-center">
@@ -422,7 +430,7 @@
                         <div class="mt16 clearfix">
                             <div class="pull-right">
                                 <div class="text-right">
-                                    <t t-foreach="question.tags" t-as="tag">
+                                    <t t-foreach="question.tag_ids" t-as="tag">
                                         <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
                                     </t>
                                 </div>
@@ -474,14 +482,14 @@
 
                 <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
                     <a t-attf-id="answer-#{str(answer.id)}"/>
-                    <div t-attf-class="#{answer.correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
+                    <div t-attf-class="#{answer.is_correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
                         <div class="text-center pull-left">
                             <t t-call="website_forum.vote">
                                 <t t-set="post" t-value="answer"/>
                             </t>
                             <div class="text-muted">
-                                <a t-attf-id="#{answer.id}" t-if="answer.correct" class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_true"/>
-                                <a t-attf-id="#{answer.id}" t-if="not answer.correct" class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_false"/>
+                                <a t-attf-id="#{answer.id}" t-if="answer.is_correct" class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_true"/>
+                                <a t-attf-id="#{answer.id}" t-if="not answer.is_correct" class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_false"/>
                             </div>
                         </div>
                         <div style="margin-left: 95px;" class="clearfix">
@@ -831,7 +839,7 @@
 
         <template id="user_badges">
             <table class="table mt32 mb64">
-                <tr t-foreach="user.badges" t-as="badge">
+                <tr t-foreach="user.badge_ids" t-as="badge">
                     <td>
                         <a t-attf-href="/forum/#{ slug(forum) }/badge/#{ slug(badge.badge_id) }" class="badge pull-left">
                             <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold"/>
@@ -847,7 +855,7 @@
                     </td>
                 </tr>
             </table>
-            <div class="mb16" t-if="not user.badges">
+            <div class="mb16" t-if="not user.badge_ids">
                 <b>No badge yet!</b><br/>
                 <a t-attf-href="/forum/#{ slug(forum) }/badge" class="fa fa-arrow-right"> Check available badges</a>
             </div>
