@@ -79,7 +79,7 @@ class Registry(Mapping):
         self._any_cache_cleared = False
 
         cr = self.cursor()
-        has_unaccent = openerp.modules._db.has_unaccent(cr)
+        has_unaccent = openerp.modules.db.has_unaccent(cr)
         if openerp.tools.config['unaccent'] and not has_unaccent:
             _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
         self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
