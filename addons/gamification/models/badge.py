@@ -34,7 +34,6 @@ class gamification_badge_user(osv.Model):
 
     _name = 'gamification.badge.user'
     _description = 'Gamification user badge'
-    _inherit = ['mail.thread']
     _order = "create_date desc"
     _rec_name = "badge_name"
 
@@ -59,6 +58,7 @@ class gamification_badge_user(osv.Model):
         """
         res = True
         temp_obj = self.pool.get('email.template')
+        user_obj = self.pool.get('res.users')
         template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
         for badge_user in self.browse(cr, uid, ids, context=context):
             body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
@@ -66,9 +66,8 @@ class gamification_badge_user(osv.Model):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        create_context = dict(context, mail_create_nolog=True)
         self.pool.get('gamification.badge').check_granting(cr, uid, badge_id=vals.get('badge_id'), context=context)
-        return super(gamification_badge_user, self).create(cr, uid, vals, context=create_context)
+        return super(gamification_badge_user, self).create(cr, uid, vals, context=context)
 
 
 class gamification_badge(osv.Model):
