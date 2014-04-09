@@ -148,10 +148,11 @@ class event_track(osv.osv):
     def calculate_slots(new_start_date, new_end_date, new_schedule):
         '''
         params:
-        new_start_date,new_end_date: datetime object
-        new_schedule:list of start date and end date
+            new_start_date,new_end_date: datetime object
+            new_schedule:list of start date and end date
         
-        rtype: list
+        rtype: 
+            list
         '''
         if not new_schedule:
             new_schedule.append([new_start_date, new_end_date])
@@ -209,11 +210,12 @@ class event_track(osv.osv):
     def convert_time(time, duration, local_tz):
         '''
         Params:
-        time: string
-        duration: Interger
-        local_tz: TimeZone Name
+            time: string
+            duration: Interger
+            local_tz: Pytz Timezone.
         
-        rtype: start time, end time and string
+        rtype:
+            start time, end time and string
         '''
         local_dt = (datetime.datetime.strptime(time, tools.DEFAULT_SERVER_DATETIME_FORMAT)).replace(tzinfo=pytz.utc).astimezone(local_tz)
         local_tz.normalize(local_dt)
@@ -223,10 +225,11 @@ class event_track(osv.osv):
     def generate_slots(date_and_durations, local_tz):
         '''
         Params:
-        date_and_duration: List containing list of date and duration.
-        timeznoe: Name of Timezone
-        
-        rtype:dict, dict
+            date_and_duration: List containing list of date and duration.
+            timeznoe: Pytz Timezone.
+
+        rtype:
+            dict, dict
         '''
         got_slots = {}
         sort_track = {}
@@ -245,12 +248,13 @@ class event_track(osv.osv):
     def make_tracks(self,cr, uid, only_slots={}, sort_tracks={}, event_tracks=[], local_tz=None, context=None):
         '''
         Params:
-        only_slots:  Dictionary containing {day : [(start_time1, end_time1),(start_time2, end_time2)]}
-        sort_tracks:  Dictionary containing {day : {slot1: [], slot2: []}}
-        event_tracks: List of tracks
-        timezone: Timezone Name
+            only_slots:  Dictionary containing {day : [(start_time1, end_time1),(start_time2, end_time2)]}
+            sort_tracks:  Dictionary containing {day : {slot1: [], slot2: []}}
+            event_tracks: List of tracks
+            timezone: Pytz Timezone.
         
-        rtype: Dictionary(sort_tracks)
+        rtype:
+            Dictionary(sort_tracks)
         '''
         def get_speaker_name(ids):
             speaker_names = res_partner.name_get(cr, uid, ids, context=context)
@@ -283,12 +287,12 @@ class event_track(osv.osv):
     def calculate_and_sort(sort_tracks):
         '''
         Params:
-        sort_tracks: Dictionary containing {day : {slot1: [tracks], slot2: [tracks]}} 
-        
+            sort_tracks: Dictionary containing {day : {slot1: [tracks], slot2: [tracks]}}
+
         rtype:
-        row_skip_td: Dictionary containing {day: {location_1: [timeslots], location_2: [timeslots] }}
-        sort_tracks: Dictionary containing {day : {slot1: [tracks], slot2: [tracks]}}
-        talks: Dictionary containing {day1: integer, day2: interger}
+            row_skip_td: Dictionary containing {day: {location_1: [timeslots], location_2: [timeslots] }}
+            sort_tracks: Dictionary containing {day : {slot1: [tracks], slot2: [tracks]}}
+            talks: Dictionary containing {day1: integer, day2: interger}
         '''
         row_skip_td = {}
         talks = {}
