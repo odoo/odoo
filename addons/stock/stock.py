@@ -587,14 +587,6 @@ class stock_quant(osv.osv):
             raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
 
-    def write(self, cr, uid, ids, vals, context=None):
-        #check the inventory constraint before the write
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if 'owner_id' in vals or 'lot_id' in vals or 'package_id' in vals or 'location_id' in vals or 'product_id' in vals:
-            self._check_open_inventory_location(cr, uid, ids, context=context)
-        return super(stock_quant, self).write(cr, uid, ids, vals, context=context)
-
 
 #----------------------------------------------------------
 # Stock Picking
@@ -2591,6 +2583,7 @@ class stock_inventory(osv.osv):
         for th_line in inventory.theoretical_line_ids:
             th_vals.append({
                 'product_id': th_line.product_id.id,
+                'product_uom_id': th_line.product_uom_id.id,
                 'product_qty': th_line.product_qty,
                 'location_id': th_line.location_id.id,
                 'prod_lot_id': th_line.prod_lot_id.id,
