@@ -144,7 +144,7 @@ class QWeb(orm.AbstractModel):
         """Add a parsed template in the context. Used to preprocess templates."""
         qwebcontext.templates[name] = node
 
-    def load_document(self, document, qwebcontext):
+    def load_document(self, document, res_id, qwebcontext):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -159,6 +159,8 @@ class QWeb(orm.AbstractModel):
             if node.nodeType == self.node.ELEMENT_NODE and node.getAttribute('t-name'):
                 name = str(node.getAttribute("t-name"))
                 self.add_template(qwebcontext, name, node)
+                if res_id:
+                    self.add_template(qwebcontext, res_id, node)
 
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
@@ -167,7 +169,7 @@ class QWeb(orm.AbstractModel):
                 xml_doc = qwebcontext.loader(name)
             except ValueError:
                 raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
-            self.load_document(xml_doc, qwebcontext=qwebcontext)
+            self.load_document(xml_doc, isinstance(name, (int, long)) and name or None, qwebcontext=qwebcontext)
 
         if name in qwebcontext.templates:
             return qwebcontext.templates[name]
@@ -385,7 +387,12 @@ class QWeb(orm.AbstractModel):
         cr = d.get('request') and d['request'].cr or None
         uid = d.get('request') and d['request'].uid or None
 
-        return self.render(cr, uid, self.eval_format(template_attributes["call"], d), d)
+        template = self.eval_format(template_attributes["call"], d)
+        try:
+            template = int(template)
+        except ValueError:
+            pass
+        return self.render(cr, uid, template, d)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -418,8 +425,7 @@ class QWeb(orm.AbstractModel):
                                  element, template_attributes, generated_attributes, qwebcontext, context=qwebcontext.context)
 
     def get_converter_for(self, field_type):
-        return self.pool.get('ir.qweb.field.' + field_type,
-                             self.pool['ir.qweb.field'])
+        return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
 
     def get_widget_for(self, widget):
         return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
@@ -842,6 +848,26 @@ class Contact(orm.AbstractModel):
         }
 
         html = self.pool["ir.ui.view"].render(cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
+
+        return HTMLSafe(html)
+
+class QwebView(orm.AbstractModel):
+    _name = 'ir.qweb.field.qweb'
+    _inherit = 'ir.qweb.field.many2one'
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if not getattr(record, field_name):
+            return None
+
+        view = getattr(record, field_name)
+
+        if view._model._name != "ir.ui.view":
+            _logger.warning("%s.%s must be a 'ir.ui.view' model." % (record, field_name))
+            return None
+
+        ctx = (context or {}).copy()
+        ctx['object'] = record
+        html = view.render(ctx, engine='ir.qweb', context=ctx).decode('utf8')
 
         return HTMLSafe(html)
 
