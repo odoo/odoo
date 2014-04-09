@@ -49,6 +49,7 @@ class stock_landed_cost(osv.osv):
         'date': fields.datetime('Date', required=True),
         'picking_ids': fields.many2many('stock.picking', string='Pickings'),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines'),
+        'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments'),
         'description': fields.text('Item Description'),
         'amount_total': fields.function(_total_amount, type='float', string='Total', digits_compute=dp.get_precision('Account'),
             store={
@@ -107,6 +108,21 @@ class stock_landed_cost_lines(osv.osv):
     _defaults = {
         'quantity': 1.0,
         'split_method': 'equal',
+    }
+
+class stock_valuation_adjustment_lines(osv.osv):
+    _name = 'stock.valuation.adjustment.lines'
+    _description = 'Stock Valuation Adjustment Lines'
+
+    _columns = {
+        'name': fields.char('Description', size=256),
+        'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
+        'former_cost': fields.float('Former Cost', required=True, digits_compute= dp.get_precision('Product Price')),
+        'former_cost_per_unit': fields.float('Former Cost(Per Unit)', required=True, digits_compute= dp.get_precision('Product Price')),
+        'additional_landed_cost': fields.float('Additional Landed Cost', required=True, digits_compute= dp.get_precision('Product Price')),
+        'final_cost': fields.float('Final Cost', required=True, digits_compute= dp.get_precision('Product Price')),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
