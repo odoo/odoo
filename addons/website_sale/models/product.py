@@ -60,6 +60,9 @@ class product_template(osv.Model):
         'website_style_ids': fields.many2many('product.style', 'product_website_style_rel', 'product_id', 'style_id', 'Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
+
+
+        'test_ir_ui_view': fields.many2one('ir.ui.view', 'test_ir_ui_view'),
     }
 
     def __defaults_website_sequence(self, cr, uid, *kwargs):
