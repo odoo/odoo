@@ -559,3 +559,14 @@ div.media_iframe_video div {
   height: 100%;
   display: none;
 }
+
+/* Mobile view */
+@media (max-width: 768px) {
+  img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+    transform: none !important;
+  }
+}
