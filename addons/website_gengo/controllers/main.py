@@ -4,9 +4,6 @@ import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 import time
-import json
-from openerp.tools.translate import _
-
 
 GENGO_DEFAULT_LIMIT = 20
 

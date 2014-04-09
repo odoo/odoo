@@ -4,6 +4,8 @@ import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
+import json
+
 class website_gengo(http.Controller):
     @http.route('/website/gengo_callback', type='http', auth='none')
     def gengo_callback(self,**post):
