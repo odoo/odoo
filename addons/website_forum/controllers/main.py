@@ -448,7 +448,7 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         cr, uid, context, post_id = request.cr, request.uid, request.context, int(post.get('post_id'))
-        return request.registry['website.forum.post'].vote(cr, uid, [post_id], post.get('vote'), context)
+        return request.registry['website.forum.post'].vote(cr, uid, [post_id], upvote=(post.get('vote') == '1'), context=context)
 
     @http.route('/forum/post_delete', type='json', auth="user", multilang=True, methods=['POST'], website=True)
     def delete_answer(self, **kwarg):

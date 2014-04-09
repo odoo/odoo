@@ -159,32 +159,30 @@ class Post(osv.Model):
                 self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': value}, context=context)
         return res
 
-    def vote(self, cr, uid, ids, vote, context=None):
-        print ids, vote
-        return True
-        # try:
-        #     vote = int(vote)
-        # except:
-        #     return {'error': 'Wrong Vote Value'}
+    def vote(self, cr, uid, ids, upvote=True, context=None):
+        Vote = self.pool['website.forum.post.vote']
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        # must have at least 10 karma to vote
+        if not upvote and user.karma <= 10:
+            return {'error': 'lessthen_10_karma'}
+        # user can not vote on own post
+        posts = self.pool['website.forum.post'].browse(cr, uid, ids, context=context)
+        if any(post.user_id.id == uid for post in posts):
+            return {'error': 'own_post'}
 
-        # if not vote in [-1, 0, 1]:
-        #     return {'error': 'Wrong Vote Value'}
-        # user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        # # must have at least 10 karma to vote
-        # if (vote == '-1') and (user.karma <= 10):
-        #     return {'error': 'lessthen_10_karma'}
-        # # user can not vote on own post
-        # posts = self.pool['website.forum.post'].browse(cr, uid, ids, context=context)
-        # if any(post.user_id.id == uid for post in posts):
-        #     return {'error': 'own_post'}
-
-        # vote_ids = self.pool['website.forum.post.vote'].search(cr, uid, [('post_id', 'in', post_ids), ('user_id', '=', uid)], context=context)
-        # if vote_ids:
-        #     self.pool['website.forum.post.vote'].write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
-        # else:
-        #     self.popol['website.forum.post.vote'].create(cr, uid, {'post_id': post_id, 'vote': vote}, context=context)
-        # post.refresh()
-        # return {'vote_count': post.vote_count}
+        vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
+        if vote_ids:
+            for vote in Vote.browse(cr, uid, vote_ids, context=context):
+                if upvote:
+                    new_vote = '0' if vote.vote == '-1' else '1'
+                else:
+                    new_vote = '0' if vote.vote == '1' else '-1'
+                Vote.write(cr, uid, vote_ids, {'vote': new_vote}, context=context)
+        else:
+            for post_id in ids:
+                new_vote = '1' if upvote else '-1'
+                Vote.create(cr, uid, {'post_id': post_id, 'vote': new_vote}, context=context)
+        return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]]}
 
     def set_viewed(self, cr, uid, ids, context=None):
         for post in self.browse(cr, uid, ids, context=context):
