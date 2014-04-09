@@ -288,8 +288,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {}
         if 'website_published' in _object._all_columns:
             values['website_published'] = not obj.website_published
-        if 'website_published_datetime' in _object._all_columns and values.get('website_published'):
-            values['website_published_datetime'] = fields.datetime.now()
         _object.write(request.cr, request.uid, [_id],
                       values, context=request.context)
 
@@ -341,9 +339,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         id = int(id)
 
         ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context) \
-           or Model.search(request.cr, openerp.SUPERUSER_ID,
-                           [('id', '=', id), ('website_published', '=', True)], context=request.context)
+                           [('id', '=', id)], context=request.context)
+        if not ids and 'website_published' in Model._all_columns:
+            ids = Model.search(request.cr, openerp.SUPERUSER_ID,
+                               [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
             return self.placeholder(response)
