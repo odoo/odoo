@@ -1000,7 +1000,7 @@ class survey_user_input_line(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested})
+            vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested)})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
