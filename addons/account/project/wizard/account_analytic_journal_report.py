@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
+import time
 from openerp.osv import fields, osv
+
 
 class account_analytic_journal_report(osv.osv_memory):
     _name = 'account.analytic.journal.report'
@@ -49,16 +50,15 @@ class account_analytic_journal_report(osv.osv_memory):
             for analytic_record in record.analytic_account_journal_id:
                 ids_list.append(analytic_record.id)
         datas = {
-             'ids': ids_list,
-             'model': 'account.analytic.journal',
-             'form': data
-                 }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.journal',
-            'datas': datas,
-            }
-        
+            'ids': ids_list,
+            'model': 'account.analytic.journal',
+            'form': data
+        }
+        context2 = context.copy()
+        context2['active_model'] = 'account.analytic.journal'
+        context2['active_ids'] = ids_list
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_analyticjournal', data=datas, context=context2)
+
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
