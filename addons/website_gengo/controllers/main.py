@@ -40,21 +40,3 @@ class website_gengo(http.Controller):
     def post_gengo_jobs(self):
         request.registry['base.gengo.translations']._sync_request(request.cr, request.uid, limit=GENGO_DEFAULT_LIMIT, context=request.context)
         return True
-
-    @http.route('/website/gengo_callback/<model("ir.translation"):term>', type='http', auth='none')
-    def gengo_callback(self,term,**post):
-        if post and post.get('job'):
-            translation_pool = request.registry['ir.translation']
-            base_gengo_pool = request.registry['base.gengo.translations']
-            job, vals = json.loads(post['job']), {}
-            if job.get('status') == 'approved':
-                vals.update({'state': 'translated', 'value': job.get('body_tgt')})
-            flag, gengo = base_gengo_pool.gengo_authentication(request.cr, openerp.SUPERUSER_ID, context=request.context)   
-            job_comment = gengo.getTranslationJobComments(id=job.get('job_id'))
-            if job_comment['opstat']=='ok':
-                gengo_comments=""
-                for comment in job_comment['response']['thread']:
-                    gengo_comments += _('%s\n-- Commented on %s by %s.\n\n') % (comment['body'], time.ctime(comment['ctime']), comment['author'])
-                vals.update({'gengo_comment': gengo_comments})
-                if vals:
-                    translation_pool.write(request.cr, openerp.SUPERUSER_ID, term.id, vals)
