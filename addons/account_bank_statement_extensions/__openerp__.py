@@ -50,6 +50,7 @@ This module adds:
         'wizard/confirm_statement_line_wizard.xml',
         'wizard/cancel_statement_line_wizard.xml',
         'data/account_bank_statement_extensions_data.xml',
+        'views/report_bankstatementbalance.xml',
     ],
     'auto_install': False,
     'installable': True,

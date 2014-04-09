@@ -72,15 +72,24 @@
     </xpath>
 
     <xpath expr='//body[@class="container"]/div[@id="wrapwrap"]' position="before">
-        <t t-set="languages" t-value="website.get_languages() if website else list()"/>
-        <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
-            <li t-foreach="languages" t-as="lg">
-                <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
-                   t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                    <t t-esc="lg[1].split('/').pop()"/>
-                </a>
-            </li>
-        </ul>
+        <t t-set="languages" t-value="website.get_languages() if website else None"/>
+        <t t-if="languages">
+            <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
+                <li t-foreach="languages" t-as="lg">
+                    <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
+                       t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
+                        <t t-esc="lg[1].split('/').pop()"/>
+                    </a>
+                </li>
+                <li groups="base.group_website_publisher">
+                    <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                    <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                        <i class="fa fa-plus-circle"/>
+                        Add a language...
+                    </a>
+                </li>
+            </ul>
+        </t>
     </xpath>
 </template>
 </data>
