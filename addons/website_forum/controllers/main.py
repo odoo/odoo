@@ -60,14 +60,13 @@ class website_forum(http.Controller):
                  '/forum/<model("website.forum"):forum>/tag/<model("website.forum.tag"):tag>/questions'
         ], type='http', auth="public", website=True, multilang=True)
 
-    def questions(self, forum, tag='', page=1, filters='', sorting='', **searches):
+    def questions(self, forum, tag='', page=1, filters='', sorting='', search='', **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Forum = request.registry['website.forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
         domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
         order = "id desc"
 
-        search = searches.get('search',False)
         if search:
             domain += ['|',
                 ('name', 'ilike', search),
@@ -112,6 +111,7 @@ class website_forum(http.Controller):
             'tag': tag,
             'filters': filters,
             'sorting': sorting,
+            'search': search,
             'searches': searches,
         }
 
