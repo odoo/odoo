@@ -135,15 +135,25 @@ class stock_valuation_adjustment_lines(osv.osv):
     _name = 'stock.valuation.adjustment.lines'
     _description = 'Stock Valuation Adjustment Lines'
 
+    def _amount_final(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            result[line.id] = (line.former_cost + line.additional_landed_cost)
+        return result
+
     _columns = {
         'name': fields.char('Description', size=256),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
-        'former_cost': fields.float('Former Cost', required=True, digits_compute= dp.get_precision('Product Price')),
-        'former_cost_per_unit': fields.float('Former Cost(Per Unit)', required=True, digits_compute= dp.get_precision('Product Price')),
-        'additional_landed_cost': fields.float('Additional Landed Cost', required=True, digits_compute= dp.get_precision('Product Price')),
-        'final_cost': fields.float('Final Cost', required=True, digits_compute= dp.get_precision('Product Price')),
+        'former_cost': fields.float('Former Cost', digits_compute= dp.get_precision('Product Price')),
+        'former_cost_per_unit': fields.float('Former Cost(Per Unit)', digits_compute= dp.get_precision('Product Price')),
+        'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute= dp.get_precision('Product Price')),
+        'final_cost': fields.function(_amount_final, string='Final Cost', type='float', digits_compute= dp.get_precision('Account'), store=True),
+    }
+
+    _defaults = {
+        'quantity': 1.0,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
