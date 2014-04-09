@@ -81,7 +81,7 @@ class event_track(osv.osv):
         'stage_id': fields.many2one('event.track.stage', 'Stage'),
         'description': fields.html('Track Description', translate=True),
         'date': fields.datetime('Track Date'),
-        'duration': fields.integer('Duration'),
+        'duration': fields.float('Duration', digits=(16,2)),
         'location_id': fields.many2one('event.track.location', 'Location'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
@@ -101,7 +101,7 @@ class event_track(osv.osv):
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,
         'website_published': lambda self, cr, uid, ctx: False,
-        'duration': lambda *args: 60,
+        'duration': lambda *args: 1.5,
         'stage_id': _default_stage_id,
         'priority': '2'
     }

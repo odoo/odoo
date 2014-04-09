@@ -222,7 +222,7 @@
                             <b>Date</b><br/>
                             <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/><br/>
                             <b>Duration</b><br/>
-                            <span t-field="track.duration"/> minutes<br/>
+                            <span t-esc="'%.2f' % (track.duration)"/> hours<br/>
                             <b>Location</b><br/>
                             <span t-field="track.location_id"/><br/>
                         </div>
@@ -372,9 +372,9 @@
                             <ul class="list-unstyled">
                                 <li>
                                     <strong>Regular Talks</strong>. These are standard talks with slides,
-                                    alocated in slots of 30 minutes.
+                                    alocated in slots of 60 minutes.
                                 </li><li>
-                                    <strong>Lightning Talks</strong>. These are 10 minutes talks on many
+                                    <strong>Lightning Talks</strong>. These are 30 minutes talks on many
                                     different topics. Most topics are accepted in lightning talks.
                                 </li>
                             </ul>

@@ -229,7 +229,7 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
                                     <field name="tag_ids"/>
-                                    <div t-if="duration"><field name="duration"/> hours</div>
+                                    <div t-if="duration"><field name="duration" widget="float_time"/> hours</div>
                                     <span class="oe_right">
                                         <t t-set="priority" t-value="record.priority.raw_value || 0"/>
                                         <a type="object" name="set_priority" args="['2']" t-if="priority == 3" title="Normal Priority">
@@ -261,7 +261,7 @@
             <field name="model">event.track</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="color" date_start="date" date_delay="duration" string="Event Tracks">
+                <calendar color="location_id" date_start="date" date_delay="duration" string="Event Tracks">
                     <field name="name"/>
                     <field name="event_id"/>
                 </calendar>
@@ -319,7 +319,7 @@
                                 <field name="date"/>
                                 <label for="duration"/>
                                 <div>
-                                    <field name="duration" class="oe_inline"/> minutes
+                                    <field name="duration" class="oe_inline" widget="float_time"/> hours
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags"/>
                                 <field name="color"/>

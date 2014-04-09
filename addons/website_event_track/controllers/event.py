@@ -50,7 +50,7 @@ class website_event(http.Controller):
         forcetr = True
         for track in event_track_ids:
             start_date = (datetime.datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
-            end_date = start_date + datetime.timedelta(minutes = (track.duration or 30))
+            end_date = start_date + datetime.timedelta(hours = (track.duration or 30))
             location = track.location_id or False
             locations.setdefault(location, [])
 
