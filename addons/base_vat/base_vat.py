@@ -126,6 +126,7 @@ class res_partner(osv.osv):
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not check_func(cr, uid, vat_country, vat_number, context=context):
+                _logger.info(_("Importing VAT Number [%s] is not valid !" % vat_number))
                 return False
         return True
 
@@ -149,7 +150,9 @@ class res_partner(osv.osv):
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         if default_vat_check(vat_country, vat_number):
             vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
-        return '\n' + _('This VAT number does not seem to be valid.\nNote: the expected format is %s') % vat_no
+        #Retrieve the current partner for wich the VAT is not valid
+        error_partner = self.browse(cr, uid, ids, context=context)
+        return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (error_partner[0].vat, error_partner[0].name, vat_no)
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 

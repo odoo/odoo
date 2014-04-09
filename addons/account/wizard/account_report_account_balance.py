@@ -36,7 +36,6 @@ class account_balance_report(osv.osv_memory):
 
     def _print_report(self, cr, uid, ids, data, context=None):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data}
-
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_trialbalance', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
