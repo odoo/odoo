@@ -1484,7 +1484,7 @@ class calendar_event(osv.Model):
             raise osv.except_osv(_('Warning!'), _('Group by date is not supported, use the calendar view instead.'))
         virtual_id = context.get('virtual_id', True)
         context.update({'virtual_id': False})
-        res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy)
+        res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
         for result in res:
             #remove the count, since the value is not consistent with the result of the search when expand the group
             for groupname in groupby:

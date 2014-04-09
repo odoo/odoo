@@ -114,7 +114,7 @@ class IdeaIdea(osv.Model):
                 result.append(res[0])
             return result
         else:
-            return super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            return super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
 
     #------------------------------------------------------
     # Workflow / Actions
