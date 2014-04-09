@@ -755,10 +755,10 @@ class survey_question(osv.Model):
             if question.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # There is no answer neither comments (if comments count as answer)
-            if not answer_candidates and question.comment_count_as_answer and comment_flag and comment_answer:
+            if not answer_candidates and question.comment_count_as_answer and (not comment_flag or not comment_answer):
                 errors.update({answer_tag: question.constr_error_msg})
             # There is no answer at all
-            if not answer_candidates and not comment_flag:
+            if not answer_candidates and not question.comment_count_as_answer:
                 errors.update({answer_tag: question.constr_error_msg})
         return errors
 
@@ -981,14 +981,24 @@ class survey_user_input_line(osv.Model):
     def create(self, cr, uid, vals, context=None):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+            try:
+                mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+            except KeyError:
+                mark = 0.0
+            except ValueError:
+                mark = 0.0
             vals.update({'quizz_mark': mark})
         return super(survey_user_input_line, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         value_suggested = vals.get('value_suggested')
         if value_suggested:
-            mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+            try:
+                mark = self.pool.get('survey.label').browse(cr, uid, int(value_suggested), context=context).quizz_mark
+            except KeyError:
+                mark = 0.0
+            except ValueError:
+                mark = 0.0
             vals.update({'quizz_mark': mark})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
