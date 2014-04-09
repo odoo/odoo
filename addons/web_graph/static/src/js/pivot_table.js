@@ -253,7 +253,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         var self = this;
         return this.perform_requests().then (function () {
             var data = Array.prototype.slice.call(arguments);
-            self.no_data = !data[0][0].attributes.length;
+            self.no_data = !data[0].length;
             if (self.no_data) {
                 return;
             }
