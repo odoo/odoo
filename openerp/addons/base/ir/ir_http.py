@@ -53,8 +53,8 @@ class ir_http(osv.AbstractModel):
     def _get_converters(self):
         return {'model': ModelConverter, 'models': ModelsConverter}
 
-    def _find_handler(self):
-        return self.routing_map().bind_to_environ(request.httprequest.environ).match()
+    def _find_handler(self, return_rule=False):
+        return self.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
 
     def _auth_method_user(self):
         request.uid = request.session.uid
@@ -77,19 +77,22 @@ class ir_http(osv.AbstractModel):
                 # what if error in security.check()
                 #   -> res_users.check()
                 #   -> res_users.check_credentials()
-            except Exception:
+            except (openerp.exceptions.AccessDenied, openerp.http.SessionExpiredException):
+                # All other exceptions mean undetermined status (e.g. connection pool full),
+                # let them bubble up
                 request.session.logout()
         getattr(self, "_auth_method_%s" % auth_method)()
         return auth_method
 
     def _handle_exception(self, exception):
-        # If handle exception return something different than None, it will be used as a response
-        raise
+        # If handle_exception returns something different than None, it will be used as a response
+        return request._handle_exception(exception)
 
     def _dispatch(self):
         # locate the controller method
         try:
-            func, arguments = self._find_handler()
+            rule, arguments = self._find_handler(return_rule=True)
+            func = rule.endpoint
         except werkzeug.exceptions.NotFound, e:
             return self._handle_exception(e)
 
@@ -102,7 +105,7 @@ class ir_http(osv.AbstractModel):
                 convert_exception_to(
                     werkzeug.exceptions.Forbidden))
 
-        processing = self._postprocess_args(arguments)
+        processing = self._postprocess_args(arguments, rule)
         if processing:
             return processing
 
@@ -118,7 +121,7 @@ class ir_http(osv.AbstractModel):
 
         return result
 
-    def _postprocess_args(self, arguments):
+    def _postprocess_args(self, arguments, rule):
         """ post process arg to set uid on browse records """
         for arg in arguments.itervalues():
             if isinstance(arg, orm.browse_record) and arg._uid is UID_PLACEHOLDER:

@@ -208,20 +208,19 @@ class res_company(osv.osv):
         res['value'] = {'currency_id': currency_id}
         return res
 
-    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False, access_rights_uid=None):
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
         if context is None:
             context = {}
-        if context.get('user_preference'):
+        if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
             user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
-            return cmp_ids
-        return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-            context=context, count=count, access_rights_uid=access_rights_uid)
+            uid = SUPERUSER_ID
+            args = (args or []) + [('id', 'in', cmp_ids)]
+        return super(res_company, self).name_search(cr, uid, name=name, args=args, operator=operator, context=context, limit=limit)
 
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """

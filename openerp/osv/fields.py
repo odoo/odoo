@@ -236,15 +236,24 @@ class char(_column):
 class text(_column):
     _type = 'text'
 
+
 class html(text):
     _type = 'html'
     _symbol_c = '%s'
-    def _symbol_f(x):
-        if x is None or x == False:
+
+    def _symbol_set_html(self, value):
+        if value is None or value is False:
             return None
-        return html_sanitize(x)
-        
-    _symbol_set = (_symbol_c, _symbol_f)
+        if not self._sanitize:
+            return value
+        return html_sanitize(value)
+
+    def __init__(self, string='unknown', sanitize=True, **args):
+        super(html, self).__init__(string=string, **args)
+        self._sanitize = sanitize
+        # symbol_set redefinition because of sanitize specific behavior
+        self._symbol_f = self._symbol_set_html
+        self._symbol_set = (self._symbol_c, self._symbol_f)
 
 import __builtin__
 
@@ -639,7 +648,10 @@ class one2many(_column):
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
-                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(_table, self._fields_id), (act[1], id))
+                # table of the field (parent_model in case of inherit)
+                field_model = self._fields_id in obj.pool[self._obj]._columns and self._obj or obj.pool[self._obj]._all_columns[self._fields_id].parent_model
+                field_table = obj.pool[field_model]._table
+                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
                     obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})

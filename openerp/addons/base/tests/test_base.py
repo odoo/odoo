@@ -9,6 +9,7 @@ class test_base(common.TransactionCase):
         super(test_base,self).setUp()
         self.res_partner = self.registry('res.partner')
         self.res_users = self.registry('res.users')
+        self.res_partner_title = self.registry('res.partner.title')
 
         # samples use effective TLDs from the Mozilla public suffix
         # list at http://publicsuffix.org
@@ -285,27 +286,99 @@ class test_base(common.TransactionCase):
 
     def test_60_read_group(self):
         cr, uid = self.cr, self.uid
-        for user_data in [
-          {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend'},
-          {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend'},
-          {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper'},
-          {'name': 'Nab', 'login': 'nab', 'color': 2, 'function': '5$ Wrench'},
-        ]:
-          self.res_users.create(cr, uid, user_data)
+        title_sir = self.res_partner_title.create(cr, uid, {'name': 'Sir', 'domain': 'contact'})
+        title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady', 'domain': 'contact'})
+        test_users = [
+            {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend', 'date': '2015-03-28', 'title': title_lady},
+            {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend',  'date': '2015-01-28', 'title': title_lady},
+            {'name': 'Bob', 'login': 'bob', 'color': 2, 'function': 'Friend', 'date': '2015-03-02', 'title': title_sir},
+            {'name': 'Eve', 'login': 'eve', 'color': 3, 'function': 'Eavesdropper', 'date': '2015-03-20', 'title': title_lady},
+            {'name': 'Nab', 'login': 'nab', 'color': -3, 'function': '5$ Wrench', 'date': '2014-09-10', 'title': title_sir},
+            {'name': 'Nab', 'login': 'nab-she', 'color': 6, 'function': '5$ Wrench', 'date': '2014-01-02', 'title': title_lady},
+        ]
+        ids = [self.res_users.create(cr, uid, u) for u in test_users]
+        domain = [('id', 'in', ids)]
 
-        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color', 'function'], groupby='function')
-        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        # group on local char field without domain and without active_test (-> empty WHERE clause)
+        groups_data = self.res_users.read_group(cr, uid, [], fields=['login'], groupby=['login'], orderby='login DESC', context={'active_test': False})
+        self.assertGreater(len(groups_data), 6, "Incorrect number of results when grouping on a field")
+
+        # group on local char field with limit
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['login'], groupby=['login'], orderby='login DESC', limit=3, offset=3)
+        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field with limit")
+        self.assertEqual(['bob', 'alice2', 'alice'], [g['login'] for g in groups_data], 'Result mismatch')
+
+        # group on inherited char field, aggregate on int field (second groupby ignored on purpose)
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['name', 'color', 'function'], groupby=['function', 'login'])
+        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
+        self.assertEqual(['5$ Wrench', 'Eavesdropper', 'Friend'], [g['function'] for g in groups_data], 'incorrect read_group order')
         for group_data in groups_data:
-          self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
-          self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
+            self.assertIn('color', group_data, "Aggregated data for the column 'color' is not present in read_group return values")
+            self.assertEqual(group_data['color'], 3, "Incorrect sum for aggregated data for the column 'color'")
 
-        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve'))], fields=['name', 'color'], groupby='name', orderby='name DESC, color asc')
-        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
-        self.assertEqual([user['name'] for user in groups_data], ['Eve', 'Bob', 'Alice'], 'Incorrect ordering of the list')
+        # group on inherited char field, reverse order
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['name', 'color'], groupby='name', orderby='name DESC')
+        self.assertEqual(['Nab', 'Eve', 'Bob', 'Alice'], [g['name'] for g in groups_data], 'Incorrect ordering of the list')
 
-        groups_data = self.res_users.read_group(cr, uid, domain=[('login', 'in', ('alice', 'bob', 'eve', 'nab'))], fields=['function', 'color'], groupby='function', orderby='color ASC')
-        self.assertEqual(len(groups_data), 3, "Incorrect number of results when grouping on a field")
-        self.assertEqual(groups_data, sorted(groups_data, key=lambda x: x['color']), 'Incorrect ordering of the list')
+        # group on int field, default ordering
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['color'], groupby='color')
+        self.assertEqual([-3, 0, 1, 2, 3, 6], [g['color'] for g in groups_data], 'Incorrect ordering of the list')
+
+        # multi group, second level is int field, should still be summed in first level grouping
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['name', 'color'], groupby=['name', 'color'], orderby='name DESC')
+        self.assertEqual(['Nab', 'Eve', 'Bob', 'Alice'], [g['name'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([3, 3, 2, 1], [g['color'] for g in groups_data], 'Incorrect ordering of the list')
+
+        # group on inherited char field, multiple orders with directions
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['name', 'color'], groupby='name', orderby='color DESC, name')
+        self.assertEqual(len(groups_data), 4, "Incorrect number of results when grouping on a field")
+        self.assertEqual(['Eve', 'Nab', 'Bob', 'Alice'], [g['name'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([1, 2, 1, 2], [g['name_count'] for g in groups_data], 'Incorrect number of results')
+
+        # group on inherited date column (res_partner.date) -> Year-Month, default ordering
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'date'], groupby=['date'])
+        self.assertEqual(len(groups_data), 4, "Incorrect number of results when grouping on a field")
+        self.assertEqual(['January 2014', 'September 2014', 'January 2015', 'March 2015'], [g['date'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([1, 1, 1, 3], [g['date_count'] for g in groups_data], 'Incorrect number of results')
+
+        # group on inherited date column (res_partner.date) -> Year-Month, custom order
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'date'], groupby=['date'], orderby='date DESC')
+        self.assertEqual(len(groups_data), 4, "Incorrect number of results when grouping on a field")
+        self.assertEqual(['March 2015', 'January 2015', 'September 2014', 'January 2014'], [g['date'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([3, 1, 1, 1], [g['date_count'] for g in groups_data], 'Incorrect number of results')
+
+        # group on inherited many2one (res_partner.title), default order
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'])
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        # m2o is returned as a (id, label) pair
+        self.assertEqual([(title_lady, 'Lady'), (title_sir, 'Sir')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([4, 2], [g['title_count'] for g in groups_data], 'Incorrect number of results')
+        self.assertEqual([10, -1], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
+
+        # group on inherited many2one (res_partner.title), reversed natural order
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'], orderby="title desc")
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        # m2o is returned as a (id, label) pair
+        self.assertEqual([(title_sir, 'Sir'), (title_lady, 'Lady')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([2, 4], [g['title_count'] for g in groups_data], 'Incorrect number of results')
+        self.assertEqual([-1, 10], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
+
+        # group on inherited many2one (res_partner.title), multiple orders with m2o in second position
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'], orderby="color desc, title desc")
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        # m2o is returned as a (id, label) pair
+        self.assertEqual([(title_lady, 'Lady'), (title_sir, 'Sir')], [g['title'] for g in groups_data], 'Incorrect ordering of the result')
+        self.assertEqual([4, 2], [g['title_count'] for g in groups_data], 'Incorrect number of results')
+        self.assertEqual([10, -1], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
+
+        # group on inherited many2one (res_partner.title), ordered by other inherited field (color)
+        groups_data = self.res_users.read_group(cr, uid, domain, fields=['function', 'color', 'title'], groupby=['title'], orderby='color')
+        self.assertEqual(len(groups_data), 2, "Incorrect number of results when grouping on a field")
+        # m2o is returned as a (id, label) pair
+        self.assertEqual([(title_sir, 'Sir'), (title_lady, 'Lady')], [g['title'] for g in groups_data], 'Incorrect ordering of the list')
+        self.assertEqual([2, 4], [g['title_count'] for g in groups_data], 'Incorrect number of results')
+        self.assertEqual([-1, 10], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
+
 
 class test_partner_recursion(common.TransactionCase):
 

@@ -56,6 +56,7 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             \n%(country_name)s: the name of the country
             \n%(country_code)s: the code of the country"""),
         'currency_id': fields.many2one('res.currency', 'Currency'),
+        'image': fields.binary("Image"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)',

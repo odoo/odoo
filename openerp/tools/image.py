@@ -32,7 +32,7 @@ from random import randint
 # Image resizing
 # ----------------------------------------
 
-def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype='PNG', avoid_if_small=False):
+def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', filetype=None, avoid_if_small=False):
     """ Function to resize an image. The image will be resized to the given
         size, while keeping the aspect ratios, and holes in the image will be
         filled with transparent background. The image will not be stretched if
@@ -58,7 +58,8 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
             height mean an automatically computed value based respectivelly
             on height or width of the source image.
         :param encoding: the output encoding
-        :param filetype: the output filetype
+        :param filetype: the output filetype, by default the source image's
+        :type filetype: str, any PIL image format (supported for creation)
         :param avoid_if_small: do not resize if image height and width
             are smaller than the expected size.
     """
@@ -68,6 +69,12 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         return base64_source
     image_stream = StringIO.StringIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
+    # store filetype here, as Image.new below will lose image.format
+    filetype = (filetype or image.format).upper()
+
+    filetype = {
+        'BMP': 'PNG',
+    }.get(filetype, filetype)
 
     asked_width, asked_height = size
     if asked_width is None:
@@ -95,21 +102,21 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     image.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
 
-def image_resize_image_big(base64_source, size=(1204, 1204), encoding='base64', filetype='PNG', avoid_if_small=True):
+def image_resize_image_big(base64_source, size=(1204, 1024), encoding='base64', filetype=None, avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
         :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
     """
     return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
 
-def image_resize_image_medium(base64_source, size=(128, 128), encoding='base64', filetype='PNG', avoid_if_small=False):
+def image_resize_image_medium(base64_source, size=(128, 128), encoding='base64', filetype=None, avoid_if_small=False):
     """ Wrapper on image_resize_image, to resize to the standard 'medium'
         image size: 180x180.
         :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
     """
     return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
 
-def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', filetype='PNG', avoid_if_small=False):
+def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', filetype=None, avoid_if_small=False):
     """ Wrapper on image_resize_image, to resize to the standard 'small' image
         size: 50x50.
         :param size, encoding, filetype, avoid_if_small: refer to image_resize_image

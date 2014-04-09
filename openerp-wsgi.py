@@ -40,6 +40,8 @@ conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
 #----------------------------------------------------------
 application = openerp.service.wsgi_server.application
 
+openerp.service.server.load_server_wide_modules()
+
 #----------------------------------------------------------
 # Gunicorn
 #----------------------------------------------------------

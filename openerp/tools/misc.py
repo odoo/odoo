@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -83,7 +83,8 @@ def exec_pg_command(name, *args):
         raise Exception('Couldn\'t find %s' % name)
     args2 = (prog,) + args
 
-    return subprocess.call(args2)
+    with open(os.devnull) as dn:
+        return subprocess.call(args2, stdout=dn, stderr=subprocess.STDOUT)
 
 def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
