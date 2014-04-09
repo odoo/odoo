@@ -176,7 +176,8 @@ class survey_survey(osv.Model):
     }
 
     _defaults = {
-        'color': 0
+        'color': 0,
+        'stage_id': lambda self, cr, uid, context: self.pool.get('survey.stage').search_read(cr, uid, fields=['id'], order='sequence asc', limit=1, context=context)[0]['id']
     }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
