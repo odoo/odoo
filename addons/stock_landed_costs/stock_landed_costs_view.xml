@@ -29,9 +29,10 @@
                                     on_change="onchange_pickings(picking_ids)"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Cost Lines">
-                                <field name="cost_lines">
+                        <group>
+                            <separator string="Cost Lines" colspan="4"/>
+                            <group>
+                                <field name="cost_lines" nolabel="1">
                                     <form string="Cost Lines" version="7.0">
                                         <group>
                                             <group>
@@ -52,7 +53,7 @@
                                         <label for="name"/>
                                         <field name="name"/>
                                     </form>
-                                    <tree string="Cost Lines">
+                                    <tree string="Cost Lines" editable="bottom">
                                         <field name="product_id" on_change="onchange_product_id(product_id, quantity, uom_id, price_unit, account_id)"/>
                                         <field name="name"/>
                                         <field name="account_id"/>
@@ -63,12 +64,12 @@
                                         <field name="price_subtotal"/>
                                     </tree>
                                 </field>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <field name="amount_total"/>
-                                </group>
-                            </page>
-                            <page string="Valuation Adjustments">
-                                <field name="valuation_adjustment_lines">
+                            </group>
+                        </group>
+                        <group>
+                            <separator string="Valuation Adjustments" colspan="4"/>
+                            <group>
+                                <field name="valuation_adjustment_lines" nolabel="1">
                                     <form string="Valuation Adjustments" version="7.0">
                                         <group>
                                             <group>
@@ -81,7 +82,7 @@
                                             </group>
                                         </group>
                                     </form>
-                                    <tree string="Valuation Adjustments">
+                                    <tree string="Valuation Adjustments" editable="bottom">
                                         <field name="product_id"/>
                                         <field name="quantity"/>
                                         <field name="former_cost"/>
@@ -89,11 +90,11 @@
                                         <field name="final_cost"/>
                                     </tree>
                                 </field>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <field name="amount_total"/>
-                                </group>
-                            </page>
-                        </notebook>
+                            </group>
+                        </group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="amount_total"/>
+                        </group>
                         <div class="oe_clear">
                             <label for="description"/>
                         </div>
