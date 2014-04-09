@@ -162,6 +162,9 @@
                 <xpath expr="//div[@class='oe_right oe_button_box']" position="inside">
                     <button name="%(website_event_track.act_event_list_tracks)d" type="action" string="Tracks"/>
                 </xpath>
+                <xpath expr="//field[@name='organizer_id']" position="after">
+                    <field name="timezone_of_event" />
+                </xpath>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <label for="tag_ids" class="oe_edit_only"/>
                     <field name="tag_ids" widget="many2many_tags"/>
@@ -319,6 +322,7 @@
                                     <field name="duration" class="oe_inline"/> minutes
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="color"/>
                             </group>
                         </group>
                         <label for="description" class="oe_edit_only"/>
@@ -357,6 +361,7 @@
         <record model="ir.actions.act_window" id="action_event_track">
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
+            <field name="view_mode">tree,form,calendar</field>
         </record>
         <menuitem name="Event Tracks" id="menu_event_track" action="action_event_track" parent="event.event_configuration" groups="base.group_no_one"/>
 

@@ -23,6 +23,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
 
+import pytz
+
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
     _order = 'name'
@@ -103,6 +105,7 @@ class event_track(osv.osv):
         'stage_id': _default_stage_id,
         'priority': '2'
     }
+
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         stage_obj = self.pool.get('event.track.stage')
         result = stage_obj.name_search(cr, uid, '', context=context)
@@ -117,6 +120,10 @@ class event_track(osv.osv):
 #
 class event_event(osv.osv):
     _inherit = "event.event"
+    def _tz_get(self,cr,uid, context=None):
+        # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
+        return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
         res = dict.fromkeys(ids, [])
         for event in self.browse(cr, uid, ids, context=context):
@@ -134,11 +141,13 @@ class event_event(osv.osv):
         'show_blog': fields.boolean('News'),
         'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
         'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tags', help="List of available tags for track proposals."),
+        'timezone_of_event': fields.selection(_tz_get, 'Event Timezone', size=64),
     }
     _defaults = {
         'show_track_proposal': False,
         'show_tracks': False,
         'show_blog': False,
+        'timezone_of_event':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).tz,
     }
     def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}

@@ -42,85 +42,69 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
-        <section data-snippet-id="title">
-            <h1 class="text-center mb0" t-field="event.name"/>
-        </section>
+        <t t-set="head">
+          <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
+          <t t-raw="head or ''"/>
+        </t>
         <section class="container">
-          <div class="row">
-            <div id="left_column">
+            <h1 class="text-center" t-field="event.name"/>
+            <div class="form-inline pull-right">
+                <label class="invisible text-muted" id="search_summary"><span id="search_number">0</span> Found </label>
+                <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
             </div>
-            <div class="col-md-12" id="right_column">
-                <p class="text-muted fa fa-info-circle"> You can click on cells to highlight your interests.</p>
-                <h3 class="page-header mt0">
-                    Monday, 3rd June
-                    <small>23 talks</small>
-                </h3>
-                <table class="table table-bordered table-condensed">
-                    <tr>
-                        <th></th>
-                        <th class="active"><a href="#">Room 1</a></th>
-                        <th class="active"><a href="#">Room 2</a></th>
-                        <th class="active"><a href="#">Room 3</a></th>
-                        <th class="active"><a href="#">Room 5</a></th>
-                        <th class="active"><a href="#">Room 6</a></th>
-                    </tr>
-                    <tr>
-                        <td class="active"><b>09:00</b><br/><span class="text-muted">10:00</span></td>
-                        <th colspan="5" class="success text-center">
-                            <a href="#">Plenary Session</a><br/>
-                            Room 5
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
-                        <td><a href="#">fkdsj kl jkl sdfjksdfj kl</a></td>
-                        <td rowspan="2" class="danger"><a href="#">Learning Python</a></td>
-                        <td></td>
-                        <td><a href="#">Learning Pytdon</a></td>
-                        <td><a href="#">Boost your Sales Witd OpenERP CRM</a></td>
-                    </tr>
-                    <tr>
-                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
-                        <td></td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr>
-                    <tr>
-                        <th class="active">11:00<br/><span class="text-muted">12:00</span></th>
-                        <td class="danger">Learning Pytdon</td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td>this is a test</td>
-                    </tr>
-                    <tr class="active">
-                        <td colspan="6" class="text-center text-muted"><span class="fa fa-clock-o"/></td>
-                    </tr>
-                    <tr>
-                        <th class="active">14:00<br/><span class="text-muted">15:00</span></th>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td class="danger">Learning Pytdon</td>
-                        <td></td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr><tr>
-                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td rowspan="2" class="danger">Learning Python</td>
-                        <td></td>
-                        <td>Learning Pytdon</td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                    </tr>
-                    <tr>
-                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
-                        <td></td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr>
-                </table>
-            </div>
-          </div>
+        </section>
+        <section class="container" t-foreach="days.keys()" t-as="day">
+            <t t-set="locations" t-value="days[day]['locations']"/>
+            <t t-set="dates" t-value="days[day]['dates']"/>
+            <h3 class="page-header mt0">
+                <t t-esc="day"/>
+                <small><t t-esc="days_nbr[day]"/> talks</small>
+            </h3>
+            <table id="table_search" class="table table-bordered table-condensed">
+            <tr>
+                <th/>
+                <t t-foreach="locations.keys()" t-as="location">
+                    <th t-if="location" class="active">
+                        <span t-esc="location and location.name or 'Unknown'"/>
+                    </th>
+                </t>
+            </tr>
+            <tr t-foreach="dates" t-as="dt">
+                <td class="active">
+                    <b t-esc="dt[0].strftime('%H:%M')"/>
+                </td>
+                <t t-if="dt[2]"> <!-- Not a multi location -->
+                    <t t-foreach="locations" t-as="location">
+                        <t t-if="location and dt[1].get(location, False)">
+                            <t t-set="track" t-value="dt[1][location][0]"/>
+                            <t t-if="track">
+                                <td t-att-rowspan="dt[1][location][3]" t-attf-class="event_color_#{track.color} #{track and 'event_track' or ''}">
+                                    <t t-if="track">
+                                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                                            <span t-esc="track and track.name"/>
+                                        </a>
+                                        <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
+                                            <small t-esc="speaker.display_name"/>
+                                        </div>
+                                    </t>
+                                </td>
+                            </t>
+                            <td t-if="not track" t-att-rowspan="dt[1][location][3]" class="event_track"/>
+                        </t>
+                    </t>
+                </t><t t-if="not dt[2]">
+                    <t t-set="track" t-value="dt[1][False][0]"/>
+                    <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
+                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                            <span t-esc="track.name"/><br/>
+                            <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
+                                <small t-esc="speaker.display_name"/>
+                            </div>
+                        </a>
+                    </td>
+                </t>
+            </tr>
+            </table>
         </section>
     </t>
 </template>
