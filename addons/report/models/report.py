@@ -20,9 +20,10 @@
 ##############################################################################
 
 from openerp.osv import osv
+from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, config
-from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
+from openerp.addons.web.http import request
+from openerp.tools.safe_eval import safe_eval as eval
 
 import os
 import time
@@ -34,8 +35,6 @@ import tempfile
 import lxml.html
 import cStringIO
 import subprocess
-from datetime import datetime
-from functools import partial
 from distutils.version import LooseVersion
 try:
     from pyPdf import PdfFileWriter, PdfFileReader
@@ -46,7 +45,7 @@ except ImportError:
 _logger = logging.getLogger(__name__)
 
 
-"""Check the presence of wkhtmltopdf and return its version."""
+"""Check the presence of wkhtmltopdf and return its version at OpnerERP start-up."""
 wkhtmltopdf_state = 'install'
 try:
     process = subprocess.Popen(
@@ -70,98 +69,26 @@ class Report(osv.Model):
 
     public_user = None
 
+    MINIMAL_HTML_PAGE = """
+<base href="{base_url}">
+<!DOCTYPE html>
+<html style="height: 0;">
+    <head>
+        <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+        <style type='text/css'>{css}</style>
+        {subst}
+    </head>
+    <body class="container" onload="subst()">
+        {body}
+    </body>
+</html>"""
+
     #--------------------------------------------------------------------------
     # Extension of ir_ui_view.render with arguments frequently used in reports
     #--------------------------------------------------------------------------
-
-    def _get_digits(self, cr, uid, obj=None, f=None, dp=None):
-        d = DEFAULT_DIGITS = 2
-        if dp:
-            decimal_precision_obj = self.pool['decimal.precision']
-            ids = decimal_precision_obj.search(cr, uid, [('name', '=', dp)])
-            if ids:
-                d = decimal_precision_obj.browse(cr, uid, ids)[0].digits
-        elif obj and f:
-            res_digits = getattr(obj._columns[f], 'digits', lambda x: ((16, DEFAULT_DIGITS)))
-            if isinstance(res_digits, tuple):
-                d = res_digits[1]
-            else:
-                d = res_digits(cr)[1]
-        elif (hasattr(obj, '_field') and
-                isinstance(obj._field, (float_field, function_field)) and
-                obj._field.digits):
-                d = obj._field.digits[1] or DEFAULT_DIGITS
-        return d
-
-    def _get_lang_dict(self, cr, uid):
-        pool_lang = self.pool['res.lang']
-        lang = self.localcontext.get('lang', 'en_US') or 'en_US'
-        lang_ids = pool_lang.search(cr, uid, [('code', '=', lang)])[0]
-        lang_obj = pool_lang.browse(cr, uid, lang_ids)
-        lang_dict = {
-            'lang_obj': lang_obj,
-            'date_format': lang_obj.date_format,
-            'time_format': lang_obj.time_format
-        }
-        self.lang_dict.update(lang_dict)
-        self.default_lang[lang] = self.lang_dict.copy()
-        return True
-
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False, cr=None, uid=None):
-        """
-            Assuming 'Account' decimal.precision=3:
-                formatLang(value) -> digits=2 (default)
-                formatLang(value, digits=4) -> digits=4
-                formatLang(value, dp='Account') -> digits=3
-                formatLang(value, digits=5, dp='Account') -> digits=5
-        """
-        def get_date_length(date_format=DEFAULT_SERVER_DATE_FORMAT):
-            return len((datetime.now()).strftime(date_format))
-
-        if digits is None:
-            if dp:
-                digits = self._get_digits(cr, uid, dp=dp)
-            else:
-                digits = self._get_digits(cr, uid, value)
-
-        if isinstance(value, (str, unicode)) and not value:
-            return ''
-
-        if not self.lang_dict_called:
-            self._get_lang_dict(cr, uid)
-            self.lang_dict_called = True
-
-        if date or date_time:
-            if not str(value):
-                return ''
-
-            date_format = self.lang_dict['date_format']
-            parse_format = DEFAULT_SERVER_DATE_FORMAT
-            if date_time:
-                value = value.split('.')[0]
-                date_format = date_format + " " + self.lang_dict['time_format']
-                parse_format = DEFAULT_SERVER_DATETIME_FORMAT
-            if isinstance(value, basestring):
-                # FIXME: the trimming is probably unreliable if format includes day/month names
-                #        and those would need to be translated anyway.
-                date = datetime.strptime(value[:get_date_length(parse_format)], parse_format)
-            elif isinstance(value, time.struct_time):
-                date = datetime(*value[:6])
-            else:
-                date = datetime(*value.timetuple()[:6])
-            if date_time:
-                # Convert datetime values to the expected client/context timezone
-                date = datetime_field.context_timestamp(cr, uid, timestamp=date, context=self.localcontext)
-            return date.strftime(date_format.encode('utf-8'))
-
-        res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
-        if currency_obj:
-            if currency_obj.position == 'after':
-                res = '%s %s' % (res, currency_obj.symbol)
-            elif currency_obj and currency_obj.position == 'before':
-                res = '%s %s' % (currency_obj.symbol, res)
-        return res
-
     def render(self, cr, uid, ids, template, values=None, context=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
@@ -175,28 +102,19 @@ class Report(osv.Model):
         if context is None:
             context = {}
 
-        self.lang_dict = self.default_lang = {}
-        self.lang_dict_called = False
-        self.localcontext = {
-            'lang': context.get('lang'),
-            'tz': context.get('tz'),
-            'uid': context.get('uid'),
-        }
-        self._get_lang_dict(cr, uid)
-
         view_obj = self.pool['ir.ui.view']
 
-        def render_doc(doc_id, model, template):
-            """Helper used when a report should be translated into the associated
-            partner's lang.
+        def translate_doc(doc_id, model, lang_field, template):
+            """Helper used when a report should be translated into a specific lang.
 
             <t t-foreach="doc_ids" t-as="doc_id">
-                <t t-raw="render_doc(doc_id, doc_model, 'module.templatetocall')"/>
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', account.report_invoice_document')"/>
             </t>
 
             :param doc_id: id of the record to translate
             :param model: model of the record to translate
-            :param template: name of the template to translate into the partner's lang
+            :param lang_field': field of the record containing the lang
+            :param template: name of the template to translate into the lang_field
             """
             ctx = context.copy()
             doc = self.pool[model].browse(cr, uid, doc_id, context=ctx)
@@ -205,26 +123,28 @@ class Report(osv.Model):
             if ctx.get('translatable') is True:
                 qcontext['o'] = doc
             else:
-                ctx['lang'] = doc.partner_id.lang
+                # Reach the lang we want to translate the doc into
+                ctx['lang'] = eval('doc.%s' % lang_field, {'doc': doc})
                 qcontext['o'] = self.pool[model].browse(cr, uid, doc_id, context=ctx)
             return view_obj.render(cr, uid, template, qcontext, context=ctx)
 
+        user = self.pool['res.users'].browse(cr, uid, uid)
+        website = None
+        if request and hasattr(request, 'website'):
+            website = request.website
         values.update({
             'time': time,
-            'formatLang': partial(self.formatLang, cr=cr, uid=uid),
-            'get_digits': self._get_digits,
-            'render_doc': render_doc,
+            'translate_doc': translate_doc,
             'editable': True,  # Will active inherit_branding
-            'res_company': self.pool['res.users'].browse(cr, uid, uid).company_id,
-            'website': False,  # Will be overidden by ir.ui.view if the request has website enabled
+            'user': user,
+            'res_company': user.company_id,
+            'website': website,
         })
-
         return view_obj.render(cr, uid, template, values, context=context)
 
     #--------------------------------------------------------------------------
-    # Main reports methods
+    # Main report methods
     #--------------------------------------------------------------------------
-
     def get_html(self, cr, uid, ids, report_name, data=None, context=None):
         """This method generates and returns html version of a report.
         """
@@ -233,7 +153,7 @@ class Report(osv.Model):
         try:
             report_model_name = 'report.%s' % report_name
             particularreport_obj = self.pool[report_model_name]
-            return particularreport_obj.render_html(cr, uid, ids, data={'form': data}, context=context)
+            return particularreport_obj.render_html(cr, uid, ids, data=data, context=context)
         except KeyError:
             report = self._get_report_from_name(cr, uid, report_name)
             report_obj = self.pool[report.model]
@@ -254,15 +174,122 @@ class Report(osv.Model):
         if html is None:
             html = self.get_html(cr, uid, ids, report_name, data=data, context=context)
 
-        html = html.decode('utf-8')
+        html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
 
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
+        # Check if we have to save the report or if we have to get one from the db.
+        save_in_attachment = self._check_attachment_use(cr, uid, ids, report)
+        # Get the paperformat associated to the report, otherwise fallback on the company one.
+        if not report.paperformat_id:
+            user = self.pool['res.users'].browse(cr, uid, uid)
+            paperformat = user.company_id.paperformat_id
+        else:
+            paperformat = report.paperformat_id
 
-        # Check attachment_use field. If set to true and an existing pdf is already saved, load
-        # this one now. Else, mark save it.
+        # Preparing the minimal html pages
+        subst = "<script src='/report/static/src/js/subst.js'></script> "
+        css = ''  # Will contain local css
+        headerhtml = []
+        contenthtml = []
+        footerhtml = []
+        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+
+        # The received html report must be simplified. We convert it in a xml tree
+        # in order to extract headers, bodies and footers.
+        try:
+            root = lxml.html.fromstring(html)
+
+            for node in root.xpath("//html/head/style"):
+                css += node.text
+
+            for node in root.xpath("//div[@class='header']"):
+                body = lxml.html.tostring(node)
+                header = self.MINIMAL_HTML_PAGE.format(css=css, subst=subst, body=body, base_url=base_url)
+                headerhtml.append(header)
+
+            for node in root.xpath("//div[@class='footer']"):
+                body = lxml.html.tostring(node)
+                footer = self.MINIMAL_HTML_PAGE.format(css=css, subst=subst, body=body, base_url=base_url)
+                footerhtml.append(footer)
+
+            for node in root.xpath("//div[@class='page']"):
+                # Previously, we marked some reports to be saved in attachment via their ids, so we
+                # must set a relation between report ids and report's content. We use the QWeb
+                # branding in order to do so: searching after a node having a data-oe-model
+                # attribute with the value of the current report model and read its oe-id attribute
+                oemodelnode = node.find(".//*[@data-oe-model='%s']" % report.model)
+                if oemodelnode is not None:
+                    reportid = oemodelnode.get('data-oe-id')
+                    if reportid:
+                        reportid = int(reportid)
+                else:
+                    reportid = False
+
+                body = lxml.html.tostring(node)
+                reportcontent = self.MINIMAL_HTML_PAGE.format(css=css, subst='', body=body, base_url=base_url)
+
+                # FIXME: imo the best way to extract record id from html reports is by using the
+                # qweb branding. As website editor is not yet splitted in a module independant from
+                # website, when we print a unique report we can use the id passed in argument to
+                # identify it.
+                if ids and len(ids) == 1:
+                    reportid = ids[0]
+
+                contenthtml.append(tuple([reportid, reportcontent]))
+
+        except lxml.etree.XMLSyntaxError:
+            contenthtml = []
+            contenthtml.append(html)
+            save_in_attachment = {}  # Don't save this potentially malformed document
+
+        # Get paperformat arguments set in the root html tag. They are prioritized over
+        # paperformat-record arguments.
+        specific_paperformat_args = {}
+        for attribute in root.items():
+            if attribute[0].startswith('data-report-'):
+                specific_paperformat_args[attribute[0]] = attribute[1]
+
+        # Run wkhtmltopdf process
+        pdf = self._generate_wkhtml_pdf(
+            cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
+            paperformat, specific_paperformat_args, save_in_attachment
+        )
+        return pdf
+
+    def get_action(self, cr, uid, ids, report_name, data=None, context=None):
+        """Return an action of type ir.actions.report.xml.
+
+        :param report_name: Name of the template to generate an action for
+        """
+        if context is None:
+            context = {}
+
+        report_obj = self.pool['ir.actions.report.xml']
+        idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
+        try:
+            report = report_obj.browse(cr, uid, idreport[0], context=context)
+        except IndexError:
+            raise osv.except_osv(_('Bad Report'), _('This report is not loaded into the database.'))
+
+        action = {
+            'context': context,
+            'data': data,
+            'type': 'ir.actions.report.xml',
+            'report_name': report.report_name,
+            'report_type': report.report_type,
+            'report_file': report.report_file,
+        }
+        return action
+
+    #--------------------------------------------------------------------------
+    # Report generation helpers
+    #--------------------------------------------------------------------------
+    def _check_attachment_use(self, cr, uid, ids, report):
+        """ Check attachment_use field. If set to true and an existing pdf is already saved, load
+        this one now. Else, mark save it.
+        """
         save_in_attachment = {}
-
         if report.attachment_use is True:
             save_in_attachment['model'] = report.model
             save_in_attachment['loaded_documents'] = {}
@@ -287,132 +314,8 @@ class Report(osv.Model):
                         _logger.info('The PDF document %s was loaded from the database' % filename)
                     else:
                         # Mark current document to be saved
-                        save_in_attachment[id] = filename
-
-        # Get the paperformat associated to the report, otherwise fallback on the company one.
-        if not report.paperformat_id:
-            user = self.pool['res.users'].browse(cr, uid, uid)
-            paperformat = user.company_id.paperformat_id
-        else:
-            paperformat = report.paperformat_id
-
-        # Preparing the minimal html pages
-        #subst = self._get_url_content('/report/static/src/js/subst.js')[0]  # Used in age numbering
-        subst = "<script src='/report/static/src/js/subst.js'></script> "
-        css = ''  # Will contain local css
-
-        headerhtml = []
-        contenthtml = []
-        footerhtml = []
-        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
-
-        minimalhtml = """
-<base href="{base_url}">
-<!DOCTYPE html>
-<html style="height: 0;">
-    <head>
-        <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
-        <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-        <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-        <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-        <style type='text/css'>{css}</style>
-        {subst}
-    </head>
-    <body class="container" onload='subst()'>
-        {body}
-    </body>
-</html>"""
-
-        # The retrieved html report must be simplified. We convert it into a xml tree
-        # via lxml in order to extract headers, footers and content.
-        try:
-            root = lxml.html.fromstring(html)
-
-            for node in root.xpath("//html/head/style"):
-                css += node.text
-
-            for node in root.xpath("//div[@class='header']"):
-                body = lxml.html.tostring(node)
-                header = minimalhtml.format(css=css, subst=subst, body=body, base_url=base_url)
-                headerhtml.append(header)
-
-            for node in root.xpath("//div[@class='footer']"):
-                body = lxml.html.tostring(node)
-                footer = minimalhtml.format(css=css, subst=subst, body=body, base_url=base_url)
-                footerhtml.append(footer)
-
-            for node in root.xpath("//div[@class='page']"):
-                # Previously, we marked some reports to be saved in attachment via their ids, so we
-                # must set a relation between report ids and report's content. We use the QWeb
-                # branding in order to do so: searching after a node having a data-oe-model
-                # attribute with the value of the current report model and read its oe-id attribute
-                oemodelnode = node.find(".//*[@data-oe-model='%s']" % report.model)
-                if oemodelnode is not None:
-                    reportid = oemodelnode.get('data-oe-id')
-                    if reportid:
-                        reportid = int(reportid)
-                else:
-                    reportid = False
-
-                body = lxml.html.tostring(node)
-                reportcontent = minimalhtml.format(css=css, subst='', body=body, base_url=base_url)
-                contenthtml.append(tuple([reportid, reportcontent]))
-
-        except lxml.etree.XMLSyntaxError:
-            contenthtml = []
-            contenthtml.append(html)
-            save_in_attachment = {}  # Don't save this potentially malformed document
-
-        # Get paperformat arguments set in the root html tag. They are prioritized over
-        # paperformat-record arguments.
-        specific_paperformat_args = {}
-        for attribute in root.items():
-            if attribute[0].startswith('data-report-'):
-                specific_paperformat_args[attribute[0]] = attribute[1]
-
-        # Run wkhtmltopdf process
-        pdf = self._generate_wkhtml_pdf(
-            cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
-            paperformat, specific_paperformat_args, save_in_attachment
-        )
-        return pdf
-
-    def get_action(self, cr, uid, ids, report_name, datas=None, context=None):
-        """Return an action of type ir.actions.report.xml.
-
-        :param report_name: Name of the template to generate an action for
-        """
-        # TODO: return the action for the ids passed in args
-        if context is None:
-            context = {}
-
-        if datas is None:
-            datas = {}
-
-        report_obj = self.pool.get('ir.actions.report.xml')
-        idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
-
-        try:
-            report = report_obj.browse(cr, uid, idreport[0], context=context)
-        except IndexError:
-            raise osv.except_osv(_('Bad Report'),
-                                 _('This report is not loaded into the database.'))
-
-        action = {
-            'type': 'ir.actions.report.xml',
-            'report_name': report.report_name,
-            'report_type': report.report_type,
-            'report_file': report.report_file,
-        }
-
-        if datas:
-            action['datas'] = datas
-
-        return action
-
-    #--------------------------------------------------------------------------
-    # Report generation helpers
-    #--------------------------------------------------------------------------
+                        save_in_attachment[record_id] = filename
+        return save_in_attachment
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
@@ -436,14 +339,16 @@ class Report(osv.Model):
 
         # Passing the cookie to wkhtmltopdf in order to resolve URL.
         try:
-            from openerp.addons.web.http import request
-            command_args.extend(['--cookie', 'session_id', request.session.sid])
+            if request:
+                command_args.extend(['--cookie', 'session_id', request.session.sid])
         except AttributeError:
             pass
 
         # Display arguments
         if paperformat:
             command_args.extend(self._build_wkhtmltopdf_args(paperformat, spec_paperformat_args))
+
+        command_args.extend(['--load-error-handling', 'ignore'])
 
         if landscape and '--orientation' in command_args:
             command_args_copy = list(command_args)
@@ -464,7 +369,7 @@ class Report(osv.Model):
             # Directly load the document if we have it
             if save_in_attachment and save_in_attachment['loaded_documents'].get(reporthtml[0]):
                 pdfreport.write(save_in_attachment['loaded_documents'].get(reporthtml[0]))
-                pdfreport.flush()
+                pdfreport.seek(0)
                 pdfdocuments.append(pdfreport)
                 continue
 
@@ -473,7 +378,7 @@ class Report(osv.Model):
                 head_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.',
                                                         dir=tmp_dir, mode='w+')
                 head_file.write(headers[index])
-                head_file.flush()
+                head_file.seek(0)
                 command_arg_local.extend(['--header-html', head_file.name])
 
             # Footer stuff
@@ -481,14 +386,14 @@ class Report(osv.Model):
                 foot_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.footer.tmp.',
                                                         dir=tmp_dir, mode='w+')
                 foot_file.write(footers[index])
-                foot_file.flush()
+                foot_file.seek(0)
                 command_arg_local.extend(['--footer-html', foot_file.name])
 
             # Body stuff
             content_file = tempfile.NamedTemporaryFile(suffix='.html', prefix='report.body.tmp.',
                                                        dir=tmp_dir, mode='w+')
             content_file.write(reporthtml[1])
-            content_file.flush()
+            content_file.seek(0)
 
             try:
                 # If the server is running with only one worker, ask to create a secund to be able
@@ -525,7 +430,7 @@ class Report(osv.Model):
                     _logger.info('The PDF document %s is now saved in the '
                                  'database' % attachment['name'])
 
-                pdfreport.flush()
+                pdfreport.seek(0)
                 pdfdocuments.append(pdfreport)
 
                 if headers:
@@ -566,14 +471,23 @@ class Report(osv.Model):
             command_args.extend(['--page-size', paperformat.format])
 
         if paperformat.page_height and paperformat.page_width and paperformat.format == 'custom':
-            command_args.extend(['--page-width', str(paperformat.page_width) + 'in'])
-            command_args.extend(['--page-height', str(paperformat.page_height) + 'in'])
+            command_args.extend(['--page-width', str(paperformat.page_width) + 'mm'])
+            command_args.extend(['--page-height', str(paperformat.page_height) + 'mm'])
 
-        if specific_paperformat_args and specific_paperformat_args['data-report-margin-top']:
-            command_args.extend(['--margin-top',
-                                 str(specific_paperformat_args['data-report-margin-top'])])
+        if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
+            command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
         elif paperformat.margin_top:
             command_args.extend(['--margin-top', str(paperformat.margin_top)])
+
+        if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
+            command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
+        elif paperformat.dpi:
+            command_args.extend(['--dpi', str(paperformat.dpi)])
+
+        if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
+            command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
+        elif paperformat.header_spacing:
+            command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
 
         if paperformat.margin_left:
             command_args.extend(['--margin-left', str(paperformat.margin_left)])
@@ -583,12 +497,8 @@ class Report(osv.Model):
             command_args.extend(['--margin-right', str(paperformat.margin_right)])
         if paperformat.orientation:
             command_args.extend(['--orientation', str(paperformat.orientation)])
-        if paperformat.header_spacing:
-            command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
         if paperformat.header_line:
             command_args.extend(['--header-line'])
-        if paperformat.dpi:
-            command_args.extend(['--dpi', str(paperformat.dpi)])
 
         return command_args
 

@@ -21,7 +21,6 @@
 
 from openerp.osv import fields, osv
 from lxml import etree
-
 from openerp.tools.translate import _
 
 class followup(osv.osv):
@@ -189,11 +188,7 @@ class res_partner(osv.osv):
              'model': 'account_followup.followup',
              'form': data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account_followup.followup.print',
-            'datas': datas,
-            }
+        return self.pool['report'].get_action(cr, uid, wizard_partner_ids, 'account_followup.report_followup', data=datas, context=context)
 
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
         if context is None:
@@ -274,6 +269,9 @@ class res_partner(osv.osv):
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
                     followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+
+                total = reduce(lambda x, y: x+y['balance'], currency_dict['line'], 0.00)
+
                 total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
                 followup_table += '''<tr> </tr>
                                 </table>
