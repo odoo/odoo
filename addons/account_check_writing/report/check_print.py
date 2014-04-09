@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
-from openerp.tools import amount_to_text_en
+
 
 class report_print_check(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -33,13 +34,14 @@ class report_print_check(report_sxw.rml_parse):
             'get_lines': self.get_lines,
             'fill_stars' : self.fill_stars,
         })
+
     def fill_stars(self, amount):
         if len(amount) < 100:
             stars = 100 - len(amount)
             return ' '.join([amount,'*'*stars])
 
         else: return amount
-    
+
     def get_lines(self, voucher_lines):
         result = []
         self.number_lines = len(voucher_lines)
@@ -63,24 +65,11 @@ class report_print_check(report_sxw.rml_parse):
             result.append(res)
         return result
 
-report_sxw.report_sxw(
-    'report.account.print.check.top',
-    'account.voucher',
-    'addons/account_check_writing/report/check_print_top.rml',
-    parser=report_print_check,header=False
-)
 
-report_sxw.report_sxw(
-    'report.account.print.check.middle',
-    'account.voucher',
-    'addons/account_check_writing/report/check_print_middle.rml',
-    parser=report_print_check,header=False
-)
+class report_check(osv.AbstractModel):
+    _name = 'report.account_check_writing.report_check'
+    _inherit = 'report.abstract_report'
+    _template = 'account_check_writing.report_check'
+    _wrapped_report_class = report_print_check
 
-report_sxw.report_sxw(
-    'report.account.print.check.bottom',
-    'account.voucher',
-    'addons/account_check_writing/report/check_print_bottom.rml',
-    parser=report_print_check,header=False
-)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

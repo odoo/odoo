@@ -27,14 +27,14 @@ class event_track_tag(osv.osv):
     _name = "event.track.tag"
     _order = 'name'
     _columns = {
-        'name': fields.char('Event Track Tag')
+        'name': fields.char('Event Track Tag', translate=True)
     }
 
 class event_tag(osv.osv):
     _name = "event.tag"
     _order = 'name'
     _columns = {
-        'name': fields.char('Event Tag')
+        'name': fields.char('Event Tag', translate=True)
     }
 
 #
@@ -45,7 +45,7 @@ class event_track_stage(osv.osv):
     _name = "event.track.stage"
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Track Stage'),
+        'name': fields.char('Track Stage', translate=True),
         'sequence': fields.integer('Sequence')
     }
     _defaults = {
@@ -160,7 +160,7 @@ class event_sponsors_type(osv.osv):
     _name = "event.sponsor.type"
     _order = "sequence"
     _columns = {
-        "name": fields.char('Sponsor Type', required=True),
+        "name": fields.char('Sponsor Type', required=True, translate=True),
         "sequence": fields.integer('Sequence')
     }
 

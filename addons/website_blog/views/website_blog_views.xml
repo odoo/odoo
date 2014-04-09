@@ -56,8 +56,14 @@
                     <sheet>
                         <h1><field name="name" placeholder="Name"/></h1>
                         <field name="tag_ids" widget="many2many_tags"/>
+                        <field name="subtitle" placeholder="Blog Subtitle"/>
                         <group>
+                            <field name="background_image"/>
                             <field name="blog_id"/>
+                        </group>
+                        <group>
+                            <field name="visits"/>
+                            <field name="ranking" invisible="1"/>
                         </group>
                         <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
                         <group string="Technical" groups="base.group_no_one">
@@ -155,5 +161,6 @@
             name="Page History"
             res_model="blog.post.history"
             src_model="blog.post"/>
+
     </data>
 </openerp>

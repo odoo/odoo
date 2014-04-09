@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from lxml import etree
 
+
 class account_print_journal(osv.osv_memory):
     _inherit = "account.common.journal.report"
     _name = 'account.print.journal'
@@ -60,19 +61,14 @@ class account_print_journal(osv.osv_memory):
         res['arch'] = etree.tostring(doc)
         return res
 
-
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['sort_selection'], context=context)[0])
         if context.get('sale_purchase_only'):
-            report_name = 'account.journal.period.print.sale.purchase'
+            return self.pool['report'].get_action(cr, uid, ids, 'account.report_salepurchasejournal', data=data, context=context)
         else:
-            report_name = 'account.journal.period.print'
-        return {'type': 'ir.actions.report.xml', 'report_name': report_name, 'datas': data}
-
-
-#vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+            return self.pool['report'].get_action(cr, uid, ids, 'account.report_journal', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
