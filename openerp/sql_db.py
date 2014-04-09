@@ -389,7 +389,7 @@ class TestCursor(Cursor):
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit
         super(TestCursor, self).__init__(*args, **kwargs)
-        super(TestCursor, self).execute("SAVEPOINT test_cursor")
+        self.execute("SAVEPOINT test_cursor")
         self._lock = threading.RLock()
 
     def acquire(self):
@@ -397,9 +397,6 @@ class TestCursor(Cursor):
 
     def release(self):
         self._lock.release()
-
-    def execute(self, *args, **kwargs):
-        super(TestCursor, self).execute(*args, **kwargs)
 
     def close(self, force=False):
         if force:
@@ -412,12 +409,12 @@ class TestCursor(Cursor):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
-        super(TestCursor, self).execute("RELEASE SAVEPOINT test_cursor")
-        super(TestCursor, self).execute("SAVEPOINT test_cursor")
+        self.execute("RELEASE SAVEPOINT test_cursor")
+        self.execute("SAVEPOINT test_cursor")
 
     def rollback(self):
-        super(TestCursor, self).execute("ROLLBACK TO SAVEPOINT test_cursor")
-        super(TestCursor, self).execute("SAVEPOINT test_cursor")
+        self.execute("ROLLBACK TO SAVEPOINT test_cursor")
+        self.execute("SAVEPOINT test_cursor")
 
 class PsycoConnection(psycopg2.extensions.connection):
     pass
