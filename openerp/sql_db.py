@@ -391,7 +391,6 @@ class TestCursor(Cursor):
         super(TestCursor, self).__init__(*args, **kwargs)
         super(TestCursor, self).execute("SAVEPOINT test_cursor")
         self._lock = threading.RLock()
-        self._auto_commit = False
 
     def acquire(self):
         self._lock.acquire()
@@ -401,18 +400,16 @@ class TestCursor(Cursor):
 
     def execute(self, *args, **kwargs):
         super(TestCursor, self).execute(*args, **kwargs)
-        if self._auto_commit:
-            self.commit()
 
     def close(self, force=False):
-        self.rollback()                 # for stuff that has not been committed
         if force:
             super(TestCursor, self).close()
-        else:
+        elif not self._closed:
+            self.rollback()             # for stuff that has not been committed
             self.release()
 
     def autocommit(self, on):
-        self._auto_commit = on
+        _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
         super(TestCursor, self).execute("RELEASE SAVEPOINT test_cursor")

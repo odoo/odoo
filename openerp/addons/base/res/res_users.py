@@ -394,8 +394,7 @@ class res_users(osv.osv):
             # (In this way, there is no opportunity to have two transactions
             # interleaving their cr.execute()..cr.commit() calls and have one
             # of them rolled back due to a concurrent access.)
-            if not openerp.tools.config['test_enable']:
-                cr.autocommit(True)
+            cr.autocommit(True)
             # check if user exists
             res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
             if res:

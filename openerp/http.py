@@ -279,7 +279,7 @@ class WebRequest(object):
         def checked_call(___dbname, *a, **kw):
             # The decorator can call us more than once if there is an database error. In this
             # case, the request cursor is unusable. Rollback transaction to create a new one.
-            if self._cr and not openerp.tools.config['test_enable']:
+            if self._cr:
                 self._cr.rollback()
             return self.endpoint(*a, **kw)
 
