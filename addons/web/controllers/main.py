@@ -31,6 +31,7 @@ except ImportError:
 
 import openerp
 import openerp.modules.registry
+from openerp.addons.base.ir.ir_qweb import AssetsBundle
 from openerp.tools.translate import _
 from openerp import http
 
@@ -364,30 +365,17 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((None, pattern))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    # Hack for IE, who limit 288Ko, 4095 rules, 31 sheets
-                    # http://support.microsoft.com/kb/262161/en
-                    if pattern == "static/lib/bootstrap/css/bootstrap.css":
-                        if include_remotes:
-                            r.insert(0, (None, fs2web(path[len(addons_path):])))
-                    else:
-                        r.append((path, fs2web(path[len(addons_path):])))
+                    r.append((path, fs2web(path[len(addons_path):])))
     return r
 
-def manifest_list(extension, mods=None, db=None, debug=False):
+def manifest_list(extension, mods=None, db=None, debug=None):
     """ list ressources to load specifying either:
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """
+    if debug is not None:
+        _logger.warning("openerp.addons.web.main.manifest_list(): debug parameter is deprecated")
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    if not debug:
-        path = '/web/webclient/' + extension
-        if mods is not None:
-            path += '?' + werkzeug.url_encode({'mods': mods})
-        elif db:
-            path += '?' + werkzeug.url_encode({'db': db})
-
-        remotes = [wp for fp, wp in files if fp is None]
-        return [path] + remotes
     return [wp for _fp, wp in files]
 
 def get_last_modified(files):
@@ -614,26 +602,16 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-def render_bootstrap_template(template, values=None, debug=False, db=None, **kw):
-    if not db:
-        db = request.db
-    if request.debug:
-        debug = True
+def render_bootstrap_template(template, values=None, **kw):
     if values is None:
-        values = {}
-    values['debug'] = debug
-    values['current_db'] = db
+        values = dict()
     try:
         values['databases'] = http.db_list()
     except openerp.exceptions.AccessDenied:
         values['databases'] = None
 
-    for res in ['js', 'css']:
-        if res not in values:
-            values[res] = manifest_list(res, db=db, debug=debug)
-
     if 'modules' not in values:
-        values['modules'] = module_boot(db=db)
+        values['modules'] = module_boot()
     values['modules'] = simplejson.dumps(values['modules'])
 
     return request.render(template, values, **kw)
@@ -678,6 +656,20 @@ class Home(http.Controller):
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
         return login_and_redirect(db, login, key, redirect_url=redirect)
+
+    @http.route('/web/js/<xmlid>', type='http', auth="none")
+    def js_bundle(self, xmlid, **kw):
+        values = dict(manifest_list=manifest_list)
+        html = request.render(xmlid, lazy=False, qcontext=values)
+        bundle = AssetsBundle(xmlid, html)
+        return bundle.js()
+
+    @http.route('/web/css/<xmlid>', type='http', auth='none')
+    def css_bundle(self, xmlid, **kw):
+        values = dict(manifest_list=manifest_list)
+        html = request.render(xmlid, lazy=False, qcontext=values)
+        bundle = AssetsBundle(xmlid, html)
+        return bundle.css()
 
 class WebClient(http.Controller):
 

@@ -3,6 +3,19 @@
 -->
 <openerp>
     <data>
+        <template id="web.assets_common">
+            <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+        </template>
+
+        <template id="web.assets_webclient_manifest">
+            <t t-foreach="manifest_list('css')" t-as="css_file">
+                <link rel="stylesheet" t-att-href="css_file"/>
+            </t>
+            <t t-foreach="manifest_list('js')" t-as="js_file">
+                <script type="text/javascript" t-att-src="js_file"></script>
+            </t>
+        </template>
 
         <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
             <html style="height: 100%">
@@ -23,12 +36,7 @@
         <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
             <t t-call="web.layout">
                 <t t-set="head">
-                    <t t-foreach="css" t-as="css_file">
-                        <link rel="stylesheet" t-att-href="css_file"/>
-                    </t>
-                    <t t-foreach="js" t-as="js_file">
-                        <script type="text/javascript" t-att-src="js_file"></script>
-                    </t>
+                    <t t-call-assets="web.assets_webclient_manifest"/>
                     <script type="text/javascript">
                         $(function() {
                             var s = new openerp.init(<t t-raw="modules"/>);
@@ -78,10 +86,10 @@
             </script>
             <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
                 <label for="db" class="control-label">Database</label>
-                <select name="db" id="db" class="form-control" required="required" t-att-autofocus="'autofocus' if current_db not in databases else None" onchange="dbchanged(this.value)">
+                <select name="db" id="db" class="form-control" required="required" t-att-autofocus="'autofocus' if request.db not in databases else None" onchange="dbchanged(this.value)">
                     <option></option>
                     <t t-foreach="databases" t-as="db">
-                        <option t-att-selected="'selected' if db == current_db else None">
+                        <option t-att-selected="'selected' if db == request.db else None">
                             <t t-esc="db"/>
                         </option>
                     </t>

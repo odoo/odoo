@@ -1478,7 +1478,7 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
     $('head').append($('<link>', {
         'rel': 'stylesheet',
         'type': 'text/css',
-        'href': origin +'/web/webclient/css'
+        'href': origin +'/web/css/web.assets_webclient'
     }));
     var currentScript = document.currentScript;
     if (!currentScript) {
