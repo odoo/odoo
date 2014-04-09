@@ -176,8 +176,6 @@ class survey_survey(osv.Model):
     }
 
     _defaults = {
-        'auth_required': True,
-        'users_can_go_back': False,
         'color': 0
     }
 
