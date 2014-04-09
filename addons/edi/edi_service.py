@@ -35,7 +35,7 @@ def _edi_dispatch(db_name, method_name, *method_args):
         registry = openerp.modules.registry.RegistryManager.get(db_name)
         assert registry, 'Unknown database %s' % db_name
         edi = registry['edi.edi']
-        cr = registry.get_cursor()
+        cr = registry.cursor()
         res = None
         res = getattr(edi, method_name)(cr, *method_args)
         cr.commit()
