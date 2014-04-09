@@ -26,6 +26,7 @@ from openerp.addons.website.models.website import slug
 from urlparse import urljoin
 from itertools import product
 from collections import Counter
+from datetime import datetime
 
 import datetime
 import logging
@@ -671,49 +672,19 @@ class survey_question(osv.Model):
         # Empty answer to mandatory question
         if question.constr_mandatory and not answer:
             errors.update({answer_tag: question.constr_error_msg})
+        # Email format validation
+        # Note: this validation is very basic:
+        #     all the strings of the form
+        #     <something>@<anything>.<extension>
+        #     will be accepted
+        if answer and question.validation_email:
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", answer):
+                errors.update({answer_tag: _('This answer must be an email address')})
         # Answer validation (if properly defined)
-        if answer and question.validation_required and question.validation_type:
-            # Length of the answer must be in a range
-            if question.validation_type == "has_length":
-                if not (question.validation_length_min <= len(answer) <= question.validation_length_max):
-                    errors.update({answer_tag: question.validation_error_msg})
-
-            # Answer must be an integer in a particular range
-            elif question.validation_type == "is_integer":
-                try:
-                    intanswer = int(answer)
-                # Answer is not an integer
-                except ValueError:
-                    errors.update({answer_tag: question.validation_error_msg})
-                else:
-                    # Answer is not in the right range
-                    if not (question.validation_min_int_value <= intanswer <= question.validation_max_int_value):
-                        errors.update({answer_tag: question.validation_error_msg})
-            # Answer must be a float in a particular range
-            elif question.validation_type == "is_decimal":
-                try:
-                    floatanswer = float(answer)
-                # Answer is not an integer
-                except ValueError:
-                    errors.update({answer_tag: question.validation_error_msg})
-                else:
-                    # Answer is not in the right range
-                    if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
-                        errors.update({answer_tag: question.validation_error_msg})
-
-            # Answer must be a date in a particular range
-            elif question.validation_type == "is_date":
-                raise Exception("Not implemented")
-            # Answer must be an email address
-            # Note: this validation is very basic:
-            #       all the strings of the form
-            #       <something>@<anything>.<extension>
-            #       will be accepted
-            elif question.validation_type == "is_email":
-                if not re.match(r"[^@]+@[^@]+\.[^@]+", answer):
-                    errors.update({answer_tag: question.validation_error_msg})
-            else:
-                pass
+        # Length of the answer must be in a range
+        if answer and question.validation_required:
+            if not (question.validation_length_min <= len(answer) <= question.validation_length_max):
+                errors.update({answer_tag: question.validation_error_msg})
         return errors
 
     def validate_numerical_box(self, cr, uid, question, post, answer_tag, context=None):
@@ -725,9 +696,14 @@ class survey_question(osv.Model):
         # Checks if user input is a number
         if answer:
             try:
-                float(answer)
+                floatanswer = float(answer)
             except ValueError:
-                errors.update({answer_tag: question.constr_error_msg})
+                errors.update({answer_tag: _('This is not a number')})
+        # Answer validation (if properly defined)
+        if answer and floatanswer and question.validation_required:
+            # Answer is not in the right range
+            if not (question.validation_min_float_value <= floatanswer <= question.validation_max_float_value):
+                errors.update({answer_tag: question.validation_error_msg})
         return errors
 
     def validate_datetime(self, cr, uid, question, post, answer_tag, context=None):
@@ -737,13 +713,22 @@ class survey_question(osv.Model):
         if question.constr_mandatory and not answer:
             errors.update({answer_tag: question.constr_error_msg})
         # Checks if user input is a datetime
-        # TODO when datepicker will be available
+        if answer:
+            try:
+                dateanswer = datetime.strptime(answer, DF)
+            except ValueError:
+                errors.update({answer_tag: _('This is not a date/time')})
+        # Answer validation (if properly defined)
+        if answer and dateanswer and question.validation_required:
+            # Answer is not in the right range
+            if not (datetime.strptime(question.validation_min_date, DF) <= dateanswer <= datetime.strptime(question.validation_max_date, DF)):
+                errors.update({answer_tag: question.validation_error_msg})
         return errors
 
     def validate_simple_choice(self, cr, uid, question, post, answer_tag, context=None):
         errors = {}
         if question.comments_allowed:
-            comment_tag = "%s_%s" % (answer_tag, question.comment_children_ids[0].id)
+            comment_tag = "%s_%s" % (answer_tag, 'comment')
         # Empty answer to mandatory question
         if question.constr_mandatory and not answer_tag in post:
             errors.update({answer_tag: question.constr_error_msg})
@@ -760,7 +745,7 @@ class survey_question(osv.Model):
             answer_candidates = dict_keys_startswith(post, answer_tag)
             comment_flag = answer_candidates.pop(("%s_%s" % (answer_tag, -1)), None)
             if question.comments_allowed:
-                comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), '').strip()
+                comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and question.comment_count_as_answer and comment_flag and comment_answer:
                 errors.update({answer_tag: question.constr_error_msg})
@@ -774,7 +759,6 @@ class survey_question(osv.Model):
         if question.constr_mandatory:
             lines_number = len(question.labels_ids_2)
             answer_candidates = dict_keys_startswith(post, answer_tag)
-            #comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, question.comment_children_ids[0].id)), None)
             # Number of lines that have been answered
             if question.matrix_subtype == 'simple':
                 answer_number = len(answer_candidates)
@@ -782,19 +766,6 @@ class survey_question(osv.Model):
                 answer_number = len(set([sk.rsplit('_', 1)[0] for sk in answer_candidates.keys()]))
             else:
                 raise RuntimeError("Invalid matrix subtype")
-            # Validate lines
-            if question.constr_type == 'all' and answer_number != lines_number:
-                errors.update({answer_tag: question.constr_error_msg})
-            elif question.constr_type == 'at least' and answer_number < question.constr_minimum_req_ans:
-                errors.update({answer_tag: question.constr_error_msg})
-            elif question.constr_type == 'at most' and answer_number > question.constr_maximum_req_ans:
-                errors.update({answer_tag: question.constr_error_msg})
-            elif question.constr_type == 'exactly' and answer_number != question.constr_maximum_req_ans:
-                errors.update({answer_tag: question.constr_error_msg})
-            elif question.constr_type == 'a range' and not (question.constr_minimum_req_ans <= answer_number <= question.constr_maximum_req_ans):
-                errors.update({answer_tag: question.constr_error_msg})
-            else:
-                pass  # Everything is okay
         return errors
 
 
