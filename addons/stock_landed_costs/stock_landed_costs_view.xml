@@ -25,7 +25,8 @@
                                 <field name="date"/>
                             </group>
                             <group>
-                                <field name="picking_ids" widget="many2many_tags"/>
+                                <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done')]"
+                                    on_change="onchange_pickings(picking_ids)"/>
                             </group>
                         </group>
                         <notebook>

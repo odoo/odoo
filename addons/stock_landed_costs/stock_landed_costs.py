@@ -44,6 +44,27 @@ class stock_landed_cost(osv.osv):
             result[line.cost_id.id] = True
         return result.keys()
 
+    def onchange_pickings(self, cr, uid, ids, picking_ids=None):
+        result = {'valuation_adjustment_lines': []}
+        line_obj = self.pool.get('stock.valuation.adjustment.lines')
+        picking_obj = self.pool.get('stock.picking')
+        lines = []
+ 
+        for cost in self.browse(cr, uid, ids):
+            line_ids = [line.id for line in cost.valuation_adjustment_lines]
+            line_obj.unlink(cr, uid, line_ids)
+
+        picking_ids = picking_ids and picking_ids[0][2] or False
+        if not picking_ids:
+            return {'value': result}
+
+        for picking in picking_obj.browse(cr, uid, picking_ids):
+            for move in picking.move_lines:
+                vals = dict(product_id = move.product_id.id, quantity = move.product_uom_qty, former_cost = move.product_uom_qty * move.price_unit)
+                lines.append(vals)
+        result['valuation_adjustment_lines'] = lines
+        return {'value': result}
+
     _columns = {
         'name': fields.char('Name', size=256, required=True),
         'date': fields.datetime('Date', required=True),
