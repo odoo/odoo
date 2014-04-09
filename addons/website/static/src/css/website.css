@@ -373,11 +373,23 @@ ul.nav-stacked > li > a {
   position: absolute;
   margin-top: -8px;
 }
-.carousel .carousel-control.left span {
-  left: 10px;
+.carousel .carousel-control.left {
+  left: -10px;
 }
-.carousel .carousel-control.right span {
-  right: 10px;
+.carousel .carousel-control.left * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  right: 50%;
+}
+.carousel .carousel-control.right {
+  right: -10px;
+}
+.carousel .carousel-control.right * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  left: 50%;
 }
 
 .quotecarousel {
@@ -527,4 +539,34 @@ span[data-oe-type="monetary"] {
 .oe_website_login_container {
   width: 400px;
   margin: 40px auto;
+}
+
+div.media_iframe_video {
+  height: 0;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 66.5%;
+}
+div.media_iframe_video iframe {
+  width: 100%;
+  height: 100%;
+}
+div.media_iframe_video div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+    transform: none !important;
+  }
 }

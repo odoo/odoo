@@ -39,8 +39,8 @@
                     </div>
                 </div>
             </div>
-            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
-            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
+            <div class="carousel-control left hidden" data-target="#myCarousel" data-slide="prev" style="width: 10%"><i class="fa fa-chevron-left"></i></div>
+            <div class="carousel-control right hidden" data-target="#myCarousel" data-slide="next" style="width: 10%"><i class="fa fa-chevron-right"></i></div>
         </div>
     </div>
 
@@ -960,6 +960,27 @@
                 <li data-value="1.7"><a>Very Fast</a></li>
             </ul>
         </li>
+    </div>
+
+    <div data-snippet-option-id='media'
+        data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa, .glyphicon">
+        <li><a href="#" class="edition">Change...</a></li>
+    </div>
+
+    <div data-snippet-option-id='transform'
+        data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu" name="parallax-scroll">
+                <li data-value="img-rounded"><a>Rounded corners</a></li>
+                <li data-value="img-thumbnail"><a>Box</a></li>
+                <li data-value="img-circle"><a>Circle</a></li>
+                <li data-value="shadow"><a>Shadow</a></li>
+                <li data-value="fa-spin"><a>Spin</a></li>
+            </ul>
+        </li>
+        <li><a href="#" class="style">Transform</a></li>
+        <li><a href="#" class="clear-style">Reset Transformation</a></li>
     </div>
 
 </template>
