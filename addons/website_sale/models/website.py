@@ -147,7 +147,7 @@ class Website(orm.Model):
         quotation_values = self._ecommerce_get_quotation_values(cr, uid, context=context)
         quotation_values['user_id'] = False
         quotation_values['section_id'] = self.pool.get('crm.case.section').search(cr, SUPERUSER_ID, [('code', '=', 'SPC')], context=context)[0]
-        quotation_values['state'] = 'shopping_cart'
+        # quotation_values['state'] = 'shopping_cart'
         return SaleOrder.create(cr, SUPERUSER_ID, quotation_values, context=context)
 
     def ecommerce_get_new_order(self, cr, uid, context=None):
