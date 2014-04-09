@@ -92,6 +92,9 @@ class stock_landed_cost(osv.osv):
     def button_cancel(self, cr ,uid, ids, context=None):
         return True
 
+    def compute_landed_cost(self, cr, uid, ids, context=None):
+        return True
+
 class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
     _description = 'Stock Landed Cost Lines'
