@@ -2546,7 +2546,7 @@ class stock_inventory(osv.osv):
         product_obj = self.pool.get('product.product')
         location_ids = location_obj.search(cr, uid, [('id', 'child_of', [inventory.location_id.id])], context=context)
         domain = ' location_id in %s'
-        args = (tuple(location_ids),)
+        args = (inventory.date, inventory.date, tuple(location_ids),)
         if inventory.partner_id:
             domain += ' and owner_id = %s'
             args += (inventory.partner_id.id,)
@@ -2559,9 +2559,39 @@ class stock_inventory(osv.osv):
         if inventory.package_id:
             domain += ' and package_id = %s'
             args += (inventory.package_id.id,)
+
         cr.execute('''
            SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
-           FROM stock_quant WHERE''' + domain + '''
+           FROM ((SELECT
+                    stock_move.id::text || '-' || quant.id::text AS id,
+                    stock_move.location_dest_id AS location_id,
+                    stock_move.product_id,
+                    quant.qty AS qty,
+                    quant.owner_id,
+                    quant.package_id,
+                    quant.lot_id,
+                    stock_move.date
+                FROM
+                    stock_quant as quant, stock_quant_move_rel, stock_move
+                LEFT JOIN stock_location location ON (stock_move.location_dest_id = location.id)
+                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id
+                AND stock_quant_move_rel.move_id = stock_move.id AND stock_move.date < %s
+                ) UNION
+                (SELECT
+                    '-' || stock_move.id::text || '-' || quant.id::text AS id,
+                    stock_move.location_id AS location_id,
+                    stock_move.product_id,
+                    - quant.qty AS qty,
+                    quant.owner_id,
+                    quant.package_id,
+                    quant.lot_id,
+                    stock_move.date
+                FROM
+                    stock_quant as quant, stock_quant_move_rel, stock_move
+                LEFT JOIN stock_location location ON (stock_move.location_id = location.id)
+                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id
+                AND stock_quant_move_rel.move_id = stock_move.id AND stock_move.date < %s
+                )) AS subquery WHERE''' + domain + '''
            GROUP BY product_id, location_id, lot_id, package_id, partner_id
         ''', args)
         vals = []
