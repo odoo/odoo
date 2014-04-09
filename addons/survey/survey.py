@@ -535,7 +535,7 @@ class survey_question(osv.Model):
     _columns = {
         # Question metadata
         'page_id': fields.many2one('survey.page', 'Survey page',
-            ondelete='cascade'),
+            ondelete='cascade', required=1),
         'survey_id': fields.related('page_id', 'survey_id', type='many2one',
             relation='survey.survey', string='Survey'),
         'sequence': fields.integer(string='Sequence'),
@@ -574,6 +574,7 @@ class survey_question(osv.Model):
                                        ('3', '4'),
                                        ('2', '6')],
             'Number of columns'),
+            # These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap
         'display_mode': fields.selection([('columns', 'Radio Buttons/Checkboxes'),
                                           ('dropdown', 'Selection Box')],
                                          'Display mode'),
@@ -608,6 +609,7 @@ class survey_question(osv.Model):
                                                'question_id', 'Answers',
                                                domain=[('skipped', '=', False)]),
     }
+
     _defaults = {
         'page_id': lambda self, cr, uid, context: context.get('page_id'),
         'sequence': 10,
@@ -620,6 +622,7 @@ class survey_question(osv.Model):
         'validation_required': False,
         'comments_message': lambda s, cr, uid, c: _('If other, precise:'),
     }
+
     _sql_constraints = [
         ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
         ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
@@ -802,6 +805,12 @@ class survey_label(osv.Model):
     _order = 'sequence'
     _description = 'Survey Label'
 
+    def _check_question_not_empty(self, cr, uid, ids, context=None):
+        '''Ensure that field question_id XOR field question_id_2 is not null'''
+        for label in self.browse(cr, uid, ids, context=context):
+            # 'bool()' is required in order to make '!=' act as XOR with objects
+            return bool(label.question_id) != bool(label.question_id_2)
+
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question',
             ondelete='cascade'),
@@ -815,6 +824,9 @@ class survey_label(osv.Model):
     defaults = {
         'sequence': 100,
     }
+    _constraints = [
+        (_check_question_not_empty, "A label must be attached to one and only one question", ['question_id', 'question_id_2'])
+    ]
 
 
 class survey_user_input(osv.Model):
@@ -835,8 +847,7 @@ class survey_user_input(osv.Model):
         'date_create': fields.datetime('Creation Date', required=True,
                                        readonly=1),
         'deadline': fields.datetime("Deadline",
-                                help="Date by which the person can open the survey and submit answers.\
-                                Warning: ",
+                                help="Date by which the person can open the survey and submit answers",
                                 oldname="date_deadline"),
         'type': fields.selection([('manually', 'Manually'), ('link', 'Link')],
                                  'Answer Type', required=1, readonly=1,
@@ -875,7 +886,8 @@ class survey_user_input(osv.Model):
     }
 
     _sql_constraints = [
-        ('unique_token', 'UNIQUE (token)', 'A token must be unique!')
+        ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
+        ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
 
     def copy_data(self, cr, uid, id, default=None, context=None):
@@ -883,7 +895,8 @@ class survey_user_input(osv.Model):
             element!'))
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
-        ''' Remove empty user inputs that have been created manually (cronjob) '''
+        ''' Remove empty user inputs that have been created manually
+            (used as a cronjob declared in data/survey_cron.xml) '''
         empty_user_input_ids = self.search(cr, uid, [('type', '=', 'manually'),
                                                      ('state', '=', 'new'),
                                                      ('date_create', '<', (datetime.datetime.now() - datetime.timedelta(hours=1)).strftime(DF))],
@@ -929,11 +942,32 @@ class survey_user_input_line(osv.Model):
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
 
+    def _answered_or_skipped(self, cr, uid, ids, context=None):
+        for uil in self.browse(cr, uid, ids, context=context):
+            # 'bool()' is required in order to make '!=' act as XOR with objects
+            return uil.skipped != bool(uil.answer_type)
+
+    def _check_answer_type(self, cr, uid, ids, context=None):
+        for uil in self.browse(cr, uid, ids, context=None):
+            if uil.answer_type:
+                if uil.answer_type == 'text':
+                    # 'bool()' is required in order to make '!=' act as XOR with objects
+                    return bool(uil.value_text)
+                elif uil.answer_type == 'number':
+                    return uil.value_number != False
+                elif uil.answer_type == 'date':
+                    return bool(uil.value_date)
+                elif uil.answer_type == 'free_text':
+                    return bool(uil.value_free_text)
+                elif uil.answer_type == 'suggestion':
+                    return bool(uil.value_suggested)
+            return True
+
     _columns = {
         'user_input_id': fields.many2one('survey.user_input', 'User Input',
                                          ondelete='cascade', required=1),
         'question_id': fields.many2one('survey.question', 'Question',
-                                       ondelete='restrict'),
+                                       ondelete='restrict', required=1),
         'page_id': fields.related('question_id', 'page_id', type='many2one',
                                   relation='survey.page', string="Page"),
         'survey_id': fields.related('user_input_id', 'survey_id',
@@ -960,6 +994,10 @@ class survey_user_input_line(osv.Model):
         'skipped': False,
         'date_create': fields.datetime.now()
     }
+    _constraints = [
+        (_answered_or_skipped, "A question cannot be unanswered and skipped", ['skipped', 'answer_type']),
+        (_check_answer_type, "The answer must be in the right type", ['answer_type', 'text', 'number', 'date', 'free_text', 'suggestion'])
+    ]
 
     def create(self, cr, uid, vals, context=None):
         value_suggested = vals.get('value_suggested')
