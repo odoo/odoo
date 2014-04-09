@@ -1441,6 +1441,9 @@
         start : function () {
             var self = this;
             this._super();
+            if (!self.$target.data("snippet-view")) {
+                this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
+            }
             this.scroll();
             this.$target.on('snippet-style-change snippet-style-preview', function () {
                 self.$target.data("snippet-view").set_values();
@@ -1472,9 +1475,6 @@
             this.$target.find(".parallax")
                 .css("background-position", '')
                 .removeAttr("data-scroll-background-offset");
-        },
-        _drag_and_drop: function(){
-            this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
         }
     });
 
