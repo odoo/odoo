@@ -155,9 +155,7 @@
             <field name="inherit_id" ref="sale_team.crm_case_section_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
-                    <div name="options_active">
-                       <h6><field name="use_leads"/><label for="use_leads" string="Leads"/></h6>
-                    </div>
+                    <h6><field name="use_leads"/><label for="use_leads" string="Leads"/></h6>
                 </xpath>
                 <xpath expr="//group/field[@name='active']" position="inside">
                     <group>
