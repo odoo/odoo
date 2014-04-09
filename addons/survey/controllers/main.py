@@ -80,7 +80,7 @@ class WebsiteSurvey(http.Controller):
 
         # Test mode
         if token and token == "phantom":
-            _logger.error("[survey] Phantom mode")
+            _logger.info("[survey] Phantom mode")
             user_input_id = user_input_obj.create(cr, uid, {'survey_id': survey.id, 'test_entry': True}, context=context)
             user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
             data = {'survey': survey, 'page': None, 'token': user_input.token}
