@@ -34,7 +34,7 @@ class stock_landed_cost(osv.osv):
         for cost in self.browse(cr, uid, ids, context=context):
             total = 0.0
             for line in cost.cost_lines:
-                total += line.price_subtotal
+                total += line.price_unit
             result[cost.id] = total
         return result
 
@@ -96,12 +96,6 @@ class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
     _description = 'Stock Landed Cost Lines'
 
-    def _amount_subtotal(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            result[line.id] = (line.quantity * line.price_unit)
-        return result
-
     def onchange_product_id(self, cr, uid, ids, product_id=False, quantity=0.0, uom_id=False, price_unit=0.0, account_id=False, context=None):
         result = {}
         if not product_id:
@@ -111,24 +105,15 @@ class stock_landed_cost_lines(osv.osv):
         result['name'] = product.name
         result['split_method'] = product.split_method
         result['price_unit'] = product.standard_price
-        result['uom_id'] = product.uom_id.id
         return {'value': result}
 
     _columns = {
         'name': fields.char('Description', size=256),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'uom_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null', select=True),
-        'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method'),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
-        'price_subtotal': fields.function(_amount_subtotal, string='Amount', type='float', digits_compute= dp.get_precision('Account'), store=True),
-    }
-
-    _defaults = {
-        'quantity': 1.0,
-        'split_method': 'equal',
     }
 
 class stock_valuation_adjustment_lines(osv.osv):
