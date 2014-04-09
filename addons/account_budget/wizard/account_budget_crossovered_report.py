@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
+import time
 from openerp.osv import fields, osv
+
 
 class account_budget_crossvered_report(osv.osv_memory):
 
@@ -40,16 +41,12 @@ class account_budget_crossvered_report(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
-             'ids': context.get('active_ids',[]),
-             'model': 'crossovered.budget',
-             'form': data
+            'ids': context.get('active_ids', []),
+            'model': 'crossovered.budget',
+            'form': data
         }
+        datas['form']['ids'] = datas['ids']
         datas['form']['report'] = 'analytic-full'
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'crossovered.budget.report',
-            'datas': datas,
-        }
-
+        return self.pool['report'].get_action(cr, uid, ids, 'account_budget.report_crossoveredbudget', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
