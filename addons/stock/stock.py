@@ -2588,7 +2588,7 @@ class stock_inventory(osv.osv):
 
     def _get_th_inventory_lines(self, cr, uid, inventory, context=None):
         th_vals = []
-        for th_line in inventory.theoretical_inventory_lines:
+        for th_line in inventory.theoretical_line_ids:
             th_vals.append({
                 'product_id': th_line.product_id.id,
                 'product_qty': th_line.product_qty,
@@ -2603,7 +2603,6 @@ class stock_inventory(osv.osv):
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
-    _rec_name = "inventory_id"
     _order = "inventory_id, location_name, product_code, product_name, prodlot_name"
 
     def _get_product_name_change(self, cr, uid, ids, context=None):
@@ -2696,8 +2695,20 @@ class stock_inventory_line(osv.osv):
 
 class stock_theoretical_inventory_line(osv.osv):
     """ Simple copy of the inventory line table used to keep track of the theoretical inventory lines that should be recorded in inventories. It's filled at the time an inventory is started and checked and the time it's done to see the difference and apply stock move accordingly. We could have used another relation between inventory and inventory lines but having a second table is easier to make sure we don't introduce any side effect """
-    _inherit = "stock.inventory.line"
     _name = "stock.theoretical.inventory.line"
+    _columns = {
+        'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, select=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
+        'package_id': fields.many2one('stock.quant.package', 'Pack', select=True),
+        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'product_qty': fields.float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
+        'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
+        'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
+        'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
+        'th_qty': fields.float('Theoretical Quantity', readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Owner'),
+    }
 
 
 #----------------------------------------------------------
