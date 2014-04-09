@@ -125,12 +125,7 @@ $(document).ready(function () {
     // });
 
     // Launch prefilling
-    prefill().then(function(){
-        // Activate the print dialog if needed
-        if (print_mode){
-            window.print();
-        }
-    });
+    prefill();
 
     console.debug("[survey] Custom JS for survey loaded!");
 });
