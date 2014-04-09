@@ -2259,7 +2259,7 @@ class BaseModel(object):
                 'year': 'YYYY'
             }
             time_intervals = {
-                'day': dateutil.relativedelta.relativedelta(months=3),
+                'day': dateutil.relativedelta.relativedelta(days=1),
                 'week': datetime.timedelta(days=7),
                 'month': dateutil.relativedelta.relativedelta(months=1),
                 'quarter': dateutil.relativedelta.relativedelta(months=3),
