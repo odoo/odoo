@@ -186,7 +186,7 @@ class base_gengo_translations(osv.osv_memory):
                     'comment': comment,
                     'callback_url': self.pool.get('ir.config_parameter').get_param(cr, uid,'web.base.url') + '/website/gengo_callback'
                 }
-        return {'jobs': jobs}
+        return {'jobs': jobs, 'as_group': 1}
 
 
     def _send_translation_terms(self, cr, uid, term_ids, context=None):
