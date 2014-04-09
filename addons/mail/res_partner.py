@@ -30,8 +30,8 @@ class res_partner_mail(osv.Model):
     _mail_flat_thread = False
 
     _columns = {
-        'notification_email_send': fields.selection([
-            ('never', 'Never'),
+        'notify_email': fields.selection([
+            ('none', 'Never'),
             ('always', 'All Messages'),
             ], 'Receive Messages by Email', required=True,
             help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
@@ -40,7 +40,7 @@ class res_partner_mail(osv.Model):
     }
 
     _defaults = {
-        'notification_email_send': lambda *args: 'always'
+        'notify_email': lambda *args: 'always'
     }
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

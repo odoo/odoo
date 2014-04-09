@@ -96,10 +96,10 @@ class mail_notification(osv.Model):
             if message.author_id and message.author_id.email == partner.email:
                 continue
             # Partner does not want to receive any emails or is opt-out
-            if partner.notification_email_send == 'never':
+            if partner.notify_email == 'none':
                 continue
             # Partner wants to receive emails, comments and notification
-            if partner.notification_email_send == 'always' and message.type not in ('email', 'comment', 'notification'):
+            if partner.notify_email == 'always' and message.type not in ('email', 'comment', 'notification'):
                 continue
             notify_pids.append(partner.id)
         return notify_pids
