@@ -83,6 +83,7 @@ class product_pricelist(report_sxw.rml_parse):
         cat_ids=[]
         res=[]
         self.pricelist = form['price_list']
+        self.partner_id = form['partner_id']
         self._set_quantity(form)
         pool = pooler.get_pool(self.cr.dbname)
         pro_ids=[]
@@ -108,17 +109,18 @@ class product_pricelist(report_sxw.rml_parse):
                     if qty == 0:
                         val['qty'+str(i)] = 0.0
                     else:
-                        val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
+                        val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty, partner_id=self.partner_id)
                     i += 1
                 products.append(val)
             res.append({'name':cat[1],'products': products})
         return res
 
-    def _get_price(self, pricelist_id, product_id, qty):
+    def _get_price(self, pricelist_id, product_id, qty, partner_id=None):
         sale_price_digits = self.get_digits(dp='Product Price')
         pool = pooler.get_pool(self.cr.dbname)
         pricelist = self.pool.get('product.pricelist').browse(self.cr, self.uid, [pricelist_id], context=self.localcontext)[0]
-        price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)
+        price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, partner=partner_id, context=self.localcontext)
+
         if price_dict[pricelist_id]:
             price = self.formatLang(price_dict[pricelist_id], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         else:
