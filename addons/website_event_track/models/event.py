@@ -27,6 +27,7 @@ import pytz
 from pytz import timezone
 from collections import OrderedDict
 from openerp import tools
+from operator import itemgetter
 
 class event_track_tag(osv.osv):
     _name = "event.track.tag"
@@ -216,7 +217,7 @@ class event_track(osv.osv):
         '''
         local_dt = (datetime.datetime.strptime(time, tools.DEFAULT_SERVER_DATETIME_FORMAT)).replace(tzinfo=pytz.utc).astimezone(local_tz)
         local_tz.normalize(local_dt)
-        return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime('%m-%d-%y') 
+        return local_dt, local_dt + datetime.timedelta(minutes = duration), local_dt.strftime(tools.DEFAULT_SERVER_DATE_FORMAT) 
 
     @staticmethod
     def generate_slots(date_and_durations, local_tz):
@@ -312,22 +313,34 @@ class event_track(osv.osv):
                         row_skip_td[track_day][location_key] = row_skip_td[track_day] [location_key] + skip_time
         return row_skip_td, sort_tracks, talks
         
-    def get_location(self, cr, uid, location_list):
+    def get_location(self, cr, uid, track_day, event_track):
         '''
         Params:
-        location list: List
-        rtype:List of location with name
+            track_day: List
+            event_track: List
+        rtype: Dictionary containing {day:[(ID1, Name1),(ID2, Name2)],day1:[(ID3, Name3)]}
+            **ID,Name of locations
         '''
+        room_list = {}
         location_object = self.pool.get('event.track.location')
-        locations = []
-        for location_id in location_list:
-            locations.append([location_id, location_object.browse(cr, uid, location_id).name])
-        return locations
+        
+        #Create Key(day) to display its related locations
+        for day in track_day:room_list[day]= []
+        
+        #Add location according to DAY 
+        for track in event_track:
+            day_location_list = room_list[track['date'][:10]]
+            if track['location_id'] and track['location_id'][0] not in [element[0] for element in day_location_list]: 
+                day_location_list.append([track['location_id'][0], location_object.browse(cr, uid, track['location_id'][0]).name])
+        #sort locations
+        for day in room_list:room_list[day]= sorted(room_list[day], key=itemgetter(0))
+        return room_list
+        
 
     def get_sorted_tracks(self, cr, uid, event, context=None):
         '''
         Params:
-        event: Event module's browse object.
+            event: Event module's browse object.
         
         rtype: Dictionary containing
             event: event object
@@ -347,11 +360,11 @@ class event_track(osv.osv):
         row_skip_td, sort_tracks, talks = event_track.calculate_and_sort(sort_tracks)
         return  {
             'event': event,
-            'room_list': self.get_location(cr, uid, set([track['location_id'][0] for track in event_tracks if track['location_id']])),
+            'location_by_days': self.get_location(cr, uid, sort_tracks.keys(), event_tracks),
             'days': sort_tracks,
             'row_skip_td': row_skip_td,
             'talks': talks,
-            'format_date': [(datetime.datetime.strptime(day, '%m-%d-%y')).strftime("%d %B, %Y") for day in sort_tracks.keys()],
+            'format_date': [(datetime.datetime.strptime(day, tools.DEFAULT_SERVER_DATE_FORMAT)).strftime("%d %B, %Y") for day in sort_tracks.keys()],
         }
 
 #

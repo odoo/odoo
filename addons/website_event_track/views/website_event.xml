@@ -56,6 +56,7 @@
             <div class="col-md-12" id="right_column">
                 <t t-foreach="days" t-as="day">
                     <t t-set="index_of_day" t-value="(days.keys()).index(day)" />
+                    <t t-set="room_list"  t-value="location_by_days[day]" />
                     <h3 class="page-header mt0">
                         <t t-esc="format_date[index_of_day]" />
                         <small><t t-esc="(talks[day])"/> talks</small>
@@ -64,19 +65,33 @@
                         </div>
                     </h3>
                     <table id="table_search" class="table table-bordered table-condensed">
-                        <t t-set="td_width" t-value="90/len(room_list)"/>
+                        <t t-if="len(room_list)"> <t t-set="td_width" t-value="90/len(room_list)"/></t>
+                        <t t-if="not len(room_list)"> <t t-set="td_width" t-value="1"/></t>
                         <t t-set="index" t-value="0"/>
                         <t t-set="for_all" t-value="True"/>
                         <tr id="agenda_th">
                             <th t-attf-style="width:#{10}%;"><small title="Timezone" class="text-muted"> <t t-esc= "event.timezone_of_event"/>* </small></th>
                             <t t-foreach="room_list" t-as="room">
-                                <th t-attf-style="width: #{td_width}px;" class="active"><bold><t t-esc="room[1]"/></bold></th>
+                                <th t-attf-style="width: #{td_width}px;" class="active text-center"><bold><t t-esc="room[1]"/></bold></th>
+                            </t>
+                            <t t-if="len(room_list) == 0">
+                                <th class="active"> </th>
                             </t>
                         </tr>
                         <t t-foreach="days[day]" t-as="slot">
                             <t t-set="skip_it" t-value="row_skip_td[day].keys()"/>
                             <tr id="agenda_tr">
                                 <td t-attf-style="width:#{10}%;"><t t-esc= "slot"/></td>
+                                <t t-if="not len(room_list)">
+                                    <t t-if="len(days[day][slot])">
+                                        <t t-set="record" t-value="days[day][slot][0]"/>
+                                        <td id="seach_enable" t-attf-class="event_color_#{record['color']} text-center">
+                                            <img t-if="not record['website_published']" title="Not Published" style="width:10px; height:10px" src="/web/static/src/img/icons/gtk-no.png" />
+                                            <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([record['id'], record['name']]) }"> <t t-esc="record['name']" /> </a>
+                                            <br/><small class="text-muted"> <t t-esc="record['speaker_ids']" /></small>
+                                        </td>
+                                    </t>
+                                </t>
                                 <t t-foreach="room_list" t-as="room">
                                     <t t-set="sid" t-value="not (room[0] in skip_it and slot in row_skip_td[day][room[0]])" />
                                     <t t-if="sid">
@@ -100,7 +115,7 @@
                                                     </td>
                                                 </t>
                                                 <t  t-if="record['location_id'][0] == room[0]" >
-                                                    <td t-att-rowspan="record['row_span']"  t-attf-style="width: #{td_width}px;" t-attf-class="event_color_#{record['color']}" id="seach_enable">
+                                                    <td t-att-rowspan="record['row_span']"  t-attf-style="width: #{td_width}px;" t-attf-class="event_color_#{record['color']} text-center" id="seach_enable">
                                                         <img t-if="not record['website_published']" title="Not Published" style="width:10px; height:10px" src="/web/static/src/img/icons/gtk-no.png" />
                                                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug([record['id'], record['name']]) }"> <t t-esc="record['name']" /> </a>
                                                         <br/><small class="text-muted"> <t t-esc="record['speaker_ids']" /></small>
