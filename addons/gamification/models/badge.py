@@ -62,7 +62,7 @@ class gamification_badge_user(osv.Model):
         template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
         for badge_user in self.browse(cr, uid, ids, context=context):
             body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
-            res = self.message_post(cr, uid, badge_user.id, body=body_html, partner_ids=[badge_user.user_id.partner_id.id], context=context)
+            res = user_obj.message_post(cr, uid, badge_user.user_id.id, body=body_html, partner_ids=[badge_user.user_id.partner_id.id], context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
