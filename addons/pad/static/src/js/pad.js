@@ -13,6 +13,7 @@ openerp.pad = function(instance) {
                 event.preventDefault();
                 self.set("configured", true);
             });
+            this.pad_loading_request = null;
         },
         initialize_content: function() {
             var self = this;
@@ -25,23 +26,20 @@ openerp.pad = function(instance) {
                 self.$(".oe_unconfigured").toggle(!configured);
                 self.$(".oe_configured").toggle(configured);
             });
-            this.on("change:effective_readonly", this, this.render_value);
+            this.render_value();
         },
         render_value: function() {
             var self = this;
-            this._configured_deferred.always(function() {
+            $.when(this._configured_deferred, this.pad_loading_request).always(function() {
                 if (! self.get('configured')) {
                     return;
                 };
                 var value = self.get('value');
                 if (self.get('effective_readonly')) {
                     if (_.str.startsWith(value, 'http')) {
-                        self.$('.oe_pad_content').addClass('oe_pad_loading')
-                        this.pad_loading_request = self.view.dataset.call('pad_get_content', {url: value}).done(function(data) {
-                            if (self.$('.oe_pad_loading').length) {
-                                self.$('.oe_pad_content').removeClass('oe_pad_loading').html('<div class="oe_pad_readonly"><div>');
-                                self.$('.oe_pad_readonly').html(data);
-                            }
+                        self.pad_loading_request = self.view.dataset.call('pad_get_content', {url: value}).done(function(data) {
+                            self.$('.oe_pad_content').removeClass('oe_pad_loading').html('<div class="oe_pad_readonly"><div>');
+                            self.$('.oe_pad_readonly').html(data);
                         }).fail(function() {
                             self.$('.oe_pad_content').text(_t('Unable to load pad'));
                         });
