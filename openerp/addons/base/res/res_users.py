@@ -388,7 +388,7 @@ class res_users(osv.osv):
         if not password:
             return False
         user_id = False
-        cr = self.pool.get_cursor()
+        cr = self.pool.cursor()
         try:
             # autocommit: our single update request will be performed atomically.
             # (In this way, there is no opportunity to have two transactions
@@ -440,7 +440,7 @@ class res_users(osv.osv):
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
             if user_agent_env and user_agent_env.get('base_location'):
-                cr = self.pool.get_cursor()
+                cr = self.pool.cursor()
                 try:
                     base = user_agent_env['base_location']
                     ICP = self.pool['ir.config_parameter']
@@ -461,7 +461,7 @@ class res_users(osv.osv):
             raise openerp.exceptions.AccessDenied()
         if self._uid_cache.get(db, {}).get(uid) == passwd:
             return
-        cr = self.pool.get_cursor()
+        cr = self.pool.cursor()
         try:
             self.check_credentials(cr, uid, passwd)
             if self._uid_cache.has_key(db):

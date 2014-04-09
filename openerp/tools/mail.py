@@ -625,7 +625,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            local_cr = cr = openerp.registry(db_name).get_cursor()
+            local_cr = cr = openerp.registry(db_name).cursor()
         else:
             raise Exception("No database cursor found, please pass one explicitly")
 

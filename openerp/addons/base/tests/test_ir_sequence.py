@@ -21,7 +21,7 @@ def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
 
 def cursor():
-    return openerp.modules.registry.RegistryManager.get(DB).get_cursor()
+    return openerp.modules.registry.RegistryManager.get(DB).cursor()
 
 
 def drop_sequence(code):

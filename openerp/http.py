@@ -235,7 +235,7 @@ class WebRequest(object):
         """
         # some magic to lazy create the cr
         if not self._cr:
-            self._cr = self.registry.get_cursor()
+            self._cr = self.registry.cursor()
         return self._cr
 
     def __enter__(self):

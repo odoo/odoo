@@ -71,7 +71,7 @@ class BaseCase(unittest2.TestCase):
     """
 
     def cursor(self):
-        return self.registry.get_cursor()
+        return self.registry.cursor()
 
     def ref(self, xid):
         """ Returns database ID corresponding to a given identifier.
@@ -120,7 +120,7 @@ class SingleTransactionCase(BaseCase):
     @classmethod
     def setUpClass(cls):
         cls.registry = RegistryManager.get(DB)
-        cls.cr = cls.registry.get_cursor()
+        cls.cr = cls.registry.cursor()
         cls.uid = openerp.SUPERUSER_ID
 
     @classmethod

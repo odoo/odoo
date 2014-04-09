@@ -78,7 +78,7 @@ class Registry(Mapping):
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
 
-        cr = self.get_cursor()
+        cr = self.cursor()
         has_unaccent = openerp.modules.db.has_unaccent(cr)
         if openerp.tools.config['unaccent'] and not has_unaccent:
             _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
@@ -203,27 +203,18 @@ class Registry(Mapping):
         self.test_cr = None
         RegistryManager.leave_test_mode()
 
-    def get_cursor(self):
-        """ Return a new cursor for the database. """
+    def cursor(self):
+        """ Return a new cursor for the database. The cursor itself may be used
+            as a context manager to commit/rollback and close automatically.
+        """
         if self.test_cr is not None:
             # While in test mode, we use one special cursor across requests. The
             # test cursor uses a reentrant lock to serialize accesses. The lock
-            # is granted here by get_cursor(), and automatically released by the
+            # is granted here by cursor(), and automatically released by the
             # cursor itself in its method close().
             self.test_cr.acquire()
             return self.test_cr
         return self.db.cursor()
-
-    @contextmanager
-    def cursor(self, auto_commit=True):
-        """ Manage a new cursor; commit, rollback and closing are automatic. """
-        cr = self.get_cursor()
-        try:
-            yield cr
-            if auto_commit:
-                cr.commit()
-        finally:
-            cr.close()
 
 class DummyRLock(object):
     """ Dummy reentrant lock, to be used while running rpc and js tests """
@@ -314,7 +305,7 @@ class RegistryManager(object):
             # Yeah, crazy.
             registry = cls.registries[db_name]
 
-            cr = registry.get_cursor()
+            cr = registry.cursor()
             try:
                 registry.do_parent_store(cr)
                 cr.commit()
@@ -370,7 +361,7 @@ class RegistryManager(object):
         changed = False
         if openerp.multi_process and db_name in cls.registries:
             registry = cls.get(db_name)
-            cr = registry.get_cursor()
+            cr = registry.cursor()
             try:
                 cr.execute("""
                     SELECT base_registry_signaling.last_value,
@@ -416,7 +407,7 @@ class RegistryManager(object):
             registry = cls.get(db_name)
             if registry.any_cache_cleared():
                 _logger.info("At least one model cache has been cleared, signaling through the database.")
-                cr = registry.get_cursor()
+                cr = registry.cursor()
                 r = 1
                 try:
                     cr.execute("select nextval('base_cache_signaling')")
@@ -431,7 +422,7 @@ class RegistryManager(object):
         if openerp.multi_process and db_name in cls.registries:
             _logger.info("Registry changed, signaling through the database")
             registry = cls.get(db_name)
-            cr = registry.get_cursor()
+            cr = registry.cursor()
             r = 1
             try:
                 cr.execute("select nextval('base_registry_signaling')")

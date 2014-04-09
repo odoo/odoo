@@ -21,12 +21,15 @@ class test_cr_execute(unittest2.TestCase):
         """
         Try to use iterable but non-list or int params in query parameters.
         """
-        with registry().cursor(auto_commit=False) as cr:
+        cr = registry().cursor()
+        try:
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE login=%s", 'admin')
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", 1)
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE id=%s", '1')
+        finally:
+            cr.close()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
