@@ -349,7 +349,7 @@
                                 <group string="Allow Comments" attrs="{'invisible':[('type','not in',['simple_choice','multiple_choice', 'matrix'])]}">
                                     <field name='comments_allowed' />
                                     <field name='comments_message' attrs="{'invisible': [('comments_allowed', '=', False)]}"/>
-                                    <field name='comment_count_as_answer' attrs="{'invisible': [('comments_allowed', '=', False)]}" />
+                                    <field name='comment_count_as_answer' attrs="{'invisible': ['|', ('comments_allowed', '=', False), ('type', 'in', ['matrix'])]}" />
                                 </group>
                             </page>
                         </notebook>
