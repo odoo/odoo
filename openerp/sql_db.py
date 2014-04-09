@@ -172,7 +172,7 @@ class Cursor(object):
         self.sql_log_count = 0
         self.__closed = True    # avoid the call of close() (by __del__) if an exception
                                 # is raised by any of the following initialisations
-        self._pool = pool
+        self.__pool = pool
         self.dbname = dbname
 
         # Whether to enable snapshot isolation level for this cursor.
@@ -318,7 +318,7 @@ class Cursor(object):
             chosen_template = tools.config['db_template']
             templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
             keep_in_pool = self.dbname not in templates_list
-            self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+            self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check
     def autocommit(self, on):
@@ -476,12 +476,12 @@ class Connection(object):
 
     def __init__(self, pool, dbname):
         self.dbname = dbname
-        self._pool = pool
+        self.__pool = pool
 
     def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dbname)
-        return Cursor(self._pool, self.dbname, serialized=serialized)
+        return Cursor(self.__pool, self.dbname, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
