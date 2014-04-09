@@ -125,30 +125,14 @@ class WebsiteForum(http.Controller):
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
-
-        #maintain total views on post.
-        # Statistics = request.registry['website.forum.post.statistics']
-        # post_obj = request.registry['website.forum.post']
-        # if request.session.uid:
-        #     view_ids = Statistics.search(cr, uid, [('user_id', '=', request.session.uid), ('post_id', '=', question.id)], context=context)
-        #     if not view_ids:
-        #         Statistics.create(cr, SUPERUSER_ID, {'user_id': request.session.uid, 'post_id': question.id }, context=context)
-        # else:
-        #     request.session[request.session_id] = request.session.get(request.session_id, [])
-        #     if not (question.id in request.session[request.session_id]):
-        #         request.session[request.session_id].append(question.id)
-        #         post_obj._set_view_count(cr, SUPERUSER_ID, [question.id], 'views', 1, {}, context=context)
+        # increment view counter
+        request.registry['website.forum.post'].set_viewed(cr, uid, [question.id], context=context)
 
         #Check that user have answered question or not.
         answer_done = False
         for answer in question.child_ids:
             if answer.user_id.id == request.uid:
                 answer_done = True
-
-        #Check that user is following question or not
-        partner_id = request.registry['res.users'].browse(cr, uid, request.uid, context=context).partner_id.id
-        message_follower_ids = [follower.id for follower in question.message_follower_ids]
-        following = True if partner_id in message_follower_ids else False
 
         filters = 'question'
         user = request.registry['res.users'].browse(cr, uid, uid, context=None)
@@ -158,7 +142,7 @@ class WebsiteForum(http.Controller):
             'notifications': self._get_notifications(),
             'searches': post,
             'filters': filters,
-            'following': following,
+            'following': question.message_is_follower,
             'answer_done': answer_done,
             'reversed': reversed,
             'forum': forum,

@@ -120,6 +120,7 @@ class Post(osv.Model):
 
     _defaults = {
         'state': 'active',
+        'views': 0,
         'vote_count': 0,
         'active': True,
     }
@@ -184,6 +185,11 @@ class Post(osv.Model):
         #     self.popol['website.forum.post.vote'].create(cr, uid, {'post_id': post_id, 'vote': vote}, context=context)
         # post.refresh()
         # return {'vote_count': post.vote_count}
+
+    def set_viewed(self, cr, uid, ids, context=None):
+        for post in self.browse(cr, uid, ids, context=context):
+            self.write(cr, uid, [post.id], {'views': post.views + 1}, context=context)
+        return True
 
 
 class PostReason(osv.Model):
