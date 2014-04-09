@@ -89,7 +89,7 @@ class Cursor(object):
         self.sql_log_count = 0
         self.__closed = True    # avoid the call of close() (by __del__) if an exception
                                 # is raised by any of the following initialisations
-        self._pool = pool
+        self.__pool = pool
         self.dbname = dbname
         self._serialized = serialized
         self._cnx = pool.borrow(dsn(dbname))
@@ -217,7 +217,7 @@ class Cursor(object):
             self._cnx.leaked = True
         else:
             keep_in_pool = self.dbname not in ('template1', 'template0', 'postgres')
-            self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+            self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check
     def autocommit(self, on):
@@ -337,12 +337,12 @@ class Connection(object):
 
     def __init__(self, pool, dbname):
         self.dbname = dbname
-        self._pool = pool
+        self.__pool = pool
 
     def cursor(self, serialized=False):
         cursor_type = serialized and 'serialized ' or ''
         self.__logger.log(logging.DEBUG_SQL, 'create %scursor to %r', cursor_type, self.dbname)
-        return Cursor(self._pool, self.dbname, serialized=serialized)
+        return Cursor(self.__pool, self.dbname, serialized=serialized)
 
     def serialized_cursor(self):
         return self.cursor(True)
