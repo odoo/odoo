@@ -144,9 +144,10 @@ class module(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
          res = super(module, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+         result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_server_module_immediate_install')[1]
          if view_type == 'form':
              if res.get('toolbar',False):
-                 list = [rec for rec in res['toolbar']['action'] if rec.get('name', False) != 'Module Immediate Install']
+                 list = [rec for rec in res['toolbar']['action'] if rec.get('id', False) != result]
                  res['toolbar'] = {'action': list}
          return res
 
