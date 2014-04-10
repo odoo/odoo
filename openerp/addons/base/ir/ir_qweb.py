@@ -962,11 +962,11 @@ class AssetsBundle(object):
                 href = el.attrib.get('href')
                 if el.tag == 'style':
                     self.stylesheets.append(StylesheetAsset(inline=el.text))
-                elif el.tag == 'link' and el.attrib['rel'] == 'stylesheet' and self.is_internal_url(href):
+                elif el.tag == 'link' and el.attrib['rel'] == 'stylesheet' and self.can_aggregate(href):
                     self.stylesheets.append(StylesheetAsset(url=href))
                 elif el.tag == 'script' and not src:
                     self.javascripts.append(JavascriptAsset(inline=el.text))
-                elif el.tag == 'script' and self.is_internal_url(src):
+                elif el.tag == 'script' and self.can_aggregate(src):
                     self.javascripts.append(JavascriptAsset(url=src))
                 else:
                     self.remains.append(lxml.html.tostring(el))
@@ -977,8 +977,8 @@ class AssetsBundle(object):
                     # notYETimplementederror
                     raise NotImplementedError
 
-    def is_internal_url(self, url):
-        return not urlparse(url).netloc
+    def can_aggregate(self, url):
+        return not urlparse(url).netloc and not url.startswith('/web/css') and not url.startswith('/web/js')
 
     def to_html(self, sep='\n'):
         response = list(self.remains)
