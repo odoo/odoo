@@ -91,7 +91,7 @@ class IdeaIdea(osv.Model):
     # Technical stuff
     #------------------------------------------------------
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
@@ -103,7 +103,7 @@ class IdeaIdea(osv.Model):
                         'state_count': 0,
                     } for state_value, state_name in states]
             # Get standard results
-            read_group_res = super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
+            read_group_res = super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby, lazy)
             # Update standard results with default results
             result = []
             for state_value, state_name in states:
@@ -114,7 +114,7 @@ class IdeaIdea(osv.Model):
                 result.append(res[0])
             return result
         else:
-            return super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+            return super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
 
     #------------------------------------------------------
     # Workflow / Actions

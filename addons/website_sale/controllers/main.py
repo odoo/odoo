@@ -589,7 +589,7 @@ class Ecommerce(http.Controller):
 
         # if no sale order at this stage: back to checkout beginning
         order = self.get_order()
-        if not order or order.state != 'draft' or not order.order_line:
+        if not order or order.state not in ['draft', 'shopping_cart'] or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect("/shop")
         # alread a transaction: forward to confirmation
