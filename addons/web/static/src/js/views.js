@@ -410,10 +410,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
             this.dialog_stop(executor.action);
             this.dialog = new instance.web.Dialog(this, {
+                title: executor.action.name,
                 dialogClass: executor.klass,
             });
             this.dialog.on("closing", null, options.on_close);
-            this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
                     $buttons: this.dialog.$buttons,
@@ -1223,7 +1223,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
-                instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
+                new instance.web.Dialog(this, { title: _t("Warning")}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
             var active_ids_context = {

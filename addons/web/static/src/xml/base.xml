@@ -32,7 +32,20 @@
         <t t-esc="message"/>
     </div>
 </t>
-
+<t t-name="Dialog">
+    <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title"><t t-raw="title"/></h3>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
