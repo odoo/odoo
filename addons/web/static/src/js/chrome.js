@@ -379,7 +379,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
                     this.$el.parents('.modal').modal('hide');
                 }}
             ],
-        }, QWeb.render('CrashManager.warning', {error: error}));
+        }, QWeb.render('CrashManager.warning', {error: error})).open();
         this.destroy();
     }
 });
