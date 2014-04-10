@@ -156,11 +156,13 @@ class QWeb(orm.AbstractModel):
             dom = xml.dom.minidom.parse(document)
 
         for node in dom.documentElement.childNodes:
-            if node.nodeType == self.node.ELEMENT_NODE and node.getAttribute('t-name'):
-                name = str(node.getAttribute("t-name"))
-                self.add_template(qwebcontext, name, node)
-                if res_id:
+            if node.nodeType == self.node.ELEMENT_NODE:
+                if node.getAttribute('t-name'):
+                    name = str(node.getAttribute("t-name"))
+                    self.add_template(qwebcontext, name, node)
+                if res_id and node.tagName == "t":
                     self.add_template(qwebcontext, res_id, node)
+                    res_id = None
 
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
