@@ -26,6 +26,7 @@ from datetime import datetime
 
 import re
 import uuid
+import urlparse
 
 emails_split = re.compile(r"[;,\n\r]+")
 
@@ -137,8 +138,12 @@ class survey_mail_compose_message(osv.TransientModel):
             """ Create one mail by recipients and replace __URL__ by link with identification token """
             #set url
             url = wizard.survey_id.public_url
+
+            url = urlparse.urlparse(url).path[1:]  # dirty hack to avoid incorrect urls
+
             if token:
                 url = url + '/' + token
+
             # post the message
             values = {
                 'model': None,
