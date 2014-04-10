@@ -2390,9 +2390,8 @@ class stock_inventory(osv.osv):
 
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
-        'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The date that will be used for the validation date of the stock move related to this inventory (and for the valuation accounting entries, if any)"),
+        'date': fields.datetime('Inventory Date', required=True, readonly=True, help="The date that will be used for the stock level check of the products and the validation of the stock move related to this inventory."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
-        'theoretical_line_ids': fields.one2many('stock.theoretical.inventory.line', 'inventory_id', 'Theoretical Inventory Lines', readonly=False, states={'done': [('readonly', True)]}),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
         'state': fields.selection(INVENTORY_STATE_SELECTION, 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -2500,15 +2499,9 @@ class stock_inventory(osv.osv):
             #first remove the existing stock moves linked to this inventory
             move_ids = [move.id for move in inventory.move_ids]
             stock_move_obj.unlink(cr, uid, move_ids, context=context)
-            #compute what should be in the inventory lines
-            theorical_lines = self._get_th_inventory_lines(cr, uid, inventory, context=context)
             for line in inventory.line_ids:
-                #compare the inventory lines to the theorical ones and store the diff in theorical_lines
-                inventory_line_obj._resolve_inventory_line(cr, uid, line, theorical_lines, context=context)
-            #each theorical_lines where product_qty is not 0 is a difference for which we need to create a stock move
-            for todo_line in theorical_lines:
-                if todo_line['product_qty'] != 0:
-                    self._create_stock_move(cr, uid, inventory, todo_line, context=context)
+                #compare the checked quantities on inventory lines to the theorical one
+                inventory_line_obj._resolve_inventory_line(cr, uid, line, context=context)
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         """ Cancels the stock move and change inventory state to draft.
@@ -2524,29 +2517,22 @@ class stock_inventory(osv.osv):
 
     def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
-        th_inventory_line_obj = self.pool.get('stock.theoretical.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
-            #check inventory start date is allowed
-            if inventory.date > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
-                raise osv.except_osv(_('Error!'), _('It\'s impossible to confirm an inventory in the future. Please change the inventory date to proceed further.'))
             #clean the existing inventory lines before redoing an inventory proposal
             line_ids = [line.id for line in inventory.line_ids]
             inventory_line_obj.unlink(cr, uid, line_ids, context=context)
-            th_line_ids = [line.id for line in inventory.theoretical_line_ids]
-            th_inventory_line_obj.unlink(cr, uid, th_line_ids, context=context)
             #compute the inventory lines and create them
             vals = self._get_inventory_lines(cr, uid, inventory, context=context)
             for product_line in vals:
                 inventory_line_obj.create(cr, uid, product_line, context=context)
-                th_inventory_line_obj.create(cr, uid, product_line, context=context)
-        return self.write(cr, uid, ids, {'state': 'confirm'})
+        return self.write(cr, uid, ids, {'state': 'confirm', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_inventory_lines(self, cr, uid, inventory, context=None):
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')
         location_ids = location_obj.search(cr, uid, [('id', 'child_of', [inventory.location_id.id])], context=context)
         domain = ' location_id in %s'
-        args = (inventory.date, inventory.date, tuple(location_ids),)
+        args = (tuple(location_ids),)
         if inventory.partner_id:
             domain += ' and owner_id = %s'
             args += (inventory.partner_id.id,)
@@ -2562,36 +2548,7 @@ class stock_inventory(osv.osv):
 
         cr.execute('''
            SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
-           FROM ((SELECT
-                    stock_move.id::text || '-' || quant.id::text AS id,
-                    stock_move.location_dest_id AS location_id,
-                    stock_move.product_id,
-                    quant.qty AS qty,
-                    quant.owner_id,
-                    quant.package_id,
-                    quant.lot_id,
-                    stock_move.date
-                FROM
-                    stock_quant as quant, stock_quant_move_rel, stock_move
-                LEFT JOIN stock_location location ON (stock_move.location_dest_id = location.id)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id
-                AND stock_quant_move_rel.move_id = stock_move.id AND stock_move.date < %s
-                ) UNION
-                (SELECT
-                    '-' || stock_move.id::text || '-' || quant.id::text AS id,
-                    stock_move.location_id AS location_id,
-                    stock_move.product_id,
-                    - quant.qty AS qty,
-                    quant.owner_id,
-                    quant.package_id,
-                    quant.lot_id,
-                    stock_move.date
-                FROM
-                    stock_quant as quant, stock_quant_move_rel, stock_move
-                LEFT JOIN stock_location location ON (stock_move.location_id = location.id)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id
-                AND stock_quant_move_rel.move_id = stock_move.id AND stock_move.date < %s
-                )) AS subquery WHERE''' + domain + '''
+           FROM stock_quant WHERE''' + domain + '''
            GROUP BY product_id, location_id, lot_id, package_id, partner_id
         ''', args)
         vals = []
@@ -2607,20 +2564,6 @@ class stock_inventory(osv.osv):
                 product_line['product_uom_id'] = product.uom_id.id
             vals.append(product_line)
         return vals
-
-    def _get_th_inventory_lines(self, cr, uid, inventory, context=None):
-        th_vals = []
-        for th_line in inventory.theoretical_line_ids:
-            th_vals.append({
-                'product_id': th_line.product_id.id,
-                'product_uom_id': th_line.product_uom_id.id,
-                'product_qty': th_line.product_qty,
-                'location_id': th_line.location_id.id,
-                'prod_lot_id': th_line.prod_lot_id.id,
-                'package_id': th_line.package_id.id,
-                'partner_id': th_line.partner_id.id
-            })
-        return th_vals
 
 
 class stock_inventory_line(osv.osv):
@@ -2667,30 +2610,35 @@ class stock_inventory_line(osv.osv):
         'product_qty': 1,
     }
 
-    def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
-        #TODO : package_id management !
-        found = False
-        uom_obj = self.pool.get('product.uom')
-        for th_line in theorical_lines:
-            #We try to match the inventory line with a theorical line with same product, lot, location and owner
-            if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and th_line['prod_lot_id'] == inventory_line.prod_lot_id.id and th_line['partner_id'] == inventory_line.partner_id.id:
-                uom_reference = inventory_line.product_id.uom_id
-                real_qty = uom_obj._compute_qty_obj(cr, uid, inventory_line.product_uom_id, inventory_line.product_qty, uom_reference)
-                th_line['product_qty'] -= real_qty
-                found = True
-                break
-        #if it was still not found, we add it to the theorical lines so that it will create a stock move for it
-        if not found:
-            vals = {
-                'inventory_id': inventory_line.inventory_id.id,
-                'location_id': inventory_line.location_id.id,
-                'product_id': inventory_line.product_id.id,
-                'product_uom_id': inventory_line.product_id.uom_id.id,
-                'product_qty': -inventory_line.product_qty,
-                'prod_lot_id': inventory_line.prod_lot_id.id,
-                'partner_id': inventory_line.partner_id.id,
-            }
-            theorical_lines.append(vals)
+    def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
+        stock_move_obj = self.pool.get('stock.move')
+        diff = inventory_line.th_qty - inventory_line.product_qty
+        if not diff:
+            return
+        #each theorical_lines where difference between theoretical and checked quantities is not 0 is a line for which we need to create a stock move
+        vals = {
+            'name': _('INV:') + (inventory_line.inventory_id.name or ''),
+            'product_id': inventory_line.product_id.id,
+            'product_uom': inventory_line.product_uom_id.id,
+            'date': inventory_line.inventory_id.date,
+            'company_id': inventory_line.inventory_id.company_id.id,
+            'inventory_id': inventory_line.inventory_id.id,
+            'state': 'confirmed',
+            'restrict_lot_id': inventory_line.prod_lot_id.id,
+            'restrict_partner_id': inventory_line.partner_id.id,
+         }
+        inventory_location_id = inventory_line.product_id.property_stock_inventory.id
+        if diff < 0:
+            #found more than expected
+            vals['location_id'] = inventory_location_id
+            vals['location_dest_id'] = inventory_line.location_id.id
+            vals['product_uom_qty'] = -diff
+        else:
+            #found less than expected
+            vals['location_id'] = inventory_line.location_id.id
+            vals['location_dest_id'] = inventory_location_id
+            vals['product_uom_qty'] = diff
+        return stock_move_obj.create(cr, uid, vals, context=context)
 
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, owner_id=False, lot_id=False, package_id=False, context=None):
         """ Changes UoM and name if product_id changes.
@@ -2714,24 +2662,6 @@ class stock_inventory_line(osv.osv):
             uom_record = uom_obj.browse(cr, uid, uom, context=context)
             th_qty = uom_obj._compute_qty_obj(cr, uid, obj_product.uom_id, th_qty, uom_record)
         return {'value': {'th_qty': th_qty, 'product_uom_id': uom or obj_product.uom_id.id}}
-
-
-class stock_theoretical_inventory_line(osv.osv):
-    """ Simple copy of the inventory line table used to keep track of the theoretical inventory lines that should be recorded in inventories. It's filled at the time an inventory is started and checked and the time it's done to see the difference and apply stock move accordingly. We could have used another relation between inventory and inventory lines but having a second table is easier to make sure we don't introduce any side effect """
-    _name = "stock.theoretical.inventory.line"
-    _columns = {
-        'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, select=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'package_id': fields.many2one('stock.quant.package', 'Pack', select=True),
-        'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'product_qty': fields.float('Checked Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
-        'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
-        'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'th_qty': fields.float('Theoretical Quantity', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Owner'),
-    }
 
 
 #----------------------------------------------------------

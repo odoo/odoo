@@ -138,6 +138,9 @@
                                     <field name="state" invisible="True"/>
                                 </tree>
                             </field>
+                            <p class="oe_grey">
+                                Inventory adjustments will be made by comparing the theoretical and the checked quantities. You can delete lines to ignore some products. If a product is not at the right place, set the checked quantity to 0 and create a new line with correct location.
+                            </p>
                         </page>
                         <page string="Inventory Adjustments" attrs="{'invisible': [('state', '!=', 'done')]}">
                             <field name="move_ids">
