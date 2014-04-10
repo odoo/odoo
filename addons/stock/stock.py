@@ -2640,28 +2640,39 @@ class stock_inventory_line(osv.osv):
             vals['product_uom_qty'] = diff
         return stock_move_obj.create(cr, uid, vals, context=context)
 
-    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, owner_id=False, lot_id=False, package_id=False, context=None):
-        """ Changes UoM and name if product_id changes.
+    def restrict_change(self, cr, uid, ids, th_qty, context=None):
+        if ids and th_qty:
+            #if the user try to modify a line prepared by openerp, reject the change and display an error message explaining how he should do
+            old_value = self.browse(cr, uid, ids[0], context=context)
+            return {
+                'value': {
+                    'product_id': old_value.product_id.id,
+                    'product_uom_id': old_value.product_uom_id.id,
+                    'location_id': old_value.location_id.id,
+                    'prod_lot_id': old_value.prod_lot_id.id,
+                    'package_id': old_value.package_id.id,
+                    'partner_id': old_value.partner_id.id,
+                    },
+                'warning': {
+                    'title': _('Error'),
+                    'message': _('You can only change the checked quantity of an existing inventory line. If you want modify a data, please set the checked quantity to 0 and create a new inventory line.')
+                }
+            }
+        return {}
+
+    def on_change_product_id(self, cr, uid, ids, product, uom, th_qty, context=None):
+        """ Changes UoM
         @param location_id: Location id
         @param product: Changed product_id
         @param uom: UoM product
         @return:  Dictionary of changed values
         """
-        context = context or {}
+        if ids and th_qty:
+            return self.restrict_change(cr, uid, ids, th_qty, context=context)
         if not product:
-            return {'value': {'product_qty': 0.0, 'product_uom_id': False}}
-        uom_obj = self.pool.get('product.uom')
-        ctx = context.copy()
-        ctx['location'] = location_id
-        ctx['lot_id'] = lot_id
-        ctx['owner_id'] = owner_id
-        ctx['package_id'] = package_id
-        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
-        th_qty = obj_product.qty_available
-        if uom and uom != obj_product.uom_id.id:
-            uom_record = uom_obj.browse(cr, uid, uom, context=context)
-            th_qty = uom_obj._compute_qty_obj(cr, uid, obj_product.uom_id, th_qty, uom_record)
-        return {'value': {'th_qty': th_qty, 'product_uom_id': uom or obj_product.uom_id.id}}
+            return {'value': {'product_uom_id': False}}
+        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        return {'value': {'product_uom_id': uom or obj_product.uom_id.id}}
 
 
 #----------------------------------------------------------
