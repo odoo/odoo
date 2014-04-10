@@ -161,21 +161,10 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
 def execute_kw(db, uid, obj, method, args, kw=None):
     return execute(db, uid, obj, method, *args, **kw or {})
 
-@contextmanager
-def closing_cr_and_commit(cr):
-    try:
-        yield cr
-        cr.commit()
-    except Exception:
-        cr.rollback()
-        raise
-    finally:
-        cr.close()
-
 @check
 def execute(db, uid, obj, method, *args, **kw):
     threading.currentThread().dbname = db
-    with closing_cr_and_commit(openerp.registry(db).db.cursor()) as cr:
+    with openerp.registry(db).cursor() as cr:
         if method.startswith('_'):
             raise except_orm('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
         res = execute_cr(cr, uid, obj, method, *args, **kw)
@@ -190,7 +179,7 @@ def exec_workflow_cr(cr, uid, obj, signal, *args):
 
 @check
 def exec_workflow(db, uid, obj, signal, *args):
-    with closing_cr_and_commit(openerp.registry(db).db.cursor()) as cr:
+    with openerp.registry(db).cursor() as cr:
         return exec_workflow_cr(cr, uid, obj, signal, *args)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
