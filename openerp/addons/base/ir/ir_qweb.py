@@ -934,6 +934,7 @@ class AssetsBundle(object):
                 try:
                     self.remains.append(lxml.html.tostring(el))
                 except Exception:
+                    # notYETimplementederror
                     raise NotImplementedError
 
     def is_internal_url(self, url):
@@ -946,6 +947,12 @@ class AssetsBundle(object):
         if self.stylesheets:
             response.insert(0, '<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
         return sep.join(response)
+
+    @property
+    def last_modified(self):
+        jsdates = [asset.last_modified for asset in self.javascripts]
+        cssdates = [asset.last_modified for asset in self.stylesheets]
+        return max(jsdates + cssdates) or datetime.datetime(1970, 1, 1)
 
     def js(self, minified=True):
         if minified:
@@ -975,23 +982,35 @@ class AssetsBundle(object):
 class WebAsset(object):
     def __init__(self, source=None, url=None, filename=None):
         self.source = source
-        self.filename = filename
+        self._filename = filename
         self.url = url
+
+    @property
+    def filename(self):
+        if self._filename:
+            return self._filename
+        module = filter(bool, self.url.split('/'))[0]
+        mpath = openerp.http.addons_manifest[module]['addons_path']
+        self._filename = mpath + self.url.replace('/', os.path.sep)
+        return self._filename
 
     def get_content(self):
         if self.source:
             data = self.source
         else:
-            if self.url and not self.filename:
-                module = filter(bool, self.url.split('/'))[0]
-                mpath = openerp.http.addons_manifest[module]['addons_path']
-                self.filename = mpath + self.url.replace('/', os.path.sep)
             with open(self.filename, 'rb') as fp:
                 data = fp.read().decode('utf-8')
         return data
 
     def minify(self):
         return self.get_content()
+
+    @property
+    def last_modified(self):
+        if self.source:
+            # TODO: return last_update of bundle's ir.ui.view
+            return datetime.datetime(1970, 1, 1)
+        return datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
 
 class JavascriptAsset(WebAsset):
     def minify(self):
@@ -1020,9 +1039,9 @@ class StylesheetAsset(WebAsset):
             )
         return content
 
-    def minify(self):
-        content = self.get_content()
-        return self.rx_comments.sub('', content)
+    # def minify(self):
+    #     content = self.get_content()
+    #     return self.rx_comments.sub('', content)
 
 def rjsmin(script):
     """ Minify js with a clever regex.
