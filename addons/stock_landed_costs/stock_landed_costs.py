@@ -93,6 +93,44 @@ class stock_landed_cost(osv.osv):
         return True
 
     def compute_landed_cost(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('stock.valuation.adjustment.lines')
+        for cost in self.browse(cr, uid, ids, context=None):
+            total_qty = 0.0
+            total_cost = 0.0
+            total_line = 0.0
+            for line in cost.valuation_adjustment_lines:
+                total_qty += line.quantity
+                total_cost += line.former_cost
+                total_line += 1
+
+        for cost in self.browse(cr, uid, ids, context=None):
+            dict = {}
+            for line in cost.cost_lines:
+                for valuation in cost.valuation_adjustment_lines:
+                    if line.split_method in ('by_quantity', 'by_weight', 'by_volume'):
+                        per_unit = (line.price_unit / total_qty)
+                        value = valuation.quantity * per_unit
+                        if valuation.id not in dict:
+                            dict.setdefault(valuation.id, value)
+                        else:
+                            dict[valuation.id] += value
+                    elif line.split_method == 'equal':
+                        per_unit = (line.price_unit / total_line)
+                        if valuation.id not in dict:
+                            dict.setdefault(valuation.id, per_unit)
+                        else:
+                            dict[valuation.id] += per_unit
+                    elif line.split_method == 'by_current_cost_price':
+                        per_unit = (total_cost / line.price_unit)
+                        value = valuation.former_cost * per_unit
+                        if valuation.id not in dict:
+                            dict.setdefault(valuation.id, value)
+                        else:
+                            dict[valuation.id] += value
+
+        for key, value in dict.items():
+            line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
+
         return True
 
 class stock_landed_cost_lines(osv.osv):
