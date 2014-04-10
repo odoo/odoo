@@ -414,9 +414,7 @@ class Ecommerce(http.Controller):
         order = self.get_order()
         return [quantity,
                 order.get_number_of_products()]
-        
-        return quantity
-
+    
     @http.route(['/shop/checkout/'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
