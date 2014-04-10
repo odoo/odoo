@@ -612,7 +612,9 @@ class Home(http.Controller):
         bundle.last_modified
         if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
             return werkzeug.wrappers.Response(status=304)
-        return request.make_response(bundle.js(), [('Content-Type', 'application/javascript')])
+        return make_conditional(
+            request.make_response(bundle.js(), [('Content-Type', 'application/javascript')]),
+            bundle.last_modified, bundle.checksum)
 
     @http.route('/web/css/<xmlid>', type='http', auth='none')
     def css_bundle(self, xmlid, **kw):
@@ -621,7 +623,9 @@ class Home(http.Controller):
         bundle = AssetsBundle(xmlid, assets_html)
         if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
             return werkzeug.wrappers.Response(status=304)
-        return request.make_response(bundle.css(), [('Content-Type', 'text/css')])
+        return make_conditional(
+            request.make_response(bundle.css(), [('Content-Type', 'text/css')]),
+            bundle.last_modified, bundle.checksum)
 
 class WebClient(http.Controller):
 
