@@ -36,6 +36,8 @@ Ask questions, get answers, no distractions
     ],
     'data': [
         'data/forum_data.xml',
+        'views/forum.xml',
+        'views/res_users.xml',
         'views/website_forum.xml',
         'security/ir.model.access.csv',
         'security/website_forum.xml',
