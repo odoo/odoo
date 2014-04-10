@@ -27,6 +27,7 @@ from openerp.osv import fields, osv
 from openerp.tools import ustr
 from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -140,7 +141,7 @@ class mail_alias(osv.Model):
             elif record.alias_name:
                 res.append((record['id'], "%s" % (record.alias_name)))
             else:
-                res.append((record['id'], "New Alias"))
+                res.append((record['id'], _("New Alias")))
         return res
 
     def _find_unique(self, cr, uid, name, context=None):
