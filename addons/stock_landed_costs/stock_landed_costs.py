@@ -60,7 +60,12 @@ class stock_landed_cost(osv.osv):
 
         for picking in picking_obj.browse(cr, uid, picking_ids):
             for move in picking.move_lines:
-                vals = dict(product_id = move.product_id.id, quantity = move.product_uom_qty, former_cost = move.product_uom_qty * move.price_unit)
+                total_cost = 0.0
+                total_qty = 0.0
+                for quant in move.quant_ids:
+                    total_cost += quant.cost
+                    total_qty += quant.qty
+                vals = dict(product_id = move.product_id.id, move_id = move.id, quantity = move.product_uom_qty, former_cost = total_cost * total_qty)
                 lines.append(vals)
         result['valuation_adjustment_lines'] = lines
         return {'value': result}
@@ -87,6 +92,19 @@ class stock_landed_cost(osv.osv):
     }
 
     def button_validate(self, cr ,uid, ids, context=None):
+        quant_obj = self.pool.get('stock.quant')
+        for cost in self.browse(cr, uid, ids, context=context):
+            for line in cost.valuation_adjustment_lines:
+                per_unit = line.final_cost / line.quantity
+                diff = per_unit - line.former_cost_per_unit
+                quants = [quant for quant in line.move_id.quant_ids if line.move_id]
+                for quant in quants:
+                    if quant.cost < 0:
+                        new_cost = quant.cost - diff
+                    else:
+                        new_cost = quant.cost + diff
+                    quant_obj.write(cr, uid, quant.id, {'cost': new_cost}, context=context)
+            self.write(cr, uid, cost.id, {'state': 'open'}, context=context)
         return True
 
     def button_cancel(self, cr ,uid, ids, context=None):
@@ -121,7 +139,7 @@ class stock_landed_cost(osv.osv):
                         else:
                             dict[valuation.id] += per_unit
                     elif line.split_method == 'by_current_cost_price':
-                        per_unit = (total_cost / line.price_unit)
+                        per_unit = (line.price_unit / total_cost)
                         value = valuation.former_cost * per_unit
                         if valuation.id not in dict:
                             dict.setdefault(valuation.id, value)
@@ -175,6 +193,7 @@ class stock_valuation_adjustment_lines(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
+        'move_id': fields.many2one('stock.move', 'Stock Move'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
         'former_cost': fields.float('Former Cost', digits_compute= dp.get_precision('Product Price')),
