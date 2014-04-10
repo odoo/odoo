@@ -1399,6 +1399,9 @@
         start : function () {
             var self = this;
             this._super();
+            if (!self.$target.data("snippet-view")) {
+                this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
+            }
             this.scroll();
             this.$target.on('snippet-style-change snippet-style-preview', function () {
                 self.$target.data("snippet-view").set_values();
