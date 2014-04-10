@@ -116,7 +116,7 @@ class note_note(osv.osv):
     }
     _order = 'sequence'
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         if groupby and groupby[0]=="stage_id":
 
             #search all stages
@@ -169,7 +169,7 @@ class note_note(osv.osv):
 
         else:
             return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
-                offset=offset, limit=limit, context=context, orderby=orderby)
+                offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
 
 
 #upgrade config setting page to configure pad, fancy and tags mode
