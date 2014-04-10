@@ -144,7 +144,6 @@ class Post(osv.Model):
     }
 
     _defaults = {
-        'create_uid': lambda self, cr, uid, ctx=None: uid,
         'state': 'active',
         'views': 0,
         'active': True,
@@ -166,7 +165,7 @@ class Post(osv.Model):
                 subtype='website_forum.mt_answer_new', context=context)
         else:
             #add 2 karma to user when asks question.
-            self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': 2}, context=context)
+            self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': 2}, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -185,7 +184,7 @@ class Post(osv.Model):
                 value = -15
                 if vals.get('correct'):
                     value = 15
-                self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': value}, context=context)
+                self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': value}, context=context)
         return res
 
     def vote(self, cr, uid, ids, upvote=True, context=None):
@@ -196,7 +195,7 @@ class Post(osv.Model):
             return {'error': 'lessthen_10_karma'}
         # user can not vote on own post
         posts = self.browse(cr, uid, ids, context=context)
-        if any(post.user_id.id == uid for post in posts):
+        if any(post.create_uid.id == uid for post in posts):
             return {'error': 'own_post'}
 
         vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
@@ -245,7 +244,7 @@ class Vote(osv.Model):
         karma_value = (int(new_vote) - int(old_vote)) * 10
         if karma_value:
             for vote in self.browse(cr, uid, ids, context=context):
-                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.post_id.user_id.id], karma_value, context=context)
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.post_id.create_uid.id], karma_value, context=context)
         return True
 
     def create(self, cr, uid, vals, context=None):
