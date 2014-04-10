@@ -308,11 +308,11 @@ class website_sale(http.Controller):
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-    optional_billing_fields = ["company", "state_id"]
+    optional_billing_fields = ["company_name", "state_id"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
     optional_shipping_fields = ["state_id"]
 
-    def checkout_parse(self, address_type, data):
+    def checkout_parse(self, address_type, data, remove_prefix=False):
         """ data is a dict OR a partner browse record
         """
         # set mandatory and optional fields
@@ -328,17 +328,19 @@ class website_sale(http.Controller):
         if isinstance(data, dict):
             query = dict((prefix + field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
         else:
-            query = dict((prefix + field_name, getattr(data, field_name))
-                for field_name in all_fields if field_name != "company" and getattr(data, field_name))
+            query = dict((prefix + field_name, getattr(data, field_name)) for field_name in all_fields if getattr(data, field_name))
             if data.parent_id:
-                query[prefix + 'company'] = data.parent_id.name
+                query[prefix + 'company_name'] = data.company_name or data.parent_id.name
 
         if query.get(prefix + 'state_id'):
             query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
         if query.get(prefix + 'country_id'):
             query[prefix + 'country_id'] = int(query[prefix + 'country_id'])
 
-        return query
+        if not remove_prefix:
+            return query
+
+        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
 
     def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -357,7 +359,7 @@ class website_sale(http.Controller):
 
         return error
 
-    def checkout_form_save(self, post):
+    def checkout_form_save(self, checkout):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         order = request.website.sale_get_order(force_create=1, context=context)
@@ -366,16 +368,7 @@ class website_sale(http.Controller):
         orm_user = registry.get('res.users')
         order_line_obj = request.registry.get('sale.order')
 
-        billing_info = self.checkout_parse('billing', post)
-
-        # save partner for order
-        company_id = None
-        if billing_info.get('company'):
-            company_name = billing_info['company']
-            company_ids = orm_partner.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
-            company_id = (company_ids and company_ids[0]) or orm_partner.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
-
-        billing_info['parent_id'] = company_id
+        billing_info = self.checkout_parse('billing', checkout, True)
 
         # set partner_id
         partner_id = None
@@ -388,27 +381,24 @@ class website_sale(http.Controller):
                 partner_id = order.partner_id.id
 
         # save partner informations
-        if partner_id:
+        if partner_id and request.website.user_id.partner_id.id != partner_id:
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         # set shipping_id
         shipping_id = None
-        if post.get('shipping_different'):
-            shipping_info = self.checkout_parse('shipping', post)
-            shipping_info = dict ((field_name, shipping_info[field_name]) for field_name in shipping_info.items())
+        if checkout.get('shipping_different'):
+            shipping_info = self.checkout_parse('shipping', checkout, True)
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
 
-            domain = [(key, '_id' in key and '=' or 'ilike', value)
-                      for key, value in shipping_info.items() if key in self.mandatory_shipping_fields + ["type", "parent_id"]]
+            domain = [(key, '_id' in key and '=' or 'ilike', value) for key, value in shipping_info.items()]
             shipping_ids = orm_partner.search(cr, SUPERUSER_ID, domain, context=context)
             
             # save shipping informations
             if shipping_ids:
                 shipping_id = shipping_ids[0]
-                orm_partner.write(cr, SUPERUSER_ID, [shipping_id], shipping_info, context)
             else:
                 shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
 
