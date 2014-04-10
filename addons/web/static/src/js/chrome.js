@@ -71,6 +71,8 @@ instance.web.Dialog = instance.web.Widget.extend({
         @param {Widget} parent
         @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
             dictionary can contain the following keys:
+            - modal_size: one of the following: 'large', 'medium', 'small'
+            - dialogClass: class to add to the body of dialog
             - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
                 label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
                 corresponding method of a jQuery element targeting the <button> tag). It is deprecated because all dialogs
@@ -87,13 +89,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.content_to_set = content;
         this.dialog_options = {
             destroy_on_close: true,
-            width: 900,
-            min_width: 0,
-            max_width: '95%',
-            height: 'auto',
-            min_height: 0,
-            max_height: $(window.top).height() - 200,
-            resizable: true,
+            modal_size: 'large', //'medium', 'small'
             buttons: null,
         };
         if (options) {
@@ -101,51 +97,6 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
         this.on("closing", this, this._closing);
         this.$buttons = $('<div class="modal-footer"><span class="oe_dialog_custom_buttons"/></div>');
-    },
-    _get_options: function() {
-        var self = this;
-        var o = _.extend({}, this.dialog_options);
-        var sizes = {
-            width: $(window.top).width(),
-            height: $(window.top).height(),
-        };
-        _.each(sizes, function(available_size, unit) {
-            o[unit] = self._get_size(o[unit], available_size);
-            o['min_' + unit] = self._get_size(o['min_' + unit] || 0, available_size);
-            o['max_' + unit] = self._get_size(o['max_' + unit] || 0, available_size);
-            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) {
-                o[unit] = o['min_' + unit];
-            }
-            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) {
-                o[unit] = o['max_' + unit];
-            }
-        });
-        var layout_inner = {};
-        var layout_outer = {};
-        _.each(o, function(value,key){
-            if (_.contains(self.css_layout_inner, ''+key+'')){
-                layout_inner[key] = value;
-                delete o[key];
-            }
-            if (_.contains(self.css_layout_outer, ''+key+'')){
-                layout_outer[key] = value;
-                delete o[key];
-            }
-        });
-        o.layout_inner = layout_inner;
-        o.layout_outer = layout_outer;
-        o.title = o.title || this.dialog_title;
-        return o;
-    },
-    _get_size: function(val, available_size) {
-        val = val.toString();
-        if (val === 'auto') {
-            return val;
-        } else if (val.slice(-1) === "%") {
-            return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
-        } else {
-            return parseInt(val, 10);
-        }
     },
     renderElement: function() {
         if (this.content_to_set) {
@@ -189,7 +140,8 @@ instance.web.Dialog = instance.web.Widget.extend({
     */
     init_dialog: function() {
         var self = this;
-        var options = this._get_options();
+        var options = _.extend({}, this.dialog_options);
+        options.title = options.title || this.dialog_title;
         if (options.buttons) {
             this._add_buttons(options.buttons);
             delete(options.buttons);
@@ -201,36 +153,26 @@ instance.web.Dialog = instance.web.Widget.extend({
             'backdrop': false,
             'keyboard': true,
         });
+        if (options.modal_size !== 'large'){
+            var dialog_class_size = this.$dialog_box.find('.modal-lg').removeClass('modal-lg')
+            if (options.modal_size === 'small'){
+                dialog_class_size.addClass('modal-sm');
+            }
+        }
+
         this.$el.appendTo(this.$dialog_box.find(".modal-body"));
         var dialog_body = this.$dialog_box.find('.modal-content');
-        if (options.layout_outer || options.layout_inner){
-            dialog_body.parent().css(options.layout_outer);
-            dialog_body.css(options.layout_inner);
-        }
         if (options.dialogClass){
             dialog_body.find(".modal-body").addClass(options.dialogClass);
         }
         dialog_body.openerpClass();
         dialog_body.draggable({ handle: ".modal-header", containment: "window" });
+
         this.$dialog_box.on('hidden.bs.modal',this,function(){
             self.trigger("closing");
         });
         this.$dialog_box.modal('show');
 
-        if (options.layout_inner.height === 'auto' && options.layout_inner.max_height) {
-            this.$el.css({ 'max-height': options.layout_inner.max_height, 'overflow-y': 'auto' });
-        }
-        var dialog_body = this.$dialog_box.find('.modal-content');
-        if (options.resizable){
-            dialog_body.resizable({ handles: 'n, e, s, w, ne, se, sw, nw' });
-        }
-        dialog_body.resize(function() {
-            var main_modal = dialog_body.parent();
-            var modal_body = main_modal.find(".modal-body .in");
-            var modal_content = main_modal.find(".modal-content").height();
-            modal_body.height(modal_content - 150);
-            main_modal.find(".modal-content").height((modal_body.height() + main_modal.find(".modal-header").height() + main_modal.find(".modal-footer").height()) + 85);
-        });
         this.dialog_inited = true;
         var res = this.start();
         return res;
@@ -305,6 +247,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
         }
         new instance.web.Dialog(this, {
+            modal_size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
@@ -321,7 +264,6 @@ instance.web.CrashManager = instance.web.Class.extend({
         };
         new instance.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
-            width: '80%',
             buttons: buttons
         }, QWeb.render('CrashManager.error', {session: instance.session, error: error})).open();
     },
@@ -371,6 +313,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
         error.data.message = error.data.arguments[0];
 
         new instance.web.Dialog(this, {
+            modal_size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }},
@@ -527,6 +470,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
      */
     display_error: function (error) {
         return new instance.web.Dialog(this, {
+            modal_size: 'medium',
             title: error.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
@@ -759,6 +703,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     },
     display_error: function (error) {
         return new instance.web.Dialog(this, {
+            modal_size: 'medium',
             title: error.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
@@ -1079,9 +1024,9 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 window.location = $.param.querystring( window.location.href, 'debug');
             });
             new instance.web.Dialog(this, {
-                resizable: false,
+                modal_size: 'medium',
+                dialogClass: 'oe_act_window',
                 title: _t("About"),
-                width: 507, height: 290,
             }, $help).open();
         });
     },

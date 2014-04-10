@@ -587,6 +587,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         if (!_.isEmpty(result.warning)) {
             new instance.web.Dialog(this, {
+                modal_size: 'medium',
                 title:result.warning.title,
                 buttons: [
                     {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
@@ -3229,7 +3230,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
     init: function(parent) {
         this._super(parent, {
             title: _.str.sprintf(_t("Add %s"), parent.string),
-            width: 312,
+            modal_size: 'medium',
         });
     },
     start: function() {
@@ -4912,7 +4913,6 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         var self = this;
         this.renderElement();
         var dialog = new instance.web.Dialog(this, {
-            min_width: '800px',
             dialogClass: 'oe_act_window',
             title: this.options.title || "",
         }, this.$el).open();

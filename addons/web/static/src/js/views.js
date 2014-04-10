@@ -926,7 +926,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             current_view = this.views[this.active_view].controller;
         switch (val) {
             case 'fvg':
-                var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
+                var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get") }).open();
                 $('<pre>').text(instance.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$el);
                 break;
             case 'tests':
@@ -943,7 +943,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     this.dataset.call('perm_read', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
                             title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
-                            width: 400
+                            modal_size: 'medium',
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],
                             format : instance.web.format_value
@@ -986,7 +986,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     new instance.web.Dialog(self, {
                         title: _.str.sprintf(_t("Model %s fields"),
                                              self.dataset.model),
-                        width: '95%'}, $root).open();
+                        }, $root).open();
                 });
                 break;
             case 'edit_workflow':
@@ -1223,7 +1223,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
-                new instance.web.Dialog(this, { title: _t("Warning")}, $("<div />").text(_t("You must choose at least one record."))).open();
+                new instance.web.Dialog(this, { title: _t("Warning"), modal_size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
             var active_ids_context = {
