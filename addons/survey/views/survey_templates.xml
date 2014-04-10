@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <!-- List of all the surveys -->
-    <template id="list" name="Survey List">
-        <t t-call="website.layout">
-            <div class="wrap">
-                <div class="container">
-                    <h1>Open surveys</h1>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <tr><th>Title</th></tr>
-                            <t t-foreach="surveys" t-as="survey">
-                                <tr>
-                                    <td><a t-att-href="survey.public_url" t-field="survey.title" /></td>
-                                </tr>
-                            </t>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </t>
-    </template>
-
     <!-- "Thank you" message when the survey is completed -->
     <template id="sfinished" name="Survey Finished">
         <t t-call="website.layout">
@@ -58,6 +37,9 @@
             <div class="wrap">
                 <div class="oe_structure" />
                 <div class="container">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="text-right">
+                        <a href="/web#action=survey.action_survey_form" class="btn btn-default">Go back to surveys</a>
+                    </div>
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
                         <div t-field='survey.description' />
@@ -80,6 +62,9 @@
             <div class="wrap">
                 <div class="oe_structure"/>
                 <div class="container">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="text-right">
+                        <a href="/web#action=survey.action_survey_form" class="btn btn-default">Go back to surveys</a>
+                    </div>
                     <t t-call="survey.page" />
                 </div>
                 <div class="oe_structure"/>
