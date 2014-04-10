@@ -34,7 +34,6 @@
             var $snipped_id = $(this);
             if ($snipped_id.data("snippet-view")) {
                 $snipped_id.data("snippet-view").stop();
-                $snipped_id.data("snippet-view", false);
             }
         });
     };
