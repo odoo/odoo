@@ -3,7 +3,7 @@
     <data>
 
         <template id="editor_head" inherit_id="website.editor_head"
-            name="Event Editor">
+            name="Forum Editor">
             <xpath expr="//script[@id='website_tour_js']" position="after">
                 <script type="text/javascript"
                     src="/website_forum/static/src/js/website.tour.forum.js"/>
@@ -48,9 +48,10 @@
                     <div class="text-muted">
                         by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.user_id.id }" t-field="question.user_id"/>
                         <t t-if="question.user_id.country_id"> 
-                            <span t-field="question.user_id.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}'/>
+                            <span t-field="question.user_id.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}'
+                                t-attf-title="#{str(question.user_id.name)} is from #{str(question.user_id.country_id.name)}"/>
                         </t>
-                        on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+                        on <span t-field="question.write_date" t-field-options='{"format":"short"}' t-attf-title="#{question.write_date}"/>
                         <div t-if="question.vote_count">
                             <strong>with <span t-esc="question.vote_count"/> votes</strong>
                         </div>
@@ -152,12 +153,16 @@
                                     </div>
                                     <div class="panel-body"> 
                                         <table class="table">
-                                            <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-field-options='{"format":"short"}'/></strong></td></tr></thead>
+                                            <thead><tr><td> Asked: 
+                                                <strong><abbr t-field="question.create_date" t-field-options='{"format":"short"}' t-attf-title="#{question.create_date}"/></strong>
+                                            </td></tr></thead>
                                             <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
                                                 <span t-if="question.views&gt;1">times</span>
                                                 <span t-if="question.views&lt;=1">time</span>
                                             </td></tr>
-                                            <tr><td> Last updated: <strong><span t-field="question.write_date" t-field-options='{"format":"short"}'/></strong></td></tr>
+                                            <tr><td> Last updated: 
+                                                <strong><abbr t-field="question.write_date" t-field-options='{"format":"short"}' t-attf-title="#{question.write_date}"/></strong>
+                                            </td></tr>
                                         </table>
                                     </div>
                                 </div>
@@ -259,17 +264,18 @@
                 <div>
                     <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(user) }" t-field="user.name"/>
                     <t t-if="user.country_id">
-                        <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}'/>
+                        <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}'
+                            t-attf-title="#{str(user.name)} is from #{str(user.country_id.name)}"/>
                     </t>
-                    <b><t t-esc="user.karma"/></b>
+                    <b><span t-esc="user.karma" title="Total Karma"/></b>
                     <t t-raw="separator"/>
                     <div>
                         <b> badges:</b>
-                        <span class="fa fa-circle badge-gold"/>
+                        <span class="fa fa-circle badge-gold" t-attf-title="#{str(user.gold_badge)} gold badges"/>
                         <t t-esc="user.gold_badge"/>
-                        <span class="fa fa-circle badge-silver"/>
+                        <span class="fa fa-circle badge-silver" t-attf-title="#{str(user.silver_badge)} silver badges"/>
                         <t t-esc="user.silver_badge"/>
-                        <span class="fa fa-circle badge-bronze"/>
+                        <span class="fa fa-circle badge-bronze" t-attf-title="#{str(user.bronze_badge)} bronze badges"/>
                         <t t-esc="user.bronze_badge"/>
                     </div>
                     <t t-raw="0"/>
@@ -388,10 +394,10 @@
         <template id="vote">
             <div t-attf-class="box oe_grey">
                 <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''}" 
-                    t-attf-id="#{post.id}" t-attf-value="1"/>
+                    t-attf-id="#{post.id}" t-attf-value="1" title="This post is useful"/>
                 <span id="vote_count" t-esc="post.vote_count"/>
-                <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
-                    t-attf-id="#{post.id}" t-attf-value="-1"/>
+                <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" t-attf-id="#{post.id}"
+                    t-attf-value="-1" title="This post is not useful"/>
                 <div>
                     votes
                 </div>
@@ -412,7 +418,7 @@
                             <span t-if="question.child_count&lt;=1">Answer</span>
                         </div>
                         <div>
-                            <a t-attf-id="#{question.id}" t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
+                            <a t-attf-id="#{question.id}" title="This is a favorite question (click again to undo)" t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                         </div>
                     </div>
                     <div style="margin-left: 95px;">
@@ -433,8 +439,8 @@
                                 <ul class="list-inline">
                                     <li t-if="user.id == question.user_id.id or user.karma&gt;=50">
                                         <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
-                                              t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
-                                            comment
+                                            title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments."
+                                            t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }"> comment
                                         </a>
                                     </li>
                                     <li t-if="question.state != 'close' and (user.id == question.user_id.id or user.karma&gt;=100)">
@@ -458,7 +464,9 @@
                             <div>
                                 <t t-call="website_forum.user_detail">
                                     <t t-set="user" t-value="question.user_id"/>
-                                    <span class="text-muted">Asked on <span t-field="question.write_date" t-field-options='{"format":"short"}'/></span>
+                                    <span class="text-muted">Asked on 
+                                        <span t-field="question.write_date" t-field-options='{"format":"short"}' t-attf-title="#{question.write_date}"/>
+                                    </span>
                                 </t>
                             </div>
                             <div class="alert alert-info" t-if="question.state == 'close'">
@@ -494,7 +502,8 @@
                                 <ul class="list-inline pull-right">
                                     <li t-if="user.id == answer.user_id.id or user.karma&gt;=50">
                                         <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
-                                              t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
+                                            title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”."
+                                            t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
                                         </a>
                                     </li>
                                     <li t-if="user.id == answer.user_id.id or user.karma&gt;=300">
@@ -510,7 +519,9 @@
                                 </ul>
                                 <t t-call="website_forum.user_detail">
                                     <t t-set="user" t-value="answer.user_id"/>
-                                    <span class="text-muted">Answered on <span t-field="answer.create_date" t-field-options='{"format":"short"}'/></span>
+                                    <span class="text-muted">Answered on 
+                                        <span t-field="answer.create_date" t-field-options='{"format":"short"}' t-attf-title="#{answer.create_date}"/>
+                                    </span>
                                 </t>
                             </div>
                             <t t-call="website_forum.comments">
@@ -643,7 +654,9 @@
                     <div t-foreach="users" t-as="user" class="col-sm-4">
                         <t t-set="separator"><br/></t>
                         <t t-call="website_forum.user_detail"/>
-                        <span class="text-muted">Joined on <span t-field="user.create_date" t-field-options='{"format":"short"}'/></span>
+                        <span class="text-muted">Joined on \
+                            <span t-field="user.create_date" t-field-options='{"format":"short"}' t-attf-title="#{user.create_date}"/>
+                        </span>
                     </div>
                 </div>
                 <div class="pull-left">
@@ -714,10 +727,10 @@
                         <tr>
                             <td rowspan="2" valign="top"><span class="text-muted">contributions</span></td>
                             <td>member since</td>
-                            <td><span t-field="user.create_date" t-field-options='{"format": "short"}'/></td>
+                            <td><abbr t-field="user.create_date" t-field-options='{"format": "short"}' t-attf-title="#{user.create_date}"/></td>
                         </tr><tr>
                             <td>last connection</td>
-                            <td><span t-field="user.login_date" t-field-options='{"format": "short"}'/></td>
+                            <td><abbr t-field="user.login_date" t-field-options='{"format": "short"}' t-attf-title="#{user.login_date}"/></td>
                         </tr>
                         <tr>
                             <td rowspan="2" valign="top"><span class="text-muted">bio</span></td>
@@ -733,8 +746,10 @@
                                 <span t-field="user.city"/>
                                 <span t-if="user.city and user.country_id">, </span>
                                 <span t-field="user.country_id"/>
-                                <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}'/></t>
-                                
+                                <t t-if="user.country_id"> 
+                                    <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}' 
+                                        t-attf-title="#{str(user.name)} is from #{str(user.country_id.name)}"/>
+                                </t>
                             </td>
                         </tr>
                         <tr>
@@ -744,10 +759,8 @@
                         </tr><tr>
                             <td>votes</td>
                             <td>
-                                <span class="fa fa-thumbs-up"/>
-                                <span t-esc="up_votes"/>
-                                <span class="fa fa-thumbs-down"/>
-                                <span t-esc="down_votes"/>
+                                <span class="fa fa-thumbs-up" t-esc="up_votes" title="total up-votes on this users answers/questions"/>
+                                <span class="fa fa-thumbs-down" t-esc="down_votes" title="total down-votes on this users answers/questions"/>
                             </td>
                         </tr>
                         </table>
@@ -762,22 +775,22 @@
 
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#questions" data-toggle="tab"><t t-esc="len(questions)"/> Questions</a>
+                        <a href="#questions" data-toggle="tab" title="questions this user asked"><t t-esc="len(questions)"/> Questions</a>
                     </li>
                     <li>
-                        <a href="#answers" data-toggle="tab"><t t-esc="len(answers)"/> Answers</a>
+                        <a href="#answers" data-toggle="tab" title="answers provided by this user"><t t-esc="len(answers)"/> Answers</a>
                     </li>
                     <li t-if="uid == user.id">
-                        <a href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
+                        <a href="#favourite_question" data-toggle="tab" title="questions you have favorited"><t t-esc="len(favourite)"/> Favourite Questions</a>
                     </li>
                     <li t-if="uid == user.id">
-                        <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Questions</a>
+                        <a href="#followed_question" data-toggle="tab" title="questions you have favorited"><t t-esc="len(followed)"/> Followed Questions</a>
                     </li>
                     <li t-if="uid == user.id">
-                        <a href="#activity" data-toggle="tab">Activity</a>
+                        <a href="#activity" data-toggle="tab" title="this user's recent activity">Activity</a>
                     </li>
                     <li>
-                        <a href="#badges" data-toggle="tab">Badges</a>
+                        <a href="#badges" data-toggle="tab" title="badges this user has earned">Badges</a>
                     </li>
                     <li t-if="uid == user.id">
                         <a href="#votes" data-toggle="tab">Votes</a>

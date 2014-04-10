@@ -18,7 +18,7 @@ $(document).ready(function () {
                     } else if (data['error'] == 'anonymous_user'){
                         var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            'Sorry, anonymous users cannot vote'+
+                            'Sorry you must be logged to vote'+
                             '</div>');
                     }
                     else if (data['error'] == 'lessthen_10_karma')
