@@ -902,6 +902,7 @@ def get_field_type(column, options):
     return options.get('widget', column._type)
 
 class AssetsBundle(object):
+    cache = dict()
     rx_css_charset = re.compile("(@charset.+;$)", re.M)
     rx_css_import = re.compile("(@import.+;$)", re.M)
 
@@ -965,30 +966,30 @@ class AssetsBundle(object):
             self._checksum = checksum.hexdigest()
         return self._checksum
 
-    def js(self, minified=True):
-        if minified:
-            content = ';\n'.join([asset.minify() for asset in self.javascripts])
-        else:
-            content = ';\n'.join([asset.content for asset in self.javascripts])
-        return content
+    def js(self):
+        key = 'js_' + self.checksum
+        if key not in self.cache:
+            content =';\n'.join([asset.minify() for asset in self.javascripts])
+            self.cache[key] = content
+        return self.cache[key]
 
-    def css(self, minified=True):
-        if minified:
+    def css(self):
+        key = 'css_' + self.checksum
+        if key not in self.cache:
             content = '\n'.join([asset.minify() for asset in self.stylesheets])
-        else:
-            content = '\n'.join([asset.content for asset in self.stylesheets])
-        # move up all @import and @charset rules to the top
-        matches = []
-        def push(matchobj):
-            matches.append(matchobj.group(0))
-            return ''
+            # move up all @import and @charset rules to the top
+            matches = []
+            def push(matchobj):
+                matches.append(matchobj.group(0))
+                return ''
 
-        content = re.sub(self.rx_css_charset, push, content)
-        content = re.sub(self.rx_css_import, push, content)
+            content = re.sub(self.rx_css_charset, push, content)
+            content = re.sub(self.rx_css_import, push, content)
 
-        matches.append(content)
-        content = '\n'.join(matches)
-        return content
+            matches.append(content)
+            content = '\n'.join(matches)
+            self.cache[key] = content
+        return self.cache[key]
 
 class WebAsset(object):
     def __init__(self, source=None, url=None, filename=None):
