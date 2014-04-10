@@ -595,8 +595,15 @@ class Home(http.Controller):
         bundle.last_modified
         if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
             return werkzeug.wrappers.Response(status=304)
+        headers = [('Content-Type', 'application/javascript')]
+
+        if True:
+            # WIP: decide best cache settings
+            headers.append(('Cache-Control', 'max-age=%s' % (60*5)))
+            return request.make_response(bundle.js(), headers)
+
         return make_conditional(
-            request.make_response(bundle.js(), [('Content-Type', 'application/javascript')]),
+            request.make_response(bundle.js(), headers),
             bundle.last_modified, bundle.checksum)
 
     @http.route('/web/css/<xmlid>', type='http', auth='none')
@@ -606,8 +613,15 @@ class Home(http.Controller):
         bundle = AssetsBundle(xmlid, assets_html)
         if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
             return werkzeug.wrappers.Response(status=304)
+        headers = [('Content-Type', 'text/css')]
+
+        if True:
+            # WIP: decide best cache settings
+            headers.append(('Cache-Control', 'max-age=%s' % (60*5)))
+            return request.make_response(bundle.css(), headers)
+
         return make_conditional(
-            request.make_response(bundle.css(), [('Content-Type', 'text/css')]),
+            request.make_response(bundle.css(), headers),
             bundle.last_modified, bundle.checksum)
 
 class WebClient(http.Controller):
