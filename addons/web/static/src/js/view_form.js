@@ -967,9 +967,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         context: {
                             'bin_size': true,
                             'future_display_name': true
-                        }
+                        },
+                        check_access_rule: true
                     }).then(function(r) {
                         self.trigger('load_record', r);
+                    }).fail(function (){
+                        self.do_action('history_back');
                     });
             }
         });
@@ -1990,8 +1993,10 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var context = this.build_context();
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
-            this.view.dataset, this.view.datarecord.id, function () {
-                self.view.recursive_reload();
+            this.view.dataset, this.view.datarecord.id, function (reason) {
+                if (!_.isObject(reason)) {
+                    self.view.recursive_reload();
+                }
             });
     },
     check_disable: function() {
@@ -2264,7 +2269,7 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
 /**
     Some hack to make placeholders work in ie9.
 */
-if ($.browser.msie && $.browser.version === "9.0") {
+if (!('placeholder' in document.createElement('input'))) {    
     document.addEventListener("DOMNodeInserted",function(event){
         var nodename =  event.target.nodeName.toLowerCase();
         if ( nodename === "input" || nodename == "textarea" ) {
@@ -4358,7 +4363,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                         if (data.id) {
                             self.add_id(data.id);
                         } else {
-                            ignore_blur = true;
+                            self.ignore_blur = true;
                             data.action();
                         }
                         this.trigger('setSuggestions', {result : []});
@@ -4398,7 +4403,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        var ignore_blur = false;
+        self.ignore_blur = false;
         self.$text = this.$("textarea");
         self.$text.textext(self.initialize_texttext()).bind('getSuggestions', function(e, data) {
             var _this = this;
@@ -4418,11 +4423,11 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         self.$text
             .focusin(function () {
                 self.trigger('focused');
-                ignore_blur = false;
+                self.ignore_blur = false;
             })
             .focusout(function() {
                 self.$text.trigger("setInputData", "");
-                if (!ignore_blur) {
+                if (!self.ignore_blur) {
                     self.trigger('blurred');
                 }
             }).keydown(function(e) {
@@ -4500,6 +4505,10 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             width: width,
             minHeight: height
         });
+    },    
+    _search_create_popup: function() {
+        self.ignore_blur = true;
+        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
 });
 
