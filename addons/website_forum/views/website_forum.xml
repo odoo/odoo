@@ -327,8 +327,8 @@
                         <input type="text" name="question_name" id="question_name" required="True"
                             t-attf-value="#{question.name}" class="form-control" placeholder="Edit your Question"/>
                         <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
-                        <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                     </div>
+                    <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                     <textarea name="content" required="True" class="form-control load_editor">
                         <t t-if="is_answer"> <t t-esc="answer.content"/></t>
                         <t t-if="not is_answer"><t t-esc="question.content"/></t>
@@ -823,17 +823,19 @@
                     <div class="tab-pane" id="activity">
                         <ul class="list-unstyled">
                             <li t-foreach="activities" t-as="activity">
-                                <span t-esc="activity.date"/>
+                                <span t-field="activity.date" t-field-options='{"format": "short"}'/>
                                 <span t-esc="activity.subtype_id.name" class="label label-info"/>
                                 <t t-set="post" t-value="posts[activity.res_id]"/>
                                 <span t-if="post[1]"> 
                                     <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
-                                        Gave an answer
-                                    </a> on
+                                        <span t-esc="post[0].name"/>
+                                    </a>
                                 </span>
-                                <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }">
-                                    <span t-esc="post[0].name"/>
-                                </a>
+                                <span t-if="not post[1]">
+                                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }">
+                                        <span t-esc="post[0].name"/>
+                                    </a>
+                                </span>
                             </li>
                         </ul>
                     </div>

@@ -221,7 +221,7 @@ class WebsiteForum(http.Controller):
 
         #activity by user.
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
-        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post'), '|', ('subtype_id', '!=', comment), ('subtype_id', '=', False)], context=context)
+        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'website.forum.post'), ('subtype_id', '!=', comment)], context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
 
         posts = {}
@@ -362,7 +362,7 @@ class WebsiteForum(http.Controller):
             'content': post.get('content'),
         }
         question_tags = []
-        if post.get('question_tag').strip('[]'):
+        if post.get('question_tag') and post.get('question_tag').strip('[]'):
             Tag = request.registry['website.forum.tag']
             tags = post.get('question_tag').strip('[]').replace('"','').split(",")
             for tag in tags:
