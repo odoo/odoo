@@ -1148,11 +1148,15 @@ class survey_user_input_line(osv.Model):
             self.unlink(cr, uid, old_uil, context=context)
 
         ca = dict_keys_startswith(post, answer_tag)
+        comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
         if len(ca) > 0:
             for a in ca:
                 vals.update({'answer_type': 'suggestion', 'value_suggested': ca[a]})
                 self.create(cr, uid, vals, context=context)
-        else:
+        if comment_answer:
+            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            self.create(cr, uid, vals, context=context)
+        if not ca and not comment_answer:
             vals.update({'answer_type': None, 'skipped': True})
             self.create(cr, uid, vals, context=context)
         return True
@@ -1172,8 +1176,14 @@ class survey_user_input_line(osv.Model):
         if old_uil:
             self.unlink(cr, uid, old_uil, context=context)
 
-        ca = dict_keys_startswith(post, answer_tag)
         no_answers = True
+        ca = dict_keys_startswith(post, answer_tag)
+
+        comment_answer = ca.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+        if comment_answer:
+            vals.update({'answer_type': 'text', 'value_text': comment_answer})
+            self.create(cr, uid, vals, context=context)
+            no_answers = False
 
         if question.matrix_subtype == 'simple':
             for row in question.labels_ids_2:
