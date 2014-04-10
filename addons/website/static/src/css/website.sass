@@ -68,6 +68,12 @@ header
         img
             max-height: 50px
 
+// add {WORD JOINER} (equivalent to deprecated ZERO WIDTH NO-BREAK SPACE) at
+// the beginning of paragraphs so they don't "disappear" after saving when
+// used solely for spacing.
+#wrapwrap p:empty:after
+    content: '\2060'
+
 /* ----- Snippets Styles ----- */
 
 .readable
@@ -78,17 +84,16 @@ header
 
 /* ----- EDITOR ----- */
 
-
 .css_non_editable_mode_hidden
     display: none
 
-
 /* ----- BOOTSTRAP FIX ----- */
 
-.container
+.container, .readable
     .container
         padding-left: 0
         padding-right: 0
+        width: auto
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
 
@@ -179,7 +184,6 @@ footer
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal
     overflow: hidden
-    overflow-y: hidden
 
 ul.nav-stacked > li > a
     padding: 2px 15px
@@ -195,7 +199,7 @@ ul.nav-stacked > li > a
     .btn-success, .css_unpublish
         display: none
 
-[data-publish='off']
+[data-publish='off']>*:not(.css_options)
     +opacity(0.5)
 
 /* ---- END of PUBLISH ---- */
@@ -230,11 +234,11 @@ ul.nav-stacked > li > a
 .oe_img_bg
     background-size: 100%
 
-[data-snippet-id],.colmd,.hr,.blockquote
+.carousel, .parallax, .blockquote
     overflow: hidden
 
 @media (max-width: 400px)
-    [data-snippet-id]:not([data-snippet-id="carousel"])
+    section, .parallax, .row, .hr, .blockquote
         height: auto !important
 
 .carousel-inner
@@ -302,17 +306,30 @@ ul.nav-stacked > li > a
             top: 50%
             position: absolute
             margin-top: -8px
-        &.left span
-            left: 10px
-        &.right span
-            right: 10px
+        &.left
+            left: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                right: 50%
+        &.right
+            right: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                left: 50%
 
 .quotecarousel
     padding-bottom: 16px
 
+.hr
+    padding: 4px 0
+
 /* Parallax Theme */
 
-div.carousel[data-snippet-id="slider"]
+div.carousel
     .carousel-indicators
         li
             border: 1px solid grey
@@ -336,7 +353,6 @@ div.carousel[data-snippet-id="slider"]
 .oe_dark
     background: #eff8f8
     background: rgba(200, 200, 200, 0.14)
-    +box-shadow(0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset)
 
 .oe_black
     background-color: rgba(0, 0, 0, 0.9)
@@ -423,3 +439,34 @@ span[data-oe-type="monetary"]
 .oe_website_login_container
     width: 400px
     margin: 40px auto
+
+.oe_website_overflow_ellipsis
+    white-space:nowrap
+    overflow:hidden
+    text-overflow:ellipsis
+
+div.media_iframe_video
+    height: 0
+    margin: 0 auto
+    text-align: center
+    position: relative
+    overflow: hidden
+    padding-bottom: 66.5%
+    iframe
+        width: 100%
+        height: 100%
+    div
+        position: absolute
+        width: 100%
+        height: 100%
+        display: none
+
+/* Mobile view */
+
+@media (max-width: 768px)
+    img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa
+        -webkit-transform: none !important
+        -moz-transform: none !important
+        -ms-transform: none !important
+        -o-transform: none !important
+        transform: none !important

@@ -31,10 +31,12 @@ Module for the Check Writing and Check Printing.
     'depends' : ['account_voucher'],
     'data': [
         'wizard/account_check_batch_printing_view.xml',
-        'account_check_writing_report.xml',
         'account_view.xml',
         'account_voucher_view.xml',
         'account_check_writing_data.xml',
+        'data/report_paperformat.xml',
+        'views/report_check.xml',
+        'account_check_writing_report.xml',
     ],
     'demo': ['account_demo.xml'],
     'test': [],

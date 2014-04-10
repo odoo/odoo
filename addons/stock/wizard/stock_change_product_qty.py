@@ -33,6 +33,10 @@ class stock_change_product_qty(osv.osv_memory):
         'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
+    _defaults = {
+        'new_quantity': 1,
+        'product_id': lambda self, cr, uid, ctx: ctx and ctx.get('active_id', False) or False
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None: context = {}
@@ -54,20 +58,22 @@ class stock_change_product_qty(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
-        product_id = context and context.get('active_id', False) or False
+
         res = super(stock_change_product_qty, self).default_get(cr, uid, fields, context=context)
 
-        if 'new_quantity' in fields:
-            res.update({'new_quantity': 1})
-        if 'product_id' in fields:
-            res.update({'product_id': product_id})
         if 'location_id' in fields:
-            try:
-                model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-                self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
-            except (orm.except_orm, ValueError):
-                location_id = False
-            res.update({'location_id': location_id})
+            location_id = res.get('location_id', False)
+            if not location_id:
+                try:
+                    model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+                except (orm.except_orm, ValueError):
+                    pass
+            if location_id:
+                try:
+                    self.pool.get('stock.location').check_access_rule(cr, uid, [location_id], 'read', context=context)
+                except (orm.except_orm, ValueError):
+                   pass
+            res['location_id'] = location_id
         return res
 
     def change_product_qty(self, cr, uid, ids, context=None):

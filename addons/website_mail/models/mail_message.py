@@ -19,14 +19,29 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
+from openerp.tools import html2plaintext
 from openerp.tools.translate import _
-from openerp.osv import osv, fields
-
+from openerp.osv import osv, fields, expression
 
 class MailMessage(osv.Model):
     _inherit = 'mail.message'
 
+    def _get_description_short(self, cr, uid, ids, name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for message in self.browse(cr, uid, ids, context=context):
+            if message.subject:
+                res[message.id] = message.subject
+            else:
+                plaintext_ct = html2plaintext(message.body)
+                res[message.id] = plaintext_ct + '%s' % (' [...]' if len(plaintext_ct) >= 20 else '')
+        return res
+
     _columns = {
+        'description': fields.function(
+            _get_description_short, type='char',
+            help='Message description: either the subject, or the beginning of the body'
+        ),
         'website_published': fields.boolean(
             'Published', help="Visible on the website as a comment"
         ),
@@ -48,13 +63,14 @@ class MailMessage(osv.Model):
                 context=None, count=False, access_rights_uid=None):
         """ Override that adds specific access rights of mail.message, to restrict
         messages to published messages for public users. """
-        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
-        if group_user_id in [group.id for group in group_ids]:
-            args = ['&', ('website_published', '=', True)] + list(args)
+        if uid != SUPERUSER_ID:
+            group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
+            group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_public')[1]
+            if group_user_id in [group.id for group in group_ids]:
+                args = expression.AND([[('website_published', '=', True)], list(args)])
 
         return super(MailMessage, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-                                                context=context, count=False, access_rights_uid=access_rights_uid)
+                                                context=context, count=count, access_rights_uid=access_rights_uid)
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Add Access rules of mail.message for non-employee user:

@@ -241,10 +241,10 @@ class crm_lead(format_address, osv.osv):
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
-        'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
@@ -313,7 +313,10 @@ class crm_lead(format_address, osv.osv):
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
         if not stage.on_change:
             return {'value': {}}
-        return {'value': {'probability': stage.probability}}
+        vals = {'probability': stage.probability}
+        if stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1):
+                vals['date_closed'] = fields.datetime.now()
+        return {'value': vals}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
@@ -407,7 +410,7 @@ class crm_lead(format_address, osv.osv):
                         'probability = 0 %, select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id, 'date_closed': fields.datetime.now()}, context=context)
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -428,7 +431,7 @@ class crm_lead(format_address, osv.osv):
                         'probability = 100 % and select "Change Probability Automatically".\n'
                         'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id, 'date_closed': fields.datetime.now()}, context=context)
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
         return True
 
     def case_escalate(self, cr, uid, ids, context=None):

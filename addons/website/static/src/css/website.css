@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -102,6 +103,10 @@ header a.navbar-brand img {
   max-height: 50px;
 }
 
+#wrapwrap p:empty:after {
+  content: "\2060";
+}
+
 /* ----- Snippets Styles ----- */
 .readable {
   font-size: 120%;
@@ -116,9 +121,10 @@ header a.navbar-brand img {
 }
 
 /* ----- BOOTSTRAP FIX ----- */
-.container .container {
+.container .container, .readable .container {
   padding-left: 0;
   padding-right: 0;
+  width: auto;
 }
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
@@ -216,7 +222,6 @@ footer {
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;
-  overflow-y: hidden;
 }
 
 ul.nav-stacked > li > a {
@@ -236,7 +241,7 @@ ul.nav-stacked > li > a {
   display: none;
 }
 
-[data-publish='off'] {
+[data-publish='off'] > *:not(.css_options) {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
@@ -280,12 +285,12 @@ ul.nav-stacked > li > a {
   background-size: 100%;
 }
 
-[data-snippet-id], .colmd, .hr, .blockquote {
+.carousel, .parallax, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id]:not([data-snippet-id="carousel"]) {
+  section, .parallax, .row, .hr, .blockquote {
     height: auto !important;
   }
 }
@@ -368,22 +373,38 @@ ul.nav-stacked > li > a {
   position: absolute;
   margin-top: -8px;
 }
-.carousel .carousel-control.left span {
-  left: 10px;
+.carousel .carousel-control.left {
+  left: -10px;
 }
-.carousel .carousel-control.right span {
-  right: 10px;
+.carousel .carousel-control.left * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  right: 50%;
+}
+.carousel .carousel-control.right {
+  right: -10px;
+}
+.carousel .carousel-control.right * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  left: 50%;
 }
 
 .quotecarousel {
   padding-bottom: 16px;
 }
 
+.hr {
+  padding: 4px 0;
+}
+
 /* Parallax Theme */
-div.carousel[data-snippet-id="slider"] .carousel-indicators li {
+div.carousel .carousel-indicators li {
   border: 1px solid grey;
 }
-div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
+div.carousel .carousel-indicators .active {
   background-color: grey;
 }
 
@@ -406,9 +427,6 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 .oe_dark {
   background: #eff8f8;
   background: rgba(200, 200, 200, 0.14);
-  -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
 }
 
 .oe_black {
@@ -521,4 +539,34 @@ span[data-oe-type="monetary"] {
 .oe_website_login_container {
   width: 400px;
   margin: 40px auto;
+}
+
+div.media_iframe_video {
+  height: 0;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 66.5%;
+}
+div.media_iframe_video iframe {
+  width: 100%;
+  height: 100%;
+}
+div.media_iframe_video div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+    transform: none !important;
+  }
 }

@@ -31,6 +31,9 @@ class sale_order(osv.Model):
         'cart_quantity': fields.function(_cart_qty, type='integer', string='Main Menu'),
     }
 
+    def _get_errors(self, cr, uid, order, context=None):
+        return []
+
     def _get_website_data(self, cr, uid, order, context):
         return {
             'partner': order.partner_id.id,

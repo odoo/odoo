@@ -2,6 +2,11 @@
 <openerp>
 <data>
 <template id="editor_head" inherit_id="report.html_container" name="Editor" groups="base.group_website_publisher">
+    <xpath expr="//html" position="attributes">
+        <attribute name="t-att-data-website-id">website.id if editable and website else None</attribute>
+        <attribute name="t-att-data-translatable">'1' if translatable else None</attribute>
+    </xpath>
+
     <xpath expr="//body" position="attributes">
         <attribute name="style">padding-top: 51px;</attribute>
     </xpath>
@@ -42,15 +47,17 @@
 
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
         <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
         <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
         <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
         <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
         <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
+
+        <script type="text/javascript" src="/website/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
 
         <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
@@ -65,15 +72,24 @@
     </xpath>
 
     <xpath expr='//body[@class="container"]/div[@id="wrapwrap"]' position="before">
-        <t t-set="languages" t-value="website.get_languages()"/>
-        <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
-            <li t-foreach="languages" t-as="lg">
-                <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
-                   t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                    <t t-esc="lg[1].split('/').pop()"/>
-                </a>
-            </li>
-        </ul>
+        <t t-set="languages" t-value="website.get_languages() if website else None"/>
+        <t t-if="languages">
+            <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
+                <li t-foreach="languages" t-as="lg">
+                    <a t-att-href="url_for('', lang=lg[0]) + '?' + keep_query()"
+                       t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
+                        <t t-esc="lg[1].split('/').pop()"/>
+                    </a>
+                </li>
+                <li groups="base.group_website_publisher">
+                    <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                    <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id}&amp;url_return=#{url_return}">
+                        <i class="fa fa-plus-circle"/>
+                        Add a language...
+                    </a>
+                </li>
+            </ul>
+        </t>
     </xpath>
 </template>
 </data>

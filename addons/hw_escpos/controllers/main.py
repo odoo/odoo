@@ -12,6 +12,7 @@ import math
 import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
 import subprocess
+import traceback
 from threading import Thread, Lock
 from Queue import Queue, Empty
 
@@ -36,6 +37,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class EscposDriver(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -45,17 +47,17 @@ class EscposDriver(Thread):
 
     def connected_usb_devices(self):
         connected = []
+        
         for device in supported_devices.device_list:
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
         return connected
 
     def lockedstart(self):
-        self.lock.acquire()
-        if not self.isAlive():
-            self.daemon = True
-            self.start()
-        self.lock.release()
+        with self.lock:
+            if not self.isAlive():
+                self.daemon = True
+                self.start()
     
     def get_escpos_printer(self):
         try:
@@ -73,6 +75,8 @@ class EscposDriver(Thread):
     def get_status(self):
         self.push_task('status')
         return self.status
+
+
 
     def open_cashbox(self,printer):
         printer.cashdraw(2)
@@ -113,6 +117,9 @@ class EscposDriver(Thread):
                     if timestamp >= time.time() - 1 * 60 * 60:
                         self.print_receipt_body(printer,data)
                         printer.cut()
+                elif task == 'xml_receipt':
+                    if timestamp >= time.time() - 1 * 60 * 60:
+                        printer.receipt(data)
                 elif task == 'cashbox':
                     if timestamp >= time.time() - 12:
                         self.open_cashbox(printer)
@@ -123,7 +130,8 @@ class EscposDriver(Thread):
 
             except Exception as e:
                 self.set_status('error', str(e))
-                _logger.error(e);
+                errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
+                _logger.error(errmsg);
 
     def push_task(self,task, data = None):
         self.lockedstart()
@@ -142,11 +150,14 @@ class EscposDriver(Thread):
         if len(ips) == 0:
             eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')
         elif len(ips) == 1:
-            eprint.text('IP Address\n'+ips[0]+'\n')
+            eprint.text('IP Address:\n'+ips[0]+'\n')
         else:
-            eprint.text('IP Addresses\n')
+            eprint.text('IP Addresses:\n')
             for ip in ips:
                 eprint.text(ip+'\n')
+
+        if len(ips) >= 1:
+            eprint.text('\nHomepage:\nhttp://'+ips[0]+':8069\n')
 
         eprint.text('\n\n')
         eprint.cut()
@@ -276,12 +287,13 @@ class EscposDriver(Thread):
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
 
+
 driver = EscposDriver()
+
+driver.push_task('printstatus')
 
 hw_proxy.drivers['escpos'] = driver
 
-driver.push_task('printstatus')
-        
 class EscposProxy(hw_proxy.Proxy):
     
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
@@ -293,4 +305,9 @@ class EscposProxy(hw_proxy.Proxy):
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)
+
+    @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
+    def print_receipt(self, receipt):
+        _logger.info('ESC/POS: PRINT XML RECEIPT') 
+        driver.push_task('xml_receipt',receipt)
     

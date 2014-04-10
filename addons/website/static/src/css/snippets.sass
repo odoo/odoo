@@ -151,6 +151,7 @@
     height: 0
     position: absolute
     background: transparent
+    z-index: 1001
     //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.02) ,rgba(255,255,255,.02) 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 75px))
     +border-radius(3px)
     @include transition(opacity 100ms linear)
@@ -238,20 +239,34 @@
             top: auto
             left: 50%
             bottom: -6px
+            margin-left: -50px
             .oe_handle_button
+                position: relative
                 z-index: 3
-                content: "Resize"
-                width: 64px
                 text-align: center
-                margin-left: -32px
+                margin-left: -52px
                 margin-top: -10px
-                cursor: row-resize
                 left: 0px
-                top: 9px
                 &:hover
                     background: rgba(30, 30, 30, .8)
                     color: #fff
                     +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+            .size
+                position: absolute
+                width: 64px
+                cursor: row-resize
+                top: 9px
+                margin-left: 52px
+                padding: 0 5px
+            .auto_size
+                position: absolute
+                width: 100px
+                top: 9px
+                cursor: pointer
+        &.readonly
+            cursor: auto !important
+            &:before, &.size
+                display: none !important
 
     .icon.btn
         display: inline-block
@@ -260,7 +275,7 @@
         position: absolute
         left: 50% !important
         text-align: center
-        top: -11px
+        top: -20px
         z-index: 1002
         > .btn-group
             left: -50%
@@ -484,10 +499,6 @@
             width: 16px
             height: 16px
             display: inline-block
-
-[data-snippet-id] 
-    min-height: 10px
-    min-width: 10px
 
 
 

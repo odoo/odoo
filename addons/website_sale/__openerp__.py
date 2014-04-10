@@ -14,6 +14,7 @@ OpenERP E-Commerce
         'data/data.xml',
         'views/views.xml',
         'views/templates.xml',
+        'views/payment.xml',
         'security/ir.model.access.csv',
         'security/website_sale.xml',
     ],

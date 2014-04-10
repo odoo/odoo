@@ -5,7 +5,7 @@
 <!-- Layout add nav and footer -->
 <template id="footer_custom" inherit_id="website.layout" name="Footer Customer References Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a href="/customers/">Our References</a></li>
+        <li><a href="/customers">Our References</a></li>
     </xpath>
 </template>
 
@@ -44,11 +44,11 @@
                             </t>
                             <t t-foreach="partners_data" t-as="partner_data" class="media">
                                 <div class="media">
-                                    <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                                    <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
                                         <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                                     </a>
                                     <div class="media-body" style="min-height: 64px;">
-                                        <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/" t-esc="partner_data.get('name')"/>
+                                        <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }" t-esc="partner_data.get('name')"/>
                                         <div t-raw="partner_data.get('website_short_description') or ''"/>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
 <template id="opt_country" inherit_option_id="website_customer.index" name="Show Map">
     <xpath expr="//div[@id='ref_left_column']" position="inside">
 
-        <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed/"
+        <iframe t-attf-src="/google_map/?partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/&amp;output=embed"
             style="width:100%; border:0; padding:0; margin:0;"></iframe>
     </xpath>
 </template>
@@ -80,7 +80,7 @@
             <t t-foreach="countries" t-as="country_dict">
                 <t t-if="country_dict['country_id']">
                     <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                        <a t-attf-href="/customers/#{ country_dict['country_id'][0] and 'country/%s/' % slug(country_dict['country_id']) or '' }#{ search_path }">
+                        <a t-attf-href="/customers/#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }">
                             <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
@@ -143,7 +143,7 @@
                         </div>
                     </address>
                     <div>
-                        <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/#references/" t-if="implemented_partner_ids">
+                        <a t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/#references" t-if="implemented_partner_ids">
                             <t t-esc="len(implemented_partner_ids)"/> references
                         </a>
                     </div>
@@ -158,11 +158,11 @@
         <t t-if="implemented_partners_data">
             <h3 id="references">References</h3>
             <div t-foreach="implemented_partners_data" t-as="partner_data" class="media">
-                <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                <a class="pull-left" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
                     <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
-                    <a class="media-heading" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                    <a class="media-heading" t-attf-href="/customers/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
                         <t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/>
                     </a>
                     <div t-if="partner_data.get('website_short_description')" t-raw="partner_data.get('website_short_description')"/>
