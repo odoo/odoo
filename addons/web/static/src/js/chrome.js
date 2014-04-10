@@ -83,8 +83,6 @@ instance.web.Dialog = instance.web.Widget.extend({
     */
     init: function (parent, options, content) {
         var self = this;
-        this.css_layout_outer = ['width','min_width','max_width'];
-        this.css_layout_inner = ['height','min_height','max_height'];
         this._super(parent);
         this.content_to_set = content;
         this.dialog_options = {
@@ -166,7 +164,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             dialog_body.find(".modal-body").addClass(options.dialogClass);
         }
         dialog_body.openerpClass();
-        dialog_body.draggable({ handle: ".modal-header", containment: "window" });
 
         this.$dialog_box.on('hidden.bs.modal',this,function(){
             self.trigger("closing");
