@@ -109,10 +109,10 @@ class website_sale(http.Controller):
             pricelist = partner.property_product_pricelist
         return pricelist
 
-    @http.route(['/shop/',
-        '/shop/page/<int:page>/',
-        '/shop/category/<model("product.public.category"):category>/',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>/'
+    @http.route(['/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
     ], type='http', auth="public", website=True, multilang=True)
     def shop(self, page=0, category=None, search='', **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
@@ -133,7 +133,7 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
         product_obj = pool.get('product.template')
         product_count = product_obj.search_count(cr, uid, domain, context=context)
-        pager = request.website.pager(url="/shop/", total=product_count, page=page, step=PPG, scope=7, url_args=post)
+        pager = request.website.pager(url="/shop", total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG+10, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
         products = product_obj.browse(cr, uid, product_ids, context=context)
 
@@ -169,7 +169,7 @@ class website_sale(http.Controller):
 
         return request.website.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, multilang=True)
     def product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
@@ -253,7 +253,7 @@ class website_sale(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         # must have a draft sale order with lines at this point, otherwise reset
-        if order.state != 'draft':
+        if not order or order.state != 'draft':
             request.website_sale_reset(cr, uid, context=context)
             return request.redirect('/shop')
 
@@ -326,7 +326,7 @@ class website_sale(http.Controller):
 
         # set data
         if isinstance(data, dict):
-            query = dict((field_name, data[field_name]) for field_name in all_fields if data.get(field_name))
+            query = dict((prefix + field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
         else:
             query = dict((prefix + field_name, getattr(data, field_name))
                 for field_name in all_fields if field_name != "company" and getattr(data, field_name))
@@ -351,6 +351,7 @@ class website_sale(http.Controller):
 
         if data.get("shipping_different"):
             for field_name in self.mandatory_shipping_fields:
+                field_name = 'shipping_' + field_name
                 if not data.get(field_name):
                     error[field_name] = 'missing'
 
@@ -447,6 +448,7 @@ class website_sale(http.Controller):
             return redirection
 
         values = self.checkout_values(post)
+
         values["error"] = self.checkout_form_validate(values["checkout"])
         if values["error"]:
             return request.website.render("website_sale.checkout", values)
@@ -532,7 +534,7 @@ class website_sale(http.Controller):
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
-            return request.redirect("/shop/checkout/")
+            return request.redirect("/shop/checkout")
 
         # find an already existing transaction
         tx = request.website.sale_get_transaction()
@@ -627,7 +629,7 @@ class website_sale(http.Controller):
             assert order.id == request.session.get('sale_last_order_id')
 
         if not tx or not order:
-            return request.redirect('/shop/')
+            return request.redirect('/shop')
 
         if not order.amount_total or tx.state == 'done':
             # confirm the quotation
@@ -644,9 +646,9 @@ class website_sale(http.Controller):
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset(context=context)
 
-        return request.redirect('/shop/confirmation/')
+        return request.redirect('/shop/confirmation')
 
-    @http.route(['/shop/confirmation/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/confirmation'], type='http', auth="public", website=True, multilang=True)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :
@@ -661,7 +663,7 @@ class website_sale(http.Controller):
         if sale_order_id:
             order = request.registry['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
         else:
-            return request.redirect('/shop/')
+            return request.redirect('/shop')
 
         return request.website.render("website_sale.confirmation", {'order': order})
 
@@ -669,7 +671,7 @@ class website_sale(http.Controller):
     # Edit
     #------------------------------------------------------
 
-    @http.route(['/shop/add_product/'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
+    @http.route(['/shop/add_product'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
     def add_product(self, name=None, category=0, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         if not name:

@@ -124,10 +124,12 @@ class website(orm.Model):
                 self.pool['sale.order'].write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
         if sale_order_id:
+            sale_order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+            if not sale_order.exists():
+                request.session['sale_order_id'] = None
+                return None
             # TODO cache partner_id session
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-            sale_order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-
             # check for change of pricelist with a coupon
             # TODO cache sale_order.pricelist_id.code in session
             if code and code != sale_order.pricelist_id.code:
