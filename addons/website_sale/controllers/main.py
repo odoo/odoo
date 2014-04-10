@@ -417,7 +417,7 @@ class Ecommerce(http.Controller):
 
         # must have a draft sale order with lines at this point, otherwise reset
         order = self.get_order()
-        if not order or order.state != 'draft' or not order.order_line:
+        if not order or order.state not in ['draft', 'shopping_cart'] or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop')
         # if transaction pending / done: redirect to confirmation
@@ -473,7 +473,7 @@ class Ecommerce(http.Controller):
 
         # must have a draft sale order with lines at this point, otherwise redirect to shop
         order = self.get_order()
-        if not order or order.state != 'draft' or not order.order_line:
+        if not order or order.state not in ['draft', 'shopping_cart'] or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop')
         # if transaction pending / done: redirect to confirmation
