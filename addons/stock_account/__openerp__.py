@@ -56,6 +56,7 @@ Dashboard / Reports for Warehouse Management will include:
         'product_data.xml',
         'product_view.xml',
         'stock_account_view.xml',
+        'res_config_view.xml',
     ],
     'test': [
 

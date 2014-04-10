@@ -45,10 +45,6 @@ class stock_config_settings(osv.osv_memory):
         'module_claim_from_delivery': fields.boolean("Allow claim on deliveries",
             help='Adds a Claim link to the delivery order.\n'
                  '-This installs the module claim_from_delivery.'),
-        'module_stock_invoice_directly': fields.boolean("Create and open the invoice when the user finish a delivery order",
-            help='This allows to automatically launch the invoicing wizard if the delivery is '
-                 'to be invoiced when you send or deliver goods.\n'
-                 '-This installs the module stock_invoice_directly.'),
         'module_product_expiry': fields.boolean("Expiry date on serial numbers",
             help="""Track different dates on products and serial numbers.
 The following dates can be tracked:
@@ -76,8 +72,6 @@ This installs the module product_expiry."""),
         'group_stock_tracking_owner': fields.boolean("Manage owner on stock",
             implied_group='stock.group_tracking_owner',
             help="""This way you can receive products attributed to a certain owner. """),
-        'module_stock_account': fields.boolean("Generate accounting entries per stock movement",
-            help="""Allows to configure inventory valuations on products and product categories."""),
         'group_stock_multiple_locations': fields.boolean("Manage multiple locations and warehouses",
             implied_group='stock.group_locations',
             help="""This will show you the locations and allows you to define multiple picking types and warehouses."""),
