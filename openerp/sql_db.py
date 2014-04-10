@@ -547,7 +547,7 @@ class Connection(object):
     def test_cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create test %scursor to %r', cursor_type, self.dbname)
-        return TestCursor(self._pool, self.dbname, serialized=serialized)
+        return TestCursor(self.__pool, self.dbname, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
