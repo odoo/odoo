@@ -86,10 +86,10 @@ openerp.account = function (instance) {
             var self = this;
             var ids = this.get_selected_ids();
             if (ids.length === 0) {
-                instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), {
+                new instance.web.Dialog(this, {
                     title: _t("Warning"),
-                    modal: true
-                });
+                    modal_size: 'medium',
+                }, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
 
