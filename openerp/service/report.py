@@ -49,7 +49,7 @@ def exp_render_report(db, uid, object, ids, datas=None, context=None):
 
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
-    cr = openerp.registry(db).db.cursor()
+    cr = openerp.registry(db).cursor()
     try:
         result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
         if not result:
@@ -87,7 +87,7 @@ def exp_report(db, uid, object, ids, datas=None, context=None):
     self_reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
     def go(id, uid, ids, datas, context):
-        cr = openerp.registry(db).db.cursor()
+        cr = openerp.registry(db).cursor()
         try:
             result, format = openerp.report.render_report(cr, uid, ids, object, datas, context)
             if not result:

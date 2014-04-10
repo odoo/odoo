@@ -104,7 +104,9 @@ class ir_actions_report_xml(osv.osv):
             cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s", (name,))
             r = cr.dictfetchone()
             if r:
-                if r['report_rml'] or r['report_rml_content_data']:
+                if r['report_type'] in ['qweb-pdf', 'qweb-html']:
+                    return r['report_name']
+                elif r['report_rml'] or r['report_rml_content_data']:
                     if r['parser']:
                         kwargs = { 'parser': operator.attrgetter(r['parser'])(openerp.addons) }
                     else:
@@ -127,7 +129,11 @@ class ir_actions_report_xml(osv.osv):
         Look up a report definition and render the report for the provided IDs.
         """
         new_report = self._lookup_report(cr, name)
-        return new_report.create(cr, uid, res_ids, data, context)
+        # in order to use current yml test files with qweb reports
+        if isinstance(new_report, (str, unicode)):
+            return self.pool['report'].get_pdf(cr, uid, res_ids, new_report, data=data, context=context), 'pdf'
+        else:
+            return new_report.create(cr, uid, res_ids, data, context)
 
     _name = 'ir.actions.report.xml'
     _inherit = 'ir.actions.actions'
