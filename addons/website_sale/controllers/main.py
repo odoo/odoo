@@ -514,14 +514,7 @@ class Ecommerce(http.Controller):
         if error:
             return request.website.render("website_sale.checkout", values)
 
-        company_name = checkout['company']
-        company_id = None
-        if post['company']:
-            company_ids = orm_partner.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
-            company_id = (company_ids and company_ids[0]) or orm_partner.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
-
         billing_info = dict((k, v) for k,v in checkout.items() if "shipping_" not in k and k != "company")
-        billing_info['parent_id'] = company_id
 
         partner_id = None
         public_id = request.registry['website'].get_public_user(cr, uid, context)
@@ -542,7 +535,8 @@ class Ecommerce(http.Controller):
             shipping_info = {
                 'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
-                'street': post['shipping_street'],
+                'street': checkout['company'],
+                'street2': post['shipping_street'],
                 'city': post['shipping_city'],
                 'name': post['shipping_name'],
                 'email': post['email'],
