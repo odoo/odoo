@@ -43,7 +43,7 @@ class CheckoutInfo(object):
         result = dict((prefix + field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
         result[prefix + 'state_id'] = partner.state_id and partner.state_id.id or ''
         result[prefix + 'country_id'] = partner.country_id and partner.country_id.id or ''
-        result[prefix + 'company'] = partner.parent_id and partner.parent_id.name or ''
+        result[prefix + 'company'] = partner.commercial_partner_id and partner.commercial_partner_id.is_company and partner.commercial_partner_id.name or ''
         return result
 
     def from_post(self, post):
