@@ -107,9 +107,6 @@ class stock_landed_cost(osv.osv):
             self.write(cr, uid, cost.id, {'state': 'open'}, context=context)
         return True
 
-    def button_cancel(self, cr ,uid, ids, context=None):
-        return True
-
     def compute_landed_cost(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
         for cost in self.browse(cr, uid, ids, context=None):
@@ -155,7 +152,7 @@ class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
     _description = 'Stock Landed Cost Lines'
 
-    def onchange_product_id(self, cr, uid, ids, product_id=False, price_unit=0.0, account_id=False, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
         result = {}
         if not product_id:
             return {'value': {'quantity': 0.0, 'price_unit': 0.0}}
@@ -164,6 +161,7 @@ class stock_landed_cost_lines(osv.osv):
         result['name'] = product.name
         result['split_method'] = product.split_method
         result['price_unit'] = product.standard_price
+        result['account_id'] = product.property_account_expense and product.property_account_expense.id or False
         return {'value': result}
 
     _columns = {
