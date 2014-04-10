@@ -951,19 +951,15 @@ class account_voucher(osv.osv):
     def cancel_voucher(self, cr, uid, ids, context=None):
         reconcile_pool = self.pool.get('account.move.reconcile')
         move_pool = self.pool.get('account.move')
-
+        move_line_pool = self.pool.get('account.move.line')
         for voucher in self.browse(cr, uid, ids, context=context):
-            # refresh to make sure you don't unlink an already removed move
-            voucher.refresh()
-            recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    recs += [line.reconcile_id.id]
-                if line.reconcile_partial_id:
-                    recs += [line.reconcile_partial_id.id]
-
-            reconcile_pool.unlink(cr, uid, recs)
-
+                    move_lines = [move_line.id for move_line in line.reconcile_id.line_id]
+                    move_lines.remove(line.id)
+                    reconcile_pool.unlink(cr, uid, [line.reconcile_id.id])
+                    if len(move_lines) >= 2:
+                        move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto',context=context)
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
                 move_pool.unlink(cr, uid, [voucher.move_id.id])
