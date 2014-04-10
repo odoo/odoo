@@ -453,12 +453,25 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     build_rows: function (raw) {
         var self = this,
             pivot = this.pivot,
-            m, cell;
+            m, i, cell;
 
         return _.map(pivot.rows.headers, function (row) {
             var cells = [];
+            var pivot_cells = [];
+            for (i = 0; i < pivot.cells.length; i++) {
+                if (pivot.cells[i].x == row.id || pivot.cells[i].y == row.id) {
+                    pivot_cells.push(pivot.cells[i]);
+                }
+            }
             _.each(pivot.get_cols_leaves(), function (col) {
-                var values = pivot.get_values(row.id,col.id);
+                var values;
+                for (i = 0; i < pivot_cells.length; i++) {
+                    if (pivot_cells[i].x == col.id || pivot_cells[i].y == col.id) {
+                        values = pivot_cells[i].values;
+                        break;
+                    }
+                }
+                if (!values) { values = new Array(pivot.measures.length);}
                 for (m = 0; m < pivot.measures.length; m++) {
                     cells.push(self.make_cell(row,col,values[m], m, raw));
                 }

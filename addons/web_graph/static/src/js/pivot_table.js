@@ -81,10 +81,15 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
 	get_values: function (id1, id2, default_values) {
-		var cell = _.findWhere(this.cells, {x: Math.min(id1, id2), y: Math.max(id1, id2)});
-		return (cell !== undefined) ?
-                    cell.values :
-                    (default_values || new Array(this.measures.length));
+        var cells = this.cells,
+            x = Math.min(id1, id2),
+            y = Math.max(id1, id2);
+        for (var i = 0; i < cells.length; i++) {
+            if (cells[i].x == x && cells[i].y == y) {
+                return cells[i].values;
+            }
+        }
+        return (default_values || new Array(this.measures.length));
 	},
 
 	// ----------------------------------------------------------------------
@@ -248,7 +253,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
         var self = this;
         return this.perform_requests().then (function () {
             var data = Array.prototype.slice.call(arguments);
-            self.no_data = !data[0][0].attributes.length;
+            self.no_data = !data[0].length;
             if (self.no_data) {
                 return;
             }
@@ -276,7 +281,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             var row_value = (prefix || []).concat(data_pt.attributes.value.slice(0,index));
             var col_value = data_pt.attributes.value.slice(index);
             
-            if (expand && !_.find(col_headers, function (hdr) {return _.isEqual(col_value, hdr.path);})) {
+            if (expand && !_.find(col_headers, function (hdr) {return self.isEqual(col_value, hdr.path);})) {
                 return;
             }
             var row = self.find_or_create_header(row_headers, row_value, data_pt);
@@ -306,8 +311,9 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     },
 
     find_or_create_header: function (headers, path, data_pt) {
+        var self = this;
         var hdr = _.find(headers, function (header) {
-            return _.isEqual(path, header.path);
+            return self.isEqual(path, header.path);
         });
         if (hdr) {
             return hdr;
@@ -323,7 +329,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             title: _t(_.last(path))
         });
         var parent = _.find(headers, function (header) {
-            return _.isEqual(header.path, _.initial(path, 1));
+            return self.isEqual(header.path, _.initial(path, 1));
         });
 
         var previous = parent.children.length ? _.last(parent.children) : parent;
@@ -355,10 +361,11 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 
     // set the 'expanded' status of new_headers more or less like root.headers, with root as root
     set_headers: function(new_headers, root) {
+        var self = this;
         if (root.headers) {
             _.each(root.headers, function (header) {
                 var corresponding_header = _.find(new_headers, function (h) {
-                    return _.isEqual(h.path, header.path);
+                    return self.isEqual(h.path, header.path);
                 });
                 if (corresponding_header && header.expanded) {
                     corresponding_header.expanded = true;
@@ -424,6 +431,16 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     // if field is a fieldname, returns field, if field is field_id:interval, retuns field_id
     raw_field: function (field) {
         return field.split(':')[0];
+    },
+
+    isEqual: function (path1, path2) {
+        if (path1.length !== path2.length) { return false; }
+        for (var i = 0; i < path1.length; i++) {
+            if (path1[i] !== path2[i]) { 
+                return false; 
+            }
+        }
+        return true;
     },
 
 });
