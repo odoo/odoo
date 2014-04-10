@@ -326,11 +326,13 @@ class website_sale(http.Controller):
 
         # set data
         if isinstance(data, dict):
-            query = dict((prefix + field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
+            query = dict((prefix + field_name, data[prefix + field_name])
+                for field_name in all_fields if data.get(prefix + field_name))
         else:
-            query = dict((prefix + field_name, getattr(data, field_name)) for field_name in all_fields if getattr(data, field_name))
+            query = dict((prefix + field_name, getattr(data, field_name))
+                for field_name in all_fields if field_name != "company_name" and getattr(data, field_name))
             if data.parent_id:
-                query[prefix + 'company_name'] = data.company_name or data.parent_id.name
+                query[prefix + 'company_name'] = data.parent_id.name
 
         if query.get(prefix + 'state_id'):
             query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
