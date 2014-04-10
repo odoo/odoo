@@ -300,7 +300,6 @@ class WebsiteForum(http.Controller):
             return login_redirect()
 
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
 
         create_context = dict(context)
         new_question_id = request.registry['website.forum.post'].create(
@@ -321,24 +320,18 @@ class WebsiteForum(http.Controller):
             if record.user_id.id == request.uid:
                 answer = record
         return werkzeug.utils.redirect("/forum/%s/question/%s/edit/%s" % (slug(forum), question.id, answer.id))
- 
+
     @http.route(['/forum/<model("website.forum"):forum>/edit/question/<model("website.forum.post"):question>',
                  '/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>/edit/<model("website.forum.post"):answer>']
                 , type='http', auth="user", website=True, multilang=True)
     def edit_post(self, forum, question, answer=None, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
 
-        history_obj = request.registry['website.forum.post.history']
         User = request.registry['res.users']
-        User.write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
         user = User.browse(cr, uid, uid, context=context)
 
-        post_id = answer.id if answer else question.id
-        history_ids = history_obj.search(cr, uid, [('post_id', '=', post_id)], order = "id desc", context=context)
-        post_history = history_obj.browse(cr, uid, history_ids, context=context)
-
         tags = ""
-        for tag_name in question.tags:
+        for tag_name in question.tag_ids:
             tags += tag_name.name + ","
 
         values = {
@@ -349,7 +342,6 @@ class WebsiteForum(http.Controller):
             'is_answer': True if answer else False,
             'notifications': self._get_notifications(),
             'forum': forum,
-            'post_history': post_history,
             'searches': kwargs
         }
         return request.website.render("website_forum.edit_post", values)
@@ -357,7 +349,6 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("website.forum"):forum>/post/save', type='http', auth="user", multilang=True, methods=['POST'], website=True)
     def save_edited_post(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
-        request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
         vals = {
             'content': post.get('content'),
         }
