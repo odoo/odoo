@@ -131,7 +131,7 @@ setuptools.setup(
           'python-ldap', # optional
           'python-openid',
           'pytz',
-          'pywebdav <= 0.9.4',
+          'pywebdav < 0.9.8',
           'pyyaml',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
