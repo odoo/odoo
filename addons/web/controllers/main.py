@@ -606,16 +606,21 @@ class Home(http.Controller):
 
     @http.route('/web/js/<xmlid>', type='http', auth="none")
     def js_bundle(self, xmlid, **kw):
-        values = dict(manifest_list=manifest_list)
-        html = request.render(xmlid, lazy=False, qcontext=values)
-        bundle = AssetsBundle(xmlid, html)
+        values = dict(manifest_list=manifest_list) # manifest backward compatible mode, to be removed
+        assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        bundle = AssetsBundle(xmlid, assets_html)
+        bundle.last_modified
+        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
+            return werkzeug.wrappers.Response(status=304)
         return request.make_response(bundle.js(), [('Content-Type', 'application/javascript')])
 
     @http.route('/web/css/<xmlid>', type='http', auth='none')
     def css_bundle(self, xmlid, **kw):
-        values = dict(manifest_list=manifest_list)
-        html = request.render(xmlid, lazy=False, qcontext=values)
-        bundle = AssetsBundle(xmlid, html)
+        values = dict(manifest_list=manifest_list) # manifest backward compatible mode, to be removed
+        assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        bundle = AssetsBundle(xmlid, assets_html)
+        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
+            return werkzeug.wrappers.Response(status=304)
         return request.make_response(bundle.css(), [('Content-Type', 'text/css')])
 
 class WebClient(http.Controller):
