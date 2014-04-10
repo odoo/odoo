@@ -94,5 +94,25 @@
       </field>
     </record>
 
+    <record id="sale_order_form_state_button" model="ir.ui.view">
+        <field name="name">sale.order.form.state.button</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name='state' position="before">
+                <button name="action_button_confirm" states="shopping_cart" string="Confirm Sale" type="object" groups="base.group_user"/>
+                <button name="cancel" states="shopping_cart" string="Cancel Quotation" groups="base.group_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sale.action_orders" model="ir.actions.act_window">
+        <field name="domain">[('state', 'not in', ('draft', 'shopping_cart', 'sent', 'cancel'))]</field>
+    </record>
+
+    <record id="sale.action_quotations" model="ir.actions.act_window">
+        <field name="domain">[('state','in',('draft','shopping_cart','sent','cancel'))]</field>
+    </record>
+
  </data>
 </openerp>

@@ -80,14 +80,14 @@
                         <button name="action_quotation_send" string="Send by Email" type="object" states="sent,progress,manual" groups="base.group_user"/>
                         <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                         <button name="print_quotation" string="Print" type="object" states="sent,progress,manual" groups="base.group_user"/>
-                        <button name="action_button_confirm" states="draft,shopping_cart" string="Confirm Sale" type="object" groups="base.group_user"/>
+                        <button name="action_button_confirm" states="draft" string="Confirm Sale" type="object" groups="base.group_user"/>
                         <button name="action_button_confirm" states="sent" string="Confirm Sale" class="oe_highlight" type="object" groups="base.group_user"/>
                         <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
                             attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
                         <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                             type="action" states="manual" class="oe_highlight" groups="base.group_user"/>
                         <button name="copy_quotation" states="cancel" string="New Copy of Quotation" type="object"/>
-                        <button name="cancel" states="draft,shopping_cart,sent" string="Cancel Quotation" groups="base.group_user"/>
+                        <button name="cancel" states="draft,sent" string="Cancel Quotation" groups="base.group_user"/>
                         <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" groups="base.group_user"/>
                         <button name="invoice_cancel" states="invoice_except" string="Cancel Order" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}'/>
@@ -277,7 +277,7 @@
                     'search_default_my_sale_orders_filter': 1
                 }
             </field>
-            <field name="domain">[('state', 'not in', ('draft', 'shopping_cart', 'sent', 'cancel'))]</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a quotation that can be converted into a sales
@@ -321,7 +321,7 @@
             <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_my_sale_orders_filter': 1}</field>
-            <field name="domain">[('state','in',('draft','shopping_cart','sent','cancel'))]</field>
+            <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

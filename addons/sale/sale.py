@@ -170,7 +170,6 @@ class sale_order(osv.osv):
         'client_order_ref': fields.char('Customer Reference', size=64),
         'state': fields.selection([
             ('draft', 'Draft Quotation'),
-            ('shopping_cart', 'Shopping Cart'),
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
             ('waiting_date', 'Waiting Schedule'),
