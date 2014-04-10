@@ -259,36 +259,6 @@ def concat_xml(file_list):
             root.append(child)
     return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
-def concat_files(file_list, reader=None, intersperse=""):
-    """ Concatenates contents of all provided files
-
-    :param list(str) file_list: list of files to check
-    :param function reader: reading procedure for each file
-    :param str intersperse: string to intersperse between file contents
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    if reader is None:
-        def reader(f):
-            import codecs
-            with codecs.open(f, 'rb', "utf-8-sig") as fp:
-                return fp.read().encode("utf-8")
-
-    files_content = []
-    for fname in file_list:
-        contents = reader(fname)
-        checksum.update(contents)
-        files_content.append(contents)
-
-    files_concat = intersperse.join(files_content)
-    return files_concat, checksum.hexdigest()
-
-concat_js_cache = {}
-
 def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
@@ -640,70 +610,6 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/qweblist', type='json', auth="none")
     def qweblist(self, mods=None):
         return manifest_list('qweb', mods=mods)
-
-    @http.route('/web/webclient/css', type='http', auth="none")
-    def css(self, mods=None, db=None):
-        files = list(manifest_glob('css', addons=mods, db=db))
-        last_modified = get_last_modified(f[0] for f in files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        file_map = dict(files)
-
-        rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
-        rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
-
-        def reader(f):
-            """read the a css file and absolutify all relative uris"""
-            with open(f, 'rb') as fp:
-                data = fp.read().decode('utf-8')
-
-            path = file_map[f]
-            web_dir = os.path.dirname(path)
-
-            data = re.sub(
-                rx_import,
-                r"""@import \1%s/""" % (web_dir,),
-                data,
-            )
-
-            data = re.sub(
-                rx_url,
-                r"url(\1%s/" % (web_dir,),
-                data,
-            )
-            return data.encode('utf-8')
-
-        content, checksum = concat_files((f[0] for f in files), reader)
-
-        # move up all @import and @charset rules to the top
-        matches = []
-        def push(matchobj):
-            matches.append(matchobj.group(0))
-            return ''
-
-        content = re.sub(re.compile("(@charset.+;$)", re.M), push, content)
-        content = re.sub(re.compile("(@import.+;$)", re.M), push, content)
-
-        matches.append(content)
-        content = '\n'.join(matches)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'text/css')]),
-            last_modified, checksum)
-
-    @http.route('/web/webclient/js', type='http', auth="none")
-    def js(self, mods=None, db=None):
-        files = [f[0] for f in manifest_glob('js', addons=mods, db=db)]
-        last_modified = get_last_modified(files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content, checksum = concat_js(files)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'application/javascript')]),
-            last_modified, checksum)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
