@@ -318,11 +318,6 @@
                 <h3 t-if="not is_answer">Edit question</h3>
                 <h3 t-if="is_answer">Edit answer</h3>
                 <form t-attf-action="/forum/#{ slug(forum) }/post/save" method="post" role="form" class="tag_text">
-                    <select class="form-control post_history">
-                        <t t-foreach="post_history" t-as="history">
-                            <option t-att-value="history.id"><t t-esc="history.name"/></option>
-                        </t>
-                    </select>
                     <div t-if="not is_answer">
                         <input type="text" name="question_name" id="question_name" required="True"
                             t-attf-value="#{question.name}" class="form-control" placeholder="Edit your Question"/>
