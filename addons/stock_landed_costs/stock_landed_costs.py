@@ -137,10 +137,10 @@ class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
     _description = 'Stock Landed Cost Lines'
 
-    def onchange_product_id(self, cr, uid, ids, product_id=False, quantity=0.0, uom_id=False, price_unit=0.0, account_id=False, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id=False, price_unit=0.0, account_id=False, context=None):
         result = {}
         if not product_id:
-            return {'value': {'quantity': 0.0, 'uom_id': False, 'price_unit': 0.0}}
+            return {'value': {'quantity': 0.0, 'price_unit': 0.0}}
 
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         result['name'] = product.name
@@ -153,7 +153,7 @@ class stock_landed_cost_lines(osv.osv):
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
-        'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method'),
+        'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
     }
 
