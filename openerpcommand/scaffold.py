@@ -17,8 +17,15 @@ def run(args):
     env.filters['snake'] = snake
     args.dependency = 'web' if args.controller else 'base'
 
+    module_name = snake(args.module)
     module = functools.partial(
-        os.path.join, args.modules_dir, snake(args.module))
+        os.path.join, args.modules_dir, module_name)
+
+    if args.controller is True:
+        args.controller = module_name
+
+    if args.model is True:
+        args.model = module_name
 
     if os.path.exists(module()):
         message = "The path `%s` already exists." % module()
@@ -53,13 +60,13 @@ def add_parser(subparsers):
 
     controller = parser.add_mutually_exclusive_group()
     controller.add_argument('--controller', type=identifier,
-        help="The name of the controller to generate (default: %(default)s)")
+        help="The name of the controller to generate")
     controller.add_argument('--no-controller', dest='controller',
         action='store_const', const=None, help="Do not generate a controller")
 
     model = parser.add_mutually_exclusive_group()
     model.add_argument('--model', type=identifier,
-       help="The name of the model to generate (default: %(default)s)")
+       help="The name of the model to generate")
     model.add_argument('--no-model', dest='model',
        action='store_const', const=None, help="Do not generate a model")
 
@@ -73,13 +80,13 @@ def add_parser(subparsers):
                      help="Website of the module author")
     mod.add_argument('--category', default="Uncategorized",
         help="Broad categories to which the module belongs, used for "
-             "filtering within OpenERP and on apps.openerp.com. "
+             "filtering within OpenERP and on apps.openerp.com."
              "Defaults to %(default)s")
     mod.add_argument('--summary', default="",
         help="Short (1 phrase/line) summary of the module's purpose, used as "
              "subtitle on modules listing or apps.openerp.com")
 
-    parser.set_defaults(run=run, controller='my_controller', model='my_model')
+    parser.set_defaults(run=run, controller=True, model=True)
 
 def snake(s):
     """ snake cases ``s``
