@@ -208,7 +208,7 @@ class website_forum(http.Controller):
 
         post = request.registry['website.forum.post'].browse(cr, uid, int(post_id), context=context)
         question_id = post.parent_id.id if post.parent_id else post.id
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),question_id))
+        return werkzeug.utils.redirect("/forum/%s/question/%s#comments-%s" % (slug(forum), question_id, post.id))
 
     @http.route(['/forum/<model("website.forum"):forum>/user/<model("res.users"):user>'], type='http', auth="public", website=True, multilang=True)
     def open_user(self, forum, user, **post):
@@ -339,7 +339,7 @@ class website_forum(http.Controller):
         request.registry['res.users'].write(cr, SUPERUSER_ID, uid, {'forum': True}, context=context)
 
         create_context = dict(context)
-        new_question_id = request.registry['website.forum.post'].create(
+        answer_id = request.registry['website.forum.post'].create(
             cr, uid, {
                 'forum_id': forum.id,
                 'user_id': uid,
@@ -348,7 +348,7 @@ class website_forum(http.Controller):
                 'state': 'active',
                 'active': True,
             }, context=create_context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post_id))
+        return werkzeug.utils.redirect("/forum/%s/question/%s#answer-%s" % (slug(forum), post_id, answer_id))
 
     @http.route(['/forum/<model("website.forum"):forum>/question/<model("website.forum.post"):question>/editanswer']
                 , type='http', auth="user", website=True, multilang=True)
@@ -411,7 +411,7 @@ class website_forum(http.Controller):
         vals.update({'tags': [(6, 0, question_tags)], 'name': post.get('question_name')})
 
         post_id = post.get('answer_id') if post.get('answer_id') else post.get('question_id')
-        new_question_id = request.registry['website.forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
+        request.registry['website.forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('question_id')))
 
     @http.route(['/forum/<model("website.forum"):forum>/tag'], type='http', auth="public", website=True, multilang=True)

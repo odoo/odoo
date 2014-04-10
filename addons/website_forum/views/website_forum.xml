@@ -542,7 +542,7 @@
 
         <template id="comments">
             <div class="row clearfix">
-                <div class="col-sm-10 col-sm-offset-2">
+                <div class="col-sm-10 col-sm-offset-2" t-attf-id="comments-#{object.id}">
                     <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_comment_grey" style="padding: 4px;">
                         <small class="text-muted">
                             <button type="button" t-if="user.id == message.create_uid.id or user.karma&gt;=750" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
