@@ -54,6 +54,8 @@ have a new option to import payment orders as bank statement lines.
         'account_payment_workflow.xml',
         'account_payment_sequence.xml',
         'account_payment_report.xml',
+
+        'views/report_paymentorder.xml',
     ],
     'demo': ['account_payment_demo.xml'],
     'test': [
