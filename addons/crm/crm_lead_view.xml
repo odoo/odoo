@@ -103,9 +103,8 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button string="Schedule/Log Call" 
-                                name="%(opportunity2phonecall_act)d"
-                                type="action"/>
+                        <button class="oe_inline oe_stat_button" type="action" name="%(opportunity2phonecall_act)d" icon="fa-phone"  
+                            widget="statinfo" string="Calls"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -389,11 +388,13 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button string="Schedule/Log Call" type="action"
-                                name="%(opportunity2phonecall_act)d"/>
-                            <button string="Meeting" type="object"
-                                name="action_makeMeeting"
-                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
+                            <button class="oe_inline oe_stat_button" type="action" name="%(opportunity2phonecall_act)d" icon="fa-phone"  
+                                widget="statinfo" string="Calls"/>
+                            <button class="oe_inline oe_stat_button" type="object" 
+                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"
+                                name="action_makeMeeting" icon="fa-calendar">
+                                <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                            </button>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>

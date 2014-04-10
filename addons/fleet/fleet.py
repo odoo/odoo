@@ -313,6 +313,20 @@ class fleet_vehicle(osv.Model):
         except ValueError:
             model_id = False
         return model_id
+    
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'odometer_count': 0, 'fuel_logs_count': 0, 'service_count': 0, 'contract_count': 0, 'cost_count': 0,}), ids))
+        try:
+            for costs in self.browse(cr, uid, ids, context=context):
+                res[costs.id] = {'odometer_count': len(costs.odometer_ids),
+                'fuel_logs_count': len(costs.log_fuel),
+                'service_count': len(costs.log_services),
+                'contract_count': len(costs.log_contracts),
+                'cost_count': len(costs.costs_ids)
+                }
+        except:
+            pass
+        return res
 
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
@@ -327,6 +341,13 @@ class fleet_vehicle(osv.Model):
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
+        'costs_ids': fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs'),
+        'odometer_ids': fields.one2many('fleet.vehicle.odometer', 'vehicle_id', 'Odometer'),
+        'cost_count': fields.function(_count_all, type='integer', string="Costs" , multi=True),
+        'contract_count': fields.function(_count_all, type='integer', string='Contracts', multi=True),
+        'service_count': fields.function(_count_all, type='integer', string='Services', multi=True),
+        'fuel_logs_count': fields.function(_count_all, type='integer', string='Fuel Logs', multi=True),
+        'odometer_count': fields.function(_count_all, type='integer', string='Odometer', multi=True),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color': fields.char('Color', size=32, help='Color of the vehicle'),
         'state_id': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),

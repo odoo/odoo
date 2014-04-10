@@ -614,8 +614,17 @@ class product_template(osv.osv):
 
 class product_product(osv.osv):
     _inherit="product.product"
+    def _orderpoint_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for orderpoint in self.browse(cr, uid, ids, context=context):
+                res[orderpoint.id] = len(orderpoint.orderpoint_ids)
+        except:
+            pass
+        return res
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
+        'orderpoint_count': fields.function(_orderpoint_count, string='# Orderpoints', type='integer'),
     }
 
 

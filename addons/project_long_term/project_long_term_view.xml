@@ -102,9 +102,10 @@
                        <label for="use_phases"/>
                 </xpath>
                 <xpath expr="//div[@name='buttons']" position='inside'>
-                        <button name="%(act_project_phases)d"
-                                string="Phases" type="action"
-                                attrs="{'invisible':[('use_phases','=', 0)]}"/>
+                    <button class="oe_inline oe_stat_button" type="action"
+                        attrs="{'invisible':[('use_phases','=', 0)]}" name="%(act_project_phases)d" icon="fa-qrcode">
+                        <field string="Phases" name="phase_count" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>
@@ -151,7 +152,11 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet>
-                    <button name="%(project_phase_task_list)d" string="Related Tasks" type="action" class="oe_right"/>
+                    <div class="oe_button_box oe_right">
+                    <button class=" oe_inline oe_stat_button " name= "%(project_phase_task_list)d" type="action" icon="fa-tasks">
+                        <field string="Tasks" name="tasks_count" widget="statinfo"/>
+                    </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>

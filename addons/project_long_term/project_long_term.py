@@ -98,7 +98,14 @@ class project_phase(osv.osv):
             else:
                 res[phase.id] = round(100.0 * done / tot, 2)
         return res
-
+    def _tasks_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for task in self.browse(cr, uid, ids, context=context):
+                res[task.id] = len(task.task_ids)
+        except:
+            pass
+        return res
     _columns = {
         'name': fields.char("Name", size=64, required=True),
         'date_start': fields.datetime('Start Date', select=True, help="It's computed by the scheduler according the project date or the end date of the previous phase.", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -119,6 +126,7 @@ class project_phase(osv.osv):
                                   help='If the phase is created the status \'Draft\'.\n If the phase is started, the status becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' status.\
                                   \n If the phase is over, the status is set to \'Done\'.'),
         'progress': fields.function(_compute_progress, string='Progress', help="Computed based on related tasks"),
+        'tasks_count': fields.function(_tasks_count, string='# Related Tasks', type='integer'),
      }
     _defaults = {
         'state': 'draft',

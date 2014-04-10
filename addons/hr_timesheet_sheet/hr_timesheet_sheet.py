@@ -103,6 +103,17 @@ class hr_timesheet_sheet(osv.osv):
         for sheet in self.browse(cr, uid, ids, context=context):
             if sheet.employee_id.id not in employee_ids: employee_ids.append(sheet.employee_id.id)
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
+    
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'timesheet_activity_count': 0, 'attendance_count': 0,}), ids))
+        try:
+           for datas in self.browse(cr, uid, ids, context=context):
+                res[datas.id] = {'timesheet_activity_count': len(datas.timesheet_activity_ids),
+                'attendance_count': len(datas.attendances_ids),
+                }
+        except:
+            pass
+        return res
 
     _columns = {
         'name': fields.char('Note', size=64, select=1,
@@ -134,6 +145,9 @@ class hr_timesheet_sheet(osv.osv):
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'department_id':fields.many2one('hr.department','Department'),
+        'timesheet_activity_ids': fields.one2many('hr.analytic.timesheet', 'sheet_id', 'Timesheet Activities'),
+        'timesheet_activity_count': fields.function(_count_all, type='integer', string='Timesheet Activities', multi=True),
+        'attendance_count': fields.function(_count_all, type='integer', string="Attendances", multi=True),
     }
 
     def _default_date_from(self, cr, uid, context=None):

@@ -239,12 +239,23 @@
                             <field name="date"/>
                             <field name="active"/>
                         </group>
-                        <group groups="stock.group_tracking_lot" string="Traceability">
-                            <button name="action_traceability" string="Upstream Traceability" type="object"
-                                 colspan="2"/>
-                            <button name="action_traceability" string="Downstream Traceability" type="object"
-                                context="{'type': 'move_history_ids'}" colspan="2"/>
-                        </group>
+                        <group  class="oe_right" groups="stock.group_tracking_lot" string="Traceability">
+                            <div class="oe_right oe_button_box">
+                                <button name="action_traceability" 
+                                    string="Upstream"
+                                    help="Upstream Traceability"
+                                    class="oe_stat_button"
+                                    icon="fa-arrow-up" 
+                                    type="object" colspan="2"/>
+                                <button name="action_traceability" 
+                                    string="Downstream"
+                                    help="Downstream Traceability"
+                                    class="oe_stat_button"
+                                    icon="fa-arrow-down" 
+                                    type="object"
+                                    context="{'type': 'move_history_ids'}" colspan="2"/>
+                            </div>
+                        </group>                            
                     </group>
                     <field name="move_ids"/>
                 </form>
@@ -344,8 +355,16 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
-                        <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}"/>
+                        <button name="action_traceability" 
+                            string="Upstream" class="oe_stat_button" 
+                            help="Upstream Traceability"
+                            icon="fa-arrow-up" type="object" 
+                            context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
+                        <button name="action_traceability" 
+                            string="Downstream" class="oe_stat_button"
+                            icon="fa-arrow-down" type="object" 
+                            help="Downstream Traceability"
+                            context="{'type': 'move_history_ids', 'field': 'prodlot_id'}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>

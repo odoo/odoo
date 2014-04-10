@@ -78,14 +78,18 @@
             <field name="model">res.partner</field>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml" >
+                <xpath expr="//div[@name='buttons']" position="inside" groups="account.group_account_invoice">
+                    <button class="oe_inline oe_stat_button" type="object" name="do_button_print" 
+                        icon="fa-print" string="Print Overdue" widget="statinfo" groups="account.group_account_user" 
+                        help="Print overdue payments report independent of follow-up line" 
+                        attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}"/>
+                    <button class="oe_inline oe_stat_button" type="object" name="do_partner_mail" 
+                        icon="fa-envelope-o" string="Mail Overdue" widget="statinfo" 
+                        help="If not specified by the latest follow-up level, it will send from the default email template"
+                        attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}" groups="account.group_account_user"/>
+                </xpath>
                 <page string="Accounting" position="before" version="7.0">
                     <page string="Payment Follow-up" groups="account.group_account_invoice" name="followup_tab">
-                        <div class="oe_right oe_button_box" name="followup_button">
-                            <button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" 
-                                help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}" />
-                            <button name="do_partner_mail" type="object" string="Send Overdue Email" groups="account.group_account_user"
-                                help="If not specified by the latest follow-up level, it will send from the default email template" attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}"/>
-                        </div>
                         <p attrs="{'invisible':[('latest_followup_date','=', False)]}">
                             The <field name="latest_followup_date"  class = "oe_inline"/>, the latest payment follow-up
                             was: <field name="latest_followup_level_id" class="oe_inline"/>

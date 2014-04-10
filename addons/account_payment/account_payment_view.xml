@@ -69,13 +69,13 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
                 <sheet string="Payment order">
-                    <div class="oe_button_box">
-                        <button name="%(action_create_payment_order)d" string="Select Invoices to Pay"
-                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
-                    </div>
                     <div class="oe_title">
                         <label for="reference" class="oe_edit_only"/>
                         <h1><field name="reference"/></h1>
+                    </div>
+                    <div class=" oe_right oe_button_box">
+                        <button class="oe_inline oe_stat_button oe_right" name="%(action_create_payment_order)d" string="Invoices" Help="Select Invoices to Pay"
+                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="fa-pencil-square-o" widget="statinfo"/>
                     </div>
                     <group>
                         <group>
@@ -292,7 +292,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
 	            <xpath expr="//div[@name='import_buttons']" position="inside">
-	                <button name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import Payment Lines" type="action" icon="gtk-execute"/>
+	                <button class="oe_inline oe_stat_button" name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import Lines" help="Import Payment Lines" type="action" icon="fa-cogs" widget="statinfo"/>
 	            </xpath>
             </field>
         </record>

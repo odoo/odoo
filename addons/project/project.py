@@ -186,20 +186,11 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
-
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        """ :deprecated: this method will be removed with OpenERP v8. Use task_ids
-                         fields instead. """
-        if context is None:
-            context = {}
-        res = dict.fromkeys(ids, 0)
-        ctx = context.copy()
-        ctx['active_test'] = False
-        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)], context=ctx)
-        for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
-            res[task.project_id.id] += 1
+        res={}
+        for tasks in self.browse(cr, uid, ids, context):
+            res[tasks.id] = len(tasks.task_ids)
         return res
-
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
@@ -265,8 +256,7 @@ class project(osv.osv):
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'task_count': fields.function(_task_count, type='integer', string="Open Tasks",
-                                      deprecated="This field will be removed in OpenERP v8. Use task_ids one2many field instead."),
+        'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
                                     domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),

@@ -357,7 +357,10 @@
                     <button string="⇒ Request Procurement" name="%(act_make_procurement)d" type="action" class="oe_link"/>
                 </xpath>
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
+                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest">
+                       <field string="Orderpoints" name="orderpoint_count" widget="statinfo" />
+                   </button>
                 </xpath>
                 <xpath expr="//field[@name='cost_method']" position="before">
                     <field name="procure_method" groups="base.group_user"

@@ -64,12 +64,19 @@
                 <div class="oe_right oe_button_box" name="button_box">
                     <button type="action"
                         name="%(act_marketing_campaing_stat)d"
-                        string="Campaign Statistics"/>
+                        class="oe_stat_button"
+                        icon="fa-keyboard-o"
+                        string="Statistics" help="Marketing Campaign Statistics"/>
                     <button type="action"
                         name="%(act_marketing_campaing_segment_opened)d"
-                        string="Segments"/>  
+                        class="oe_stat_button"
+                        icon="fa-table">
+                        <field name="segments_count" widget="statinfo" string="Segments"/>
+                    </button>  
                     <button type="action"
                         name="%(act_marketing_campaing_followup)d"
+                        class="oe_stat_button"
+                        icon="fa-thumbs-up"
                         string="Follow-Up"/>
                 </div>
                 <div class="oe_title">

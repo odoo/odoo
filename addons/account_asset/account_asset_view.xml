@@ -84,7 +84,9 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="open_entries" string="Entries" type="object" class="oe_inline"/>
+                        <button class="oe_inline oe_stat_button" name="open_entries"  type="object" icon="fa-pencil">
+                        <field string="Entries" name="entry_count" widget="statinfo" />
+                    </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>

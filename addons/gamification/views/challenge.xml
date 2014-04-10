@@ -53,7 +53,13 @@
 
                         <!-- action buttons -->
                         <div class="oe_right oe_button_box">
-                            <button type="action" name="%(goals_from_challenge_act)d" string="Related Goals" attrs="{'invisible': [('state','=','draft')]}" />
+                            <button type="action" 
+                                name="%(goals_from_challenge_act)d" 
+                                class="oe_stat_button"
+                                icon="fa-gift"
+                                attrs="{'invisible': [('state','=','draft')]}">
+                                <field name="goals_count" widget="statinfo" string="Goals" help="Related Goals"/>
+                            </button>
                         </div>
                         <group>
                             <group>

@@ -352,7 +352,14 @@ class product_product(osv.osv):
             for id in ids:
                 res[id][f] = stock.get(id, 0.0)
         return res
-
+    def _move_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for move in self.browse(cr, uid, ids, context=context):
+                res[move.id] = len(move.move_ids)
+        except:
+            pass
+        return res
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
@@ -413,6 +420,8 @@ class product_product(osv.osv):
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),
+        'move_ids': fields.one2many('stock.move', 'product_id', 'Moves'),
+        'move_count': fields.function(_move_count, string='# Moves', type='integer'),
     }
 
     _defaults = {

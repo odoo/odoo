@@ -200,9 +200,9 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='import_buttons']" position="inside">
-                    <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
+                    <button class="oe_inline oe_stat_button" name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoice" type="action"
+                            attrs="{'invisible':[('state','=','confirm')]}" widget="statinfo" icon="fa-pencil-square-o"/>
                 </xpath>
             </field>
         </record>
