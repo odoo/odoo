@@ -2,6 +2,7 @@
 import collections
 import cStringIO
 import datetime
+import hashlib
 import json
 import logging
 import math
@@ -909,6 +910,7 @@ class AssetsBundle(object):
         self.javascripts = []
         self.stylesheets = []
         self.remains = []
+        self._checksum = None
         if html:
             self.parse(html)
 
@@ -954,18 +956,27 @@ class AssetsBundle(object):
         cssdates = [asset.last_modified for asset in self.stylesheets]
         return max(jsdates + cssdates) or datetime.datetime(1970, 1, 1)
 
+    @property
+    def checksum(self):
+        if self._checksum is None:
+            checksum = hashlib.new('sha1')
+            for asset in self.javascripts + self.stylesheets:
+                checksum.update(asset.content.encode("utf-8"))
+            self._checksum = checksum.hexdigest()
+        return self._checksum
+
     def js(self, minified=True):
         if minified:
             content = ';\n'.join([asset.minify() for asset in self.javascripts])
         else:
-            content = ';\n'.join([asset.get_content() for asset in self.javascripts])
+            content = ';\n'.join([asset.content for asset in self.javascripts])
         return content
 
     def css(self, minified=True):
         if minified:
             content = '\n'.join([asset.minify() for asset in self.stylesheets])
         else:
-            content = '\n'.join([asset.get_content() for asset in self.stylesheets])
+            content = '\n'.join([asset.content for asset in self.stylesheets])
         # move up all @import and @charset rules to the top
         matches = []
         def push(matchobj):
@@ -983,16 +994,22 @@ class WebAsset(object):
     def __init__(self, source=None, url=None, filename=None):
         self.source = source
         self._filename = filename
+        self._content = None
         self.url = url
 
     @property
     def filename(self):
-        if self._filename:
-            return self._filename
-        module = filter(bool, self.url.split('/'))[0]
-        mpath = openerp.http.addons_manifest[module]['addons_path']
-        self._filename = mpath + self.url.replace('/', os.path.sep)
+        if self._filename is None:
+            module = filter(bool, self.url.split('/'))[0]
+            mpath = openerp.http.addons_manifest[module]['addons_path']
+            self._filename = mpath + self.url.replace('/', os.path.sep)
         return self._filename
+
+    @property
+    def content(self):
+        if self._content is None:
+            self._content = self.get_content()
+        return self._content
 
     def get_content(self):
         if self.source:
@@ -1003,7 +1020,10 @@ class WebAsset(object):
         return data
 
     def minify(self):
-        return self.get_content()
+        return self.content
+
+    def compute_checksum(self):
+        return 'fewfwe'
 
     @property
     def last_modified(self):
@@ -1014,7 +1034,7 @@ class WebAsset(object):
 
 class JavascriptAsset(WebAsset):
     def minify(self):
-        return rjsmin(self.get_content())
+        return rjsmin(self.content)
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -1040,8 +1060,7 @@ class StylesheetAsset(WebAsset):
         return content
 
     # def minify(self):
-    #     content = self.get_content()
-    #     return self.rx_comments.sub('', content)
+    #     return self.rx_comments.sub('', self.content)
 
 def rjsmin(script):
     """ Minify js with a clever regex.
