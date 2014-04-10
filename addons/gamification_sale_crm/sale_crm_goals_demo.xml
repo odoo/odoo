@@ -3,10 +3,10 @@
     <data>
 
         <!-- challenges -->
-        <!--<record model="gamification.challenge" id="challenge_crm_sale">
+        <record model="gamification.challenge" id="challenge_crm_sale">
             <field name="user_ids" eval="[(4,ref('base.user_demo'))]" />
             <field name="state">inprogress</field>
-        </record>-->
+        </record>
 
         <!-- goals -->
         <record model="gamification.goal" id="goal_crm_sale1">
@@ -16,7 +16,6 @@
             <field name="start_date" eval="time.strftime('%Y-%m-01')" />
             <field name="end_date" eval="(DateTime.today().replace(day=1)+relativedelta(months=1, days=-1)).strftime('%Y-%m-%d')" />
             <field name="target_goal">2000</field>
-            <field name="state">inprogress</field>
         </record>
         
     </data>
