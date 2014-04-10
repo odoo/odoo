@@ -52,6 +52,10 @@ class WebsiteSurvey(http.Controller):
         if survey.stage_id.closed:
             return request.website.render("survey.notopen")
 
+        # If there is no pages
+        if not survey.page_ids:
+            return request.website.render("survey.nopages")
+
         # Everything seems to be ok
         return None
 

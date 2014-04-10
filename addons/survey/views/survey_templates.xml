@@ -31,6 +31,20 @@
         </t>
     </template>
 
+    <!-- Message when the survey has no pages  -->
+    <template id="nopages" name="Survey has no pages">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Not ready</h1>
+                        <p>This survey has no pages by now!</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <!-- First page of a survey -->
     <template id="survey_init" name="Survey">
         <t t-call="website.layout">
