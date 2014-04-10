@@ -210,11 +210,6 @@ class WebsiteSurvey(http.Controller):
                     _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
         return json.dumps(ret)
 
-    # AJAX validation of some questions
-    # @http.route(['/survey/validate/<model("survey.survey"):survey>'],
-    #                type='http', auth='public', multilang=True)
-    # def validate(self, survey, **post):
-
     # AJAX submission of a page
     @http.route(['/survey/submit/<model("survey.survey"):survey>'],
                 type='http', auth='public', multilang=True, website=True)
