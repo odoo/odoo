@@ -75,7 +75,7 @@ $(document).ready(function () {
                     } else if (data['error'] == 'user'){
                         var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            'Sorry, You cannot choose correct answer.'+
+                            'Sorry, the user who asked this question can only accept the answer as correct.'+
                             '</div>');
                     }
                     correct_answer_alert = $link.parent().find("#correct_answer_alert");
