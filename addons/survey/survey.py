@@ -1118,18 +1118,24 @@ class survey_user_input_line(osv.Model):
             'survey_id': question.survey_id.id,
             'skipped': False
         }
-        if answer_tag in post and post[answer_tag].strip() != '':
-            vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
-        else:
-            vals.update({'answer_type': None, 'skipped': True})
         old_uil = self.search(cr, uid, [('user_input_id', '=', user_input_id),
                                         ('survey_id', '=', question.survey_id.id),
                                         ('question_id', '=', question.id)],
                               context=context)
         if old_uil:
-            self.write(cr, uid, old_uil[0], vals, context=context)
+            self.unlink(cr, uid, old_uil, context=context)
+
+        if answer_tag in post and post[answer_tag].strip() != '':
+            vals.update({'answer_type': 'suggestion', 'value_suggested': post[answer_tag]})
         else:
+            vals.update({'answer_type': None, 'skipped': True})
+        self.create(cr, uid, vals, context=context)
+
+        comment_answer = post.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
+        if comment_answer:
+            vals.update({'answer_type': 'text', 'value_text': comment_answer})
             self.create(cr, uid, vals, context=context)
+
         return True
 
     def save_line_multiple_choice(self, cr, uid, user_input_id, question, post, answer_tag, context=None):
