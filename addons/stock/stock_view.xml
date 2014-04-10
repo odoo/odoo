@@ -127,17 +127,23 @@
                             <button name="set_checked_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != th_qty; red: th_qty &lt; 0">
-                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
-                                    <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
-                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_lot"/>
-                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_owner"/>
+                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(product_id,product_uom_id,th_qty,context)" domain="[('type','=','product')]"/>
+                                    <field name="product_uom_id" groups="product.group_uom" on_change="restrict_change(th_qty)"/>
+                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="restrict_change(th_qty)"/>
+                                    <field name="prod_lot_id" on_change="restrict_change(th_qty)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                    <field name="package_id" on_change="restrict_change(th_qty)" groups="stock.group_tracking_lot"/>
+                                    <field name="partner_id" on_change="restrict_change(th_qty)" groups="stock.group_tracking_owner"/>
                                     <field name="th_qty" readonly="1"/>
                                     <field name="product_qty" string="Real Quantity"/>
                                     <field name="state" invisible="True"/>
                                 </tree>
                             </field>
+                            <p></p>
+                            <h3 class="oe_grey">Notes</h3>
+                            <ul class="oe_grey"><li>Inventory adjustments will be made by comparing the theoretical and the checked quantities.</li>
+                            <li>You can delete lines to ignore some products.</li>
+                            <li>If a product is not at the right place, set the checked quantity to 0 and create a new line with correct location.</li>
+                            </ul>
                         </page>
                         <page string="Inventory Adjustments" attrs="{'invisible': [('state', '!=', 'done')]}">
                             <field name="move_ids">
