@@ -654,7 +654,7 @@
                     <div t-foreach="users" t-as="user" class="col-sm-4">
                         <t t-set="separator"><br/></t>
                         <t t-call="website_forum.user_detail"/>
-                        <span class="text-muted">Joined on \
+                        <span class="text-muted">Joined on 
                             <span t-field="user.create_date" t-field-options='{"format":"short"}' t-attf-title="#{user.create_date}"/>
                         </span>
                     </div>
