@@ -901,6 +901,9 @@ def get_field_type(column, options):
     return options.get('widget', column._type)
 
 class AssetsBundle(object):
+    rx_css_charset = re.compile("(@charset.+;$)", re.M)
+    rx_css_import = re.compile("(@import.+;$)", re.M)
+
     def __init__(self, xmlid, html=None):
         self.xmlid = xmlid
         self.javascripts = []
@@ -938,18 +941,35 @@ class AssetsBundle(object):
 
     def to_html(self, sep='\n'):
         response = list(self.remains)
-        if self.stylesheets:
-            response.insert(0, '<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
         if self.javascripts:
             response.insert(0, '<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        if self.stylesheets:
+            response.insert(0, '<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
         return sep.join(response)
 
-    def js(self):
-        content = '\n'.join([asset.get_content() for asset in self.javascripts])
+    def js(self, minified=True):
+        if minified:
+            content = ';\n'.join([asset.minify() for asset in self.javascripts])
+        else:
+            content = ';\n'.join([asset.get_content() for asset in self.javascripts])
         return content
 
-    def css(self):
-        content = '\n'.join([asset.get_content() for asset in self.stylesheets])
+    def css(self, minified=True):
+        if minified:
+            content = '\n'.join([asset.minify() for asset in self.stylesheets])
+        else:
+            content = '\n'.join([asset.get_content() for asset in self.stylesheets])
+        # move up all @import and @charset rules to the top
+        matches = []
+        def push(matchobj):
+            matches.append(matchobj.group(0))
+            return ''
+
+        content = re.sub(self.rx_css_charset, push, content)
+        content = re.sub(self.rx_css_import, push, content)
+
+        matches.append(content)
+        content = '\n'.join(matches)
         return content
 
 class WebAsset(object):
@@ -960,22 +980,92 @@ class WebAsset(object):
 
     def get_content(self):
         if self.source:
-            return self.source
-        if self.url:
-            module = filter(bool, self.url.split('/'))[0]
-            mpath = openerp.http.addons_manifest[module]['addons_path']
-            self.filename = mpath + self.url.replace('/', os.path.sep)
-        with open(self.filename, 'rb') as fp:
-            data = fp.read().decode('utf-8')
-            return data
+            data = self.source
+        else:
+            if self.url and not self.filename:
+                module = filter(bool, self.url.split('/'))[0]
+                mpath = openerp.http.addons_manifest[module]['addons_path']
+                self.filename = mpath + self.url.replace('/', os.path.sep)
+            with open(self.filename, 'rb') as fp:
+                data = fp.read().decode('utf-8')
+        return data
+
+    def minify(self):
+        return self.get_content()
 
 class JavascriptAsset(WebAsset):
-    def get_content(self):
-        content = super(JavascriptAsset, self).get_content()
-        return content + ';'
+    def minify(self):
+        return rjsmin(self.get_content())
 
 class StylesheetAsset(WebAsset):
-    pass
+    rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
+    rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
+    rx_comments = re.compile(r"""/\*.*\*/""", re.S)
 
+    def get_content(self):
+        content = super(StylesheetAsset, self).get_content()
+        if self.url:
+            web_dir = os.path.dirname(self.url)
+
+            content = re.sub(
+                self.rx_import,
+                r"""@import \1%s/""" % (web_dir,),
+                content,
+            )
+
+            content = re.sub(
+                self.rx_url,
+                r"url(\1%s/" % (web_dir,),
+                content,
+            )
+        return content
+
+    def minify(self):
+        content = self.get_content()
+        return self.rx_comments.sub('', content)
+
+def rjsmin(script):
+    """ Minify js with a clever regex.
+    Taken from http://opensource.perlig.de/rjsmin
+    Apache License, Version 2.0 """
+    def subber(match):
+        """ Substitution callback """
+        groups = match.groups()
+        return (
+            groups[0] or
+            groups[1] or
+            groups[2] or
+            groups[3] or
+            (groups[4] and '\n') or
+            (groups[5] and ' ') or
+            (groups[6] and ' ') or
+            (groups[7] and ' ') or
+            ''
+        )
+
+    result = re.sub(
+        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
+        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
+        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
+        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
+        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
+        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
+        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
+        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
+        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
+        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
+        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
+        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
+        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
+        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
+        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
+        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
+        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+    ).strip()
+    return result
 
 # vim:et:
