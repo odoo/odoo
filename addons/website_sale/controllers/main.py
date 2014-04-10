@@ -411,6 +411,10 @@ class Ecommerce(http.Controller):
         quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, set_number=set_number,
             context=request.context)
+        order = self.get_order()
+        return [quantity,
+                order.get_number_of_products()]
+        
         return quantity
 
     @http.route(['/shop/checkout/'], type='http', auth="public", website=True, multilang=True)
