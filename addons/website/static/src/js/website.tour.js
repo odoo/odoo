@@ -299,8 +299,8 @@ website.Tour = openerp.Class.extend({
             .on("click", function () {
                 var help = $("#help-menu-button");
                 var offset = help.offset();
-                var left = (offset.left > 0) ? (offset.left + link.width()) : offset.left;
-                var top = (link.height() > 0) ? (offset.top + link.height()) : offset.top;
+                var left = (offset.left > 0) ? (offset.left + help.width()) : offset.left;
+                var top = (help.height() > 0) ? (offset.top + help.height()) : offset.top;
 
                 if ($(this).is("[data-role='next']") && step.element) {
                     $(".popover.tour").remove();
