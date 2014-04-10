@@ -62,6 +62,14 @@ class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
         # dont listen as we use PreforkServer#socket
         pass
 
+
+class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def setup(self):
+        # flag the current thread as handling a http request
+        super(RequestHandler, self).setup()
+        me = threading.currentThread()
+        me.name = 'openerp.service.http.request.%s' % (me.ident,)
+
 # _reexec() should set LISTEN_* to avoid connection refused during reload time. It
 # should also work with systemd socket activation. This is currently untested
 # and not yet used.
@@ -71,6 +79,10 @@ class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
     given by the environement, this is used by autoreload to keep the listen
     socket open when a reload happens.
     """
+    def __init__(self, host, port, app):
+        super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
+                                                           handler=RequestHandler)
+
     def server_bind(self):
         envfd = os.environ.get('LISTEN_FDS')
         if envfd and os.environ.get('LISTEN_PID') == str(os.getpid()):

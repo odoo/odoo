@@ -229,7 +229,17 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+            self._wait_remaining_requests()
             _logger.info("phantom_run execution finished")
+
+    def _wait_remaining_requests(self):
+        for thread in threading.enumerate():
+            if thread.name.startswith('openerp.service.http.request.'):
+                while thread.isAlive():
+                    # Need a busyloop here as thread.join() masks signals
+                    # and would prevent the forced shutdown.
+                    thread.join(0.05)
+                    time.sleep(0.05)
 
     def phantom_jsfile(self, jsfile, timeout=60, **kw):
         options = {
