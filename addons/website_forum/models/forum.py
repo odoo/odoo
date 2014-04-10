@@ -3,6 +3,7 @@
 import openerp
 
 from openerp import SUPERUSER_ID
+from openerp.addons.website.models.website import slug
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 
@@ -28,6 +29,12 @@ class Forum(osv.Model):
         'description': 'This community is for professionals and enthusiasts of our products and services.',
         'faq': _get_default_faq,
     }
+
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        create_context = dict(context, mail_create_nolog=True)
+        return super(Forum, self).create(cr, uid, values, context=create_context)
 
 
 class Post(osv.Model):
@@ -119,6 +126,7 @@ class Post(osv.Model):
     }
 
     _defaults = {
+        'user_id': lambda self, cr, uid, ctx=None: uid,
         'state': 'active',
         'views': 0,
         'vote_count': 0,
@@ -130,14 +138,18 @@ class Post(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
+        post = self.browse(cr, uid, post_id, context=context)
         # post message + subtype depending on parent_id
         if vals.get("parent_id"):
-            name, body, subtype = vals.get('name'), 'New Answer', 'website_forum.mt_answer_new'
+            parent = self.browse(cr, SUPERUSER_ID, vals['parent_id'], context=context)
+            body = _('<p><a href="forum/%s/question/%s">New Answer Posted</a></p>' % (slug(parent.forum_id), slug(parent)))
+            self.message_post(
+                cr, uid, parent.id,
+                subject=_('Re: %s') % parent.name, body=body,
+                subtype='website_forum.mt_answer_new', context=context)
         else:
-            name, body, subtype = vals.get('name'), 'Post Created', 'website_forum.mt_question_new'
             #add 2 karma to user when asks question.
-            self.pool['res.users'].write(cr, SUPERUSER_ID, [vals.get('user_id')], {'karma': 2}, context=context)
-        self.message_post(cr, uid, [post_id], body=_(body), subtype=subtype, context=context)
+            self.pool['res.users'].write(cr, SUPERUSER_ID, [post.user_id.id], {'karma': 2}, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -196,42 +208,6 @@ class PostReason(osv.Model):
     _columns = {
         'name': fields.char('Post Reason'),
     }
-
-
-class Users(osv.Model):
-    _inherit = 'res.users'
-
-    def _get_user_badge_level(self, cr, uid, ids, name, args, context=None):
-        """Return total badge per level of users"""
-        result = dict.fromkeys(ids, False)
-        badge_user_obj = self.pool['gamification.badge.user']
-        for id in ids:
-            result[id] = {
-                'gold_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'gold'), ('user_id', '=', id)], context=context, count=True),
-                'silver_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'silver'), ('user_id', '=', id)], context=context, count=True),
-                'bronze_badge': badge_user_obj.search(cr, uid, [('badge_id.level', '=', 'bronze'), ('user_id', '=', id)], context=context, count=True),
-            }
-        return result
-
-    _columns = {
-        'create_date': fields.datetime('Create Date', select=True, readonly=True),
-        # 'is_forum': fields.boolean('Is Forum Member'),
-        'karma': fields.integer('Karma'),
-        'badge_ids': fields.one2many('gamification.badge.user', 'user_id', 'Badges'),
-        'gold_badge': fields.function(_get_user_badge_level, string="Number of gold badges", type='integer', multi='badge_level'),
-        'silver_badge': fields.function(_get_user_badge_level, string="Number of silver badges", type='integer', multi='badge_level'),
-        'bronze_badge': fields.function(_get_user_badge_level, string="Number of bronze badges", type='integer', multi='badge_level'),
-    }
-
-    _defaults = {
-        # 'is_forum': False,
-        'karma': 0,
-    }
-
-    def add_karma(self, cr, uid, ids, karma, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [user.id], {'karma': user.karma + karma}, context=context)
-        return True
 
 
 class Vote(osv.Model):
