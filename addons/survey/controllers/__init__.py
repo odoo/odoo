@@ -19,6 +19,4 @@
 #
 ##############################################################################
 
-import survey
-import controllers
-import wizard
+import main

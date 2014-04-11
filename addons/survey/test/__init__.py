@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,6 +19,9 @@
 #
 ##############################################################################
 
-import survey
-import controllers
-import wizard
+
+from . import test_survey
+
+checks = [
+    test_survey
+]
