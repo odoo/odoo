@@ -6,6 +6,7 @@ import werkzeug.urls
 
 import lxml.html
 
+import openerp
 from openerp import tools
 
 import cases
@@ -43,15 +44,23 @@ class CrawlSuite(unittest2.TestSuite):
     def __init__(self, user=None, password=None):
         super(CrawlSuite, self).__init__()
 
-        self.opener = urllib2.OpenerDirector()
-        self.opener.add_handler(urllib2.UnknownHandler())
-        self.opener.add_handler(urllib2.HTTPHandler())
-        self.opener.add_handler(urllib2.HTTPSHandler())
-        self.opener.add_handler(urllib2.HTTPCookieProcessor())
-        self.opener.add_handler(RedirectHandler())
+        registry = openerp.registry(tools.config['db_name'])
+        try:
+            # switch registry to test mode, so that requests can be made
+            registry.enter_test_mode()
 
-        self._authenticate(user, password)
-        self.user = user
+            self.opener = urllib2.OpenerDirector()
+            self.opener.add_handler(urllib2.UnknownHandler())
+            self.opener.add_handler(urllib2.HTTPHandler())
+            self.opener.add_handler(urllib2.HTTPSHandler())
+            self.opener.add_handler(urllib2.HTTPCookieProcessor())
+            self.opener.add_handler(RedirectHandler())
+
+            self._authenticate(user, password)
+            self.user = user
+
+        finally:
+            registry.leave_test_mode()
 
     def _request(self, path):
         return self.opener.open(urlparse.urlunsplit([
@@ -79,37 +88,45 @@ class CrawlSuite(unittest2.TestSuite):
             assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
-        paths = [URL('/'), URL('/sitemap')]
-        seen = set(paths)
+        registry = openerp.registry(tools.config['db_name'])
+        try:
+            # switch registry to test mode, so that requests can be made
+            registry.enter_test_mode()
 
-        while paths:
-            url = paths.pop(0)
-            r = self._request(url.url)
-            url.to_case(self.user, r).run(result)
+            paths = [URL('/'), URL('/sitemap')]
+            seen = set(paths)
 
-            if r.info().gettype() != 'text/html':
-                continue
+            while paths:
+                url = paths.pop(0)
+                r = self._request(url.url)
+                url.to_case(self.user, r).run(result)
 
-            doc = lxml.html.fromstring(r.read())
-            for link in doc.xpath('//a[@href]'):
-                href = link.get('href')
-
-                # avoid repeats, even for links we won't crawl no need to
-                # bother splitting them if we've already ignored them
-                # previously
-                if href in seen: continue
-                seen.add(href)
-
-                parts = urlparse.urlsplit(href)
-
-                if parts.netloc or \
-                    not parts.path.startswith('/') or \
-                    parts.path == '/web' or\
-                    parts.path.startswith('/web/') or \
-                    (parts.scheme and parts.scheme not in ('http', 'https')):
+                if r.info().gettype() != 'text/html':
                     continue
 
-                paths.append(URL(href, url.url))
+                doc = lxml.html.fromstring(r.read())
+                for link in doc.xpath('//a[@href]'):
+                    href = link.get('href')
+
+                    # avoid repeats, even for links we won't crawl no need to
+                    # bother splitting them if we've already ignored them
+                    # previously
+                    if href in seen: continue
+                    seen.add(href)
+
+                    parts = urlparse.urlsplit(href)
+
+                    if parts.netloc or \
+                        not parts.path.startswith('/') or \
+                        parts.path == '/web' or\
+                        parts.path.startswith('/web/') or \
+                        (parts.scheme and parts.scheme not in ('http', 'https')):
+                        continue
+
+                    paths.append(URL(href, url.url))
+
+        finally:
+            registry.leave_test_mode()
 
 class URL(object):
     def __init__(self, url, source=None):

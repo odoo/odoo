@@ -5,8 +5,8 @@
         <record id="gengo_sync_receive_request_scheduler" model="ir.cron">
             <field name="name" >Gengo Sync Translation (Response)</field>
             <field eval="True" name="active"/>
-            <field name="interval_number">20</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field eval="'base.gengo.translations'" name="model"></field>
             <field eval="'_sync_response'" name="function"/>
@@ -17,8 +17,8 @@
         <record id="gengo_sync_send_request_scheduler" model="ir.cron">
             <field name="name" >Gengo Sync Translation (Request)</field>
             <field eval="True" name="active"/>
-            <field name="interval_number">20</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field eval="'base.gengo.translations'" name="model"></field>
             <field eval="'_sync_request'" name="function"/>
