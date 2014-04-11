@@ -99,11 +99,8 @@ $(document).ready(function () {
     $('.comment_delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var forum_id = $link.data('forum-id');
-        var post_id = $link.data('post-id');
-        var message_id = $link.data('message-id');
-        openerp.jsonRpc("/forum/message_delete", 'call', {}).then(function (data) {
-            $link.parents('#comment').remove();
+        openerp.jsonRpc($link.attr('href'), 'call', {}).then(function (data) {
+            $link.parents('.comment').first().remove();
         });
         return true;
     });

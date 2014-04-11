@@ -537,9 +537,11 @@
 <template id="post_comment">
     <div class="row clearfix">
         <div class="col-sm-10 col-sm-offset-2">
-            <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_comment_grey mb8">
+            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey mb8">
                 <small class="text-muted">
-                    <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
+                    <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750"
+                        t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
+                        class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{message.id}"
                         t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'

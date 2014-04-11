@@ -575,7 +575,7 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].unlink(request.cr, SUPERUSER_ID, [post.id], context=request.context)
         return self.post_comment(forum, question, **values)
 
-    @http.route('/forum/message_delete', type='json', auth="user", multilang=True, methods=['POST'], website=True)
-    def delete_comment(self, **kwarg):
-        request.registry['mail.message'].unlink(request.cr, SUPERUSER_ID, [int(kwarg.get('message_id'))], context=request.context)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", multilang=True, website=True)
+    def delete_comment(self, forum, post, comment, **kwarg):
+        request.registry['mail.message'].unlink(request.cr, SUPERUSER_ID, [comment.id], context=request.context)
         return True
