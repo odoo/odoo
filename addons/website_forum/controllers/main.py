@@ -115,7 +115,7 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.forum_index", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/faq'], type='http', auth="public", website=True, multilang=True)
-    def faq(self, forum, **post):
+    def forum_faq(self, forum, **post):
         values = self._prepare_forum_values(forum=forum, searches=dict(), **post)
         return request.website.render("website_forum.faq", values)
 
@@ -148,7 +148,7 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.ask_question", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/new', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def register_question(self, forum, **post):
+    def question_create(self, forum, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['forum.tag']
         question_tag_ids = []
@@ -185,23 +185,6 @@ class WebsiteForum(http.Controller):
             'reversed': reversed,
         })
         return request.website.render("website_forum.post_description_full", values)
-
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", methods=['POST'], website=True)
-    def post_comment(self, forum, post, **kwargs):
-        # tde: fix post / question
-        if not request.session.uid:
-            return login_redirect()
-        cr, uid, context = request.cr, request.uid, request.context
-        if kwargs.get('comment'):
-            # TDE FIXME: check that post_id is the question or one of its answers
-            if request.registry['res.users'].has_group(cr, uid, 'website_mail.group_comment'):
-                request.registry['forum.post'].message_post(
-                    cr, uid, post.id,
-                    body=kwargs.get('comment'),
-                    type='comment',
-                    subtype='mt_comment',
-                    context=dict(context, mail_create_nosubcribe=True))
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))
 
     @http.route('/forum/<int:forum_id>/question/<int:question_id>/toggle_favourite', type='json', auth="user", multilang=True, website=True)
     def question_toggle_favorite_tmp(self, forum_id, question_id, **post):
@@ -281,6 +264,9 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': True}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
+    # Answers
+    # --------------------------------------------------
+
     # Post
     # --------------------------------------------------
 
@@ -295,6 +281,24 @@ class WebsiteForum(http.Controller):
                 'content': kwargs.get('content'),
             }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))
+
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", methods=['POST'], website=True)
+    def post_comment(self, forum, post, **kwargs):
+        # tde: fix post / question
+        if not request.session.uid:
+            return login_redirect()
+        question = post.parent_id if post.parent_id else post
+        cr, uid, context = request.cr, request.uid, request.context
+        if kwargs.get('comment') and post.forum_id.id == forum.id:
+            # TDE FIXME: check that post_id is the question or one of its answers
+            if request.registry['res.users'].has_group(cr, uid, 'website_mail.group_comment'):
+                request.registry['forum.post'].message_post(
+                    cr, uid, post.id,
+                    body=kwargs.get('comment'),
+                    type='comment',
+                    subtype='mt_comment',
+                    context=dict(context, mail_create_nosubcribe=True))
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
@@ -563,7 +567,8 @@ class WebsiteForum(http.Controller):
             'content': comment.body,
         }
         request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
-        return self.post_answer(forum, post.parent_id and post.parent_id.id or post.id, **values)
+        question = post.parent_id if post.parent_id else post
+        return self.post_new(forum, question, **values)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", multilang=True, website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):

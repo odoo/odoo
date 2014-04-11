@@ -542,19 +542,21 @@
 <template id="post_comment">
     <div class="row clearfix">
         <div class="col-sm-10 col-sm-offset-2">
-            <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_comment_grey" style="padding: 4px;">
+            <div t-foreach="reversed(object.website_message_ids)" t-as="message" id="comment" class="oe_comment_grey mb8">
                 <small class="text-muted">
-                    <button type="button" t-if="user.karma&gt;=750" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
+                    <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750" t-att-id="message.id" class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
-                        <a t-attf-href="/forum/#{slug(forum)}/user/#{message.id}"
-                            t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
-                            style="display: inline-block;"/>
-                        on <span t-field="message.date" t-field-options='{"format":"short"}'/>
+                    <a t-attf-href="/forum/#{slug(forum)}/user/#{message.id}"
+                        t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                        style="display: inline-block;"/>
+                    on <span t-field="message.date" t-field-options='{"format":"short"}'/>
+                    <a class="fa fa-magic text-muted pull-right"
+                        t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/convert_to_answer">Convert as an answer</a>
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
                 <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse"
-                        t-attf-action="/forum/#{slug(forum)}/question/#{slug(object)}/comment" method="POST">
+                        t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
                     <input name="post_id" t-att-value="object.id" type="hidden"/>
                     <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
                     <button type="submit" class="btn btn-primary mt8">Post</button>
