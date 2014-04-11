@@ -819,6 +819,8 @@ class Contact(orm.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if options is None:
+            options = {}
         opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
 
         if not getattr(record, field_name):
@@ -838,6 +840,7 @@ class Contact(orm.AbstractModel):
             'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
             'email': field_browse.email,
             'fields': opf,
+            'object': field_browse,
             'options': options
         }
 
