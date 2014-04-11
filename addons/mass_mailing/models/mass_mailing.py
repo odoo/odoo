@@ -622,7 +622,7 @@ class MassMailing(osv.Model):
         })
         return super(MassMailing, self).copy_data(cr, uid, id, default, context=context)
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """ Override read_group to always display all states. """
         if groupby and groupby[0] == "state":
             # Default result structure
