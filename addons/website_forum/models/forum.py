@@ -171,12 +171,9 @@ class Post(osv.Model):
         if vals.get("parent_id"):
             parent = self.browse(cr, SUPERUSER_ID, vals['parent_id'], context=context)
             body = _('<p><a href="forum/%s/question/%s">New Answer Posted</a></p>' % (slug(parent.forum_id), slug(parent)))
-            self.message_post(
-                cr, uid, parent.id,
-                subject=_('Re: %s') % parent.name, body=body,
-                subtype='website_forum.mt_answer_new', context=context)
+            self.message_post(cr, uid, parent.id, subject=_('Re: %s') % parent.name, body=body, subtype='website_forum.mt_answer_new', context=context)
         else:
-            #add 2 karma to user when asks question.
+            self.message_post(cr, uid, post.id, subject=post.name, body=_('New Question Created'), subtype='website_forum.mt_question_new', context=context)
             self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': 2}, context=context)
         return post_id
 
@@ -186,30 +183,21 @@ class Post(osv.Model):
         if 'content' in vals or 'name' in vals:
             for post in self.browse(cr, uid, ids, context=context):
                 if post.parent_id:
-                    body, subtype = 'Answer Edited', 'website_forum.mt_answer_edit'
+                    body, subtype = _('Answer Edited'), 'website_forum.mt_answer_edit'
+                    obj_id = post.parent_id.id
                 else:
-                    body, subtype = 'Question Edited', 'website_forum.mt_question_edit'
-                self.message_post(cr, uid, [post.id], body=_(body), subtype=subtype, context=context)
+                    body, subtype = _('Question Edited'), 'website_forum.mt_question_edit'
+                    obj_id = post.id
+                self.message_post(cr, uid, obj_id, body=_(body), subtype=subtype, context=context)
         # update karma of related user when any answer accepted
-        if vals.get('correct'):
+        if 'correct' in vals:
             for post in self.browse(cr, uid, ids, context=context):
-                value = -15
-                if vals.get('correct'):
-                    value = 15
-                self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': value}, context=context)
+                karma_value = 15 if vals.get('correct') else -15
+                self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': karma_value}, context=context)
         return res
 
     def vote(self, cr, uid, ids, upvote=True, context=None):
         Vote = self.pool['forum.post.vote']
-        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-        # must have at least 10 karma to vote
-        if not upvote and user.karma <= 10:
-            return {'error': 'lessthen_10_karma'}
-        # user can not vote on own post
-        posts = self.browse(cr, uid, ids, context=context)
-        # if any(post.create_uid.id == uid for post in posts):
-        #     return {'error': 'own_post'}
-
         vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
         if vote_ids:
             for vote in Vote.browse(cr, uid, vote_ids, context=context):

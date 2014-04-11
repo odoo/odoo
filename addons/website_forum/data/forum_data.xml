@@ -44,16 +44,17 @@
             <field name="description">Answer Edited</field>
         </record>
         <!-- Questions subtypes -->
+        <record id="mt_question_new" model="mail.message.subtype">
+            <field name="name">New Question</field>
+            <field name="res_model">forum.post</field>
+            <field name="default" eval="False"/>
+            <field name="description">New Question</field>
+        </record>
         <record id="mt_question_edit" model="mail.message.subtype">
             <field name="name">Question Edited</field>
             <field name="res_model">forum.post</field>
             <field name="default" eval="False"/>
             <field name="description">Question Edited</field>
-        </record>
-
-        <!--At this time create_date is not stores in db for administrator only so for that forcefully updating date. -->
-        <record id="base.user_root" model="res.users">
-            <field name="create_date" eval="DateTime.today()"/>
         </record>
 
     </data>
