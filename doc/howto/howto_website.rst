@@ -24,6 +24,8 @@ create a module:
 
 .. todo:: output directory probably shouldn't be ``.``
 
+.. todo:: ``oe`` v ``./oe``?
+
 .. code-block:: console
 
     $ oe scaffold Academy .

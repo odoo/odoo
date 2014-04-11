@@ -1,10 +1,10 @@
 # HG changeset patch
-# Parent e95e38d7a1c75741d1f7babf1fe6590b8227888e
+# Parent a110c540b0769ee849a404324cf8594d116cc982
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
 +++ b/controllers/academy.py
-@@ -3,9 +3,22 @@
+@@ -3,12 +3,45 @@
  from openerp import http
  from openerp.addons.web.controllers import main
  
@@ -25,18 +25,14 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +        ]
 +
          return """<!doctype html>
- <html>
-     <head>
-@@ -16,6 +29,26 @@ class academy(main.Home):
-         <h1>Introduction to a thing</h1>
-         <h2>Course description</h2>
-         <p>Course introduction</p>
-+        <h2>Teaching Assistants</h2>
-+        <ul>
-+            %(tas)s
-+        </ul>
-     </body>
- </html>
+ <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+ <body class="container">
+     <h1>Introduction to a thing</h1>
++    <h2>Teaching Assistants</h2>
++    <ul>
++        %(tas)s
++    </ul>
+ </body>
 -"""
 +""" % {
 +        'tas': '\n'.join(tas)
@@ -48,7 +44,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +<html>
 +    <head>
 +        <title>AcademyAcademy TA %(name)s</title>
-+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
++        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 +    </head>
 +    <body class="container">
 +        <h1>%(name)s</h1>

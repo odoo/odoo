@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 006b3182bb96e16310fd6fc4be808bd5698f1ab6
+# Parent 69c500d7634c0e5287508cfaffa14174cc47d800
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
@@ -8,8 +8,8 @@ diff --git a/controllers/academy.py b/controllers/academy.py
  ]
  
  class academy(main.Home):
--    @http.route('/', auth='none')
-+    @http.route('/', auth='public')
+-    @http.route('/', auth='none', website=True)
++    @http.route('/', auth='public', website=True)
      def index(self):
          return http.request.website.render('academy.index', {
              'tas': teaching_assistants,
@@ -29,7 +29,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 -    <html>
 -        <head>
 -            <title>AcademyAcademy</title>
--            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+-            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
 -        </head>
 -        <body class="container">
 -            <h1>Introduction to a thing</h1>
@@ -83,7 +83,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 -    <html>
 -        <head>
 -            <title>AcademyAcademy TA <t t-esc="name"/></title>
--            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+-            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
 -        </head>
 -        <body class="container">
 -            <h1><t t-esc="name"/></h1>

@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 5342fd2d61587d3ab2c29f88e813b9a402eaa808
+# Parent 93586905ed9663bf48ef33ca6476a537a8f96ac8
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -19,7 +19,7 @@ diff --git a/__openerp__.py b/__openerp__.py
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
 +++ b/controllers/academy.py
-@@ -14,41 +14,18 @@ teaching_assistants = [
+@@ -14,34 +14,17 @@ teaching_assistants = [
  class academy(main.Home):
      @http.route('/', auth='none')
      def index(self):
@@ -30,35 +30,28 @@ diff --git a/controllers/academy.py b/controllers/academy.py
          ]
  
 -        return """<!doctype html>
--<html>
--    <head>
--        <title>AcademyAcademy</title>
--        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
--    </head>
--    <body class="container">
--        <h1>Introduction to a thing</h1>
--        <h2>Course description</h2>
--        <p>Course introduction</p>
--        <h2>Teaching Assistants</h2>
--        <ul>
--            %(tas)s
--        </ul>
--    </body>
--</html>
+-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+-<body class="container">
+-    <h1>Introduction to a thing</h1>
+-    <h2>Teaching Assistants</h2>
+-    <ul>
+-        %(tas)s
+-    </ul>
+-</body>
 -""" % {
 -        'tas': '\n'.join(tas)
 -    }
+-
 +        return http.request.registry['ir.ui.view'].render(cr, uid, 'academy.index', {
 +            'tas': '\n'.join(tas)
 +        }, context=context)
- 
      @http.route('/tas/<int:id>/', auth='none')
      def ta(self, id):
 -        return """<!doctype html>
 -<html>
 -    <head>
 -        <title>AcademyAcademy TA %(name)s</title>
--        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 -    </head>
 -    <body class="container">
 -        <h1>%(name)s</h1>
@@ -67,7 +60,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 -""" % teaching_assistants[id]
 +        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 +        return http.request.registry['ir.ui.view'].render(
-+            cr, uid,  "academy.ta", teaching_assistants[id], context=context)
++            cr, uid, 'academy.ta', teaching_assistants[id], context=context)
 diff --git a/views/templates.xml b/views/templates.xml
 new file mode 100644
 --- /dev/null
@@ -79,7 +72,7 @@ new file mode 100644
 +    <html>
 +        <head>
 +            <title>AcademyAcademy</title>
-+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
++            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
 +        </head>
 +        <body class="container">
 +            <h1>Introduction to a thing</h1>
@@ -102,7 +95,7 @@ new file mode 100644
 +    <html>
 +        <head>
 +            <title>AcademyAcademy TA <t t-esc="name"/></title>
-+            <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
++            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
 +        </head>
 +        <body class="container">
 +            <h1><t t-esc="name"/></h1>

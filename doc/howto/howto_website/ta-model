@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 21954f9743a937b8185a5e717fe6af0e92660c55
+# Parent e8b98f4c8f9070f7d5b91936381324cd1fe12e17
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
@@ -17,7 +17,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 -]
 -
  class academy(main.Home):
-     @http.route('/', auth='public')
+     @http.route('/', auth='public', website=True)
      def index(self):
 +        tas = http.request.registry['academy.tas'].search_read(
 +            http.request.cr, http.request.uid, context=http.request.context)

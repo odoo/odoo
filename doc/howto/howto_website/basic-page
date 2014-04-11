@@ -1,24 +1,17 @@
 # HG changeset patch
-# Parent d06b1f422ac5672c4a4c34bb3a50e98df42f3e31
+# Parent b96cd22d25cfa9a67f451d091f5c4896997d350d
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
 +++ b/controllers/academy.py
-@@ -6,4 +6,16 @@ from openerp.addons.web.controllers impo
+@@ -6,4 +6,9 @@ from openerp.addons.web.controllers impo
  class academy(main.Home):
      @http.route('/', auth='none')
      def index(self):
 -        return "Hello, world!"
 +        return """<!doctype html>
-+<html>
-+    <head>
-+        <title>AcademyAcademy</title>
-+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-+    </head>
-+    <body class="container">
-+        <h1>Introduction to a thing</h1>
-+        <h2>Course description</h2>
-+        <p>Course introduction</p>
-+    </body>
-+</html>
++<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
++<body class="container">
++    <h1>Introduction to a thing</h1>
++</body>
 +"""

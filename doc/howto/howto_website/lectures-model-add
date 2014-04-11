@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent fef5ecf2dad4b7bdcc9a760545c2689187bb15f9
+# Parent dc6e1146075f61db66b1f7d2b7d3b8e76341e7bb
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -17,7 +17,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +++ b/controllers/academy.py
 @@ -6,10 +6,15 @@ from openerp.addons.web.controllers impo
  class academy(main.Home):
-     @http.route('/', auth='public')
+     @http.route('/', auth='public', website=True)
      def index(self):
 +        cr, uid, context = http.request.cr, http.request.uid, http.request.context
 +        Lectures = http.request.registry['academy.lectures']
