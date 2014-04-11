@@ -156,6 +156,9 @@ class Post(osv.Model):
         'state': 'active',
         'views': 0,
         'active': True,
+        'vote_ids': list(),
+        'favourite_ids': list(),
+        'child_ids': list(),
     }
 
     def create(self, cr, uid, vals, context=None):
