@@ -163,6 +163,8 @@ class gamification_challenge(osv.Model):
         'reward_second_id': fields.many2one('gamification.badge', string="For 2nd user"),
         'reward_third_id': fields.many2one('gamification.badge', string="For 3rd user"),
         'reward_failure': fields.boolean('Reward Bests if not Succeeded?'),
+        'reward_realtime': fields.boolean('Reward as soon as every goal is reached',
+            help="With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."),
 
         'visibility_mode': fields.selection([
                 ('personal', 'Individual Goals'),
@@ -257,7 +259,7 @@ class gamification_challenge(osv.Model):
 
         elif vals.get('state') == 'draft':
             # resetting progress
-            if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', 'in', ['inprogress', 'inprogress_update'])], context=context):
+            if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context):
                 raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
         
         write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
@@ -280,13 +282,13 @@ class gamification_challenge(osv.Model):
         - Create the missing goals (eg: modified the challenge to add lines)
         - Update every running challenge
         """
-        # start planned challenges
+        # start scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
             ('start_date', '<=', fields.date.today())])
         self.write(cr, uid, planned_challenge_ids, {'state': 'inprogress'}, context=context)
 
-        # close planned challenges
+        # close scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
             ('end_date', '>=', fields.date.today())])
@@ -312,7 +314,7 @@ class gamification_challenge(osv.Model):
         goal_ids = goal_obj.search(cr, uid, [
             ('challenge_id', 'in', ids),
             '|',
-                ('state', 'in', ('inprogress', 'inprogress_update')),
+                ('state', '=', 'inprogress'),
                 '&',
                     ('state', 'in', ('reached', 'failed')),
                     '|',
@@ -327,6 +329,8 @@ class gamification_challenge(osv.Model):
                 # check in case of new users in challenge, this happens if manager removed users in challenge manually
                 self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
             self.generate_goals_from_challenge(cr, uid, [challenge.id], context=context)
+
+            # goal_group = goal_obj.read_group(cr, uid, [('challenge_id', '=', challenge.id), ('closed', '=', False)], fields=['id', 'line_id', 'target_goal'], groupby=['line_id'], context=context)
 
             # goals closed but still opened at the last report date
             closed_goals_to_report = goal_obj.search(cr, uid, [
@@ -349,6 +353,7 @@ class gamification_challenge(osv.Model):
         """Update all the goals of a challenge, no generation of new goals"""
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
+        print self.pool.get('gamification.goal').read_group(cr, uid, [('challenge_id', '=', challenge_id), ('closed', '=', False)], fields=['id', 'line_id', 'target_goal'], groupby=['line_id'], context=context)
         return True
 
 
@@ -377,6 +382,7 @@ class gamification_challenge(osv.Model):
         can be called after each change in the list of users or lines.
         :param list(int) ids: the list of challenge concerned"""
 
+        to_update = []
         for challenge in self.browse(cr, uid, ids, context):
             (start_date, end_date) = start_end_date_for_period(challenge.period)
 
@@ -403,7 +409,7 @@ class gamification_challenge(osv.Model):
                         canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
                         if canceled_goal_ids:
                             goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
-                            goal_obj.update(cr, uid, canceled_goal_ids, context=context)
+                            to_update.extend(canceled_goal_ids)
 
                         # skip to next user
                         continue
@@ -425,8 +431,9 @@ class gamification_challenge(osv.Model):
                         values['remind_update_delay'] = challenge.remind_update_delay
 
                     new_goal_id = goal_obj.create(cr, uid, values, context)
+                    to_update.append(new_goal_id)
 
-                    goal_obj.update(cr, uid, [new_goal_id], context=context)
+            goal_obj.update(cr, uid, to_update, context=context)
 
         return True
 
@@ -460,7 +467,7 @@ class gamification_challenge(osv.Model):
                     'rank': <user ranking>,
                     'user_id': <res.users id>,
                     'name': <res.users name>,
-                    'state': <gamification.goal state {draft,inprogress,inprogress_update,reached,failed,canceled}>,
+                    'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
                     'completeness': <percentage>,
                     'current': <current value>,
                 }
@@ -478,7 +485,7 @@ class gamification_challenge(osv.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,inprogress_update,reached,failed,canceled}>,                                
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
             'completeness': <percentage>,
             'current': <current value>,
         }
@@ -545,7 +552,7 @@ class gamification_challenge(osv.Model):
                     if user_id and goal.user_id.id == user_id:
                         line_data['own_goal_id'] = goal.id
                     elif restrict_top and ranking > restrict_top:
-                        # not own goal, over top, skipping
+                        # not own goal and too low to be in top
                         continue
 
                     line_data['goals'].append({
