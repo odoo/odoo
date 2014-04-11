@@ -126,10 +126,19 @@
          * as an editable row at the top or bottom of the list)
          */
         do_add_record: function () {
+            var self = this;
             if (this.editable()) {
                 this.$el.find('table:first').show();
                 this.$el.find('.oe_view_nocontent').remove();
-                this.start_edition();
+                this.start_edition().then(function(){
+                    var fields = self.editor.form.fields;
+                    self.editor.form.fields_order.some(function(field){
+                        if (fields[field].$el.is(':visible')){
+                            fields[field].$el.find("input").select();
+                            return true;
+                        }
+                    });
+                });
             } else {
                 this._super();
             }
