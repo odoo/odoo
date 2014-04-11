@@ -2332,7 +2332,7 @@ class BaseModel(object):
         del data['id']
         return data
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context={}, orderby=False, lazy=True):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
@@ -2364,6 +2364,8 @@ class BaseModel(object):
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
+        if context is None:
+            context = {}
         self.check_access_rights(cr, uid, 'read')
         query = self._where_calc(cr, uid, domain, context=context) 
         fields = fields or self._columns.keys()
