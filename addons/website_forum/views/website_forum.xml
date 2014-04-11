@@ -482,15 +482,14 @@
 
         <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
             <a t-attf-id="answer-#{str(answer.id)}"/>
-            <div t-attf-class="#{answer.is_correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
+            <div t-attf-class="forum_answer #{answer.is_correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
                 <div class="text-center pull-left">
                     <t t-call="website_forum.vote">
                         <t t-set="post" t-value="answer"/>
                     </t>
                     <div class="text-muted">
                         <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_true #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
-                            t-attf-data-forum-id="#{question.forum_id.id}" t-attf-data-post-id="#{answer.id}"
-                            t-attf-data-accept="#{answer.is_correct}"/>
+                            t-attf-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                     </div>
                 </div>
                 <div style="margin-left: 95px;" class="clearfix">

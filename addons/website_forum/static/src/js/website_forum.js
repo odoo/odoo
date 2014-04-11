@@ -52,9 +52,7 @@ $(document).ready(function () {
     $('.accept_answer').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var forum_id = $link.data('forum-id');
-        var post_id = $link.data('post-id');
-        openerp.jsonRpc("/forum/" + forum_id + "/post/" + post_id + "/toggle_correct", 'call', {}).then(function (data) {
+        openerp.jsonRpc($link.attr('href'), 'call', {}).then(function (data) {
             if (data['error']) {
                 if (data['error'] == 'anonymous_user'){
                     var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
@@ -76,8 +74,7 @@ $(document).ready(function () {
                 $link.parents().find(".answer_correct").removeClass("answer_correct alert alert-info")
                 if (data) {
                     $link.removeClass("oe_answer_false").addClass('oe_answer_true');
-                    $("div#answer_" + $link.attr('id')).addClass("answer_correct alert alert-info");
-                    console.log("aaaaa",$("div#answer_" + $link.attr('id')))
+                    $link.parents('.forum_answer').first().addClass("answer_correct alert alert-info");
                 }
             }
         });

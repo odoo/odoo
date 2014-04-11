@@ -297,20 +297,18 @@ class WebsiteForum(http.Controller):
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
-    def post_toggle_correct(self, form, post, **kwargs):
+    def post_toggle_correct(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        # user = request.registry['res.users'].browse(cr, uid, uid, context=None)
-
         # # if user have not access to accept answer then reise warning
-        # if not (post.parent_id.create_uid.id == uid or user.karma >= 500):
-        #     return {'error': 'user'}
+        if post.parent_id is False or post.parent_id.create_uid.id != uid:
+            return {'error': 'user'}
 
         # set all answers to False, only one can be accepted
         request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
-        request.registry['forum.post'].write(cr, uid, [post.id, post.parent_id.id], {'is_correct': not post.correct}, context=context)
-        return not post.correct
+        request.registry['forum.post'].write(cr, uid, [post.id, post.parent_id.id], {'is_correct': not post.is_correct}, context=context)
+        return not post.is_correct
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", multilang=True, website=True)
     def post_delete(self, forum, post, **kwargs):
