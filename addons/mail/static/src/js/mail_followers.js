@@ -95,8 +95,7 @@ openerp_mail_followers = function(session, mail) {
             var user_pid = $currentTarget.data('id');
             $('div.oe_edit_actions').remove();
             self.$dialog = new session.web.Dialog(this, {
-                            destroy_on_close: false,
-                            modal_size: 'small',
+                            size: 'small',
                             title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
