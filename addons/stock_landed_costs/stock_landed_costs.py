@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+from openerp.tools.translate import _
 import product
 
 class stock_landed_cost(osv.osv):
@@ -93,6 +94,54 @@ class stock_landed_cost(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
+    def _create_accounting_entries(self, cr, uid, cost, valuation_lines, context=None):
+        product_obj = self.pool.get('product.product')
+        for line in valuation_lines:
+            credit_account_id = line.product_id.property_stock_account_input and line.product_id.property_stock_account_input.id or False
+            debit_account_id = line.cost_line_id and line.cost_line_id.product_id and line.cost_line_id.product_id.property_account_expense and \
+                                line.cost_line_id.product_id.property_account_expense.id or False
+            if not credit_account_id:
+                raise osv.except_osv(_('Error!'), _('Please configure Stock Input Account for product: %s.') % (line.product_id.name))
+            if not debit_account_id:
+                raise osv.except_osv(_('Error!'), _('Please configure Stock Expense Account for product: %s.') % (line.cost_line_id and line.cost_line_id.product_id and line.cost_line_id.product_id.name))
+            accounts = product_obj.get_product_accounts(cr, uid, line.product_id.id, context=context)
+            journal_id = accounts['stock_journal']
+            self._create_account_move(cr, uid, cost, line, credit_account_id=credit_account_id, debit_account_id=debit_account_id, journal_id=journal_id, context=context)
+        return True
+
+    def _prepare_account_move_line(self, cr, uid, cost, line, credit_account_id, debit_account_id, context=None):
+        """
+        Generate the account.move.line values to track the landed cost.
+        """
+        debit_line_vals = {
+            'name': cost.name,
+            'product_id': line.product_id.id,
+            'quantity': line.quantity,
+            'debit': line.additional_landed_cost,
+            'account_id': debit_account_id
+        }
+        credit_line_vals = {
+            'name': cost.name,
+            'product_id': line.product_id.id,
+            'quantity': line.quantity,
+            'credit': line.additional_landed_cost,
+            'account_id': credit_account_id
+        }
+        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+
+    def _create_account_move(self, cr, uid, cost, line, credit_account_id, debit_account_id, journal_id, context=None):
+        move_lines = self._prepare_account_move_line(cr, uid, cost, line, credit_account_id, debit_account_id, context=context)
+        vals = {
+            'journal_id': journal_id,
+            'line_id': move_lines,
+            'period_id': self.pool.get('account.period').find(cr, uid, cost.date, context=context)[0],
+            'date': cost.date,
+            'ref': cost.name
+        }
+        move = self.pool.get('account.move').create(cr, uid, vals, context=context)
+        self.pool.get('stock.valuation.adjustment.lines').write(cr, uid, line.id, {'account_move_id': move}, context=context)
+        return True
+
     def button_validate(self, cr ,uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for cost in self.browse(cr, uid, ids, context=context):
@@ -106,6 +155,7 @@ class stock_landed_cost(osv.osv):
                     else:
                         new_cost = quant.cost + diff
                     quant_obj.write(cr, uid, quant.id, {'cost': new_cost}, context=context)
+            self._create_accounting_entries(cr, uid, cost, cost.valuation_adjustment_lines, context=context)
             self.write(cr, uid, cost.id, {'state': 'open'}, context=context)
         return True
 
@@ -176,7 +226,7 @@ class stock_landed_cost(osv.osv):
                                 dict[valuation.id] = value
                             else:
                                 dict[valuation.id] += value
- 
+
         for key, value in dict.items():
             line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
 
@@ -227,6 +277,7 @@ class stock_valuation_adjustment_lines(osv.osv):
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'cost_line_id': fields.many2one('stock.landed.cost.lines', 'Cost Line'),
         'move_id': fields.many2one('stock.move', 'Stock Move'),
+        'account_move_id': fields.many2one('account.move', 'Journal Entry'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
         'weight': fields.float('Weight', digits_compute= dp.get_precision('Product Unit of Measure')),
