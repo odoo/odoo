@@ -2,6 +2,14 @@
 <openerp>
     <data>
         
+        <record id="removal_fifo" model="product.removal">
+            <field name="name">First In First Out (FIFO)</field>
+            <field name="method">fifo</field>
+        </record>
+        <record id="removal_lifo" model="product.removal">
+            <field name="name">Last In First Out (LIFO)</field>
+            <field name="method">lifo</field>
+        </record>
         
                 <!--
     Resource: stock.location

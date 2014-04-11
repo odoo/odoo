@@ -129,9 +129,9 @@ class stock_location(osv.osv):
 
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Is a Scrap Location?', help='Check this box to allow using this location to put scrapped/damaged goods.'),
-        'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
-        'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
-        'loc_barcode': fields.char('Location barcode'),
+        'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
+        'putaway_strategy_id': fields.many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
+        'loc_barcode': fields.char('Location Barcode'),
     }
     _defaults = {
         'active': True,
@@ -147,31 +147,36 @@ class stock_location(osv.osv):
     def create(self, cr, uid, default, context=None):
         if not default.get('loc_barcode', False):
             default.update({'loc_barcode': default.get('complete_name', False)})
-        return super(stock_location,self).create(cr, uid, default, context=context)
+        return super(stock_location, self).create(cr, uid, default, context=context)
 
     def get_putaway_strategy(self, cr, uid, location, product, context=None):
-        pa = self.pool.get('product.putaway')
-        categ = product.categ_id
-        categs = [categ.id, False]
-        while categ.parent_id:
-            categ = categ.parent_id
-            categs.append(categ.id)
+        ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
+        putaway_obj = self.pool.get('product.putaway')
+        loc = location
+        while loc:
+            if loc.putaway_strategy_id:
+                res = putaway_obj.putaway_strat_apply(cr, uid, loc.putaway_strategy_id, product, context=context)
+                if res:
+                    return res
+            loc = loc.location_id
 
-        result = pa.search(cr, uid, [('location_id', '=', location.id), ('product_categ_id', 'in', categs)], context=context)
-        if result:
-            return pa.browse(cr, uid, result[0], context=context)
+    def _default_removal_strategy(self, cr, uid, context=None):
+        return 'fifo'
 
     def get_removal_strategy(self, cr, uid, location, product, context=None):
-        pr = self.pool.get('product.removal')
-        categ = product.categ_id
-        categs = [categ.id, False]
-        while categ.parent_id:
-            categ = categ.parent_id
-            categs.append(categ.id)
-
-        result = pr.search(cr, uid, [('location_id', '=', location.id), ('product_categ_id', 'in', categs)], context=context)
-        if result:
-            return pr.browse(cr, uid, result[0], context=context).method
+        ''' Returns the removal strategy to consider for the given product and location.
+            :param location: browse record (stock.location)
+            :param product: browse record (product.product)
+            :rtype: char
+        '''
+        if product.categ_id.removal_strategy_id:
+            return product.categ_id.removal_strategy_id.method
+        loc = location
+        while loc:
+            if loc.removal_strategy_id:
+                return loc.removal_strategy_id.method
+            loc = loc.location_id
+        return self._default_removal_strategy(cr, uid, context=context)
 
 
 #----------------------------------------------------------
@@ -419,14 +424,18 @@ class stock_quant(osv.osv):
         if restrict_lot_id:
             domain += [('lot_id', '=', restrict_lot_id)]
         if location:
-            removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
-            if removal_strategy == 'fifo':
-                result += self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
-            elif removal_strategy == 'lifo':
-                result += self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
-            else:
-                raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
+            removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context)
+            result += self.apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
         return result
+
+    def apply_removal_strategy(self, cr, uid, location, product, quantity, domain, removal_strategy, context=None):
+        if removal_strategy == 'fifo':
+            order = 'in_date, id'
+            return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
+        elif removal_strategy == 'lifo':
+            order = 'in_date desc, id desc'
+            return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
+        raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
 
     def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
         '''Create a quant in the destination location and create a negative quant in the source location if it's an internal location.
@@ -573,14 +582,6 @@ class stock_quant(osv.osv):
                     break
             offset += 10
         return res
-
-    def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], context=None):
-        order = 'in_date, id'
-        return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
-
-    def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], context=None):
-        order = 'in_date desc, id desc'
-        return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
     def _check_location(self, cr, uid, location, context=None):
         if location.usage == 'view':
@@ -922,8 +923,10 @@ class stock_picking(osv.osv):
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
 
     def _picking_putaway_resolution(self, cr, uid, picking, product, putaway, context=None):
-        if putaway.method == 'fixed' and putaway.location_spec_id:
-            return putaway.location_spec_id.id
+        if putaway.method == 'fixed':
+            for strat in putaway.fixed_location_ids:
+                if product.categ_id.id == strat.category_id.id:
+                    return strat.fixed_location_id.id
         return False
 
     def _get_top_level_packages(self, cr, uid, quants_suggested_locations, context=None):
@@ -981,11 +984,10 @@ class stock_picking(osv.osv):
             location = False
             # Search putaway strategy
             if product_putaway_strats.get(product.id):
-                putaway_strat = product_putaway_strats[product.id]
+                location = product_putaway_strats[product.id]
             else:
-                putaway_strat = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, product, context=context)
-                product_putaway_strats[product.id] = putaway_strat
-            if putaway_strat:
+                location = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, product, context=context)
+                product_putaway_strats[product.id] = location
                 location = self._picking_putaway_resolution(cr, uid, picking, product, putaway_strat, context=context)
             return location or picking.picking_type_id.default_location_dest_id.id or picking.location_dest_id.id
 
