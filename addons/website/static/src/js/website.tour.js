@@ -314,7 +314,7 @@ website.Tour = openerp.Class.extend({
                             width: '1px',
                             height: '1px',
                             opacity: 0
-                        }, 1000,
+                        }, 800,
                         function(){
                             $(".popover.tour").remove();
                             clearTimeout(self.timer);
