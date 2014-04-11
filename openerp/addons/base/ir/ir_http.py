@@ -85,8 +85,8 @@ class ir_http(osv.AbstractModel):
         return auth_method
 
     def _handle_exception(self, exception):
-        # If handle exception return something different than None, it will be used as a response
-        raise
+        # If handle_exception returns something different than None, it will be used as a response
+        return request._handle_exception(exception)
 
     def _dispatch(self):
         # locate the controller method

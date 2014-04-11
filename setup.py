@@ -150,7 +150,7 @@ setuptools.setup(
       #include_package_data = True,
       install_requires = [
           'pychart', # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
-          'babel',
+          'babel >= 1.0',
           'docutils',
           'feedparser',
           'gdata',
@@ -171,7 +171,7 @@ setuptools.setup(
           'python-openid',
           'pytz',
           'pyusb >= 1.0.0b1',
-          'pywebdav',
+          'pywebdav <= 0.9.4',
           'pyyaml',
           'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab

@@ -73,11 +73,17 @@ class view_custom(osv.osv):
 class view(osv.osv):
     _name = 'ir.ui.view'
 
-    def _get_model_data(self, cr, uid, ids, *args, **kwargs):
-        ir_model_data = self.pool.get('ir.model.data')
-        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
-        result = dict(zip(ids, data_ids))
+    def _get_model_data(self, cr, uid, ids, fname, args, context=None):
+        result = dict.fromkeys(ids, False)
+        IMD = self.pool['ir.model.data']
+        data_ids = IMD.search_read(cr, uid, [('res_id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
+        result.update(map(itemgetter('res_id', 'id'), data_ids))
         return result
+
+    def _views_from_model_data(self, cr, uid, ids, context=None):
+        IMD = self.pool['ir.model.data']
+        data_ids = IMD.search_read(cr, uid, [('id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
+        return map(itemgetter('res_id'), data_ids)
 
     _columns = {
         'name': fields.char('View Name', required=True),
@@ -97,7 +103,11 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
-        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data", store=True),
+        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
+                                         store={
+                                             _name: (lambda s, c, u, i, ctx=None: i, None, 10),
+                                             'ir.model.data': (_views_from_model_data, ['model', 'res_id'], 10),
+                                         }),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
