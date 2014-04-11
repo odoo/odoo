@@ -379,10 +379,10 @@
 <template id="vote">
     <div t-attf-class="box oe_grey">
         <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''}" 
-            t-attf-data-post-id="#{post.id}" t-attf-data-forum-id="#{post.forum_id.id}" data-value="1"/>
+            t-attf-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
         <span id="vote_count" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
-            t-attf-data-post-id="#{post.id}" t-attf-data-forum-id="#{post.forum_id.id}" data-value="-1"/>
+            t-attf-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
         <div>
             votes
         </div>
@@ -404,7 +404,7 @@
                     <span t-if="question.child_count&lt;=1">Answer</span>
                 </div>
                 <div>
-                    <a t-attf-data-forum-id="#{question.forum_id.id}" t-attf-data-post-id="#{question.id}"
+                    <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                         t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                 </div>
             </div>

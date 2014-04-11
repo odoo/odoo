@@ -186,33 +186,17 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.post_description_full", values)
 
-    @http.route('/forum/<int:forum_id>/question/<int:question_id>/toggle_favourite', type='json', auth="user", multilang=True, website=True)
-    def question_toggle_favorite_tmp(self, forum_id, question_id, **post):
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", multilang=True, methods=['POST'], website=True)
+    def question_toggle_favorite(self, forum, question, **post):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        # forum = request.registry['forum.forum'].browse(request.cr, request.uid, forum_id, context=request.context)
-        question = request.registry['forum.post'].browse(request.cr, request.uid, question_id, context=request.context)
         # TDE: add check for not public
         favourite = False if question.user_favourite else True
-        print favourite
         if favourite:
             favourite_ids = [(4, request.uid)]
         else:
             favourite_ids = [(3, request.uid)]
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'favourite_ids': favourite_ids}, context=request.context)
-        print favourite_ids
-        return favourite
-
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", multilang=True, methods=['POST'], website=True)
-    def question_toggle_favorite(self, forum, question, **post):
-        # TDE: add check for not public
-        favourite = False if question.user_favourite else True
-        if favourite:
-            favourite_ids = [(4, request.uid)]
-        else:
-            favourite_ids = [(3, request.uid)]
-        request.registry['forum.post'].write(
-            request.cr, request.uid, [question.id], {'favourite_ids': favourite_ids}, context=request.context)
         return favourite
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", multilang=True, website=True)
@@ -359,27 +343,11 @@ class WebsiteForum(http.Controller):
         question = post.parent_id if post.parent_id else post
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
-    @http.route('/forum/<int:forum_id>/post/<int:post_id>/upvote', type='json', auth="public", multilang=True, website=True)
-    def post_upvote_tmp(self, forum_id, post_id, **kwargs):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
-        # forum = request.registry['forum.forum'].browse(request.cr, request.uid, forum_id, context=request.context)
-        post = request.registry['forum.post'].browse(request.cr, request.uid, post_id, context=request.context)
-        return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=True, context=request.context)
-
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", multilang=True, website=True)
     def post_vote(self, forum, post, **kwargs):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=True, context=request.context)
-
-    @http.route('/forum/<int:forum_id>/post/<int:post_id>/downvote', type='json', auth="public", multilang=True, website=True)
-    def post_downvote_tmp(self, forum_id, post_id, **kwargs):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
-        # forum = request.registry['forum.forum'].browse(request.cr, request.uid, forum_id, context=request.context)
-        post = request.registry['forum.post'].browse(request.cr, request.uid, post_id, context=request.context)
-        return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=False, context=request.context)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", multilang=True, website=True)
     def post_downvote(self, forum, post, **kwargs):

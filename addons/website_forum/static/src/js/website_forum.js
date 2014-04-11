@@ -3,11 +3,7 @@ $(document).ready(function () {
     $('.vote_up ,.vote_down').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var url_target = $link.data("value") == '1' ? 'upvote' : 'downvote';
-        var forum_id = $link.data('forum-id');
-        var post_id = $link.data('post-id');
-
-        openerp.jsonRpc("/forum/" + forum_id + "/post/" + post_id + "/" + url_target, 'call', {})
+        openerp.jsonRpc($link.attr('href'), 'call', {})
             .then(function (data) {
                 if (data['error']){
                     if (data['error'] == 'own_post'){
@@ -84,9 +80,7 @@ $(document).ready(function () {
     $('.favourite_question').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var forum_id = $link.data('forum-id');
-        var post_id = $link.data('post-id');
-        openerp.jsonRpc("/forum/" + forum_id + "/question/" + post_id + "/toggle_favourite", 'call', {}).then(function (data) {
+        openerp.jsonRpc($link.attr('href'), 'call', {}).then(function (data) {
             if (data) {
                 $link.addClass("forum_favourite_question")
             } else {
