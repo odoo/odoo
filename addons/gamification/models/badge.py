@@ -39,7 +39,8 @@ class gamification_badge_user(osv.Model):
     _columns = {
         'user_id': fields.many2one('res.users', string="User", required=True),
         'sender_id': fields.many2one('res.users', string="Sender", help="The user who has send the badge"),
-        'badge_id': fields.many2one('gamification.badge', string='Badge', required=True),
+        'badge_id': fields.many2one('gamification.badge', string='Badge', required=True, ondelete="cascade"),
+        'challenge_id': fields.many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge"),
         'comment': fields.text('Comment'),
         'badge_name': fields.related('badge_id', 'name', type="char", string="Badge Name"),
         'create_date': fields.datetime('Created', readonly=True),
@@ -263,7 +264,7 @@ class gamification_badge(osv.Model):
 
     def check_progress(self, cr, uid, context=None):
         try:
-            model, res_id = template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'badge_hidden')
+            model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'badge_hidden')
         except ValueError:
             return True
         badge_user_obj = self.pool.get('gamification.badge.user')

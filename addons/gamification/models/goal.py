@@ -88,8 +88,16 @@ class gamification_goal_definition(osv.Model):
             string='Date Field',
             help='The date to use for the time period evaluated'),
         'domain': fields.char("Filter Domain",
-            help="Domain for filtering records. The rule can contain reference to 'user' that is a browse record of the current user, e.g. [('user_id', '=', user.id)].",
+            help="Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode.",
             required=True),
+
+        'batch_mode': fields.boolean('Batch Mode',
+            help="Evaluate the expression in batch instead of once for each user"),
+        'batch_distinctive_field': fields.many2one('ir.model.fields',
+            string="Distinctive field for batch user",
+            help="In batch mode, this indicates which field distinct one user form the other, e.g. user_id, partner_id..."),
+        'batch_user_expression': fields.char("Evaluted expression for batch mode",
+            help="The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."),
         'compute_code': fields.text('Python Code',
             help="Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."),
         'condition': fields.selection([
@@ -102,7 +110,7 @@ class gamification_goal_definition(osv.Model):
         'action_id': fields.many2one('ir.actions.act_window', string="Action",
             help="The action that will be called to update the goal value."),
         'res_id_field': fields.char("ID Field of user",
-            help="The field name on the user profile (res.users) containing the value for res_id for action.")
+            help="The field name on the user profile (res.users) containing the value for res_id for action."),
     }
 
     _defaults = {
@@ -158,7 +166,7 @@ class gamification_goal(osv.Model):
     _columns = {
         'definition_id': fields.many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade"),
         'user_id': fields.many2one('res.users', string='User', required=True),
-        'line_id': fields.many2one('gamification.challenge.line', string='Goal Line', ondelete="cascade"),
+        'line_id': fields.many2one('gamification.challenge.line', string='Challenge Line', ondelete="cascade"),
         'challenge_id': fields.related('line_id', 'challenge_id',
             string="Challenge",
             type='many2one',
@@ -175,7 +183,6 @@ class gamification_goal(osv.Model):
         'state': fields.selection([
                 ('draft', 'Draft'),
                 ('inprogress', 'In progress'),
-                ('inprogress_update', 'In progress (to update)'),
                 ('reached', 'Reached'),
                 ('failed', 'Failed'),
                 ('canceled', 'Canceled'),
@@ -183,6 +190,8 @@ class gamification_goal(osv.Model):
             string='State',
             required=True,
             track_visibility='always'),
+        'to_update': fields.boolean('To update'),
+        'closed': fields.boolean('Closed goal', help="These goals will not be recomputed."),
 
         'computation_mode': fields.related('definition_id', 'computation_mode', type='char', string="Computation mode"),
         'remind_update_delay': fields.integer('Remind delay',
@@ -212,14 +221,14 @@ class gamification_goal(osv.Model):
         if goal.remind_update_delay and goal.last_update:
             delta_max = timedelta(days=goal.remind_update_delay)
             last_update = datetime.strptime(goal.last_update, DF).date()
-            if date.today() - last_update > delta_max and goal.state == 'inprogress':
+            if date.today() - last_update > delta_max:
                 # generate a remind report
                 temp_obj = self.pool.get('email.template')
                 template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_reminder', context)
                 body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal', goal.id, context=context)
 
                 self.message_post(cr, uid, goal.id, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
-                return {'state': 'inprogress_update'}
+                return {'to_update': True}
         return {}
 
     def update(self, cr, uid, ids, context=None):
@@ -233,70 +242,122 @@ class gamification_goal(osv.Model):
         if context is None:
             context = {}
 
+        goals_by_definition = {}
+        goals_to_write = {}
+        all_goals = {}
         for goal in self.browse(cr, uid, ids, context=context):
-            towrite = {}
             if goal.state in ('draft', 'canceled'):
-                # skip if goal draft or canceled
+                # draft or canceled goals should not be recomputed
                 continue
 
-            if goal.definition_id.computation_mode == 'manually':
-                towrite.update(self._check_remind_delay(cr, uid, goal, context))
+            goals_by_definition.setdefault(goal.definition_id, []).append(goal)
+            goals_to_write[goal.id] = {}
+            all_goals[goal.id] = goal
 
-            elif goal.definition_id.computation_mode == 'python':
-                # execute the chosen method
-                cxt = {
-                    'self': self.pool.get('gamification.goal'),
-                    'object': goal,
-                    'pool': self.pool,
-                    'cr': cr,
-                    'context': dict(context),  # copy context to prevent side-effects of eval
-                    'uid': uid,
-                    'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
-                }
-                code = goal.definition_id.compute_code.strip()
-                safe_eval(code, cxt, mode="exec", nocopy=True)
-                # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
-                result = cxt.get('result')
-                if result is not None and type(result) in (float, int, long):
-                    if result != goal.current:
-                        towrite['current'] = result
-                else:
-                    _logger.exception(_('Invalid return content from the evaluation of %s' % code))
+        for definition, goals in goals_by_definition.items():
+            if definition.computation_mode == 'manually':
+                for goal in goals:
+                    goals_to_write[goal.id].update(self._check_remind_delay(cr, uid, goal, context))
+            elif definition.computation_mode == 'python':
+                # TODO batch execution
+                for goal in goals:
+                    # execute the chosen method
+                    cxt = {
+                        'self': self.pool.get('gamification.goal'),
+                        'object': goal,
+                        'pool': self.pool,
+                        'cr': cr,
+                        'context': dict(context), # copy context to prevent side-effects of eval
+                        'uid': uid,
+                        'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
+                    }
+                    code = definition.compute_code.strip()
+                    safe_eval(code, cxt, mode="exec", nocopy=True)
+                    # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
+                    result = cxt.get('result')
+                    if result is not None and type(result) in (float, int, long):
+                        if result != goal.current:
+                            goals_to_write[goal.id]['current'] = result
+                    else:
+                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s' % definition.name))
 
             else:  # count or sum
-                obj = self.pool.get(goal.definition_id.model_id.model)
-                field_date_name = goal.definition_id.field_date_id.name
 
-                # eval the domain with user replaced by goal user object
-                domain = safe_eval(goal.definition_id.domain, {'user': goal.user_id})
+                obj = self.pool.get(definition.model_id.model)
+                field_date_name = definition.field_date_id and definition.field_date_id.name or False
 
-                # add temporal clause(s) to the domain if fields are filled on the goal
-                if goal.start_date and field_date_name:
-                    domain.append((field_date_name, '>=', goal.start_date))
-                if goal.end_date and field_date_name:
-                    domain.append((field_date_name, '<=', goal.end_date))
+                if definition.computation_mode == 'count' and definition.batch_mode:
 
-                if goal.definition_id.computation_mode == 'sum':
-                    field_name = goal.definition_id.field_id.name
-                    res = obj.read_group(cr, uid, domain, [field_name], [field_name], context=context)
-                    new_value = res and res[0][field_name] or 0.0
+                    general_domain = safe_eval(definition.domain)
+                    # goal_distinct_values = {goal.id: safe_eval(definition.batch_user_expression, {'user': goal.user_id}) for goal in goals}
+                    field_name = definition.batch_distinctive_field.name
+                    # general_domain.append((field_name, 'in', list(set(goal_distinct_values.keys()))))
+                    subqueries = {}
+                    for goal in goals:
+                        start_date = field_date_name and goal.start_date or False
+                        end_date = field_date_name and goal.end_date or False
+                        subqueries.setdefault((start_date, end_date), {}).update({goal.id:safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
 
-                else:  # computation mode = count
-                    new_value = obj.search(cr, uid, domain, context=context, count=True)
+                    for (start_date, end_date), query_goals in subqueries.items():
+                        subquery_domain = list(general_domain)
+                        subquery_domain.append((field_name, 'in', list(set(query_goals.values()))))
+                        if start_date:
+                            subquery_domain.append((field_date_name, '>=', start_date))
+                        if end_date:
+                            subquery_domain.append((field_date_name, '>=', end_date))
 
-                # avoid useless write if the new value is the same as the old one
-                if new_value != goal.current:
-                    towrite['current'] = new_value
+                        user_values = obj.read_group(cr, uid, subquery_domain, fields=[field_name], groupby=[field_name], context=context)                            
+
+                        for goal in [g for g in goals if g.id in query_goals.keys()]:
+                            for user_value in user_values:
+                                # return format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
+                                queried_value = field_name in user_value and user_value[field_name] or False
+                                if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], (int, long)):
+                                    queried_value = queried_value[0]
+                                if queried_value == query_goals[goal.id]:
+                                    new_value = user_value.get(field_name+'_count', goal.current)
+                                    if new_value != goal.current:
+                                        goals_to_write[goal.id]['current'] = new_value
+
+                else:
+                    for goal in goals:
+                        # eval the domain with user replaced by goal user object
+                        domain = safe_eval(definition.domain, {'user': goal.user_id})
+
+                        # add temporal clause(s) to the domain if fields are filled on the goal
+                        if goal.start_date and field_date_name:
+                            domain.append((field_date_name, '>=', goal.start_date))
+                        if goal.end_date and field_date_name:
+                            domain.append((field_date_name, '<=', goal.end_date))
+
+                        if definition.computation_mode == 'sum':
+                            field_name = definition.field_id.name
+                            res = obj.read_group(cr, uid, domain, [field_name], [field_name], context=context)
+                            new_value = res and res[0][field_name] or 0.0
+
+                        else:  # computation mode = count
+                            new_value = obj.search(cr, uid, domain, context=context, count=True)
+
+                        # avoid useless write if the new value is the same as the old one
+                        if new_value != goal.current:
+                            goals_to_write[goal.id]['current'] = new_value
+
+        for goal_id, value in goals_to_write.items():
+            if not value:
+                continue
+            goal = all_goals[goal_id]
 
             # check goal target reached
-            if (goal.definition_condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.definition_condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
-                towrite['state'] = 'reached'
+            if (goal.definition_condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
+              or (goal.definition_condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
+                value['state'] = 'reached'
 
             # check goal failure
             elif goal.end_date and fields.date.today() > goal.end_date:
-                towrite['state'] = 'failed'
-            if towrite:
-                self.write(cr, uid, [goal.id], towrite, context=context)
+                value['state'] = 'failed'
+                value['closed'] = True
+            if value:
+                self.write(cr, uid, [goal.id], value, context=context)
         return True
 
     def action_start(self, cr, uid, ids, context=None):
