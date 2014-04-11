@@ -416,7 +416,7 @@ var T = website.Tour = {
         T.saveState(state.id, state.mode, step.id);
 
         if (step.id !== state.step_id) {
-            console.log("Tour Step: '" + step._title + "' (" + (new Date().getTime() - this.time) + "ms)");
+            console.log("Tour Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
 
         T.autoTogglePopover(true);
