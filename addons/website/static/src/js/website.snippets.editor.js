@@ -151,10 +151,11 @@
             $("[data-oe-model] *, [data-oe-type=html] *").off('click');
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
+            website.snippet.stop_animation();
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                  website.snippet.stop_animation();
-                  website.snippet.start_animation(true, $(".media_iframe_video"));
+                website.snippet.start_animation();
+                $("#wrapwrap *").off('mousedown mouseup click');
             });
 
             return this._super.apply(this, arguments);
