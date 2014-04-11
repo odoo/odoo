@@ -62,10 +62,12 @@ class stock_landed_cost(osv.osv):
             for move in picking.move_lines:
                 total_cost = 0.0
                 total_qty = 0.0
+                weight = move.product_id and move.product_id.weight
+                volume = move.product_id and move.product_id.volume
                 for quant in move.quant_ids:
                     total_cost += quant.cost
                     total_qty += quant.qty
-                vals = dict(product_id = move.product_id.id, move_id = move.id, quantity = move.product_uom_qty, former_cost = total_cost * total_qty)
+                vals = dict(product_id = move.product_id.id, move_id = move.id, quantity = move.product_uom_qty, former_cost = total_cost * total_qty, weight = weight, volume = volume)
                 lines.append(vals)
         result['valuation_adjustment_lines'] = lines
         return {'value': result}
