@@ -45,7 +45,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post_vote')"/>
-            <field name="domain">[('user_id', '=', user.id), ('vote', '=', '-1')]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('vote', '=', '-1')]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_critic">
@@ -76,7 +76,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('vote_count', '>=', 3), ('active', '=', False)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('vote_count', '>=', 3), ('active', '=', False)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_disciplined">
@@ -107,7 +107,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('mail.model_mail_message')" />
-            <field name="domain">[('user_id','=',user.id), '|', ('name','!=',False), ('content','!=',False)]</field>
+            <field name="domain">[('create_uid','=',user.id), '|', ('name','!=',False), ('content','!=',False)]</field>
             <field name="domain" eval="[('author_id', '=', user.partner_id.id), ('model', '=', 'forum.post'), ('subtype_id', 'in', [ref('website_forum.mt_answer_edit'), ref('website_forum.mt_question_edit')])]"/>
             <field name="condition">higher</field>
         </record>
@@ -140,7 +140,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post_history')" />
-            <field name="domain">[('user_id','=',user.id), ('tags','!=',False)]</field>
+            <field name="domain">[('create_uid','=',user.id), ('tags','!=',False)]</field>
             <field name="condition">higher</field>
         </record> -->
 
@@ -176,7 +176,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_website_forum_post_history')" />
-            <field name="domain">[('user_id','=',user.id), '|', ('name','!=',False), ('content','!=',False)]</field>
+            <field name="domain">[('create_uid','=',user.id), '|', ('name','!=',False), ('content','!=',False)]</field>
             <field name="condition">higher</field>
         </record> -->
 
@@ -211,8 +211,7 @@
 end_date = date.today() - timedelta(days=1)
 cr.execute('SELECT COUNT(id), create_date from forum_post_vote where create_date &gt;= %s and create_date &lt;= %s and user_id = %s GROUP BY create_date',(start_date,end_date, object.user_id.id,))
 data = cr.dictfetchall()
-result = int(len(data) >= 15)
-            </field>
+result = int(len(data) >= 15)</field>
             <field name="display_mode">boolean</field>
             <field name="condition">higher</field>
         </record>
@@ -278,7 +277,7 @@ result = int(len(data) >= 15)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id','=',user.id), ('vote_count', '&lt;=', -3), ('active', '=', False)]</field>
+            <field name="domain">[('create_uid','=',user.id), ('vote_count', '&lt;=', -3), ('active', '=', False)]</field>
             <field name="condition">higher</field>
         </record>
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- <?xml version="1.0" encoding="utf-8"?> -->
 <openerp>
     <data>
 
@@ -107,7 +107,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('favorite_count', '>=', 1)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('favourite_count', '>=', 1)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_favorite_question">
@@ -137,7 +137,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('favorite_count', '>=', 5)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('favourite_count', '>=', 5)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_favorite_question">
@@ -167,7 +167,7 @@
 <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('favorite_count', '>=', 25)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('favourite_count', '>=', 25)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_stellar_question">
@@ -199,7 +199,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '=', False), ('vote_count', '>=', 1)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('vote_count', '>=', 1)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_student">
@@ -229,7 +229,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')"/>
-            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 4)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('vote_count', '>=', 4)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_nice_question">
@@ -259,7 +259,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '=', False), ('vote_count', '>=', 6)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('vote_count', '>=', 6)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_good_question">
@@ -289,7 +289,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('vote_count', '>=', 15)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('vote_count', '>=', 15)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_great_question">
@@ -320,7 +320,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id','=',user.id), ('parent_id', '=', False), ('is_correct', '=', True)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '=', False), ('is_correct', '=', True)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_scholar">

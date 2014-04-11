@@ -26,7 +26,6 @@
             <field name="forum_id" ref="website_forum.forum_help"/>
             <field name="views">5</field>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_0')),(4,ref('website_forum.tags_1')),(4,ref('website_forum.tags_2'))]"/>
-            <field name="user_id" ref="base.user_root"/>
         </record>
         <record id="question_1" model="forum.post">
             <field name="name">CMS replacement for ERP and eCommerce</field>
@@ -38,7 +37,6 @@ Can I use OpenERP as a replacement CMS of Wordpress + eCommerce plugin?
 
 In simple words does OpenERP became CMS+ERP platform?</field>
             <field name="tag_ids" eval="[(4,ref('website_forum.tags_3'))]"/>
-            <field name="user_id" ref="base.user_demo"/>
         </record>
 
         <!-- Answer -->
@@ -53,7 +51,7 @@ In simple words does OpenERP became CMS+ERP platform?</field>
                 Step 5. Go to Scheduled Actions.. Set interval number to 1. Interval Unit to Minutes. Then Set the Next Execution date to 2 minutes from now. If your SMTP is configured correctly you will start to get a mail every minute with the reminder.
             </field>
             <field name="parent_id" ref="question_0" />
-            <field name="user_id" ref="base.user_root"/>
+            <field name="create_uid" ref="base.user_root"/>
         </record>
         <record id="answer_1" model="forum.post">
             <field name="forum_id" ref="website_forum.forum_help"/>
@@ -61,7 +59,7 @@ In simple words does OpenERP became CMS+ERP platform?</field>
                             The CMS editor in OpernERP web is nice but I prefer drupal for customization and there is a drupal module for OpenERP. I think WP is better than OpenERP web too.
             </field>
             <field name="parent_id" ref="question_1"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="create_uid" ref="base.user_root"/>
         </record>
 
         <!-- Post Vote  -->

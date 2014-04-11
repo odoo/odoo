@@ -65,14 +65,14 @@ class Post(osv.Model):
     def _get_user_favourite(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, False)
         for post in self.browse(cr, uid, ids, context=context):
-            if uid in [f.user_id.id for f in post.favourite_ids]:
+            if uid in [f.id for f in post.favourite_ids]:
                 res[post.id] = True
         return res
 
     def _get_favorite_count(self, cr, uid, ids, field_name, arg, context):
         res = dict.fromkeys(ids, 0)
         for post in self.browse(cr, uid, ids, context=context):
-            res[post.id] += len(post.favorite_ids)
+            res[post.id] += len(post.favourite_ids)
         return res
 
     def _get_post_from_hierarchy(self, cr, uid, ids, context=None):
@@ -89,6 +89,12 @@ class Post(osv.Model):
                 res[post.parent_id.id] = len(post.parent_id.child_ids)
             else:
                 res[post.id] = len(post.child_ids)
+        return res
+
+    def _get_uid_answered(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for post in self.browse(cr, uid, ids, context=context):
+            res[post.id] = any(answer.create_uid.id == uid for answer in post.child_ids)
         return res
 
     _columns = {
@@ -122,12 +128,12 @@ class Post(osv.Model):
                 'forum.post.vote': (_get_post_from_vote, [], 10),
             }),
         # favorite fields
-        'favourite_ids': fields.many2many('res.users', 'Favourite'),
+        'favourite_ids': fields.many2many('res.users', string='Favourite'),
         'user_favourite': fields.function(_get_user_favourite, string="My Favourite", type='boolean'),
-        'favorite_count': fields.function(
+        'favourite_count': fields.function(
             _get_favorite_count, string='Favorite Count', type='integer',
             store={
-                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['favorite_ids'], 10),
+                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['favourite_ids'], 10),
             }),
         # hierarchy
         'parent_id': fields.many2one('forum.post', 'Question', ondelete='cascade'),
@@ -137,6 +143,9 @@ class Post(osv.Model):
             store={
                 'forum.post': (_get_post_from_hierarchy, ['parent_id', 'child_ids'], 10),
             }),
+        'uid_has_answered': fields.function(
+            _get_uid_answered, string='Has Answered', type='boolean',
+        ),
         # closing
         'closed_reason_id': fields.many2one('forum.post.reason', 'Reason'),
         'closed_uid': fields.many2one('res.users', 'Closed by', select=1),
@@ -195,8 +204,8 @@ class Post(osv.Model):
             return {'error': 'lessthen_10_karma'}
         # user can not vote on own post
         posts = self.browse(cr, uid, ids, context=context)
-        if any(post.create_uid.id == uid for post in posts):
-            return {'error': 'own_post'}
+        # if any(post.create_uid.id == uid for post in posts):
+        #     return {'error': 'own_post'}
 
         vote_ids = Vote.search(cr, uid, [('post_id', 'in', ids), ('user_id', '=', uid)], context=context)
         if vote_ids:

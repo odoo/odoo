@@ -39,6 +39,7 @@ Ask questions, get answers, no distractions
         'views/forum.xml',
         'views/res_users.xml',
         'views/website_forum.xml',
+        'views/ir_qweb.xml',
         'security/ir.model.access.csv',
         'data/badges_question.xml',
         'data/badges_answer.xml',

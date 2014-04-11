@@ -15,7 +15,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_teacher">
@@ -45,7 +45,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 4)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 4)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_nice_answer">
@@ -75,7 +75,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 6)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 6)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_good_answer">
@@ -105,7 +105,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_great_answer">
@@ -137,7 +137,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')"/>
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3), ('is_correct', '=', True)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3), ('is_correct', '=', True)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_enlightened">
@@ -167,7 +167,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15), ('is_correct', '=', True)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15), ('is_correct', '=', True)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_guru">
@@ -199,7 +199,7 @@
             <field name="compute_code">def get_posts(cr, uid, context=None):
     res = 1
     Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('user_id','=',object.user_id.id), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
+    user_posts = Post.search(cr, uid, [('create_uid','=',object.user_id.id), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
     for post in Post.browse(cr, uid, user_posts, context=context):
         print post.parent_id.create_date
         question_date = datetime.strptime(post.parent_id.create_date, "%Y-%m-%d %H:%M:%S")
@@ -240,7 +240,7 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('user_id', '=', user.id), ('parent_id', '!=', False), ('parent_id.user_id', '=', user.id), ('vote_count', '>=', 3)]</field>
+            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('parent_id.create_uid', '=', user.id), ('vote_count', '>=', 3)]</field>
             <field name="condition">higher</field>
         </record>
         <record model="gamification.challenge" id="challenge_self_learner">

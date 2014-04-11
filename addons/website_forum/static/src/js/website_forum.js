@@ -3,11 +3,11 @@ $(document).ready(function () {
     $('.vote_up ,.vote_down').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        var value = $link.attr("value")
-        
-        openerp.jsonRpc("/forum/post_vote", 'call', {
-                'post_id': $link.attr("id"),
-                'vote': value})
+        var url_target = $link.data("value") == '1' ? 'upvote' : 'downvote';
+        var forum_id = $link.data('forum-id');
+        var post_id = $link.data('post-id');
+
+        openerp.jsonRpc("/forum/" + forum_id + "/post/" + post_id + "/" + url_target, 'call', {})
             .then(function (data) {
                 if (data['error']){
                     if (data['error'] == 'own_post'){
@@ -38,7 +38,7 @@ $(document).ready(function () {
                         $link.parent().find(".text-success").removeClass("text-success");
                         $link.parent().find(".text-warning").removeClass("text-warning");
                     } else {
-                        if (value == 1) {
+                        if (data['vote_count'] == 1) {
                             $link.addClass("text-success");
                         } else {
                             $link.addClass("text-warning");
@@ -49,75 +49,65 @@ $(document).ready(function () {
         return true;
     });
 
-    $('.delete').on('click', function (ev) {
-        ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/post_delete", 'call', {
-            'post_id': $link.attr("id")})
-            .then(function (data) {
-                $("div#answer_" + $link.attr('id')).remove();
-            });
-        return false;
-    });
-
     $('.accept_answer').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/correct_answer", 'call', {
-            'post_id': $link.attr("id")})
-            .then(function (data) {
-                if (data['error']) {
-                    if (data['error'] == 'anonymous_user'){
-                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            'Sorry, anonymous users cannot choose correct answer.'+
-                            '</div>');
-                    } else if (data['error'] == 'user'){
-                        var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
-                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            'Sorry, the user who asked this question can only accept the answer as correct.'+
-                            '</div>');
-                    }
-                    correct_answer_alert = $link.parent().find("#correct_answer_alert");
-                    if (correct_answer_alert.length == 0) {
-                        $link.parent().append($warning);
-                    }
-                } else {
-                    $link.parents().find(".oe_answer_true").removeClass("oe_answer_true alert alert-info").addClass('oe_answer_false');
-                    $link.parents().find(".answer_correct").removeClass("answer_correct alert alert-info")
-                    if (data) {
-                        $link.removeClass("oe_answer_false").addClass('oe_answer_true');
-                        $("div#answer_" + $link.attr('id')).addClass("answer_correct alert alert-info");
-                        console.log("aaaaa",$("div#answer_" + $link.attr('id')))
-                    }
+        var forum_id = $link.data('forum-id');
+        var post_id = $link.data('post-id');
+        openerp.jsonRpc("/forum/" + forum_id + "/post/" + post_id + "/toggle_correct", 'call', {}).then(function (data) {
+            if (data['error']) {
+                if (data['error'] == 'anonymous_user'){
+                    var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                        '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                        'Sorry, anonymous users cannot choose correct answer.'+
+                        '</div>');
+                } else if (data['error'] == 'user'){
+                    var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
+                        '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                        'Sorry, the user who asked this question can only accept the answer as correct.'+
+                        '</div>');
                 }
-            });
+                correct_answer_alert = $link.parent().find("#correct_answer_alert");
+                if (correct_answer_alert.length == 0) {
+                    $link.parent().append($warning);
+                }
+            } else {
+                $link.parents().find(".oe_answer_true").removeClass("oe_answer_true alert alert-info").addClass('oe_answer_false');
+                $link.parents().find(".answer_correct").removeClass("answer_correct alert alert-info")
+                if (data) {
+                    $link.removeClass("oe_answer_false").addClass('oe_answer_true');
+                    $("div#answer_" + $link.attr('id')).addClass("answer_correct alert alert-info");
+                    console.log("aaaaa",$("div#answer_" + $link.attr('id')))
+                }
+            }
+        });
         return true;
     });
 
     $('.favourite_question').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/favourite_question", 'call', {
-            'post_id': $link.attr("id")})
-            .then(function (data) {
-                if (data) {
-                    $link.addClass("forum_favourite_question")
-                } else {
-                    $link.removeClass("forum_favourite_question")
-                }
-            });
+        var forum_id = $link.data('forum-id');
+        var post_id = $link.data('post-id');
+        openerp.jsonRpc("/forum/" + forum_id + "/question/" + post_id + "/toggle_favourite", 'call', {}).then(function (data) {
+            if (data) {
+                $link.addClass("forum_favourite_question")
+            } else {
+                $link.removeClass("forum_favourite_question")
+            }
+        });
         return true;
     });
 
     $('.comment_delete').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/message_delete", 'call', {
-            'message_id': $link.attr("id")})
-            .then(function (data) {
-                $link.parents('#comment').remove();
-            });
+        var forum_id = $link.data('forum-id');
+        var post_id = $link.data('post-id');
+        var message_id = $link.data('message-id');
+        openerp.jsonRpc("/forum/message_delete", 'call', {}).then(function (data) {
+            $link.parents('#comment').remove();
+        });
         return true;
     });
 
@@ -154,20 +144,6 @@ $(document).ready(function () {
             $(this).val("");
         });
     }
-
-    $('.post_history').change(function (ev) {
-        var $option = $(ev.currentTarget);
-        openerp.jsonRpc("/forum/selecthistory", 'call', {
-            'history_id': $option.attr("value")})
-            .then(function (data) {
-                var $input = $('<input type="text" name="question_tag" class="form-control col-md-9 load_tags" placeholder="Tags"/>')
-                $option.parent().find(".text-core").replaceWith($input);
-                set_tags(data['tags']);
-                $option.parent().find("#question_name").attr('value', data['name']);
-                CKEDITOR.instances['content'].setData(data['content'])
-            })
-        return true;
-    });
 
     if ($('textarea.load_editor').length) {
         var editor = CKEDITOR.instances['content'];
