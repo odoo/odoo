@@ -102,10 +102,12 @@ var T = website.Tour = {
             return;
         }
         var tour = T.tours[tour_id];
-        T.saveState(tour.id, mode || tour.mode, 0);
+        this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
+            T.saveState(tour.id, mode || tour.mode, -1);
             window.location.href = "/"+T.getLang()+tour.path;
         } else {
+            T.saveState(tour.id, mode || tour.mode, 0);
             T.running();
         }
     },
@@ -296,6 +298,7 @@ var T = website.Tour = {
     },
     getState: function () {
         var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
+        if (state) { this.time = state.time; }
         var tour_id,mode,step_id;
         if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
             state = {
@@ -310,7 +313,7 @@ var T = website.Tour = {
             return;
         }
         state.tour = T.tours[state.id];
-        state.step = state.tour.steps[state.step_id];
+        state.step = state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
     },
     error: function (message) {
@@ -335,7 +338,7 @@ var T = website.Tour = {
         return tour_ids;
     },
     saveState: function (tour_id, mode, step_id) {
-        localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0}));
+        localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0, "time": this.time}));
     },
     reset: function () {
         var state = T.getState();
@@ -411,6 +414,10 @@ var T = website.Tour = {
 
         step = step || state.step;
         T.saveState(state.id, state.mode, step.id);
+
+        if (step.id !== state.step_id) {
+            console.log("Tour Step: '" + step._title + "' (" + (new Date().getTime() - this.time) + "ms)");
+        }
 
         T.autoTogglePopover(true);
 
