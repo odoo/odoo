@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 9042ace1e3e8175155d9dbed75657222a371cdb6
+# Parent fef5ecf2dad4b7bdcc9a760545c2689187bb15f9
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -12,11 +12,11 @@ diff --git a/__openerp__.py b/__openerp__.py
      ],
      'tests': [
      ],
-diff --git a/controllers/my_controller.py b/controllers/my_controller.py
---- a/controllers/my_controller.py
-+++ b/controllers/my_controller.py
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
 @@ -6,10 +6,15 @@ from openerp.addons.web.controllers impo
- class my_controller(main.Home):
+ class academy(main.Home):
      @http.route('/', auth='public')
      def index(self):
 +        cr, uid, context = http.request.cr, http.request.uid, http.request.context
@@ -60,9 +60,9 @@ new file mode 100644
 +        </record>
 +    </data>
 +</openerp>
-diff --git a/models/my_model.py b/models/my_model.py
---- a/models/my_model.py
-+++ b/models/my_model.py
+diff --git a/models/academy.py b/models/academy.py
+--- a/models/academy.py
++++ b/models/academy.py
 @@ -8,3 +8,12 @@ class TeachingAssistants(orm.Model):
          'name': fields.char(),
          'biography': fields.html(),

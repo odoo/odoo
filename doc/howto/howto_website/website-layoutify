@@ -1,13 +1,13 @@
 # HG changeset patch
-# Parent 341dd9480911ad71df915449944e21275a1f32c6
+# Parent 006b3182bb96e16310fd6fc4be808bd5698f1ab6
 
-diff --git a/controllers/my_controller.py b/controllers/my_controller.py
---- a/controllers/my_controller.py
-+++ b/controllers/my_controller.py
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
 @@ -12,12 +12,12 @@ teaching_assistants = [
  ]
  
- class my_controller(main.Home):
+ class academy(main.Home):
 -    @http.route('/', auth='none')
 +    @http.route('/', auth='public')
      def index(self):

@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent f84f5783ecf4eabd018fd27548423b5cefc1d2dc
+# Parent dce817856f7995c3220ef7261c26b83006c3627e
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -13,11 +13,11 @@ diff --git a/__openerp__.py b/__openerp__.py
      'data': [
          'security/ir.model.access.csv',
          'views/templates.xml',
-diff --git a/controllers/my_controller.py b/controllers/my_controller.py
---- a/controllers/my_controller.py
-+++ b/controllers/my_controller.py
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
 @@ -14,18 +14,10 @@ teaching_assistants = [
- class my_controller(main.Home):
+ class academy(main.Home):
      @http.route('/', auth='none')
      def index(self):
 -        cr, uid, context = http.request.cr, http.request.uid, http.request.context

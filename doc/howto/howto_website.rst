@@ -40,10 +40,10 @@ This builds a basic module for you:
     ├── __openerp__.py
     ├── controllers
     │   ├── __init__.py
-    │   └── my_controller.py
+    │   └── academy.py
     ├── models
     │   ├── __init__.py
-    │   └── my_model.py
+    │   └── academy.py
     └── security
         └── ir.model.access.csv
 
@@ -68,7 +68,7 @@ Let's prettify things a bit: instead of returning just a bit of text,
 we can return a page, and use a tool like bootstrap_ to get a
 nicer rendering than the default.
 
-Go to :file:`academy/controllers/my_controller.py` and change the string
+Go to :file:`academy/controllers/academy.py` and change the string
 returned by the ``index`` method to get a more page-ish output:
 
 .. patch::

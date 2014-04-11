@@ -43,19 +43,19 @@ new file mode 100644
 +++ b/controllers/__init__.py
 @@ -0,0 +1,3 @@
 +# -*- coding: utf-8 -*-
-+import my_controller
++import academy
 +
-diff --git a/controllers/my_controller.py b/controllers/my_controller.py
+diff --git a/controllers/academy.py b/controllers/academy.py
 new file mode 100644
 --- /dev/null
-+++ b/controllers/my_controller.py
++++ b/controllers/academy.py
 @@ -0,0 +1,9 @@
 +# -*- coding: utf-8 -*-
 +
 +from openerp import http
 +from openerp.addons.web.controllers import main
 +
-+class my_controller(main.Home):
++class academy(main.Home):
 +    @http.route('/', auth='none')
 +    def index(self):
 +        return "Hello, world!"
@@ -65,18 +65,18 @@ new file mode 100644
 +++ b/models/__init__.py
 @@ -0,0 +1,3 @@
 +# -*- coding: utf-8 -*-
-+import my_model
++import academy
 +
-diff --git a/models/my_model.py b/models/my_model.py
+diff --git a/models/academy.py b/models/academy.py
 new file mode 100644
 --- /dev/null
-+++ b/models/my_model.py
++++ b/models/academy.py
 @@ -0,0 +1,9 @@
 +# -*- coding: utf-8 -*-
 +from openerp.osv import orm, fields
 +
-+class my_model(orm.Model):
-+    _name = "academy.my_model"
++class academy(orm.Model):
++    _name = "academy.academy"
 +
 +    _columns = {
 +        'name': fields.char(),
@@ -87,4 +87,4 @@ new file mode 100644
 +++ b/security/ir.model.access.csv
 @@ -0,0 +1,2 @@
 +id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-+access_academy_my_model,access_academy_my_model,model_academy_my_model,,1,0,0,0
++access_academy_academy,access_academy_academy,model_academy_academy,,1,0,0,0

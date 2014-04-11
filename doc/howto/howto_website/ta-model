@@ -1,9 +1,9 @@
 # HG changeset patch
-# Parent b6ba23a3c284db481f14d9ea573e0baf8d3320e8
+# Parent 21954f9743a937b8185a5e717fe6af0e92660c55
 
-diff --git a/controllers/my_controller.py b/controllers/my_controller.py
---- a/controllers/my_controller.py
-+++ b/controllers/my_controller.py
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
 @@ -3,19 +3,13 @@
  from openerp import http
  from openerp.addons.web.controllers import main
@@ -16,7 +16,7 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 -    {'name': "Tanya Harris"},
 -]
 -
- class my_controller(main.Home):
+ class academy(main.Home):
      @http.route('/', auth='public')
      def index(self):
 +        tas = http.request.registry['academy.tas'].search_read(
@@ -27,15 +27,15 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
          })
  
      @http.route('/tas/<int:id>/', auth='public', website=True)
-diff --git a/models/my_model.py b/models/my_model.py
---- a/models/my_model.py
-+++ b/models/my_model.py
+diff --git a/models/academy.py b/models/academy.py
+--- a/models/academy.py
++++ b/models/academy.py
 @@ -1,8 +1,8 @@
  # -*- coding: utf-8 -*-
  from openerp.osv import orm, fields
  
--class my_model(orm.Model):
--    _name = "academy.my_model"
+-class academy(orm.Model):
+-    _name = "academy.academy"
 +class TeachingAssistants(orm.Model):
 +    _name = "academy.tas"
  
@@ -46,5 +46,5 @@ diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
 +++ b/security/ir.model.access.csv
 @@ -1,2 +1,2 @@
  id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
--access_academy_my_model,access_academy_my_model,model_academy_my_model,,1,0,0,0
+-access_academy_academy,access_academy_academy,model_academy_academy,,1,0,0,0
 +access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0

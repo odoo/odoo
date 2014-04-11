@@ -1,9 +1,9 @@
 # HG changeset patch
-# Parent a615de71be483d88acca032ad5d35072c87999c0
+# Parent e95e38d7a1c75741d1f7babf1fe6590b8227888e
 
-diff --git a/controllers/my_controller.py b/controllers/my_controller.py
---- a/controllers/my_controller.py
-+++ b/controllers/my_controller.py
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
 @@ -3,9 +3,22 @@
  from openerp import http
  from openerp.addons.web.controllers import main
@@ -16,7 +16,7 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
 +    {'name': "Tanya Harris"},
 +]
 +
- class my_controller(main.Home):
+ class academy(main.Home):
      @http.route('/', auth='none')
      def index(self):
 +        tas = [
@@ -27,7 +27,7 @@ diff --git a/controllers/my_controller.py b/controllers/my_controller.py
          return """<!doctype html>
  <html>
      <head>
-@@ -16,6 +29,26 @@ class my_controller(main.Home):
+@@ -16,6 +29,26 @@ class academy(main.Home):
          <h1>Introduction to a thing</h1>
          <h2>Course description</h2>
          <p>Course introduction</p>
