@@ -2,6 +2,7 @@ import functools
 import logging
 
 import simplejson
+import urlparse
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
@@ -68,7 +69,8 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
     def get_state(self, provider):
         state = dict(
             d=request.session.db,
-            p=provider['id']
+            p=provider['id'],
+            r=request.httprequest.full_path
         )
         token = request.params.get('token')
         if token:
@@ -137,8 +139,12 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
+                redirect = state.get('r')
                 url = '/web'
-                if action:
+                if redirect and not redirect.startswith('/auth_oauth/signin') and \
+                (not redirect.startswith('/web/login') or 'redirect' in urlparse.urlsplit(redirect).query):
+                    url = redirect
+                elif action:
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
