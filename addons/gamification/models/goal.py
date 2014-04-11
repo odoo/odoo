@@ -269,14 +269,13 @@ class gamification_goal(osv.Model):
                         'cr': cr,
                         'context': dict(context), # copy context to prevent side-effects of eval
                         'uid': uid,
-                        'result': False,
                         'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
                     }
                     code = definition.compute_code.strip()
                     safe_eval(code, cxt, mode="exec", nocopy=True)
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
-                    result = cxt.get('result', False)
-                    if result and type(result) in (float, int, long):
+                    result = cxt.get('result')
+                    if result is not None and type(result) in (float, int, long):
                         if result != goal.current:
                             goals_to_write[goal.id]['current'] = result
                     else:
