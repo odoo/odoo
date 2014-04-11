@@ -445,7 +445,7 @@
                             <li t-if="uid == question.create_uid.id and not question.active">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete">undelete</a>
                             </li>
-                            <li><a class="text-muted fa fa-share" href="">share</a></li>
+                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}">share</a></li>
                         </ul>
                     </div>
                     <div>
@@ -505,7 +505,7 @@
                             <li t-if="user.id == answer.create_uid.id">
                                 <a class="text-muted fa fa-magic" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment">Convert as a comment</a>
                             </li>
-                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/#answer-#{ answer.id }">share</a></li>
+                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/#answer_#{answer.id}">share</a></li>
                         </ul>
                         <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                         <div>
