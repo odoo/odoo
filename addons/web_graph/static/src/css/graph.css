@@ -1,5 +1,17 @@
-.graph_main_content {
-    position: relative;
+ /* 
+ This is a hack for IE9 ...
+ Attrs : width and height are not take in consideration
+ */
+.openerp svg:not(:root) {
+    overflow: visible;    
+}
+
+.graph_pivot_mode {
+    position:initial;
+}
+
+.graph_chart_mode {
+    position:relative;
 }
 
 .graph_main_content td {

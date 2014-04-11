@@ -105,9 +105,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             autoOpen: false,
             position: [false, 40],
             buttons: null,
-            beforeClose: function () {
-                self.trigger("closing");
-            },
             resizeStop: function() {
                 self.trigger("resized");
             },
@@ -208,8 +205,9 @@ instance.web.Dialog = instance.web.Widget.extend({
     /**
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
-    close: function() {
+    close: function(reason) {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
+            this.trigger("closing", reason);
             this.$el.dialog('close');
         }
     },
@@ -225,14 +223,14 @@ instance.web.Dialog = instance.web.Widget.extend({
     /**
         Destroys the popup, also closes it.
     */
-    destroy: function () {
+    destroy: function (reason) {
         this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
         if (! this.__tmp_dialog_closing) {
             this.__tmp_dialog_destroying = true;
-            this.close();
+            this.close(reason);
             this.__tmp_dialog_destroying = undefined;
         }
         if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
@@ -256,7 +254,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             new (handler)(this, error).display();
             return;
         }
-        if (error.data.name === "openerp.http.SessionExpiredException") {
+        if (error.data.name === "openerp.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
             this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
@@ -1264,9 +1262,9 @@ instance.web.WebClient = instance.web.Client.extend({
                 };
                 self.action_manager.do_action(result);
                 var form = self.action_manager.dialog_widget.views.form.controller;
-                form.on("on_button_cancel", self.action_manager.dialog, self.action_manager.dialog.close);
+                form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
                 form.on('record_saved', self, function() {
-                    self.action_manager.dialog.close();
+                    self.action_manager.dialog_stop();
                     self.update_logo();
                 });
             });
@@ -1337,12 +1335,13 @@ instance.web.WebClient = instance.web.Client.extend({
         if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.done(function() {
                 new instance.web.Model("res.users").call("read", [self.session.uid, ["action_id"]]).done(function(data) {
-                    var first_menu_id = self.menu.$el.find("a:first").data("menu");
-                    if(first_menu_id)
-                        self.menu.menu_click(first_menu_id);
-
                     if(data.action_id) {
                         self.action_manager.do_action(data.action_id[0]);
+                        self.menu.open_action(data.action_id[0]);
+                    } else {
+                        var first_menu_id = self.menu.$el.find("a:first").data("menu");
+                        if(first_menu_id)
+                            self.menu.menu_click(first_menu_id);
                     }
                 });
             });

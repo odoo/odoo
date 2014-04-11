@@ -38,6 +38,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (this.mode !== 'pivot') {
             this.$('.graph_heatmap label').addClass('disabled');
+            this.$('.graph_main_content').addClass('graph_chart_mode');
+        } else {
+            this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
 
         openerp.session.rpc('/web_graph/check_xlwt').then(function (result) {
@@ -171,10 +174,10 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         if (mode === 'pivot') {
             this.$('.graph_heatmap label').removeClass('disabled');
-            this.$('.graph_main_content').css('position', 'inherit')
+            this.$('.graph_main_content').removeClass('graph_chart_mode').addClass('graph_pivot_mode');
         } else {
             this.$('.graph_heatmap label').addClass('disabled');
-            this.$('.graph_main_content').css('position', 'relative')
+            this.$('.graph_main_content').removeClass('graph_pivot_mode').addClass('graph_chart_mode');
         }
         this.display_data();
     },
@@ -378,11 +381,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // Convert Pivot data structure into table structure :
     //      compute rows, cols, colors, cell width, cell height, ...
     // ----------------------------------------------------------------------
-    build_table: function() {
+    build_table: function(raw) {
         return {
             headers: this.build_headers(),
             measure_row: this.build_measure_row(),
-            rows: this.build_rows(),
+            rows: this.build_rows(raw),
             nbr_measures: this.pivot.measures.length,
             title: this.title,
         };
@@ -432,8 +435,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return result;
     },
 
-    make_cell: function (row, col, value, index) {
-        var formatted_value = openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
+    make_cell: function (row, col, value, index, raw) {
+        var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
             cell = {value:formatted_value};
 
         if (this.heatmap_mode === 'none') { return cell; }
@@ -447,23 +450,36 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return cell;
     },
 
-    build_rows: function () {
+    build_rows: function (raw) {
         var self = this,
             pivot = this.pivot,
-            m, cell;
+            m, i, cell;
 
         return _.map(pivot.rows.headers, function (row) {
             var cells = [];
+            var pivot_cells = [];
+            for (i = 0; i < pivot.cells.length; i++) {
+                if (pivot.cells[i].x == row.id || pivot.cells[i].y == row.id) {
+                    pivot_cells.push(pivot.cells[i]);
+                }
+            }
             _.each(pivot.get_cols_leaves(), function (col) {
-                var values = pivot.get_values(row.id,col.id);
+                var values;
+                for (i = 0; i < pivot_cells.length; i++) {
+                    if (pivot_cells[i].x == col.id || pivot_cells[i].y == col.id) {
+                        values = pivot_cells[i].values;
+                        break;
+                    }
+                }
+                if (!values) { values = new Array(pivot.measures.length);}
                 for (m = 0; m < pivot.measures.length; m++) {
-                    cells.push(self.make_cell(row,col,values[m], m));
+                    cells.push(self.make_cell(row,col,values[m], m, raw));
                 }
             });
             if (pivot.get_cols_leaves().length > 1) {
                 var totals = pivot.get_total(row);
                 for (m = 0; m < pivot.measures.length; m++) {
-                    cell = self.make_cell(row, pivot.main_col(), totals[m], m);
+                    cell = self.make_cell(row, pivot.main_col(), totals[m], m, raw);
                     cell.is_bold = 'true';
                     cells.push(cell);
                 }
@@ -740,7 +756,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         openerp.web.blockUI();
         this.session.get_file({
             url: '/web_graph/export_xls',
-            data: {data: JSON.stringify(this.build_table())},
+            data: {data: JSON.stringify(this.build_table(true))},
             complete: openerp.web.unblockUI,
             error: c.rpc_error.bind(c)
         });
