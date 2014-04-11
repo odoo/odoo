@@ -324,44 +324,40 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True, multilang=True)
     def post_edit(self, forum, post, **kwargs):
-        cr, uid, context = request.cr, request.uid, request.context
-
         tags = ""
         for tag_name in post.tag_ids:
             tags += tag_name.name + ","
-
         values = self._prepare_forum_values(forum=forum)
         values.update({
-            'question': post.parent_id,
             'tags': tags,
-            'answer': post,
-            'is_answer': True if post else False,
+            'post': post,
+            'is_answer': bool(post.parent_id),
             'searches': kwargs
         })
         return request.website.render("website_forum.edit_post", values)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/save', type='http', auth="user", multilang=True, methods=['POST'], website=True)
-    def post_save(self, forum, **post):
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/save', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    def post_save(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
-        vals = {
-            'content': post.get('content'),
-        }
         question_tags = []
-        if post.get('question_tag') and post.get('question_tag').strip('[]'):
+        if kwargs.get('question_tag') and kwargs.get('question_tag').strip('[]'):
             Tag = request.registry['forum.tag']
-            tags = post.get('question_tag').strip('[]').replace('"','').split(",")
+            tags = kwargs.get('question_tag').strip('[]').replace('"', '').split(",")
             for tag in tags:
                 tag_ids = Tag.search(cr, uid, [('name', '=', tag)], context=context)
                 if tag_ids:
                     question_tags += tag_ids
                 else:
-                    new_tag = Tag.create(cr, uid, {'name' : tag,'forum_id' : forum.id}, context=context)
+                    new_tag = Tag.create(cr, uid, {'name': tag, 'forum_id': forum.id}, context=context)
                     question_tags.append(new_tag)
-        vals.update({'tag_ids': [(6, 0, question_tags)], 'name': post.get('question_name')})
-
-        post_id = post.get('answer_id') if post.get('answer_id') else post.get('question_id')
-        new_question_id = request.registry['forum.post'].write( cr, uid, [int(post_id)], vals, context=context)
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum),post.get('question_id')))
+        vals = {
+            'tag_ids': [(6, 0, question_tags)],
+            'name': kwargs.get('question_name'),
+            'content': kwargs.get('content'),
+        }
+        request.registry['forum.post'].write(cr, uid, [post.id], vals, context=context)
+        question = post.parent_id if post.parent_id else post
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<int:forum_id>/post/<int:post_id>/upvote', type='json', auth="public", multilang=True, website=True)
     def post_upvote_tmp(self, forum_id, post_id, **kwargs):

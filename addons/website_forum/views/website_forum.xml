@@ -309,21 +309,16 @@
     <t t-call="website_forum.header">
         <h3 t-if="not is_answer">Edit question</h3>
         <h3 t-if="is_answer">Edit answer</h3>
-        <form t-attf-action="/forum/#{ slug(forum) }/post/save" method="post" role="form" class="tag_text">
+        <form t-attf-action="/forum/#{slug(forum)}/post/#{slug(post)}/save" method="post" role="form" class="tag_text">
             <div t-if="not is_answer">
                 <input type="text" name="question_name" id="question_name" required="True"
-                    t-attf-value="#{question.name}" class="form-control" placeholder="Edit your Question"/>
+                    t-attf-value="#{post.name}" class="form-control" placeholder="Edit your Question"/>
                 <h5 class="mt20">Please enter a descriptive question (should finish by a '?')</h5>
             </div>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <textarea name="content" required="True" class="form-control load_editor">
-                <t t-if="is_answer"> <t t-esc="answer.content"/></t>
-                <t t-if="not is_answer"><t t-esc="question.content"/></t>
+                <t t-esc="post.content"/>
             </textarea>
-            <input name="question_id" t-att-value="question.id" type="hidden"/>
-            <div t-if="is_answer">
-                <input name="answer_id" t-att-value="answer.id" type="hidden"/>
-            </div>
             <div t-if="not is_answer">
                 <br/>
                 <input type="text" name="question_tag" class="form-control col-md-9 load_tags" placeholder="Tags" t-attf-value="#{tags}"/>
@@ -442,7 +437,7 @@
                                 <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen">reopen</a>
                             </li>
                             <li t-if="user.id == question.create_uid.id or user.karma&gt;=300">
-                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/edit">edit</a>
+                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit">edit</a>
                             </li>
                             <li t-if="question.active and user.id == question.create_uid.id or user.karma&gt;=1000">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete">delete</a>
