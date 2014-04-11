@@ -4,11 +4,12 @@
 <template id="html_container">
     &lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if editable else None"
           t-att-data-editable="'1' if editable else None"
-          t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
-          t-att-data-main-object="repr(main_object) if editable else None">
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-report-margin-top="data_report_margin_top if data_report_margin_top else None"
+          t-att-data-report-header-spacing="data_report_header_spacing if data_report_header_spacing else None"
+          t-att-data-report-dpi="data_report_dpi if data_report_dpi else None">
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -66,6 +67,9 @@
     .table-condensed > thead > tr > th {
         border-bottom: 1px solid black !important;
     }
+    .zero_min_height {
+        min-height: 0px !important;
+    }
 </template>
 
 <template id="external_layout">
@@ -86,11 +90,11 @@
     <div class="header">
         <div class="row">
             <div class="col-xs-3">
-                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
             </div>
             <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
         </div>
-        <div class="row">
+        <div class="row zero_min_height">
             <div class="col-xs-12">
                 <div style="border-bottom: 1px solid black;"></div>
             </div>
@@ -160,5 +164,6 @@
     </div>
     <t t-raw="0" />
 </template>
+
 </data>
 </openerp>

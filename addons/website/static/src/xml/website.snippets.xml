@@ -22,7 +22,7 @@
 
     <t t-name="website.snippet_overlay">
         <div class="oe_overlay">
-            <div class="oe_overlay_options">
+            <div class="oe_overlay_options" contentEditable="false">
                 <div class="btn-group">
                     <a href="#" class="btn btn-default btn-sm oe_snippet_parent" title="Select Container Block"><i class="fa fa-upload"></i></a>
                     <div class="dropdown oe_options hidden btn-group">
@@ -33,6 +33,16 @@
                     <a href="#" class="btn btn-default btn-sm oe_snippet_clone" title="Duplicate Container">&amp;nbsp;<i class="fa fa-files-o"></i>&amp;nbsp; </a>
                     <a href="#" class="btn btn-default btn-sm oe_snippet_remove" title="Remove Block">&amp;nbsp;<i class="fa fa-trash-o"></i>&amp;nbsp; </a>
                 </div>
+            </div>
+            <div class='oe_handles'>
+                <div class='oe_handle n readonly'><div></div></div>
+                <div class='oe_handle e readonly'><div></div></div>
+                <div class='oe_handle w readonly'><div></div></div>
+                <div class='oe_handle size readonly'>
+                    <div class="oe_handle_button auto_size">Auto Resize</div>
+                    <div class="oe_handle_button size">Resize</div>
+                </div>
+                <div class='oe_handle s readonly'><div></div></div>
             </div>
         </div>
     </t>
@@ -45,13 +55,6 @@
 
     <div t-name="website.snippets.resize" data-snippet-id='resize'>
         <!-- custom data for the widget -->
-        <div class='oe_handles'>
-            <div class='oe_handle n'></div>
-            <div class='oe_handle e'></div>
-            <div class='oe_handle w'></div>
-            <div class='oe_handle size'><div class="oe_handle_button size">Resize</div><div class="oe_border"/></div>
-            <div class='oe_handle s'></div>
-        </div>
         <div class='oe_snippet_thumbnail'>Margin resize</div>
     </div>
 

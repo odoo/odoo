@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import datetime
+import hashlib
 import logging
 import re
 import traceback
-
 import werkzeug
 import werkzeug.routing
 
@@ -65,7 +66,7 @@ class ir_http(orm.AbstractModel):
 
     def reroute(self, path):
         if not hasattr(request, 'rerouting'):
-            request.rerouting = []
+            request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
             raise Exception("Rerouting loop is forbidden")
         request.rerouting.append(path)
@@ -78,25 +79,59 @@ class ir_http(orm.AbstractModel):
 
         return self._dispatch()
 
-    def _postprocess_args(self, arguments):
-        url = request.httprequest.url
-        for arg in arguments.itervalues():
-            if isinstance(arg, orm.browse_record) and isinstance(arg._uid, RequestUID):
-                placeholder = arg._uid
-                arg._uid = request.uid
-                try:
-                    good_slug = slug(arg)
-                    if str(arg.id) != placeholder.value and placeholder.value != good_slug:
-                        # TODO: properly recompose the url instead of using replace()
-                        url = url.replace(placeholder.value, good_slug)
-                except KeyError:
-                    return self._handle_exception(werkzeug.exceptions.NotFound())
-        if url != request.httprequest.url:
-            werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
+    def _postprocess_args(self, arguments, rule):
+        if not getattr(request, 'website_enabled', False):
+            return super(ir_http, self)._postprocess_args(arguments, rule)
+
+        for arg, val in arguments.items():
+            # Replace uid placeholder by the current request.uid
+            if isinstance(val, orm.browse_record) and isinstance(val._uid, RequestUID):
+                val._uid = request.uid
+        try:
+            _, path = rule.build(arguments)
+            assert path is not None
+        except Exception:
+            return self._handle_exception(werkzeug.exceptions.NotFound())
+
+        generated_path = werkzeug.url_unquote_plus(path)
+        current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+        if generated_path != current_path:
+            if request.lang != request.website.default_lang_code:
+                path = '/' + request.lang + path
+            return werkzeug.utils.redirect(path)
+
+    def _serve_attachment(self):
+        domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
+        attach = self.pool['ir.attachment'].search_read(request.cr, openerp.SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
+        if attach:
+            wdate = attach[0]['__last_update']
+            datas = attach[0]['datas']
+            response = werkzeug.wrappers.Response()
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            try:
+                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
+            except ValueError:
+                # just in case we have a timestamp without microseconds
+                response.last_modified = datetime.datetime.strptime(wdate, server_format)
+
+            response.set_etag(hashlib.sha1(datas).hexdigest())
+            response.make_conditional(request.httprequest)
+
+            if response.status_code == 304:
+                return response
+
+            response.mimetype = attach[0]['mimetype']
+            response.set_data(datas.decode('base64'))
+            return response
 
     def _handle_exception(self, exception=None, code=500):
         if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:
             return exception.response
+
+        attach = self._serve_attachment()
+        if attach:
+            return attach
+
         if getattr(request, 'website_enabled', False) and request.website:
             values = dict(
                 exception=exception,

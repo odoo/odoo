@@ -218,18 +218,18 @@ class account_followup_print(osv.osv_memory):
         #Update partners
         self.do_update_followup_level(cr, uid, to_update, partner_list, date, context=context)
         #process the partners (send mails...)
-        restot = self.process_partners(cr, uid, partner_list, data, context=context)
+        restot_context = context.copy()
+        restot = self.process_partners(cr, uid, partner_list, data, context=restot_context)
+        context.update(restot_context)
         #clear the manual actions if nothing is due anymore
         nbactionscleared = self.clear_manual_actions(cr, uid, partner_list, context=context)
         if nbactionscleared > 0:
             restot['resulttext'] = restot['resulttext'] + "<li>" +  _("%s partners have no credits and as such the action is cleared") %(str(nbactionscleared)) + "</li>" 
-        res = restot['action']
-
         #return the next action
         mod_obj = self.pool.get('ir.model.data')
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_sending_results')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'description': restot['resulttext'], 'needprinting': restot['needprinting'], 'report_data': res})
+        context.update({'description': restot['resulttext'], 'needprinting': restot['needprinting'], 'report_data': restot['action']})
         return {
             'name': _('Send Letters and Emails: Actions Summary'),
             'view_type': 'form',

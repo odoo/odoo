@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_partner_ledger(osv.osv_memory):
     """
     This wizard will provide the partner Ledger report by periods, between any two dates.
@@ -37,6 +38,7 @@ class account_partner_ledger(osv.osv_memory):
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column on report if the currency differs from the company currency."),
         'journal_ids': fields.many2many('account.journal', 'account_partner_ledger_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
+
     _defaults = {
        'initial_balance': False,
        'page_split': False,
@@ -45,8 +47,8 @@ class account_partner_ledger(osv.osv_memory):
     def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
         res = super(account_partner_ledger, self).onchange_filter(cr, uid, ids, filter=filter, fiscalyear_id=fiscalyear_id, context=context)
         if filter in ['filter_no', 'unreconciled']:
-            if filter  == 'unreconciled':
-                 res['value'].update({'fiscalyear_id': False})
+            if filter == 'unreconciled':
+                res['value'].update({'fiscalyear_id': False})
             res['value'].update({'initial_balance': False, 'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False})
         return res
 
@@ -55,17 +57,8 @@ class account_partner_ledger(osv.osv_memory):
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['initial_balance', 'filter', 'page_split', 'amount_currency'])[0])
-        if data['form']['page_split']:
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.third_party_ledger',
-                'datas': data,
-        }
-        return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.third_party_ledger_other',
-                'datas': data,
-        }
-
+        if data['form'].get('page_split') is True: 
+            return self.pool['report'].get_action(cr, uid, ids, 'account.report_partnerledgerother', data=data, context=context)
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_partnerledger', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

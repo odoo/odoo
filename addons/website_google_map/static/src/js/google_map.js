@@ -38,7 +38,7 @@ function initialize(pt) {
         if (status == google.maps.GeocoderStatus.OK) {
           var location = results[0].geometry.location;
 
-          $.post("/google_map/set_partner_position/", {
+          $.post("/google_map/set_partner_position", {
               'partner_id': partner.id,
               'latitude': location.ob,
               'longitude': location.pb
