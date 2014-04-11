@@ -587,7 +587,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         if (!_.isEmpty(result.warning)) {
             new instance.web.Dialog(this, {
-                modal_size: 'medium',
+                size: 'medium',
                 title:result.warning.title,
                 buttons: [
                     {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
@@ -3230,7 +3230,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
     init: function(parent) {
         this._super(parent, {
             title: _.str.sprintf(_t("Add %s"), parent.string),
-            modal_size: 'medium',
+            size: 'medium',
         });
     },
     start: function() {

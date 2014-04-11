@@ -827,7 +827,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var self = this;
         this.edit_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
-            modal_size: 'medium',
+            size: 'medium',
             buttons: [
                 {text: _t("Update"), click: function () {
                     var warn = false, update_values = [];
@@ -953,7 +953,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.add_widget = [];
         this.add_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
-            modal_size: 'medium',
+            size: 'medium',
             buttons: [
                 {text: _t("Update"), click: function() {
                     var check_add_node = true, values = {};

@@ -71,7 +71,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         @param {Widget} parent
         @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
             dictionary can contain the following keys:
-            - modal_size: one of the following: 'large', 'medium', 'small'
+            - size: one of the following: 'large', 'medium', 'small'
             - dialogClass: class to add to the body of dialog
             - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
                 label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
@@ -87,7 +87,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.content_to_set = content;
         this.dialog_options = {
             destroy_on_close: true,
-            modal_size: 'large', //'medium', 'small'
+            size: 'large', //'medium', 'small'
             buttons: null,
         };
         if (options) {
@@ -151,21 +151,21 @@ instance.web.Dialog = instance.web.Widget.extend({
             'backdrop': false,
             'keyboard': true,
         });
-        if (options.modal_size !== 'large'){
+        if (options.size !== 'large'){
             var dialog_class_size = this.$dialog_box.find('.modal-lg').removeClass('modal-lg')
-            if (options.modal_size === 'small'){
+            if (options.size === 'small'){
                 dialog_class_size.addClass('modal-sm');
             }
         }
 
         this.$el.appendTo(this.$dialog_box.find(".modal-body"));
-        var dialog_body = this.$dialog_box.find('.modal-content');
+        var $dialog_content = this.$dialog_box.find('.modal-content');
         if (options.dialogClass){
-            dialog_body.find(".modal-body").addClass(options.dialogClass);
+            $dialog_content.find(".modal-body").addClass(options.dialogClass);
         }
-        dialog_body.openerpClass();
+        $dialog_content.openerpClass();
 
-        this.$dialog_box.on('hidden.bs.modal',this,function(){
+        this.$dialog_box.on('hidden.bs.modal', this, function(){
             self.trigger("closing");
         });
         this.$dialog_box.modal('show');
@@ -244,7 +244,7 @@ instance.web.CrashManager = instance.web.Class.extend({
             error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
         }
         new instance.web.Dialog(this, {
-            modal_size: 'medium',
+            size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
@@ -310,7 +310,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
         error.data.message = error.data.arguments[0];
 
         new instance.web.Dialog(this, {
-            modal_size: 'medium',
+            size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }},
@@ -467,7 +467,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
      */
     display_error: function (error) {
         return new instance.web.Dialog(this, {
-            modal_size: 'medium',
+            size: 'medium',
             title: error.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
@@ -700,7 +700,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     },
     display_error: function (error) {
         return new instance.web.Dialog(this, {
-            modal_size: 'medium',
+            size: 'medium',
             title: error.title,
             buttons: [
                 {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
@@ -1021,7 +1021,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 window.location = $.param.querystring( window.location.href, 'debug');
             });
             new instance.web.Dialog(this, {
-                modal_size: 'medium',
+                size: 'medium',
                 dialogClass: 'oe_act_window',
                 title: _t("About"),
             }, $help).open();

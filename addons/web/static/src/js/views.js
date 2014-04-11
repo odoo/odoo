@@ -943,7 +943,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     this.dataset.call('perm_read', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
                             title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
-                            modal_size: 'medium',
+                            size: 'medium',
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],
                             format : instance.web.format_value
@@ -1223,7 +1223,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
-                new instance.web.Dialog(this, { title: _t("Warning"), modal_size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
+                new instance.web.Dialog(this, { title: _t("Warning"), size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
             var active_ids_context = {
