@@ -6,7 +6,7 @@
                     <button type="button" data-action="save"
                             class="btn btn-primary">Save</button>
                     or
-                    <a href="#" data-action="cancel">Discard</a>
+                    <a href="#" data-action="cancel" class="btn btn-link">Discard</a>
                 </form>
                 <ul class="nav navbar-nav pull-right">
                 </ul>
@@ -88,49 +88,85 @@
             </form>
         </t>
     </t>
-    <t t-name="website.editor.dialog.image">
-        <t t-call="website.editor.dialog">
-            <t t-set="title">Image:</t>
-            <div class="row">
-                <form method="POST" action="/website/attach"
-                      enctype="multipart/form-data"
-                      target="fileframe"
-                      class="col-sm-8">
-                    <div class="text-center">
-                        <input type="file" name="upload" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                        <button type="button" class="btn btn-primary btn-lg filepicker">
-                            Upload an image from your computer
-                        </button>
-                        <button type="button" class="btn btn-lg hidden wait" disabled="disabled"/>
-                        <p class="text-muted mt16">— or —</p>
+    <t t-name="website.editor.dialog.media">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog select-media">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Select a Media</h3>
                     </div>
-                    <div class="well">
-                        <a href="#existing" class="pull-right">Browse existing images</a>
-                        <h3 class="list-group-item-heading">Image URL</h3>
-                        <input type="text" class="form-control url"
-                               placeholder="http://openerp.com"/>
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
+                            <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
+                            <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
+                            <li class="search" style="float: right;">
+                                <ul class="pager mb0 mt0">
+                                    <li class="previous disabled"><a href="#">← Previous</a></li>
+                                    <li class="next disabled"><a href="#">Next →</a></li>
+                                </ul>
+                            </li>
+                            <li class="search" style="float: right;">
+                                <form action="#">
+                                    <div class="form-group font-icons fa fa-search mb0">
+                                        <input type="search" class="form-control" id="icon-search"/>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="editor-media-image">
+                                
+                            </div>
+                            <div class="tab-pane fade" id="editor-media-icon">
+                                
+                            </div>
+                            <div class="tab-pane fade" id="editor-media-video">
+                                
+                            </div>
+                        </div>
                     </div>
-                    <input type="hidden" name="func"/>
-                    <div class="help-block"/>
-                </form>
-                <div class="col-sm-4 image-preview-container">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAC0lEQVQIHWP4zwAAAgEBAMVfG14AAAAASUVORK5CYII%3D"
-                         class="pull-right img-rounded image-preview"
-                         width="100%"/>
-                    <img src="/web/static/src/img/throbber-large.gif"
-                         class="pull-right img-rounded wait hidden"
-                         width="100%"/>
-                    <select class="form-control image-style">
-                        <option value="">No styling</option>
-                        <option value="img-rounded">Rounded corners</option>
-                        <option value="img-thumbnail">Box</option>
-                        <option value="img-circle">Circle</option>
-                        <option value="shadow">Shadow</option>
-                    </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Save</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled"/>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
                 </div>
             </div>
-            <iframe src="about:blank" name="fileframe" class="hidden"/>
-        </t>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.image">
+        <div>
+            <form method="POST"
+                  action="/website/attach"
+                  enctype="multipart/form-data"
+                  target="fileframe"
+                  class="form-inline">
+                <div class="well">
+                    <div class="form-group pull-left">
+                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
+                    </div>
+                    <div>
+                        <span class="text-muted"> — or — </span>
+                        <label for="iamgeurl">Add an image URL</label>
+                        <div class="form-group btn-group">
+                            <input type="text" name="url" class="form-control url pull-left" style="width: 320px;" id="iamgeurl" placeholder="http://openerp.com/logo.png"/>
+                            <button class="btn btn-default" type="submit">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="func"/>
+                <div class="help-block"/>
+                <div class="existing-attachments"/>
+            </form>
+        </div>
+        <iframe src="about:blank" name="fileframe" class="hidden"/>
     </t>
     <t t-name="website.editor.dialog.image.existing">
         <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -153,15 +189,11 @@
     </t>
     <t t-name="website.editor.dialog.image.existing.content">
         <div class="existing-attachments">
-            <ul class="pager">
-                <li class="previous disabled"><a href="#">← Previous</a></li>
-                <li class="next disabled"><a href="#">Next →</a></li>
-            </ul>
             <div class="row mt16" t-foreach="rows" t-as="row">
                 <div class="col-sm-2 existing-attachment-cell"
                      t-foreach="row" t-as="attachment">
                     <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
-                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" class="img img-responsive"/>
+                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" t-att-title="attachment.name" class="img img-responsive"/>
                 </div>
             </div>
         </div>
@@ -174,7 +206,7 @@
                 <li>
                     <a t-attf-href="/web#model=ir.ui.view&amp;id=#{view.id}">
                         <t t-esc="view.name"/>
-                    </a> (id <t t-esc="view.id"/>)
+                    </a>
                 </li>
             </ul>
         </div>
@@ -217,49 +249,42 @@
         </div>
     </t>
 
-    <t t-name="website.editor.hoverbutton">
-        <button type="button" contenteditable="false"
-                t-attf-class="btn btn-primary hover-edition-button #{classes or ''}">
-            <t t-esc="label"/>
-        </button>
+    <t t-name="website.editor.hoverbutton.link">
+        <button contentEditable="false" type="button" class="btn btn-primary hover-edition-button btn-xs">Change</button>
+    </t>
+
+    <t t-name="website.editor.hoverbutton.media">
+        <div contentEditable="false" class="hover-edition dropdown">
+            <a class="btn btn-primary btn-sm" data-toggle="dropdown" href="#">Customize</a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li><a href="#" class="hover-edition-button">Change Media</a></li>
+                <li><a href="#" class="hover-style-button">Style</a></li>
+                <li class="dropdown-submenu">
+                    <a href="#" tabindex="-1">Rotation</a>
+                    <ul class="dropdown-menu">
+                        <li data-value="fa-spin"><a>Spin</a></li>
+                        <li data-value="fa-flip-horizontal"><a>Horizontal flip</a></li>
+                        <li data-value="fa-flip-vertical"><a>Vertical flip</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" data-value="fa-border">border</a></li>
+            </ul>
+        </div>
     </t>
 
     <t t-name="website.editor.dialog.font-icons">
-        <t t-call="website.editor.dialog">
-            <t t-set="title">Icon:</t>
-            <form>
-                <div class="form-group" id="fa-preview">
+        <form action="#">
+            <input type="hidden" id="fa-icon"/>
+            <input type="hidden" id="fa-size"/>
+            <div class="font-icons-icons">
+                <t t-call="website.editor.dialog.font-icons.icons">
+                    <t t-set="icons" t-value="widget.icons"/>
+                </t>
+            </div>
+            <div class="form-group mt32" id="fa-preview">
 
-                </div>
-                <div class="form-group font-icons fa fa-search">
-                    <input type="hidden" id="fa-icon" class="form-control"/>
-                    <input type="hidden" id="fa-size" class="form-control"/>
-                    <input type="search" class="form-control" id="icon-search"/>
-                    <div class="font-icons-icons">
-                        <t t-call="website.editor.dialog.font-icons.icons">
-                            <t t-set="icons" t-value="widget.icons"/>
-                        </t>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="fa-rotation">Rotation</label>
-                    <select id="fa-rotation" class="form-control">
-                        <option value="">None</option>
-                        <option value="fa-spin">Spin</option>
-                        <option value="fa-rotate-90">Rotate 90º</option>
-                        <option value="fa-rotate-180">Rotate 180º</option>
-                        <option value="fa-rotate-270">Rotate 270º</option>
-                        <option value="fa-flip-horizontal">Horizontal flip</option>
-                        <option value="fa-flip-vertical">Vertical flip</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="fa-border"/> border
-                    </label>
-                </div>
-            </form>
-        </t>
+            </div>
+        </form>
     </t>
     <t t-name="website.editor.dialog.font-icons.icons">
         <span t-foreach="icons" t-as="icon"
@@ -267,6 +292,52 @@
               t-att-data-id="icon.id">
             <t t-esc="icon.text"/>
         </span>
+    </t>
+
+    <t t-name="website.editor.dialog.video">
+        <form action="#" class="form-inline">
+            <div class="well">
+                <div class="form-group btn-group">
+                    <span class="text-muted pull-right" style="margin-left:10px; line-height: 2em;">(Youtube, Vimeo, Dailymotion)</span>
+                    <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left">Set a video URL</label>
+                    <input type="text"
+                        name="url"
+                        class="form-control url pull-left"
+                        style="width: 400px;"
+                        id="urlvideo"
+                        placeholder="//www.youtube.com/embed/yws1tbgNV7k"/>
+                    <button class="btn btn-default">Preview</button>
+                </div>
+                <div class="form-group btn-group">
+                    <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left"><span class="text-muted">— or —</span> Embed Video (HTML)</label>
+                    <input type="text"
+                        name="embed"
+                        class="form-control url pull-left"
+                        style="width: 400px;"
+                        id="embedvideo"
+                        placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'/>
+                    <button class="btn btn-default">Preview</button>
+                </div>
+            </div>
+            
+            <div id="video-preview" style="width: 450px; margin: 0 auto;">
+                <div class="media_iframe_video">
+                    <iframe
+                        src=""
+                        frameborder="0"
+                        allowfullscreen="allowfullscreen"></iframe>
+                </div>
+            </div>
+
+            <input type="hidden" id="video_id" value=""/>
+            <input type="hidden" id="video_type" value=""/>
+
+            <div class="text-center mt32">
+                <div class="checkbox">
+                    <label><input type="checkbox" id="autoplay"/> Autoplay</label>
+                </div>
+            </div>
+        </form>
     </t>
 
 </templates>

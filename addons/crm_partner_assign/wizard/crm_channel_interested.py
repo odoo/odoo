@@ -63,15 +63,12 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if wizard.comment:
             message += '<p>%s</p>' % wizard.comment
         for active_id in context.get('active_ids', []):
-            lead_obj.message_post(cr, uid, active_id, body=message, context=context)
+            lead_obj.message_post(cr, uid, active_id, body=message, subtype="mail.mt_comment", context=context)
         if values:
             lead_obj.write(cr, SUPERUSER_ID, context.get('active_ids', []), values)
         if wizard.interested:
             for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
                 lead_obj.convert_opportunity(cr, SUPERUSER_ID, [lead.id], lead.partner_id and lead.partner_id.id or None, context=None)
         return {
-            'type': 'ir.actions.client',
-            'tag': 'next_or_list',
-            'params': {
-            },
+            'type': 'ir.actions.act_window_close',
         }
