@@ -1733,7 +1733,6 @@ class stock_move(osv.osv):
         'partner_id': _default_destination_address,
         'state': 'draft',
         'priority': '1',
-        'product_qty': 1.0,
         'product_uom_qty': 1.0,
         'scrapped': False,
         'date': fields.datetime.now,
