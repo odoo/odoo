@@ -34,7 +34,7 @@
         </record> -->
 
         <!-- Critic: downvote based -->
-        <record id="badge_5" model="gamification.badge">
+<!--         <record id="badge_5" model="gamification.badge">
             <field name="name">Critic</field>
             <field name="description">First downvote</field>
             <field name="level">bronze</field>
@@ -62,10 +62,10 @@
             <field name="definition_id" eval="ref('definition_critic')"/>
             <field name="challenge_id" eval="ref('challenge_critic')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
 
         <!-- Disciplined: delete own post with >=3 upvotes -->
-        <record id="badge_6" model="gamification.badge">
+<!--         <record id="badge_6" model="gamification.badge">
             <field name="name">Disciplined</field>
             <field name="description">Deleted own post with 3 or more upvotes</field>
             <field name="level">bronze</field>
@@ -93,7 +93,7 @@
             <field name="definition_id" eval="ref('definition_disciplined')"/>
             <field name="challenge_id" eval="ref('challenge_disciplined')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
 
         <!-- Editor: first edit -->
 <!--         <record id="badge_7" model="gamification.badge">
@@ -198,7 +198,7 @@
         </record> -->
 
         <!-- Enthusiast: vote for 15 days in a row -->
-        <record id="badge_9" model="gamification.badge">
+<!--         <record id="badge_9" model="gamification.badge">
             <field name="name">Enthusiast</field>
             <field name="description">Voted on questions/answers for 15 days in a row</field>
             <field name="level">silver</field>
@@ -235,9 +235,9 @@ result = int(len(data) >= 15)</field>
             <field name="name">Supporter</field>
             <field name="description">First upvote</field>
             <field name="level">gold</field>
-        </record>
+        </record> -->
 
-        <record model="gamification.goal.definition" id="definition_supporter">
+<!--         <record model="gamification.goal.definition" id="definition_supporter">
             <field name="name">Supporter</field>
             <field name="description">First upwnvote</field>
             <field name="computation_mode">count</field>
@@ -262,10 +262,10 @@ result = int(len(data) >= 15)</field>
             <field name="definition_id" eval="ref('definition_supporter')" />
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_supporter')" />
-        </record>
+        </record> -->
 
 
-        <record id="badge_23" model="gamification.badge">
+<!--         <record id="badge_23" model="gamification.badge">
             <field name="name">Peer Pressure</field>
             <field name="description">Deleted own post with 3 or more downvotes</field>
             <field name="level">gold</field>
@@ -296,7 +296,7 @@ result = int(len(data) >= 15)</field>
             <field name="definition_id" eval="ref('definition_peer_pressure')" />
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_peer_pressure')" />
-        </record>
+        </record> -->
 
 
     </data>

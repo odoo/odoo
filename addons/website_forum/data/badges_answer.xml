@@ -4,7 +4,7 @@
 
         <!-- QUALITY (VOTES) -->
         <!-- Teacher: at least 3 upvotes -->
-        <record id="badge_a_1" model="gamification.badge">
+<!--         <record id="badge_a_1" model="gamification.badge">
             <field name="name">Teacher</field>
             <field name="description">Received at least 3 upvote for an answer for the first time</field>
             <field name="level">bronze</field>
@@ -32,9 +32,9 @@
             <field name="definition_id" eval="ref('definition_teacher')"/>
             <field name="challenge_id" eval="ref('challenge_teacher')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
         <!-- Nice: at least 4 upvotes -->
-        <record id="badge_a_2" model="gamification.badge">
+<!--         <record id="badge_a_2" model="gamification.badge">
             <field name="name">Nice Answer</field>
             <field name="description">Answer voted up 4 times</field>
             <field name="level">bronze</field>
@@ -62,9 +62,9 @@
             <field name="definition_id" eval="ref('definition_nice_answer')"/>
             <field name="challenge_id" eval="ref('challenge_nice_answer')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
         <!-- Good: at least 6 upvotes -->
-        <record id="badge_a_3" model="gamification.badge">
+<!--         <record id="badge_a_3" model="gamification.badge">
             <field name="name">Good Answer</field>
             <field name="description">Answer voted up 6 times</field>
             <field name="level">silver</field>
@@ -92,9 +92,9 @@
             <field name="definition_id" eval="ref('definition_good_answer')"/>
             <field name="challenge_id" eval="ref('challenge_good_answer')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
         <!-- Great: at least 15 upvotes -->
-        <record id="badge_a_4" model="gamification.badge">
+<!--         <record id="badge_a_4" model="gamification.badge">
             <field name="name">Great Answer</field>
             <field name="description">Answer voted up 15 times</field>
             <field name="level">gold</field>
@@ -122,11 +122,11 @@
             <field name="definition_id" eval="ref('definition_great_answer')"/>
             <field name="challenge_id" eval="ref('challenge_great_answer')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
 
         <!-- ACCEPTANCE -->
         <!-- Enlightened: at least 3 upvotes for an accepted answer -->
-        <record id="badge_a_5" model="gamification.badge">
+<!--         <record id="badge_a_5" model="gamification.badge">
             <field name="name">Enlightened</field>
             <field name="description">Answer was accepted with 3 or more votes</field>
             <field name="level">silver</field>
@@ -154,9 +154,9 @@
             <field name="definition_id" eval="ref('definition_enlightened')"/>
             <field name="challenge_id" eval="ref('challenge_enlightened')"/>
             <field name="target_goal">1</field>
-        </record>
+        </record> -->
         <!-- Guru: at least 15 upvotes for an accepted answer -->
-        <record id="badge_a_6" model="gamification.badge">
+<!--         <record id="badge_a_6" model="gamification.badge">
             <field name="name">Guru</field>
             <field name="description">Answer accepted with 15 or more votes</field>
             <field name="level">silver</field>
@@ -184,7 +184,7 @@
             <field name="definition_id" eval="ref('definition_guru')" />
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_guru')" />
-        </record>
+        </record> -->
 
         <!-- Necromancer: 30 days old question -->
 <!--         <record id="badge_a_7" model="gamification.badge">
@@ -229,7 +229,7 @@ result = get_posts(cr, uid, context=context)
         </record> -->
 
         <!-- Sealf Leaner: own question, 3+ upvotes -->
-        <record id="badge_a_8" model="gamification.badge">
+<!--         <record id="badge_a_8" model="gamification.badge">
             <field name="name">Self-Learner</field>
             <field name="description">Answered own question with at least 4 up votes</field>
             <field name="level">gold</field>
@@ -257,7 +257,7 @@ result = get_posts(cr, uid, context=context)
             <field name="definition_id" eval="ref('definition_self_learner')"/>
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_self_learner')"/>
-        </record>
+        </record> -->
 
     </data>
 </openerp>
