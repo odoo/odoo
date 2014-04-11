@@ -95,7 +95,7 @@
                             <h3 class="panel-title">About This Forum</h3>
                         </div>
                         <div class="panel-body">
-                            <t t-esc="forum.description"/><br/>
+                            <t t-raw="forum.description"/><br/>
                             <a t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
                         </div>
                     </div>
