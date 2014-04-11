@@ -17,11 +17,10 @@ $(document).ready(function () {
                             'Sorry you must be logged to vote'+
                             '</div>');
                     }
-                    else if (data['error'] == 'lessthen_10_karma')
-                    {
+                    else if (data['error'] == 'not_enough_karma') {
                         var $warning = $('<div class="alert alert-danger alert-dismissable" id="vote_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                             '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-                            '10 karma required to downvote'+
+                            'Sorry, at least ' + data['karma'] + ' karma is required to vote'+
                             '</div>');
                     }
                     vote_alert = $link.parent().find("#vote_alert");
@@ -55,7 +54,7 @@ $(document).ready(function () {
                         '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                         'Sorry, anonymous users cannot choose correct answer.'+
                         '</div>');
-                } else if (data['error'] == 'user'){
+                } else if (data['error'] == 'own_post'){
                     var $warning = $('<div class="alert alert-danger alert-dismissable" id="correct_answer_alert" style="position:absolute; margin-top: -30px; margin-left: 90px;">'+
                         '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
                         'Sorry, the user who asked this question can only accept the answer as correct.'+

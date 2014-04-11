@@ -759,7 +759,7 @@
                         <span t-field="user.city"/>
                         <span t-if="user.city and user.country_id">, </span>
                         <span t-field="user.country_id"/>
-                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class":"forum_user_flag"}'/></t>
+                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/></t>
                         
                     </td>
                 </tr>

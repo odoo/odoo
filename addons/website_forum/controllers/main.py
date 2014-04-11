@@ -285,9 +285,9 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        # # if user have not access to accept answer then reise warning
+        # if user have not access to accept answer then reise warning
         if post.parent_id is False or post.parent_id.create_uid.id != uid:
-            return {'error': 'user'}
+            return {'error': 'own_post'}
 
         # set all answers to False, only one can be accepted
         request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
@@ -344,13 +344,22 @@ class WebsiteForum(http.Controller):
         # check for karma and not self vote
         if not request.session.uid:
             return {'error': 'anonymous_user'}
+        if request.uid == post.create_uid.id:
+            return {'error': 'own_post'}
+        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
+        if user.karma <= 5:
+            return {'error': 'not_enough_karma', 'karma': 5}
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=True, context=request.context)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", multilang=True, website=True)
     def post_downvote(self, forum, post, **kwargs):
-        # check for karma and not self vote
         if not request.session.uid:
             return {'error': 'anonymous_user'}
+        if request.uid == post.create_uid.id:
+            return {'error': 'own_post'}
+        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
+        if user.karma <= 50:
+            return {'error': 'not_enough_karma', 'karma': 50}
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=False, context=request.context)
 
     # User
@@ -464,18 +473,15 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.user_detail_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/edit', type='http', auth="user", multilang=True, website=True)
-    def edit_profile(self, forum, user, **kwarg):
-        cr, context = request.cr, request.context
+    def edit_profile(self, forum, user, **kwargs):
         country = request.registry['res.country']
-        country_ids = country.search(cr, SUPERUSER_ID, [], context=context)
-        countries = country.browse(cr, SUPERUSER_ID, country_ids, context)
-        values = {
-            'user': user,
-            'forum': forum,
-            'searches': kwarg,
+        country_ids = country.search(request.cr, SUPERUSER_ID, [], context=request.context)
+        countries = country.browse(request.cr, SUPERUSER_ID, country_ids, context=request.context)
+        values = self._prepare_forum_values(forum=forum, searches=kwargs)
+        values.update({
             'countries': countries,
             'notifications': self._get_notifications(),
-        }
+        })
         return request.website.render("website_forum.edit_profile", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", multilang=True, website=True)
@@ -488,8 +494,7 @@ class WebsiteForum(http.Controller):
             'country_id': kwargs.get('country'),
             'website_description': kwargs.get('description'),
         }, context=request.context)
-        user.refresh()
-        return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum), slug(user)))
+        return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), user.id))
 
     # Badges
     # --------------------------------------------------
