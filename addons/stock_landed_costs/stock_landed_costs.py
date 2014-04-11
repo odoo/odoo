@@ -74,12 +74,12 @@ class stock_landed_cost(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True),
-        'date': fields.date('Date', required=True),
-        'picking_ids': fields.many2many('stock.picking', string='Pickings'),
-        'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines'),
-        'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments'),
-        'description': fields.text('Item Description'),
+        'name': fields.char('Name', size=256, required=True, states={'open': [('readonly', True)]}),
+        'date': fields.date('Date', required=True, states={'open': [('readonly', True)]}),
+        'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'open': [('readonly', True)]}),
+        'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'open': [('readonly', True)]}),
+        'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments', states={'open': [('readonly', True)]}),
+        'description': fields.text('Item Description', states={'open': [('readonly', True)]}),
         'amount_total': fields.function(_total_amount, type='float', string='Total', digits_compute=dp.get_precision('Account'),
             store={
                 'stock.landed.cost': (lambda self, cr, uid, ids, c={}: ids, ['cost_lines'], 20),
@@ -275,9 +275,9 @@ class stock_valuation_adjustment_lines(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
-        'cost_line_id': fields.many2one('stock.landed.cost.lines', 'Cost Line'),
-        'move_id': fields.many2one('stock.move', 'Stock Move'),
-        'account_move_id': fields.many2one('account.move', 'Journal Entry'),
+        'cost_line_id': fields.many2one('stock.landed.cost.lines', 'Cost Line', readonly=True),
+        'move_id': fields.many2one('stock.move', 'Stock Move', readonly=True),
+        'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
         'weight': fields.float('Weight', digits_compute= dp.get_precision('Product Unit of Measure')),
