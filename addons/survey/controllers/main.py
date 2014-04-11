@@ -193,7 +193,11 @@ class WebsiteSurvey(http.Controller):
                 answer_value = None
                 if answer.answer_type == 'free_text':
                     answer_value = answer.value_free_text
-                elif answer.answer_type == 'text':
+                elif answer.answer_type == 'text' and answer.question_id.type == 'textbox':
+                    answer_value = answer.value_text
+                elif answer.answer_type == 'text' and answer.question_id.type != 'textbox':
+                    # here come comment answers for matrices, simple choice and multiple choice
+                    answer_tag = "%s_%s" % (answer_tag, 'comment')
                     answer_value = answer.value_text
                 elif answer.answer_type == 'number':
                     answer_value = answer.value_number.__str__()
