@@ -6,12 +6,12 @@
 
     website.EditorBar.include({
         start: function () {
-            this.registerTour(new website.QuestionTour(this));
+            this.registerTour(new website.Tour.Forum(this));
             return this._super();
         },
     });
 
-    website.QuestionTour = website.Tour.extend({
+    website.Tour.Forum = website.Tour.extend({
         id: 'question',
         name: "Create a question",
         testPath: '/forum(/[0-9]+/register)?',

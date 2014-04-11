@@ -21,7 +21,7 @@
                     window_title: _t("New Forum"),
                     input: "Forum Name",
                 }).then(function (forum_name) {
-                    website.form('/forum/add_forum', 'POST', {
+                    website.form('/forum/new', 'POST', {
                         forum_name: forum_name
                     });
                 });
