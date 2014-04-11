@@ -28,7 +28,8 @@ Adds support for:
     ],
     'qweb': ['static/src/xml/*.xml'],
     'demo': [
-        'data/event_demo.xml'
+        'data/event_demo.xml',
+        'data/website_event_track_demo.xml'
     ],
     'installable': True,
 }

@@ -56,7 +56,7 @@
                                 new_content:self.getInitialContent(this),
                                 translation_id: data.oeTranslationId || null,
                                 gengo_translation: gengo_service_level,
-                                gengo_comment:"Original page:" + document.URL
+                                gengo_comment:"\nOriginal Page: " + document.URL
                             });
                         });
                         openerp.jsonRpc('/website/set_translations', 'call', {

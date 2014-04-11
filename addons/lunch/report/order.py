@@ -20,11 +20,11 @@
 ##############################################################################
 
 import time
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp.report import report_sxw
+from openerp.osv import osv
 
 
-class order(http.Controller):
+class order(report_sxw.rml_parse):
 
     def get_lines(self, user,objects):
         lines=[]
@@ -60,24 +60,23 @@ class order(http.Controller):
             notes.append(obj.note)
         return notes
         
-    @http.route(['/report/lunch.report_lunchorder/<docids>'], type='http', auth='user', website=True, multilang=True)
-    def report_lunch(self, docids):
-        self.cr, self.uid, self.context = request.cr, request.uid, request.context
-
-        ids = [int(i) for i in docids.split(',')]
-        report_obj = request.registry['lunch.order.line']
-        docs = report_obj.browse(self.cr, self.uid, ids, context=self.context)
-
+    def __init__(self, cr, uid, name, context):
+        super(order, self).__init__(cr, uid, name, context)
         self.net_total=0.0
-        docargs = {
-            'docs': docs,
+        self.localcontext.update({
             'time': time,
             'get_lines': self.get_lines,
             'get_users': self.get_users,
             'get_total': self.get_total,
             'get_nettotal': self.get_nettotal,
             'get_note': self.get_note,
-        }
-        return request.registry['report'].render(self.cr, self.uid, [], 'lunch.report_lunchorder', docargs)
+        })
+
+
+class report_lunchorder(osv.AbstractModel):
+    _name = 'report.lunch.report_lunchorder'
+    _inherit = 'report.abstract_report'
+    _template = 'lunch.report_lunchorder'
+    _wrapped_report_class = order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
