@@ -20,7 +20,6 @@ class Users(osv.Model):
 
     _columns = {
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
-        # 'is_forum': fields.boolean('Is Forum Member'),
         'karma': fields.integer('Karma'),
         'badge_ids': fields.one2many('gamification.badge.user', 'user_id', 'Badges'),
         'gold_badge': fields.function(_get_user_badge_level, string="Number of gold badges", type='integer', multi='badge_level'),
@@ -29,7 +28,6 @@ class Users(osv.Model):
     }
 
     _defaults = {
-        # 'is_forum': False,
         'karma': 0,
     }
 
