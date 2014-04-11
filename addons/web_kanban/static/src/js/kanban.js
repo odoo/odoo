@@ -1334,15 +1334,54 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
             self.$el.find('.caret').toggleClass('hidden', e.type == 'mouseleave');
         });
     },
+
+    on_click_block_reason: function(event) {
+        var self = this;
+        var li = $(event.target).closest( "li" );
+        $('div.oe_edit_actions').remove();
+        self.$dialog = new instance.web.dialog($('<div class="oe_edit_actions"><textarea id="txtReason"rows="3" cols="40"></textarea></div>'), {
+            modal: true,
+            width: 'auto',
+            height: 'auto',
+            title: _t('Reason for blocking'),
+            buttons: [
+                        {
+                            class: 'oe_highlight',
+                            text: _t("Block"), click: function() {
+                                if ($("#txtReason").val() == "") {
+                                    alert('Reason Required');
+                                } else {
+                                    value[self.name] = String(li.data('value'));
+                                    var reason = $("#txtReason").val();
+                                    $(this).dialog("close");
+                                    self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
+                                    return self.parent.view.dataset._model.call('message_post', [[self.record_id], reason]);        
+                                };
+                            }},
+                            { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
+                    ],
+                });
+},
     do_action: function(e) {
         var self = this;
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
-            return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
-        }
-    },
+            if (self.parent.group.value) {
+                var stage_id = self.parent.group.value
+                new openerp.web.Model(self.parent.record.stage_id.relation).query([])
+                    .filter([["id", "=", stage_id]]).first().then(function(res) {
+                        if ((res.block_reason) && value[self.name] == 'blocked') {
+                            self.on_click_block_reason(e);
+                        } else {
+                            return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
+                        }
+                    });
+                }
+            }
+        },
+
     reload_record: function() {
         this.do_reload();
     },
