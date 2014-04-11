@@ -1557,7 +1557,7 @@
             <field name="name">stock.incoterms.form</field>
             <field name="model">stock.incoterms</field>
             <field name="arch" type="xml">
-                <form string="Incoterms" version="7.0">
+                <form string="Incoterms" version="7.0" class="col-md-6">
                     <group>
                         <field name="name"/>
                         <field name="code"/>
@@ -1690,7 +1690,7 @@
             <field name="name">Stock Journals</field>
             <field name="model">stock.journal</field>
             <field name="arch" type="xml">
-                <form string="Stock Journal" version="7.0">
+                <form string="Stock Journal" version="7.0" class="col-md-6">
                     <group>
                         <field name="name"/>
                         <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'stock.group_stock_manager']}"/>

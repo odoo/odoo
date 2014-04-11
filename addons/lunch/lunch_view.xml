@@ -427,12 +427,16 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name='name'/>
-                            <field name='category_id'/>
-                            <field name='supplier'/>
-                            <field name='price'/>
+                            <group>
+                                <field name='name'/>
+                                <field name='category_id'/>
+                            </group>
+                            <group>
+                                <field name='supplier'/>
+                                <field name='price'/>
+                            </group>
                         </group>
-                        <label for='description'/>
+                        <separator String='Description'/>
                         <field name='description'/>
                     </sheet>
                 </form>
@@ -461,7 +465,7 @@
                     <sheet>
                         <group string="Schedule Date">
                             <group>
-                                <field name="alter_type"/>
+                                <field name="alter_type" class="oe_inline"/>
                                 <field name="specific_day" attrs="{'invisible': [('alter_type','!=','specific')], 'required':[('alter_type','=','specific')]}"/>
                             </group>
                         </group>

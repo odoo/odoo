@@ -1628,6 +1628,7 @@
                         <field name="name"/>
                         <field name="active"/>
                     </group>
+                    <label for="note"/>
                     <field name="note" placeholder="Payment term explanation for the customer..."/>
                     <separator string="Computation"/>
                     <field name="line_ids"/>
@@ -2444,7 +2445,7 @@
                         <field name="style_overwrite"/>
                     </group>
                     <notebook>
-                        <page string="Report">
+                        <page string="Report" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}">
                             <group>
                                 <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"/>
                                 <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
