@@ -249,9 +249,8 @@ class gamification_goal(osv.Model):
                     'object': goal,
                     'pool': self.pool,
                     'cr': cr,
-                    'context': dict(context), # copy context to prevent side-effects of eval
+                    'context': dict(context),  # copy context to prevent side-effects of eval
                     'uid': uid,
-                    # 'result': False,
                     'date': date, 'datetime': datetime, 'timedelta': timedelta, 'time': time
                 }
                 code = goal.definition_id.compute_code.strip()
