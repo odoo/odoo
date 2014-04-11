@@ -638,7 +638,7 @@ class ir_attachment(osv.osv):
             # in-document URLs are html-escaped, a straight search will not
             # find them
             url = werkzeug.utils.escape(attachment.website_url)
-            ids = Views.search(cr, uid, [('arch', 'like', url)], context=context)
+            ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
 
             if ids:
                 removal_blocked_by[attachment.id] = Views.read(

@@ -8,329 +8,199 @@
             <field name="name">functional</field>
         </record>
         <record id="blog_tag_2" model="blog.tag">
-            <field name="name">technical</field>
-        </record>
-        <record id="blog_tag_3" model="blog.tag">
             <field name="name">website</field>
-        </record>
-        <record id="blog_tag_4" model="blog.tag">
-            <field name="name">pos</field>
         </record>
 
         <!-- POSTS -->
         <record id="blog_post_1" model="blog.post">
-            <field name="name">OpenERP v8 New Features</field>
+            <field name="name">The Future of Emails</field>
+            <field name="subtitle">Ideas behing the OpenERP communication tools.</field>
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="website_meta_keywords">OpenERP, Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
-            <field name="website_meta_description">Open source Point of Sale with no installation required that runs online and offline.</field>
+            <field name="website_meta_keywords">OpenERP, email</field>
+            <field name="website_meta_description">The Future of Emails</field>
+            <field name="background_image">/website_blog/static/src/img/post1.jpg</field>
             <field name="content"><![CDATA[
-        <section data-snippet-id='image-text'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 mt16 mb16">
-                        <img class="img-responsive shadow" src="/website/static/src/img/image_text.jpg"/>
-                    </div>
-                    <div class="col-md-6 mt16">
-                        <p>
-                            OpenERP's Point of Sale introduces a super clean
-                            interface with no installation required that runs
-                            online and offline on modern hardwares.
-                        </p><p>
-                            It's full integration with the company inventory
-                            and accounting, gives you real time statistics
-                            without the hassle of integrating several applications.
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <section class="mt16 mb16 readable">
+            <iframe width="361" height="200" src="http://www.youtube.com/embed/EkbBFmIWoTE" frameborder="0" allowfullscreen></iframe>
+            <p>
+                Emails are broken.
+            </p><p>
+                Emails make me waste my time. But I need them.
+                Given the importance that emails have in our lives,
+                it's incredible it's still one of the only software
+                areas that did not evolve in the past 20 years!
+            </p><p>
+                Reading my inbox is the most unproductive task I do
+                on a daily basis. I have to spend one full hour a
+                day to process my emails. All the junk flows in the
+                same inbox; spams, information that doesn't matter,
+                quoted answers of quoted answers, etc. At the end
+                of the hour, only 10 emails actually requested an
+                answer from me. With a good tool, I could have done
+                my job in 10 minutes!
+            </p>
         </section>
-        <section class="mt16 mb16" data-snippet-id='text-block'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center mt16 mb32">
-                        <h2>
-                            Linked with Project Management
-                        </h2>
-                        <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
-                    </div>
-                    <div class="col-md-12 mb16 mt16">
-                        <p>
-                            OpenERP's <b>collaborative and realtime</b> project
-                            management helps your team get work done. Keep
-                            track of everything, from the big picture to the
-                            minute details, from the customer contract to the
-                            billing.
-                        </p><p>
-                            Organize projects around <b>your own processes</b>. Work
-                            on tasks and issues using the kanban view, schedule
-                            tasks using the gantt chart and control deadlines
-                            in the calendar view. Every project may have it's
-                            own stages allowing teams to optimize their job.
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <section class="mt16 mb16 readable">
+            <p>
+                At OpenERP, we build tools to bring productivity to
+                enterprises. As emails and information flows are one of
+                the biggest wastes of time in companies, we have to fix
+                this.
+            </p><p>
+                To disrupt emails, you need more than just another user
+                interface. We need to rethink the whole communication flow.
+            </p>
+            <h3>The Communication Mechanism of OpenERP</h3>
+            <p>
+                Here are the ideas behing the OpenERP communication tools:
+            </p>
+            <ul>
+                <li>
+                    Get Things Done: your inbox is a
+                    todo list. You should be able to process (not only
+                    read) the inbox and easily mark messages for future
+                    actions. Every inbox should be empty after having
+                    been processed; no more overload of information.
+                    <img class="img-responsive" src="/website_blog/static/src/img/mail-sc-00.png"/>
+                </li><li>
+                    Keep control of what you want to receive or don't want
+                    to receive. People should never receive spam. You
+                    should follow/unfollow any kind of information in one
+                    click.
+                </li><li>
+                    Productivity is key: our smart user
+                    interface does not require you to click on every mail
+                    to read a thread. Reading a full thread, replying,
+                    attaching documents is super fast.
+                    <img class="img-responsive" src="/website_blog/static/src/img/mail-sc-03.png"/>
+                </li><li>
+                    A mix of push & pull: Today, people
+                    are victims of what others decide to push to them.
+                    OpenERP differentiates:
+                    <ul>
+                        <li>
+                            Messages "for information":
+                            you can pull them when you need some specific
+                            information; they are not required to be read
+                            every day.You receive only what you decided
+                            to follow.This accounts for 90% of your daily
+                            emails.Use the "Inbox" menu for these.
+                        </li><li>
+                            Messages "for action": they
+                            require your immediate attention and you need
+                            to process them all. This accounts for 10%
+                            of your daily emails. Use the "To: me" menu
+                            for these.
+                        </li>
+                    </ul>
+                </li><li>
+                    Focus on the Content: Everything is
+                    stripped to emphasize on the real message. No more
+                    welcome introductions, greetings, signatures and legal
+                    notes.We standardize the layout of each message.
+                    (signatures are on the profile of a contact, not in
+                    every message)
+                </li><li>
+                    Folders and mailing lists are great tools but too
+                    complex in traditional email clients. In OpenERP, a
+                    group of contacts that share a discussion can be
+                    created with one click. Every group should have it's
+                    own email address.
+                </li>
+            </ul>
         </section>
-        <section class="oe_dark mt16 mb16" data-snippet-id='big-picture'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center mt32 mb32">
-                        <h2>Work with the hardware you already have...</h2>
-                    </div>
-                    <div class="col-md-12">
-                        <img class="img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
-                    </div>
-                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
-                        <p class="text-center">
-                            <b>No installation required</b>
-                        </p>
-                        <p class="text-center">
-                            OpenERP's Point of Sale introduces a super clean
-                            interface with no installation required that runs
-                            online and offline on modern hardware. Laptops,
-                            tablets, industrial POS, it runs on everything.
-                        </p>
-                        <p class="text-center">
-                            <a href="/page/website.contactus">Get more information »</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
 ]]>
 </field>
         </record>
 
         <record id="blog_post_2" model="blog.post">
-            <field name="name">New Hardware Integration</field>
+            <field name="name">Integrating your CMS and E-Commerce</field>
+            <field name="subtitle">Building your company's website and selling your products online easy.</field>
             <field name="blog_id" ref="blog_blog_1"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
-            <field name="content">
-<![CDATA[<section class="mt16 mb16" data-snippet-id='big-picture'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <img class="img-responsive" src="/website/static/src/img/big_picture.png" style="margin: 0 auto;"/>
-                    </div>
-                    <div class="col-md-6 col-md-offset-3 mb16 mt16">
-                        <p class="text-center">
-                            <b>New Features Launched</b>
-                        </p>
-                        <p class="text-center">
-                            OpenERP's Point of Sale introduces a super clean
-                            interface with no installation required that runs
-                            online and offline on modern hardware. Laptops,
-                            tablets, industrial POS, it runs on everything.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section data-snippet-id='pricing'>
-            <div class="container">
-              <div class="row">
-                <div class="col-md-12 text-center mt16 mb32">
-                    <h2>Our Offers</h2>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="panel panel-info">
-                      <!-- Default panel contents -->
-                      <div class="panel-heading text-center">
-                          <h2 style="margin: 0">Beginner</h2>
-                          <p style="margin: 0" class="text-muted">
-                              Starter package
-                          </p>
-                      </div>
-                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
-                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">450</b><small>.00</small></h2>
-                        <div>per month</div>
-                      </div>
-
-                      <!-- List group -->
-                      <ul class="list-group">
-                        <li class="list-group-item">Battery: 8 hours</li>
-                        <li class="list-group-item">Screen: 2.5 inch</li>
-                        <li class="list-group-item">Weight: 1.1 ounces</li>
-                        <li class="list-group-item">No support</li>
-                      </ul>
-                      <div class="panel-footer text-center">
-                          <p class="text-muted">
-                              <i>Free shipping, satisfied or reimbursed.</i>
-                          </p>
-                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
-                      </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-primary">
-                      <!-- Default panel contents -->
-                      <div class="panel-heading text-center">
-                          <h2 style="margin: 0">Professional</h2>
-                          <p style="margin: 0">
-                              Enterprise package
-                          </p>
-                      </div>
-                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
-                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">590</b><small>.00</small></h2>
-                        <div>per month</div>
-                      </div>
-
-                      <!-- List group -->
-                      <ul class="list-group">
-                        <li class="list-group-item">Battery: 12 hours</li>
-                        <li class="list-group-item">Screen: 2.8 inch</li>
-                        <li class="list-group-item">Weight: 1.2 ounces</li>
-                        <li class="list-group-item">Limited support</li>
-                      </ul>
-                      <div class="panel-footer text-center">
-                          <p class="text-muted">
-                              <i>Free shipping, satisfied or reimbursed.</i>
-                          </p>
-                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Order now</a>
-                      </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-info">
-                      <!-- Default panel contents -->
-                      <div class="panel-heading text-center">
-                          <h2 style="margin: 0">Expert</h2>
-                          <p style="margin: 0" class="text-muted">
-                              The top of the top
-                          </p>
-                      </div>
-                      <div class="panel-body text-center text-muted" style="background-color: rgba(0,0,0,0.1)">
-                        <h2 style="margin: 0"><span>$</span><b style="font-size: 60px">890</b><small>.00</small></h2>
-                        <div>per month</div>
-                      </div>
-
-                      <!-- List group -->
-                      <ul class="list-group">
-                        <li class="list-group-item">Battery: 20 hours</li>
-                        <li class="list-group-item">Screen: 2.8 inch</li>
-                        <li class="list-group-item">Weight: 1.2 ounces</li>
-                        <li class="list-group-item">Unlimited support</li>
-                      </ul>
-                      <div class="panel-footer text-center">
-                          <p class="text-muted">
-                              <i>Free shipping, satisfied or reimbursed.</i>
-                          </p>
-                          <a href="/page/website.contactus" class="btn btn-primary btn-lg">Contact us</a>
-                      </div>
-                    </div>
-
-                </div>
-              </div>
-            </div>
-        </section>
-
-
-]]>
-</field>
-        </record>
-
-        <record id="blog_post_3" model="blog.post">
-            <field name="name">Touchscreen Point of Sale for 6.1</field>
-            <field name="blog_id" ref="blog_blog_1"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
-            <field name="website_meta_keywords">Point of Sale, Hardware, Interface, Payment Terminal, Store</field>
-            <field name="website_meta_description">Point of Sale with no installation required that runs online and offline.</field>
-            <field name="content">
-<![CDATA[<p>The brand new OpenERP touchscreen point of sale is available with 6.1 which allows you
-to manage your shop sales very easily.  It's fully web based so that you don't
-have to install or deploy any software and all the sales shops can be easily
-consolidated.  It works in connected and disconnected modes so that you can
-continue to sell even if you lose your internet connection.</p>
-<img src="http://www.openerp.com/sites/default/files/fileattach/POS(2).png" alt="">
-<h3>Here's a summary of its main features and benefits:</h3>
-<ul>
-    <li>100% WEB based</li>
-    <li>available for any touchscreen device (ipod, ipad, any tablet)mobile (with portable devices)</li>
-    <li>no installation required</li>
-    <li>no synchronization needed, completely integrated</li>
-    <li>continue working even when your connection is down or if you close your browser, data won't be lost</li>
-    <li>fully web based with a clean interface smart interface</li>
-</ul>
-<p>You have different options to select your products. You can do it through the
-barcode reader, just browse through the categories you have put in place (ie.
-drinks, snacks, meals, etc.), or text search in case neither of the other
-options work for you.  For example, if you need to use the POS for your restaurant, 
-your employees can record multiple tickets at the same time without having to wait 
-to process one transaction at a time. In addition, you can facilitate payments, 
-the application allows multiple payment methods.</p>
-<p>The POS application is so simple and accessible to use that your shop or
-restaurant will never need any other tool to manage orders. Due to its smart
-and user-friendly interface you don't need any training to learn how to use it.
-Think of it as an out-of-the-box solution to boost your business' productivity.
-</p>
-]]>
-</field>
-        </record>
-
-        <record id="blog_post_4" model="blog.post">
-            <field name="name">Announcing a New Partnership</field>
-            <field name="blog_id" ref="blog_blog_1"/>
-            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
             <field name="website_published" eval="True"/>
-            <field name="website_meta_keywords">OpenERP, Partnership, News, Accounting</field>
-            <field name="website_meta_description">Our company partners with OpenERP to develop accounting best practices.</field>
-            <field name="content"><![CDATA[
-        <section data-snippet-id='image-text'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 mt16 mb16">
-                        <img class="img-responsive shadow" src="/website/static/src/img/text_image.png"/>
-                    </div>
-                    <div class="col-md-6 mt16">
-                        <p>
-                            We are proud to announce a new partnership with
-                            the company OpenERP. Their open source application suite
-                            will allow us to reach new markets, specifically in
-                            the accounting area.
-                        </p><p>
-                            The full integration with the company inventory
-                            and accounting, will give our customers real time statistics
-                            without the hassle of integrating several applications.
-                        </p>
-                    </div>
-                </div>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
+            <field name="background_image">/website_blog/static/src/img/post2.jpg</field>
+            <field name="content">
+<![CDATA[<section class="row readable">
+            <div class="col-md-12 mb32">
+                <img class="img-responsive" src="/website_blog/static/src/img/CMS_WMS_screens.jpg"/>
+            </div>
+            <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                <p class="text-center">
+                    New Features Launched
+                </p>
+                <p class="text-center">
+                    To add to an already comprehensive set of OpenERP
+                    features, a website content management system (CMS
+                    or WMS) has been developed and a beta release is
+                    available from today, 31st January 2014.
+                </p>
             </div>
         </section>
-        <section class="mt16 mb16" data-snippet-id='text-block'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center mt16 mb32">
-                        <h2>
-                            OpenERP Project Management
-                        </h2>
-                        <h3 class="text-muted">Infinitely flexible. Incredibly easy to use.</h3>
-                    </div>
-                    <div class="col-md-12 mb16 mt16">
-                        <p>
-                            OpenERP's <b>collaborative and realtime</b> project
-                            management helps your team get work done. Keep
-                            track of everything, from the big picture to the
-                            minute details, from the customer contract to the
-                            billing.
-                        </p><p>
-                            Organize projects around <b>your own processes</b>. Work
-                            on tasks and issues using the kanban view, schedule
-                            tasks using the gantt chart and control deadlines
-                            in the calendar view. Every project may have it's
-                            own stages allowing teams to optimize their job.
-                        </p>
-                    </div>
-                </div>
-            </div>
+        <section class="readable">
+            <p>
+                OpenERP claims to be 'the Open Source software that makes
+                building your company's website and selling your products
+                online easy'. So how true is this statement?
+            </p><p>
+                "OpenERP's latest launch will allow a business to go from
+                zero to trading online quicker than ever before,” Stuart
+                Mackintosh, MD of Open Source specialist and OpenERP
+                integration partner, OpusVL, explains. “The investment
+                required to have a fully automated business system is
+                dramatically reduced, enabling the small and medium
+                enterprise to compete at a level of functionality and
+                performance previously reserved for the big IT investors."
+            </p>
+            <blockquote>
+                <p>
+                    "Finally, the leading edge is being brought to the masses.
+                    It will now be the turn of the big players to catch up to
+                    the superior technologies of the SME."
+                </p>
+            </blockquote>
+            <p>
+                "This is another clever and highly disruptive move by
+                OpenERP,which will force other technology providers to
+                take another look at the value they are providing to ensure
+                that their 'solutions' can still compete."
+            </p><p>
+                "OpenERP now competes on many fronts, with no real
+                competition out there to knock them off the top spot.
+                With the launch of their integrated CMS and Ecommerce
+                systems,it only elevates their position as one of the leading
+                lights in the open source revolution. It will be at least 5
+                years before another ERP or CMS provider will be able to
+                compete at this level due to the technology currently
+                employed by most industry providers."
+            </p>
+            <h4>Adding to industry leading technology</h4>
+            <p>
+                Like many modern website editors, with OpenERP you can edit
+                content in-line, enabling you to see exactly what you are
+                changing and ensure your changes suit the context.
+            </p><p>
+                However, unlike other web content management systems, it
+                fully integrates into the back-end database. This means
+                that when you edit a product description, image or price,
+                it updates the product database in real time, providing a
+                true self-service window into the business.
+            </p><p>
+                This provides a single source of data for your company and
+                removes the need to create offline synchronisation between
+                website and product database.
+            </p><p>
+                As it comes, there is a default website based on Bootstrap
+                3, the latest industry standard for rapid development of
+                multi-device websites backed by Twitter, so can be directly
+                integrated with many web tools and works across all devices
+                by default.
+            </p>
         </section>
 ]]>
 </field>
         </record>
-
-
     </data>
 </openerp>

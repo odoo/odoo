@@ -234,8 +234,6 @@ ul.nav-stacked > li > a
 .oe_img_bg
     background-size: 100%
 
-section, .carousel, .parallax, .row, .hr, .blockquote
-    min-height: 30px
 .carousel, .parallax, .blockquote
     overflow: hidden
 
@@ -308,13 +306,26 @@ section, .carousel, .parallax, .row, .hr, .blockquote
             top: 50%
             position: absolute
             margin-top: -8px
-        &.left span
-            left: 10px
-        &.right span
-            right: 10px
+        &.left
+            left: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                right: 50%
+        &.right
+            right: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                left: 50%
 
 .quotecarousel
     padding-bottom: 16px
+
+.hr
+    padding: 4px 0
 
 /* Parallax Theme */
 
@@ -434,3 +445,28 @@ span[data-oe-type="monetary"]
     overflow:hidden
     text-overflow:ellipsis
 
+div.media_iframe_video
+    height: 0
+    margin: 0 auto
+    text-align: center
+    position: relative
+    overflow: hidden
+    padding-bottom: 66.5%
+    iframe
+        width: 100%
+        height: 100%
+    div
+        position: absolute
+        width: 100%
+        height: 100%
+        display: none
+
+/* Mobile view */
+
+@media (max-width: 768px)
+    img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa
+        -webkit-transform: none !important
+        -moz-transform: none !important
+        -ms-transform: none !important
+        -o-transform: none !important
+        transform: none !important
