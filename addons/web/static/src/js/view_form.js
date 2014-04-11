@@ -2384,6 +2384,7 @@ instance.web.form.DropdownSelection = instance.web.form.FieldChar.extend({
                                 if ($("#txtReason").val() == "") {
                                     alert('Reason Required');                                            
                                 } else {                                  
+                                    value = {}
                                     value[self.name] = String(li.data('value'));
                                     var reason = $("#txtReason").val()
                                     $(this).dialog("close");

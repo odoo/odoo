@@ -1351,6 +1351,7 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
                                 if ($("#txtReason").val() == "") {
                                     alert('Reason Required');
                                 } else {
+                                    value = {}
                                     value[self.name] = String(li.data('value'));
                                     var reason = $("#txtReason").val();
                                     $(this).dialog("close");
