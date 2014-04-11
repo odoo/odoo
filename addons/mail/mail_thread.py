@@ -26,6 +26,7 @@ import email
 import logging
 import pytz
 import re
+import socket
 import time
 import xmlrpclib
 from email.message import Message
@@ -539,8 +540,12 @@ class mail_thread(osv.AbstractModel):
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
+            our_hostname = socket.gethostname()
+            reply_to_hostname = ref_match.group(3)
+            # do not match forwarded emails from another OpenERP system (thread_id collision!)
+            is_reply_to_local = (our_hostname == reply_to_hostname)
             model_pool = self.pool.get(model)
-            if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
+            if thread_id and is_reply_to_local and model and model_pool and model_pool.exists(cr, uid, thread_id) \
                 and hasattr(model_pool, 'message_update'):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, model, thread_id, custom_values, uid)
