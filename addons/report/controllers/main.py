@@ -22,48 +22,43 @@
 from openerp.addons.web.http import Controller, route, request
 
 import simplejson
-import urlparse
-from werkzeug import exceptions
+from werkzeug import exceptions, url_decode
+from werkzeug.test import Client
+from werkzeug.wrappers import BaseResponse
+from werkzeug.datastructures import Headers
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 
 class ReportController(Controller):
 
     #------------------------------------------------------
-    # Generic reports controller
+    # Report controllers
     #------------------------------------------------------
-    @route('/report/<reportname>/<docids>', type='http', auth='user', website=True, multilang=True)
-    def report_html(self, reportname, docids):
-        cr, uid, context = request.cr, request.uid, request.context
-        docids = self._eval_params(docids)
-        return request.registry['report'].get_html(cr, uid, docids, reportname, context=context)
-
-    @route('/report/pdf/report/<reportname>/<docids>', type='http', auth="user", website=True)
-    def report_pdf(self, reportname, docids):
-        cr, uid, context = request.cr, request.uid, request.context
-        docids = self._eval_params(docids)
-        pdf = request.registry['report'].get_pdf(cr, uid, docids, reportname, context=context)
-        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-        return request.make_response(pdf, headers=pdfhttpheaders)
-
-    #------------------------------------------------------
-    # Particular reports controller
-    #------------------------------------------------------
-    @route('/report/<reportname>', type='http', auth='user', website=True, multilang=True)
-    def report_html_particular(self, reportname, **data):
-        cr, uid, context = request.cr, request.uid, request.context
+    @route([
+        '/report/<path:converter>/<reportname>',
+        '/report/<path:converter>/<reportname>/<docids>',
+    ], type='http', auth='user', website=True, multilang=True)
+    def report_routes(self, reportname, docids=None, converter=None, **data):
         report_obj = request.registry['report']
-        data = self._eval_params(data)  # Sanitizing
-        return report_obj.get_html(cr, uid, [], reportname, data=data, context=context)
-
-    @route('/report/pdf/report/<reportname>', type='http', auth='user', website=True, multilang=True)
-    def report_pdf_particular(self, reportname, **data):
         cr, uid, context = request.cr, request.uid, request.context
-        report_obj = request.registry['report']
-        data = self._eval_params(data)  # Sanitizing
-        pdf = report_obj.get_pdf(cr, uid, [], reportname, data=data, context=context)
-        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
-        return request.make_response(pdf, headers=pdfhttpheaders)
+
+        if docids:
+            docids = [int(i) for i in docids.split(',')]
+        options_data = None
+        if data.get('options'):
+            options_data = simplejson.loads(data['options'])
+        if data.get('context'):
+            context.update(simplejson.loads(data['context']))
+
+        if converter == 'html':
+            html = report_obj.get_html(cr, uid, docids, reportname, data=options_data, context=context)
+            return request.make_response(html)
+        elif converter == 'pdf':
+            pdf = report_obj.get_pdf(cr, uid, docids, reportname, data=options_data, context=context)
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+        else:
+            raise exceptions.HTTPException(description='Converter %s not implemented.' % converter)
 
     #------------------------------------------------------
     # Misc. route utils
@@ -94,7 +89,7 @@ class ReportController(Controller):
     @route(['/report/download'], type='http', auth="user", website=True)
     def report_download(self, data, token):
         """This function is used by 'qwebactionmanager.js' in order to trigger the download of
-        a pdf report.
+        a pdf/controller report.
 
         :param data: a javascript array JSON.stringified containg report internal url ([0]) and
         type [1]
@@ -102,26 +97,26 @@ class ReportController(Controller):
         """
         requestcontent = simplejson.loads(data)
         url, type = requestcontent[0], requestcontent[1]
-        if type == 'qweb-pdf':
-            reportname = url.split('/report/pdf/report/')[1].split('?')[0].split('/')[0]
 
-            if '?' not in url:
+        if type == 'qweb-pdf':
+            reportname = url.split('/report/pdf/')[1].split('?')[0]
+
+            docids = None
+            if '/' in reportname:
+                reportname, docids = reportname.split('/')
+
+            if docids:
                 # Generic report:
-                docids = url.split('/')[-1]
-                response = self.report_pdf(reportname, docids)
+                response = self.report_routes(reportname, docids=docids, converter='pdf')
             else:
                 # Particular report:
-                querystring = url.split('?')[1]
-                querystring = dict(urlparse.parse_qsl(querystring))
-                response = self.report_pdf_particular(reportname, **querystring)
+                data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
+                response = self.report_routes(reportname, converter='pdf', **dict(data))
 
             response.headers.add('Content-Disposition', 'attachment; filename=%s.pdf;' % reportname)
             response.set_cookie('fileToken', token)
             return response
         elif type =='controller':
-            from werkzeug.test import Client
-            from werkzeug.wrappers import BaseResponse
-            from werkzeug.datastructures import Headers
             reqheaders = Headers(request.httprequest.headers)
             response = Client(request.httprequest.app, BaseResponse).get(url, headers=reqheaders, follow_redirects=True)
             response.set_cookie('fileToken', token)
@@ -132,28 +127,3 @@ class ReportController(Controller):
     @route(['/report/check_wkhtmltopdf'], type='json', auth="user")
     def check_wkhtmltopdf(self):
         return request.registry['report']._check_wkhtmltopdf()
-
-    def _eval_params(self, param):
-        """Parse a dict generated by the webclient (javascript) into a python dict.
-        """
-        if isinstance(param, dict):
-            for key, value in param.iteritems():
-                if value.lower() == 'false':
-                    param[key] = False
-                elif value.lower() == 'true':
-                    param[key] = True
-                elif ',' in value:
-                    param[key] = [int(i) for i in value.split(',')]
-                else:
-                    try:
-                        param[key] = int(value)
-                    except (ValueError, TypeError):
-                        pass
-        else:
-            if isinstance(param, (str, unicode)):
-                param = [int(i) for i in param.split(',')]
-            if isinstance(param, list):
-                param = list(set(param))
-            if isinstance(param, int):
-                param = [param]
-        return param

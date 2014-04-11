@@ -20,9 +20,9 @@
 ##############################################################################
 
 import time
-import datetime
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class analytic_account_budget_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -166,6 +166,11 @@ class analytic_account_budget_report(report_sxw.rml_parse):
         result.append(res)
         return result
 
-report_sxw.report_sxw('report.account.analytic.account.budget', 'account.analytic.account', 'addons/account_budget/report/analytic_account_budget_report.rml',parser=analytic_account_budget_report,header='internal')
+
+class report_analyticaccountbudget(osv.AbstractModel):
+    _name = 'report.account_budget.report_analyticaccountbudget'
+    _inherit = 'report.abstract_report'
+    _template = 'account_budget.report_analyticaccountbudget'
+    _wrapped_report_class = analytic_account_budget_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

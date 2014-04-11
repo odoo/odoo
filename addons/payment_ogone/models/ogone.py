@@ -36,6 +36,11 @@ class PaymentAcquirerOgone(osv.Model):
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (env,),
         }
 
+    def _get_providers(self, cr, uid, context=None):
+        providers = super(PaymentAcquirerOgone, self)._get_providers(cr, uid, context=context)
+        providers.append(['ogone', 'Ogone'])
+        return providers
+
     _columns = {
         'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
         'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
@@ -57,7 +62,7 @@ class PaymentAcquirerOgone(osv.Model):
         :return string: shasign
         """
         assert inout in ('in', 'out')
-        assert acquirer.name == 'ogone'
+        assert acquirer.provider == 'ogone'
         key = getattr(acquirer, 'ogone_shakey_' + inout)
 
         def filter_key(key):

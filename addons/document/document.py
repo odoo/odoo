@@ -2005,7 +2005,7 @@ class nodefd_content(StringIO, node_descriptor):
 
         par = self._get_parent()
         uid = par.context.uid
-        cr = openerp.registry(par.context.dbname).db.cursor()
+        cr = openerp.registry(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
@@ -2058,7 +2058,7 @@ class nodefd_static(StringIO, node_descriptor):
 
         par = self._get_parent()
         # uid = par.context.uid
-        cr = openerp.registry(par.context.dbname).db.cursor()
+        cr = openerp.registry(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()

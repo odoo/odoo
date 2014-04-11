@@ -131,6 +131,8 @@ class sale_order(osv.osv):
         }
 
     def onchange_template_id(self, cr, uid, ids, template_id, partner=False, fiscal_position=False, context=None):
+        if not template_id:
+            return True
         lines = []
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
