@@ -137,7 +137,6 @@ class stock_landed_cost(osv.osv):
                         continue
                     line_obj.copy(cr, uid, valuation.id, default={'cost_line_id': line.id, 'flag': 'duplicate'}, context=context)
 
-
         for cost in self.browse(cr, uid, ids, context=None):
             dict = {}
             for line in cost.cost_lines:
@@ -151,14 +150,14 @@ class stock_landed_cost(osv.osv):
                             else:
                                 dict[valuation.id] += value
                         elif line.split_method == 'by_weight':
-                            per_unit = (line.price_unit / total_weight or 1.0)
+                            per_unit = (line.price_unit / total_weight if total_weight else total_line)
                             value = valuation.quantity * per_unit
                             if valuation.id not in dict:
                                 dict[valuation.id] = value
                             else:
                                 dict[valuation.id] += value
                         elif line.split_method == 'by_volume':
-                            per_unit = (line.price_unit / total_volume or 1.0)
+                            per_unit = (line.price_unit / total_volume if total_volume else total_line)
                             value = valuation.quantity * per_unit
                             if valuation.id not in dict:
                                 dict[valuation.id] = value
