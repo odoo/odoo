@@ -111,7 +111,6 @@
                 title:     _t("Save your modifications"),
                 content:   _t("Once you click on save, your product is updated."),
                 popover:   { fixed: true },
-
             },
             {
                 waitFor:   '#website-top-navbar button[data-action="edit"]:visible',

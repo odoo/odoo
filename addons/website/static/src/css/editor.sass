@@ -77,6 +77,9 @@
 .cke_editable .css_editable_mode_hidden
     display: none
 
+.cke_editable .css_editable_mode_display
+    display: block !important
+
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
     background-image: url('/website/static/src/img/edit_here.png') !important
 
@@ -150,7 +153,7 @@ ul.oe_menu_editor
     +user-select(auto)
     cursor: text !important
 
-.modal-dialog.select-image
+.modal-dialog.select-media
     width: 80%
 
 .modal .existing-attachments
@@ -179,7 +182,7 @@ ul.oe_menu_editor
 .modal
     .font-icons-icons
         font-size: 2em
-        max-height: 6em
+        max-height: 9em
         overflow: auto
 
         .font-icons-icon
@@ -232,6 +235,10 @@ $attachment-border-color: #848490
             border-top: none
             border-left: none
             +border-bottom-right-radius(8px)
+        &.media_selected
+            > i, > img 
+                border-width: 5px
+                border-color: rgb(0, 248, 248)
 
 // wrapper positioned relatively for drag&drop widget which is disabled below.
 // Breaks completely horribly crazy products listing page, so take it out.
@@ -259,16 +266,29 @@ $attachment-border-color: #848490
     outline: 1px solid red !important
     background-color: #ffd9dd !important
 
-.hover-edition-button
+.hover-edition
+    display: inline-block
     position: absolute
     top: 0
     left: 0
-    // This z-index is due to .navbar of bootstrap
-    z-index: 1000
+    // This z-index is due to .navbar of bootstrap & jQuery-transfo
+    z-index: 1001
+.preview-container
+    text-align: center
+    line-height: 100px
+    height: 100px
+    > *
+        max-height: 100px
+        line-height: 100px
+        margin: 0 auto
+        display: inline-block
 
 // fontawesome
 .cke_editable .fa
     cursor: pointer
+
+.img-responsive
+    text-align: center
 
 // }}}
 

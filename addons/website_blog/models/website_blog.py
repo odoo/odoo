@@ -1,31 +1,14 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today OpenERP SA (<http://www.openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
+from datetime import datetime
+import difflib
+import lxml
+import random
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
-
-import difflib
 
 
 class Blog(osv.Model):
@@ -35,12 +18,9 @@ class Blog(osv.Model):
     _order = 'name'
 
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Blog Name', required=True),
+        'subtitle': fields.char('Blog Subtitle'),
         'description': fields.text('Description'),
-        'blog_post_ids': fields.one2many(
-            'blog.post', 'blog_id',
-            'Blogs',
-        ),
     }
 
 
@@ -52,9 +32,6 @@ class BlogTag(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True),
-        'blog_post_ids': fields.many2many(
-            'blog.post', string='Posts',
-        ),
     }
 
 
@@ -62,37 +39,20 @@ class BlogPost(osv.Model):
     _name = "blog.post"
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata']
-    _order = 'write_date DESC'
-    # maximum number of characters to display in summary
-    _shorten_max_char = 250
+    _order = 'id DESC'
 
-    def get_shortened_content(self, cr, uid, ids, name, arg, context=None):
+    def _compute_ranking(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for page in self.browse(cr, uid, ids, context=context):
-            try:
-                body_short = tools.html_email_clean(
-                    page.content,
-                    remove=True,
-                    shorten=True,
-                    max_length=self._shorten_max_char,
-                    expand_options={
-                        'oe_expand_container_tag': 'div',
-                        'oe_expand_container_class': 'oe_mail_expand text-center',
-                        'oe_expand_container_content': '',
-                        'oe_expand_a_href': '/blogpost/%d' % page.id,
-                        'oe_expand_a_class': 'oe_mail_expand btn btn-info',
-                        'oe_expand_separator_node': 'br',
-                    },
-                    protect_sections=True,
-                )
-            except Exception:
-                body_short = False
-            res[page.id] = body_short
+        for blog_post in self.browse(cr, uid, ids, context=context):
+            age = datetime.now() - datetime.strptime(blog_post.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            res[blog_post.id] = blog_post.visits * (0.5+random.random()) / max(3, age.days)
         return res
 
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
-        'content_image': fields.binary('Background Image'),
+        'subtitle': fields.char('Sub Title', translate=True),
+        'author_id': fields.many2one('res.partner', 'Author'),
+        'background_image': fields.binary('Background Image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
             required=True, ondelete='cascade',
@@ -101,32 +61,22 @@ class BlogPost(osv.Model):
             'blog.tag', string='Tags',
         ),
         'content': fields.html('Content', translate=True),
-        'shortened_content': fields.function(
-            get_shortened_content,
-            type='html',
-            string='Shortened Content',
-            help="Shortened content of the page that serves as a summary"
-        ),
         # website control
         'website_published': fields.boolean(
             'Publish', help="Publish on the website"
         ),
-        'website_published_datetime': fields.datetime(
-            'Publish Date'
-        ),
-        # TDE TODO FIXME: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
-                '&', ('model', '=', self._name), ('type', '=', 'comment')
+                '&', '&', ('model', '=', self._name), ('type', '=', 'comment'), ('path', '=', False)
             ],
             string='Website Messages',
             help="Website communication history",
         ),
-        # technical stuff: history, menu (to keep ?)
         'history_ids': fields.one2many(
             'blog.post.history', 'post_id',
-            'History', help='Last post modifications'
+            'History', help='Last post modifications',
+            deprecated='This field will be removed for OpenERP v9.'
         ),
         # creation / update stuff
         'create_date': fields.datetime(
@@ -145,10 +95,70 @@ class BlogPost(osv.Model):
             'res.users', 'Last Contributor',
             select=True, readonly=True,
         ),
+        'visits': fields.integer('No of Views'),
+        'ranking': fields.function(_compute_ranking, string='Ranking', type='float'),
     }
+
     _defaults = {
-        'website_published': False
+        'name': _('Blog Post Title'),
+        'subtitle': _('Subtitle'),
+        'author_id': lambda self, cr, uid, ctx=None: self.pool['res.users'].browse(cr, uid, uid, context=ctx).partner_id.id,
     }
+
+    def html_tag_nodes(self, html, attribute=None, tags=None, context=None):
+        """ Processing of html content to tag paragraphs and set them an unique
+        ID.
+        :return result: (html, mappin), where html is the updated html with ID
+                        and mapping is a list of (old_ID, new_ID), where old_ID
+                        is None is the paragraph is a new one. """
+        mapping = []
+        if not html:
+            return html, mapping
+        if tags is None:
+            tags = ['p']
+        if attribute is None:
+            attribute = 'data-unique-id'
+        counter = 0
+
+        # form a tree
+        root = lxml.html.fragment_fromstring(html, create_parent='div')
+        if not len(root) and root.text is None and root.tail is None:
+            return html, mapping
+
+        # check all nodes, replace :
+        # - img src -> check URL
+        # - a href -> check URL
+        for node in root.iter():
+            if not node.tag in tags:
+                continue
+            ancestor_tags = [parent.tag for parent in node.iterancestors()]
+            if ancestor_tags:
+                ancestor_tags.pop()
+            ancestor_tags.append('counter_%s' % counter)
+            new_attribute = '/'.join(reversed(ancestor_tags))
+            old_attribute = node.get(attribute)
+            node.set(attribute, new_attribute)
+            mapping.append((old_attribute, counter))
+            counter += 1
+
+        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+        if html.startswith('<div>') and html.endswith('</div>'):
+            html = html[5:-6]
+        return html, mapping
+
+    def _postproces_content(self, cr, uid, id, content=None, context=None):
+        if content is None:
+            content = self.browse(cr, uid, id, context=context).content
+        if content is False:
+            return content
+        content, mapping = self.html_tag_nodes(content, attribute='data-chatter-id', tags=['p'], context=context)
+        for old_attribute, new_attribute in mapping:
+            if not old_attribute:
+                continue
+            msg_ids = self.pool['mail.message'].search(cr, SUPERUSER_ID, [('path', '=', old_attribute)], context=context)
+            self.pool['mail.message'].write(cr, SUPERUSER_ID, msg_ids, {'path': new_attribute}, context=context)
+        return content
 
     def create_history(self, cr, uid, ids, vals, context=None):
         for i in ids:
@@ -163,12 +173,16 @@ class BlogPost(osv.Model):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        if 'content' in vals:
+            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(BlogPost, self).create(cr, uid, vals, context=create_context)
         self.create_history(cr, uid, [post_id], vals, context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if 'content' in vals:
+            vals['content'] = self._postproces_content(cr, uid, None, vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result
@@ -182,10 +196,6 @@ class BlogPost(osv.Model):
             'website_published_datetime': False,
         })
         return super(BlogPost, self).copy(cr, uid, id, default=default, context=context)
-
-    def img(self, cr, uid, ids, field='image_small', context=None):
-        post = self.browse(cr, SUPERUSER_ID, ids[0], context=context)
-        return "/website/image?model=%s&field=%s&id=%s" % ('res.users', field, post.create_uid.id)
 
 
 class BlogPostHistory(osv.Model):
@@ -215,5 +225,3 @@ class BlogPostHistory(osv.Model):
             raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
         diff = difflib.HtmlDiff()
         return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

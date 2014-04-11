@@ -94,6 +94,10 @@
   display: none;
 }
 
+.cke_editable .css_editable_mode_display {
+  display: block !important;
+}
+
 .oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/edit_here.png") !important;
 }
@@ -180,7 +184,7 @@ ul.oe_menu_editor .disclose {
   cursor: text !important;
 }
 
-.modal-dialog.select-image {
+.modal-dialog.select-media {
   width: 80%;
 }
 
@@ -212,7 +216,7 @@ ul.oe_menu_editor .disclose {
 
 .modal .font-icons-icons {
   font-size: 2em;
-  max-height: 6em;
+  max-height: 9em;
   overflow: auto;
 }
 .modal .font-icons-icons .font-icons-icon {
@@ -271,6 +275,10 @@ ul.oe_menu_editor .disclose {
   -webkit-border-bottom-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
+.existing-attachments .existing-attachment-cell.media_selected > i, .existing-attachments .existing-attachment-cell.media_selected > img {
+  border-width: 5px;
+  border-color: #00f8f8;
+}
 
 .cke_widget_wrapper {
   position: static !important;
@@ -296,15 +304,32 @@ ul.oe_menu_editor .disclose {
   background-color: #ffd9dd !important;
 }
 
-.hover-edition-button {
+.hover-edition {
+  display: inline-block;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 1001;
+}
+
+.preview-container {
+  text-align: center;
+  line-height: 100px;
+  height: 100px;
+}
+.preview-container > * {
+  max-height: 100px;
+  line-height: 100px;
+  margin: 0 auto;
+  display: inline-block;
 }
 
 .cke_editable .fa {
   cursor: pointer;
+}
+
+.img-responsive {
+  text-align: center;
 }
 
 /* ---- MOBILE PREVIEW ---- {{{ */
