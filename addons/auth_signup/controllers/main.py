@@ -37,6 +37,9 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         ensure_db()
         response = super(AuthSignupHome, self).web_login(*args, **kw)
         response.qcontext.update(self.get_auth_signup_config())
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
         return response
 
     @http.route('/web/signup', type='http', auth='public', website=True, multilang=True)

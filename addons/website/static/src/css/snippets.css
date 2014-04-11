@@ -80,10 +80,8 @@
   -moz-user-select: none;
   user-select: none;
   cursor: move;
-  pointer-events: none;
 }
 .oe_snippet .oe_snippet_thumbnail {
-  pointer-events: auto;
   text-align: center;
   height: 100%;
   background: transparent;
@@ -200,8 +198,10 @@
 
 .oe_overlay {
   display: none;
+  height: 0;
   position: absolute;
   background: transparent;
+  z-index: 1001;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -214,20 +214,12 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  pointer-events: none;
 }
 .oe_overlay.oe_active {
   display: block;
-  border-style: dashed;
-  border-width: 1px;
-  -webkit-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
-  -moz-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
-  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.3), 0px 0px 0px 1px rgba(255, 255, 255, 0.3) inset;
-  border-color: rgba(0, 0, 0, 0.3);
 }
 .oe_overlay .oe_handle {
   display: block !important;
-  pointer-events: auto;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -238,7 +230,18 @@
   height: 16px;
   margin: -2px;
 }
+.oe_overlay .oe_handle > div {
+  z-index: 1;
+  position: absolute;
+  border-style: dashed;
+  border-width: 1px;
+  border-color: #666666;
+  -webkit-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.5), 0px 0px 0px 1px rgba(255, 255, 255, 0.5) inset;
+  -moz-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.5), 0px 0px 0px 1px rgba(255, 255, 255, 0.5) inset;
+  box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.5), 0px 0px 0px 1px rgba(255, 255, 255, 0.5) inset;
+}
 .oe_overlay .oe_handle.e:before, .oe_overlay .oe_handle.w:before, .oe_overlay .oe_handle.s:before, .oe_overlay .oe_handle.n:before, .oe_overlay .oe_handle.size .oe_handle_button {
+  z-index: 2;
   position: relative;
   top: 50%;
   left: 50%;
@@ -270,56 +273,68 @@
   -moz-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
+.oe_overlay .oe_handle.e, .oe_overlay .oe_handle.w {
+  top: 4px;
+  height: 100%;
+}
 .oe_overlay .oe_handle.e:before, .oe_overlay .oe_handle.w:before {
   content: "\f0d9-\f0da";
   line-height: 16px;
 }
+.oe_overlay .oe_handle.e > div, .oe_overlay .oe_handle.w > div {
+  width: 0;
+  height: 100%;
+  top: 2px;
+  left: 8px;
+}
 .oe_overlay .oe_handle.e {
   left: auto;
-  top: 2px;
-  height: 100%;
   right: -6px;
   cursor: w-resize;
 }
 .oe_overlay .oe_handle.w {
-  top: 2px;
-  height: 100%;
   left: -6px;
   cursor: e-resize;
 }
+.oe_overlay .oe_handle.s, .oe_overlay .oe_handle.n {
+  left: 2px;
+  width: 100%;
+}
 .oe_overlay .oe_handle.s:before, .oe_overlay .oe_handle.n:before {
-  z-index: 0;
   content: "\f07d";
   text-align: center;
   padding: 1px;
 }
+.oe_overlay .oe_handle.s > div, .oe_overlay .oe_handle.n > div {
+  width: 100%;
+  height: 0;
+  top: 7px;
+  left: 1px;
+}
 .oe_overlay .oe_handle.s {
   top: auto;
-  left: 2px;
-  width: 100%;
-  bottom: -6px;
   cursor: n-resize;
 }
 .oe_overlay .oe_handle.n {
-  left: 2px;
-  width: 100%;
-  top: -6px;
   cursor: s-resize;
 }
+.oe_overlay .oe_handle.n > div {
+  top: 5px;
+}
 .oe_overlay .oe_handle.size {
+  z-index: 3;
   top: auto;
-  left: 2px;
-  width: 100%;
+  left: 50%;
   bottom: -6px;
+  margin-left: -50px;
 }
 .oe_overlay .oe_handle.size .oe_handle_button {
-  z-index: 1;
-  content: "Resize";
-  width: 64px;
+  position: relative;
+  z-index: 3;
   text-align: center;
-  margin-left: -32px;
+  margin-left: -52px;
   margin-top: -10px;
-  cursor: row-resize;
+  left: 0px;
 }
 .oe_overlay .oe_handle.size .oe_handle_button:hover {
   background: rgba(30, 30, 30, 0.8);
@@ -328,25 +343,40 @@
   -moz-box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 5px 3px rgba(255, 255, 255, 0.7);
 }
-.oe_overlay .oe_handle.size div {
-  border-style: dashed;
-  border-width: 0 0 1px 0;
-  border-color: rgba(0, 0, 0, 0.5);
-  position: relative;
-  top: 8px;
+.oe_overlay .oe_handle.size .size {
+  position: absolute;
+  width: 64px;
+  cursor: row-resize;
+  top: 9px;
+  margin-left: 52px;
+  padding: 0 5px;
+}
+.oe_overlay .oe_handle.size .auto_size {
+  position: absolute;
+  width: 100px;
+  top: 9px;
+  cursor: pointer;
+}
+.oe_overlay .oe_handle.readonly {
+  cursor: auto !important;
+}
+.oe_overlay .oe_handle.readonly:before, .oe_overlay .oe_handle.readonly.size {
+  display: none !important;
 }
 .oe_overlay .icon.btn {
   display: inline-block;
 }
 .oe_overlay .oe_overlay_options {
   position: absolute;
-  width: 100%;
+  left: 50% !important;
   text-align: center;
-  top: -11px;
+  top: -20px;
   z-index: 1002;
 }
+.oe_overlay .oe_overlay_options > .btn-group {
+  left: -50%;
+}
 .oe_overlay .oe_overlay_options .btn, .oe_overlay .oe_overlay_options a {
-  pointer-events: auto;
   cursor: pointer;
 }
 .oe_overlay .oe_overlay_options .dropdown {
@@ -505,7 +535,6 @@
   box-shadow: 0px 3px 17px rgba(99, 53, 150, 0.59);
 }
 .oe_snippet_editor .oe_snippet > * {
-  pointer-events: none;
   margin-top: 16px;
   line-height: 1em;
   zoom: 0.6;
@@ -607,9 +636,4 @@
   width: 16px;
   height: 16px;
   display: inline-block;
-}
-
-[data-snippet-id] {
-  min-height: 10px;
-  min-width: 10px;
 }

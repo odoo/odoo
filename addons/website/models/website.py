@@ -4,11 +4,13 @@ import inspect
 import itertools
 import logging
 import math
+import mimetypes
 import re
 import urlparse
 
 import werkzeug
 import werkzeug.exceptions
+import werkzeug.utils
 import werkzeug.wrappers
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -88,7 +90,7 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    slugname = slugify(name)
+    slugname = slugify(name or '')
     if not slugname:
         return str(id)
     return "%s-%d" % (slugname, id)
@@ -247,7 +249,7 @@ class website(osv.osv):
             pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
-            _url = "%spage/%s/" % (url, page) if page > 1 else url
+            _url = "%s/page/%s" % (url, page) if page > 1 else url
             if url_args:
                 _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
@@ -552,7 +554,7 @@ class ir_attachment(osv.osv):
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
-            if attach.type == 'url':
+            if attach.url:
                 result[attach.id] = attach.url
             else:
                 result[attach.id] = urlplus('/website/image', {
@@ -573,17 +575,38 @@ class ir_attachment(osv.osv):
 
     def _compute_checksum(self, attachment_dict):
         if attachment_dict.get('res_model') == 'ir.ui.view'\
-                and not attachment_dict.get('res_id')\
+                and not attachment_dict.get('res_id') and not attachment_dict.get('url')\
                 and attachment_dict.get('type', 'binary') == 'binary'\
                 and attachment_dict.get('datas'):
             return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
         return None
 
+    def _datas_big(self, cr, uid, ids, name, arg, context=None):
+        result = dict.fromkeys(ids, False)
+        if context and context.get('bin_size'):
+            return result
+
+        for record in self.browse(cr, uid, ids, context=context):
+            if not record.datas: continue
+            try:
+                result[record.id] = openerp.tools.image_resize_image_big(record.datas)
+            except IOError: # apparently the error PIL.Image.open raises
+                pass
+
+        return result
+
     _columns = {
         'datas_checksum': fields.function(_datas_checksum, size=40,
               string="Datas checksum", type='char', store=True, select=True),
-        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
+        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
+        'datas_big': fields.function (_datas_big, type='binary', store=True,
+                                      string="Resized file content"),
+        'mimetype': fields.char('Mime Type', readonly=True),
     }
+
+    def _add_mimetype_if_needed(self, values):
+        if values.get('datas_fname'):
+            values['mimetype'] = mimetypes.guess_type(values.get('datas_fname'))[0] or 'application/octet-stream'
 
     def create(self, cr, uid, values, context=None):
         chk = self._compute_checksum(values)
@@ -591,8 +614,40 @@ class ir_attachment(osv.osv):
             match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
             if match:
                 return match[0]
+        self._add_mimetype_if_needed(values)
         return super(ir_attachment, self).create(
             cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        self._add_mimetype_if_needed(values)
+        return super(ir_attachment, self).write(cr, uid, ids, values, context=context)
+
+    def try_remove(self, cr, uid, ids, context=None):
+        """ Removes a web-based image attachment if it is used by no view
+        (template)
+
+        Returns a dict mapping attachments which would not be removed (if any)
+        mapped to the views preventing their removal
+        """
+        Views = self.pool['ir.ui.view']
+        attachments_to_remove = []
+        # views blocking removal of the attachment
+        removal_blocked_by = {}
+
+        for attachment in self.browse(cr, uid, ids, context=context):
+            # in-document URLs are html-escaped, a straight search will not
+            # find them
+            url = werkzeug.utils.escape(attachment.website_url)
+            ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
+
+            if ids:
+                removal_blocked_by[attachment.id] = Views.read(
+                    cr, uid, ids, ['name'], context=context)
+            else:
+                attachments_to_remove.append(attachment.id)
+        if attachments_to_remove:
+            self.unlink(cr, uid, attachments_to_remove, context=context)
+        return removal_blocked_by
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -600,7 +655,7 @@ class res_partner(osv.osv):
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'center': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
             'size': "%sx%s" % (height, width),
             'zoom': zoom,
             'sensor': 'false',

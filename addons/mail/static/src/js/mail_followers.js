@@ -70,7 +70,17 @@ openerp_mail_followers = function(session, mail) {
                     self.do_unfollow();
             });
             // event: click on a subtype, that (un)subscribe for this subtype
-            this.$el.on('click', '.oe_subtype_list input', self.do_update_subscription);
+            this.$el.on('click', '.oe_subtype_list input', function(event) {
+                self.do_update_subscription(event);
+                var $list = self.$('.oe_subtype_list');
+                if(!$list.hasClass('open')) {
+                    $list.addClass('open');
+                }
+                if(self.$('.oe_subtype_list ul')[0].children.length < 1) {
+                    $list.removeClass('open');
+                }
+                event.stopPropagation();
+            });
             // event: click on 'invite' button, that opens the invite wizard
             this.$('.oe_invite').on('click', self.on_invite_follower);
             // event: click on 'edit_subtype(pencil)' button to edit subscription
@@ -244,8 +254,14 @@ openerp_mail_followers = function(session, mail) {
             if (user_pid) {
                 dialog = true;
             } else {
-                var subtype_list_ul = this.$('.oe_subtype_list').empty();
-                if (! this.message_is_follower) return;
+                var subtype_list_ul = this.$('.oe_subtype_list ul').empty();
+                if (! this.message_is_follower) {
+                    this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', true);
+                    return;
+                }
+                else {
+                    this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', false);
+                }
             }
             var id = this.view.datarecord.id;
             this.ds_model.call('message_get_subscription_data', [[id], user_pid, new session.web.CompoundContext(this.build_context(), {})])
@@ -259,9 +275,8 @@ openerp_mail_followers = function(session, mail) {
                 var $list = self.$dialog;
             }
             else {
-                var $list = this.$('.oe_subtype_list');
+                var $list = this.$('.oe_subtype_list ul');
             }
-            $list.empty().hide();
             var records = data[id].message_subtype_data;
             this.records_length = $.map(records, function(value, index) { return index; }).length;
             if (this.records_length > 1) { self.display_followers(); }
@@ -276,15 +291,13 @@ openerp_mail_followers = function(session, mail) {
                 }
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                $(session.web.qweb.render('mail.followers.subtype', {'record': record})).appendTo($list);
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record, 'dialog': dialog})).appendTo($list);
             });
-            if (_.size(records) > 1) {
-                $list.show();
-            }
         },
 
         do_follow: function () {
             var context = new session.web.CompoundContext(this.build_context(), {});
+            this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', false);
             this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context])
                 .then(this.proxy('read_value'));
 
@@ -294,11 +307,13 @@ openerp_mail_followers = function(session, mail) {
         },
         
         do_unfollow: function (user_pid) {
+            var self = this;
             if (confirm(_t("Warning! \nYou won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"))) {
                 _(this.$('.oe_msg_subtype_check')).each(function (record) {
                     $(record).attr('checked',false);
                 });
             var action_unsubscribe = 'message_unsubscribe_users';
+            this.$('.oe_subtype_list > .dropdown-toggle').attr('disabled', true);
             var follower_ids = [this.session.uid];
             if (user_pid) {
                 action_unsubscribe = 'message_unsubscribe';
@@ -332,6 +347,8 @@ openerp_mail_followers = function(session, mail) {
             if (!checklist.length) {
                 if (!this.do_unfollow(user_pid)) {
                     $(event.target).attr("checked", "checked");
+                } else {
+                      self.$('.oe_subtype_list ul').empty(); 
                 }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});

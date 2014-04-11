@@ -34,6 +34,11 @@ class AcquirerPaypal(osv.Model):
                 'paypal_rest_url': 'https://api.sandbox.paypal.com/v1/oauth2/token',
             }
 
+    def _get_providers(self, cr, uid, context=None):
+        providers = super(AcquirerPaypal, self)._get_providers(cr, uid, context=context)
+        providers.append(['paypal', 'Paypal'])
+        return providers
+
     _columns = {
         'paypal_email_account': fields.char('Paypal Email ID', required_if_provider='paypal'),
         'paypal_seller_account': fields.char(
@@ -70,6 +75,7 @@ class AcquirerPaypal(osv.Model):
                 else:
                     paypal_view = self.pool['ir.model.data'].get_object(cr, uid, 'payment_paypal', 'paypal_acquirer_button')
                     self.create(cr, uid, {
+                        'name': 'paypal',
                         'paypal_email_account': company_paypal_account,
                         'view_template_id': paypal_view.id,
                     }, context=context)

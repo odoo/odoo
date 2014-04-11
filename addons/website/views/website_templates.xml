@@ -80,8 +80,8 @@
 
             <script type="text/javascript" src="/website/static/src/js/website.js"></script>
             
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
             <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
@@ -113,7 +113,7 @@
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li><a href="/web" role="menuitem">Administration</a></li>
+                                            <li><a href="/web" role="menuitem">My Account</a></li>
                                             <li class="divider"/>
                                             <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
@@ -272,6 +272,8 @@
         <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
 
+        <script type="text/javascript" src="/website/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
+
         <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
         <script type="text/javascript" src="/website/static/src/js/website.menu.js" groups="base.group_website_designer"></script>
@@ -282,13 +284,14 @@
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
         <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+
+        <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
     </xpath>
 </template>
 
 <template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
     <xpath expr='//t[@name="layout_head"]' position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.tour.test.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.test.admin.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
     </xpath>
 </template>
 
@@ -362,7 +365,7 @@
                 </li>
                 <t t-raw="0"/>
                 <li t-if="publish_edit">
-                    <a t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s' % (object._name, object.id)"
+                    <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
                     title='Edit in backend'>Edit</a>
                 </li>
             </ul>
@@ -591,19 +594,68 @@
             <link rel='stylesheet' href='/website/static/src/css/website.css'/>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            <script>
+                $(document).ready(function() {
+                    var button = $('#reset_templates_button');
+                    button.click(function() {
+                        var dialog = $('#reset_template_confirmation').modal('show');
+                        var input = dialog.find('input[type="text"]').val('').focus();
+                        var dialog_form = dialog.find('form');
+                        dialog_form.submit(function() {
+                            if (input.val() == dialog.find('.confirm_word').text()) {
+                                dialog.modal('hide');
+                                button.prop('disabled', true).text('Working...');
+                                $('#reset_templates_form').trigger('submit');
+                            } else {
+                                input.val('').focus();
+                            }
+                            return false;
+                        });
+                        return false;
+                    });
+                });
+            </script>
         </head>
         <body>
-            <div id="wrapwrap">
-                    <div class="navbar navbar-default navbar-static-top">
-                        <div class="container">
-                            <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav pull-right">
-                                    <li><a href="/">Home</a></li>
-                                    <li><a href="javascript: window.history.back()">Back</a></li>
-                                </ul>
+            <div id="reset_template_confirmation" class="modal" tabindex="-1" role="dialog" aria-hidden="true" t-ignore="true">
+                <div class="modal-dialog">
+                    <form class="form-horizontal" role="form">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="modal-title">Reset templates</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group mb0">
+                                <label for="page-name" class="col-sm-9">
+                                    <p>The selected templates will be reset to their factory settings.</p>
+                                    <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
+                                </label>
+                                <div class="col-sm-3 mt16">
+                                    <input type="text" class="form-control" required="required" placeholder="yes"/>
+                                </div>
                             </div>
                         </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Confirm" class="btn btn-primary"/>
+                            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                        </div>
                     </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="wrapwrap">
+                <div class="navbar navbar-default navbar-static-top">
+                    <div class="container">
+                        <div class="collapse navbar-collapse navbar-top-collapse">
+                            <ul class="nav navbar-nav pull-right">
+                                <li><a href="/">Home</a></li>
+                                <li><a href="javascript: window.history.back()">Back</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 <div class="mb32">
                     <div class="oe_structure">
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
@@ -614,7 +666,7 @@
                             <h4>Template fallback</h4>
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
-                            <form action="/website/reset_templates" method="post">
+                            <form action="/website/reset_templates" method="post" id="reset_templates_form">
                                 <ul class="oe_template_fallback">
                                     <li t-foreach="views" t-as="view">
                                         <label>
@@ -624,7 +676,7 @@
                                     </li>
                                 </ul>
                                 <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
-                                <input type="submit" value="Reset selected templates"/>
+                                <button id="reset_templates_button">Reset selected templates</button>
                             </form>
                         </div>
                     </div>
@@ -756,24 +808,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <div class="oe_structure"></div>
         </div>
     </t>
-</template>
-
-<template id="contact">
-    <address t-ignore="true" class="mb0" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <div t-att-class="'name' not in fields and 'css_non_editable_mode_hidden'"><span itemprop="name" t-esc="name"/></div>
-        <div itemprop="address" itemscope="itemscope" itemtype="http://schema.org/PostalAddress">
-            <div t-if="address and 'address' in fields" class='css_editable_mode_hidden'>
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="streetAddress" t-raw="address.replace('\n', options.get('no_tag_br') and ', ' or ('&lt;br/&gt;%s' % ('' if options.get('no_marker') else '&amp;nbsp; &amp;nbsp; ')))"/>
-            </div>
-            <div t-if="city and 'city' in fields" class='css_editable_mode_hidden'>
-                <i t-if="not options.get('no_marker')" class='fa fa-map-marker'/> <span itemprop="addressLocality" t-raw="city"/>, <span itemprop="addressCountry" t-raw="country_id"/>
-            </div>
-            <div t-if="phone and 'phone' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-phone'/> <span itemprop="telephone" t-esc="phone"/></div>
-            <div t-if="mobile and 'mobile' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-mobile-phone'/> <span itemprop="telephone" t-esc="mobile"/></div>
-            <div t-if="fax and 'fax' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-file-text-o'/> <span itemprop="faxNumber" t-esc="fax"/></div>
-            <div t-if="email and 'email' in fields" class='css_editable_mode_hidden'><i t-if="not options.get('no_marker')" class='fa fa-envelope'/> <span itemprop="email" t-esc="email"/></div>
-        </div>
-    </address>
 </template>
 
      </data>

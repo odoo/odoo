@@ -16,6 +16,9 @@ class SaleOrder(osv.Model):
         ),
     }
 
+    def _get_errors(self, cr, uid, order, context=None):
+        return []
+
     def _get_website_data(self, cr, uid, order, context):
         return {
             'partner': order.partner_id.id,
