@@ -248,7 +248,7 @@
                 <table class="table table-hover table-condensed">
                      <thead>
                          <tr>
-                             <th>User Responce</th>
+                             <th>User Responses</th>
                              <th>Occurence</th>
                          </tr>
                      </thead>
@@ -274,10 +274,10 @@
                     </thead>
                     <tbody>
                         <tr class="hidden" t-foreach="number_result['input_lines']" t-as="user_input">
-                            <td><t t-esc="user_input_index+1"></t></td>
-                                <td>
+                            <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
+<!--                             <td><t t-esc="user_input_index+1"></t></td>
+ -->                                <td>
                                     <span t-field="user_input.value_number"></span><br/>
-                                    <small><p t-field="user_input.date_create" class="fa fa-calendar oe_date text-muted"></p></small>
                                 </td>
                         </tr>
                     </tbody>
