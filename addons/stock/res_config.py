@@ -73,18 +73,17 @@ This installs the module product_expiry."""),
         'group_stock_tracking_lot': fields.boolean("Use packages: pallets, boxes, ...",
             implied_group='stock.group_tracking_lot',
             help="""This allows you to manage products by using serial numbers. When you select a serial number on product moves, you can get the traceability of that product."""),
-        'group_stock_tracking_owner': fields.boolean("Manage owner on stock", 
-            implied_group='stock.group_tracking_owner', 
-            help="""This way you can receive products attributed to a certain owner. """), 
+        'group_stock_tracking_owner': fields.boolean("Manage owner on stock",
+            implied_group='stock.group_tracking_owner',
+            help="""This way you can receive products attributed to a certain owner. """),
         'module_stock_account': fields.boolean("Generate accounting entries per stock movement",
             help="""Allows to configure inventory valuations on products and product categories."""),
         'group_stock_multiple_locations': fields.boolean("Manage multiple locations and warehouses",
             implied_group='stock.group_locations',
-            help="""This allows to configure and use multiple stock locations and warehouses,
-                instead of having a single default one."""),
-        'group_stock_adv_location': fields.boolean("Active Push and Pull inventory flows",
+            help="""This will show you the locations and allows you to define multiple picking types and warehouses."""),
+        'group_stock_adv_location': fields.boolean("Manage advanced routes for your warehouse",
             implied_group='stock.group_adv_location',
-            help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows. """),
+            help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows through Routes."""),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
         'propagation_minimum_delta': fields.related('company_id', 'propagation_minimum_delta', type='integer', string="Minimum days to trigger a propagation of date change in pushed/pull flows."),
         'module_stock_dropshipping': fields.boolean("Manage dropshipping",
@@ -92,6 +91,11 @@ This installs the module product_expiry."""),
                  '-This installs the module stock_dropshipping.'),
         'module_stock_picking_wave': fields.boolean('Manage picking wave', help='Install the picking wave module which will help you grouping your pickings and processing them in batch'),
     }
+
+    def onchange_adv_location(self, cr, uid, ids, group_stock_adv_location, context=None):
+        if group_stock_adv_location:
+            return {'value': {'group_stock_multiple_locations': True}}
+        return {}
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)

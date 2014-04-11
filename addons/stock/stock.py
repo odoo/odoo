@@ -602,40 +602,6 @@ class stock_quant(osv.osv):
             raise osv.except_osv(_('Error'), _('You cannot move to a location of type view %s.') % (location.name))
         return True
 
-    def _check_open_inventory_location(self, cr, uid, ids, context=None):
-        """ Check if there is an inventory running for the locations implied
-        """
-        inventory_obj = self.pool.get('stock.inventory')
-        for quant in self.browse(cr, uid, ids, context=context):
-            loc = quant.location_id
-            parent_location_ids = []
-            while loc:
-                parent_location_ids.append(loc.id)
-                loc = loc.location_id
-            domain = [('state', '=', 'confirm'), ('location_id', 'in', parent_location_ids), '|', ('product_id', '=', False), ('product_id', '=', quant.product_id.id)]
-            domain += ['|', ('lot_id', '=', False), ('lot_id', '=', quant.lot_id.id)]
-            domain += ['|', ('partner_id', '=', False), ('partner_id', '=', quant.owner_id.id)]
-            domain += ['|', ('package_id', '=', False), ('package_id', '=', quant.package_id.id)]
-            inventory_ids = inventory_obj.search(cr, uid, domain, context=context)
-            if inventory_ids:
-                inventory = inventory_obj.browse(cr, uid, inventory_ids[0], context=context)
-                raise osv.except_osv(_('Error! Location on inventory'),
-                                 _('There exists an inventory conflicting with your operation :\n%s') % inventory.name)
-        return True
-
-    _constraints = [
-        (_check_open_inventory_location,
-            "A Physical Inventory is being conducted at this location", ['location_id']),
-    ]
-
-    def write(self, cr, uid, ids, vals, context=None):
-        #check the inventory constraint before the write
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if 'owner_id' in vals or 'lot_id' in vals or 'package_id' in vals or 'location_id' in vals or 'product_id' in vals:
-            self._check_open_inventory_location(cr, uid, ids, context=context)
-        return super(stock_quant, self).write(cr, uid, ids, vals, context=context)
-
 
 #----------------------------------------------------------
 # Stock Picking
@@ -1651,7 +1617,6 @@ class stock_move(osv.osv):
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True, states={'done': [('readonly', True)]}, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True, states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
 
-        # FP Note: should we remove this?
         'partner_id': fields.many2one('res.partner', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
 
 
@@ -1680,7 +1645,8 @@ class stock_move(osv.osv):
         'split_from': fields.many2one('stock.move', string="Move Split From", help="Technical field used to track the origin of a split move, which can be useful in case of debug"),
         'backorder_id': fields.related('picking_id', 'backorder_id', type='many2one', relation="stock.picking", string="Back Order of", select=True),
         'origin': fields.char("Source"),
-        'procure_method': fields.selection([('make_to_stock', 'Make to Stock'), ('make_to_order', 'Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
+        'procure_method': fields.selection([('make_to_stock', 'Default: Take From Stock'), ('make_to_order', 'Advanced: Apply Procurement Rules')], 'Supply Method', required=True, 
+                                           help="""By default, the system will take from the stock in the source location and passively wait for availability. The other possibility allows you to directly create a procurement on the source location (and thus ignore its current stock) to gather products. If we want to chain moves and have this one to wait for the previous, this second option should be chosen."""),
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id', 'scrap_location', type='boolean', relation='stock.location', string='Scrapped', readonly=True),
@@ -1811,14 +1777,21 @@ class stock_move(osv.osv):
             #   to receive goods without triggering the push rules again (which would duplicate chained operations)
             if not move.move_dest_id and not move.origin_returned_move_id:
                 domain = [('location_from_id', '=', move.location_dest_id.id)]
-                if move.warehouse_id:
-                    domain += ['|', ('warehouse_id', '=', move.warehouse_id.id), ('warehouse_id', '=', False)]
                 #priority goes to the route defined on the product and product category
                 route_ids = [x.id for x in move.product_id.route_ids + move.product_id.categ_id.total_route_ids]
                 rules = push_obj.search(cr, uid, domain + [('route_id', 'in', route_ids)], order='route_sequence, sequence', context=context)
                 if not rules:
-                    #but if there's no rule matching, we try without filtering on routes
-                    rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
+                    #then we search on the warehouse if a rule can apply
+                    wh_route_ids = []
+                    if move.warehouse_id:
+                        wh_route_ids = [x.id for x in move.warehouse_id.route_ids]
+                    elif move.picking_type_id and move.picking_type_id.warehouse_id:
+                        wh_route_ids = [x.id for x in move.picking_type_id.warehouse_id.route_ids]
+                    if wh_route_ids:
+                        rules = push_obj.search(cr, uid, domain + [('route_id', 'in', wh_route_ids)], order='route_sequence, sequence', context=context)
+                    if not rules:
+                        #if no specialized push rule has been found yet, we try to find a general one
+                        rules = push_obj.search(cr, uid, domain, order='route_sequence, sequence', context=context)
                 if rules:
                     rule = push_obj.browse(cr, uid, rules[0], context=context)
                     push_obj._apply(cr, uid, rule, move, context=context)
@@ -2263,8 +2236,7 @@ class stock_move(osv.osv):
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
         # Apply on picking
-        done_date = context.get('force_date', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        self.write(cr, uid, ids, {'state': 'done', 'date': done_date}, context=context)
+        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
         #check picking state to set the date_done is needed
         done_picking = []
@@ -2426,12 +2398,19 @@ class stock_inventory(osv.osv):
             res[inv.id] = sum([x.product_qty for x in inv.line_ids])
         return res
 
+    INVENTORY_STATE_SELECTION = [
+        ('draft', 'Draft'),
+        ('cancel', 'Cancelled'),
+        ('confirm', 'In Progress'),
+        ('done', 'Validated'),
+    ]
+
     _columns = {
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Inventory Name."),
-        'date': fields.datetime('Inventory Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="The date that will be used for the validation date of the stock move related to this inventory (and for the valuation accounting entries, if any)"),
+        'date': fields.datetime('Inventory Date', required=True, readonly=True, help="The date that will be used for the stock level check of the products and the validation of the stock move related to this inventory."),
         'line_ids': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=False, states={'done': [('readonly', True)]}, help="Inventory Lines."),
         'move_ids': fields.one2many('stock.move', 'inventory_id', 'Created Moves', help="Inventory Moves.", states={'done': [('readonly', True)]}),
-        'state': fields.selection([('draft', 'Draft'), ('cancel', 'Cancelled'), ('confirm', 'In Progress'), ('done', 'Validated')], 'Status', readonly=True, select=True),
+        'state': fields.selection(INVENTORY_STATE_SELECTION, 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'location_id': fields.many2one('stock.location', 'Location', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, states={'draft': [('readonly', False)]}, help="Specify Product to focus your inventory on a particular Product."),
@@ -2482,24 +2461,22 @@ class stock_inventory(osv.osv):
         """ Finish the inventory
         @return: True
         """
-        if context is None:
-            context = {}
-        move_obj = self.pool.get('stock.move')
         for inv in self.browse(cr, uid, ids, context=context):
             for inventory_line in inv.line_ids:
                 if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.th_qty:
                     raise osv.except_osv(_('Warning'), _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
-            if not inv.move_ids:
-                self.action_check(cr, uid, [inv.id], context=context)
+            self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
             self.write(cr, uid, [inv.id], {'state': 'done'}, context=context)
-            #The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
-            #as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
-            #as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
-            ctx = context.copy()
-            ctx['force_date'] = inv.date
-            move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=ctx)
+            self.post_inventory(cr, uid, inv, context=context)
         return True
+
+    def post_inventory(self, cr, uid, inv, context=None):
+        #The inventory is posted as a single step which means quants cannot be moved from an internal location to another using an inventory
+        #as they will be moved to inventory loss, and other quants will be created to the encoded quant location. This is a normal behavior
+        #as quants cannot be reuse from inventory location (users can still manually move the products before/after the inventory if they want).
+        move_obj = self.pool.get('stock.move')
+        move_obj.action_done(cr, uid, [x.id for x in inv.move_ids], context=context)
 
     def _create_stock_move(self, cr, uid, inventory, todo_line, context=None):
         stock_move_obj = self.pool.get('stock.move')
@@ -2539,15 +2516,9 @@ class stock_inventory(osv.osv):
             #first remove the existing stock moves linked to this inventory
             move_ids = [move.id for move in inventory.move_ids]
             stock_move_obj.unlink(cr, uid, move_ids, context=context)
-            #compute what should be in the inventory lines
-            theorical_lines = self._get_inventory_lines(cr, uid, inventory, context=context)
             for line in inventory.line_ids:
-                #compare the inventory lines to the theorical ones and store the diff in theorical_lines
-                inventory_line_obj._resolve_inventory_line(cr, uid, line, theorical_lines, context=context)
-            #each theorical_lines where product_qty is not 0 is a difference for which we need to create a stock move
-            for todo_line in theorical_lines:
-                if todo_line['product_qty'] != 0:
-                    self._create_stock_move(cr, uid, inventory, todo_line, context=context)
+                #compare the checked quantities on inventory lines to the theorical one
+                inventory_line_obj._resolve_inventory_line(cr, uid, line, context=context)
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         """ Cancels the stock move and change inventory state to draft.
@@ -2561,24 +2532,9 @@ class stock_inventory(osv.osv):
     def action_cancel_inventory(self, cr, uid, ids, context=None):
         self.action_cancel_draft(cr, uid, ids, context=context)
 
-    def check_inventory_date(self, cr, uid, inventory, context=None):
-        domain = ['|', ('location_id', 'child_of', [inventory.location_id.id]), ('location_dest_id', 'child_of', [inventory.location_id.id]), ('date', '>', inventory.date), '|', ('state', 'in', ['assigned', 'done']), '&', ('state', 'in', ['confirmed', 'waiting']), ('partially_available', '=', True)]
-        if inventory.product_id:
-            domain += [('product_id', '=', inventory.product_id.id)]
-        return self.pool.get('stock.move').search(cr, uid, domain, context=context)
-
     def prepare_inventory(self, cr, uid, ids, context=None):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         for inventory in self.browse(cr, uid, ids, context=context):
-            #check inventory start date is allowed
-            if inventory.date > time.strftime(DEFAULT_SERVER_DATETIME_FORMAT):
-                raise osv.except_osv(_('Error!'), _('It\'s impossible to confirm an inventory in the future. Please change the inventory date to proceed further.'))
-            conflicting_move_ids = self.check_inventory_date(cr, uid, inventory, context=context)
-            error_message = ""
-            for move in self.pool.get('stock.move').browse(cr, uid, conflicting_move_ids, context=context):
-                error_message += _("\n * Date: %s - %s %s - From: %s To: %s State: %s") % (move.date, move.product_uom_qty, move.product_uom.name, move.location_id.name, move.location_dest_id.name, move.state)
-            if conflicting_move_ids:
-                raise osv.except_osv(_('Error!'), _('Stock moves exist made/scheduled after the inventory date which are conflicting with its settings. Please unreserve them or change the inventory date to proceed further.\n\n%s') % (error_message))
             #clean the existing inventory lines before redoing an inventory proposal
             line_ids = [line.id for line in inventory.line_ids]
             inventory_line_obj.unlink(cr, uid, line_ids, context=context)
@@ -2586,7 +2542,7 @@ class stock_inventory(osv.osv):
             vals = self._get_inventory_lines(cr, uid, inventory, context=context)
             for product_line in vals:
                 inventory_line_obj.create(cr, uid, product_line, context=context)
-        return self.write(cr, uid, ids, {'state': 'confirm'})
+        return self.write(cr, uid, ids, {'state': 'confirm', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     def _get_inventory_lines(self, cr, uid, inventory, context=None):
         location_obj = self.pool.get('stock.location')
@@ -2606,6 +2562,7 @@ class stock_inventory(osv.osv):
         if inventory.package_id:
             domain += ' and package_id = %s'
             args += (inventory.package_id.id,)
+
         cr.execute('''
            SELECT product_id, sum(qty) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
            FROM stock_quant WHERE''' + domain + '''
@@ -2625,10 +2582,10 @@ class stock_inventory(osv.osv):
             vals.append(product_line)
         return vals
 
+
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
-    _rec_name = "inventory_id"
     _order = "inventory_id, location_name, product_code, product_name, prodlot_name"
 
     def _get_product_name_change(self, cr, uid, ids, context=None):
@@ -2670,53 +2627,69 @@ class stock_inventory_line(osv.osv):
         'product_qty': 1,
     }
 
-    def _resolve_inventory_line(self, cr, uid, inventory_line, theorical_lines, context=None):
-        #TODO : package_id management !
-        found = False
-        uom_obj = self.pool.get('product.uom')
-        for th_line in theorical_lines:
-            #We try to match the inventory line with a theorical line with same product, lot, location and owner
-            if th_line['location_id'] == inventory_line.location_id.id and th_line['product_id'] == inventory_line.product_id.id and th_line['prod_lot_id'] == inventory_line.prod_lot_id.id and th_line['partner_id'] == inventory_line.partner_id.id:
-                uom_reference = inventory_line.product_id.uom_id
-                real_qty = uom_obj._compute_qty_obj(cr, uid, inventory_line.product_uom_id, inventory_line.product_qty, uom_reference)
-                th_line['product_qty'] -= real_qty
-                found = True
-                break
-        #if it was still not found, we add it to the theorical lines so that it will create a stock move for it
-        if not found:
-            vals = {
-                'inventory_id': inventory_line.inventory_id.id,
-                'location_id': inventory_line.location_id.id,
-                'product_id': inventory_line.product_id.id,
-                'product_uom_id': inventory_line.product_id.uom_id.id,
-                'product_qty': -inventory_line.product_qty,
-                'prod_lot_id': inventory_line.prod_lot_id.id,
-                'partner_id': inventory_line.partner_id.id,
-            }
-            theorical_lines.append(vals)
+    def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
+        stock_move_obj = self.pool.get('stock.move')
+        diff = inventory_line.th_qty - inventory_line.product_qty
+        if not diff:
+            return
+        #each theorical_lines where difference between theoretical and checked quantities is not 0 is a line for which we need to create a stock move
+        vals = {
+            'name': _('INV:') + (inventory_line.inventory_id.name or ''),
+            'product_id': inventory_line.product_id.id,
+            'product_uom': inventory_line.product_uom_id.id,
+            'date': inventory_line.inventory_id.date,
+            'company_id': inventory_line.inventory_id.company_id.id,
+            'inventory_id': inventory_line.inventory_id.id,
+            'state': 'confirmed',
+            'restrict_lot_id': inventory_line.prod_lot_id.id,
+            'restrict_partner_id': inventory_line.partner_id.id,
+         }
+        inventory_location_id = inventory_line.product_id.property_stock_inventory.id
+        if diff < 0:
+            #found more than expected
+            vals['location_id'] = inventory_location_id
+            vals['location_dest_id'] = inventory_line.location_id.id
+            vals['product_uom_qty'] = -diff
+        else:
+            #found less than expected
+            vals['location_id'] = inventory_line.location_id.id
+            vals['location_dest_id'] = inventory_location_id
+            vals['product_uom_qty'] = diff
+        return stock_move_obj.create(cr, uid, vals, context=context)
 
-    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, owner_id=False, lot_id=False, package_id=False, context=None):
-        """ Changes UoM and name if product_id changes.
+    def restrict_change(self, cr, uid, ids, th_qty, context=None):
+        if ids and th_qty:
+            #if the user try to modify a line prepared by openerp, reject the change and display an error message explaining how he should do
+            old_value = self.browse(cr, uid, ids[0], context=context)
+            return {
+                'value': {
+                    'product_id': old_value.product_id.id,
+                    'product_uom_id': old_value.product_uom_id.id,
+                    'location_id': old_value.location_id.id,
+                    'prod_lot_id': old_value.prod_lot_id.id,
+                    'package_id': old_value.package_id.id,
+                    'partner_id': old_value.partner_id.id,
+                    },
+                'warning': {
+                    'title': _('Error'),
+                    'message': _('You can only change the checked quantity of an existing inventory line. If you want modify a data, please set the checked quantity to 0 and create a new inventory line.')
+                }
+            }
+        return {}
+
+    def on_change_product_id(self, cr, uid, ids, product, uom, th_qty, context=None):
+        """ Changes UoM
         @param location_id: Location id
         @param product: Changed product_id
         @param uom: UoM product
         @return:  Dictionary of changed values
         """
-        context = context or {}
+        if ids and th_qty:
+            return self.restrict_change(cr, uid, ids, th_qty, context=context)
         if not product:
-            return {'value': {'product_qty': 0.0, 'product_uom_id': False}}
-        uom_obj = self.pool.get('product.uom')
-        ctx = context.copy()
-        ctx['location'] = location_id
-        ctx['lot_id'] = lot_id
-        ctx['owner_id'] = owner_id
-        ctx['package_id'] = package_id
-        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=ctx)
-        th_qty = obj_product.qty_available
-        if uom and uom != obj_product.uom_id.id:
-            uom_record = uom_obj.browse(cr, uid, uom, context=context)
-            th_qty = uom_obj._compute_qty_obj(cr, uid, obj_product.uom_id, th_qty, uom_record)
-        return {'value': {'th_qty': th_qty, 'product_uom_id': uom or obj_product.uom_id.id}}
+            return {'value': {'product_uom_id': False}}
+        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        return {'value': {'product_uom_id': uom or obj_product.uom_id.id}}
 
 
 #----------------------------------------------------------
@@ -2777,16 +2750,6 @@ class stock_warehouse(osv.osv):
             inter_wh_loc = False
         return inter_wh_loc
 
-    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
-        return self.pool.get('product.product').search(cr, uid, [], context=context)
-
-    def _assign_route_on_products(self, cr, uid, warehouse, inter_wh_route_id, context=None):
-        product_ids = self._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        self.pool.get('product.product').write(cr, uid, product_ids, {'route_ids': [(4, inter_wh_route_id)]}, context=context)
-
-    def _unassign_route_on_products(self, cr, uid, warehouse, inter_wh_route_id, context=None):
-        product_ids = self._get_all_products_to_resupply(cr, uid, warehouse, context=context)
-        self.pool.get('product.product').write(cr, uid, product_ids, {'route_ids': [(3, inter_wh_route_id)]}, context=context)
 
     def _get_inter_wh_route(self, cr, uid, warehouse, wh, context=None):
         return {
@@ -2819,11 +2782,9 @@ class stock_warehouse(osv.osv):
                 pull_rules_list = self._get_supply_pull_rules(cr, uid, warehouse, values, inter_wh_route_id, context=context)
                 for pull_rule in pull_rules_list:
                     pull_obj.create(cr, uid, vals=pull_rule, context=context)
-                #if the warehouse is also set as default resupply method, assign this route automatically to all product
+                #if the warehouse is also set as default resupply method, assign this route automatically to the warehouse
                 if default_resupply_wh and default_resupply_wh.id == wh.id:
-                    self._assign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
-                #finally, save the route on the warehouse
-                self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
+                    self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]}, context=context)
 
     def _default_stock_id(self, cr, uid, context=None):
         #lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
@@ -3007,6 +2968,8 @@ class stock_warehouse(osv.osv):
         wh_route_ids.append((4, crossdock_route_id))
         dummy, pull_rules_list = self._get_push_pull_rules(cr, uid, warehouse, warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', values, crossdock_route_id, context=context)
         for pull_rule in pull_rules_list:
+            # Fixed cross-dock is logically mto
+            pull_rule['procure_method'] = 'make_to_order'
             pull_obj.create(cr, uid, vals=pull_rule, context=context)
 
         #create route selectable on the product to resupply the warehouse from another one
@@ -3309,15 +3272,15 @@ class stock_warehouse(osv.osv):
             if vals.get('default_resupply_wh_id') == warehouse.id:
                 raise osv.except_osv(_('Warning'),_('The default resupply warehouse should be different than the warehouse itself!'))
             if warehouse.default_resupply_wh_id:
-                #remove the existing resupplying route on all products
+                #remove the existing resupplying route on the warehouse
                 to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', warehouse.default_resupply_wh_id.id)], context=context)
                 for inter_wh_route_id in to_remove_route_ids:
-                    self._unassign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
+                    self.write(cr, uid, [warehouse.id], {'route_ids': [(3, inter_wh_route_id)]})
             if vals.get('default_resupply_wh_id'):
                 #assign the new resupplying route on all products
                 to_assign_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', '=', vals.get('default_resupply_wh_id'))], context=context)
                 for inter_wh_route_id in to_assign_route_ids:
-                    self._assign_route_on_products(cr, uid, warehouse, inter_wh_route_id, context=context)
+                    self.write(cr, uid, [warehouse.id], {'route_ids': [(4, inter_wh_route_id)]})
 
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
@@ -3326,7 +3289,9 @@ class stock_warehouse(osv.osv):
         return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
+        route_obj = self.pool.get("stock.location.route")
         all_routes = [route.id for route in warehouse.route_ids]
+        all_routes += route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id)], context=context)
         all_routes += [warehouse.mto_pull_id.route_id.id]
         return all_routes
 
@@ -3522,7 +3487,8 @@ class stock_package(osv.osv):
         'complete_name': fields.function(_complete_name, type='char', string="Package Name",),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
-        'packaging_id': fields.many2one('product.packaging', 'Type of Packaging'),
+        'packaging_id': fields.many2one('product.packaging', 'Packaging', help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense."),
+        'ul_id': fields.many2one('product.ul', 'Logistic Unit'),
         'location_id': fields.function(_get_package_info, type='many2one', relation='stock.location', string='Location', multi="package",
                                     store={
                                        'stock.quant': (_get_packages, ['location_id'], 10),
@@ -3922,7 +3888,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'logic': fields.selection([('max', 'Order to Max'), ('price', 'Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '!=', 'service')]),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\

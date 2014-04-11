@@ -214,10 +214,14 @@ class product_uom(osv.osv):
 
 class product_ul(osv.osv):
     _name = "product.ul"
-    _description = "Shipping Unit"
+    _description = "Logistic Unit"
     _columns = {
         'name' : fields.char('Name', select=True, required=True, translate=True),
         'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
+        'height': fields.float('Height', help='The height of the package'),
+        'width': fields.float('Width', help='The width of the package'),
+        'length': fields.float('Length', help='The length of the package'),
+        'weight': fields.float('Empty Package Weight'),
     }
 
 
@@ -724,7 +728,7 @@ class product_product(osv.osv):
         'is_only_child': fields.function(
             _is_only_child, type='boolean', string='Sole child of the parent template'),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
-        'packaging': fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
+        'packaging': fields.one2many('product.packaging', 'product_id', 'Packaging', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage amount on sale price for the variant. eg. 10 price margin, 1000 * 1.1 = 1100."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -937,8 +941,9 @@ class product_packaging(osv.osv):
         'name' : fields.text('Description'),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
-        'ul' : fields.many2one('product.ul', 'Type of Package', required=True),
+        'ul' : fields.many2one('product.ul', 'Package Logistic Unit', required=True),
         'ul_qty' : fields.integer('Package by layer', help='The number of packages by layer'),
+        'ul_container': fields.many2one('product.ul', 'Pallet Logistic Unit'),
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),
@@ -946,12 +951,7 @@ class product_packaging(osv.osv):
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
-        'weight_ul': fields.float('Empty Package Weight'),
-        'height': fields.float('Height', help='The height of the package'),
-        'width': fields.float('Width', help='The width of the package'),
-        'length': fields.float('Length', help='The length of the package'),
     }
-
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for pack in self.browse(cr, uid, ids, context=context):

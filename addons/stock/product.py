@@ -88,7 +88,7 @@ class product_product(osv.osv):
                 wids = warehouse_obj.search(cr, uid, [], context=context)
 
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
-                location_ids.append(w.lot_stock_id.id)
+                location_ids.append(w.view_location_id.id)
 
         operator = context.get('compute_child',True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
@@ -136,7 +136,6 @@ class product_product(osv.osv):
 
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
-
         res = {}
         for id in ids:
             res[id] = {

@@ -127,17 +127,23 @@
                             <button name="set_checked_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
                             <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}">
                                 <tree string="Inventory Details" editable="bottom" colors="blue: product_qty != th_qty; red: th_qty &lt; 0">
-                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('type','=','product')]"/>
-                                    <field name="product_uom_id" groups="product.group_uom" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)"/>
-                                    <field name="prod_lot_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
-                                    <field name="package_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_lot"/>
-                                    <field name="partner_id" on_change="on_change_product_id(location_id,product_id,product_uom_id,partner_id,prod_lot_id,package_id)" groups="stock.group_tracking_owner"/>
+                                    <field context="{'location':location_id, 'uom':product_uom_id, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(product_id,product_uom_id,th_qty,context)" domain="[('type','=','product')]"/>
+                                    <field name="product_uom_id" groups="product.group_uom" on_change="restrict_change(th_qty)"/>
+                                    <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations" on_change="restrict_change(th_qty)"/>
+                                    <field name="prod_lot_id" on_change="restrict_change(th_qty)" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                                    <field name="package_id" on_change="restrict_change(th_qty)" groups="stock.group_tracking_lot"/>
+                                    <field name="partner_id" on_change="restrict_change(th_qty)" groups="stock.group_tracking_owner"/>
                                     <field name="th_qty" readonly="1"/>
                                     <field name="product_qty" string="Real Quantity"/>
                                     <field name="state" invisible="True"/>
                                 </tree>
                             </field>
+                            <p></p>
+                            <h3 class="oe_grey">Notes</h3>
+                            <ul class="oe_grey"><li>Inventory adjustments will be made by comparing the theoretical and the checked quantities.</li>
+                            <li>You can delete lines to ignore some products.</li>
+                            <li>If a product is not at the right place, set the checked quantity to 0 and create a new line with correct location.</li>
+                            </ul>
                         </page>
                         <page string="Inventory Adjustments" attrs="{'invisible': [('state', '!=', 'done')]}">
                             <field name="move_ids">
@@ -1109,12 +1115,12 @@
                             <field name="location_id" groups="stock.group_locations"/>
                             <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
                             <field name="create_date" groups="base.group_no_one"/>
-                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
+                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                             <field name="group_id"/>
                         </group>
                         <group name="destination_grp" string="Destination" groups="stock.group_locations">
                             <field name="location_dest_id" />
-                            <field name="partner_id" context="{'contact_display':'partner'}" />                            
+                            <field name="partner_id" context="{'contact_display':'partner'}" />
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
                             <field name="reserved_quant_ids"/>
@@ -1140,7 +1146,7 @@
                 <group>
                     <group>
                         <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
-                        <field name="procure_method"/>
+                        <field name="procure_method" groups="stock.group_adv_location"/>
                         <field name="picking_type_id" invisible="1"/>
                         <label for="product_uom_qty"/>
                         <div>
@@ -1679,7 +1685,7 @@
                 </xpath>
                 <xpath expr="//group[@name='propagation_group']" position="before">
                     <group attrs="{'invisible': [('action', '!=', 'move')]}" string="Moving Options">
-                        <field name="procure_method"/>
+                        <field name="procure_method" groups="stock.group_adv_location"/>
                         <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"/>
                         <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}"/>
                         <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
@@ -1716,8 +1722,8 @@
                        <filter string='Owner' context="{'group_by' : 'owner_id'}" groups="stock.group_tracking_owner"/>
                        <filter string='Lot' context="{'group_by' : 'lot_id'}" groups="stock.group_production_lot"/>
                        <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
-                       <filter string='Packaging Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Package' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
                        <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
@@ -1933,7 +1939,8 @@
                         </div>
                         <group>
                             <group>
-                            <field name="packaging_id"/>
+                               <field name="ul_id"/>
+                               <field name="packaging_id"/>
                                <field name='company_id' groups="base.group_multi_company"/>
                                <field name='owner_id' groups="stock.group_tracking_owner"/>
                             </group>
@@ -1941,7 +1948,6 @@
                             <field name="location_id"/>
                             <field name="parent_id"/>
                             </group>
-                            
                         </group>
                         <notebook>
                             <page string="Content">
@@ -1962,6 +1968,7 @@
                                 <field name="children_ids">
                                     <tree string="Contained Packages">
                                         <field name="complete_name"/>
+                                        <field name="ul_id"/>
                                         <field name="packaging_id"/>
                                         <field name="location_id"/>
                                     </tree>
@@ -1969,7 +1976,6 @@
                             </page>
                         </notebook> 
                     </sheet>
-
                 </form>
             </field>
         </record>
@@ -1982,6 +1988,7 @@
             <field name="arch" type="xml">
                 <tree string="Package">
                     <field name="complete_name"/>
+                    <field name="ul_id"/>
                     <field name="packaging_id"/>
                     <field name="location_id"/>
                     <field name="company_id"/>
@@ -1991,11 +1998,12 @@
         <record id="quant_package_search_view" model="ir.ui.view">
             <field name="name">stock.quant.package.search</field>
             <field name="model">stock.quant.package</field>
-            <field eval="10" name="priority"/>            
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Package">
                     <field name="name" string="Package Name"/>
                     <field name="location_id"/>
+                    <field name="ul_id"/>
                     <field name="packaging_id"/>
                     <group  expand='0' string='Group by...'>
                        <filter string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
