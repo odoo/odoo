@@ -361,7 +361,7 @@
         },
         clean_for_save: function () {
             var self = this;
-            $(website.snippet.globalSelector).each(function () {
+            this.dom_filter(website.snippet.globalSelector).each(function () {
                 var $snippet = $(this);
                 self.make_active($snippet);
                 self.make_active(false);
