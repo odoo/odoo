@@ -503,7 +503,7 @@ class WebsiteForum(http.Controller):
     def badges(self, forum, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Badge = request.registry['gamification.badge']
-        badge_ids = Badge.search(cr, uid, [('challenge_id.category', '=', 'forum')], context=context)
+        badge_ids = Badge.search(cr, SUPERUSER_ID, [('challenge_ids.category', '=', 'forum')], context=context)
         badges = Badge.browse(cr, uid, badge_ids, context=context)
         values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
