@@ -44,6 +44,7 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
+        'block_reason': fields.boolean('Block Reason Required',help='If true, Give the reason for blocking this task'),
     }
 
     def _get_default_project_ids(self, cr, uid, ctx={}):
