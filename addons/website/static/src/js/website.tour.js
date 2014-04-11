@@ -316,15 +316,15 @@ var T = website.Tour = {
         state.step = state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
     },
-    error: function (message) {
+    error: function (step, message) {
         var state = T.getState();
         message += '\n tour: ' + state.id
-            + '\n step: ' + state.step_id + ": '" + (state.step._title || state.step.title) + "'"
+            + '\n step: ' + step.id + ": '" + (step._title || step.title) + "'"
             + '\n href: ' + window.location.href
             + '\n referrer: ' + document.referrer
-            + '\n element: ' + Boolean(!state.step.element || ($(state.step.element).size() && $(state.step.element).is(":visible") && !$(state.step.element).is(":hidden")))
-            + '\n waitNot: ' + Boolean(!state.step.waitNot || !$(state.step.waitNot).size())
-            + '\n waitFor: ' + Boolean(!state.step.waitFor || $(state.step.waitFor).size())
+            + '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
+            + '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
+            + '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
             + "\n localStorage: " + JSON.stringify(localStorage)
             + '\n\n' + $("body").html();
         T.reset();
@@ -400,7 +400,7 @@ var T = website.Tour = {
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
                 T.timer = setTimeout(checkNext, T.defaultDelay);
             } else {
-                T.error("Can't reach the next step");
+                T.error(next, "Can't reach the next step");
             }
         }
         checkNext();
