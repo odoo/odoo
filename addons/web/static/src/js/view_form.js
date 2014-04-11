@@ -586,13 +586,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this._internal_set_values(result.value, processed);
         }
         if (!_.isEmpty(result.warning)) {
-            instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+            new instance.web.Dialog(this, {
+                size: 'medium',
                 title:result.warning.title,
-                modal: true,
                 buttons: [
-                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                    {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
                 ]
-            });
+            }, QWeb.render("CrashManager.warning", result.warning)).open();
         }
 
         return $.Deferred().resolve();
@@ -1080,7 +1080,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 };
             })
             .value();
-
         var d = new instance.web.Dialog(this, {
             title: _t("Set Default"),
             args: {
@@ -1956,26 +1955,23 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = instance.web.dialog($('<div/>').text(self.node.attrs.confirm), {
+                var dialog = instance.web.Dialog(this, {
                     title: _t('Confirm'),
-                    modal: true,
                     buttons: [
                         {text: _t("Cancel"), click: function() {
-                                $(this).dialog("close");
+                                this.parents('.modal').modal('hide');
                             }
                         },
                         {text: _t("Ok"), click: function() {
                                 var self2 = this;
                                 self.on_confirmed().always(function() {
-                                    $(self2).dialog("close");
+                                    self2.parents('.modal').modal('hide');
                                 });
                             }
                         }
                     ],
-                    beforeClose: function() {
-                        def.resolve();
-                    },
-                });
+                }, $('<div/>').text(self.node.attrs.confirm)).open();
+                dialog.on("closing", null, function() {def.resolve();});
                 return def.promise();
             } else {
                 return self.on_confirmed();
@@ -3234,7 +3230,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
     init: function(parent) {
         this._super(parent, {
             title: _.str.sprintf(_t("Add %s"), parent.string),
-            width: 312,
+            size: 'medium',
         });
     },
     start: function() {
@@ -3302,7 +3298,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             delete this.$drop_down;
         }
         if (this.$input) {
-            this.$input.closest(".ui-dialog .ui-dialog-content").off('scroll');
+            this.$input.closest(".modal .modal-content").off('scroll');
             this.$input.off('keyup blur autocompleteclose autocompleteopen ' +
                             'focus focusout change keydown');
             delete this.$input;
@@ -3395,7 +3391,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.$input.autocomplete("close");
             }
         }, 50);
-        this.$input.closest(".ui-dialog .ui-dialog-content").on('scroll', this, close_autocomplete);
+        this.$input.closest(".modal .modal-content").on('scroll', this, close_autocomplete);
 
         self.ed_def = $.Deferred();
         self.uned_def = $.Deferred();
@@ -4921,13 +4917,12 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         var self = this;
         this.renderElement();
         var dialog = new instance.web.Dialog(this, {
-            min_width: '800px',
             dialogClass: 'oe_act_window',
-            close: function() {
-                self.check_exit(true);
-            },
             title: this.options.title || "",
         }, this.$el).open();
+        dialog.on('closing', this, function (e){
+            self.check_exit(true);
+        });
         this.$buttonpane = dialog.$buttons;
         this.start();
     },
@@ -4994,8 +4989,8 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
     },
     destroy: function () {
         this.trigger('closed');
-        if (this.$el.is(":data(dialog)")) {
-            this.$el.dialog('close');
+        if (this.$el.is(":data(bs.modal)")) {
+            this.$el.parents('.modal').modal('hide');
         }
         this._super();
     },
