@@ -12,7 +12,6 @@ from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
 from openerp.addons.website.models.website import slug
 from openerp.tools import html2plaintext
-from openerp.tools.translate import _
 
 controllers = controllers()
 
@@ -24,12 +23,13 @@ class WebsiteForum(http.Controller):
     def _get_notifications(self):
         cr, uid, context = request.cr, request.uid, request.context
         Message = request.registry['mail.message']
-        BadgeUser = request.registry['gamification.badge.user']
-        #notification to user.
-        badgeuser_ids = BadgeUser.search(cr, uid, [('user_id', '=', uid)], context=context)
-        notification_ids = Message.search(cr, uid, [('res_id', 'in', badgeuser_ids), ('model', '=', 'gamification.badge.user'), ('to_read', '=', True)], context=context)
-        notifications = Message.browse(cr, uid, notification_ids, context=context)
-        return notifications
+        badge_st_id = request.registry['ir.model.data'].xmlid_to_res_id(cr, uid, 'gamification.mt_badge_granted')
+        if badge_st_id:
+            msg_ids = Message.search(cr, uid, [('subtype_id', '=', badge_st_id), ('to_read', '=', True)], context=context)
+            msg = Message.browse(cr, uid, msg_ids, context=context)
+        else:
+            msg = list()
+        return msg
 
     def _prepare_forum_values(self, forum=None, **kwargs):
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, context=request.context)
@@ -38,11 +38,11 @@ class WebsiteForum(http.Controller):
                   'notifications': self._get_notifications(),
                   'header': kwargs.get('header', dict()),
                   'searches': kwargs.get('searches', dict())}
-        values.update(kwargs)
         if forum:
             values['forum'] = forum
         elif kwargs.get('forum_id'):
-            values['forum'] = request.registry['forum.forum'].browse(request.cr, request.uid, kwargs['forum_id'], context=request.context)
+            values['forum'] = request.registry['forum.forum'].browse(request.cr, request.uid, kwargs.pop('forum_id'), context=request.context)
+        values.update(kwargs)
         return values
 
     # Forum
@@ -248,9 +248,6 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': True}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
-    # Answers
-    # --------------------------------------------------
-
     # Post
     # --------------------------------------------------
 
@@ -268,7 +265,6 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="public", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
-        # tde: fix post / question
         if not request.session.uid:
             return login_redirect()
         question = post.parent_id if post.parent_id else post
@@ -344,13 +340,15 @@ class WebsiteForum(http.Controller):
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", multilang=True, website=True)
-    def post_vote(self, forum, post, **kwargs):
+    def post_upvote(self, forum, post, **kwargs):
+        # check for karma and not self vote
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=True, context=request.context)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", multilang=True, website=True)
     def post_downvote(self, forum, post, **kwargs):
+        # check for karma and not self vote
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=False, context=request.context)
@@ -481,27 +479,26 @@ class WebsiteForum(http.Controller):
         return request.website.render("website_forum.edit_profile", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", multilang=True, website=True)
-    def save_edited_profile(self, forum, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        user = request.registry['res.users'].browse(cr, uid, int(post.get('user_id')),context=context)
-        request.registry['res.partner'].write( cr, uid, [user.partner_id.id], {
-            'name': post.get('name'),
-            'website': post.get('website'),
-            'email': post.get('email'),
-            'city': post.get('city'),
-            'country_id': post.get('country'),
-            'website_description': post.get('description'), 
-        }, context=context)
-        return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum),post.get('user_id')))
+    def save_edited_profile(self, forum, user, **kwargs):
+        request.registry['res.users'].write(request.cr, request.uid, [user.id], {
+            'name': kwargs.get('name'),
+            'website': kwargs.get('website'),
+            'email': kwargs.get('email'),
+            'city': kwargs.get('city'),
+            'country_id': kwargs.get('country'),
+            'website_description': kwargs.get('description'),
+        }, context=request.context)
+        user.refresh()
+        return werkzeug.utils.redirect("/forum/%s/user/%s" % (slug(forum), slug(user)))
 
     # Badges
     # --------------------------------------------------
 
-    @http.route(['/forum/<model("forum.forum"):forum>/badge'], type='http', auth="public", website=True, multilang=True)
+    @http.route('/forum/<model("forum.forum"):forum>/badge', type='http', auth="public", website=True, multilang=True)
     def badges(self, forum, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         Badge = request.registry['gamification.badge']
-        badge_ids = Badge.search(cr, uid, [('level', '!=', False)], context=context)
+        badge_ids = Badge.search(cr, uid, [('challenge_id.category', '=', 'forum')], context=context)
         badges = Badge.browse(cr, uid, badge_ids, context=context)
         values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
@@ -513,9 +510,8 @@ class WebsiteForum(http.Controller):
     def badge_users(self, forum, badge, **kwargs):
         user_ids = [badge_user.user_id.id for badge_user in badge.owner_ids]
         users = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, user_ids, context=request.context)
-        kwargs['badges'] = 'True'
 
-        values = self._prepare_forum_values(forum=forum)
+        values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
             'badge': badge,
             'users': users,
