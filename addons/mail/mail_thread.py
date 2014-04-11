@@ -538,18 +538,19 @@ class mail_thread(osv.AbstractModel):
         thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
-            thread_id = int(ref_match.group(1))
-            model = ref_match.group(2) or model
-            our_hostname = socket.gethostname()
-            reply_to_hostname = ref_match.group(3)
+            reply_thread_id = int(ref_match.group(1))
+            reply_model = ref_match.group(2) or model
+            reply_hostname = ref_match.group(3)
+            local_hostname = socket.gethostname()
             # do not match forwarded emails from another OpenERP system (thread_id collision!)
-            is_reply_to_local = (our_hostname == reply_to_hostname)
-            model_pool = self.pool.get(model)
-            if thread_id and is_reply_to_local and model and model_pool and model_pool.exists(cr, uid, thread_id) \
-                and hasattr(model_pool, 'message_update'):
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                return [(model, thread_id, custom_values, uid)]
+            if local_hostname == reply_hostname:
+                thread_id, model = reply_thread_id, reply_model
+                model_pool = self.pool.get(model)
+                if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
+                    and hasattr(model_pool, 'message_update'):
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                    return [(model, thread_id, custom_values, uid)]
 
         # Verify whether this is a reply to a private message
         if in_reply_to:

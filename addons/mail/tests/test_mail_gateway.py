@@ -318,11 +318,11 @@ class TestMailgateway(TestMailBase):
         # Test2: discussion update
         # --------------------------------------------------
 
-        # Do: even with a wrong destination, a reply should end up in the correct thread
+        # Do: even with a wrong destination, a reply should end up in the correct thread 
         frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
                                             msg_id='<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>',
                                             to='erroneous@example.com>', subject='Re: news',
-                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+                                            extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
         # Test: no group 'Re: news' created, still only 1 Frogs group
         self.assertEqual(len(frog_groups), 0,
                             'message_process: reply on Frogs should not have created a new group with new subject')
@@ -339,8 +339,8 @@ class TestMailgateway(TestMailBase):
 
         # Do: due to some issue, same email goes back into the mailgateway
         frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
-                                            msg_id='<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>',
-                                            subject='Re: news', extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+                                            to='erroneous@example.com>', subject='Re: news',
+                                            extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
         # Test: no group 'Re: news' created, still only 1 Frogs group
         self.assertEqual(len(frog_groups), 0,
                             'message_process: reply on Frogs should not have created a new group with new subject')
@@ -366,28 +366,28 @@ class TestMailgateway(TestMailBase):
 
         # Do: post a new message, with a known partner -> duplicate emails -> partner
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
-                                            to='erroneous@example.com>', subject='Re: news (2)',
-                                            msg_id='<1198923581.41972151344608186760.JavaMail.new1@agrolait.com>',
-                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+                           subject='Re: news (2)',
+                           msg_id='<1198923581.41972151344608186760.JavaMail.new1@agrolait.com>',
+                           extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
         frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: author is A-Raoul (only existing)
         self.assertEqual(frog_group.message_ids[0].author_id.id, extra_partner_id,
-                            'message_process: email_from -> author_id wrong')
+                         'message_process: email_from -> author_id wrong')
 
         # Do: post a new message, with a known partner -> duplicate emails -> user
         frog_group.message_unsubscribe([extra_partner_id])
         raoul_email = self.user_raoul.email
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
-                                            to='erroneous@example.com>', subject='Re: news (3)',
-                                            msg_id='<1198923581.41972151344608186760.JavaMail.new2@agrolait.com>',
-                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+                           to='groups@example.com', subject='Re: news (3)',
+                           msg_id='<1198923581.41972151344608186760.JavaMail.new2@agrolait.com>',
+                           extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
         frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: author is Raoul (user), not A-Raoul
         self.assertEqual(frog_group.message_ids[0].author_id.id, self.partner_raoul_id,
-                            'message_process: email_from -> author_id wrong')
+                         'message_process: email_from -> author_id wrong')
 
         # Do: post a new message, with a known partner -> duplicate emails -> partner because is follower
         frog_group.message_unsubscribe([self.partner_raoul_id])
@@ -395,14 +395,14 @@ class TestMailgateway(TestMailBase):
         raoul_email = self.user_raoul.email
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
-                                            to='erroneous@example.com>', subject='Re: news (3)',
-                                            msg_id='<1198923581.41972151344608186760.JavaMail.new3@agrolait.com>',
-                                            extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
+                           to='groups@example.com', subject='Re: news (3)',
+                           msg_id='<1198923581.41972151344608186760.JavaMail.new3@agrolait.com>',
+                           extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
         frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: author is Raoul (user), not A-Raoul
         self.assertEqual(frog_group.message_ids[0].author_id.id, extra_partner_id,
-                            'message_process: email_from -> author_id wrong')
+                         'message_process: email_from -> author_id wrong')
 
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': raoul_email})
 
