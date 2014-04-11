@@ -83,7 +83,7 @@ class gamification_challenge(osv.Model):
 
         :return: a string in DEFAULT_SERVER_DATE_FORMAT representing the date"""
         res = {}
-        for challenge in self.browse(cr, uid, ids, context):
+        for challenge in self.browse(cr, uid, ids, context=context):
             last = datetime.strptime(challenge.last_report_date, DF).date()
             if challenge.report_message_frequency == 'daily':
                 next = last + timedelta(days=1)
@@ -353,7 +353,6 @@ class gamification_challenge(osv.Model):
         """Update all the goals of a challenge, no generation of new goals"""
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
-        print self.pool.get('gamification.goal').read_group(cr, uid, [('challenge_id', '=', challenge_id), ('closed', '=', False)], fields=['id', 'line_id', 'target_goal'], groupby=['line_id'], context=context)
         return True
 
 
@@ -368,7 +367,7 @@ class gamification_challenge(osv.Model):
         """Manual report of a goal, does not influence automatic report frequency"""
         if isinstance(ids, (int,long)):
             ids = [ids]
-        for challenge in self.browse(cr, uid, ids, context):
+        for challenge in self.browse(cr, uid, ids, context=context):
             self.report_progress(cr, uid, challenge, context=context)
         return True
 
@@ -383,7 +382,7 @@ class gamification_challenge(osv.Model):
         :param list(int) ids: the list of challenge concerned"""
 
         to_update = []
-        for challenge in self.browse(cr, uid, ids, context):
+        for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period)
 
             # if no periodicity, use challenge dates
@@ -430,7 +429,7 @@ class gamification_challenge(osv.Model):
                     if challenge.remind_update_delay:
                         values['remind_update_delay'] = challenge.remind_update_delay
 
-                    new_goal_id = goal_obj.create(cr, uid, values, context)
+                    new_goal_id = goal_obj.create(cr, uid, values, context=context)
                     to_update.append(new_goal_id)
 
             goal_obj.update(cr, uid, to_update, context=context)
@@ -676,52 +675,63 @@ class gamification_challenge(osv.Model):
         """
         if isinstance(ids, (int,long)):
             ids = [ids]
-        context = context or {}
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
             yesterday = date.today() - timedelta(days=1)
-            if end_date == yesterday.strftime(DF) or force:
+
+            rewarded_users = []
+            challenge_ended = end_date == yesterday.strftime(DF) or force
+            if challenge.reward_id and challenge_ended or challenge.reward_realtime:
+                for user in challenge.user_ids:
+                    reached_goal_ids = self.pool.get('gamification.goal').search(cr, uid, [
+                        ('challenge_id', '=', challenge.id),
+                        ('user_id', '=', user.id),
+                        ('start_date', '=', start_date),
+                        ('end_date', '=', end_date),
+                        ('state', '=', 'reached')
+                    ], context=context)
+                    if len(reached_goal_ids) == len(challenge.line_ids):
+                        # the user has succeeded every assigned goal
+                        if challenge.reward_realtime:
+                            badges = self.pool['gamification.badge.user'].search(cr, uid, [
+                                ('challenge_id', '=', challenge.id),
+                                ('badge_id', '=', challenge.reward_id.id),
+                                ('user_id', '=', user.id),
+                            ], count=True, context=context)
+                            if badges > 0:
+                                # has already recieved the badge for this challenge
+                                continue
+                        self.reward_user(cr, uid, user.id, challenge.reward_id.id, challenge.id, context=context)
+                        rewarded_users.append(user)
+
+            if challenge_ended:
                 # open chatter message
                 message_body = _("The challenge %s is finished." % challenge.name)
 
-                # reward for everybody succeeding
-                rewarded_users = []
-                if challenge.reward_id:
-                    for user in challenge.user_ids:
-                        reached_goal_ids = self.pool.get('gamification.goal').search(cr, uid, [
-                            ('challenge_id', '=', challenge.id),
-                            ('user_id', '=', user.id),
-                            ('start_date', '=', start_date),
-                            ('end_date', '=', end_date),
-                            ('state', '=', 'reached')
-                        ], context=context)
-                        if len(reached_goal_ids) == len(challenge.line_ids):
-                            self.reward_user(cr, uid, user.id, challenge.reward_id.id, context)
-                            rewarded_users.append(user)
-
-                    if rewarded_users:
-                        message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([user.name for user in rewarded_users])))
-                    else:
-                        message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
+                if rewarded_users:
+                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([user.name for user in rewarded_users])))
+                else:
+                    message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
 
                 # reward bests
                 if challenge.reward_first_id:
-                    (first_user, second_user, third_user) = self.get_top3_users(cr, uid, challenge, context)
+                    (first_user, second_user, third_user) = self.get_top3_users(cr, uid, challenge, context=context)
                     if first_user:
-                        self.reward_user(cr, uid, first_user.id, challenge.reward_first_id.id, context)
+                        self.reward_user(cr, uid, first_user.id, challenge.reward_first_id.id, challenge.id, context=context)
                         message_body += _("<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :")
                         message_body += "<br/> 1. %s - %s" % (first_user.name, challenge.reward_first_id.name)
                     else:
                         message_body += _("Nobody reached the required conditions to receive special badges.")
 
                     if second_user and challenge.reward_second_id:
-                        self.reward_user(cr, uid, second_user.id, challenge.reward_second_id.id, context)
+                        self.reward_user(cr, uid, second_user.id, challenge.reward_second_id.id, challenge.id, context=context)
                         message_body += "<br/> 2. %s - %s" % (second_user.name, challenge.reward_second_id.name)
                     if third_user and challenge.reward_third_id:
-                        self.reward_user(cr, uid, third_user.id, challenge.reward_second_id.id, context)
+                        self.reward_user(cr, uid, third_user.id, challenge.reward_second_id.id, challenge.id, context=context)
                         message_body += "<br/> 3. %s - %s" % (third_user.name, challenge.reward_third_id.name)
 
                 self.message_post(cr, uid, challenge.id, body=message_body, context=context)
+
         return True
 
     def get_top3_users(self, cr, uid, challenge, context=None):
@@ -775,14 +785,14 @@ class gamification_challenge(osv.Model):
             return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], False)
         return (sorted_challengers[0]['user'], sorted_challengers[1]['user'], sorted_challengers[2]['user'])
 
-    def reward_user(self, cr, uid, user_id, badge_id, context=None):
+    def reward_user(self, cr, uid, user_id, badge_id, challenge_id=False, context=None):
         """Create a badge user and send the badge to him
 
         :param user_id: the user to reward
         :param badge_id: the concerned badge
         """
         badge_user_obj = self.pool.get('gamification.badge.user')
-        user_badge_id = badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge_id}, context=context)
+        user_badge_id = badge_user_obj.create(cr, uid, {'user_id': user_id, 'badge_id': badge_id, 'challenge_id':challenge_id}, context=context)
         return badge_user_obj._send_badge(cr, uid, [user_badge_id], context=context)
 
 
