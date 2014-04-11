@@ -72,7 +72,7 @@ class stock_landed_cost(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=256, required=True),
-        'date': fields.datetime('Date', required=True),
+        'date': fields.date('Date', required=True),
         'picking_ids': fields.many2many('stock.picking', string='Pickings'),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines'),
         'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments'),
@@ -88,7 +88,7 @@ class stock_landed_cost(osv.osv):
 
     _defaults = {
         'state': 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def button_validate(self, cr ,uid, ids, context=None):
@@ -194,6 +194,8 @@ class stock_valuation_adjustment_lines(osv.osv):
         'move_id': fields.many2one('stock.move', 'Stock Move'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
+        'weight': fields.float('Weight', digits_compute= dp.get_precision('Product Unit of Measure')),
+        'volume': fields.float('Volume', digits_compute= dp.get_precision('Product Unit of Measure')),
         'former_cost': fields.float('Former Cost', digits_compute= dp.get_precision('Product Price')),
         'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', digits_compute= dp.get_precision('Account'), store=True),
         'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute= dp.get_precision('Product Price')),
