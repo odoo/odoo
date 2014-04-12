@@ -54,9 +54,10 @@ class MassMailingContact(osv.Model):
     _columns = {
         'name': fields.char('Name'),
         'email': fields.char('Email', required=True),
+        'create_date': fields.datetime('Create Date'),
         'list_id': fields.many2one(
             'mail.mass_mailing.list', string='Mailing List',
-            ondelete='cascade',
+            ondelete='cascade', required=True,
         ),
         'opt_out': fields.boolean('Opt Out', help='The contact has chosen not to receive mails anymore from this list'),
     }
@@ -104,8 +105,8 @@ class MassMailingCampaign(osv.Model):
             'res.users', 'Responsible',
             required=True,
         ),
-        'category_ids': fields.many2many(
-            'mail.mass_mailing.category', 'Categories'),
+        'category_ids': fields.many2many('mail.mass_mailing.category', 'mail_mass_amiling_category_rel', 
+            'category_id', 'campaign_id', string='Categories'),
         'mass_mailing_ids': fields.one2many(
             'mail.mass_mailing', 'mass_mailing_campaign_id',
             'Mass Mailings',
@@ -174,8 +175,8 @@ class MassMailing(osv.Model):
         'reply_to': fields.char('Reply To'),
 
         # Target Emails
-        'mailing_model': fields.selection(_get_mailing_model, string='Model', required=True),
-        'mailing_domain': fields.char('Domain', required=True),
+        'mailing_model': fields.selection(_get_mailing_model, string='Model'),
+        'mailing_domain': fields.char('Domain'),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
@@ -215,7 +216,6 @@ class MassMailing(osv.Model):
     def on_change_mailing_model(self, cr, uid, ids, mailing_model, context=None):
         values = {
             'contact_list_ids': [],
-            'template_id': False,
             'contact_nbr': 0,
             'auto_reply_to_available': not mailing_model in self._get_private_models(context),
             'reply_in_thread': not mailing_model in self._get_private_models(context),
@@ -245,21 +245,6 @@ class MassMailing(osv.Model):
                 self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, list_ids, context=context)[mailing_model],
                 count=True, context=context
             )
-        return {'value': values}
-
-    def on_change_template_id(self, cr, uid, ids, template_id, context=None):
-        values = {}
-        if template_id:
-            template = self.pool['email.template'].browse(cr, uid, template_id, context=context)
-            if template.email_from:
-                values['email_from'] = template.email_from
-            if template.reply_to:
-                values['reply_to'] = template.reply_to
-            values['body_html'] = template.body_html
-        else:
-            values['email_from'] = self.pool['mail.message']._get_default_from(cr, uid, context=context)
-            values['reply_to'] = False
-            values['body_html'] = False
         return {'value': values}
 
     def on_change_contact_ab_pc(self, cr, uid, ids, contact_ab_pc, contact_nbr, context=None):
