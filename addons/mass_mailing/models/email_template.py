@@ -8,11 +8,9 @@ class EmailTemplate(osv.Model):
     """Add the mass mailing campaign data to mail"""
     _name = 'email.template'
     _inherit = ['email.template']
-
     _columns = {
         'use_in_mass_mailing': fields.boolean('Available for marketing and mailing'),
     }
-
     def action_new_mailing(self, cr, uid, ids, context=None):
         template = self.browse(cr, uid, ids[0], context=context)
         ctx = dict(context)

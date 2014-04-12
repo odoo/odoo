@@ -12,17 +12,17 @@
         <menuitem name="Configuration" id="marketing_configuration"
             parent="base.marketing_menu" sequence="99"/>
 
-        <!--  MASS MAILING CONTACT !-->
+        <!--  MASS MAILING CONTACT -->
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
             <field name="model">mail.mass_mailing.contact</field>
             <field name="arch" type="xml">
-               <search string="Mass Mailings">
+               <search string="Mailing Lists Subscribers">
                     <field name="name"/>
                     <field name="email"/>
                     <field name="list_id"/>
                     <separator/>
-                    <filter string="Available for Mass Mailing" name="not_opt_out" domain="[('opt_out', '=', False)]"
+                    <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"
                         help="Contact is not opt-out"/>
                     <group expand="0" string="Group By...">
                         <filter string="Mailing Lists" name="group_list_id"
@@ -37,7 +37,7 @@
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mass Mailings">
+                <tree string="Mailing Lists Subscribers" editable="top">
                     <field name="name"/>
                     <field name="email"/>
                     <field name="list_id"/>
@@ -46,58 +46,26 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_form">
-            <field name="name">mail.mass_mailing.contact.form</field>
-            <field name="model">mail.mass_mailing.contact</field>
-            <field name="arch" type="xml">
-                <form string="Mass Mailing" version="7.0">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="email"/>
-                            <field name="list_id"/>
-                            <field name="opt_out"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="action_view_mass_mailing_contacts" model="ir.actions.act_window">
-            <field name="name">Mass Mailing Contacts</field>
+            <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree</field>
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
-        <menuitem name="Contacts" id="menu_email_mass_mailing_contacts" groups="base.group_no_one"
+        <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
             parent="mass_mailing_list" sequence="50"
             action="action_view_mass_mailing_contacts"/>
 
-        <!-- Create a Mailing List from Contacts -->
-        <act_window name="Create Mailing List"
-            res_model="mail.mass_mailing.list.confirm"
-            src_model="mail.mass_mailing.contact"
-            view_mode="form"
-            multi="True"
-            target="new"
-            key2="client_action_multi"
-            id="action_contact_to_mailing_list"
-            context="{
-'default_mass_mailing_id': context.get('default_mass_mailing_id'),
-'default_model': context.get('default_model', 'mail.mass_mailing.contact'),
-'default_name': context.get('default_name', False)}"/>
-
-        <!--  MASS MAILING LIST !-->
+        <!--  MASS MAILING LIST -->
         <record model="ir.ui.view" id="view_mail_mass_mailing_list_search">
             <field name="name">mail.mass_mailing.list.search</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-               <search string="Mass Mailings">
-                    <field name="name"/>
-                    <separator/>
-                </search>
+               <search string="Mailing Lists">
+                   <field name="name"/>
+               </search>
             </field>
         </record>
 
@@ -106,11 +74,23 @@
             <field name="model">mail.mass_mailing.list</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Contact Lists">
+                <tree string="Mailing Lists">
                     <field name="name"/>
-                    <field name="model"/>
                     <field name="contact_nbr"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="mass_mailing_list_open_contacts" model="ir.actions.act_window">
+            <field name="name">Recipients</field>
+            <field name="res_model">mail.mass_mailing.contact</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_list_id': active_id}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a recipient.
+              </p>
             </field>
         </record>
 
@@ -119,26 +99,15 @@
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
                 <form string="Contact List" version="7.0">
-                    <header>
-                        <button name="action_add_to_mailing" type="object"
-                            class="oe_highlight" string="Continue to Mailing"
-                            invisible="not context.get('default_mass_mailing_id')"/>
-                    </header>
                     <sheet>
+                        <!-- TODO: stat_get button and relate link -->
+                        <div class="oe_button_box" nname="buttons">
+                            <button name="%(mass_mailing.mass_mailing_list_open_contacts)d" type="action"
+                                string="Recipients"/>
+                        </div>
                         <group>
-                            <field name="name" string="Mailing List Name"/>
-                            <label for="contact_nbr"/>
-                            <div>
-                                <field name="contact_nbr" nolabel="1" class="oe_inline"/>
-                                <field name="model" class="oe_inline"
-                                    on_change="on_change_model(model, context)" nolabel="1"/>
-                                <button string="See Recipients" class="oe_inline oe_link" style="margin-left: 8px;"
-                                    name="action_see_records" type="object"/>
-                            </div>
-                            <field name="filter_id" groups="base.group_no_one"
-                                on_change="on_change_filter_id(filter_id, context)"/>
-                            <field name="domain" groups="base.group_no_one"
-                                on_change="on_change_domain(domain, model, context)"/>
+                            <field name="name"/>
+                            <field for="contact_nbr"/>
                         </group>
                     </sheet>
                 </form>
@@ -150,15 +119,17 @@
             <field name="res_model">mail.mass_mailing.list</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-<field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click here to create a new mailing list.
-</p><p>
-    Mailing lists allows you to to manage customers and contacts easily and to send to mailings in a single click.
-</p></field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new mailing list.
+                </p><p>
+                    Mailing lists allows you to to manage customers and
+                    contacts easily and to send to mailings in a single click.
+                </p>
+            </field>
         </record>
 
-        <menuitem name="Contact Lists" id="menu_email_mass_mailing_lists"
+        <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
             parent="mass_mailing_list" sequence="40"
             action="action_view_mass_mailing_lists"/>
 
@@ -170,15 +141,12 @@
                <search string="Mass Mailings">
                     <field name="name" string="Mailings"/>
                     <field name="mass_mailing_campaign_id"/>
-                    <field name="template_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="State" name="group_state"
                             context="{'group_by': 'state'}"/>
                         <filter string="Campaign" name="group_mass_mailing_campaign_id"
                             groups="mass_mailing.group_mass_mailing_campaign"
                             context="{'group_by': 'mass_mailing_campaign_id'}"/>
-                        <filter string="Template" name="group_template_id"
-                            context="{'group_by': 'template_id'}"/>
                     </group>
                 </search>
             </field>
@@ -197,7 +165,6 @@
                     <field name="replied"/>
                     <field name="mass_mailing_campaign_id"
                         groups="mass_mailing.group_mass_mailing_campaign"/>
-                    <field name="template_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -208,20 +175,21 @@
             <field name="arch" type="xml">
                 <form string="Mass Mailing" version="7.0">
                     <header>
+                        <field name="state" widget="statusbar" clickable="True"/>
                         <button name="action_test_mailing" type="object"
                             class="oe_highlight" string="Test Mailing"/>
                         <button name="send_mail" type="object"
                             class="oe_highlight" string="Send to All"/>
-                        <field name="state" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
-                        <div colspan="2" class="oe_form_box_info oe_text_center"
+                        <div class="oe_form_box_info oe_text_center"
                                 attrs="{'invisible': [('scheduled', '=', 0)]}">
                             <p>
                                 <strong><field name="scheduled" class="oe_inline"/>emails are in queue
                                 and will be sent soon.</strong>
                             </p>
                         </div>
+
                         <group>
                             <group>
                                 <field name="email_from"/>
@@ -512,7 +480,6 @@
                                 <field name="name"/>
                                 <field name="user_id"/>
                                 <field name="category_id"/>
-                                <field name="ab_testing"/>
                             </group>
                             <group>
                                 <field name="total" invisible="1"/>
