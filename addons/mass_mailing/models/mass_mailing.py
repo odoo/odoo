@@ -142,13 +142,13 @@ class MassMailing(osv.Model):
 
     def _get_mailing_model(self, cr, uid, context=None):
         return [
-            ('res.partner', 'Customers'),
-            ('mail.mass_mailing.contact', 'Contacts')
+            ('res.partner', _('Customers')),
+            ('mail.mass_mailing.contact', _('Mailing List'))
         ]
 
     _columns = {
         'name': fields.char('Subject', required=True),
-        'email_from': fields.char('From'),
+        'email_from': fields.char('From', required=True),
         'date': fields.datetime('Date'),
         'body_html': fields.html('Body'),
 
@@ -157,7 +157,7 @@ class MassMailing(osv.Model):
             ondelete='set null',
         ),
         'state': fields.selection(
-            [('draft', 'Schedule'), ('test', 'Tested'), ('done', 'Sent')], string='Status', required=True,
+            [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')], string='Status', required=True,
         ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
@@ -175,7 +175,7 @@ class MassMailing(osv.Model):
         'reply_to': fields.char('Reply To'),
 
         # Target Emails
-        'mailing_model': fields.selection(_get_mailing_model, string='Model'),
+        'mailing_model': fields.selection(_get_mailing_model, string='Recipients Model'),
         'mailing_domain': fields.char('Domain'),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
@@ -212,16 +212,19 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
     # Views & Actions
     #------------------------------------------------------
-
-    def on_change_mailing_model(self, cr, uid, ids, mailing_model, context=None):
-        values = {
-            'contact_list_ids': [],
-            'contact_nbr': 0,
-            'auto_reply_to_available': not mailing_model in self._get_private_models(context),
-            'reply_in_thread': not mailing_model in self._get_private_models(context),
-            'reply_specified': mailing_model in self._get_private_models(context)
-        }
-        return {'value': values}
+    def on_change_model(self, cr, uid, ids, mailing_model, list_ids, context=None):
+        value = {}
+        if mailing_model=='mail.mass_mailing.contact':
+            if list_ids and list_ids[0][0]==6 and list_ids[0][2]:
+                value['mailing_domain'] = "[('list_id', 'in', ["+','.join(map(str, list_ids[0][2]))+"])]"
+                value['contact_nbr'] = 5
+            else:
+                value['mailing_domain'] = "[('list_id', '=', False)]"
+                value['contact_nbr'] = 0
+        else:
+            value['mailing_domain'] = False
+            value['contact_nbr'] = 0
+        return {'value': value}
 
     def on_change_reply_specified(self, cr, uid, ids, reply_specified, reply_in_thread, context=None):
         if reply_specified == reply_in_thread:
@@ -271,15 +274,15 @@ class MassMailing(osv.Model):
         else:
             return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
 
-    def action_new_list(self, cr, uid, ids, context=None):
+    def action_domain_select(self, cr, uid, ids, context=None):
         mailing = self.browse(cr, uid, ids[0], context=context)
-        action_id = self._get_model_to_list_action_id(cr, uid, mailing.mailing_model, context=context)
-        ctx = dict(context,
-                   search_default_not_opt_out=True,
-                   view_manager_highlight=[action_id],
-                   default_name=mailing.name,
-                   default_mass_mailing_id=ids[0],
-                   default_model=mailing.mailing_model)
+        ctx = dict(
+            context,
+            search_default_not_opt_out=True,
+            view_manager_highlight=[action_id],         # To Change
+            default_mass_mailing_id=ids[0],
+            default_model=mailing.mailing_model
+        )
         return {
             'name': _('Choose Recipients'),
             'type': 'ir.actions.act_window',

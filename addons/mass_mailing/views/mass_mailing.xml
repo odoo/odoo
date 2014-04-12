@@ -179,110 +179,116 @@
             <field name="arch" type="xml">
                 <form string="Mass Mailing" version="7.0">
                     <header>
-                        <field name="state" widget="statusbar" clickable="True"/>
                         <button name="action_test_mailing" type="object"
                             class="oe_highlight" string="Test Mailing"/>
                         <button name="send_mail" type="object"
                             class="oe_highlight" string="Send to All"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
-                        <div class="oe_form_box_info oe_text_center"
-                                attrs="{'invisible': [('scheduled', '=', 0)]}">
+                        <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">
                             <p>
                                 <strong><field name="scheduled" class="oe_inline"/>emails are in queue
                                 and will be sent soon.</strong>
                             </p>
                         </div>
 
+                        <div class="oe_button_box pull-right" attrs="{'invisible': [('total', '=', 0)]}">
+                            <button name="%(action_mail_mass_mailing_report)d"
+                                type="action" class="oe_stat_button">
+                                <field name="received_ratio" string="Received" widget="percentpie"/>
+                            </button>
+                            <button name="%(action_mail_mass_mailing_report)d"
+                                type="action" class="oe_stat_button">
+                                <field name="opened_ratio" string="Opened" widget="percentpie"/>
+                            </button>
+                            <button name="%(action_mail_mass_mailing_report)d"
+                                type="action" class="oe_stat_button">
+                                <field name="replied_ratio" string="Replied" widget="percentpie"/>
+                            </button>
+                        </div>
+                        <div class="oe_button_box" attrs="{'invisible': [('total', '=', 0)]}" style="margin-bottom: 32px">
+                            <button name="%(action_mail_mass_mailing_report)d" type="action"
+                                icon="fa-envelope-o" class="oe_stat_button">
+                                <field name="total" string="Emails" widget="statinfo"/>
+                            </button>
+                        </div>
                         <group>
-                            <group>
-                                <field name="email_from"/>
-                                <field name="name"/>
-                            </group>
-                            <group>
-                                <div class="oe_right oe_button_box" name="buttons">
-                                    <div>
-                                        <button name="action_see_recipients" type="object"
-                                            icon="fa-user" class="oe_stat_button">
-                                            <field name="contact_nbr" string="Recipients" widget="statinfo"/>
-                                        </button>
-                                        <button name="%(action_mail_mass_mailing_report)d" type="action"
-                                            icon="fa-envelope-o" class="oe_stat_button">
-                                            <field name="total" string="Emails" widget="statinfo"/>
-                                        </button>
-                                    </div>
-                                    <div style="margin-top: 8px;"
-                                        attrs="{'invisible': [('total', '=', 0)]}">
-                                        <button name="%(action_mail_mass_mailing_report)d"
-                                            type="action" class="oe_stat_button">
-                                            <field name="received_ratio" string="Received" widget="percentpie"/>
-                                        </button>
-                                        <button name="%(action_mail_mass_mailing_report)d"
-                                            type="action" class="oe_stat_button">
-                                            <field name="opened_ratio" string="Opened" widget="percentpie"/>
-                                        </button>
-                                        <button name="%(action_mail_mass_mailing_report)d"
-                                            type="action" class="oe_stat_button">
-                                            <field name="replied_ratio" string="Replied" widget="percentpie"/>
-                                        </button>
-                                    </div>
-                                    <div style="margin-top: 8px;"
-                                        attrs="{'invisible': [('total', '=', 0)]}">
-                                        <button name="%(action_mail_mass_mailing_report)d"
-                                            type="action" class="oe_stat_button oe_inline">
-                                            <field name="opened_dayly" string="Opened Daily" widget="barchart"/>
-                                        </button>
-                                        <button name="%(action_mail_mass_mailing_report)d"
-                                            type="action" class="oe_stat_button oe_inline">
-                                            <field name="replied_dayly" string="Replied Daily" widget="barchart"/>
-                                        </button>
-                                    </div>
-                                </div>
-                            </group>
-                        </group>
-                        <group>
-                            <label for="reply_to"/>
-                            <div>
-                                <field name="auto_reply_to_available" invisible="1"/>
-                                <field name="reply_in_thread" class="oe_inline"
-                                    on_change="on_change_reply_in_thread(reply_specified, reply_in_thread, context)"
-                                    attrs="{'readonly': [('auto_reply_to_available', '=', False)]}"/>
-                                <span attrs="{'invisible': [('auto_reply_to_available', '=', False)]}">
-                                    Replies go into the original document
-                                </span>
-                                <span class="oe_grey" attrs="{'invisible': [('auto_reply_to_available', '=', True)]}">
-                                    Replies go into the original document (not available for those recipients)
-                                </span>
-                                <br />
-                                <field name="reply_specified" class="oe_inline"
-                                    on_change="on_change_reply_specified(reply_specified, reply_in_thread, context)"/> Use a specific reply-to address
-                                <field name="reply_to" class="oe_inline"
-                                    style="margin-left: 8px;"
-                                    attrs="{'required': [('reply_specified', '=', True)]}"/>
-                            </div>
+                            <field name="email_from"/>
+                            <field name="name"/>
                             <label for="mailing_model" string="Recipients"/>
                             <div>
-                                <field name="mailing_model" widget="radio"
-                                    on_change='on_change_mailing_model(mailing_model, context)'/>
+                                <field name="mailing_domain" invisible="1"/>
+                                <field name="mailing_model" widget="radio" style="margin-bottom: 8px"
+                                    on_change="on_change_model(mailing_model, contact_list_ids)"/>
 
-                                <label for="contact_list_ids" string="Mailing Lists" style="display: inline-block; min-width: 90px;"/>
-                                <field name="contact_list_ids" widget="many2many_tags" options="{'no_create': True}"
-                                    class="oe_inline" placeholder="Choose mailing lists"
-                                    on_change="on_change_contact_list_ids(mailing_model, contact_list_ids, context)"/>
-                                <span style="margin-left: 8px; margin-right: 8px">or</span>
-                                <button string='Create a New List' class="oe_link" type='object' name='action_new_list'/><br />
-
-                                <field name="contact_ab_pc" groups="mass_mailing.group_mass_mailing_campaign"/>
+                                <div attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.contact')]}">
+                                    <button class="oe_link" type='object' name='action_domain_select' attrs="{'invisible': [('contact_nbr', '&gt;', '0')]}">
+                                        <span class="fa fa-arrow-right"> Select Recipients</span>
+                                    </button>
+                                </div>
+                                <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">
+                                    <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
+                                    <field name="contact_list_ids" widget="many2many_tags"
+                                        placeholder="Select mailing lists..." class="oe_inline"
+                                        on_change="on_change_model(mailing_model, contact_list_ids)"/>
+                                </div>
+                                <div attrs="{'invisible': [('contact_nbr', '&lt;', 1)]}">
+                                    <strong>
+                                        <field name="contact_nbr" class="oe_inline"/> Recipients
+                                    </strong>
+                                    <button class="oe_link" type='object' name='action_domain_select' attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.contact')]}">
+                                        <span class="fa fa-arrow-right"> Change Selection</span>
+                                    </button>
+                                </div>
 
                             </div>
-                            <field name="date" readonly="True" groups="mass_mailing.group_mass_mailing_campaign"
-                                attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                            <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
-                            <label for="body_html" string="Email"/>
-                            <button name="action_edit_html" type="object" string="Edit Mail Content"
-                                class="oe_link" style="margin-left: 8px"/>
-                            <field name="body_html"/>
                         </group>
+                        <notebook>
+                            <page string="Mail Body">
+                                <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight"/>
+                                <div attrs="{'invisible' : ['|', ('body_html','!=',False), ('contact_nbr', '&lt;', 1)]}" class="oe_view_nocontent oe_clear">
+                                    <p class="oe_view_nocontent_create oe_edit_only">
+                                        Click to design your email.
+                                    </p>
+                                </div>
+                                <field name="body_html" readonly="1"/>
+                            </page><page string="Options">
+                                <group>
+                                    <group string="Campaign" groups="mass_mailing.group_mass_mailing_campaign">
+                                        <field name="mass_mailing_campaign_id"/>
+                                        <label for="contact_ab_pc"/>
+                                        <div>
+                                            <field name="contact_ab_pc" class="oe_inline"/> %
+                                        </div>
+                                    </group><group>
+                                        <field name="date"/>
+                                    </group><group>
+                                        <label for="reply_to"/>
+                                        <div>
+                                            <field name="auto_reply_to_available" invisible="1"/>
+                                            <field name="reply_in_thread" class="oe_inline"
+                                                on_change="on_change_reply_in_thread(reply_specified, reply_in_thread, context)"
+                                                attrs="{'readonly': [('auto_reply_to_available', '=', False)]}"/>
+                                            <span attrs="{'invisible': [('auto_reply_to_available', '=', False)]}">
+                                                Replies go into the original document
+                                            </span>
+                                            <span class="oe_grey" attrs="{'invisible': [('auto_reply_to_available', '=', True)]}">
+                                                Replies go into the original document (not available for those recipients)
+                                            </span>
+                                            <br />
+                                            <field name="reply_specified" class="oe_inline"
+                                                on_change="on_change_reply_specified(reply_specified, reply_in_thread, context)"/> Use a specific reply-to address
+                                            <field name="reply_to" class="oe_inline"
+                                                style="margin-left: 8px;"
+                                                attrs="{'required': [('reply_specified', '=', True)]}"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+
+
                     </sheet>
                 </form>
             </field>
