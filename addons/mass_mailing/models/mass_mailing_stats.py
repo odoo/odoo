@@ -203,7 +203,6 @@ class MassMailing(osv.Model):
             if not mailing.mailing_domain:
                 res[mailing.id] = 0
                 continue
-            print mailing.mailing_model, mailing.mailing_domain
             res[mailing.id] = self.pool[mailing.mailing_model].search(
                 cr, uid, eval(mailing.mailing_domain), count=True, context=context
             )

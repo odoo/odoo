@@ -217,10 +217,11 @@ class MassMailing(osv.Model):
         if mailing_model=='mail.mass_mailing.contact':
             if list_ids and list_ids[0][0]==6 and list_ids[0][2]:
                 value['mailing_domain'] = "[('list_id', 'in', ["+','.join(map(str, list_ids[0][2]))+"])]"
-                value['contact_nbr'] = 5
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
-                value['contact_nbr'] = 0
+            value['contact_nbr'] = self.pool[mailing_model].search(
+                cr, uid, eval(value['mailing_domain']), count=True, context=context
+            )
         else:
             value['mailing_domain'] = False
             value['contact_nbr'] = 0
