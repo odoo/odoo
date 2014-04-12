@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Email Templates -->
+        <record id="email_template_form_mass_mailing" model="ir.ui.view">
+            <field name="name">email.template.form.mass.mailing</field>
+            <field name="model">email.template</field>
+            <field name="inherit_id" ref="email_template.email_template_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                        <field name="use_in_mass_mailing"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_template_form_minimal">
+            <field name="name">email.template.form.minimal</field>
+            <field name="model">email.template</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <form string="Templates" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="True"/>
+                                <field name="model_id" required="1" options="{'no_open': True, 'no_create': True}"
+                                    on_change="onchange_model_id(model_id)"
+                                    domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact'])]"/>
+                                <field name="model" invisible="True"/>
+                                <field name="use_default_to" invisible="1"/>
+                                <field name="use_in_mass_mailing" invisible="1"/>
+                            </group>
+                            <group>
+                                <div class="oe_right oe_button_box" name="buttons">
+                                    <button name="%(email_template.wizard_email_template_preview)d" string="Preview"
+                                        type="action" target="new"
+                                        context="{'template_id':active_id}"/>
+                                    <br />
+                                    <field name="website_link" widget='html' radonly='1'
+                                    style='margin: 0px; padding: 0px;'/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Body">
+                                <field name="body_html" nolabel="1"/>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                        </notebook>
+                       </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_email_template_search_mass_mailing" model="ir.ui.view">
+           <field name="name">email.template.search.mass.mailing</field>
+           <field name="model">email.template</field>
+           <field name="inherit_id" ref="email_template.view_email_template_search"/>
+           <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <separator/>
+                    <filter string="Available for Marketing and Mailing" name="use_in_mass_mailing" domain="[('use_in_mass_mailing', '=', 1)]"
+                        help="Available for use in mass mailings"/>
+                </xpath>
+           </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_email_template_kanban">
+            <field name="name">email.template.kanban</field>
+            <field name="model">email.template</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="body_html"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click oe_kanban_email_template">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">i</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t>
+                                            <li><a name="action_new_mailing" type="object">New Mailing</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Edit</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                    </ul>
+                                </div>
+                                 <div class="oe_kanban_content">
+                                    <h3>
+                                        <field name="name"/>
+                                    </h3>
+                                    <div class="kanban_html_preview">
+                                        <t t-raw="record.body_html.raw_value"/>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_email_template_marketing">
+            <field name="name">Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain" eval="[('use_in_mass_mailing', '=', True)]"/>
+            <field name="context">{
+    'form_view_ref': 'mass_mailing.email_template_form_minimal',
+    'default_use_default_to': True,
+    'default_use_in_mass_mailing': True,
+}</field>
+        </record>
+
+        <!-- Add Templates in Marketing / Mass mailing menu -->
+        <menuitem name="Mail Templates" id="menu_email_template"
+            parent="mass_mailing_campaign" sequence="3"
+            action="action_email_template_marketing"/>
+
+    </data>
+</openerp>

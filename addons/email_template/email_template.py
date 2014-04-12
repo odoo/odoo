@@ -231,6 +231,11 @@ class email_template(osv.osv):
         'email_from': fields.char('From',
             help="Sender address (placeholders may be used here). If not set, the default "
                     "value will be the author's email alias if configured, or email address."),
+        'use_default_to': fields.boolean(
+            'Default recipients',
+            help="Default recipients of the record:\n"
+                 "- partner (using id on a partner or the partner_id field) OR\n"
+                 "- email (using email_from or email field)"),
         'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
         'partner_to': fields.char('To (Partners)',
             help="Comma-separated ids of recipient partners (placeholders may be used here)",
@@ -386,6 +391,42 @@ class email_template(osv.osv):
                         })
         return {'value': result}
 
+    def generate_recipients_batch(self, cr, uid, results, template_id, res_ids, context=None):
+        """Generates the recipients of the template. Default values can ben generated
+        instead of the template values if requested by template or context.
+        Emails (email_to, email_cc) can be transformed into partners if requested
+        in the context. """
+        if context is None:
+            context = {}
+        template = self.browse(cr, uid, template_id, context=context)
+
+        if template.use_default_to or context.get('tpl_force_default_to'):
+            if template.model and hasattr(self.pool[template.model], 'message_get_default_recipients'):
+                default_recipients = self.pool[template.model].message_get_default_recipients(cr, uid, res_ids, context=context)
+            elif template.model:
+                ctx = dict(context, thread_model=template.model)
+                default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
+            else:
+                default_recipients = {}
+            for res_id, recipients in default_recipients.iteritems():
+                results[res_id].pop('partner_to', None)
+                results[res_id].update(recipients)
+
+        for res_id, values in results.iteritems():
+            partner_ids = values.get('partner_ids', list())
+            if context and context.get('tpl_partners_only'):
+                mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
+                for mail in mails:
+                    partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+                    partner_ids.append(partner_id)
+            partner_to = values.pop('partner_to', '')
+            if partner_to:
+                # placeholders could generate '', 3, 2 due to some empty field values
+                tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
+                partner_ids += self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)
+            results[res_id]['partner_ids'] = partner_ids
+        return results
+
     def generate_email_batch(self, cr, uid, template_id, res_ids, context=None, fields=None):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
@@ -420,14 +461,18 @@ class email_template(osv.osv):
                     context=context)
                 for res_id, field_value in generated_field_values.iteritems():
                     results.setdefault(res_id, dict())[field] = field_value
+            # compute recipients
+            results = self.generate_recipients_batch(cr, uid, results, template.id, template_res_ids, context=context)
             # update values for all res_ids
             for res_id in template_res_ids:
                 values = results[res_id]
+                # body: add user signature, sanitize
                 if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
                     values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
                     auto_delete=template.auto_delete,
@@ -484,17 +529,8 @@ class email_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         if not values.get('email_from'):
-            raise osv.except_osv(_('Warning!'),_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
-        # process partner_to field that is a comma separated list of partner_ids -> recipient_ids
-        # NOTE: only usable if force_send is True, because otherwise the value is
-        # not stored on the mail_mail, and therefore lost -> fixed in v8
-        values['recipient_ids'] = []
-        partner_to = values.pop('partner_to', '')
-        if partner_to:
-            # placeholders could generate '', 3, 2 due to some empty field values
-            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
-            values['recipient_ids'] += [(4, pid) for pid in self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)]
-
+            raise osv.except_osv(_('Warning!'), _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+        values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)

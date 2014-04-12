@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Create a Mailing List from Leads -->
+        <act_window name="Create Mailing List"
+            res_model="mail.mass_mailing.list"
+            src_model="hr.applicant"
+            view_mode="form"
+            multi="True"
+            target="current"
+            key2="client_action_multi"
+            id="action_applicant_to_mailing_list"
+            context="{
+'default_mass_mailing_id': context.get('default_mass_mailing_id'),
+'default_model': context.get('default_model', 'hr.applicant'),
+'default_name': context.get('default_name', False)}"/>
+
+    </data>
+</openerp>

@@ -3,39 +3,12 @@
     <data>
 
         <!-- Top menu item -->
-        <menuitem name="Marketing"
-            id="base.marketing_menu"
-            groups="base.group_user"
-            sequence="85"/>
+        <menuitem name="Marketing" id="base.marketing_menu" sequence="85"
+            groups="base.group_user"/>
 
-         <record id="view_crm_lead_form" model="ir.ui.view">
-            <field name="name">crm.lead.inherit.form</field>
-            <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='categorization']" position="attributes">
-                    <attribute name="string">Marketing</attribute>
-                    <attribute name="groups"></attribute>
-                </xpath>
-                <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="type_id"/>
-                    <field name="channel_id" widget="selection"/>
-                </xpath>
-            </field>
-        </record>
+        <!-- Reporting for Marketing -->
+        <menuitem name="Marketing" id="base.marketing_reporting_menu" sequence="10"
+            parent="base.menu_reporting" />
 
-        <record id="view_crm_opportunity_form" model="ir.ui.view">
-            <field name="name">crm.lead.inherit.form</field>
-            <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='mailings']" position="before">
-                    <group string="Marketing">
-                        <field name="type_id" />
-                        <field name="channel_id" widget="selection"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
     </data>
 </openerp>

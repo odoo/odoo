@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_mail_mass_mailing_report_graph" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.report.graph</field>
+            <field name="model">mail.mass_mailing.report</field>
+            <field name="arch" type="xml">
+                <graph string="Mass Mailing Analysis" type="pivot" stacked="True">
+                    <field name="mailing_date" interval="day" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_mail_mass_mailing_report_search" model="ir.ui.view">
+            <field name="name">mail.mass_mailing.report.search</field>
+            <field name="model">mail.mass_mailing.report</field>
+            <field name="arch" type="xml">
+                <search string="Mass Mailing Analysis">
+                    <group expand="0" string="Extended Filters...">
+                        <!-- <separator orientation="vertical"/> -->
+                        <!-- <newline/> -->
+                        <field name="mailing_date"/>
+                    </group>
+                    <group expand="1" string="Group By...">
+                        <!-- <separator orientation="vertical" /> -->
+                        <filter string="Mailing Date (day)"
+                            domain="[]" context="{'group_by':'mailing_date:day'}"/>
+                        <filter string="Mailing Date (week)"
+                            domain="[]" context="{'group_by':'mailing_date:week'}"/>
+                        <filter string="Mailing Date (month)" name="mailing_date_month"
+                            domain="[]" context="{'group_by':'mailing_date:month'}"/>
+                        <filter string="Mailing Date (year)"
+                            domain="[]" context="{'group_by':'mailing_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions and Menuitems -->
+       <record id="action_mail_mass_mailing_report" model="ir.actions.act_window">
+           <field name="name">Mass Mailing Analysis</field>
+           <field name="res_model">mail.mass_mailing.report</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">graph</field>
+           <field name="help">Mass Mailing Analysis allows you to check different mailing related information like the opened ratio or the mailing performances. You can sort out your analysis by different groups to get accurate grained analysis.</field>
+       </record>
+       <record id="action_mail_mass_mailing_report_graph" model="ir.actions.act_window.view">
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_mail_mass_mailing_report_graph"/>
+            <field name="act_window_id" ref="action_mail_mass_mailing_report"/>
+       </record>
+
+       <menuitem name="Mass Mailing Analysis" id="menu_mass_mailing_report" sequence="1"
+            parent="base.marketing_reporting_menu" action="action_mail_mass_mailing_report"/>
+
+    </data>
+</openerp>

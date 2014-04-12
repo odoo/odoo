@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from urlparse import urljoin
+import urllib
+import urlparse
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -50,7 +51,12 @@ class MailMail(osv.Model):
 
     def _get_tracking_url(self, cr, uid, mail, partner=None, context=None):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        track_url = urljoin(base_url, 'mail/track/%d/blank.gif' % mail.id)
+        track_url = urlparse.urljoin(
+            base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
+                'mail_id': mail.id,
+                'params': urllib.urlencode({'db': cr.dbname})
+            }
+        )
         return '<img src="%s" alt=""/>' % track_url
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
@@ -63,3 +69,10 @@ class MailMail(osv.Model):
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
+
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent is True and mail.statistics_ids:
+            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now()}, context=context)
+        elif mail_sent is False and mail.statistics_ids:
+            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'exception': fields.datetime.now()}, context=context)
+        return super(MailMail, self)._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)

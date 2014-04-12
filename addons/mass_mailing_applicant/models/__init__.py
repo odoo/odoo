@@ -1,0 +1,1 @@
+import mass_mailing

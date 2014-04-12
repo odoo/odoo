@@ -13,38 +13,38 @@
                 <div class="row">
                     <div class="col-md-8">
                         <a class="pull-right mt32"
-                                t-att-href="'/web#return_label=Website&amp;action=email_template.action_email_template_tree_all&amp;view_type=form&amp;id=%d' % template.id">
-                            <button class="btn btn-primary">Back to Template Form</button>
+                                t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;view_type=form' % (model_name, res_id)">
+                            <button class="btn btn-primary">Back to Form</button>
                         </a>
-                        <h1 t-field="template.name"/>
+                        <h1 t-field="object.name"/>
                         <div class="row" style="width: 600px;">
-                            <div class="row">
+                            <div t-if="'email_from' in model._all_columns" class="row">
                                 <div class="col-lg-3"><b>Email From</b></div>
-                                <div class="col-lg-9"><span t-field="template.email_from"/></div>
+                                <div class="col-lg-9"><span t-field="object.email_from"/></div>
                             </div>
 
-                            <div class="row">
+                            <div t-if="'email_to' in model._all_columns" class="row">
                                 <div class="col-lg-3"><b>To (Email)</b></div>
-                                <div class="col-lg-9"><span t-field="template.email_to"/></div>
+                                <div class="col-lg-9"><span t-field="object.email_to"/></div>
                             </div>
 
-                            <div class="row">
+                            <div t-if="'partner_to' in model._all_columns" class="row">
                                 <div class="col-lg-3"><b>To (Partners)</b></div>
-                                <div class="col-lg-9"><span t-field="template.partner_to"/></div>
+                                <div class="col-lg-9"><span t-field="object.partner_to"/></div>
                             </div>
 
-                            <div class="row">
+                            <div t-if="'reply_to' in model._all_columns" class="row">
                                 <div class="col-lg-3"><b>Reply To</b></div>
-                                <div class="col-lg-9"><span t-field="template.reply_to"/></div>
+                                <div class="col-lg-9"><span t-field="object.reply_to"/></div>
                             </div>
 
-                            <div class="row">
+                            <div t-if="'subject' in model._all_columns" class="row">
                                 <div class="col-lg-3"><b>Subject</b></div>
-                                <div class="col-lg-9"><span t-field="template.subject"/></div>
+                                <div class="col-lg-9"><span t-field="object.subject"/></div>
                             </div>
 
                             <div class="row well">
-                                <div t-field="template.body_html" style="position: relative;"/>
+                                <div t-field="object.body_html" style="position: relative;"/>
                             </div>
                         </div>
                     </div>

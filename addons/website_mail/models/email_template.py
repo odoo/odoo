@@ -27,7 +27,7 @@ class EmailTemplate(osv.Model):
     _inherit = 'email.template'
 
     def _get_website_link(self, cr, uid, ids, name, args, context=None):
-        return dict((id, _('<a href="website_mail/email_designer/%s">Open with visual editor</a>') % id) for id in ids)
+        return dict((id, _('<a href="website_mail/email_designer?model=email.template&res_id=%d">Open with visual editor</a>') % id) for id in ids)
 
     _columns = {
         'website_link': fields.function(
