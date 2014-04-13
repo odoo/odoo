@@ -40,7 +40,7 @@ class MassMailingList(osv.Model):
     def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
         result = dict.fromkeys(ids, 0)
         mlc = self.pool.get('mail.mass_mailing.contact')
-        for m in mlc.read_group(cr, uid, [('list_id','in',ids)], ['list_id'], ['list_id'], context=context):
+        for m in mlc.read_group(cr, uid, [('list_id','in',ids),('opt_out','!=',1)], ['list_id'], ['list_id'], context=context):
             result[m['list_id'][0]] = m['list_id_count']
         return result
 

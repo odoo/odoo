@@ -87,7 +87,7 @@
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="context">{'search_default_list_id': active_id}</field>
+            <field name="context">{'search_default_list_id': active_id, 'search_default_not_opt_out': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a recipient.
@@ -180,15 +180,17 @@
                 <form string="Mass Mailing" version="7.0">
                     <header>
                         <button name="action_test_mailing" type="object"
-                            class="oe_highlight" string="Test Mailing"/>
-                        <button name="send_mail" type="object"
+                            class="oe_highlight" string="Test Mailing" states="draft"/>
+                        <button name="send_mail" type="object" states="draft,test"
                             class="oe_highlight" string="Send to All"/>
+                        <button name="action_test_mailing" type="object" states="test,done"
+                            string="Send Test Sample"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">
                         <p><strong>
-                            <field name="scheduled" class="oe_inline"/>emails are in queue
-                            and will be sent soon.
+                            <field name="scheduled" class="oe_inline"/>
+                            emails are in queue and will be sent soon.
                         </strong></p>
                     </div>
                     <sheet>
@@ -236,16 +238,14 @@
                                     <strong>
                                         <field name="contact_nbr" class="oe_inline"/> Recipients
                                     </strong>
-                                    <button class="oe_link" type='object' name='action_domain_select' attrs="{'invisible': [('mailing_model', '=', 'mail.mass_mailing.contact')]}">
-                                        <span class="fa fa-arrow-right"> Change Selection</span>
-                                    </button>
                                 </div>
 
                             </div>
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight"/>
+                                <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight" states="draft"/>
+                                <button name="action_edit_html" type="object" string="Change Email Design" states="test"/>
                                 <div attrs="{'invisible' : ['|', ('body_html','!=',False), ('mailing_domain', '!=', False)]}" class="oe_view_nocontent oe_clear">
                                     <p class="oe_view_nocontent_create oe_edit_only">
                                         Click to design your email.

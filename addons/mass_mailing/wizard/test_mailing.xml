@@ -6,12 +6,15 @@
             <field name="name">mail.mass_mailing.test.form</field>
             <field name="model">mail.mass_mailing.test</field>
             <field name="arch" type="xml">
-                <form string="Mailing Test" version="7.0">
+                <form string="Send a Sample Mail" version="7.0">
+                    <p class="text-muted">
+                        Send a sample of this mailing to the above of email addresses for test purpose.
+                    </p>
                     <group>
                         <field name="email_to"/>
                     </group>
                     <footer>
-                        <button string="Test Mailing" name="send_mail_test" type="object" class="oe_highlight"/>
+                        <button string="Send Sample Mail" name="send_mail_test" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
