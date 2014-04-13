@@ -175,7 +175,7 @@ class MassMailing(osv.Model):
         'reply_to': fields.char('Reply To'),
 
         # Target Emails
-        'mailing_model': fields.selection(_get_mailing_model, string='Recipients Model'),
+        'mailing_model': fields.selection(_get_mailing_model, string='Recipients Model', required=True),
         'mailing_domain': fields.char('Domain'),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
@@ -191,7 +191,7 @@ class MassMailing(osv.Model):
         'state': 'draft',
         'date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
-        'mailing_model': 'res.partner',
+        'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
     }
 
