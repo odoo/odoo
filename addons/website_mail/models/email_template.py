@@ -25,14 +25,12 @@ from openerp.tools.translate import _
 
 class EmailTemplate(osv.Model):
     _inherit = 'email.template'
-
-    def _get_website_link(self, cr, uid, ids, name, args, context=None):
-        return dict((id, _('<a href="website_mail/email_designer?model=email.template&res_id=%d">Open with visual editor</a>') % id) for id in ids)
-
-    _columns = {
-        'website_link': fields.function(
-            _get_website_link, type='text',
-            string='Website Link',
-            help='Link to the website',
-        ),
-    }
+    def action_edit_html(self, cr, uid, ids, name, args, context=None):
+        assert len(ids)==1, "One and only one ID allowed for this action"
+        url = '/website_mail/email_designer?model=email.template&res_id=%d&field_body=body_html&field_from=email_form&field_subject=name' % (ids[0],)
+        return {
+            'name': _('Edit Template'),
+            'type': 'ir.actions.act_url',
+            'url': url,
+            'target': 'self',
+        }
