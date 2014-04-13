@@ -8,10 +8,10 @@
         <t t-set="head">
             <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
         </t>
-        <div id="wrap" class="container">
-            <div id="email_template" t-att-style="(object.body_html and len(templates&gt;0)) and 'display: none'" class="mb32">
+        <div id="wrap" class="container" t-ignore="True">
+            <div id="email_template" t-att-style="(object.body_html and len(templates)&gt;0) and 'display: none'" class="mb32">
                 <a class="mt16 btn btn-default pull-right" 
-                  t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;view_type=form' % (model_name, res_id)">
+                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
                     Back
                 </a>
                 <h1 class="page-header mt16">
@@ -35,7 +35,7 @@
                 </div>
             </div><div id="email_designer" t-att-style="not (object.body_html and len(templates)&gt; 0) and 'display: none'" class="mb32">
                 <a class="mt16 btn btn-primary pull-right" 
-                  t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;view_type=form' % (model_name, res_id)">
+                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
                     Save and Continue
                 </a>
                 <h1 class="page-header mt16">

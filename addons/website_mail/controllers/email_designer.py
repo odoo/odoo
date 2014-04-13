@@ -16,6 +16,7 @@ class WebsiteEmailDesigner(http.Controller):
         tids = tmpl_obj.search(cr, uid, [('model','=',template_model)], context=context)
         templates = tmpl_obj.browse(cr, uid, tids, context=context)
 
+        print templates
         values = {
             'object': request.registry[model].browse(cr, uid, res_id, context=context),
             'templates': templates,
