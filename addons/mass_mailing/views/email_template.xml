@@ -3,17 +3,6 @@
     <data>
 
         <!-- Email Templates -->
-        <record id="email_template_form_mass_mailing" model="ir.ui.view">
-            <field name="name">email.template.form.mass.mailing</field>
-            <field name="model">email.template</field>
-            <field name="inherit_id" ref="email_template.email_template_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='model_id']" position="after">
-                        <field name="use_in_mass_mailing"/>
-                </xpath>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="email_template_form_minimal">
             <field name="name">email.template.form.minimal</field>
             <field name="model">email.template</field>
@@ -29,7 +18,6 @@
                                     domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact'])]"/>
                                 <field name="model" invisible="True"/>
                                 <field name="use_default_to" invisible="1"/>
-                                <field name="use_in_mass_mailing" invisible="1"/>
                             </group>
                             <group>
                                 <div class="oe_right oe_button_box" name="buttons">
@@ -53,19 +41,6 @@
             </field>
         </record>
 
-        <record id="view_email_template_search_mass_mailing" model="ir.ui.view">
-           <field name="name">email.template.search.mass.mailing</field>
-           <field name="model">email.template</field>
-           <field name="inherit_id" ref="email_template.view_email_template_search"/>
-           <field name="arch" type="xml">
-                <xpath expr="//field[@name='model_id']" position="after">
-                    <separator/>
-                    <filter string="Available for Marketing and Mailing" name="use_in_mass_mailing" domain="[('use_in_mass_mailing', '=', 1)]"
-                        help="Available for use in mass mailings"/>
-                </xpath>
-           </field>
-        </record>
-
         <record model="ir.ui.view" id="view_email_template_kanban">
             <field name="name">email.template.kanban</field>
             <field name="model">email.template</field>
@@ -78,9 +53,6 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t>
-                                            <li><a name="action_new_mailing" type="object">New Mailing</a></li>
-                                        </t>
                                         <t t-if="widget.view.is_action_enabled('edit')">
                                             <li><a type="edit">Edit</a></li>
                                         </t>
@@ -110,11 +82,9 @@
             <field name="res_model">email.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain" eval="[('use_in_mass_mailing', '=', True)]"/>
             <field name="context">{
     'form_view_ref': 'mass_mailing.email_template_form_minimal',
     'default_use_default_to': True,
-    'default_use_in_mass_mailing': True,
 }</field>
         </record>
 
