@@ -319,7 +319,9 @@ class MassMailing(osv.Model):
         }
 
     def action_edit_html(self, cr, uid, ids, context=None):
-        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d' % ids[0]
+        assert len(ids)==1, "One and only one ID allowed for this action"
+        mail = self.browse(cr, uid, ids[0], context=context)
+        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&field_body=body_html&field_from=email_form&field_subject=name&template_model=%s' % (ids[0], mail.mailing_model)
         return {
             'name': _('Open with Visual Editor'),
             'type': 'ir.actions.act_url',
