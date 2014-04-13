@@ -194,8 +194,7 @@
                         </strong></p>
                     </div>
                     <sheet>
-
-                        <div class="oe_button_box pull-right" attrs="{'invisible': [('total', '=', 0)]}">
+                        <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
                             <button name="%(action_mail_mass_mailing_report)d"
                                 type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
@@ -209,7 +208,7 @@
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
                         </div>
-                        <div class="oe_button_box" attrs="{'invisible': [('total', '=', 0)]}" style="margin-bottom: 32px">
+                        <div class="oe_button_box" attrs="{'invisible': [('state', 'in', ('draft','test'))]}" style="margin-bottom: 32px">
                             <button name="%(action_mail_mass_mailing_report)d" type="action"
                                 icon="fa-envelope-o" class="oe_stat_button">
                                 <field name="total" string="Emails" widget="statinfo"/>

@@ -245,14 +245,12 @@ class MassMailing(osv.Model):
                 list_ids += command[2]
         if list_ids:
             values['contact_nbr'] = self.pool[mailing_model].search(
-                cr, uid,
-                self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, list_ids, context=context)[mailing_model],
+                cr, uid, [('list_id', 'in', list_ids), ('opt_out','!=',1)],
                 count=True, context=context
             )
+        else:
+            values['contact_nbr'] = 0
         return {'value': values}
-
-    def on_change_contact_ab_pc(self, cr, uid, ids, contact_ab_pc, contact_nbr, context=None):
-        return {'value': {'contact_ab_nbr': contact_nbr * contact_ab_pc / 100.0}}
 
     def action_duplicate(self, cr, uid, ids, context=None):
         copy_id = None
@@ -268,44 +266,6 @@ class MassMailing(osv.Model):
                 'context': context,
             }
         return False
-
-    def _get_model_to_list_action_id(self, cr, uid, model, context=None):
-        if model == 'res.partner':
-            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_partner_to_mailing_list')
-        else:
-            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing.action_contact_to_mailing_list')
-
-    def action_domain_select(self, cr, uid, ids, context=None):
-        mailing = self.browse(cr, uid, ids[0], context=context)
-        ctx = dict(
-            context,
-            search_default_not_opt_out=True,
-            view_manager_highlight=[action_id],         # To Change
-            default_mass_mailing_id=ids[0],
-            default_model=mailing.mailing_model
-        )
-        return {
-            'name': _('Choose Recipients'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': mailing.mailing_model,
-            'context': ctx,
-        }
-
-    def action_see_recipients(self, cr, uid, ids, context=None):
-        mailing = self.browse(cr, uid, ids[0], context=context)
-        domain = self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [c.id for c in mailing.contact_list_ids], context=context)[mailing.mailing_model]
-        return {
-            'name': _('See Recipients'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': mailing.mailing_model,
-            'target': 'new',
-            'domain': domain,
-            'context': context,
-        }
 
     def action_test_mailing(self, cr, uid, ids, context=None):
         ctx = dict(context, default_mass_mailing_id=ids[0])
@@ -349,7 +309,7 @@ class MassMailing(osv.Model):
         res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
 
         # randomly choose a fragment
-        if mailing.contact_ab_pc != 100:
+        if mailing.contact_ab_pc < 100:
             topick = mailing.contact_ab_nbr
             if mailing.mass_mailing_campaign_id and mailing.ab_testing:
                 already_mailed = self.pool['mail.mass_mailing.campaign'].get_recipients(cr, uid, [mailing.mass_mailing_campaign_id.id], context=context)[mailing.mass_mailing_campaign_id.id]
