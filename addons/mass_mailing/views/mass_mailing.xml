@@ -436,13 +436,31 @@
             </field>
         </record>
 
+        <record id="action_new_mass_mailing" model="ir.actions.act_window">
+            <field name="name">Mass Mailings</field>
+            <field name="res_model">mail.mass_mailing</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,kanban,tree</field>
+            <field name="context">{'campaign_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a new mailing.
+                </p><p>
+                    Mass mailing allows you to to easily design and send mass
+                    mailings to your contacts, customers or leads using mailing
+                    lists.
+                </p>
+            </field>
+        </record>
+
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_form">
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                 <form string="Mass Mailing Campaign" version="7.0">
                     <header>
-                        <button name="action_new_mailing" type="object" class="oe_highlight" string="New Mailing"/>
+                        <button name="%(action_new_mass_mailing)d" type="action" class="oe_highlight" string="New Mailing"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
