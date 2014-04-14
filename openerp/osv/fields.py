@@ -344,6 +344,29 @@ class date(_column):
                               exc_info=True)
         return (context_today or today).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
+    def date_to_datetime(self, cr, uid, userdate, context=None):
+        """ Convert date values expressed in user's timezone to
+        server-side UTC timestamp, assuming a default arbitrary
+        time of 12:00 AM - because a time is needed.
+    
+        :param str userdate: date string in in user time zone
+        :return: UTC datetime string for server-side use
+        """
+        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
+        if context and context.get('tz'):
+            tz_name = context['tz']
+        else:
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + timedelta(hours=12.0)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+
 class datetime(_column):
     _type = 'datetime'
 
