@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class account_analytic_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -100,8 +101,11 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         credit = self._sum_credit(accounts, date1, date2)
         return (debit-credit)
 
-report_sxw.report_sxw('report.account.analytic.account.cost_ledger', 'account.analytic.account', 'addons/account/project/report/cost_ledger.rml',parser=account_analytic_cost_ledger, header="internal")
 
+class report_analyticcostledger(osv.AbstractModel):
+    _name = 'report.account.report_analyticcostledger'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_analyticcostledger'
+    _wrapped_report_class = account_analytic_cost_ledger
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

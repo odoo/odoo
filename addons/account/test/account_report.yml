@@ -16,10 +16,9 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('account.account_invoice_customer0')], 'account.invoice', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('account.account_invoice_customer0')], 'account.report_invoice', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
-
 -
   In order to test the PDF reports defined on a partner, we will print the Overdue Report
 -
@@ -27,7 +26,7 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], 'account.overdue', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], 'account.report_overdue', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -
@@ -86,8 +85,8 @@
   Print the General Ledger Report in Landscape Mode
 -
   !python {model: account.account}: |
-    ctx={}
-    data_dict = {'chart_account_id':ref('account.chart0'),'landscape':True}
+    ctx={'landscape': True}
+    data_dict = {'chart_account_id':ref('account.chart0')}
     from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -

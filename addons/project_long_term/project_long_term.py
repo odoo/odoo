@@ -273,8 +273,8 @@ class account_analytic_account(osv.osv):
         'use_phases': fields.boolean('Phases', help="Check this field if you plan to use phase-based scheduling"),
     }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_phases'] = template.use_phases

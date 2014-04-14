@@ -118,10 +118,18 @@ class res_users(osv.Model):
             various mailboxes, we do not have access to the current partner_id. """
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
+        current_pids = []
         partner_ids = kwargs.get('partner_ids', [])
-        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
-        if partner_id not in [command[1] for command in partner_ids]:
-            partner_ids.append(partner_id)
+        user_pid = self._message_post_get_pid(cr, uid, thread_id, context=context)
+        for partner_id in partner_ids:
+            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
+                current_pids.append(partner_id[1])
+            elif isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
+                current_pids.append(partner_id[2])
+            elif isinstance(partner_id, (int, long)):
+                current_pids.append(partner_id)
+        if user_pid not in current_pids:
+            partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
         return self.pool.get('mail.thread').message_post(cr, uid, False, **kwargs)
 
