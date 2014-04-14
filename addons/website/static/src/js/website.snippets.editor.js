@@ -435,7 +435,6 @@
                     // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
                     $snippet = $(this);
                     $toInsert = $snippet.find('.oe_snippet_body').clone();
-                    $toInsert.removeClass('oe_snippet_body');
 
                     var selector = [];
                     var selector_siblings = [];
@@ -498,6 +497,8 @@
                     });
                 },
                 stop: function(ev, ui){
+                    $toInsert.removeClass('oe_snippet_body');
+                    
                     if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
                         var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
