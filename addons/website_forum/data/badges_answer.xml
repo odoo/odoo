@@ -61,6 +61,7 @@
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_2')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -94,6 +95,7 @@
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_3')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -127,6 +129,7 @@
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_4')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -139,7 +142,7 @@
 
         <!-- ACCEPTANCE -->
         <!-- Enlightened: at least 3 upvotes for an accepted answer -->
-<!--         <record id="badge_a_5" model="gamification.badge">
+        <record id="badge_a_5" model="gamification.badge">
             <field name="name">Enlightened</field>
             <field name="description">Answer was accepted with 3 or more votes</field>
             <field name="level">silver</field>
@@ -150,8 +153,11 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')"/>
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3), ('is_correct', '=', True)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('parent_id', '!=', False), ('vote_count', '>=', 3), ('is_correct', '=', True)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_enlightened">
             <field name="name">Enlightened</field>
@@ -159,6 +165,7 @@
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_5')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -167,9 +174,9 @@
             <field name="definition_id" eval="ref('definition_enlightened')"/>
             <field name="challenge_id" eval="ref('challenge_enlightened')"/>
             <field name="target_goal">1</field>
-        </record> -->
+        </record>
         <!-- Guru: at least 15 upvotes for an accepted answer -->
-<!--         <record id="badge_a_6" model="gamification.badge">
+        <record id="badge_a_6" model="gamification.badge">
             <field name="name">Guru</field>
             <field name="description">Answer accepted with 15 or more votes</field>
             <field name="level">silver</field>
@@ -180,8 +187,11 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15), ('is_correct', '=', True)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('parent_id', '!=', False), ('vote_count', '>=', 15), ('is_correct', '=', True)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_guru">
             <field name="name">Great Answer</field>
@@ -189,6 +199,7 @@
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_6')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')" />
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -197,7 +208,7 @@
             <field name="definition_id" eval="ref('definition_guru')" />
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_guru')" />
-        </record> -->
+        </record>
 
         <!-- Necromancer: 30 days old question -->
 <!--         <record id="badge_a_7" model="gamification.badge">
@@ -209,18 +220,16 @@
             <field name="name">Necromancer</field>
             <field name="description">Answered a question more than 30 days later with at least 2 votes</field>
             <field name="computation_mode">python</field>
-            <field name="compute_code">def get_posts(cr, uid, context=None):
-    res = 1
-    Post = self.pool['website.forum.post']
-    user_posts = Post.search(cr, uid, [('create_uid','=',object.user_id.id), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
-    for post in Post.browse(cr, uid, user_posts, context=context):
-        print post.parent_id.create_date
-        question_date = datetime.strptime(post.parent_id.create_date, "%Y-%m-%d %H:%M:%S")
-        answer_date = datetime.strptime(post.create_date, "%Y-%m-%d %H:%M:%S")
-        if ((question_date - answer_date).days) >= 30:
-            res += 1
-    return res
-result = get_posts(cr, uid, context=context)
+            <field name="compute_code">
+result = 1
+Post = self.pool['website.forum.post']
+user_posts = Post.search(cr, uid, [('create_uid','=',object.user_id.id), ('parent_id', '!=', False), ('vote_count', '>=', 2)], context=context)
+for post in Post.browse(cr, uid, user_posts, context=context):
+    print post.parent_id.create_date
+    question_date = datetime.strptime(post.parent_id.create_date, "%Y-%m-%d %H:%M:%S")
+    answer_date = datetime.strptime(post.create_date, "%Y-%m-%d %H:%M:%S")
+    if ((question_date - answer_date).days) >= 30:
+        result += 1
             </field>
             <field name="display_mode">boolean</field>
             <field name="condition">higher</field>
@@ -231,6 +240,7 @@ result = get_posts(cr, uid, context=context)
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_18')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -242,7 +252,7 @@ result = get_posts(cr, uid, context=context)
         </record> -->
 
         <!-- Sealf Leaner: own question, 3+ upvotes -->
-<!--         <record id="badge_a_8" model="gamification.badge">
+        <record id="badge_a_8" model="gamification.badge">
             <field name="name">Self-Learner</field>
             <field name="description">Answered own question with at least 4 up votes</field>
             <field name="level">gold</field>
@@ -253,8 +263,11 @@ result = get_posts(cr, uid, context=context)
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('parent_id.create_uid', '=', user.id), ('vote_count', '>=', 3)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('self_reply', '=', True), ('vote_count', '>=', 4)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>            
         </record>
         <record model="gamification.challenge" id="challenge_self_learner">
             <field name="name">Self-Learner</field>
@@ -262,6 +275,7 @@ result = get_posts(cr, uid, context=context)
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_8')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -270,7 +284,7 @@ result = get_posts(cr, uid, context=context)
             <field name="definition_id" eval="ref('definition_self_learner')"/>
             <field name="target_goal">1</field>
             <field name="challenge_id" eval="ref('challenge_self_learner')"/>
-        </record> -->
+        </record>
 
     </data>
 </openerp>

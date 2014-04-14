@@ -97,6 +97,12 @@ class Post(osv.Model):
             res[post.id] = any(answer.create_uid.id == uid for answer in post.child_ids)
         return res
 
+    def _is_self_reply(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for post in self.browse(cr, uid, ids, context=context):
+            res[post.id] = post.parent_id and post.parent_id.create_uid == post.create_uid or False
+        return res
+
     _columns = {
         'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
@@ -137,6 +143,10 @@ class Post(osv.Model):
             }),
         # hierarchy
         'parent_id': fields.many2one('forum.post', 'Question', ondelete='cascade'),
+        'self_reply': fields.function(_is_self_reply, 'Reply to own question', type='boolean',
+            store={
+                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['parent_id', 'create_uid'], 10),
+            }),
         'child_ids': fields.one2many('forum.post', 'parent_id', 'Answers'),
         'child_count': fields.function(
             _get_child_count, string="Answers", type='integer',
