@@ -20,8 +20,10 @@
 ##############################################################################
 
 import time
-from common_report_header import common_report_header
+from openerp.osv import osv
 from openerp.report import report_sxw
+from common_report_header import common_report_header
+
 
 class journal_print(report_sxw.rml_parse, common_report_header):
 
@@ -156,6 +158,11 @@ class journal_print(report_sxw.rml_parse, common_report_header):
                         (tuple(move_state), period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
-report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header='internal')
+
+class report_generaljournal(osv.AbstractModel):
+    _name = 'report.account.report_generaljournal'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_generaljournal'
+    _wrapped_report_class = journal_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

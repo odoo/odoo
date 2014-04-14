@@ -66,7 +66,7 @@ class ir_http(orm.AbstractModel):
 
     def reroute(self, path):
         if not hasattr(request, 'rerouting'):
-            request.rerouting = []
+            request.rerouting = [request.httprequest.path]
         if path in request.rerouting:
             raise Exception("Rerouting loop is forbidden")
         request.rerouting.append(path)

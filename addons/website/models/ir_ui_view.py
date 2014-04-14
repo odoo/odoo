@@ -123,7 +123,7 @@ class view(osv.osv):
         return arch
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
-        if getattr(request, 'website_enabled', False):
+        if request and getattr(request, 'website_enabled', False):
             engine='website.qweb'
 
             if isinstance(id_or_xml_id, list):

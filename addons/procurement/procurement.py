@@ -439,7 +439,8 @@ class procurement_order(osv.osv):
         if len(to_cancel):
             move_obj.action_cancel(cr, uid, to_cancel)
         if len(to_assign):
-            move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
+            move_obj.write(cr, uid, to_assign, {'state': 'confirmed'})
+            move_obj.action_assign(cr, uid, to_assign)
         self.write(cr, uid, ids, {'state': 'cancel'})
         for id in ids:
             workflow.trg_trigger(uid, 'procurement.order', id, cr)

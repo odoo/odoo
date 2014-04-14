@@ -287,7 +287,9 @@ class project(osv.osv):
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
-        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='integer')
+        'doc_count': fields.function(
+            _get_attached_docs, string="Number of documents attached", type='integer'
+        )
      }
 
     def _get_type_common(self, cr, uid, context):
@@ -394,18 +396,18 @@ class project(osv.osv):
             result.append(new_id)
 
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
-            parent_id = self.browse(cr, uid, new_id, context=context).analytic_account_id.id
+            parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
 
         if result and len(result):
             res_id = result[0]
             form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
-            form_view = data_obj.read(cr, uid, [form_view_id], ['res_id'])[0]
+            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
             tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
-            tree_view = data_obj.read(cr, uid, [tree_view_id], ['res_id'])[0]
+            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
             search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
-            search_view = data_obj.read(cr, uid, [search_view_id], ['res_id'])[0]
+            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
             return {
                 'name': _('Projects'),
                 'view_type': 'form',
@@ -635,7 +637,7 @@ class task(osv.osv):
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         access_rights_uid = access_rights_uid or uid
         if project_id:
-            ids += self.pool.get('project.project').read(cr, access_rights_uid, [project_id], ['members'], context=context)[0]['members']
+            ids += self.pool.get('project.project').read(cr, access_rights_uid, project_id, ['members'], context=context)['members']
             order = res_users._order
             # lame way to allow reverting search, should just work in the trivial case
             if read_group_order == 'user_id desc':
@@ -732,9 +734,10 @@ class task(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        stage = self._get_default_stage_id(cr, uid, context=context)
-        if stage:
-            default['stage_id'] = stage
+        if not context.get('copy', False):
+            stage = self._get_default_stage_id(cr, uid, context=context)
+            if stage:
+                default['stage_id'] = stage
         return super(task, self).copy(cr, uid, id, default, context)
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
@@ -758,7 +761,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
-        'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange',
+        'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]"),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
@@ -774,7 +777,7 @@ class task(osv.osv):
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1", track_visibility='onchange', change_default=True),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -800,7 +803,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'user_id': fields.many2one('res.users', 'Assigned to', track_visibility='onchange'),
+        'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
@@ -1054,7 +1057,7 @@ class task(osv.osv):
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_start
-        if vals.get('user_id'):
+        if vals.get('user_id') and not vals.get('start_date'):
             vals['date_start'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
@@ -1071,7 +1074,7 @@ class task(osv.osv):
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
         # user_id change: update date_start
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_start' not in vals:
             vals['date_start'] = fields.datetime.now()
 
         # Overridden to reset the kanban_state to normal whenever

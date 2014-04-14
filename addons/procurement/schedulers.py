@@ -61,7 +61,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp.registry(use_new_cursor).db.cursor()
+                cr = openerp.registry(use_new_cursor).cursor()
 
             procurement_obj = self.pool.get('procurement.order')
             if not skip_exception:
@@ -201,7 +201,7 @@ class procurement_order(osv.osv):
         if context is None:
             context = {}
         if use_new_cursor:
-            cr = openerp.registry(use_new_cursor).db.cursor()
+            cr = openerp.registry(use_new_cursor).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         
         procurement_obj = self.pool.get('procurement.order')

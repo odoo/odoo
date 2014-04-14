@@ -65,11 +65,6 @@ class account_crossovered_analytic(osv.osv_memory):
              'model': 'account.analytic.account',
              'form': data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.account.crossovered.analytic',
-            'datas': datas,
-        }
-
+        return self.pool['report'].get_action(cr, uid, ids, 'account_analytic_plans.report_crossoveredanalyticplans', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

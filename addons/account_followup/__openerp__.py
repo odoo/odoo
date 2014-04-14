@@ -55,11 +55,12 @@ Note that if you want to check the follow-up level for a given partner/account e
         'account_followup_view.xml',
         'account_followup_customers.xml',
         'wizard/account_followup_print_view.xml',
+        'views/report_followup.xml',
+        'account_followup_reports.xml'
     ],
     'demo': ['account_followup_demo.xml'],
     'test': [
         'test/account_followup.yml',
-        #TODO 'test/account_followup_report.yml', --> Need to wait for second step in order to check report (expects after first)
     ],
     'installable': True,
     'auto_install': False,
