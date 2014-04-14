@@ -378,9 +378,6 @@ extrinsic (attendance records, student discussions, etc…).
 
 .. patch::
 
-.. TODO:: ``-u`` did not work, not even ``-uall``, new data file does not get
-          installed
-
 Note a new feature: ``t-field`` tags can take options through
 ``t-field-options``. The options must be a JSON_ object. Available options
 depend on the field's type and potentially the display widget (some types
@@ -394,11 +391,12 @@ an explicit format for `the weekday in short form
           canonical representation in order to provide all of the field's
           information.
 
-.. warning:: if you edit the course's dates, you will notice that the two
-             displays of the ``date`` field are unlinked, if one is edited
-             the second one will not change until the edition is saved. This
-             is a limitation of the current ``website`` but may be improved in
-             future releases.
+.. warning::
+
+    if you edit the course's dates, you will notice that the two displays of
+    the ``date`` field are not synchronized, if one is edited the second one
+    will not change until the edition is saved. This is a limitation of the
+    current ``website`` but may be improved in future releases.
 
 .. sending & storing comments (?)
 
@@ -417,8 +415,6 @@ out now. First let's move our data set to demo data:
 the difference is simply that new databases can be created either in "demo"
 mode or in "no demo" mode. In the former case, the database will be preloaded
 with any demo data configured in the installed module.
-
-.. todo:: need to create a new DB again?
 
 A brief and incomplete introduction to the OpenERP administration
 -----------------------------------------------------------------
