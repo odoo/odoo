@@ -11,32 +11,23 @@
         steps: [
             {
                 title:     "select event",
-                element:   'a[href*="/event"]:contains("Open Days in Los Angeles"):first',
+                element:   'a[href*="/event"]:contains("Conference on Business Applications"):first',
             },
             {
-                title:     "go to register page",
-                waitNot:   'a[href*="/event"]:contains("Functional Webinar")',
-                autoComplete:   function () {
-                    // use onload if website_event_track is installed
-                    if (!$('form:contains("Ticket Type")').size()) {
-                        window.location.href = $('a[href*="/event/Open-Days-in-Los-Angeles"][href*="/register"]').attr("href");
-                    }
-                },
-            },
-            {
+                waitNot:   'a[href*="/event"]:contains("Conference on Business Applications")',
                 title:     "select 2 Standard tickets",
-                element:   'select[name="ticket-1"]',
+                element:   'select:eq(0)',
                 sampleText: '2',
             },
             {
                 title:     "select 3 VIP tickets",
-                waitFor:   'select[name="ticket-1"] option:contains(2):selected',
-                element:   'select[name="ticket-2"]',
+                waitFor:   'select:eq(0) option:contains(2):selected',
+                element:   'select:eq(1)',
                 sampleText: '3',
             },
             {
                 title:     "Order Now",
-                waitFor:   'select[name="ticket-2"] option:contains(3):selected',
+                waitFor:   'select:eq(1) option:contains(3):selected',
                 element:   '.btn-primary:contains("Order Now")',
             },
             {
