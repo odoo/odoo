@@ -14,16 +14,20 @@
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                             <field name="ref_ir_act_window" invisible="1"/>
-                            <button class="oe_inline oe_stat_button" name="create_action" string="Add action" type="object"
+                            <button class="oe_inline oe_stat_button" name="create_action" type="object"
                                     attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
-                                    help="Display an option on related documents to open a composition wizard with this template" widget="statinfo"/>
-                            <button name="unlink_action" string="Drop action" type="object" 
+                                    help="Display an option on related documents to open a composition wizard with this template">
+                                <div>Add<br/>Context Action</div>
+                            </button>
+                            <button name="unlink_action" type="object" 
                                     class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
-                                    help="Remove the contextual action to use this template on related documents" widget="statinfo"/>
+                                    help="Remove the contextual action to use this template on related documents" widget="statinfo">
+                                <div>Remove<br/>Context Action</div>
+                            </button>
                             <button class="oe_inline oe_stat_button" name="%(wizard_email_template_preview)d" icon="fa-search-plus" string="Preview"
                                     type="action" target="new"
-                                    context="{'template_id':active_id}" widget="statinfo"/>
+                                    context="{'template_id':active_id}"/>
                         </div>
                         <notebook>
                             <page string="Mailing Template">
