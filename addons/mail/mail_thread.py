@@ -1526,8 +1526,7 @@ class mail_thread(osv.AbstractModel):
         if subtype:
             if '.' not in subtype:
                 subtype = 'mail.%s' % subtype
-            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, *subtype.split('.'))
-            subtype_id = ref and ref[1] or False
+            subtype_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, subtype)
 
         # automatically subscribe recipients if asked to
         if context.get('mail_post_autofollow') and thread_id and partner_ids:

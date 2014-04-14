@@ -86,6 +86,7 @@
                                     <field name="reward_second_id" attrs="{'invisible': [('reward_first_id','=', False)]}" />
                                     <field name="reward_third_id" attrs="{'invisible': ['|',('reward_first_id','=', False),('reward_second_id','=', False)]}" />
                                     <field name="reward_failure" attrs="{'invisible': [('reward_first_id','=', False)]}" />
+                                    <field name="reward_realtime" attrs="{'readonly': [('reward_id','=', False)], 'required': [('reward_id','!=', False)]}" />
                                 </group>
                                 <div class="oe_grey">
                                     <p>Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed.</p>

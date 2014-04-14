@@ -1498,7 +1498,9 @@
             $(document.body).on("media-saved", self, function (event, prev , item) {
                 self.editor.onBlur();
                 self.BuildingBlock.make_active(false);
-                self.BuildingBlock.make_active($(item));
+                if (self.$target.parent().data("oe-field") !== "image") {
+                    self.BuildingBlock.make_active($(item));
+                }
             });
 
             this.$el.find(".edition").click(function (event) {
