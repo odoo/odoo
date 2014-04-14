@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 48c349d1df4e975b47b34afbbb527f023f4f7ca0
+# Parent 9d054be011cf2d3019e3b4d1be7cc95375044a05
 
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
@@ -9,7 +9,7 @@ diff --git a/views/templates.xml b/views/templates.xml
              <div class="oe_structure">
                  <div class="container">
 -                    <h1><t t-esc="ta.name"/></h1>
-+                    <h1><t t-field="ta.name"/></h1>
++                    <h1 t-field="ta.name"/>
                  </div>
              </div>
              <div class="oe_structure"/>

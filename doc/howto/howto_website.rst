@@ -272,8 +272,6 @@ used for a single page, or to add content in HTML fields.
     each page. As a result, it's safe to use dedicated-content snippets for
     "static" pages.
 
-Time, then, to create more specific content.
-
 Storing data in OpenERP
 =======================
 
@@ -304,14 +302,14 @@ Let's add them in data files:
 
 .. patch::
 
-Update the module again, reload `your openerp`_ and the TAs are back. Click on
-a TA name, and you'll see an error message. Let's fix the TA view now:
+Update the module again, reload `your openerp`_ and the TAs are back.
 
-.. todo:: if ta template was modified in previous section, it's marked
-          noupdate and updating the module will have no effect for no known
-          reason. That's really quite annoying.
+.. warning:: if you can't see your data, check that you have reloaded the
+             server with ``-i academy``, not ``-u academy``, new data files
+             are not installed with ``-u``.
 
-          Ensure that ``-i`` does discard the noupdate-marked template
+Click on a TA name, and you'll see an error message. Let's fix the TA view
+now:
 
 .. patch::
 
@@ -357,9 +355,6 @@ Then, insert the new biographical content in the template using the same
 object-aware template tag:
 
 .. patch::
-
-.. todo:: updating the ``name`` field from the RTE altered the template, which
-          locked it...
 
 Update the module, browse to a TA's page and open the edition mode (using the
 :guilabel:`Edit` button in the window's top-right).  The empty HTML field now

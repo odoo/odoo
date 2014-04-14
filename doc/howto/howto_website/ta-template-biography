@@ -1,14 +1,13 @@
 # HG changeset patch
-# Parent bba1cb179e03ab82504d12accfe456633806ba06
+# Parent 3028c6855414a013dd18addbe102d7172bafc5af
+
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
 +++ b/views/templates.xml
-@@ -35,7 +35,9 @@
-             <div class="oe_structure"/>
+@@ -36,6 +36,8 @@
              <div class="oe_structure">
                  <div class="container">
--                    <h1><t t-field="ta.name"/></h1>
-+                    <h1 t-field="ta.name"/>
+                     <h1 t-field="ta.name"/>
 +                    <h2>Biography</h2>
 +                    <div t-field="ta.biography"/>
                  </div>
