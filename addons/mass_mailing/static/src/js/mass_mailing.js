@@ -1,7 +1,5 @@
 openerp.mass_mailing = function (instance) {
     var _t = instance.web._t;
-	debugger;
-
     openerp.mass_mailing = function(openerp) {
         openerp.web_kanban.KanbanRecord.include({
             on_card_clicked: function (event) {
@@ -50,6 +48,7 @@ openerp.mass_mailing = function (instance) {
                     contexts: search_data.contexts,
                     group_by_seq: search_data.groupbys || []
                 }).then(function (results) {
+                    // if selected IDS change domain
                     var domain = self2.pop.dataset.domain.concat(results.domain || []);
                     self.set_value(JSON.stringify(domain))
                 });
