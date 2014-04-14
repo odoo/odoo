@@ -69,6 +69,7 @@
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
             <script type="text/javascript">
                 // Bootstrap and jQuery UI conflicts
                 $.fn.bstooltip = $.fn.tooltip;
@@ -284,6 +285,8 @@
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
         <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
         <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+
+        <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
     </xpath>
 </template>
 
@@ -592,8 +595,57 @@
             <link rel='stylesheet' href='/website/static/src/css/website.css'/>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            <script>
+                $(document).ready(function() {
+                    var button = $('#reset_templates_button');
+                    button.click(function() {
+                        var dialog = $('#reset_template_confirmation').modal('show');
+                        var input = dialog.find('input[type="text"]').val('').focus();
+                        var dialog_form = dialog.find('form');
+                        dialog_form.submit(function() {
+                            if (input.val() == dialog.find('.confirm_word').text()) {
+                                dialog.modal('hide');
+                                button.prop('disabled', true).text('Working...');
+                                $('#reset_templates_form').trigger('submit');
+                            } else {
+                                input.val('').focus();
+                            }
+                            return false;
+                        });
+                        return false;
+                    });
+                });
+            </script>
         </head>
         <body>
+            <div id="reset_template_confirmation" class="modal" tabindex="-1" role="dialog" aria-hidden="true" t-ignore="true">
+                <div class="modal-dialog">
+                    <form class="form-horizontal" role="form">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="modal-title">Reset templates</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group mb0">
+                                <label for="page-name" class="col-sm-9">
+                                    <p>The selected templates will be reset to their factory settings.</p>
+                                    <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
+                                </label>
+                                <div class="col-sm-3 mt16">
+                                    <input type="text" class="form-control" required="required" placeholder="yes"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="Confirm" class="btn btn-primary"/>
+                            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
             <div id="wrapwrap">
                 <div class="navbar navbar-default navbar-static-top">
                     <div class="container">
@@ -615,7 +667,7 @@
                             <h4>Template fallback</h4>
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
-                            <form action="/website/reset_templates" method="post">
+                            <form action="/website/reset_templates" method="post" id="reset_templates_form">
                                 <ul class="oe_template_fallback">
                                     <li t-foreach="views" t-as="view">
                                         <label>
@@ -625,7 +677,7 @@
                                     </li>
                                 </ul>
                                 <input type="hidden" name="redirect" t-att-value="request.httprequest.path"/>
-                                <input type="submit" value="Reset selected templates"/>
+                                <button id="reset_templates_button">Reset selected templates</button>
                             </form>
                         </div>
                     </div>

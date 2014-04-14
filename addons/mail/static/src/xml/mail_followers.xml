@@ -5,17 +5,23 @@
         followers main template
         Template used to display the followers, the actions and the subtypes in a record.
         -->
-    <div t-name="mail.followers" class="oe_followers">        
+    <div t-name="mail.followers" class="oe_followers">
         <div class="oe_actions">
-            <button type="button" class="oe_follower oe_notfollow">
-                <span class="oe_follow">Follow</span>
-                <span class="oe_unfollow">Unfollow</span>
-                <span class="oe_following">Following</span>
-            </button>
+            <div t-attf-class="btn-group oe_subtype_list">
+                <button class="btn oe_follower oe_notfollow">
+                    <span class="oe_follow">Follow</span>
+                    <span class="oe_unfollow">Unfollow</span>
+                    <span class="oe_following">Following</span>
+                </button>
+                <button type="button" t-attf-class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu"></ul>
+            </div>
+
             <t t-if="widget.comment">
                 <h5 class="oe_comment"><t t-raw="widget.comment"/></h5>
             </t>
-            <div class="oe_subtype_list"></div>
         </div>
         <div class='oe_follower_title_box'>
             <h4 class='oe_follower_title'>Followers</h4>
@@ -42,8 +48,12 @@
     <t t-name="mail.followers.subtype">
         <table class='oe_subtype'>
             <tr>
-                <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+record.id" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></td>
-                <td><label t-att-for="'input_mail_followers_subtype_'+record.id"><t t-esc="record.name"/></label></td>
+                <td width="10%">
+                    <input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/>
+                </td>
+                <td>
+                    <label t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"><t t-raw="record.name"/></label>
+                </td>
             </tr>
         </table>
     </t>

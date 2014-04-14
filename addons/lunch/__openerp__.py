@@ -23,7 +23,7 @@
     'name': 'Lunch Orders',
     'author': 'OpenERP SA',
     'version': '0.2',
-    'depends': ['base'],
+    'depends': ['base', 'report'],
     'category' : 'Tools',
     'summary': 'Lunch Order, Meal, Food',
     'description': """
