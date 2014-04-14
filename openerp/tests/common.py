@@ -21,6 +21,7 @@ import werkzeug
 
 import openerp
 from openerp import Environment
+from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
 
@@ -38,25 +39,6 @@ if not DB and hasattr(threading.current_thread(), 'dbname'):
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
 
-# Magic session_id, unfortunately we have to serialize access to the cursors to
-# serialize requests. We first tried to duplicate the database for each tests
-# but this proved too slow. Any idea to improve this is welcome.
-HTTP_SESSION = {}
-
-def acquire_test_cursor(session_id):
-    if openerp.tools.config['test_enable']:
-        cr = HTTP_SESSION.get(session_id)
-        if cr:
-            cr._test_lock.acquire()
-            return cr
-
-def release_test_cursor(cr):
-    if openerp.tools.config['test_enable']:
-        if hasattr(cr, '_test_lock'):
-            cr._test_lock.release()
-            return True
-    return False
-
 def at_install(flag):
     """ Sets the at-install state of a test, the flag is a boolean specifying
     whether the test should (``True``) or should not (``False``) run during
@@ -68,6 +50,7 @@ def at_install(flag):
         obj.at_install = flag
         return obj
     return decorator
+
 def post_install(flag):
     """ Sets the post-install state of a test. The flag is a boolean
     specifying whether the test should or should not run after a set of
@@ -84,18 +67,13 @@ class BaseCase(unittest2.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
     
-    This class is abstract and expects self.cr and self.uid to be initialized by subclasses.
+    This class is abstract and expects self.registry, self.cr and self.uid to be
+    initialized by subclasses.
     """
 
-    @classmethod
     def cursor(self):
-        return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+        return self.registry.cursor()
 
-    @classmethod
-    def registry(self, model):
-        return openerp.modules.registry.RegistryManager.get(DB)[model]
-
-    @classmethod
     def ref(self, xid):
         """ Returns database ID corresponding to a given identifier.
 
@@ -107,7 +85,6 @@ class BaseCase(unittest2.TestCase):
         _, id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module, xid)
         return id
 
-    @classmethod
     def browse_ref(self, xid):
         """ Returns a browsable record for the given identifier.
 
@@ -126,11 +103,10 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        # Store cr and uid in class variables, to allow ref() and browse_ref to be BaseCase @classmethods
-        # and still access them
-        TransactionCase.cr = cr = self.cursor()
-        TransactionCase.uid = uid = openerp.SUPERUSER_ID
-        TransactionCase.env = Environment(cr, uid, {})
+        self.registry = RegistryManager.get(DB)
+        self.cr = self.cursor()
+        self.uid = openerp.SUPERUSER_ID
+        self.env = Environment(self.cr, self.uid, {})
 
     def tearDown(self):
         self.cr.rollback()
@@ -145,7 +121,8 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cr = cls.cursor()
+        cls.registry = RegistryManager.get(DB)
+        cls.cr = cls.registry.cursor()
         cls.uid = openerp.SUPERUSER_ID
         cls.env = Environment(cls.cr, cls.uid, {})
 
@@ -169,16 +146,15 @@ class HttpCase(TransactionCase):
 
     def setUp(self):
         super(HttpCase, self).setUp()
+        self.registry.enter_test_mode()
         # setup a magic session_id that will be rollbacked
         self.session = openerp.http.root.session_store.new()
         self.session_id = self.session.sid
         self.session.db = DB
         openerp.http.root.session_store.save(self.session)
-        self.cr._test_lock = threading.RLock()
-        HTTP_SESSION[self.session_id] = self.cr
 
     def tearDown(self):
-        del HTTP_SESSION[self.session_id]
+        self.registry.leave_test_mode()
         super(HttpCase, self).tearDown()
 
     def url_open(self, url, data=None, timeout=10):
@@ -256,7 +232,23 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+            self._wait_remaining_requests()
             _logger.info("phantom_run execution finished")
+
+    def _wait_remaining_requests(self):
+        t0 = int(time.time())
+        for thread in threading.enumerate():
+            if thread.name.startswith('openerp.service.http.request.'):
+                while thread.isAlive():
+                    # Need a busyloop here as thread.join() masks signals
+                    # and would prevent the forced shutdown.
+                    thread.join(0.05)
+                    time.sleep(0.05)
+                    t1 = int(time.time())
+                    if t0 != t1:
+                        _logger.info('remaining requests')
+                        openerp.tools.misc.dumpstacks()
+                        t0 = t1
 
     def phantom_jsfile(self, jsfile, timeout=60, **kw):
         options = {
