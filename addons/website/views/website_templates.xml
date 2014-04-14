@@ -76,15 +76,15 @@
                 $.fn.bsbutton = $.fn.button;
 
                 // keep jQuery method alive
-               <!--  window.watch("$", function (prop, oldval, val) {
-                    console.debug("jQuery "+oldval.fn.jquery+" overwritted by jQuery "+val.fn.jquery);
+                 window.watch("$", function (prop, oldval, val) {
+                    console.debug("jQuery " + oldval.fn.jquery + " overwritted by jQuery " + val.fn.jquery);
                     for (var i in oldval.fn) {
                         if (typeof val.fn[i] === "undefined") {
                             val.fn[i] = oldval.fn[i];
                         }
                     }
                     return val;
-                }); -->
+                });
             </script>
 
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
