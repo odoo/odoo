@@ -1,4 +1,5 @@
 openerp.hr_recruitment = function (openerp) {
+  "use strict";
 
   openerp.web_kanban.KanbanRecord.include({
       on_card_clicked: function() {
@@ -10,4 +11,4 @@ openerp.hr_recruitment = function (openerp) {
       },
   });
 
-}
+};

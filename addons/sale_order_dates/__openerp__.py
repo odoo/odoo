@@ -22,7 +22,7 @@
 
 {
     'name': 'Dates on Sales Order',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Sales Management',
     'description': """
 Add additional date information to the sales order.
@@ -30,7 +30,7 @@ Add additional date information to the sales order.
 
 You can add the following additional dates to a sales order:
 ------------------------------------------------------------
-    * Requested Date
+    * Requested Date (will be used as the expected date on pickings)
     * Commitment Date
     * Effective Date
 """,
@@ -40,8 +40,8 @@ You can add the following additional dates to a sales order:
     'depends': ['sale_stock'],
     'data': ['sale_order_dates_view.xml'],
     'demo': [],
-    'test': [],
-    'installable': False, #TODO picking_ids does not exist anymore on sale object, check to adapt this module once it has been changed in sales
+    'test': ['test/requested_date.yml'],
+    'installable': True,
     'auto_install': False,
 }
 

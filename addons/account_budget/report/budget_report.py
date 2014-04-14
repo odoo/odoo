@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
 
 tot = {}
@@ -187,6 +188,11 @@ class budget_report(report_sxw.rml_parse):
         result.append(res)
         return result
 
-report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml', parser=budget_report, header='internal')
+
+class report_budget(osv.AbstractModel):
+    _name = 'report.account_budget.report_budget'
+    _inherit = 'report.abstract_report'
+    _template = 'account_budget.report_budget'
+    _wrapped_report_class = budget_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

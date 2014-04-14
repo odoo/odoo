@@ -285,7 +285,7 @@ openerp.base_import = function (instance) {
 
                     callback(item_finder(default_value));
                 },
-
+                placeholder: _t('Don\'t import'),
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
             });

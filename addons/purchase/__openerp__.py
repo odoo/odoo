@@ -46,7 +46,7 @@ Dashboard / Reports for Purchase Management will include:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['stock_account', 'process'],
+    'depends': ['stock_account', 'process', 'report'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',

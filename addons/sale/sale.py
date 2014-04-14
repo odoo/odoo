@@ -20,11 +20,10 @@
 ##############################################################################
 
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP, float_compare
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
 
@@ -43,7 +42,7 @@ class sale_order(osv.osv):
         if not default:
             default = {}
         default.update({
-            'date_order': fields.date.context_today(self, cr, uid, context=context),
+            'date_order': fields.datetime.now(),
             'state': 'draft',
             'invoice_ids': [],
             'date_confirm': False,
@@ -503,7 +502,7 @@ class sale_order(osv.osv):
                     lines.append(line.id)
             created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
-                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
+                invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
         if not invoices:
             for o in self.browse(cr, uid, ids, context=context):
                 for i in o.invoice_ids:
@@ -644,12 +643,12 @@ class sale_order(osv.osv):
             'product_uos': (line.product_uos and line.product_uos.id) or line.product_uom.id,
             'company_id': order.company_id.id,
             'group_id': group_id,
-            'invoice_state': (order.order_policy=='picking') and '2binvoiced' or 'none',
+            'invoice_state': (order.order_policy == 'picking') and '2binvoiced' or 'none',
             'sale_line_id': line.id
         }
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
+        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=line.delay or 0.0)
         return date_planned
 
     def _prepare_procurement_group(self, cr, uid, order, context=None):

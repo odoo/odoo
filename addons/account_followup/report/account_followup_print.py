@@ -21,8 +21,9 @@
 
 import time
 from collections import defaultdict
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class report_rappel(report_sxw.rml_parse):
     _name = "account_followup.report.rappel"
@@ -108,8 +109,11 @@ class report_rappel(report_sxw.rml_parse):
             }
         return text
 
-report_sxw.report_sxw('report.account_followup.followup.print',
-        'account_followup.stat.by.partner', 'addons/account_followup/report/account_followup_print.rml',
-        parser=report_rappel)
+
+class report_followup(osv.AbstractModel):
+    _name = 'report.account_followup.report_followup'
+    _inherit = 'report.abstract_report'
+    _template = 'account_followup.report_followup'
+    _wrapped_report_class = report_rappel
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -282,7 +282,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp.registry(use_new_cursor).db.cursor()
+                cr = openerp.registry(use_new_cursor).cursor()
 
             # Run confirmed procurements
             while True:

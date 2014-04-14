@@ -354,14 +354,12 @@ class product_putaway_strategy(osv.osv):
 
     def putaway_apply(self, cr, uid, putaway_strat, product, context=None):
         if putaway_strat.method == 'fixed':
-            all_parent_categs = []
-            categ = product.categ_id
-            while categ:
-                all_parent_categs.append(categ.id)
-                categ = categ.parent_id
             for strat in putaway_strat.fixed_location_ids:
-                if strat.category_id.id in all_parent_categs:
-                    return strat.fixed_location_id.id
+                categ = product.categ_id
+                while categ:
+                    if strat.category_id.id == categ.id:
+                        return strat.fixed_location_id.id
+                    categ = categ.parent_id
 
 
 class fixed_putaway_strat(osv.osv):
