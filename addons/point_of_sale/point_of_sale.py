@@ -919,8 +919,6 @@ class pos_order(osv.osv):
                                                                line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
-                if line.product_id.description_sale:
-                    inv_line['note'] = line.product_id.description_sale
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
