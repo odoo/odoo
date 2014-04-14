@@ -151,8 +151,15 @@ def ensure_db(redirect='/web/database/selector'):
         # may depend on data injected by the database route dispatcher.
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
+        r = request.httprequest
+        url_redirect = r.base_url
+        if r.query_string:
+            # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
+            # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
+            url_redirect += '?' + r.query_string
+        response = werkzeug.utils.redirect(url_redirect, 302)
         request.session.db = db
-        abort_and_redirect(request.httprequest.url)
+        abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
     if not db:
@@ -649,6 +656,9 @@ class Home(http.Controller):
         ensure_db()
 
         if request.session.uid:
+            if kw.get('redirect'):
+                return werkzeug.utils.redirect(kw.get('redirect'), 303)
+
             headers = {
                 'Cache-Control': 'no-cache',
                 'Content-Type': 'text/html; charset=utf-8',
@@ -660,6 +670,9 @@ class Home(http.Controller):
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
+
+        if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            return http.redirect_with_hash(redirect)
 
         if not request.uid:
             request.uid = openerp.SUPERUSER_ID
@@ -1202,11 +1215,14 @@ class DataSet(http.Controller):
 
     def _call_kw(self, model, method, args, kwargs):
         # Temporary implements future display_name special field for model#read()
-        if method == 'read' and kwargs.get('context', {}).get('future_display_name'):
+        if method in ('read', 'search_read') and kwargs.get('context', {}).get('future_display_name'):
             if 'display_name' in args[1]:
-                names = dict(request.session.model(model).name_get(args[0], **kwargs))
+                if method == 'read':
+                    names = dict(request.session.model(model).name_get(args[0], **kwargs))
+                else:
+                    names = dict(request.session.model(model).name_search('', args[0], **kwargs))
                 args[1].remove('display_name')
-                records = request.session.model(model).read(*args, **kwargs)
+                records = getattr(request.session.model(model), method)(*args, **kwargs)
                 for record in records:
                     record['display_name'] = \
                         names.get(record['id']) or "%s#%d" % (model, (record['id']))
