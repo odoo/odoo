@@ -19,7 +19,7 @@ openerp.mass_mailing = function (instance) {
         start: function() {
             var self=this;
             this._super.apply(this, arguments);
-            $('button', this.$el).on('click', self.on_click);
+            $('button.select_records', this.$el).on('click', self.on_click);
             this.set_button();
         },
         set_button: function() {

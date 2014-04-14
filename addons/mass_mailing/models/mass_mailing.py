@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
 
 from datetime import datetime
 from dateutil import relativedelta
@@ -162,7 +143,7 @@ class MassMailingCampaign(osv.Model):
             'mail.mass_mailing', 'mass_mailing_campaign_id',
             'Mass Mailings',
         ),
-        'ab_testing': fields.boolean(
+        'unique_ab_testing': fields.boolean(
             'AB Testing',
             help='If checked, recipients will be mailed only once, allowing to send'
                  'various mailings in a single campaign to test the effectiveness'
@@ -225,7 +206,7 @@ class MassMailingCampaign(osv.Model):
     }
 
     def get_recipients(self, cr, uid, ids, model=None, context=None):
-        """Return the recipints of a mailing campaign. This is based on the statistics
+        """Return the recipients of a mailing campaign. This is based on the statistics
         build for each mailing. """
         Statistics = self.pool['mail.mail.statistics']
         res = dict.fromkeys(ids, False)
@@ -317,20 +298,6 @@ class MassMailing(osv.Model):
             results[mid]['replied_ratio'] = 100.0 * results[mid]['replied'] / (results[mid]['sent'] or 1)
         return results
 
-    def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
-        res = dict.fromkeys(ids, False)
-        for mailing in self.browse(cr, uid, ids, context=context):
-            val = {'contact_nbr': 0, 'contact_ab_nbr': 0}  # 'contact_ab_done': 0
-            val['contact_nbr'] = self.pool[mailing.mailing_model].search(
-                cr, uid, eval(mailing.mailing_domain),
-                count=True, context=context
-            )
-            # val['contact_ab_nbr'] = int(val['contact_nbr'] * mailing.contact_ab_pc / 100.0)
-            # if mailing.mass_mailing_campaign_id and mailing.ab_testing:
-            #     val['contact_ab_done'] = len(self.pool['mail.mass_mailing.campaign'].get_recipients(cr, uid, [mailing.mass_mailing_campaign_id.id], context=context)[mailing.mass_mailing_campaign_id.id])
-            res[mailing.id] = val
-        return res
-
     def _get_private_models(self, context=None):
         return ['res.partner', 'mail.mass_mailing.contact']
 
@@ -381,10 +348,6 @@ class MassMailing(osv.Model):
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
-        ),
-        'contact_nbr': fields.function(
-            _get_contact_nbr, type='integer', multi='_get_contact_nbr',
-            string='Contact Number'
         ),
         'contact_ab_pc': fields.integer(
             'AB Testing percentage',
@@ -507,17 +470,13 @@ class MassMailing(osv.Model):
 
     def on_change_model(self, cr, uid, ids, mailing_model, list_ids, context=None):
         value = {}
-        if mailing_model=='mail.mass_mailing.contact':
-            if list_ids and list_ids[0][0]==6 and list_ids[0][2]:
+        if mailing_model is 'mail.mass_mailing.contact':
+            if list_ids and list_ids[0][0] == 6 and list_ids[0][2]:
                 value['mailing_domain'] = "[('list_id', 'in', ["+','.join(map(str, list_ids[0][2]))+"])]"
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
-            value['contact_nbr'] = self.pool[mailing_model].search(
-                cr, uid, eval(value['mailing_domain']), count=True, context=context
-            )
         else:
             value['mailing_domain'] = False
-            value['contact_nbr'] = 0
         return {'value': value}
 
     def on_change_reply_specified(self, cr, uid, ids, reply_specified, reply_in_thread, context=None):
@@ -538,7 +497,7 @@ class MassMailing(osv.Model):
                 list_ids += command[2]
         if list_ids:
             values['contact_nbr'] = self.pool[mailing_model].search(
-                cr, uid, [('list_id', 'in', list_ids), ('opt_out','!=',1)],
+                cr, uid, [('list_id', 'in', list_ids), ('opt_out', '!=', True)],
                 count=True, context=context
             )
         else:
@@ -665,5 +624,3 @@ class MassMailing(osv.Model):
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
             self.write(cr, uid, [mailing.id], {'date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True
-
-

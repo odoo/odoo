@@ -208,10 +208,6 @@
                             </button>
                         </div>
                         <div class="oe_button_box" attrs="{'invisible': [('state', 'in', ('draft','test'))]}" style="margin-bottom: 32px">
-                            <button name="action_see_recipients" type="object"
-                                icon="fa-user" class="oe_stat_button">
-                                <field name="contact_nbr" string="Recipients" widget="statinfo"/>
-                            </button>
                             <button name="%(action_mail_mass_mailing_report)d" type="action"
                                 icon="fa-envelope-o" class="oe_stat_button">
                                 <field name="total" string="Emails" widget="statinfo"/>
@@ -249,12 +245,6 @@
                                         placeholder="Select mailing lists..." class="oe_inline"
                                         on_change="on_change_model(mailing_model, contact_list_ids)"/>
                                 </div>
-                                <div attrs="{'invisible': [('contact_nbr', '&lt;', 1)]}">
-                                    <strong>
-                                        <field name="contact_nbr" class="oe_inline"/> Recipients
-                                    </strong>
-                                </div>
-
                             </div>
                         </group>
                         <notebook>
