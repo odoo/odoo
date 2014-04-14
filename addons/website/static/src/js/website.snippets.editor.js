@@ -934,7 +934,7 @@
         drop_and_build_snippet: function() {
             this.id = this.unique_id();
             this.$target.attr("id", this.id);
-            this.$target.find("[data-slide]").attr("data-target", "#" + this.id);
+            this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
             this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
 
             this.rebind_event();
