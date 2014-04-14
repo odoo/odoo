@@ -50,15 +50,16 @@ class MailComposeMessage(osv.TransientModel):
         if wizard.composition_mode == 'mass_mail' and \
                 (wizard.mass_mailing_name or wizard.mass_mailing_id) and \
                 wizard.model in [item[0] for item in self.pool['mail.mass_mailing']._get_mailing_model(cr, uid, context=context)]:
-            if wizard.mailing_list_ids:
-                list_ids = [l.id for l in wizard.mailing_list_ids]
-            if not list_ids:
-                list_ids = [self.pool['mail.mass_mailing.list'].create(
-                    cr, uid, {
-                        'name': wizard.mass_mailing_name,
-                        'model': wizard.model,
-                        'domain': wizard.active_domain,
-                    }, context=context)]
+            # list_ids = None
+            # if wizard.mailing_list_ids:
+            #     list_ids = [l.id for l in wizard.mailing_list_ids]
+            # if not list_ids:
+            #     list_ids = [self.pool['mail.mass_mailing.list'].create(
+            #         cr, uid, {
+            #             'name': wizard.mass_mailing_name,
+            #             'model': wizard.model,
+            #             'domain': wizard.active_domain,
+            #         }, context=context)]
             mass_mailing = wizard.mass_mailing_id
             if not mass_mailing:
                 mass_mailing_id = self.pool['mail.mass_mailing'].create(
@@ -68,7 +69,7 @@ class MailComposeMessage(osv.TransientModel):
                         'template_id': wizard.template_id and wizard.template_id.id or False,
                         'state': 'done',
                         'mailing_type': wizard.model,
-                        'contact_list_ids': [(4, list_id) for list_id in list_ids],
+                        # 'contact_list_ids': [(4, list_id) for list_id in list_ids],
                     }, context=context)
                 mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
             recipient_values = self.pool['mail.mass_mailing'].get_recipients_data(cr, uid, mass_mailing, res_ids, context=context)
