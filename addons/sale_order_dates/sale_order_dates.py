@@ -35,18 +35,16 @@ class sale_order_dates(osv.osv):
         return super(sale_order_dates, self).copy(cr, uid, id, default=default,
                                                   context=context)
  
-    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):   
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         """Compute the expected date from the requested date, not the order date"""
         if order and order.requested_date:
-            planned_str = self.date_to_datetime(cr, uid,
-                                                order.requested_date, context)
-            date_planned = datetime.strptime(planned_str,
-                                             DEFAULT_SERVER_DATETIME_FORMAT)
+            planned_str = fields.date.date_to_datetime(cr, uid, order.requested_date, context)
+            date_planned = datetime.strptime(planned_str, DEFAULT_SERVER_DATETIME_FORMAT)
             date_planned -= timedelta(days=order.company_id.security_lead)
             return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(sale_order_dates, self)._get_date_planned(
                 cr, uid, order, line, start_date, context=context)
-        
+
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         """Read the shipping date from the related packings"""
         # TODO: would be better if it returned the date the picking was processed?
@@ -67,13 +65,9 @@ class sale_order_dates(osv.osv):
         res = {}
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
-            order_datetime_str = self.date_to_datetime(cr, uid, order.date_order,
-                                                       context)
-            order_datetime = datetime.strptime(order_datetime_str,
-                                               DEFAULT_SERVER_DATETIME_FORMAT)
             dates_list = []
             for line in order.order_line:
-                dt = order_datetime + timedelta(days=line.delay or 0.0)
+                dt = order.date_order + timedelta(days=line.delay or 0.0)
                 dt_s = dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
