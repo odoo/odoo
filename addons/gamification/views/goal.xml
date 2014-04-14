@@ -45,8 +45,8 @@
                     <header>
                         <button string="Start goal" type="object" name="action_start" states="draft" class="oe_highlight"/>
                         
-                        <button string="Goal Reached" type="object" name="action_reach" states="inprogress,inprogress_update" />
-                        <button string="Goal Failed" type="object" name="action_fail" states="inprogress,inprogress_update"/>
+                        <button string="Goal Reached" type="object" name="action_reach" states="inprogress" />
+                        <button string="Goal Failed" type="object" name="action_fail" states="inprogress"/>
                         <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached" groups="base.group_no_one" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,inprogress,reached" />
                     </header>
@@ -105,7 +105,7 @@
                     <filter name="inprogress" string="Current"
                         domain="[
                             '|',
-                                ('state', 'in', ('inprogress', 'inprogress_update')),
+                                ('state', '=', 'inprogress'),
                                 ('end_date', '>=', context_today().strftime('%%Y-%%m-%%d'))
                             ]"/>
                     <filter name="closed" string="Passed" domain="[('state', 'in', ('reached', 'failed'))]"/>
@@ -157,7 +157,7 @@
                                         <t t-if="record.definition_display.raw_value == 'boolean'">
                                             <div class="oe_goal_state oe_e">
                                                 <t t-if="record.state.raw_value=='reached'"><span class="oe_green" title="Goal Reached">W</span></t>
-                                                <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'"><span title="Goal in Progress">N</span></t>
+                                                <t t-if="record.state.raw_value=='inprogress'"><span title="Goal in Progress">N</span></t>
                                                 <t t-if="record.state.raw_value=='failed'"><span class="oe_red" title="Goal Failed">X</span></t>
                                             </div>
                                         </t>
@@ -241,15 +241,23 @@
 
                                 <!-- Hide the fields below if manually -->
                                 <field name="model_id" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                                <field name="field_id" attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}" domain="[('model_id','=',model_id)]"  class="oe_inline"/>
-                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id','=',model_id)]" class="oe_inline"/>
+                                <field name="field_id" attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}" domain="[('model_id', '=', model_id)]"  class="oe_inline"/>
+                                <field name="field_date_id" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}" domain="[('ttype', 'in', ('date', 'datetime')), ('model_id', '=', model_id)]" class="oe_inline"/>
                                 <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
                                 <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"/>
                                 <field name="condition" widget="radio"/>
                             </group>
+                            <group string="Optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
+                                <field name="batch_mode" />
+                                <div colspan="4">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
+                                <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" 
+                                    domain="[('model_id', '=', model_id)]" class="oe_inline" />
+                                <field name="batch_user_expression" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" class="oe_inline"
+                                    placeholder="e.g. user.partner_id.id"/>
+                            </group>
                             <group string="Formating Options">
                                 <field name="display_mode" widget="radio" />
-                                <field name="suffix" placeholder="e.g. days"/>
+                                <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
                                 <field name="monetary"/>
                             </group>
                             <group string="Clickable Goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
