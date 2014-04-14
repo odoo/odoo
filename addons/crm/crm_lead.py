@@ -218,7 +218,7 @@ class crm_lead(format_address, osv.osv):
         res = dict(map(lambda x: (x,0), ids))
         try:
             for meeting in self.browse(cr, uid, ids, context=context):
-                res[meeting.id] = len(meeting.opportunity_ids)
+                res[meeting.id] = len(meeting.meeting_ids)
         except:
             pass
         return res
@@ -296,7 +296,7 @@ class crm_lead(format_address, osv.osv):
         'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
                             domain="[('section_id','=',section_id)]"),
         'planned_cost': fields.float('Planned Costs'),
-        'opportunity_ids': fields.one2many('calendar.event', 'opportunity_id', 'Opportunities'),
+        'meeting_ids': fields.one2many('calendar.event', 'opportunity_id', 'Opportunities'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
     }
 
