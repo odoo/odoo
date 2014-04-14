@@ -547,5 +547,11 @@ Weight: 1.1 ounces</field>
             <field name="price_discount">-0.2000</field>
             <field name="sequence">1</field>
         </record>
+        
+        <record id="crm_case_section_shopping_carts_demo" model="crm.case.section">
+            <field name="implied_ids" ref="website_sale.crm_case_section_shopping_carts"/>
+            <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+        
     </data>
 </openerp>
