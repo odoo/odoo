@@ -309,10 +309,12 @@ function openerp_picking_widgets(instance){
                     self.$('.js_drop_down').removeClass('disabled');
                 }
                 self.$('.js_pick_pack').addClass('disabled');
+                self.$('.js_pick_done').addClass('disabled');
             }
             else{
                 self.$('.js_drop_down').removeClass('disabled');
                 self.$('.js_pick_pack').removeClass('disabled');
+                self.$('.js_pick_done').removeClass('disabled');
             }
         },
         get_current_op_selection: function(ignore_container){
