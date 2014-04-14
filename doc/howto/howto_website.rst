@@ -106,6 +106,13 @@ margins have been added to the page.
    and trying to provide high-performance and high-availability of these
    files)`-hosted file.
 
+.. note::
+
+    At this point, the OpenERP server has no autoreloader. Every time you
+    Python code (and later templates or data files), you should restart the
+    server using the original startup instruction (without the re-creation of
+    the database)
+
 Controller Parameters
 =====================
 
@@ -164,7 +171,12 @@ OpenERP 8 is bundled with new modules dedicated specifically to building
 websites (whether it be simply sets of pages or more complex components such
 as blogs).
 
-First, we'll install the ``website`` module: ``oe install website``.
+First, we'll install the ``website`` module: restart your server with
+
+.. code-block:: console
+
+    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+                       -d academy -i website --db-filter=academy
 
 .. todo:: is it possible that the page has *not* been replaced?
 
