@@ -35,9 +35,11 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='buttons']/button" position="after">
+            <xpath expr="//div[@name='buttons']" position="inside">
                     <button class="oe_inline oe_stat_button" type="action" name="%(convert_lead2projectissue_wizard_action)d" icon="fa-bug"  
-                        help="Convert to Issue" widget="statinfo" string="Move to Issue"/>
+                        help="Convert to Issue">
+                        <div>Convert To<br/>Issue</div>
+                    </button>
             </xpath>
         </field>
     </record>
