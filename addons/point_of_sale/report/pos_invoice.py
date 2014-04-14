@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,40 +19,36 @@
 #
 ##############################################################################
 
-import time
-
-from openerp.report import report_sxw
 from openerp.osv import osv
 from openerp.tools.translate import _
 
-class pos_invoice(report_sxw.rml_parse):
 
-    def __init__(self, cr, uid, name, context):
-        super(pos_invoice, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-        })
+class PosInvoiceReport(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_invoice'
 
-    def set_context(self, objects, data, ids, report_type=None):
-        super(pos_invoice, self).set_context(objects, data, ids, report_type)
-        iids = []
-        nids = []
+    def render_html(self, cr, uid, ids, data=None, context=None):
+        if context is None:
+            context = {}
 
-        for order in objects:
-            order.write({'nb_print': order.nb_print + 1})
+        report_obj = self.pool['report']
+        report = report_obj._get_report_from_name(cr, uid, 'account.report_invoice')
+        selected_posorders = self.pool['pos.order'].browse(cr, uid, ids, context=context)
 
-            if order.invoice_id and order.invoice_id not in iids:
-                if not order.invoice_id:
-                    raise osv.except_osv(_('Error!'), _('Please create an invoice for this sale.'))
-                iids.append(order.invoice_id)
-                nids.append(order.invoice_id.id)
-        data['ids'] = nids
-        self.datas = data
-        self.ids = nids
-        self.objects = iids
-        self.localcontext['data'] = data
-        self.localcontext['objects'] = iids
+        invoiced_posorders = []
+        invoiced_posorders_ids = []
+        for order in selected_posorders:
+            if order.invoice_id:
+                invoiced_posorders.append(order)
+                invoiced_posorders_ids.append(order.id)
 
-report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/account/report/account_print_invoice.rml', parser= pos_invoice)
+        if not invoiced_posorders:
+            raise osv.except_osv(_('Error!'), _('Please create an invoice for this sale.'))
+
+        docargs = {
+            'doc_ids': invoiced_posorders_ids,
+            'doc_model': report.model,
+            'docs': invoiced_posorders,
+        }
+        return report_obj.render(cr, uid, invoiced_posorders_ids, 'account.report_invoice', docargs, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

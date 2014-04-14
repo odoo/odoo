@@ -20,7 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class pos_details(report_sxw.rml_parse):
 
@@ -180,7 +182,7 @@ class pos_details(report_sxw.rml_parse):
             'strip_name': self._strip_name,
             'getpayments': self._get_payments,
             'getsumdisc': self._get_sum_discount,
-            'gettotalofthaday': self._total_of_the_day,
+            'gettotaloftheday': self._total_of_the_day,
             'gettaxamount': self._get_tax_amount,
             'pos_sales_details':self._pos_sales_details,
             'getqtytotal2': self._get_qty_total_2,
@@ -191,6 +193,11 @@ class pos_details(report_sxw.rml_parse):
             'get_user_names': self._get_user_names,
         })
 
-report_sxw.report_sxw('report.pos.details', 'pos.order', 'addons/point_of_sale_singer/report/pos_details.rml', parser=pos_details, header='internal')
+
+class report_pos_details(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_detailsofsales'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_detailsofsales'
+    _wrapped_report_class = pos_details
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

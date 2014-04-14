@@ -26,11 +26,7 @@ import pos_receipt
 import pos_invoice
 import pos_lines
 import pos_details
-import pos_details_summary
 import pos_payment_report
-import pos_sales_user
-import pos_sales_user_today
-import pos_payment_report_user
 import pos_report
 import pos_order_report
 

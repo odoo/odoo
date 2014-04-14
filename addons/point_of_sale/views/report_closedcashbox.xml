@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_closedcashbox">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <h2>Today's Closed Cashbox</h2>
+                    <p>User: <span t-esc="user.partner_id.name"/></p>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>St.Name</th>
+                                <th>Journal</th>
+                                <th>Opening Date</th>
+                                <th>Closing Date</th>
+                                <th>Starting Balance</th>
+                                <th>Ending Balance</th>
+                            </tr>
+                            <tr>
+                                <th>Total:</th>
+                                <th colspan="3"></th>
+                                <th class="text-right">
+                                    <u t-esc="formatLang(get_net_total_starting(user)[1], currency_obj=res_company.currency_id)"/>
+                                </th>
+                                <th class="text-right">
+                                    <u t-esc="formatLang(get_net_total(user), currency_obj=res_company.currency_id)"/>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="get_data(user)" t-as="statement">
+                                <tr>
+                                    <td><strong><t t-esc="statement['statement']"/></strong></td>
+                                    <td><strong><t t-esc="statement['journal']"/></strong></td>
+                                    <td><strong><t t-esc="statement['date']"/></strong></td>
+                                    <td><strong><t t-esc="statement['closing_date']"/></strong></td>
+                                    <td class="text-right">
+                                        <strong t-if="get_bal(statement)">
+                                            <span t-esc="formatLang(get_bal(statement), currency_obj=res_company.currency_id)"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-esc="formatLang(get_sub_total(user,statement['journal_id'], statement['date']), currency_obj=res_company.currency_id)"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="get_lines(statement)" t-as="line_ids">
+                                    <td colspan="2"><span t-esc="line_ids['name']"/></td>
+                                    <td><span t-esc="get_partner(line_ids)"/></td>
+                                    <td><t t-esc="get_user(line_ids)"/></td>
+                                    <td colspan="2" class="text-right">
+                                        <span t-esc="formatLang(line_ids['amount'], currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

@@ -21,6 +21,7 @@
 
 from openerp.osv import osv, fields
 
+
 class pos_discount(osv.osv_memory):
     _name = 'pos.discount'
     _description = 'Add a Global Discount'
@@ -30,21 +31,6 @@ class pos_discount(osv.osv_memory):
     _defaults = {
         'discount': 5,
     }
-
-#    def view_init(self, cr, uid, fields_list, context=None):
-#        """
-#         Creates view dynamically and adding fields at runtime.
-#         @param self: The object pointer.
-#         @param cr: A database cursor
-#         @param uid: ID of the user currently logged in
-#         @param context: A standard dictionary
-#         @return: New arch of view with new columns.
-#        """
-#        if context is None:
-#            context = {}
-#        super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
-#        record_id = context and context.get('active_id', False) or False
-#        True
 
     def apply_discount(self, cr, uid, ids, context=None):
         """
@@ -67,6 +53,5 @@ class pos_discount(osv.osv_memory):
         for order in order_ref.browse(cr, uid, record_id, context=context):
             order_line_ref.write(cr, uid, [x.id for x in order.lines], {'discount':this.discount}, context=context)
         return {}
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

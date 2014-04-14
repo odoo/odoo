@@ -19,14 +19,12 @@
 #
 ##############################################################################
 
-import point_of_sale
 import account_bank_statement
+import controllers
+import point_of_sale
+import report
 import res_users
 import res_partner
 import wizard
-import report
-
-import controllers
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

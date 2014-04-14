@@ -1,5 +1,5 @@
 
-from openerp.osv import osv, fields
+from openerp.osv import osv
 from openerp.tools.translate import _
 
 from openerp.addons.account.wizard.pos_box import CashBox
