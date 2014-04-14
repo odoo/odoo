@@ -19,7 +19,7 @@
                 </div>
 
                 <t t-foreach="docs" t-as="o">
-                    <table class="table table-condensed" t-if="pos_payment_total(o)">
+                    <table class="table table-condensed">
                         <thead>
                             <tr>
                                 <td>
@@ -70,12 +70,12 @@
                     <div class="row" t-if="pos_payment_total(o)">
                         <div class="col-xs-4 pull-right">
                             <table class="table table-condensed">
-                                <tr>
+                                <tr class="border-black">
                                     <td>
-                                        <strong>Net Total:</strong>
+                                        <strong>Net Total</strong>
                                     </td>
-                                    <td>
-                                        <strong t-esc="formatLang(pos_payment_total(o), currency_obj = res_company.currency_id)"/>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(pos_payment_total(o), currency_obj=res_company.currency_id)"/>
                                     </td>
                                 </tr>
                             </table>
