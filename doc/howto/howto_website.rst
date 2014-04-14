@@ -445,8 +445,6 @@ Let us, then, create a menu and an action for our lectures:
 
 .. patch::
 
-.. todo:: reinstall module? update?
-
 If you reload the backend, you should see a new menu :menuselection:`Academy`
 at the top-left corner, before :menuselection:`Messaging`. In it is the
 submenus we defined via ``menuitem``, and within (the first submenu is
