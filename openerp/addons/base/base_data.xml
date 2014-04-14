@@ -11,15 +11,6 @@
             </field>
             <field name="field_parent">child_id</field>
         </record>
-        <record id="action_menu_admin" model="ir.actions.act_window">
-            <field name="name">Menu</field>
-            <field name="usage">menu</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_id" ref="view_menu"/>
-            <field name="res_model">ir.ui.menu</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id', '=', False)]</field>
-        </record>
 
         <record id="lang_en" model="res.lang">
             <field name="code">en_US</field>
