@@ -59,7 +59,8 @@ Print product labels with barcode.
         'product_view.xml',
         'pricelist_view.xml',
         'partner_view.xml',
-        'process/product_process.xml'
+        'process/product_process.xml',
+        'views/report_pricelist.xml',
     ],
     'test': [
         'product_pricelist_demo.yml',
@@ -69,4 +70,5 @@ Print product labels with barcode.
     'auto_install': False,
     'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
