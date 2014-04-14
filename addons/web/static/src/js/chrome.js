@@ -196,6 +196,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     */
     destroy: function (reason) {
         this.$buttons.remove();
+        var self = this;
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
@@ -205,7 +206,12 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_destroying = undefined;
         }
         if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(bs.modal)")) {
-            this.$el.parents('.modal').remove();
+            //we need this to put the instruction to remove modal from DOM at the end
+            //of the queue, otherwise it might already have been removed before the modal-backdrop
+            //is removed when pressing escape key
+            setTimeout(function () {
+                self.$el.parents('.modal').remove();
+            },0);
         }
         this._super();
     }
