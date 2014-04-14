@@ -62,6 +62,14 @@ class BaseWSGIServerNoBind(werkzeug.serving.BaseWSGIServer):
         # dont listen as we use PreforkServer#socket
         pass
 
+
+class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+    def setup(self):
+        # flag the current thread as handling a http request
+        super(RequestHandler, self).setup()
+        me = threading.currentThread()
+        me.name = 'openerp.service.http.request.%s' % (me.ident,)
+
 # _reexec() should set LISTEN_* to avoid connection refused during reload time. It
 # should also work with systemd socket activation. This is currently untested
 # and not yet used.
@@ -71,6 +79,10 @@ class ThreadedWSGIServerReloadable(werkzeug.serving.ThreadedWSGIServer):
     given by the environement, this is used by autoreload to keep the listen
     socket open when a reload happens.
     """
+    def __init__(self, host, port, app):
+        super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
+                                                           handler=RequestHandler)
+
     def server_bind(self):
         envfd = os.environ.get('LISTEN_FDS')
         if envfd and os.environ.get('LISTEN_PID') == str(os.getpid()):
@@ -440,7 +452,7 @@ class PreforkServer(CommonServer):
             sys.exit(0)
 
     def long_polling_spawn(self):
-        nargs = stripped_sys_argv('--pidfile', '--workers')
+        nargs = stripped_sys_argv()
         cmd = nargs[0]
         cmd = os.path.join(os.path.dirname(cmd), "openerp-gevent")
         nargs[0] = cmd
@@ -834,8 +846,13 @@ def _reexec(updated_modules=None):
 
 def load_test_file_yml(registry, test_file):
     with registry.cursor() as cr:
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
-        cr.rollback()
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
+        if config['test_commit']:
+            _logger.info('test %s has been commited', test_file)
+            cr.commit()
+        else:
+            _logger.info('test %s has been rollbacked', test_file)
+            cr.rollback()
 
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
@@ -887,10 +904,10 @@ def start(preload=None, stop=False):
     """
     global server
     load_server_wide_modules()
-    if config['workers']:
-        server = PreforkServer(openerp.service.wsgi_server.application)
-    elif openerp.evented:
+    if openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
+    elif config['workers']:
+        server = PreforkServer(openerp.service.wsgi_server.application)
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
 

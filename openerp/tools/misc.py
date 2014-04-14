@@ -1171,7 +1171,7 @@ class ConstantMapping(Mapping):
         return self._value
 
 
-def dumpstacks(sig, frame):
+def dumpstacks(sig=None, frame=None):
     """ Signal handler: dump a stack trace for each existing thread."""
     code = []
 

@@ -88,50 +88,30 @@ def _open_image(filename, path=None):
 class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
         canvas.Canvas.__init__(self, *args, **kwargs)
-        self._codes = []
-        self._flag=False
-        self._pageCount=0
-        self._currentPage =0
-        self._pageCounter=0
-        self.pages={}
+        self._saved_page_states = []
 
     def showPage(self):
-        self._currentPage +=1
-        if not self._flag:
-            self._pageCount += 1
-        else:
-            self.pages.update({self._currentPage:self._pageCount})
-        self._codes.append({'code': self._code, 'stack': self._codeStack})
+        self._saved_page_states.append(dict(self.__dict__))
         self._startPage()
-        self._flag=False
 
-    def pageCount(self):
-        if self.pages.get(self._pageCounter,False):
-            self._pageNumber=0
-        self._pageCounter +=1
-        key=self._pageCounter
-        if not self.pages.get(key,False):
-            while not self.pages.get(key,False):
-                key += 1
+    def save(self):
+        """add page info to each page (page x of y)"""
+        for state in self._saved_page_states:
+            self.__dict__.update(state)
+            self.draw_page_number()
+            canvas.Canvas.showPage(self)
+        canvas.Canvas.save(self)
+
+    def draw_page_number(self):
+        page_count = len(self._saved_page_states)
         self.setFont("Helvetica", 8)
         self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             " %(this)i / %(total)i" % {
                'this': self._pageNumber+1,
-               'total': self.pages.get(key,False),
+               'total': page_count,
             }
         )
 
-    def save(self):
-        """add page info to each page (page x of y)"""
-        # reset page counter
-        self._pageNumber = 0
-        for code in self._codes:
-            self._code = code['code']
-            self._codeStack = code['stack']
-            self.pageCount()
-            canvas.Canvas.showPage(self)
-#        self.restoreState()
-        self._doc.SaveToFile(self._filename, self)
 
 class PageCount(platypus.Flowable):
     def __init__(self, story_count=0):
@@ -303,6 +283,9 @@ class _rml_doc(object):
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
 
+        if mode:
+            mode = mode.lower()
+
         if fontname not in pdfmetrics._fonts:
             pdfmetrics.registerFont(TTFont(fontname, filename))
         if mode == 'all':
@@ -310,14 +293,14 @@ class _rml_doc(object):
             addMapping(face, 0, 1, fontname)    #italic
             addMapping(face, 1, 0, fontname)    #bold
             addMapping(face, 1, 1, fontname)    #italic and bold
-        elif (mode== 'normal') or (mode == 'regular') or (mode == 'book'):
-            addMapping(face, 0, 0, fontname)    #normal
-        elif mode == 'italic':
+        elif mode in ['italic', 'oblique']:
             addMapping(face, 0, 1, fontname)    #italic
         elif mode == 'bold':
             addMapping(face, 1, 0, fontname)    #bold
-        elif mode == 'bolditalic':
+        elif mode in ('bolditalic', 'bold italic','boldoblique', 'bold oblique'):
             addMapping(face, 1, 1, fontname)    #italic and bold
+        else:
+            addMapping(face, 0, 0, fontname)    #normal
 
     def _textual_image(self, node):
         rc = ''
