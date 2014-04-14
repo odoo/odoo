@@ -291,6 +291,22 @@ class product_product(osv.osv):
         result['domain'] = "[('id','in',[" + ','.join(map(str, route_ids)) + "])]"
         return result
 
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        context = context or {}
+        default = dict(default or {})
+
+        product = self.browse(cr, uid, id, context=context)
+        op_obj = self.pool.get('stock.warehouse.orderpoint')
+        op_ids = []
+        for orderpoint in product.orderpoint_ids:
+            op_val = op_obj.copy(cr, uid, orderpoint.id, context=context)
+            op_ids.append(op_val)
+        default['orderpoint_ids'] = [(6, 0, op_ids)]
+        res = super(product_product, self).copy(cr, uid, id, default=default, context=context)
+        return res
+
+
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
