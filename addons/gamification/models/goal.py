@@ -287,11 +287,9 @@ class gamification_goal(osv.Model):
                 field_date_name = definition.field_date_id and definition.field_date_id.name or False
 
                 if definition.computation_mode == 'count' and definition.batch_mode:
-
+                    # batch mode, trying to do as much as possible in one request
                     general_domain = safe_eval(definition.domain)
-                    # goal_distinct_values = {goal.id: safe_eval(definition.batch_user_expression, {'user': goal.user_id}) for goal in goals}
                     field_name = definition.batch_distinctive_field.name
-                    # general_domain.append((field_name, 'in', list(set(goal_distinct_values.keys()))))
                     subqueries = {}
                     for goal in goals:
                         start_date = field_date_name and goal.start_date or False

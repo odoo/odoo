@@ -4,7 +4,7 @@
 
         <!-- QUALITY (VOTES) -->
         <!-- Teacher: at least 3 upvotes -->
-<!--         <record id="badge_a_1" model="gamification.badge">
+        <record id="badge_a_1" model="gamification.badge">
             <field name="name">Teacher</field>
             <field name="description">Received at least 3 upvote for an answer for the first time</field>
             <field name="level">bronze</field>
@@ -15,8 +15,11 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 3)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('parent_id', '!=', False), ('vote_count', '>=', 3)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_teacher">
             <field name="name">Teacher</field>
@@ -24,6 +27,7 @@
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_a_1')" />
+            <field name="reward_realtime">True</field>
             <field name="autojoin_group_id" eval="ref('base.group_user')"/>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
@@ -32,9 +36,9 @@
             <field name="definition_id" eval="ref('definition_teacher')"/>
             <field name="challenge_id" eval="ref('challenge_teacher')"/>
             <field name="target_goal">1</field>
-        </record> -->
+        </record>
         <!-- Nice: at least 4 upvotes -->
-<!--         <record id="badge_a_2" model="gamification.badge">
+        <record id="badge_a_2" model="gamification.badge">
             <field name="name">Nice Answer</field>
             <field name="description">Answer voted up 4 times</field>
             <field name="level">bronze</field>
@@ -45,8 +49,11 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 4)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('parent_id', '!=', False), ('vote_count', '>=', 4)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_nice_answer">
             <field name="name">Nice Answer</field>
@@ -62,9 +69,9 @@
             <field name="definition_id" eval="ref('definition_nice_answer')"/>
             <field name="challenge_id" eval="ref('challenge_nice_answer')"/>
             <field name="target_goal">1</field>
-        </record> -->
+        </record>
         <!-- Good: at least 6 upvotes -->
-<!--         <record id="badge_a_3" model="gamification.badge">
+        <record id="badge_a_3" model="gamification.badge">
             <field name="name">Good Answer</field>
             <field name="description">Answer voted up 6 times</field>
             <field name="level">silver</field>
@@ -75,8 +82,11 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 6)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('parent_id', '!=', False), ('vote_count', '>=', 6)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_good_answer">
             <field name="name">Good Answer</field>
@@ -92,9 +102,9 @@
             <field name="definition_id" eval="ref('definition_good_answer')"/>
             <field name="challenge_id" eval="ref('challenge_good_answer')"/>
             <field name="target_goal">1</field>
-        </record> -->
+        </record>
         <!-- Great: at least 15 upvotes -->
-<!--         <record id="badge_a_4" model="gamification.badge">
+        <record id="badge_a_4" model="gamification.badge">
             <field name="name">Great Answer</field>
             <field name="description">Answer voted up 15 times</field>
             <field name="level">gold</field>
@@ -105,8 +115,11 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')" />
-            <field name="domain">[('create_uid', '=', user.id), ('parent_id', '!=', False), ('vote_count', '>=', 15)]</field>
             <field name="condition">higher</field>
+            <field name="domain">[('parent_id', '!=', False), ('vote_count', '>=', 15)]</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_great_answer">
             <field name="name">Great Answer</field>
@@ -122,7 +135,7 @@
             <field name="definition_id" eval="ref('definition_great_answer')"/>
             <field name="challenge_id" eval="ref('challenge_great_answer')"/>
             <field name="target_goal">1</field>
-        </record> -->
+        </record>
 
         <!-- ACCEPTANCE -->
         <!-- Enlightened: at least 3 upvotes for an accepted answer -->
