@@ -445,6 +445,12 @@ Let us, then, create a menu and an action for our lectures:
 
 .. patch::
 
+.. note::
+
+    if a requested view does not exist, OpenERP will automatically generate a
+    very basic one on-the-fly. That is the case here as we have not yet
+    created a list and a form view for the lectures.
+
 If you reload the backend, you should see a new menu :menuselection:`Academy`
 at the top-left corner, before :menuselection:`Messaging`. In it is the
 submenus we defined via ``menuitem``, and within (the first submenu is
@@ -455,13 +461,19 @@ single record). The :guilabel:`Create` button above the list lets you create
 new record, you can select records to delete them.
 
 There's one big issue to fix right now, the labeling of the column in the list
-and the fields in the form view, which are all currently :guilabel:`unknown`:
+and the fields in the form view, which are all currently :guilabel:`unknown`.
+We can fix that by adding a ``string`` attribute to the model field:
 
-.. FIXME fix labels
+.. patch::
 
-.. create menu, action
-   .. improve generated views
-.. create list & form views for events
+The second problem is that the list view only displays the ``name`` field. To
+fix this, we have to create an explicit list view for lectures:
+
+.. patch::
+
+.. todo:: link to list view documentation
+
+.. todo:: have lectures extend events -> reuse in OpenERP?
 
 .. [#taprofile] the teaching assistants profile view ends up broken for now,
                 but don't worry we'll get around to it
