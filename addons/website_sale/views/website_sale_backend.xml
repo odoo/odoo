@@ -100,7 +100,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name='state' position="before">
-                <button name="action_button_confirm" states="shopping_cart" string="Confirm Sale" type="object" groups="base.group_user"/>
+                <button class="oe_highlight" name="action_button_confirm" states="shopping_cart" string="Confirm Sale" type="object" groups="base.group_user"/>
                 <button name="cancel" states="shopping_cart" string="Cancel Quotation" groups="base.group_user"/>
             </field>
         </field>
@@ -113,6 +113,18 @@
     <record id="sale.action_quotations" model="ir.actions.act_window">
         <field name="domain">[('state','in',('draft','shopping_cart','sent','cancel'))]</field>
     </record>
+
+    <record id="shopping_cart_filter_search_view" model="ir.ui.view">
+        <field name="name">shopping.cart.filter.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="after">
+                <filter icon="terp-document-new" string="Shopping Cart" domain="[('state','=','shopping_cart')]" help="The quotations which are in shopping cart."/>
+            </xpath>
+        </field>
+    </record>
+
 
  </data>
 </openerp>
