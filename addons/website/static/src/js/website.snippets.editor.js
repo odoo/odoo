@@ -435,7 +435,6 @@
                     // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
                     $snippet = $(this);
                     $toInsert = $snippet.find('.oe_snippet_body').clone();
-                    $toInsert.removeClass('oe_snippet_body');
 
                     var selector = [];
                     var selector_siblings = [];
@@ -498,6 +497,8 @@
                     });
                 },
                 stop: function(ev, ui){
+                    $toInsert.removeClass('oe_snippet_body');
+                    
                     if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
                         var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
@@ -934,7 +935,7 @@
         drop_and_build_snippet: function() {
             this.id = this.unique_id();
             this.$target.attr("id", this.id);
-            this.$target.find("[data-slide]").attr("data-target", "#" + this.id);
+            this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
             this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
 
             this.rebind_event();
@@ -1498,7 +1499,9 @@
             $(document.body).on("media-saved", self, function (event, prev , item) {
                 self.editor.onBlur();
                 self.BuildingBlock.make_active(false);
-                self.BuildingBlock.make_active($(item));
+                if (self.$target.parent().data("oe-field") !== "image") {
+                    self.BuildingBlock.make_active($(item));
+                }
             });
 
             this.$el.find(".edition").click(function (event) {

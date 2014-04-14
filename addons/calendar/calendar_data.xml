@@ -212,7 +212,7 @@
                                                     <td colspan="3">
                                                        : 
                                                         % for attendee in object.event_id.attendee_ids:
-                                                            <div style='display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx["color"][attendee.state] or 'white'};'></div>
+                                                            <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};"></div>
                                                             % if attendee.cn != object.cn:
                                                                 <span style="margin-left:5px">${attendee.cn}</span>
                                                             % else:
@@ -345,7 +345,7 @@
                                                     <td colspan="3">
                                                        : 
                                                         % for attendee in object.event_id.attendee_ids:
-                                                            <div style='display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx["color"][attendee.state] or 'white'};'></div>
+                                                            <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};"></div>
                                                             % if attendee.cn != object.cn:
                                                                 <span style="margin-left:5px">${attendee.cn}</span>
                                                             % else:
@@ -477,7 +477,7 @@
                                                     <td colspan="3">
                                                        : 
                                                         % for attendee in object.event_id.attendee_ids:
-                                                            <div style='display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx["color"][attendee.state] or 'white'};'></div>
+                                                            <div style="display:inline-block; border-radius: 50%; width:10px; height:10px;background:${'color' in ctx and ctx['color'][attendee.state] or 'white'};"></div>
                                                             % if attendee.cn != object.cn:
                                                                 <span style="margin-left:5px">${attendee.cn}</span>
                                                             % else:
