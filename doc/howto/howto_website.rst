@@ -178,44 +178,42 @@ First, we'll install the ``website`` module: restart your server with
     $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
                        -d academy -i website --db-filter=academy
 
-.. todo:: is it possible that the page has *not* been replaced?
+If you navigate to `your openerp`_, your basic page may have been replaced by
+the generic index page of the ``website`` module. Don't panic! (if it has not
+been replaced, don't panic either). The problem here is that both ``website``
+and ``academy`` try to handle the ``/`` (root) URL, and which one *gets* it
+depends on the order in which they're loaded (the last loaded module gets the
+last say), which itself depends on a bunch of irrelevant stuff and is
+essentially non-deterministic at this point.
 
-If you navigate to `your openerp`_, your basic page has now been replaced by
-the generic empty index page. Because you are not logged-in yet, the page has
-no content and just basic placeholders in the header and footer. Click on the
-:guilabel:`Sign In` link, fill in your credentials (``admin``/``admin`` by
-default), click :guilabel:`Log in`.
-
-You're now in OpenERP "proper", the backend/administrative interface. We'll
-deal with it in :ref:`a latter section <howto-website-administration>`. For
-now, click on the :menuselection:`Website` menu item in the top-left of the
-browser, between :menuselection:`Messaging` and :menuselection:`Settings`.
-
-You're back to your website, but are now an administrator and thus have access
-to the advanced edition features of an OpenERP-built website.
-
-Building your pages with OpenERP Website
-========================================
-
-As we've seen, your index page has "disappeared" and been replaced by the one
-provided by ``website``. The page is not lost, but because ``website`` was
-installed after the ``academy`` module, its index page takes over routing (two
-index pages exist, and one is picked over the other).
-
-To fix the issue, we can simply add ``website`` as a dependency to ``academy``
-(that is, tell OpenERP that ``academy`` needs ``website`` to work correctly):
-
-.. needs -u all to update metadata
+To make loading order deterministic, we can add ``website`` as a dependency
+to ``academy``:
 
 .. patch::
 
-This will cause ``academy``'s index page to overwrite ``website``'s.
+This tells OpenERP that ``academy`` needs ``website`` to work correctly, and
+that it must only be loaded after ``website`` has already been loaded. This
+ensures ``academy``'s index page overwrites ``website``'s.
 
-Reload `your openerp`_. Your old index page is back.
+.. note::
 
-However, none of the website edition tools are available. That is because much
-of these tools are inserted and enabled by the website layout template.  Let's
-use that layout instead of our own page structure:
+    because a change in dependencies is a metadata alteration, you'll need
+    to force an update to your module: restart your server with
+
+    .. code-block:: console
+
+        $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+                           -d academy -u academy --db-filter=academy
+
+    instead of the previous command (note: ``-i`` was replaced by ``-u``)
+
+If you reload `your openerp`_, you can see that your old index page hasn't
+changed at all. Which is odd since we wanted to use the new ``website``
+tools.
+
+That is because much of these tools are inserted and enabled by the "layout
+template" provided by ``website``.  Let's use that layout instead of our own
+page structure:
 
 .. patch::
 
@@ -226,19 +224,46 @@ use that layout instead of our own page structure:
   (e.g. snippets). Although technically not mandatory, some things will not
   work if they're not there.
 
+Reload `your openerp`_, the page has changed and new content has appeared
+(footer, menus, …) but there's still no advanced edition tools in sight, as
+you are not yet logged-in. Click on the :guilabel:`Sign In` link, fill in your
+credentials (``admin``/``admin`` by default), click :guilabel:`Log in`.
+
+You're now in OpenERP "proper", the backend/administrative interface. We'll
+deal with it in :ref:`a latter section <howto-website-administration>`. For
+now, click on the :menuselection:`Website` menu item in the top-left of the
+browser, between :menuselection:`Messaging` and :menuselection:`Settings`.
+
+You're back to your website, but are now an administrator and thus have access
+to the advanced edition features of an OpenERP-built website.
+
 * if you go in the HTML editor (:menuselection:`Customize --> HTML Editor`),
   you can see and edit your template
+* if you click the :menuselection:`Edit` button in the top left, you'll switch
+  to "Edition Mode" where the blocks (snippets) and rich text edition are
+  available.
+* there are a number of other features in the advanced editor, which we will
+  not cover here
+
+  .. todo:: link to document walking through editor features
 
 .. todo:: website template generator
 
-If you try to add content to the TA pages using snippets, for instance insert
-an :guilabel:`image-text` snippet to add a picture and a short biography for a
-TA, you'll notice things don't work right: because snippets are added in the
-template itself, they're content which is the same across all pages using that
-template.
+You can play around and add blocks or edit content on the home page, however
+if you go to a TA's page and edit it things seem to work at first (e.g. insert
+a :guilabel:`image-text` snippet to one of the TAs, as if adding a picture
+and a short bio), but if you go to a different TA's page after saving the
+first one… he has the exact same snippet inserted (and the same content, if
+you edited the snippet's content)!
+
+Because snippets are added in the template itself, they're content which is
+the same across all pages using that template, and all the teaching assistants
+share the same template (``academy.ta``).
 
 Thus snippets are mostly for generic content, when a given template is only
 used for a single page, or to add content in HTML fields.
+
+.. todo:: link HTML fields to HTML fields doc?
 
 .. note::
 
@@ -285,6 +310,8 @@ a TA name, and you'll see an error message. Let's fix the TA view now:
 .. todo:: if ta template was modified in previous section, it's marked
           noupdate and updating the module will have no effect for no known
           reason. That's really quite annoying.
+
+          Ensure that ``-i`` does discard the noupdate-marked template
 
 .. patch::
 
