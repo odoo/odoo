@@ -155,7 +155,7 @@ class stock_location(osv.osv):
         loc = location
         while loc:
             if loc.putaway_strategy_id:
-                res = putaway_obj.putaway_strat_apply(cr, uid, loc.putaway_strategy_id, product, context=context)
+                res = putaway_obj.putaway_apply(cr, uid, loc.putaway_strategy_id, product, context=context)
                 if res:
                     return res
             loc = loc.location_id
@@ -922,13 +922,6 @@ class stock_picking(osv.osv):
         self.action_assign(cr, uid, picking_ids, context=context)
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
 
-    def _picking_putaway_resolution(self, cr, uid, picking, product, putaway, context=None):
-        if putaway.method == 'fixed':
-            for strat in putaway.fixed_location_ids:
-                if product.categ_id.id == strat.category_id.id:
-                    return strat.fixed_location_id.id
-        return False
-
     def _get_top_level_packages(self, cr, uid, quants_suggested_locations, context=None):
         """This method searches for the higher level packages that can be moved as a single operation, given a list of quants
            to move and their suggested destination, and returns the list of matching packages.
@@ -988,7 +981,6 @@ class stock_picking(osv.osv):
             else:
                 location = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, product, context=context)
                 product_putaway_strats[product.id] = location
-                location = self._picking_putaway_resolution(cr, uid, picking, product, putaway_strat, context=context)
             return location or picking.picking_type_id.default_location_dest_id.id or picking.location_dest_id.id
 
         pack_obj = self.pool.get("stock.quant.package")

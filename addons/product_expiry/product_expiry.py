@@ -78,8 +78,16 @@ class stock_production_lot(osv.osv):
 
 class stock_quant(osv.osv):
     _inherit = 'stock.quant'
-    _column = {
-        'removal_date': fields.related('lot_id', 'removal_date', type='date', string='Removal Date', store=True),
+
+    def _get_quants(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.quant').search(cr, uid, [('lot_id', 'in', ids)], context=context)
+
+    _columns = {
+        'removal_date': fields.related('lot_id', 'removal_date', type='datetime', string='Removal Date',
+            store={
+                'stock.quant': (lambda self, cr, uid, ids, ctx: ids, ['lot_id'], 20),
+                'stock.production.lot': (_get_quants, ['removal_date'], 20),
+            }),
     }
 
     def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
