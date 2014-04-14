@@ -20,20 +20,14 @@ Creating a basic module
 
 In OpenERP, doing things takes the form of creating modules, and these modules
 customize the behavior of the OpenERP installation. The first step is thus to
-create a module:
-
-.. todo:: output directory probably shouldn't be ``.``
-
-.. todo:: ``oe`` v ``./oe``?
+create a module: at the command-line, go to your server's directory and enter
 
 .. code-block:: console
 
-    $ oe scaffold Academy .
+    $ ./oe scaffold Academy ../my-modules
 
-.. patch::
-    :hidden:
-
-This builds a basic module for you:
+This will build a basic module for you in a directory called ``my-modules``
+right next to your server's directory:
 
 .. code-block:: text
 
@@ -49,7 +43,8 @@ This builds a basic module for you:
     └── security
         └── ir.model.access.csv
 
-Ignore anything in the ``models`` and ``security`` directories for now.
+.. patch::
+    :hidden:
 
 .. todo::
 

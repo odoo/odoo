@@ -120,8 +120,10 @@ def directory(p):
     expanded = os.path.abspath(
         os.path.expanduser(
             os.path.expandvars(p)))
+    if not os.path.exists(expanded):
+        os.makedirs(expanded)
     if not os.path.isdir(expanded):
-        die("Directory %s does not seem to exist" % p)
+        die("%s exists but is not a directory" % p)
     return expanded
 
 def die(message, code=1):
