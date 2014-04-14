@@ -620,6 +620,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         });
                     }
                     return $.when();
+                }).fail(function() {
+                    self.save_list.pop();
+                    return $.when();
                 });
             };
             return iterate();
