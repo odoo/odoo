@@ -23,8 +23,10 @@
 import datetime
 import time
 
-from openerp.report import report_sxw
+from openerp.osv import osv
 from openerp.tools.translate import _
+from openerp.report import report_sxw
+
 
 #
 # Use period and Journal for selection or resources
@@ -84,6 +86,11 @@ class report_assert_account(report_sxw.rml_parse):
 
         return result
 
-report_sxw.report_sxw('report.account.test.assert.print', 'accounting.assert.test', 'addons/account_test/report/account_test.rml', parser=report_assert_account, header=False)
+
+class report_accounttest(osv.AbstractModel):
+    _name = 'report.account_test.report_accounttest'
+    _inherit = 'report.abstract_report'
+    _template = 'account_test.report_accounttest'
+    _wrapped_report_class = report_assert_account
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
+import time
 from openerp.osv import fields, osv
+
 
 class account_budget_analytic(osv.osv_memory):
 
@@ -30,7 +31,7 @@ class account_budget_analytic(osv.osv_memory):
         'date_from': fields.date('Start of period', required=True),
         'date_to': fields.date('End of period', required=True),
     }
-    _defaults= {
+    _defaults = {
         'date_from': lambda *a: time.strftime('%Y-01-01'),
         'date_to': lambda *a: time.strftime('%Y-%m-%d'),
     }
@@ -40,15 +41,11 @@ class account_budget_analytic(osv.osv_memory):
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
-             'ids': context.get('active_ids',[]),
-             'model': 'account.analytic.account',
-             'form': data
+            'ids': context.get('active_ids', []),
+            'model': 'account.analytic.account',
+            'form': data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.account.budget',
-            'datas': datas,
-        }
-
+        datas['form']['ids'] = datas['ids']
+        return self.pool['report'].get_action(cr, uid, ids, 'account_budget.report_analyticaccountbudget', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

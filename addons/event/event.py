@@ -111,15 +111,29 @@ class event_event(osv.osv):
         """Get reserved, available, reserved but unconfirmed and used seats.
         @return: Dictionary of function field values.
         """
-        res = dict([(id, {}) for id in ids])
-        for event in self.browse(cr, uid, ids, context=context):
-            res[event.id]['seats_reserved'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "open")
-            res[event.id]['seats_used'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "done")
-            res[event.id]['seats_unconfirmed'] = sum(reg.nb_register for reg in event.registration_ids if reg.state == "draft")
+        keys = {'draft': 'seats_unconfirmed', 'open':'seats_reserved', 'done': 'seats_used'}
+        res = {}
+        for event_id in ids:
+            res[event_id] = {key:0 for key in keys.values()}
+        query = "SELECT state, sum(nb_register) FROM event_registration WHERE event_id = %s AND state IN ('draft','open','done') GROUP BY state"
+        for event in self.pool.get('event.event').browse(cr, uid, ids, context=context):
+            cr.execute(query, (event.id,))
+            reg_states = cr.fetchall()
+            for reg_state in reg_states:
+                res[event.id][keys[reg_state[0]]] = reg_state[1]
             res[event.id]['seats_available'] = event.seats_max - \
                 (res[event.id]['seats_reserved'] + res[event.id]['seats_used']) \
                 if event.seats_max > 0 else None
         return res
+
+    def _get_events_from_registrations(self, cr, uid, ids, context=None):
+        """Get reserved, available, reserved but unconfirmed and used seats, of the event related to a registration.
+        @return: Dictionary of function field values.
+        """
+        event_ids=set()
+        for registration in self.browse(cr, uid, ids, context=context):
+            event_ids.add(registration.event_id.id)
+        return list(event_ids)
 
     def _subscribe_fnc(self, cr, uid, ids, fields, args, context=None):
         """This functional fields compute if the current user (uid) is already subscribed or not to the event passed in parameter (ids)
@@ -142,10 +156,18 @@ class event_event(osv.osv):
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
         'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'seats_min': fields.integer('Minimum Reserved Seats', oldname='register_min', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'seats_reserved': fields.function(_get_seats, oldname='register_current', string='Reserved Seats', type='integer', multi='seats_reserved'),
-        'seats_available': fields.function(_get_seats, oldname='register_avail', string='Available Seats', type='integer', multi='seats_reserved'),
-        'seats_unconfirmed': fields.function(_get_seats, oldname='register_prospect', string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved'),
-        'seats_used': fields.function(_get_seats, oldname='register_attended', string='Number of Participations', type='integer', multi='seats_reserved'),
+        'seats_reserved': fields.function(_get_seats, oldname='register_current', string='Reserved Seats', type='integer', multi='seats_reserved',
+            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
+        'seats_available': fields.function(_get_seats, oldname='register_avail', string='Available Seats', type='integer', multi='seats_reserved',
+            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
+        'seats_unconfirmed': fields.function(_get_seats, oldname='register_prospect', string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved',
+            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
+        'seats_used': fields.function(_get_seats, oldname='register_attended', string='Number of Participations', type='integer', multi='seats_reserved',
+            store={'event.registration': (_get_events_from_registrations, ['state'], 10),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -179,7 +201,6 @@ class event_event(osv.osv):
     }
 
     def _check_seats_limit(self, cr, uid, ids, context=None):
-        print "event _check_seats_limit"
         for event in self.browse(cr, uid, ids, context=context):
             if event.seats_max and event.seats_available < 0:
                 return False
