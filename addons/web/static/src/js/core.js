@@ -460,14 +460,11 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             .appendTo(document.body)
             .load(function () {
                 try {
-                   if (options.error) {
-                         if (!this.contentDocument.body.childNodes[1]) {
-                            options.error(this.contentDocument.body.childNodes);
-                        }
-                        else {
-                            options.error(JSON.parse(this.contentDocument.body.childNodes[1].textContent));
-                        }
-                   }
+                    if (options.error) {
+                        var body = this.contentDocument.body;
+                        var node = body.childNodes[1] || body.childNodes[0];
+                        options.error(JSON.parse(node.textContent));
+                    }
                 } finally {
                     complete();
                 }
