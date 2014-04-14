@@ -293,6 +293,7 @@ function openerp_picking_widgets(instance){
         check_content_screen: function(){
             //get all visible element and if none has positive qty, disable put in pack and process button
             var self = this;
+            var processed = this.$('.js_pack_op_line.processed');
             var qties = this.$('.js_pack_op_line:not(.processed):not(.hidden) .js_qty').map(function(){return $(this).attr('placeholder')});
             var container = this.$('.js_pack_op_line.container_head:not(.processed):not(.hidden)')
             var disabled = true;
@@ -301,6 +302,7 @@ function openerp_picking_widgets(instance){
                     disabled = false;
                 }
             });
+
             if (disabled){
                 if (container.length===0){
                     self.$('.js_drop_down').addClass('disabled');
@@ -309,7 +311,12 @@ function openerp_picking_widgets(instance){
                     self.$('.js_drop_down').removeClass('disabled');
                 }
                 self.$('.js_pick_pack').addClass('disabled');
-                self.$('.js_pick_done').addClass('disabled');
+                if (processed.length === 0){
+                    self.$('.js_pick_done').addClass('disabled');
+                }
+                else {
+                    self.$('.js_pick_done').removeClass('disabled');
+                }
             }
             else{
                 self.$('.js_drop_down').removeClass('disabled');
