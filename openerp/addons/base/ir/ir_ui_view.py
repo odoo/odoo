@@ -86,6 +86,16 @@ class view_custom(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
 
+def _hasclass(context, *cls):
+    """ Checks if the context node has all the classes passed as arguments
+    """
+    node_classes = set(context.context_node.attrib.get('class', '').split())
+
+    return node_classes.issuperset(cls)
+
+xpath_utils = etree.FunctionNamespace(None)
+xpath_utils['hasclass'] = _hasclass
+
 class view(osv.osv):
     _name = 'ir.ui.view'
 
