@@ -26,21 +26,23 @@
             <div class="carousel-inner">
                 <div class="item image_text active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
                     <div class="container">
-                        <div class="carousel-caption content">
-                            <div>
-                                <h2>Your Banner Title</h2>
-                                <h3>Click to customize this text</h3>
-                                <p>
-                                    <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
-                                </p>
+                        <div class="row content">
+                            <div class="carousel-content col-md-6 col-sm-12">
+                                    <h2>Your Banner Title</h2>
+                                    <h3>Click to customize this text</h3>
+                                    <p>
+                                        <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
+                                    </p>
                             </div>
+                            <span class="carousel-img col-md-6 hidden-sm hidden-xs">
+                                <img class="carousel-image img-responsive" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
+                            </span> 
                         </div>
-                        <img class="carousel-image hidden-xs" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                     </div>
                 </div>
             </div>
-            <a class="carousel-control left hidden" href="#myCarousel" data-slide="prev" style="width: 10%"><span class="glyphicon glyphicon-chevron-left"><span class="hidden">.</span></span></a>
-            <a class="carousel-control right hidden" href="#myCarousel" data-slide="next" style="width: 10%"><span class="glyphicon glyphicon-chevron-right"><span class="hidden">.</span></span></a>
+            <div class="carousel-control left hidden" data-target="#myCarousel" data-slide="prev" style="width: 10%"><i class="fa fa-chevron-left"></i></div>
+            <div class="carousel-control right hidden" data-target="#myCarousel" data-slide="next" style="width: 10%"><i class="fa fa-chevron-right"></i></div>
         </div>
     </div>
 
@@ -522,7 +524,7 @@
                         </p>
                     </div>
                     <div class="col-md-3">
-                        <a href="page/contactus" class="btn btn-primary btn-lg pull-right mt8">
+                        <a href="/page/website.contactus" class="btn btn-primary btn-lg pull-right mt8">
                             <i class="fa fa-arrow-right"></i>
                             Contact Us Now
                         </a>
@@ -837,6 +839,7 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Style</a>
             <ul class="dropdown-menu">
+                <li data-value="para_large"><a>Bigger Text</a></li>
                 <li data-value="readable"><a>Narrow</a></li>
             </ul>
         </li>
@@ -899,18 +902,6 @@
         </li>
     </div>
 
-    <div data-snippet-option-id='carousel-style'
-        data-selector=".carousel:not(.quotecarousel)">
-        <li class="dropdown-submenu" data-required="true">
-            <a tabindex="-1" href="#">Layout</a>
-            <ul class="dropdown-menu">
-                <li data-value="text_only"><a>Text Only</a></li>
-                <li data-value="image_text"><a>Image - Text</a></li>
-                <li data-value="text_image"><a>Text - Image</a></li>
-            </ul>
-        </li>
-    </div>
-
     <div data-snippet-option-id='carousel'
         data-selector=".carousel">
         <li class="divider"></li>
@@ -942,6 +933,11 @@
         data-selector-children=".content">
     </div>
 
+    <div data-snippet-option-id='separator'
+        data-selector="hr"
+        data-selector-children=".oe_structure, [data-oe-type=html]">
+    </div>
+
     <div data-snippet-option-id='parallax'
         data-selector=".parallax">
         <li class="dropdown-submenu">
@@ -955,6 +951,27 @@
                 <li data-value="1.7"><a>Very Fast</a></li>
             </ul>
         </li>
+    </div>
+
+    <div data-snippet-option-id='media'
+        data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa, .glyphicon">
+        <li><a href="#" class="edition">Change...</a></li>
+    </div>
+
+    <div data-snippet-option-id='transform'
+        data-selector="img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu" name="parallax-scroll">
+                <li data-value="img-rounded"><a>Rounded corners</a></li>
+                <li data-value="img-thumbnail"><a>Box</a></li>
+                <li data-value="img-circle"><a>Circle</a></li>
+                <li data-value="shadow"><a>Shadow</a></li>
+                <li data-value="fa-spin"><a>Spin</a></li>
+            </ul>
+        </li>
+        <li><a href="#" class="style">Transform</a></li>
+        <li><a href="#" class="clear-style">Reset Transformation</a></li>
     </div>
 
 </template>

@@ -76,6 +76,9 @@ header
 
 /* ----- Snippets Styles ----- */
 
+.para_large
+    font-size: 120%
+
 .readable
     font-size: 120%
     max-width: 700px
@@ -234,8 +237,6 @@ ul.nav-stacked > li > a
 .oe_img_bg
     background-size: 100%
 
-section, .carousel, .parallax, .row, .hr, .blockquote
-    min-height: 30px
 .carousel, .parallax, .blockquote
     overflow: hidden
 
@@ -249,72 +250,32 @@ section, .carousel, .parallax, .row, .hr, .blockquote
         height: 100%
         background-size: cover
 .carousel
-    .carousel-caption
-        position: absolute
-        right: 50%
-        left: 50%
-        bottom: 20px
-        > div
-            position: absolute
-            text-align: left
-            padding: 20px
-            background: rgba(0, 0, 0, 0.4)
-            bottom: 20px
-        h1, h2, h3
-            margin-top: 10px
-            margin-bottom: 10px
-    .carousel-image
-        top: 5%
-        bottom: 5%
-        position: absolute
-        max-height: 90%
-        margin: 0 auto
-    .item.text_only
-        .carousel-image
-            display: none !important
-        .carousel-caption
-            left: 10%
-            right: 10%
-            top: 10%
-            bottom: auto
-            > div
-                text-align: center
-                background: transparent
-                bottom: auto
-                width: 100%
-    .item.text_image
-        .carousel-caption
-            left: 10%
-            > div
-                right: 50%
-                margin-right: -20%
-                max-width: 550px
-        .carousel-image
-            right: 10%
-            left: 50%
-    .item.image_text
-        .carousel-caption
-            right: 10%
-            > div
-                left: 50%
-                margin-left: -20%
-                max-width: 550px
-        .carousel-image
-            right: 50%
-            left: 10%
     .carousel-control
         cursor: pointer
         span
             top: 50%
             position: absolute
             margin-top: -8px
-        &.left span
-            left: 10px
-        &.right span
-            right: 10px
+        &.left
+            left: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                right: 50%
+        &.right
+            right: -10px
+            *
+                position: absolute
+                top: 50%
+                z-index: 5
+                left: 50%
 
 .quotecarousel
     padding-bottom: 16px
+
+.hr
+    padding: 4px 0
 
 /* Parallax Theme */
 
@@ -324,6 +285,14 @@ div.carousel
             border: 1px solid grey
         .active
             background-color: grey
+    span.carousel-img img, div.carousel-content
+        max-height: 95%
+        padding: 10px        
+    div.carousel-content
+        background-color: black
+        color: white
+        background: rgba(0, 0, 0, 0.3)
+        margin-top: 75px
 
 .parallax
     background-size: cover
@@ -434,3 +403,28 @@ span[data-oe-type="monetary"]
     overflow:hidden
     text-overflow:ellipsis
 
+div.media_iframe_video
+    height: 0
+    margin: 0 auto
+    text-align: center
+    position: relative
+    overflow: hidden
+    padding-bottom: 66.5%
+    iframe
+        width: 100%
+        height: 100%
+    div
+        position: absolute
+        width: 100%
+        height: 100%
+        display: none
+
+/* Mobile view */
+
+@media (max-width: 768px)
+    img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa
+        -webkit-transform: none !important
+        -moz-transform: none !important
+        -ms-transform: none !important
+        -o-transform: none !important
+        transform: none !important
