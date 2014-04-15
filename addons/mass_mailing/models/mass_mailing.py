@@ -416,7 +416,6 @@ class MassMailing(osv.Model):
 
     _defaults = {
         'state': 'draft',
-        'create_date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'reply_to': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'mail.mass_mailing.contact',
@@ -435,6 +434,7 @@ class MassMailing(osv.Model):
             'state': 'draft',
             'statistics_ids': [],
             'name': _('%s (duplicate)') % mailing.name,
+            'sent_date': False,
         })
         return super(MassMailing, self).copy_data(cr, uid, id, default, context=context)
 

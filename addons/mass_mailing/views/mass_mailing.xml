@@ -434,15 +434,12 @@
             </field>
         </record>
 
-
-
         <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_form">
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
                 <form string="Mass Mailing Campaign" version="7.0">
                     <header>
-                        <button name="%(action_view_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="New Mailing"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -450,7 +447,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="user_id"/>
-                                <field name="category_ids"/>
+                                <field name="category_ids" widget="many2many_tags"/>
                             </group>
                             <group>
                                 <field name="total" invisible="1"/>
@@ -458,18 +455,15 @@
                                     attrs="{'invisible': [('total', '=', 0)]}">
                                     <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
-                                        <field name="received_ratio" widget="percentpie"/>
-                                        <span>Received</span>
+                                        <field name="received_ratio" widget="percentpie" string="Received"/>
                                     </button>
                                     <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
-                                        <field name="opened_ratio" widget="percentpie"/>
-                                        <span>Opened</span>
+                                        <field name="opened_ratio" widget="percentpie" string="Opened"/>
                                     </button>
                                     <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
-                                        <field name="replied_ratio" widget="percentpie"/>
-                                        <span>Replied</span>
+                                        <field name="replied_ratio" widget="percentpie" string="Replied"/>
                                     </button>
                                 </div>
                             </group>
@@ -521,7 +515,7 @@
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
                                             t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar oe_kanban_header_right"/>
                                         <h3 style="margin-bottom: 8px;"><field name="name"/></h3>
-                                        <span class="oe_tag"><field name="category_ids"/></span>
+                                        <field name="category_ids"/>
                                         <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                                             class="oe_mailings">
                                             <h4 style="margin-top: 8px;"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>
