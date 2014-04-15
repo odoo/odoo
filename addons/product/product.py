@@ -300,7 +300,7 @@ class prices_history(osv.osv):
 
     _columns = {
         'company_id': fields.many2one('res.company', required=True),
-        'product_template_id': fields.many2one('product.template', 'Product Template', required=True),
+        'product_template_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Historization Time'),
         'cost': fields.float('Historized Cost'),
         'reason': fields.char('Reason'),
