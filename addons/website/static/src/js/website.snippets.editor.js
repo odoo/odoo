@@ -151,10 +151,11 @@
             $("[data-oe-model] *, [data-oe-type=html] *").off('click');
             window.snippets = this.snippets = new website.snippet.BuildingBlock(this);
             this.snippets.appendTo(this.$el);
+            website.snippet.stop_animation();
             this.on('rte:ready', this, function () {
                 self.snippets.$button.removeClass("hidden");
-                  website.snippet.stop_animation();
-                  website.snippet.start_animation(true, $(".media_iframe_video"));
+                website.snippet.start_animation();
+                $("#wrapwrap *").off('mousedown mouseup click');
             });
 
             return this._super.apply(this, arguments);
@@ -434,7 +435,6 @@
                     // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
                     $snippet = $(this);
                     $toInsert = $snippet.find('.oe_snippet_body').clone();
-                    $toInsert.removeClass('oe_snippet_body');
 
                     var selector = [];
                     var selector_siblings = [];
@@ -497,6 +497,8 @@
                     });
                 },
                 stop: function(ev, ui){
+                    $toInsert.removeClass('oe_snippet_body');
+                    
                     if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
                         var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
@@ -933,7 +935,7 @@
         drop_and_build_snippet: function() {
             this.id = this.unique_id();
             this.$target.attr("id", this.id);
-            this.$target.find("[data-slide]").attr("data-target", "#" + this.id);
+            this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
             this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
 
             this.rebind_event();
@@ -1399,6 +1401,9 @@
         start : function () {
             var self = this;
             this._super();
+            if (!self.$target.data("snippet-view")) {
+                this.$target.data("snippet-view", new website.snippet.animationRegistry.parallax(this.$target));
+            }
             this.scroll();
             this.$target.on('snippet-style-change snippet-style-preview', function () {
                 self.$target.data("snippet-view").set_values();
@@ -1494,7 +1499,9 @@
             $(document.body).on("media-saved", self, function (event, prev , item) {
                 self.editor.onBlur();
                 self.BuildingBlock.make_active(false);
-                self.BuildingBlock.make_active($(item));
+                if (self.$target.parent().data("oe-field") !== "image") {
+                    self.BuildingBlock.make_active($(item));
+                }
             });
 
             this.$el.find(".edition").click(function (event) {
