@@ -525,15 +525,6 @@ class MassMailing(osv.Model):
     # Email Sending
     #------------------------------------------------------
 
-    def get_recipients_data(self, cr, uid, mailing, res_ids, context=None):
-        # tde todo: notification link ?
-        if mailing.mailing_model == 'mail.mass_mailing.contact':
-            contacts = self.pool['mail.mass_mailing.contact'].browse(cr, uid, res_ids, context=context)
-            return dict((contact.id, {'partner_id': False, 'name': contact.name, 'email': contact.email}) for contact in contacts)
-        else:
-            partners = self.pool['res.partner'].browse(cr, uid, res_ids, context=context)
-            return dict((partner.id, {'partner_id': partner.id, 'name': partner.name, 'email': partner.email}) for partner in partners)
-
     def get_recipients(self, cr, uid, mailing, context=None):
         domain = eval(mailing.mailing_domain)
         res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
