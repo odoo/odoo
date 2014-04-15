@@ -2440,13 +2440,12 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this._super.apply(this, arguments);
     },
     start: function() {
-        var self=this;
+        var self = this;
         this._super.apply(this, arguments);
         this.on("change:effective_readonly", this, function () {
             this.display_field();
             this.render_value();
         });
-        this.$('button.select_records').on('click', self.on_click);
         this.display_field();
         return this._super();
     },
@@ -2473,6 +2472,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
             $('.oe_domain_count', this.$el).text('0 record selected');
             $('button span', this.$el).text(' Select records');
         };
+        this.$('.select_records').on('click', self.on_click);
     },
     on_click: function(ev) {
         var self = this;
