@@ -32,6 +32,8 @@ class Users(osv.Model):
     }
 
     def add_karma(self, cr, uid, ids, karma, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for user in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [user.id], {'karma': user.karma + karma}, context=context)
         return True
