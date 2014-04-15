@@ -227,9 +227,9 @@ class MassMailing(osv.Model):
     _description = 'Mass Mailing'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
-    _order = 'date DESC'
+    _order = 'sent_date DESC'
 
-    def __get_bar_values(self, cr, uid, id, obj, domain, read_fields, value_field, groupby_field, context=None):
+    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, date_begin, context=None):
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
             This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
 
@@ -245,7 +245,7 @@ class MassMailing(osv.Model):
                                                 }
                                             ]
         """
-        date_begin = datetime.strptime(self.browse(cr, uid, id, context=context).date, tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+        date_begin = date_begin.date()
         section_result = [{'value': 0,
                            'tooltip': (date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y'),
                            } for i in range(0, self._period_number)]
@@ -264,16 +264,17 @@ class MassMailing(osv.Model):
         results for the next 6 days following the mass mailing date. """
         obj = self.pool['mail.mail.statistics']
         res = {}
-        for id in ids:
-            res[id] = {}
-            date_begin = datetime.strptime(self.browse(cr, uid, id, context=context).date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        for mailing in self.browse(cr, uid, ids, context=context):
+            res[mailing.id] = {}
+            date = mailing.sent_date if mailing.sent_date else mailing.create_date
+            date_begin = datetime.strptime(date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_end = date_begin + relativedelta.relativedelta(days=self._period_number - 1)
             date_begin_str = date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_end_str = date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            domain = [('mass_mailing_id', '=', id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
-            res[id]['opened_dayly'] = json.dumps(self.__get_bar_values(cr, uid, id, obj, domain, ['opened'], 'opened_count', 'opened:day', context=context))
-            domain = [('mass_mailing_id', '=', id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
-            res[id]['replied_dayly'] = json.dumps(self.__get_bar_values(cr, uid, id, obj, domain, ['replied'], 'replied_count', 'replied:day', context=context))
+            domain = [('mass_mailing_id', '=', mailing.id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
+            res[mailing.id]['opened_dayly'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['opened'], 'opened_count', 'opened:day', date_begin, context=context))
+            domain = [('mass_mailing_id', '=', mailing.id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
+            res[mailing.id]['replied_dayly'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['replied'], 'replied_count', 'replied:day', date_begin, context=context))
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
@@ -298,15 +299,6 @@ class MassMailing(osv.Model):
             results[mid]['replied_ratio'] = 100.0 * results[mid]['replied'] / (results[mid]['sent'] or 1)
         return results
 
-    def _get_private_models(self, context=None):
-        return ['res.partner', 'mail.mass_mailing.contact']
-
-    def _get_auto_reply_to_available(self, cr, uid, ids, name, arg, context=None):
-        res = dict.fromkeys(ids, False)
-        for mailing in self.browse(cr, uid, ids, context=context):
-            res[mailing.id] = mailing.mailing_model not in self._get_private_models(context=context)
-        return res
-
     def _get_mailing_model(self, cr, uid, context=None):
         return [
             ('res.partner', _('Customers')),
@@ -319,7 +311,8 @@ class MassMailing(osv.Model):
     _columns = {
         'name': fields.char('Subject', required=True),
         'email_from': fields.char('From', required=True),
-        'date': fields.datetime('Date'),
+        'create_date': fields.datetime('Creation Date'),
+        'sent_date': fields.datetime('Sent Date'),
         'body_html': fields.html('Body'),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
@@ -334,15 +327,12 @@ class MassMailing(osv.Model):
             type='integer', string='Color Index',
         ),
         # mailing options
-        # TODO: simplify these 4 fields
-        'reply_in_thread': fields.boolean('Reply in thread'),
-        'reply_specified': fields.boolean('Specific Reply-To'),
-        'auto_reply_to_available': fields.function(
-            _get_auto_reply_to_available,
-            type='boolean', string='Reply in thread available'
+        'reply_to_mode': fields.selection(
+            [('thread', 'In Document'), ('email', 'Specified Email Address')],
+            string='Reply-To Mode', required=True,
         ),
-        'reply_to': fields.char('Reply To'),
-        # Target Emails
+        'reply_to': fields.char('Reply To', help='Preferred Reply-To Address'),
+        # recipients
         'mailing_model': fields.selection(_mailing_model, string='Recipients Model', required=True),
         'mailing_domain': fields.char('Domain'),
         'contact_list_ids': fields.many2many(
@@ -412,13 +402,23 @@ class MassMailing(osv.Model):
             _get_daily_statistics, string='Replied',
             type='char', multi='_get_daily_statistics',
             oldname='replied_monthly',
-        ),
+        )
     }
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(MassMailing, self).default_get(cr, uid, fields, context=context)
+        if 'reply_to_mode' in fields and not 'reply_to_mode' in res and res.get('mailing_model'):
+            if res['mailing_model'] in ['res.partner', 'mail.mass_mailing.contact']:
+                res['reply_to_mode'] = 'email'
+            else:
+                res['reply_to_mode'] = 'thread'
+        return res
 
     _defaults = {
         'state': 'draft',
-        'date': fields.datetime.now,
+        'create_date': fields.datetime.now,
         'email_from': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
+        'reply_to': lambda self, cr, uid, ctx=None: self.pool['mail.message']._get_default_from(cr, uid, context=ctx),
         'mailing_model': 'mail.mass_mailing.contact',
         'contact_ab_pc': 100,
     }
@@ -468,41 +468,17 @@ class MassMailing(osv.Model):
     # Views & Actions
     #------------------------------------------------------
 
-    def on_change_model(self, cr, uid, ids, mailing_model, list_ids, context=None):
+    def on_change_model_and_list(self, cr, uid, ids, mailing_model, list_ids, context=None):
         value = {}
-        if mailing_model is 'mail.mass_mailing.contact':
-            if list_ids and list_ids[0][0] == 6 and list_ids[0][2]:
-                value['mailing_domain'] = "[('list_id', 'in', ["+','.join(map(str, list_ids[0][2]))+"])]"
+        if mailing_model == 'mail.mass_mailing.contact':
+            list_ids = map(lambda item: item if isinstance(item, (int, long)) else [lid for lid in item[2]], list_ids)
+            if list_ids:
+                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list_ids
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
             value['mailing_domain'] = False
         return {'value': value}
-
-    def on_change_reply_specified(self, cr, uid, ids, reply_specified, reply_in_thread, context=None):
-        if reply_specified == reply_in_thread:
-            return {'value': {'reply_in_thread': not reply_specified}}
-        return {}
-
-    def on_change_reply_in_thread(self, cr, uid, ids, reply_specified, reply_in_thread, context=None):
-        if reply_in_thread == reply_specified:
-            return {'value': {'reply_specified': not reply_in_thread}}
-        return {}
-
-    def on_change_contact_list_ids(self, cr, uid, ids, mailing_model, contact_list_ids, context=None):
-        values = {}
-        list_ids = []
-        for command in contact_list_ids:
-            if command[0] == 6:
-                list_ids += command[2]
-        if list_ids:
-            values['contact_nbr'] = self.pool[mailing_model].search(
-                cr, uid, [('list_id', 'in', list_ids), ('opt_out', '!=', True)],
-                count=True, context=context
-            )
-        else:
-            values['contact_nbr'] = 0
-        return {'value': values}
 
     def action_duplicate(self, cr, uid, ids, context=None):
         copy_id = None
@@ -530,23 +506,9 @@ class MassMailing(osv.Model):
             'context': ctx,
         }
 
-    def action_see_recipients(self, cr, uid, ids, context=None):
-        mailing = self.browse(cr, uid, ids[0], context=context)
-        domain = self.pool['mail.mass_mailing.list'].get_global_domain(cr, uid, [c.id for c in mailing.contact_list_ids], context=context)[mailing.mailing_model]
-        return {
-            'name': _('See Recipients'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': mailing.mailing_model,
-            'target': 'new',
-            'domain': domain,
-            'context': context,
-        }
-
     def action_edit_html(self, cr, uid, ids, context=None):
-        # fixme: assert is not correct
-        assert len(ids)==1, "One and only one ID allowed for this action"
+        if not len(ids) == 1:
+            raise ValueError('One and only one ID allowed for this action')
         mail = self.browse(cr, uid, ids[0], context=context)
         url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&field_body=body_html&field_from=email_form&field_subject=name&template_model=%s' % (ids[0], mail.mailing_model)
         return {
@@ -622,5 +584,5 @@ class MassMailing(osv.Model):
                 composer_values['reply_to'] = mailing.reply_to
             composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
-            self.write(cr, uid, [mailing.id], {'date': fields.datetime.now(), 'state': 'done'}, context=context)
+            self.write(cr, uid, [mailing.id], {'sent_date': fields.datetime.now(), 'state': 'done'}, context=context)
         return True

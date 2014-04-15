@@ -24,7 +24,7 @@ class MassMailingnReport(osv.Model):
                 SELECT
                     id,
 
-                    date_trunc('day', m.date) as mailing_date
+                    date_trunc('day', m.sent_date) as mailing_date
                 FROM
                     mail_mass_mailing m
             )""")
