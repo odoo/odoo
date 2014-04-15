@@ -401,13 +401,8 @@ class email_template(osv.osv):
         template = self.browse(cr, uid, template_id, context=context)
 
         if template.use_default_to or context.get('tpl_force_default_to'):
-            if template.model and hasattr(self.pool[template.model], 'message_get_default_recipients'):
-                default_recipients = self.pool[template.model].message_get_default_recipients(cr, uid, res_ids, context=context)
-            elif template.model:
-                ctx = dict(context, thread_model=template.model)
-                default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
-            else:
-                default_recipients = {}
+            ctx = dict(context, thread_model=template.model)
+            default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
             for res_id, recipients in default_recipients.iteritems():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)

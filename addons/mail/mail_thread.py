@@ -662,14 +662,15 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
 
     def message_get_default_recipients(self, cr, uid, ids, context=None):
-        model = self
-        if context and context.get('thread_model'):
-            model = self.pool[context['thread_model']]
+        if context and context.get('thread_model') and context['thread_model'] in self.pool and context['thread_model'] != self._name:
+            sub_ctx = dict(context)
+            sub_ctx.pop('thread_model')
+            return self.pool[context['thread_model']].message_get_default_recipients(cr, uid, ids, context=sub_ctx)
         res = {}
-        for record in model.browse(cr, SUPERUSER_ID, ids, context=context):
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
             recipient_ids, email_to, email_cc = set(), False, False
             if 'partner_id' in self._all_columns and record.partner_id:
-                recipient_ids.add(record.parent_id.id)
+                recipient_ids.add(record.partner_id.id)
             elif 'email_from' in self._all_columns and record.email_from:
                 email_to = record.email_from
             elif 'email' in self._all_columns:

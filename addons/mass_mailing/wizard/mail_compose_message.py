@@ -1,25 +1,5 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
 
-from openerp import tools
 from openerp.osv import osv, fields
 
 
@@ -62,17 +42,8 @@ class MailComposeMessage(osv.TransientModel):
                         'mailing_domain': wizard.active_domain,
                     }, context=context)
                 mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
-            recipient_values = self.pool['mail.mass_mailing'].get_recipients_data(cr, uid, mass_mailing, res_ids, context=context)
             for res_id in res_ids:
-                mail_values = res[res_id]
-                recipient = recipient_values[res_id]
-                unsubscribe_url = self.pool['mail.mass_mailing'].get_unsubscribe_url(cr, uid, mass_mailing.id, res_id, recipient['email'], context=context)
-                if unsubscribe_url:
-                    mail_values['body_html'] = tools.append_content_to_html(mail_values['body_html'], unsubscribe_url, plaintext=False, container_tag='p')
-                mail_values.update({
-                    'email_to': '"%s" <%s>' % (recipient['name'], recipient['email'])
-                })
-                recipient = recipient_values[res_id]
+                res[res_id]['mailing_id'] = mass_mailing.id
                 res[res_id]['statistics_ids'] = [(0, 0, {
                     'model': wizard.model,
                     'res_id': res_id,

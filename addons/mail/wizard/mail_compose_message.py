@@ -324,13 +324,8 @@ class mail_compose_message(osv.TransientModel):
         emails_from = self.render_template_batch(cr, uid, wizard.email_from, wizard.model, res_ids, context=context)
         replies_to = self.render_template_batch(cr, uid, wizard.reply_to, wizard.model, res_ids, context=context)
 
-        if wizard.model and hasattr(self.pool[wizard.model], 'message_get_default_recipients'):
-            default_recipients = self.pool[wizard.model].message_get_default_recipients(cr, uid, res_ids, context=context)
-        elif wizard.model:
-            ctx = dict(context, thread_model=wizard.model)
-            default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
-        else:
-            default_recipients = {}
+        ctx = dict(context, thread_model=wizard.model)
+        default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
 
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:

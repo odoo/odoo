@@ -552,16 +552,6 @@ class MassMailing(osv.Model):
             res_ids = random.sample(remaining, topick)
         return res_ids
 
-    def get_unsubscribe_url(self, cr, uid, mailing_id, res_id, email, msg=None, context=None):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        url = urlparse.urljoin(
-            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
-                'mailing_id': mailing_id,
-                'params': urllib.urlencode({'db': cr.dbname, 'res_id': res_id, 'email': email})
-            }
-        )
-        return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
-
     def send_mail(self, cr, uid, ids, context=None):
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
         for mailing in self.browse(cr, uid, ids, context=context):

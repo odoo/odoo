@@ -152,7 +152,7 @@ class mail_compose_message(osv.TransientModel):
         returned_fields = fields + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        ctx = dict(context, tpl_partners_only=True)
+        ctx = dict(context)
         template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, fields=fields, context=ctx)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
@@ -172,16 +172,18 @@ class mail_compose_message(osv.TransientModel):
                 fields=['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'],
                 context=context)
         else:
-            template_values = dict.fromkeys(res_ids, dict())
+            template_values = {}
 
         for res_id in res_ids:
-            if wizard.template_id:
+            if template_values.get(res_id):
                 # recipients are managed by the template
                 composer_values[res_id].pop('partner_ids')
                 composer_values[res_id].pop('email_to')
                 composer_values[res_id].pop('email_cc')
-            # remove attachments from template values as they should not be rendered
-            template_values[res_id].pop('attachment_ids', None)
+                # remove attachments from template values as they should not be rendered
+                template_values[res_id].pop('attachment_ids', None)
+            else:
+                template_values[res_id] = dict()
             # update template values by composer values
             template_values[res_id].update(composer_values[res_id])
         return template_values

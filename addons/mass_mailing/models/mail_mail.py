@@ -33,6 +33,7 @@ class MailMail(osv.Model):
     _inherit = ['mail.mail']
 
     _columns = {
+        'mailing_id': fields.many2one('mail.mass_mailing', 'Mass Mailing'),
         'statistics_ids': fields.one2many(
             'mail.mail.statistics', 'mail_mail_id',
             string='Statistics',
@@ -59,6 +60,16 @@ class MailMail(osv.Model):
         )
         return '<img src="%s" alt=""/>' % track_url
 
+    def _get_unsubscribe_url(self, cr, uid, mail, email_to, msg=None, context=None):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        url = urlparse.urljoin(
+            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+                'mailing_id': mail.mailing_id.id,
+                'params': urllib.urlencode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
+            }
+        )
+        return '<small><a href="%s">%s</a></small>' % (url, msg or 'Click to unsubscribe')
+
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Override to add the tracking URL to the body. """
         body = super(MailMail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
@@ -69,6 +80,15 @@ class MailMail(osv.Model):
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
         return body
+
+    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
+        res = super(MailMail, self).send_get_email_dict(cr, uid, mail, partner, context=context)
+        if mail.mailing_id and res.get('body'):
+            email_to = tools.email_split(res.get('email_to'))
+            unsubscribe_url = self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
+            if unsubscribe_url:
+                res['body'] = tools.append_content_to_html(res['body'], unsubscribe_url, plaintext=False, container_tag='p')
+        return res
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
         if mail_sent is True and mail.statistics_ids:
