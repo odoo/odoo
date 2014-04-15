@@ -347,9 +347,9 @@ class Ecommerce(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         prod_obj = request.registry.get('product.product')
 
-        # must have a draft sale order with lines at this point, otherwise reset
+        # must have a shopping_cart sale order with lines at this point, otherwise reset
         order = self.get_order()
-        if order and order.state not in ['draft','shopping_cart']:
+        if order and order.state != 'shopping_cart':
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop')
 
@@ -415,14 +415,14 @@ class Ecommerce(http.Controller):
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        # must have a draft sale order with lines at this point, otherwise reset
+        # must have a shopping_cart sale order with lines at this point, otherwise reset
         order = self.get_order()
-        if not order or order.state not in ['draft', 'shopping_cart'] or not order.order_line:
+        if not order or order.state != 'shopping_cart' or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop')
         # if transaction pending / done: redirect to confirmation
         tx = context.get('website_sale_transaction')
-        if tx and tx.state != 'draft':
+        if tx and tx.state != 'shopping_cart':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
         self.get_pricelist()
@@ -471,14 +471,14 @@ class Ecommerce(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         order_line_obj = request.registry.get('sale.order')
 
-        # must have a draft sale order with lines at this point, otherwise redirect to shop
+        # must have a shopping_cart sale order with lines at this point, otherwise redirect to shop
         order = self.get_order()
-        if not order or order.state not in ['draft', 'shopping_cart'] or not order.order_line:
+        if not order or order.state != 'shopping_cart' or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect('/shop')
         # if transaction pending / done: redirect to confirmation
         tx = context.get('website_sale_transaction')
-        if tx and tx.state != 'draft':
+        if tx and tx.state != 'shopping_cart':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
         orm_partner = registry.get('res.partner')
@@ -577,9 +577,9 @@ class Ecommerce(http.Controller):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
 
-         - a draft sale order with lines; otherwise, clean context / session and
+         - a shopping_cart sale order with lines; otherwise, clean context / session and
            back to the shop
-         - no transaction in context / session, or only a draft one, if the customer
+         - no transaction in context / session, or only a shopping_cart one, if the customer
            did go to a payment.acquirer website but closed the tab without
            paying / canceling
         """
@@ -589,12 +589,12 @@ class Ecommerce(http.Controller):
 
         # if no sale order at this stage: back to checkout beginning
         order = self.get_order()
-        if not order or order.state not in ['draft', 'shopping_cart'] or not order.order_line:
+        if not order or order.state != 'shopping_cart' or not order.order_line:
             request.registry['website'].ecommerce_reset(cr, uid, context=context)
             return request.redirect("/shop")
         # alread a transaction: forward to confirmation
         tx = context.get('website_sale_transaction')
-        if tx and tx.state != 'draft':
+        if tx and tx.state != 'shopping_cart':
             return request.redirect('/shop/confirmation/%s' % order.id)
 
         shipping_partner_id = False
@@ -666,7 +666,7 @@ class Ecommerce(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['website_sale_transaction_id'] = tx_id
-        elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+        elif tx and tx.state == 'shopping_cart':  # button cliked but no more info -> rewrite on tx or create a new one ?
             tx.write({
                 'acquirer_id': acquirer_id,
             })
@@ -754,9 +754,6 @@ class Ecommerce(http.Controller):
         if not order.amount_total or tx.state == 'done':
             # confirm the quotation
             sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
-            # send by email
-            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
-        elif tx.state == 'pending':
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'cancel':
