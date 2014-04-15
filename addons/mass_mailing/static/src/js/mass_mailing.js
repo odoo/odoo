@@ -11,32 +11,32 @@ openerp.mass_mailing = function (instance) {
         },
     });
 
-    instance.web.form.CharDomainButton = instance.web.form.AbstractField.extend({
-        template: 'CharDomainButton',
+    instance.web.form.CharDomainButton = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
         init: function(field_manager, node) {
             this._super.apply(this, arguments);
-        },
-        initialize_content: function () {
-            this.on("change:effective_readonly", this, this.render_value);
         },
         start: function() {
             var self=this;
             this._super.apply(this, arguments);
-            $('button.select_records', this.$el).on('click', self.on_click);
-            this.set_button();
+            this.on("change:effective_readonly", this, function () {
+                this.display_field();
+                this.render_value();
+            });
+            this.$('button.select_records').on('click', self.on_click);
+            this.display_field();
+            return this._super();
         },
-        render_value: function () {
-            console.log('cacaprout', this.$('.select_records'));
-            var self = this;
-            this.$('.select_records').toggle(! this.get('effective_readonly'));
+        render_value: function() {
+            this.$('button.select_records').css('visibility', this.get('effective_readonly') ? 'hidden': '');
         },
         set_value: function(value_) {
             var self = this;
             this.set('value', value_ || false);
-            this.set_button();
+            this.display_field();
          },
-        set_button: function() {
+        display_field: function() {
             var self = this;
+            this.$el.html(instance.web.qweb.render("CharDomainButton", {widget: this}));
             if (this.get('value')) {
                 var domain = instance.web.pyeval.eval('domain', this.get('value'));
                 var relation = this.getParent().fields.mailing_model.get('value')[0];
@@ -51,7 +51,6 @@ openerp.mass_mailing = function (instance) {
             };
         },
         on_click: function(ev) {
-            console.log(this.get('effective_readonly'));
             var self = this;
             var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             this.pop = new instance.web.form.SelectCreatePopup(this);
