@@ -98,15 +98,15 @@ var T = website.Tour = {
         T.tours[tour.id] = tour;
     },
     run: function (tour_id, mode) {
-        if (localStorage.getItem("tour") && mode === "test") { // only one test running
-            return;
-        }
         var tour = T.tours[tour_id];
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
+            var href = "/"+T.getLang()+tour.path;
+            console.log("Tour Begin from run method (redirection to "+href+")");
             T.saveState(tour.id, mode || tour.mode, -1);
-            window.location.href = "/"+T.getLang()+tour.path;
+            window.location.href = href;
         } else {
+            console.log("Tour Begin from run method");
             T.saveState(tour.id, mode || tour.mode, 0);
             T.running();
         }
@@ -307,6 +307,7 @@ var T = website.Tour = {
                 "step_id": 0
             };
             window.location.hash = "";
+            console.log("Tour Begin from url hash");
             T.saveState(state.id, state.mode, state.step_id);
         }
         if (!state.id || !T.tours[state.id]) {
@@ -357,6 +358,7 @@ var T = website.Tour = {
         function run () {
             var state = T.getState();
             if (state) {
+                console.log("Tour '"+state.id+"' is running");
                 T.registerSteps(state.tour);
                 T.nextStep();
             }
