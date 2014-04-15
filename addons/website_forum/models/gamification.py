@@ -12,6 +12,7 @@ class gamification_challenge(osv.Model):
         return res
 
 
+
 class Badge(osv.Model):
     _inherit = 'gamification.badge'
     _columns = {
