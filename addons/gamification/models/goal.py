@@ -296,23 +296,24 @@ class gamification_goal(osv.Model):
                         end_date = field_date_name and goal.end_date or False
                         subqueries.setdefault((start_date, end_date), {}).update({goal.id:safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
 
+                    # the global query should be split by time periods (especially for recurrent goals)
                     for (start_date, end_date), query_goals in subqueries.items():
                         subquery_domain = list(general_domain)
                         subquery_domain.append((field_name, 'in', list(set(query_goals.values()))))
                         if start_date:
                             subquery_domain.append((field_date_name, '>=', start_date))
                         if end_date:
-                            subquery_domain.append((field_date_name, '>=', end_date))
+                            subquery_domain.append((field_date_name, '<=', end_date))
 
                         if field_name == 'id':
+                            # grouping on id does not work and is similar to search anyway
                             user_ids = obj.search(cr, uid, subquery_domain, context=context)
                             user_values = [{'id': user_id, 'id_count': 1} for user_id in user_ids]
                         else:
                             user_values = obj.read_group(cr, uid, subquery_domain, fields=[field_name], groupby=[field_name], context=context)
-
+                        # user_values has format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
                         for goal in [g for g in goals if g.id in query_goals.keys()]:
                             for user_value in user_values:
-                                # return format of read_group: [{'partner_id': 42, 'partner_id_count': 3},...]
                                 queried_value = field_name in user_value and user_value[field_name] or False
                                 if isinstance(queried_value, tuple) and len(queried_value) == 2 and isinstance(queried_value[0], (int, long)):
                                     queried_value = queried_value[0]
