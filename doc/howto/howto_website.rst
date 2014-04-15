@@ -473,10 +473,91 @@ fix this, we have to create an explicit list view for lectures:
 
 .. todo:: link to list view documentation
 
-.. todo:: have lectures extend events -> reuse in OpenERP?
+Reusing and customizing existing work
+-------------------------------------
+
+OpenERP and its standard modules provide a number of models which may already
+solve your problem or part of your problem. Part of being a good OpenERP
+developer is having an idea of existing models and how they can be retrofit
+to your purposes.
+
+For our courses, instead of developing teaching assistants and lectures from
+scratch we could reuse existing OpenERP *users* (for teaching assistants) and
+*events* (for lectures)\ [#bonus]_, as well as the built-in website support
+for events.
+
+Install ``website_event`` (which will also install ``events``) by restarting
+the server as:
+
+.. code-block:: console
+
+    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+                       -d academy -i website_event --db-filter=academy
+
+We'll also add it as a dependency to our module:
+
+.. patch::
+
+Reload `your openerp`_, click on the new :menuselection:`Events` item which
+was added to the menu. This will be our new lectures page, but there are a few
+adaptations to perform
+
+Fixing the menu
+~~~~~~~~~~~~~~~
+
+The menu title is currently a generic *Events*, we only want lectures so we
+will rename it to *Lectures*. Website menu items are defined through the
+``website.menu`` model, *Events* is defined by ``website_event`` and has the
+external id ``website_event.menu_events``, renaming it is as simple as
+overwriting the ``name`` field for that record:
+
+.. patch::
+
+Restart the server with
+
+.. code-block:: console
+
+    $ ./openerp-server --addons-path=../web/addons,../addons,../my-modules \
+                       -d academy -i academy --db-filter=academy
+
+and the menu item has been renamed to Lectures.
+
+Removing the sidebar
+~~~~~~~~~~~~~~~~~~~~
+
+The filters sidebar is not necessary for our lectures. It can be removed in
+the UI via :menuselection:`Customize --> Filters` (and new filters can be
+added to the current filtering by date). Template customization is done by
+adding and removing extension views, so much like the renaming of the menu,
+we simply need to find the right record (here the Filters template view
+extending the basic event page) and set its value correctly:
+
+.. todo:: documentation for view inheritance/in-place extension
+
+.. patch::
+
+Note that the option is still available in :menuselection:`Customize`, we
+have merely flipped the default around.
+
+Simplifying templates
+~~~~~~~~~~~~~~~~~~~~~
+
+There are still two things to fix in the lectures list. First, remove the
+*Our Events* link in the top-left corner, simply replace the breadcrumb
+element by nothing:
+
+.. patch::
+
+Second, remove the "organized by" and type rows in the event's description,
+keep only the datetime and location:
+
+.. patch::
 
 .. [#taprofile] the teaching assistants profile view ends up broken for now,
                 but don't worry we'll get around to it
+
+.. [#bonus] as a bonus, we get access rights and TA access to the
+            administrative backend "for free"
 
 .. _bootstrap: http://getbootstrap.com
 
