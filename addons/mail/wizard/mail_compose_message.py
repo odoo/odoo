@@ -202,8 +202,6 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
-        # import datetime
-        # print '--> beginning sending email', datetime.datetime.now()
 
         # clean the context (hint: mass mailing sets some default values that
         # could be wrongly interpreted by mail_mail)
@@ -225,9 +223,6 @@ class mail_compose_message(osv.TransientModel):
             else:
                 res_ids = [wizard.res_id]
 
-            # print '----> before computing values', datetime.datetime.now()
-            # print '----> after computing values', datetime.datetime.now()
-
             sliced_res_ids = [res_ids[i:i + self._batch_size] for i in range(0, len(res_ids), self._batch_size)]
             for res_ids in sliced_res_ids:
                 all_mail_values = self.get_mail_values(cr, uid, wizard, res_ids, context=context)
@@ -244,7 +239,6 @@ class mail_compose_message(osv.TransientModel):
                                            mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
                         active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **mail_values)
 
-        # print '--> finished sending email', datetime.datetime.now()
         return {'type': 'ir.actions.act_window_close'}
 
     def get_mail_values(self, cr, uid, wizard, res_ids, context=None):

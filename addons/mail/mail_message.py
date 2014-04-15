@@ -76,7 +76,6 @@ class mail_message(osv.Model):
     _message_read_more_limit = 1024
 
     def default_get(self, cr, uid, fields, context=None):
-        # print '\tmail_message: default_get on', fields
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
             context = dict(context, default_type=None)
