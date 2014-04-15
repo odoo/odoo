@@ -123,7 +123,19 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="act_hr_timesheet_accounts_form" model="ir.actions.act_window">
+            <field name="name">Timesheet Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('use_timesheets','=', True)]</field>
+            <field name="context">{'default_use_timesheets':1}</field>
+        </record>
 
+        <menuitem parent="hr.menu_hr_configuration" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="7" groups="base.group_hr_manager"/>
+        
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
             <field name="name">Timesheet Activities</field>
             <field name="type">ir.actions.act_window</field>

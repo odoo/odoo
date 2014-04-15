@@ -197,7 +197,7 @@ class event_event(osv.osv):
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
         'description': fields.html(
-            'Description', readonly=False,
+            'Description', readonly=False, translate=True,
             states={'done': [('readonly', True)]},
             oldname='note'),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),

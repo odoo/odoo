@@ -54,7 +54,7 @@
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="source_id" invisible="1"/>
                 <field name="survey" invisible="1"/>
-                <field name="response" invisible="1"/>
+                <field name="response_id" invisible="1"/>
                 <field name="priority"/>
                 <field name="type_id" invisible="1"/>
                 <field name="availability" invisible="1"/>
@@ -78,12 +78,12 @@
                          help="Schedule interview with this applicant">
                          <div>Schedule<br/>Meeting</div>
                     </button>
-                    <button name="%(survey.action_view_survey_question_message)d" 
+                    <button name="action_start_survey" 
                         class="oe_stat_button"
                         icon="fa-user" 
-                        type="action"
+                        type="object"
                         help="Answer related job question"
-                        context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}"
+                        context="{'survey_id': survey}"
                         attrs="{'invisible':[('survey','=',False)]}">
                         <div>Start<br/>Interview</div>
                     </button>
@@ -110,7 +110,7 @@
                         <field name="partner_name" class="oe_inline"/>
                         <button string="Create Employee" name="create_employee_from_applicant" type="object"
                                     class="oe_link oe_inline" style="margin-left: 8px;"
-                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
+                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/>
                     </h2>
                 </div>
                 <group>
@@ -123,7 +123,7 @@
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
-                        <field name="user_id" 
+                        <field name="user_id"
                             context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_hr_manager']}"/>
                         <label for="title_action"/>
                         <div>
@@ -136,7 +136,7 @@
                     </group>
                     <group string="Job">
                         <field name="survey" invisible="1"/>
-                        <field name="response" invisible="1"/>
+                        <field name="response_id" invisible="1"/>
                         <field name="job_id" on_change="onchange_job(job_id)"/>
                         <field name="department_id" on_change="onchange_department_id(department_id, stage_id)"/>
                         <field name="company_id" />
@@ -200,7 +200,7 @@
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-               
+
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -277,7 +277,7 @@
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
-								                              
+
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
@@ -312,9 +312,9 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
-                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a> 
+                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a>
                                 </div>
-                            
+
                             </div>
                             <div class="oe_clear"></div>
                         </div>
@@ -335,7 +335,7 @@
                 process and follow up all operations: meetings, interviews, etc.
               </p><p>
                 Applicants and their attached CV are created automatically when an email is sent.
-                If you install the document management modules, all resumes are indexed automatically, 
+                If you install the document management modules, all resumes are indexed automatically,
                 so that you can easily search through their content.
               </p>
          </field>
@@ -362,7 +362,7 @@
             <group name="employee_data" position="inside">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
-                    <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
+                    <field name="survey_id" class="oe_inline" domain="[('res_model','=','hr_recruitment')]"/>
                     <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_inline oe_link"/>
                 </div>
                 <label for="address_id"/>
@@ -455,7 +455,7 @@
                                         <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value and record.state.raw_value == 'recruit'">
                                             <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                         </div>
-                                        
+
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
@@ -513,7 +513,7 @@
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click here to create a new job or remove the filter on "In Recruitment" to recruit for an on hold job. 
+                 Click here to create a new job or remove the filter on "In Recruitment" to recruit for an on hold job.
               </p>
               <p>
                 Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe

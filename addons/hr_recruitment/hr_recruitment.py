@@ -211,8 +211,8 @@ class hr_applicant(osv.Model):
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department', 'Department'),
-        'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'response': fields.integer("Response"),
+        'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey.survey', string='Survey'),
+        'response_id': fields.many2one('survey.user_input', "Response", ondelete='set null', oldname="response"),
         'reference': fields.char('Referred By', size=128),
         'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -311,24 +311,34 @@ class hr_applicant(osv.Model):
         }
         return res
 
-    def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
+    def action_start_survey(self, cr, uid, ids, context=None):
+        context = context if context else {}
+        applicant = self.browse(cr, uid, ids, context=context)[0]
+        survey_obj = self.pool.get('survey.survey')
+        response_obj = self.pool.get('survey.user_input')
+        # create a response and link it to this applicant
+        if not applicant.response_id:
+            response_id = response_obj.create(cr, uid, {'survey_id': applicant.survey.id, 'partner_id': applicant.partner_id.id}, context=context)
+            self.write(cr, uid, ids[0], {'response_id': response_id}, context=context)
+        else:
+            response_id = applicant.response_id.id
+        # grab the token of the response and start surveying
+        response = response_obj.browse(cr, uid, response_id, context=context)
+        context.update({'survey_token': response.token})
+        return survey_obj.action_start_survey(cr, uid, [applicant.survey.id], context=context)
 
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value for print survey form.
-        """
-        if context is None:
-            context = {}
-        record = self.browse(cr, uid, ids, context=context)
-        record = record and record[0]
-        context.update({'survey_id': record.survey.id, 'response_id': [record.response], 'response_no': 0, })
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
-        return value
+    def action_print_survey(self, cr, uid, ids, context=None):
+        """ If response is available then print this response otherwise print survey form (print template of the survey) """
+        context = context if context else {}
+        applicant = self.browse(cr, uid, ids, context=context)[0]
+        survey_obj = self.pool.get('survey.survey')
+        response_obj = self.pool.get('survey.user_input')
+        if not applicant.response_id:
+            return survey_obj.action_print_survey(cr, uid, [applicant.survey.id], context=context)
+        else:
+            response = response_obj.browse(cr, uid, applicant.response_id.id, context=context)
+            context.update({'survey_token': response.token})
+            return survey_obj.action_print_survey(cr, uid, [applicant.survey.id], context=context)
 
     def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
         model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
@@ -391,9 +401,9 @@ class hr_applicant(osv.Model):
             ids = [ids]
         res = True
 
-        # user_id change: update date_start
+        # user_id change: update date_open
         if vals.get('user_id'):
-            vals['date_start'] = fields.datetime.now()
+            vals['date_open'] = fields.datetime.now()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
@@ -529,7 +539,7 @@ class hr_job(osv.osv):
         return res
 
     _columns = {
-        'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
+        'survey_id': fields.many2one('survey.survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
@@ -572,21 +582,9 @@ class hr_job(osv.osv):
         return res
 
     def action_print_survey(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        datas = {}
-        record = self.browse(cr, uid, ids, context=context)[0]
-        if record.survey_id:
-            datas['ids'] = [record.survey_id.id]
-        datas['model'] = 'survey.print'
-        context.update({'response_id': [0], 'response_no': 0})
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'survey.form',
-            'datas': datas,
-            'context': context,
-            'nodestroy': True,
-        }
+        job = self.browse(cr, uid, ids, context=context)[0]
+        survey_id = job.survey_id.id
+        return self.pool.get('survey.survey').action_print_survey(cr, uid, [survey_id], context=context)
 
     def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
         #open attachments of job and related applicantions.
