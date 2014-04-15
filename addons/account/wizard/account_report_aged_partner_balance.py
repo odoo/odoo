@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_aged_trial_balance(osv.osv_memory):
     _inherit = 'account.common.partner.report'
     _name = 'account.aged.trial.balance'
@@ -80,11 +81,6 @@ class account_aged_trial_balance(osv.osv_memory):
         data['form'].update(res)
         if data.get('form',False):
             data['ids']=[data['form'].get('chart_account_id',False)]
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.aged_trial_balance',
-            'datas': data
-        }
-
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_agedpartnerbalance', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

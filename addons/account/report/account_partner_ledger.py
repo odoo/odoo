@@ -20,10 +20,11 @@
 ##############################################################################
 
 import time
-import re
+from openerp.osv import osv
+from openerp.tools.translate import _
 from openerp.report import report_sxw
 from common_report_header import common_report_header
-from openerp.tools.translate import _
+
 
 class third_party_ledger(report_sxw.rml_parse, common_report_header):
 
@@ -297,12 +298,18 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return True
         return False
 
-report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
-        'addons/account/report/account_partner_ledger.rml',parser=third_party_ledger,
-        header='internal')
 
-report_sxw.report_sxw('report.account.third_party_ledger_other', 'res.partner',
-        'addons/account/report/account_partner_ledger_other.rml',parser=third_party_ledger,
-        header='internal')
+class report_partnerledger(osv.AbstractModel):
+    _name = 'report.account.report_partnerledger'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_partnerledger'
+    _wrapped_report_class = third_party_ledger
+
+
+class report_partnerledgerother(osv.AbstractModel):
+    _name = 'report.account.report_partnerledgerother'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_partnerledgerother'
+    _wrapped_report_class = third_party_ledger
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

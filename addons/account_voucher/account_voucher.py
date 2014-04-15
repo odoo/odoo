@@ -732,13 +732,17 @@ class account_voucher(osv.osv):
 
         total_credit = 0.0
         total_debit = 0.0
-        account_type = 'receivable'
+        account_type = None
+        if context.get('account_id'):
+            account_type = self.pool['account.account'].browse(cr, uid, context['account_id'], context=context).type
         if ttype == 'payment':
-            account_type = 'payable'
+            if not account_type:
+                account_type = 'payable'
             total_debit = price or 0.0
         else:
             total_credit = price or 0.0
-            account_type = 'receivable'
+            if not account_type:
+                account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
             ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
@@ -827,9 +831,9 @@ class account_voucher(osv.osv):
             else:
                 default['value']['line_dr_ids'].append(rs)
 
-            if ttype == 'payment' and len(default['value']['line_cr_ids']) > 0:
+            if len(default['value']['line_cr_ids']) > 0:
                 default['value']['pre_line'] = 1
-            elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
+            elif len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
             default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price, ttype)
         return default
@@ -1662,7 +1666,7 @@ class account_bank_statement_line(osv.osv):
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
-                diff = abs(obj.amount) - obj.voucher_id.amount
+                diff = abs(obj.amount) - abs(obj.voucher_id.amount)
                 if not self.pool.get('res.currency').is_zero(cr, uid, obj.statement_id.currency, diff):
                     return False
         return True

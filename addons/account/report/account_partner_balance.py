@@ -20,10 +20,11 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.report import report_sxw
 from common_report_header import common_report_header
+
 
 class partner_balance(report_sxw.rml_parse, common_report_header):
 
@@ -301,6 +302,11 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             return _('Receivable and Payable Accounts')
         return ''
 
-report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/account_partner_balance.rml',parser=partner_balance, header="internal")
+
+class report_partnerbalance(osv.AbstractModel):
+    _name = 'report.account.report_partnerbalance'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_partnerbalance'
+    _wrapped_report_class = partner_balance
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
