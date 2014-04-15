@@ -218,7 +218,7 @@ $sheet-padding: 16px
         font-size: inherit
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, .oe_button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+    a.button:link, a.button:visited, button, .oe_button, input[type='submit']
         display: inline-block
         border: 1px solid rgba(0,0,0,0.4)
         color: #4c4c4c
@@ -233,18 +233,18 @@ $sheet-padding: 16px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
+    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
         background-position: 0
 
-    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
+    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus
         border: 1px solid #80bfff
         background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
+    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
@@ -271,105 +271,6 @@ $sheet-padding: 16px
     // so remove position:relative
     .ui-tabs
         position: static
-
-    // Modal box
-    &.ui-dialog
-        display: none
-        height: auto !important
-        padding: 6px
-        //overflow: hidden
-        background-color: rgba(60,60,60,0.7)
-        border: 1px solid
-        border-color: #888 #555 #444
-        //overflow: hidden
-        @include radius(8px)
-        @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
-        @include background-clip()
-        .ui-dialog-content
-            padding: 0
-        .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
-            padding: 16px
-        .ui-dialog-titlebar
-            border-top: none
-            border-left: none
-            border-right: none
-            border-bottom: 1px solid #cacaca
-            @include radius(2px 2px 0 0)
-            @include vertical-gradient(#FCFCFC, #DEDEDE)
-            .ui-dialog-title
-                margin: 0
-                padding: 0
-        .ui-dialog-content
-            background: white
-            width: auto !important
-        .ui-dialog-buttonpane
-            border-top: 1px solid #e0e0e0
-            background: #f5f7f9
-            margin: 0
-            @include radius(0 0 2px 2px)
-            button
-                margin: 0 4px 0 0
-            .ui-dialog-buttonset
-                float: left
-                .ui-button
-                    margin-right: 4px
-        .ui-dialog-titlebar-close
-            padding: 0
-            .ui-icon-closethick
-                display: none
-            &:before
-                content: "×"
-                font-size: 18px
-                font-weight: bold
-                line-height: 16px
-                color: black
-                text-shadow: 0 1px 0 white
-                padding: 0
-                cursor: pointer
-                background: transparent
-                border: 0
-                &:hover
-                    color: black
-                    text-decoration: none
-        .oe_about
-            background-color: white
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-            @include radius(0 0 2px 2px)
-            a
-                color: $link-color
-                &:hover
-                    text-decoration: underline
-                &:focus
-                    outline: none
-            .oe_logo
-                margin-left: -6px
-            .oe_bottom
-                position: absolute
-                top: 50%
-                left: 0
-                right: 0
-                bottom: 0
-                text-shadow: 0 1px 1px #999999
-                @include vertical-gradient(#b41616, #600606)
-                color: #eee
-                padding: 0 16px
-                @include radius(0 0 2px 2px)
-                a
-                    color: #eee
-
-    &.ui-dialog.oe_act_window
-        .ui-dialog-content
-            padding: 0px
-
-    .modal-backdrop
-        position: fixed
-        top: 0
-        right: 0
-        bottom: 0
-        left: 0
-        z-index: 1040
-        background-color: black
-        @include opacity(.3)
 
     // }}}
     // Generic classes {{{
@@ -1030,11 +931,6 @@ $sheet-padding: 16px
         .oe_logo
             margin-left: -6px
         .oe_bottom
-            position: absolute
-            top: 50%
-            left: 0
-            right: 0
-            bottom: 0
             text-shadow: 0 1px 1px #999999
             @include vertical-gradient(#b41616, #600606)
             color: #eee
@@ -2764,9 +2660,6 @@ body.oe_single_form
             > .arrow span
                 background-color: #729fcf !important
 
-    // jquery ui for ie
-    .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8')
 // }}}
 
 // @media print {{{
@@ -2862,6 +2755,19 @@ body.oe_single_form
     width: 18px
     height: 18px
 // End hack}}}
+
+// Customized modal according bootstrap3
+.modal
+    .modal-header button.close
+        border: none
+        background: none
+        padding: 1px
+        height: 18px
+        font-size: 20px
+    .modal-footer
+        text-align: left
+    .oe_act_window.modal-body
+        padding: 0
 
 input[type="radio"], input[type="checkbox"]
     margin-right: 4px
