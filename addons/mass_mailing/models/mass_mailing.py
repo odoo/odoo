@@ -314,6 +314,10 @@ class MassMailing(osv.Model):
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date'),
         'body_html': fields.html('Body'),
+        'attachment_ids': fields.many2many(
+            'ir.attachment', 'mass_mailing_ir_attachments_rel',
+            'mass_mailing_id', 'attachment_id', 'Attachments'
+        ),
         'mass_mailing_campaign_id': fields.many2one(
             'mail.mass_mailing.campaign', 'Mass Mailing Campaign',
             ondelete='set null',
