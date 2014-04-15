@@ -982,9 +982,20 @@ class hr_employee(osv.osv):
             res[employee.id] = {'basic': result['sum']}
         return res
 
+    def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for employee in self.browse(cr, uid, ids, context=context):
+                res[employee.id] = len(employee.payslip_ids)
+        except:
+            pass
+        return res
+
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
+        'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
+        'payslip_ids': fields.one2many('hr.payslip', 'employee_id', 'Payslips'),
     }
 
 

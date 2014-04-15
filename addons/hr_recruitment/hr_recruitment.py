@@ -517,6 +517,17 @@ class hr_job(osv.osv):
                 ], context=context)
         return res
 
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'documents_count': 0, 'application_count': 0,}), ids))
+        try:
+            for job in self.browse(cr, uid, ids, context=context):
+                res[job.id] = {'documents_count': len(job.document_ids),
+                'application_count': len(job.applicant_ids),
+                }
+        except:
+            pass
+        return res
+
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
@@ -524,8 +535,10 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
         'address_id': fields.many2one('res.partner', 'Job Location', help="Address where employees are working"),
         'application_ids': fields.one2many('hr.applicant', 'job_id', 'Applications'),
+        'application_count': fields.function(_count_all, type='integer', string='Applications', multi=True),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'document_ids': fields.function(_get_attached_docs, type='one2many', relation='ir.attachment', string='Applications'),
+        'documents_count': fields.function(_count_all, type='integer', string='Documents', multi=True),
         'user_id': fields.many2one('res.users', 'Recruitment Responsible', track_visibility='onchange'),
         'color': fields.integer('Color Index'),
     }

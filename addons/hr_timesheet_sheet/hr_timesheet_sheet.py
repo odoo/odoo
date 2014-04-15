@@ -558,6 +558,26 @@ class res_company(osv.osv):
         'timesheet_max_difference': lambda *args: 0.0
     }
 
+class hr_employee(osv.osv):
+    '''
+    Employee
+    '''
 
+    _inherit = 'hr.employee'
+    _description = 'Employee'
+
+    def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for employee in self.browse(cr, uid, ids, context=context):
+                res[employee.id] = len(employee.timesheet_ids)
+        except:
+            pass
+        return res
+
+    _columns = {
+        'timesheet_ids': fields.one2many('hr_timesheet_sheet.sheet', 'employee_id', 'Timesheets'),
+        'timesheet_count': fields.function(_timesheet_count, type='integer', string='Timsheets'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

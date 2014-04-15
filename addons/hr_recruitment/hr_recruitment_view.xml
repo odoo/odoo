@@ -75,20 +75,26 @@
             <sheet>
                 <div class="oe_right oe_button_box">
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
-                         string="Meeting" help="Schedule interview with this applicant"/>
+                         help="Schedule interview with this applicant">
+                         <div>Schedule<br/>Meeting</div>
+                    </button>
                     <button name="%(survey.action_view_survey_question_message)d" 
                         class="oe_stat_button"
                         icon="fa-user" 
                         type="action"
-                        string="Interview" help="Answer related job question"
+                        help="Answer related job question"
                         context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}"
-                        attrs="{'invisible':[('survey','=',False)]}"/>
+                        attrs="{'invisible':[('survey','=',False)]}">
+                        <div>Start<br/>Interview</div>
+                    </button>
                     <button name="action_print_survey" 
                         class="oe_stat_button"
                         icon="fa-print"
                         type="object"
-                        string="Print" help="Print interview report"
-                        attrs="{'invisible':[('survey','=',False)]}"/>
+                        help="Print interview report"
+                        attrs="{'invisible':[('survey','=',False)]}">
+                        <div>Print<br/>Interview</div>
+                    </button>
                     <button name="action_get_attachment_tree_view" 
                         class="oe_stat_button"
                         icon="fa-book"

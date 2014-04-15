@@ -549,6 +549,15 @@ class hr_employee(osv.osv):
             result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
         return result
 
+    def _leaves_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for employee in self.browse(cr, uid, ids, context=context):
+                res[employee.id] = len(employee.leave_ids)
+        except:
+            pass
+        return res
+
     _columns = {
         'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. Total based on all the leave types without overriding limit.'),
         'current_leave_state': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
@@ -557,6 +566,9 @@ class hr_employee(osv.osv):
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
+        'leave_ids': fields.one2many('hr.holidays', 'employee_id', 'Leaves'),
+        'leaves_count': fields.function(_leaves_count, type='integer', string='Leaves'),
+
     }
 
 
