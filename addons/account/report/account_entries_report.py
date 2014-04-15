@@ -94,7 +94,7 @@ class account_entries_report(osv.osv):
         return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False,lazy=True):
         if context is None:
             context = {}
         fiscalyear_obj = self.pool.get('account.fiscalyear')
@@ -108,7 +108,7 @@ class account_entries_report(osv.osv):
             domain.append(['period_id','in',ids])
         else:
             domain = domain
-        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
+        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby,lazy)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')

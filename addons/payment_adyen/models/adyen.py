@@ -26,14 +26,14 @@ class AcquirerAdyen(osv.Model):
 
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
-        if env == 'prod':
-            return {
-                'adyen_form_url': 'https://prod.adyen.com/hpp/pay.shtml',
-            }
-        else:
-            return {
-                'adyen_form_url': 'https://test.adyen.com/hpp/pay.shtml',
-            }
+        return {
+            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % env,
+        }
+
+    def _get_providers(self, cr, uid, context=None):
+        providers = super(AcquirerAdyen, self)._get_providers(cr, uid, context=context)
+        providers.append(['adyen', 'Adyen'])
+        return providers
 
     _columns = {
         'adyen_merchant_account': fields.char('Merchant Account', required_if_provider='adyen'),
@@ -54,7 +54,7 @@ class AcquirerAdyen(osv.Model):
         :return string: shasign
         """
         assert inout in ('in', 'out')
-        assert acquirer.name == 'adyen'
+        assert acquirer.provider == 'adyen'
 
         if inout == 'in':
             keys = "paymentAmount currencyCode shipBeforeDate merchantReference skinCode merchantAccount sessionValidity shopperEmail shopperReference recurringContract allowedMethods blockedMethods shopperStatement merchantReturnData billingAddressType deliveryAddressType offset".split()

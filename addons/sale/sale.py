@@ -167,7 +167,7 @@ class sale_order(osv.osv):
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this sales order request."),
-        'client_order_ref': fields.char('Customer Reference', size=64),
+        'client_order_ref': fields.char('Reference/Description', size=64),
         'state': fields.selection([
             ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),
@@ -500,7 +500,7 @@ class sale_order(osv.osv):
                     lines.append(line.id)
             created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
-                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
+                invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
         if not invoices:
             for o in self.browse(cr, uid, ids, context=context):
                 for i in o.invoice_ids:
