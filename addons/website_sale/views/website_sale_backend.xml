@@ -125,6 +125,20 @@
         </field>
     </record>
 
+    <record id="action_shopping_cart_quotations" model="ir.actions.act_window">
+        <field name="name">Shopping Cart</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="view_mode">tree,form,calendar,graph</field>
+        <field name="domain">[('state','=','shopping_cart')]</field>
+        <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+    </record>
+        
+    <menuitem id="menu_shopping_cart_quotations"
+            action="action_shopping_cart_quotations" parent="base.menu_sales"
+            sequence="5"/>
 
  </data>
 </openerp>
