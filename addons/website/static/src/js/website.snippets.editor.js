@@ -906,6 +906,7 @@
             var self = this;
             var bg = self.$target.css("background-image");
             this.$el.find('li').removeClass("active");
+            this.$el.find('li').removeClass("btn-primary");
             var $active = this.$el.find('li[data-value]')
                 .filter(function () {
                     var $li = $(this);
@@ -918,8 +919,13 @@
                     this.$el.find('li[data-value].oe_custom_bg') :
                     this.$el.find('li[data-value=""]');
             }
-            $active.addClass("active");
-            this.$el.find('li:has(li[data-value].active)').addClass("active");
+
+            //don't set active on an OpenDialog link, else it not possible to click on it again after.
+            // TODO in Saas-4 - Once bootstrap is in less
+            //      - add a class active-style to get the same display but without the active behaviour used by bootstrap in JS.
+            var classStr = _.string.contains($active[0].className, "oe_custom_bg") ? "btn-primary" : "active";
+            $active.addClass(classStr);
+            this.$el.find('li:has(li[data-value].active)').addClass(classStr);
         }
     });
 
