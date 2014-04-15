@@ -304,7 +304,11 @@ class gamification_goal(osv.Model):
                         if end_date:
                             subquery_domain.append((field_date_name, '>=', end_date))
 
-                        user_values = obj.read_group(cr, uid, subquery_domain, fields=[field_name], groupby=[field_name], context=context)
+                        if field_name == 'id':
+                            user_ids = obj.search(cr, uid, subquery_domain, context=context)
+                            user_values = [{'id': user_id, 'id_count': 1} for user_id in user_ids]
+                        else:
+                            user_values = obj.read_group(cr, uid, subquery_domain, fields=[field_name], groupby=[field_name], context=context)
 
                         for goal in [g for g in goals if g.id in query_goals.keys()]:
                             for user_value in user_values:

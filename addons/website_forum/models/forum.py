@@ -293,4 +293,5 @@ class Tags(osv.Model):
                 'forum.post': (_get_tag_from_post, ['tag_ids'], 10),
             }
         ),
+        'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
     }
