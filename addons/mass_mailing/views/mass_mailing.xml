@@ -47,7 +47,7 @@
             </field>
         </record>
 
-        <record id="action_view_mass_mailing_contacts" model="ir.actions.act_window">
+        <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
             <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
@@ -55,7 +55,7 @@
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
-        <record id="action_view_mass_mailing_contacts_from_list" model="ir.actions.act_window">
+        <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
             <field name="name">Recipients</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
@@ -118,7 +118,7 @@
             </field>
         </record>
 
-        <record id="action_view_mass_mailing_lists" model="ir.actions.act_window">
+        <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
             <field name="name">Contact Lists</field>
             <field name="res_model">mail.mass_mailing.list</field>
             <field name="view_type">form</field>
@@ -194,21 +194,21 @@
                     </div>
                     <sheet>
                         <div class="oe_button_box pull-right" attrs="{'invisible': [('state', 'in', ('draft','test'))]}">
-                            <button name="%(action_mail_mass_mailing_report)d"
+                            <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
-                            <button name="%(action_mail_mass_mailing_report)d"
+                            <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
-                            <button name="%(action_mail_mass_mailing_report)d"
+                            <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
                         </div>
                         <div class="oe_button_box" attrs="{'invisible': [('state', 'in', ('draft','test'))]}" style="margin-bottom: 32px">
-                            <button name="%(action_mail_mass_mailing_report)d" type="action"
+                            <button name="%(action_view_mass_mailing_contacts)d" type="action"
                                 icon="fa-envelope-o" class="oe_stat_button">
                                 <field name="total" string="Emails" widget="statinfo"/>
                             </button>
@@ -216,11 +216,11 @@
                         <div class="oe_button_box"
                             style="margin-top: 8px;"
                             attrs="{'invisible': [('total', '=', 0)]}">
-                            <button name="%(action_mail_mass_mailing_report)d"
+                            <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button oe_inline">
                                 <field name="opened_dayly" string="Opened Daily" widget="barchart"/>
                             </button>
-                            <button name="%(action_mail_mass_mailing_report)d"
+                            <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button oe_inline">
                                 <field name="replied_dayly" string="Replied Daily" widget="barchart"/>
                             </button>
@@ -456,17 +456,17 @@
                                 <field name="total" invisible="1"/>
                                 <div class="oe_right oe_button_box" name="buttons"
                                     attrs="{'invisible': [('total', '=', 0)]}">
-                                    <button name="%(action_mail_mass_mailing_report)d"
+                                    <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="received_ratio" widget="percentpie"/>
                                         <span>Received</span>
                                     </button>
-                                    <button name="%(action_mail_mass_mailing_report)d"
+                                    <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="opened_ratio" widget="percentpie"/>
                                         <span>Opened</span>
                                     </button>
-                                    <button name="%(action_mail_mass_mailing_report)d"
+                                    <button name="%(action_view_mass_mailing_contacts)d"
                                         type="action" class="oe_stat_button oe_inline">
                                         <field name="replied_ratio" widget="percentpie"/>
                                         <span>Replied</span>
