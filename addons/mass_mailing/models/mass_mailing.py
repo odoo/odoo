@@ -124,9 +124,9 @@ class MassMailingCampaign(osv.Model):
                 'bounced': len([s for s in stats if not s.bounced is False]),
             }
             results[cid]['delivered'] = results[cid]['sent'] - results[cid]['bounced']
-            results[cid]['received_ratio'] = 100.0 * results[cid]['delivered'] / (results[cid]['sent'] or 1)
-            results[cid]['opened_ratio'] = 100.0 * results[cid]['opened'] / (results[cid]['sent'] or 1)
-            results[cid]['replied_ratio'] = 100.0 * results[cid]['replied'] / (results[cid]['sent'] or 1)
+            results[cid]['received_ratio'] = 100.0 * results[cid]['delivered'] / (results[cid]['total'] or 1)
+            results[cid]['opened_ratio'] = 100.0 * results[cid]['opened'] / (results[cid]['total'] or 1)
+            results[cid]['replied_ratio'] = 100.0 * results[cid]['replied'] / (results[cid]['total'] or 1)
         return results
 
     _columns = {
@@ -294,9 +294,9 @@ class MassMailing(osv.Model):
                 'bounced': len([s for s in stats if not s.bounced is False]),
             }
             results[mid]['delivered'] = results[mid]['sent'] - results[mid]['bounced']
-            results[mid]['received_ratio'] = 100.0 * results[mid]['delivered'] / (results[mid]['sent'] or 1)
-            results[mid]['opened_ratio'] = 100.0 * results[mid]['opened'] / (results[mid]['sent'] or 1)
-            results[mid]['replied_ratio'] = 100.0 * results[mid]['replied'] / (results[mid]['sent'] or 1)
+            results[mid]['received_ratio'] = 100.0 * results[mid]['delivered'] / (results[mid]['total'] or 1)
+            results[mid]['opened_ratio'] = 100.0 * results[mid]['opened'] / (results[mid]['total'] or 1)
+            results[mid]['replied_ratio'] = 100.0 * results[mid]['replied'] / (results[mid]['total'] or 1)
         return results
 
     def _get_mailing_model(self, cr, uid, context=None):
