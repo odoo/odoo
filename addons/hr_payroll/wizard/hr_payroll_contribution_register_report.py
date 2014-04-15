@@ -22,8 +22,8 @@
 import time
 from datetime import datetime
 from dateutil import relativedelta
-
 from openerp.osv import fields, osv
+
 
 class payslip_lines_contribution_register(osv.osv_memory):
     _name = 'payslip.lines.contribution.register'
@@ -44,11 +44,8 @@ class payslip_lines_contribution_register(osv.osv_memory):
              'model': 'hr.contribution.register',
              'form': self.read(cr, uid, ids, [], context=context)[0]
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'contribution.register.lines',
-            'datas': datas,
-        }
-
+        return self.pool['report'].get_action(
+            cr, uid, [], 'hr_payroll.report_contributionregister', data=datas, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

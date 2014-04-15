@@ -43,6 +43,7 @@ actions(Sign in/Sign out) performed by them.
         'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
         'res_config_view.xml',
+        'views/report_attendanceerrors.xml',
     ],
     'demo': ['hr_attendance_demo.xml'],
     'test': [
@@ -51,10 +52,10 @@ actions(Sign in/Sign out) performed by them.
     ],
     'installable': True,
     'auto_install': False,
-    
     #web
     "js": ["static/src/js/attendance.js"],
-    'qweb' : ["static/src/xml/attendance.xml"],
-    'css' : ["static/src/css/slider.css"],
+    'qweb': ["static/src/xml/attendance.xml"],
+    'css': ["static/src/css/slider.css"],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
