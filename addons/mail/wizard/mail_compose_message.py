@@ -82,7 +82,6 @@ class mail_compose_message(osv.TransientModel):
             vals['active_domain'] = '%s' % context.get('active_domain')
         if result['composition_mode'] == 'comment':
             vals.update(self.get_record_data(cr, uid, result, context=context))
-        result['recipients_data'] = self.get_recipients_data(cr, uid, result, context=context)
 
         for field in vals:
             if field in fields:
@@ -112,8 +111,6 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional Contacts'),
-        'recipients_data': fields.text(string='Recipients Data',
-            help='Helper field used in mass mailing to display a sample of recipients'),
         'use_active_domain': fields.boolean('Use active domain'),
         'active_domain': fields.char('Active domain', readonly=True),
         'attachment_ids': fields.many2many('ir.attachment',
@@ -163,23 +160,6 @@ class mail_compose_message(osv.TransientModel):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
-
-    def get_recipients_data(self, cr, uid, values, context=None):
-        """ Returns a string explaining the targetted recipients, to ease the use
-        of the wizard. """
-        composition_mode, model, res_id = values['composition_mode'], values['model'], values['res_id']
-        if composition_mode == 'comment' and model and res_id:
-            doc_name = self.pool[model].name_get(cr, uid, [res_id], context=context)
-            return doc_name and 'Followers of %s' % doc_name[0][1] or False
-        elif composition_mode == 'mass_post' and model:
-            if 'active_domain' in context:
-                active_ids = self.pool[model].search(cr, uid, eval(context['active_domain']), limit=100, context=context)
-            else:
-                active_ids = context.get('active_ids', list())
-            if active_ids:
-                name_gets = [rec_name[1] for rec_name in self.pool[model].name_get(cr, uid, active_ids[:3], context=context)]
-                return 'Followers of selected documents (' + ', '.join(name_gets) + len(active_ids) > 3 and ', ...' or '' + ')'
-        return False
 
     def get_record_data(self, cr, uid, values, context=None):
         """ Returns a defaults-like dict with initial values for the composition

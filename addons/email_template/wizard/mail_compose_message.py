@@ -56,21 +56,6 @@ class mail_compose_message(osv.TransientModel):
             )
         return res
 
-    def get_recipients_data(self, cr, uid, values, context=None):
-        if values['composition_mode'] != 'mass_mail':
-            return super(mail_compose_message, self).get_recipients_data(cr, uid, values, context=context)
-        model, res_id, template_id = values['model'], values['res_id'], values.get('template_id')
-        active_ids = context.get('active_ids', list())
-        if not active_ids or not template_id:
-            return False
-        template = self.pool['email.template'].browse(cr, uid, template_id, context=context)
-        partner_to = self.render_template_batch(cr, uid, template.partner_to, model, active_ids[:3], context=context)
-        partner_ids = [int(data) for key, data in partner_to.iteritems() if data]
-        rec_names = [rec_name[1] for rec_name in self.pool['res.partner'].name_get(cr, SUPERUSER_ID, partner_ids, context=context)]
-        recipients = ', '.join(rec_names)
-        recipients += ' and %d more.' % (len(active_ids) - 3) if len(active_ids) > 3 else '.'
-        return recipients
-
     _columns = {
         'template_id': fields.many2one('email.template', 'Use template', select=True),
     }

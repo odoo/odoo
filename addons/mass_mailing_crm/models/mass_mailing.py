@@ -13,12 +13,6 @@ class MassMailing(osv.Model):
         res.append(('crm.lead', 'Leads / Opportunities'))
         return res
 
-    def _get_model_to_list_action_id(self, cr, uid, model, context=None):
-        if model == 'crm.lead':
-            return self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mass_mailing_crm.action_lead_to_mailing_list')
-        else:
-            return super(MassMailing, self)._get_model_to_list_action_id(cr, uid, model, context=context)
-
     def get_recipients_data(self, cr, uid, mailing, res_ids, context=None):
         if mailing.mailing_model == 'crm.lead':
             res = {}
