@@ -23,7 +23,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="Traceability"/>
-                    <group>
+                    <group name="traceability">
                         <label for="id" string="Traceability"/>
                         <div>
                             <div>
@@ -43,20 +43,6 @@
                                 <label for="group_stock_tracking_owner"/>
                              </div>
                         </div>    
-                    </group>
-                    <separator string="Accounting"/>
-                    <group>
-                        <label for="id" string="Accounting"/>
-                        <div>
-                            <div>
-                                <field name="module_stock_account" class="oe_inline"/>
-                                <label for="module_stock_account"/>
-                            </div>
-                            <div>
-                                <field name="module_stock_invoice_directly" class="oe_inline"/>
-                                <label for="module_stock_invoice_directly"/>
-                            </div>
-                         </div>
                     </group>
                     <separator string="Location &amp; Warehouse"/>
                     <group>

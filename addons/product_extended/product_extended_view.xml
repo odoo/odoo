@@ -10,7 +10,7 @@
                 <field name="standard_price" position="after">
                     <button name="%(action_view_compute_price_wizard)d" string="Recompute price from BoM"
                             type="action" attrs="{'invisible': [('cost_method', '!=', 'standard')]}"
-                             groups="product.group_costing_method"/>
+                             groups="stock_account.group_inventory_valuation"/>
                 </field>
             </field>
         </record>
