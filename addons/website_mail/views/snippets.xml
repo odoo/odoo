@@ -481,7 +481,11 @@
 </div>
 
 <div id="snippet_options" class="hidden">
-    <t t-call="website.snippet_options"/>
+    <div data-snippet-option-id='content'
+        data-selector="[data-oe-field='body_html'] > div, .oe_snippet_body"
+        data-selector-siblings="[data-oe-field='body_html'] > *"
+        data-selector-children="[data-oe-field='body_html']">
+    </div>
 </div>
 
         </div>
@@ -509,8 +513,8 @@
                       class="js_follow_email form-control"
                       placeholder="your email..."/>
                 <span class="input-group-btn">
-                    <a href="#" class="btn btn-default js_unfollow_btn">unsubscribe</a>
-                    <a href="#" class="btn btn-primary js_follow_btn">subscribe</a>
+                    <a href="#" class="btn btn-default js_unfollow_btn">Unsubscribe</a>
+                    <a href="#" class="btn btn-primary js_follow_btn">Subscribe</a>
                 </span>
                 <div class="alert alert-success hidden">thanks for your subscription!</div>
             </div>

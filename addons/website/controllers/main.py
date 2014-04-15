@@ -206,7 +206,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -240,41 +240,54 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'source': initial_content,
                         'value': new_content,
                     }
+                    if t.get('gengo_translation'):
+                        new_trans['gengo_translation'] = t.get('gengo_translation')
+                        new_trans['gengo_comment'] = t.get('gengo_comment')
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
-    def attach(self, func, upload):
+    def attach(self, func, upload=None, url=None):
+        Attachments = request.registry['ir.attachment']
 
-        url = message = None
-        try:
-            image_data = upload.read()
-            image = Image.open(cStringIO.StringIO(image_data))
-            w, h = image.size
-            if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                raise ValueError(
-                    u"Image size excessive, uploaded images must be smaller "
-                    u"than 42 million pixel")
-
-            Attachments = request.registry['ir.attachment']
+        website_url = message = None
+        if not upload:
+            website_url = url
+            name = url.split("/").pop()
             attachment_id = Attachments.create(request.cr, request.uid, {
-                'name': upload.filename,
-                'datas': image_data.encode('base64'),
-                'datas_fname': upload.filename,
+                'name':name,
+                'type': 'url',
+                'url': url,
                 'res_model': 'ir.ui.view',
             }, request.context)
+        else:
+            try:
+                image_data = upload.read()
+                image = Image.open(cStringIO.StringIO(image_data))
+                w, h = image.size
+                if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                    raise ValueError(
+                        u"Image size excessive, uploaded images must be smaller "
+                        u"than 42 million pixel")
 
-            [attachment] = Attachments.read(
-                request.cr, request.uid, [attachment_id], ['website_url'],
-                context=request.context)
-            url = attachment['website_url']
-        except Exception, e:
-            logger.exception("Failed to upload image to attachment")
-            message = unicode(e)
+                attachment_id = Attachments.create(request.cr, request.uid, {
+                    'name': upload.filename,
+                    'datas': image_data.encode('base64'),
+                    'datas_fname': upload.filename,
+                    'res_model': 'ir.ui.view',
+                }, request.context)
+
+                [attachment] = Attachments.read(
+                    request.cr, request.uid, [attachment_id], ['website_url'],
+                    context=request.context)
+                website_url = attachment['website_url']
+            except Exception, e:
+                logger.exception("Failed to upload image to attachment")
+                message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(url), json.dumps(message))
+        </script>""" % (func, json.dumps(website_url), json.dumps(message))
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
@@ -285,8 +298,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {}
         if 'website_published' in _object._all_columns:
             values['website_published'] = not obj.website_published
-        if 'website_published_datetime' in _object._all_columns and values.get('website_published'):
-            values['website_published_datetime'] = fields.datetime.now()
         _object.write(request.cr, request.uid, [_id],
                       values, context=request.context)
 
@@ -296,7 +307,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Helpers
     #------------------------------------------------------
-    @http.route(['/website/kanban/'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/website/kanban'], type='http', auth="public", methods=['POST'], website=True)
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
@@ -338,9 +349,10 @@ class Website(openerp.addons.web.controllers.main.Home):
         id = int(id)
 
         ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context) \
-           or Model.search(request.cr, openerp.SUPERUSER_ID,
-                           [('id', '=', id), ('website_published', '=', True)], context=request.context)
+                           [('id', '=', id)], context=request.context)
+        if not ids and 'website_published' in Model._all_columns:
+            ids = Model.search(request.cr, openerp.SUPERUSER_ID,
+                               [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
             return self.placeholder(response)

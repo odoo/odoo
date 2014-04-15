@@ -19,25 +19,16 @@
 #
 ##############################################################################
 
-from openerp.addons.web import http
-from openerp.addons.web.http import request
+import time
+from openerp.osv import osv
+from openerp.report import report_sxw
 from common_report_header import common_report_header
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
-import xlwt
 
 
-class tax_report(http.Controller, common_report_header):
+class tax_report(report_sxw.rml_parse, common_report_header):
 
-    @http.route(['/report/account.report_vat'], type='http', auth='user', website=True, multilang=True)
-    def report_account_tax(self, **data):
-        report_obj = request.registry['report']
-        self.cr, self.uid, self.pool = request.cr, request.uid, request.registry
-
-        data = report_obj.eval_params(data)
-
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
         res = {}
         self.period_ids = []
         period_obj = self.pool.get('account.period')
@@ -47,16 +38,28 @@ class tax_report(http.Controller, common_report_header):
 
         if data['form'].get('period_from', False) and data['form'].get('period_to', False):
             self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
+            periods_l = period_obj.read(self.cr, self.uid, self.period_ids, ['name'])
+            for period in periods_l:
+                if res['periods'] == '':
+                    res['periods'] = period['name']
+                else:
+                    res['periods'] += ", "+ period['name']
+        return super(tax_report, self).set_context(objects, data, new_ids, report_type=report_type)
 
-        docargs = {
-            'fiscalyear': self._get_fiscalyear(data),
-            'account': self._get_account(data),
-            'based_on': self._get_basedon(data),
-            'period_from': self.get_start_period(data),
-            'period_to': self.get_end_period(data),
-            'taxlines': self._get_lines(self._get_basedon(data), company_id=data['form']['company_id']),
-        }
-        return request.registry['report'].render(self.cr, self.uid, [], 'account.report_vat', docargs)
+    def __init__(self, cr, uid, name, context=None):
+        super(tax_report, self).__init__(cr, uid, name, context=context)
+        self.localcontext.update({
+            'time': time,
+            'get_codes': self._get_codes,
+            'get_general': self._get_general,
+            'get_currency': self._get_currency,
+            'get_lines': self._get_lines,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_account': self._get_account,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_basedon': self._get_basedon,
+        })
 
     def _get_basedon(self, form):
         return form['form']['based_on']
@@ -191,6 +194,7 @@ class tax_report(http.Controller, common_report_header):
         return self.pool.get('res.company').browse(self.cr, self.uid, form['company_id'], context=context).currency_id.name
 
     def sort_result(self, accounts, context=None):
+        # On boucle sur notre rapport
         result_accounts = []
         ind=0
         old_level=0
@@ -229,43 +233,11 @@ class tax_report(http.Controller, common_report_header):
 
         return result_accounts
 
-    @http.route(['/report/account.report_vat_xls'], type='http', auth='user', website=True, multilang=True)
-    def report_account_tax_xls(self, **data):
-        report_obj = request.registry['report']
-        self.cr, self.uid, self.pool = request.cr, request.uid, request.registry
 
-        data = report_obj.eval_params(data)
-
-        res = {}
-        self.period_ids = []
-        period_obj = self.pool.get('account.period')
-        self.display_detail = data['form']['display_detail']
-        res['periods'] = ''
-        res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
-
-        if data['form'].get('period_from', False) and data['form'].get('period_to', False):
-            self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
-
-        content = ''
-        lines = self._get_lines(self._get_basedon(data), company_id=data['form']['company_id'])
-
-        if lines:
-            xls = StringIO.StringIO()
-            xls_workbook = xlwt.Workbook()
-            vat_sheet = xls_workbook.add_sheet('report_vat')
-
-            for x in range(0, len(lines)):
-                for y in range(0, len(lines[0])):
-                    vat_sheet.write(x, y, lines[x].values()[y])
-
-            xls_workbook.save(xls)
-            xls.seek(0)
-            content = xls.read()
-
-        response = request.make_response(content, headers=[
-            ('Content-Type', 'application/vnd.ms-excel'),
-            ('Content-Disposition', 'attachment; filename=report_vat.xls;')
-        ])
-        return response
+class report_vat(osv.AbstractModel):
+    _name = 'report.account.report_vat'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_vat'
+    _wrapped_report_class = tax_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//group[@name="acquirer_display"]' position='after'>
-                    <group attrs="{'invisible': [('name', '!=', 'paypal')]}">
+                    <group attrs="{'invisible': [('provider', '!=', 'paypal')]}">
                         <group>
                             <group>
                                 <field name="paypal_email_account"/>

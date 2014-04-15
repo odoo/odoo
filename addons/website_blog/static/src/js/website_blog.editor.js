@@ -27,7 +27,38 @@
                 }).then(function (cat_id) {
                     document.location = '/blogpost/new?blog_id=' + cat_id;
                 });
-            }
+            },
         }),
+        edit: function () {
+            $('.popover').remove();
+            this._super();
+            var vHeight = $(window).height();
+            $('body').on('click','#change_cover',_.bind(this.change_bg,{},vHeight));
+            $('body').on('click', '#clear_cover',_.bind(this.clean_bg,{},vHeight));
+        },
+        save : function() {
+            var res = this._super();
+            if ($('.cover').length) {
+                openerp.jsonRpc("/blogpost/change_background", 'call', {
+                    'post_id' : $('#blog_post_name').attr('data-oe-id'),
+                    'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
+                });
+            }
+            return res;
+        },
+        clean_bg : function(vHeight) {
+            $('.js_fullheight').css({"background-image":'none', 'min-height': vHeight});
+        },
+        change_bg : function(vHeight) {
+            var self  = this;
+            var editor  = new  website.editor.ImageDialog();
+            editor.on('start', self, function (o) {
+                o.url = $('.js_fullheight').length ? $('.js_fullheight').css('background-image').replace(/url\(|\)|"|'/g,'') : ''; 
+            });
+            editor.on('save', self, function (o) {
+                $('.js_fullheight').css({"background-image": o.url && o.url !== "" ? 'url(' + o.url + ')' : "", 'min-height': vHeight})
+            });
+            editor.appendTo('body');
+        },
     });
 })();

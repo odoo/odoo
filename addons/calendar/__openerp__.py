@@ -40,7 +40,6 @@ If you need to manage your meetings, you should install the CRM module.
     'website': 'http://www.openerp.com',
     'demo': ['calendar_demo.xml'],
     'data': [
-        'security/calendar_security.xml',
         'security/ir.model.access.csv',
         'calendar_view.xml',
         'contacts_view.xml',

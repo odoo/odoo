@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-04 06:24+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:42+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -39,7 +39,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Stock move Split lines"
-msgstr "Stok hareketi Bölünmüş satırları"
+msgstr "Stok hareketi Bölünmüş Satırları"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -51,7 +51,7 @@ msgid ""
 "product"
 msgstr ""
 "Gerçek-zamanlı envanter değerlendirmesi yaparken, gelen tüm stokların "
-"hareketlerine karşılık gelen ait öğe günlükleri bu hesaba işlenecektir, "
+"hareketlerine karşılık gelen ait öğe yevmiyeleri bu hesaba işlenecektir, "
 "kaynak konumda özel bir değerlendirme hesabı yoksa. Bu kategorideki ürünler "
 "için bu varsayılan değerdir. Her ürüne doğrudan da ayarlanabilir."
 
@@ -381,7 +381,7 @@ msgstr "Uyarı!"
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Grupla partner ile"
+msgstr "Grupla iş ortağı ile"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -401,7 +401,7 @@ msgstr "Aynı anda kısmen veya tüm teslim edilecek malların belirtir"
 #: field:stock.picking.in,partner_id:0
 #: field:stock.picking.out,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr "İş Ortağı"
 
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
@@ -789,7 +789,7 @@ msgstr "İşlenmiş Envanterler"
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
 msgid "Parent Wizard (for existing lines)"
-msgstr "Ana Sihirbaz (varolan satırlar için="
+msgstr "Ana Sihirbaz (varolan satırlar için)"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1167,7 +1167,7 @@ msgstr "_İptal"
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr "İcra Tamamlama Süresi (Gün)"
+msgstr "Uygulama Tamamlama Süresi (Gün)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
@@ -1382,7 +1382,7 @@ msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
 msgstr ""
-"Bu envanteri silmek için önce ilişkili günlük girişlerinin işlenmesini "
+"Bu envanteri silmek için önce ilişkili yevmiye girişlerinin işlenmesini "
 "kaldırmalısınız."
 
 #. module: stock
@@ -1519,11 +1519,11 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Yeni bir günlük oluşturmak için tıklayın. \n"
+"                Yeni bir yevmiye oluşturmak için tıklayın. \n"
 "              </p><p>\n"
-"                Stok günlük sistemi her stok hareketini, yürütülecek \n"
+"                Stok yevmiye sistemi her stok hareketini, yürütülecek \n"
 "                işlemin ya da bu işlemi yürütecek işçi/takım türüne \n"
-"                göre belirli bir günlüğe atar. Stok günlüğü örnekleri \n"
+"                göre belirli bir yevmiyeye atar. Stok yevmiyesi örnekleri \n"
 "                şunlar olabilir: kalite kontrol, toplama listeleri,\n"
 "                paketleme, vb..\n"
 "\n"
@@ -2343,7 +2343,7 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Mevcut ortaktan aldığınız malların kaynak lkonumu olarak varsayılan yerine "
+"Mevcut iş ortaktan aldığınız malların kaynak konumu olarak varsayılan yerine "
 "bu stok konumu kullanılacaktır"
 
 #. module: stock
@@ -2778,7 +2778,7 @@ msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
 "account on category of this product are same."
 msgstr ""
-"Günlük Kaydı oluşturulamıyor, Bu ürünün Çıkış Hesabı ve bu ürünün "
+"Yevmiye Kaydı oluşturulamıyor, Bu ürünün Çıkış Hesabı ve bu ürünün "
 "kategorisindeki Değerleme hesabı aynıdır."
 
 #. module: stock
@@ -2962,8 +2962,8 @@ msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
 "account on category of this product are same."
 msgstr ""
-"Günlük Kaydı oluşturulamıyor, Bu ürünün Giriş Hesabı ve bu ürünün "
-"kategorisindeki Değerleme hesabı aynıdır."
+"Yevmiye Kaydı oluşturulamıyor, Bu ürünün Giriş Hesabı ve bu ürünün "
+"kategorisindeki değerleme hesabı aynıdır."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -4114,7 +4114,7 @@ msgid ""
 "on each product"
 msgstr ""
 "Gerçek-zamanlı envanter değerlemesi yaparken, hedef konuma özel bir "
-"değerleme hesabı ayarlanmadıkça, çıkan tüm stok hareketlerinin günlük "
+"değerleme hesabı ayarlanmadıkça, çıkan tüm stok hareketlerinin yevmiye "
 "öğeleri bu hesaba işlenecektir. Bu, bu kategorideki tüm ürünler için "
 "varsayılan değerdir. Aynı zamanda her ürünü de doğrudan ayarlanabilir."
 
@@ -4192,7 +4192,7 @@ msgstr "Onaylanmış Teslimat Siparişleri"
 #: field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "SeçimListesi"
+msgstr "Seçim Listesi"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
@@ -4908,7 +4908,7 @@ msgstr "Önek"
 #: view:stock.move:0
 #: view:stock.move.split:0
 msgid "Split in Serial Numbers"
-msgstr "Seri Numaralarına Göre ayır"
+msgstr "Seri Numaralarına Göre Ayır"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -4919,7 +4919,7 @@ msgid ""
 "product, the one from the product category is used."
 msgstr ""
 "Gerçek zamanlı envanter değerlemesi yaparken, gelen bütün stok "
-"hareketlerinin karşıt günlük maddeleri, kaynak konumda özel bir değerleme "
+"hareketlerinin karşıt yevmiye maddeleri, kaynak konumda özel bir değerleme "
 "hesabı tanımlanıncaya kadar bu hesaba işlenecektir. Ürüne tanımlanmamışsa, "
 "ürün kategorisinden bir tane kullanılır."
 

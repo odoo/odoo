@@ -21,15 +21,14 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class bank_statement_balance_report(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
         cr = self.cr
-        uid = self.uid
-        context = self.context
 
         cr.execute('SELECT s.name as s_name, s.date AS s_date, j.code as j_code, s.balance_end_real as s_balance ' \
                         'FROM account_bank_statement s ' \
@@ -46,7 +45,6 @@ class bank_statement_balance_report(report_sxw.rml_parse):
         })
         super(bank_statement_balance_report, self).set_context(objects, data, ids, report_type=report_type)
 
-
     def __init__(self, cr, uid, name, context):
         if context is None:
             context = {}
@@ -56,12 +54,11 @@ class bank_statement_balance_report(report_sxw.rml_parse):
         })
         self.context = context
 
-report_sxw.report_sxw(
-    'report.bank.statement.balance.report',
-    'account.bank.statement',
-    'addons/account_bank_statement_extensions/report/bank_statement_balance_report.rml',
-    parser=bank_statement_balance_report,
-    header='internal'
-)
+
+class report_bankstatementbalance(osv.AbstractModel):
+    _name = 'report.account_bank_statement_extensions.report_bankstatementbalance'
+    _inherit = 'report.abstract_report'
+    _template = 'account_bank_statement_extensions.report_bankstatementbalance'
+    _wrapped_report_class = bank_statement_balance_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

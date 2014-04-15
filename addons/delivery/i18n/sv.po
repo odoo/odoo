@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-04 06:29+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -29,7 +29,7 @@ msgstr "Leverans per post"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " är en funktion av "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,7 +51,7 @@ msgstr "Leveransmatrisrad"
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Måttenhet"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -70,7 +70,7 @@ msgstr "Volym"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Postnummer"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -92,6 +92,8 @@ msgstr "Utgående Leverans"
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Ingen rad matchade denna produkt eller order inom det valda "
+"leveranskombinationen."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -131,6 +133,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att skapa en leveransprislista för en viss "
+"region.\n"
+"               </p><p>\n"
+"                 Med leveransprislistan kan du beräkna kostnaden och\n"
+"                 försäljningspriset för leveransen baserat på produkternas "
+"vikt\n"
+"                 och andra kriterier. Du kan definiera flera prislistor\n"
+"                 för varje leveransmetod: per land eller ett område i ett "
+"visst\n"
+"                 land som definieras av ett postnummerområde.\n"
+"               </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -150,7 +165,7 @@ msgstr "Mängd"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr ""
+msgstr "Lägg till på offert"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -203,7 +218,7 @@ msgstr "Matrisdefinition"
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varning!"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -223,7 +238,7 @@ msgstr "Kundorder"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Utgående Leveranser"
 
 #. module: delivery
 #: view:sale.order:0
@@ -231,6 +246,8 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Om du inte \"Lägg i offert\", kommer det exakta priset beräknas vid "
+"fakturering baserad på leveransordern."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -275,7 +292,7 @@ msgstr "Beloppsgräns för fri frakt i företagets valuta"
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Fritt vid ordertotal över"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -431,6 +448,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att definiera en ny leveransmetod.\n"
+"               </p>\n"
+"                 Varje transportör (t.ex. UPS) kan ha flera leveransmetoder "
+"(t.ex.\n"
+"                 UPS Express, UPS Standard) med en uppsättning av "
+"prissättningsregler knuten\n"
+"                 till varje metod.\n"
+"               </p><p>\n"
+"                 Dessa metoder gör det möjligt att automatiskt beräkna "
+"leveranspriset\n"
+"                 enligt dina inställningar; på kundordern (baserat på\n"
+"                 offert) eller faktura (baserat på leveransorder).\n"
+"               </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -464,7 +496,7 @@ msgstr "Fritt om det överstiger %.2f"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Inkommande leveranser"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -474,7 +506,7 @@ msgstr "<="
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "Viktsenhet"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -549,7 +581,7 @@ msgstr "Speditör"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Leveransmetoder"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:57
@@ -576,7 +608,7 @@ msgstr "Försäljningspris"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Skriv ut leveransorder"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -588,7 +620,7 @@ msgstr "Tillstånd"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Enhet är måttenheten för vikt"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

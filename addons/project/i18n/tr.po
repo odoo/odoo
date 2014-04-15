@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-04 06:19+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:38+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project
 #: view:project.project:0
@@ -46,12 +46,12 @@ msgstr "Yetkiye göre görev"
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr "Ana"
+msgstr "Üst"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Projedeki görevler"
+msgstr "Proje görevleri"
 
 #. module: project
 #: field:project.task.type,name:0
@@ -77,7 +77,7 @@ msgstr "Gün"
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr "Birleştir"
+msgstr "Birleştirme"
 
 #. module: project
 #: view:res.partner:0
@@ -114,7 +114,7 @@ msgstr "Yanlış"
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
 msgid "Testing"
-msgstr "Deneniyor"
+msgstr "Test"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -146,12 +146,12 @@ msgstr "Uyarı!"
 #. module: project
 #: model:ir.model,name:project.model_res_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr "İş Ortağı"
 
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
 msgid "Allow task delegation"
-msgstr "Görev delegasyonu izinverme"
+msgstr "Görev delegasyonu izin verme"
 
 #. module: project
 #: field:project.task.delegate,planned_hours:0
@@ -268,7 +268,7 @@ msgstr "Proje Yönetimi"
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr "Prtoje Görevi Yetkilndirme"
+msgstr "Proje Görevi Yetkilndirme"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_started
@@ -379,7 +379,7 @@ msgstr ""
 #: view:project.task:0
 #: view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
-msgstr "DevamEden Görevler"
+msgstr "Devam Eden Görevler"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -419,7 +419,7 @@ msgstr "Proje Yöneticisi"
 #: selection:project.task.type,state:0
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
-msgstr "DevamEden"
+msgstr "Devam Eden"
 
 #. module: project
 #: view:project.task:0
@@ -460,7 +460,7 @@ msgstr "Mesai saatlerinizi giriniz."
 #. module: project
 #: field:project.project,alias_id:0
 msgid "Alias"
-msgstr "TakmaAd"
+msgstr "Rumuz"
 
 #. module: project
 #: view:project.task:0
@@ -627,7 +627,7 @@ msgstr "Şablon Görev Değil"
 #. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
-msgstr "Başlangıçta Planlanan Saat"
+msgstr "İlk Planlanan Saatler"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
@@ -684,7 +684,7 @@ msgstr "Planlama"
 #: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
-msgstr "ZamanSınırı"
+msgstr "Zaman Sınırı"
 
 #. module: project
 #: view:project.task.history.cumulative:0
@@ -712,7 +712,7 @@ msgstr "Son Tarih"
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr "Özellikler"
+msgstr "Tanımlama"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -733,7 +733,7 @@ msgstr "Yeni Görev Tanımı"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr "ZamanSınırını Aşan"
+msgstr "Zaman Sınırını Aşan"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -803,7 +803,7 @@ msgstr "Sil"
 #. module: project
 #: view:report.project.task.user:0
 msgid "In progress"
-msgstr "DevamEden"
+msgstr "Devam Eden"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -872,7 +872,7 @@ msgstr "Bir İzleyicidir"
 #. module: project
 #: field:project.task,work_ids:0
 msgid "Work done"
-msgstr "Biten iş"
+msgstr "Biten çalışma"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1067,7 +1067,7 @@ msgstr "Onay Durumu"
 #. module: project
 #: field:project.task.work,name:0
 msgid "Work summary"
-msgstr "İş Özeti"
+msgstr "Çalışma Özeti"
 
 #. module: project
 #: view:project.project:0
@@ -1375,7 +1375,7 @@ msgstr "Düşük"
 #. module: project
 #: selection:project.project,state:0
 msgid "Closed"
-msgstr "Kapandı"
+msgstr "Kapanan"
 
 #. module: project
 #: view:project.project:0
@@ -1471,7 +1471,7 @@ msgstr ""
 #: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
-msgstr "Ekkler"
+msgstr "Ekler"
 
 #. module: project
 #: view:project.task:0
@@ -1502,7 +1502,7 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
 #: view:project.project:0
 msgid "Open"
-msgstr "Aç"
+msgstr "Açık"
 
 #. module: project
 #: field:project.project,privacy_visibility:0
@@ -1657,7 +1657,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr "ZamanSınırı"
+msgstr "Zaman Sınırı"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
@@ -1986,7 +1986,7 @@ msgstr ""
 #. module: project
 #: model:project.category,name:project.project_category_03
 msgid "Experiment"
-msgstr "Deneyi"
+msgstr "Deneme"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -2197,7 +2197,7 @@ msgstr "Sıralama"
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
-msgstr "Görev İşi"
+msgstr "Görev Çalışma"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0

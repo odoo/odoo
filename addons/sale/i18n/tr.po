@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-04 07:03+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:28+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -54,7 +54,7 @@ msgstr "Onaylama Tarihi"
 #: view:sale.order.line:0
 #: view:sale.report:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Gruplandır İle..."
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -258,7 +258,7 @@ msgstr "Her satış siparişi kalemi için indirim yapmanıza olanak verir."
 #. module: sale
 #: view:sale.order.line:0
 msgid "Sales Order Lines that are in 'done' state"
-msgstr "'tamamlandı' durumunda Satış Siparişi Kalemleri"
+msgstr "'biten' durumunda Satış Siparişi Kalemleri"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -636,7 +636,7 @@ msgstr "Sipariş N°"
 #: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
-msgstr "Sipariş Kalemleri"
+msgstr "Sipariş Satırları"
 
 #. module: sale
 #: report:sale.order:0
@@ -652,7 +652,7 @@ msgstr "Lütfen bu ürün için gelir hesabı belirtin: \"%s\" (id:%d)."
 #. module: sale
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "Fatura Kalemleri"
+msgstr "Fatura Satırları"
 
 #. module: sale
 #: view:sale.report:0
@@ -673,9 +673,9 @@ msgid ""
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
 msgstr ""
-"Satışlarınızı ve teslimatlarınızı (toplama listeleri) değişik günlükler "
+"Satışlarınızı ve teslimatlarınızı (seçim listeleri) değişik yevmiyeler "
 "arasında sınıflandırmanızı sağlar,\n"
-"                günlükler üzerin toplu işlemler yürütür.\n"
+"                yevmiyeler üzerin toplu işlemler yürütür.\n"
 "                Bu, sale_journal modülünü kurar."
 
 #. module: sale
@@ -698,7 +698,7 @@ msgstr "Saat"
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr "Satış Siparişi sayısı"
+msgstr "# Satış Siparişi"
 
 #. module: sale
 #: help:sale.config.settings,timesheet:0
@@ -879,7 +879,7 @@ msgstr "Satış Siparişi yapıldı"
 #: code:addons/sale/sale.py:364
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
-msgstr "Bu şirket için lütfen satış günlüğü oluşturun: \"%s\" (id:%d)."
+msgstr "Bu şirket için lütfen satış yevmiyesi oluşturun: \"%s\" (id:%d)."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -890,7 +890,7 @@ msgstr "Teklifler ve Satışlar"
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "Ödenmiş"
+msgstr "Ödenmdi"
 
 #. module: sale
 #: help:sale.config.settings,group_uom:0
@@ -1229,7 +1229,7 @@ msgid ""
 "yet been invoiced"
 msgstr ""
 "Onaylı, yapıldı ya da istisna durumundaki ve henüz faturalanmamış Satış "
-"Siparişi Kalemleri"
+"Siparişi Satırları"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -1397,8 +1397,8 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
-"Satış temsilcisi teklifi onaylıyor. Satış Siparişinin durumu \"Sürüyor\" ya "
-"da \"Elle işlem sürüyor\" olur."
+"Satış temsilcisi teklifi onaylıyor. Satış Siparişinin durumu 'Sürüyor' ya da "
+"'Elle işlem sürüyor' olur."
 
 #. module: sale
 #: code:addons/sale/sale.py:942
@@ -1480,7 +1480,7 @@ msgstr "Referansınız"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Show Lines to Invoice"
-msgstr "Faturalanacak Kalemleri Göster"
+msgstr "Faturalanacak Satırları Göster"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -1582,7 +1582,7 @@ msgstr "Fatura"
 #. module: sale
 #: view:sale.order.line:0
 msgid "My Sales Order Lines"
-msgstr "Satış Siparişi Kalemlerim"
+msgstr "Satış Siparişi Satırları"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
@@ -1670,7 +1670,7 @@ msgstr ""
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Invoice Sales Order"
-msgstr "Satış Siparişi faturala"
+msgstr "Satış Siparişi Faturala"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -1838,7 +1838,7 @@ msgstr ""
 "    <p>Sayın ${object.partner_id.name},</p>\n"
 "    \n"
 "    <p>Firmamız ${object.company_id.name}nden istemiş olduğunuz "
-"${object.state in ('draft', 'sent') and 'teklif' or 'Sipariş doğrulama'} "
+"${object.state in ('draft', 'sent') and 'Teklif' or 'Sipariş doğrulama'} "
 "aşağıdadır: </p>\n"
 "\n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
@@ -1953,8 +1953,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} ${object.state in ('draft', 'sent') and 'Teklif' "
+"or 'Sipariş'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: report:sale.order:0
@@ -2332,7 +2332,7 @@ msgstr "ya da"
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Satış Siparişi Kalemleri"
+msgstr "Satış Siparişi Satırları"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -2357,7 +2357,7 @@ msgstr "Müşteri Referansı"
 #. module: sale
 #: view:sale.report:0
 msgid "Picked"
-msgstr "Toplanmış"
+msgstr "Seçilmiş"
 
 #. module: sale
 #: help:sale.config.settings,module_sale_margin:0
