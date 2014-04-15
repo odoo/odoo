@@ -32,9 +32,8 @@ class sale_order_dates(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         """Don't copy the requested date along with the Sales Order"""
         default = dict(default or {}, requested_date=False)
-        return super(sale_order_dates, self).copy(cr, uid, id, default=default,
-                                                  context=context)
- 
+        return super(sale_order_dates, self).copy(cr, uid, id, default=default, context=context)
+
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         """Compute the expected date from the requested date, not the order date"""
         if order and order.requested_date:
@@ -66,8 +65,9 @@ class sale_order_dates(osv.osv):
         dates_list = []
         for order in self.browse(cr, uid, ids, context=context):
             dates_list = []
+            order_datetime = datetime.strptime(order.date_order, DEFAULT_SERVER_DATETIME_FORMAT)
             for line in order.order_line:
-                dt = order.date_order + timedelta(days=line.delay or 0.0)
+                dt = order_datetime + timedelta(days=line.delay or 0.0)
                 dt_s = dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
