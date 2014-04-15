@@ -58,7 +58,6 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         };
         this.view_edit_dialog = new instance.web.Dialog(this, {
             title: action_title,
-            width: 850,
             buttons: [
                 {text: _t("Create"), click: function() { self.on_create_view(); }},
                 {text: _t("Edit"), click: function() { self.xml_element_id = 0; self.get_arch(); }},
@@ -376,7 +375,6 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.one_object = one_object;
         this.edit_xml_dialog = new instance.web.Dialog(this, {
             title: _.str.sprintf(_t("View Editor %d - %s"), self.main_view_id, self.model),
-            height: '90%',
             buttons: [
                 {text: _t("Inherited View"), click: function(){
                     var selected_row = self.edit_xml_dialog.$el.find('.ui-selected');
@@ -829,7 +827,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var self = this;
         this.edit_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
-            width: 450,
+            size: 'medium',
             buttons: [
                 {text: _t("Update"), click: function () {
                     var warn = false, update_values = [];
@@ -955,7 +953,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.add_widget = [];
         this.add_node_dialog = new instance.web.Dialog(this,{
             title: _t("Properties"),
-            width: 450,
+            size: 'medium',
             buttons: [
                 {text: _t("Update"), click: function() {
                     var check_add_node = true, values = {};

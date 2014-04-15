@@ -57,16 +57,6 @@ instance.web.action_warn = function(element, action) {
 instance.web.client_actions.add("action_warn", "instance.web.action_warn");
 
 /**
- * The very minimal function everything should call to create a dialog
- * in OpenERP Web Client.
- */
-instance.web.dialog = function(element) {
-    var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
-    result.dialog("widget").openerpClass();
-    return result;
-};
-
-/**
     A useful class to handle dialogs.
 
     Attributes:
@@ -81,6 +71,8 @@ instance.web.Dialog = instance.web.Widget.extend({
         @param {Widget} parent
         @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
             dictionary can contain the following keys:
+            - size: one of the following: 'large', 'medium', 'small'
+            - dialogClass: class to add to the body of dialog
             - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
                 label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
                 corresponding method of a jQuery element targeting the <button> tag). It is deprecated because all dialogs
@@ -94,57 +86,15 @@ instance.web.Dialog = instance.web.Widget.extend({
         this._super(parent);
         this.content_to_set = content;
         this.dialog_options = {
-            modal: true,
             destroy_on_close: true,
-            width: 900,
-            min_width: 0,
-            max_width: '95%',
-            height: 'auto',
-            min_height: 0,
-            max_height: $(window.top).height() - 200,
-            autoOpen: false,
-            position: [false, 40],
+            size: 'large', //'medium', 'small'
             buttons: null,
-            resizeStop: function() {
-                self.trigger("resized");
-            },
         };
         if (options) {
             _.extend(this.dialog_options, options);
         }
         this.on("closing", this, this._closing);
-        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><span class="oe_dialog_custom_buttons"/></div>');
-    },
-    _get_options: function() {
-        var self = this;
-        var o = _.extend({}, this.dialog_options);
-        var sizes = {
-            width: $(window.top).width(),
-            height: $(window.top).height(),
-        };
-        _.each(sizes, function(available_size, unit) {
-            o[unit] = self._get_size(o[unit], available_size);
-            o['min_' + unit] = self._get_size(o['min_' + unit] || 0, available_size);
-            o['max_' + unit] = self._get_size(o['max_' + unit] || 0, available_size);
-            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) {
-                o[unit] = o['min_' + unit];
-            }
-            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) {
-                o[unit] = o['max_' + unit];
-            }
-        });
-        o.title = o.title || this.dialog_title;
-        return o;
-    },
-    _get_size: function(val, available_size) {
-        val = val.toString();
-        if (val === 'auto') {
-            return val;
-        } else if (val.slice(-1) === "%") {
-            return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
-        } else {
-            return parseInt(val, 10);
-        }
+        this.$buttons = $('<div class="modal-footer"><span class="oe_dialog_custom_buttons"/></div>');
     },
     renderElement: function() {
         if (this.content_to_set) {
@@ -162,8 +112,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (!this.dialog_inited) {
             this.init_dialog();
         }
-        this.$el.dialog('open');
-        this.$el.dialog("widget").append(this.$buttons);
+        this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
         return this;
     },
     _add_buttons: function(buttons) {
@@ -188,16 +137,39 @@ instance.web.Dialog = instance.web.Widget.extend({
         @return The result returned by start().
     */
     init_dialog: function() {
-        var options = this._get_options();
+        var self = this;
+        var options = _.extend({}, this.dialog_options);
+        options.title = options.title || this.dialog_title;
         if (options.buttons) {
             this._add_buttons(options.buttons);
             delete(options.buttons);
         }
         this.renderElement();
-        instance.web.dialog(this.$el, options);
-        if (options.height === 'auto' && options.max_height) {
-            this.$el.css({ 'max-height': options.max_height, 'overflow-y': 'auto' });
+
+        this.$dialog_box = $(QWeb.render('Dialog', options)).appendTo("body");
+        this.$el.modal({
+            'backdrop': false,
+            'keyboard': true,
+        });
+        if (options.size !== 'large'){
+            var dialog_class_size = this.$dialog_box.find('.modal-lg').removeClass('modal-lg')
+            if (options.size === 'small'){
+                dialog_class_size.addClass('modal-sm');
+            }
         }
+
+        this.$el.appendTo(this.$dialog_box.find(".modal-body"));
+        var $dialog_content = this.$dialog_box.find('.modal-content');
+        if (options.dialogClass){
+            $dialog_content.find(".modal-body").addClass(options.dialogClass);
+        }
+        $dialog_content.openerpClass();
+
+        this.$dialog_box.on('hidden.bs.modal', this, function(){
+            self.trigger("closing");
+        });
+        this.$dialog_box.modal('show');
+
         this.dialog_inited = true;
         var res = this.start();
         return res;
@@ -206,9 +178,8 @@ instance.web.Dialog = instance.web.Widget.extend({
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
     close: function(reason) {
-        if (this.dialog_inited && this.$el.is(":data(dialog)")) {
-            this.trigger("closing", reason);
-            this.$el.dialog('close');
+        if (this.dialog_inited && this.$el.is(":data(bs.modal)")) {
+            this.$el.parents('.modal').modal('hide');
         }
     },
     _closing: function() {
@@ -225,6 +196,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     */
     destroy: function (reason) {
         this.$buttons.remove();
+        var self = this;
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
@@ -233,8 +205,13 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.close(reason);
             this.__tmp_dialog_destroying = undefined;
         }
-        if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
-            this.$el.dialog('destroy');
+        if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(bs.modal)")) {
+            //we need this to put the instruction to remove modal from DOM at the end
+            //of the queue, otherwise it might already have been removed before the modal-backdrop
+            //is removed when pressing escape key
+            setTimeout(function () {
+                self.$el.parents('.modal').remove();
+            },0);
         }
         this._super();
     }
@@ -272,12 +249,13 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (error.data.exception_type === "except_osv") {
             error = _.extend({}, error, {data: _.extend({}, error.data, {message: error.data.arguments[0] + "\n\n" + error.data.arguments[1]})});
         }
-        instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
+        new instance.web.Dialog(this, {
+            size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-            ]
-        });
+                {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
+            ],
+        }, $('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>')).open();
     },
     show_error: function(error) {
         if (!this.active) {
@@ -285,17 +263,12 @@ instance.web.CrashManager = instance.web.Class.extend({
         }
         var buttons = {};
         buttons[_t("Ok")] = function() {
-            $(this).dialog("close");
+            this.parents('.modal').modal('hide');
         };
-        var dialog = new instance.web.Dialog(this, {
+        new instance.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
-            width: '80%',
-            height: '50%',
-            min_width: '800px',
-            min_height: '600px',
             buttons: buttons
-        }).open();
-        dialog.$el.html(QWeb.render('CrashManager.error', {session: instance.session, error: error}));
+        }, QWeb.render('CrashManager.error', {session: instance.session, error: error})).open();
     },
     show_message: function(exception) {
         this.show_error({
@@ -342,16 +315,17 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
         error = this.error;
         error.data.message = error.data.arguments[0];
 
-        instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
+        new instance.web.Dialog(this, {
+            size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { $(this).dialog("close"); }},
+                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }},
                 {text: error.data.arguments[2], click: function() {
                     window.location.href='#action='+error.data.arguments[1];
-                    $(this).dialog("close");
+                    this.$el.parents('.modal').modal('hide');
                 }}
-            ]
-        });
+            ],
+        }, QWeb.render('CrashManager.warning', {error: error})).open();
         this.destroy();
     }
 });
@@ -498,13 +472,13 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
      * @param {String} error.error message of the error dialog
      */
     display_error: function (error) {
-        return instance.web.dialog($('<div>'), {
-            modal: true,
+        return new instance.web.Dialog(this, {
+            size: 'medium',
             title: error.title,
             buttons: [
-                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
             ]
-        }).html(error.error);
+        }, $('<div>').html(error.error)).open();
     },
     do_create: function(form) {
         var self = this;
@@ -731,13 +705,13 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
        });
     },
     display_error: function (error) {
-        return instance.web.dialog($('<div>'), {
-            modal: true,
+        return new instance.web.Dialog(this, {
+            size: 'medium',
             title: error.title,
             buttons: [
-                {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }}
             ]
-        }).html(error.error);
+        }, $('<div>').html(error.error)).open();
     },
 });
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
@@ -1052,8 +1026,11 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 e.preventDefault();
                 window.location = $.param.querystring( window.location.href, 'debug');
             });
-            instance.web.dialog($help, {autoOpen: true,
-                modal: true, width: 507, height: 290, resizable: false, title: _t("About")});
+            new instance.web.Dialog(this, {
+                size: 'medium',
+                dialogClass: 'oe_act_window',
+                title: _t("About"),
+            }, $help).open();
         });
     },
 });
