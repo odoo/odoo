@@ -10,7 +10,7 @@
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" />
                         <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
-                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">print your answers</a>.</div>
+                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">review your answers</a>.</div>
                     </div>
                 </div>
             </div>
