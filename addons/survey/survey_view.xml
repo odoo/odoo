@@ -31,7 +31,7 @@
                         <button class="oe_inline oe_stat_button" name="test_survey" states="open,draft,close,cancel" 
                             string="Test Survey" type="object" icon="fa-file-o" context="{'survey_id': active_id}" 
                             attrs="{'invisible':[('id','=',0)]}"/>
-                        <button class="oe_inline oe_stat_button" name="fill_survey" states="open" string="Reply Survey" 
+                        <button class="oe_inline oe_stat_button" name="fill_survey" states="open" string="Answer Survey" 
                             type="object" icon="fa-star-half-o" context="{'survey_id': active_id}" 
                             attrs="{'invisible':[('state','!=','open')]}"/>
                         <button class="oe_inline oe_stat_button" name="action_print_survey" states="open,draft,close,cancel" 
