@@ -2082,41 +2082,46 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         seq_obj = self.pool.get('ir.sequence')
-        for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
-            ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-            if picking:
-                # name of new picking according to its type
-                if ptype == 'internal':
-                    new_pick_name = seq_obj.get(cr, uid,'stock.picking')
-                else :
-                    new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
-                pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
-                # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
-                old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
-                if old_ptype != picking.type:
-                    old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
-            else:
-                pickid = False
-            for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
-                new_id = move_obj.copy(cr, uid, move.id, {
-                    'location_id': move.location_dest_id.id,
-                    'location_dest_id': loc.id,
-                    'date': time.strftime('%Y-%m-%d'),
-                    'picking_id': pickid,
-                    'state': 'waiting',
-                    'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
-                    'move_history_ids': [],
-                    'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
-                    'move_history_ids2': []}
-                )
-                move_obj.write(cr, uid, [move.id], {
-                    'move_dest_id': new_id,
-                    'move_history_ids': [(4, new_id)]
-                })
-                new_moves.append(self.browse(cr, uid, [new_id])[0])
-            if pickid:
-                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+        for picking, chained_moves in self._chain_compute(cr, uid, moves, context=context).items():
+            # We group the moves by automatic move type, so it creates different pickings for different types
+            moves_by_type = {}
+            for move in chained_moves:
+                moves_by_type.setdefault(move[1][1], []).append(move)
+            for todo in moves_by_type.values():
+                ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                if picking:
+                    # name of new picking according to its type
+                    if ptype == 'internal':
+                        new_pick_name = seq_obj.get(cr, uid,'stock.picking')
+                    else :
+                        new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
+                    pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
+                    # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
+                    old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
+                    if old_ptype != picking.type:
+                        old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
+                        self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
+                else:
+                    pickid = False
+                for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
+                    new_id = move_obj.copy(cr, uid, move.id, {
+                        'location_id': move.location_dest_id.id,
+                        'location_dest_id': loc.id,
+                        'date': time.strftime('%Y-%m-%d'),
+                        'picking_id': pickid,
+                        'state': 'waiting',
+                        'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
+                        'move_history_ids': [],
+                        'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
+                        'move_history_ids2': []}
+                    )
+                    move_obj.write(cr, uid, [move.id], {
+                        'move_dest_id': new_id,
+                        'move_history_ids': [(4, new_id)]
+                    })
+                    new_moves.append(self.browse(cr, uid, [new_id])[0])
+                if pickid:
+                    wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
         if new_moves:
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves
