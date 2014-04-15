@@ -1045,12 +1045,12 @@
     <ul style="list-style: none; padding-left: 2px;">
         <t t-foreach="legends" t-as="rec" >
             <t t-if="widget.get('value') gte rec.name and !rec_first">
-                <li t-att-data-value="rec.name" class="oe_left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="rec.legend"/></a></li>
+                <li t-att-data-value="rec.name" class="oe_star_left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="rec.legend"/></a></li>
             </t>
         </t>
         <t t-foreach="legends" t-as="rec" >
             <t t-if="widget.get('value') lt rec.name">
-                <li t-att-data-value="rec.name" class="oe_left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="legends[0].legend"/></a></li>
+                <li t-att-data-value="rec.name" class="oe_star_left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="legends[0].legend"/></a></li>
             </t>
         </t>
     </ul>
