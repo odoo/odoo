@@ -46,7 +46,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        self.$el.removeClass('ui-dialog-content ui-widget-content');
 
         var got_fields = new $.Deferred();
         this.$el.find('#import_compat').change(function() {
@@ -413,7 +412,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
         });
     },
     close: function() {
-        this.$el.remove();
         this._super();
     }
 });

@@ -1,3 +1,11 @@
+ /* 
+ This is a hack for IE9 ...
+ Attrs : width and height are not take in consideration
+ */
+.openerp svg:not(:root) {
+    overflow: visible;    
+}
+
 .graph_pivot_mode {
     position:initial;
 }

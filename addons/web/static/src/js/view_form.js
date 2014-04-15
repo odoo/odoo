@@ -586,13 +586,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this._internal_set_values(result.value, processed);
         }
         if (!_.isEmpty(result.warning)) {
-            instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
+            new instance.web.Dialog(this, {
+                size: 'medium',
                 title:result.warning.title,
-                modal: true,
                 buttons: [
-                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                    {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
                 ]
-            });
+            }, QWeb.render("CrashManager.warning", result.warning)).open();
         }
 
         return $.Deferred().resolve();
@@ -967,9 +967,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         context: {
                             'bin_size': true,
                             'future_display_name': true
-                        }
+                        },
+                        check_access_rule: true
                     }).then(function(r) {
                         self.trigger('load_record', r);
+                    }).fail(function (){
+                        self.do_action('history_back');
                     });
             }
         });
@@ -1077,7 +1080,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 };
             })
             .value();
-
         var d = new instance.web.Dialog(this, {
             title: _t("Set Default"),
             args: {
@@ -1277,6 +1279,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var defs = [];
         _.each(this.to_replace, function(el) {
             defs.push(el[0].replace(el[1]));
+            if (el[1].children().length) {
+                el[0].$el.append(el[1].children());
+            }
         });
         this.to_replace = [];
         return $.when.apply($, defs);
@@ -1304,7 +1309,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         var tagname = $tag[0].nodeName.toLowerCase();
         if (this.tags_registry.contains(tagname)) {
             this.tags_to_init.push($tag);
-            return $tag;
+            return (tagname === 'button') ? this.process_button($tag) : $tag;
         }
         var fn = self['process_' + tagname];
         if (fn) {
@@ -1320,6 +1325,13 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             $tag.removeAttr("modifiers");
             return $tag;
         }
+    },
+    process_button: function ($button) {
+        var self = this;
+        $button.children().each(function() {
+            self.process($(this));
+        });
+        return $button;
     },
     process_widget: function($widget) {
         this.widgets_to_init.push($widget);
@@ -1906,6 +1918,8 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
+        this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
+        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + " fa-fw\"></span>";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -1941,26 +1955,23 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = instance.web.dialog($('<div/>').text(self.node.attrs.confirm), {
+                var dialog = instance.web.Dialog(this, {
                     title: _t('Confirm'),
-                    modal: true,
                     buttons: [
                         {text: _t("Cancel"), click: function() {
-                                $(this).dialog("close");
+                                this.parents('.modal').modal('hide');
                             }
                         },
                         {text: _t("Ok"), click: function() {
                                 var self2 = this;
                                 self.on_confirmed().always(function() {
-                                    $(self2).dialog("close");
+                                    self2.parents('.modal').modal('hide');
                                 });
                             }
                         }
                     ],
-                    beforeClose: function() {
-                        def.resolve();
-                    },
-                });
+                }, $('<div/>').text(self.node.attrs.confirm)).open();
+                dialog.on("closing", null, function() {def.resolve();});
                 return def.promise();
             } else {
                 return self.on_confirmed();
@@ -1976,11 +1987,12 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var self = this;
 
         var context = this.build_context();
-
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
-            this.view.dataset, this.view.datarecord.id, function () {
-                self.view.recursive_reload();
+            this.view.dataset, this.view.datarecord.id, function (reason) {
+                if (!_.isObject(reason)) {
+                    self.view.recursive_reload();
+                }
             });
     },
     check_disable: function() {
@@ -2253,7 +2265,7 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
 /**
     Some hack to make placeholders work in ie9.
 */
-if ($.browser.msie && $.browser.version === "9.0") {
+if (!('placeholder' in document.createElement('input'))) {    
     document.addEventListener("DOMNodeInserted",function(event){
         var nodename =  event.target.nodeName.toLowerCase();
         if ( nodename === "input" || nodename == "textarea" ) {
@@ -2805,6 +2817,50 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
     }
 });
 
+/**
+    The PercentPie field expect a float from 0 to 100.
+*/
+instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
+    template: 'FieldPercentPie',
+
+    render_value: function() {
+        var value = this.get('value'),
+            formatted_value = Math.round(value || 0) + '%',
+            svg = this.$('svg')[0];
+
+        svg.innerHTML = "";
+        nv.addGraph(function() {
+            var size=43;
+            var chart = nv.models.pieChart()
+                .width(size)
+                .height(size)
+                .margin({top: 0, right: 0, bottom: 0, left: 0})
+                .donut(true) 
+                .showLegend(false)
+                .showLabels(false)
+                .tooltips(false)
+                .color(['#7C7BAD','#DDD'])
+                .donutRatio(0.62);
+   
+            d3.select(svg)
+                .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
+                .transition()
+                .call(chart)
+                .attr({width:size, height:size});
+
+            d3.select(svg)
+                .append("text")
+                .attr({x: size/2, y: size/2 + 3, 'text-anchor': 'middle'})
+                .style({"font-size": "10px", "font-weight": "bold"})
+                .text(formatted_value);
+
+            return chart;
+        });
+   
+    }
+});
+
+
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldSelection',
@@ -3174,7 +3230,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
     init: function(parent) {
         this._super(parent, {
             title: _.str.sprintf(_t("Add %s"), parent.string),
-            width: 312,
+            size: 'medium',
         });
     },
     start: function() {
@@ -3242,7 +3298,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             delete this.$drop_down;
         }
         if (this.$input) {
-            this.$input.closest(".ui-dialog .ui-dialog-content").off('scroll');
+            this.$input.closest(".modal .modal-content").off('scroll');
             this.$input.off('keyup blur autocompleteclose autocompleteopen ' +
                             'focus focusout change keydown');
             delete this.$input;
@@ -3335,7 +3391,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.$input.autocomplete("close");
             }
         }, 50);
-        this.$input.closest(".ui-dialog .ui-dialog-content").on('scroll', this, close_autocomplete);
+        this.$input.closest(".modal .modal-content").on('scroll', this, close_autocomplete);
 
         self.ed_def = $.Deferred();
         self.uned_def = $.Deferred();
@@ -4303,7 +4359,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                         if (data.id) {
                             self.add_id(data.id);
                         } else {
-                            ignore_blur = true;
+                            self.ignore_blur = true;
                             data.action();
                         }
                         this.trigger('setSuggestions', {result : []});
@@ -4343,7 +4399,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        var ignore_blur = false;
+        self.ignore_blur = false;
         self.$text = this.$("textarea");
         self.$text.textext(self.initialize_texttext()).bind('getSuggestions', function(e, data) {
             var _this = this;
@@ -4363,11 +4419,11 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         self.$text
             .focusin(function () {
                 self.trigger('focused');
-                ignore_blur = false;
+                self.ignore_blur = false;
             })
             .focusout(function() {
                 self.$text.trigger("setInputData", "");
-                if (!ignore_blur) {
+                if (!self.ignore_blur) {
                     self.trigger('blurred');
                 }
             }).keydown(function(e) {
@@ -4445,6 +4501,10 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             width: width,
             minHeight: height
         });
+    },    
+    _search_create_popup: function() {
+        self.ignore_blur = true;
+        return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
 });
 
@@ -4857,13 +4917,12 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         var self = this;
         this.renderElement();
         var dialog = new instance.web.Dialog(this, {
-            min_width: '800px',
             dialogClass: 'oe_act_window',
-            close: function() {
-                self.check_exit(true);
-            },
             title: this.options.title || "",
         }, this.$el).open();
+        dialog.on('closing', this, function (e){
+            self.check_exit(true);
+        });
         this.$buttonpane = dialog.$buttons;
         this.start();
     },
@@ -4930,8 +4989,8 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
     },
     destroy: function () {
         this.trigger('closed');
-        if (this.$el.is(":data(dialog)")) {
-            this.$el.dialog('close');
+        if (this.$el.is(":data(bs.modal)")) {
+            this.$el.parents('.modal').modal('hide');
         }
         this._super();
     },
@@ -5852,6 +5911,26 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
 });
 
 /**
+    This widget is intended to be used on stat button numeric fields.  It will display
+    the value   many2many and one2many. It is a read-only field that will 
+    display a simple string "<value of field> <label of the field>"
+*/
+instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set("value", 0);
+    },
+    render_value: function() {
+        var options = {
+            value: this.get("value") || 0,
+            text: this.string,
+        };
+        this.$el.html(QWeb.render("StatInfo", options));
+    },
+
+});
+
+/**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
  * All referenced classes must implement FieldInterface. Those represent the classes whose instances
@@ -5878,6 +5957,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'reference' : 'instance.web.form.FieldReference',
     'boolean' : 'instance.web.form.FieldBoolean',
     'float' : 'instance.web.form.FieldFloat',
+    'percentpie': 'instance.web.form.FieldPercentPie',
     'integer': 'instance.web.form.FieldFloat',
     'float_time': 'instance.web.form.FieldFloat',
     'progressbar': 'instance.web.form.FieldProgressBar',
@@ -5888,6 +5968,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
+    'statinfo': 'instance.web.form.StatInfo',
 });
 
 /**

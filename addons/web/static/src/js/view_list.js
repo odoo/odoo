@@ -537,7 +537,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name')
+                }), 'name'),
+            {check_access_rule: true}
         ).done(function (records) {
             var values = records[0];
             if (!values) {
