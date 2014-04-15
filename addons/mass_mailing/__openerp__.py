@@ -53,9 +53,7 @@ professional emails and reuse templates in a few clicks.
     'js': [
         'static/src/js/mass_mailing.js',
     ],
-    'qweb' : [
-        'static/src/xml/*.xml',
-    ],
+    'qweb': [],
     'css': [
         'static/src/css/mass_mailing.css',
         'static/src/css/email_template.css'
