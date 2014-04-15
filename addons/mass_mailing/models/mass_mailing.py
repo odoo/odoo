@@ -2,13 +2,12 @@
 
 from datetime import datetime
 from dateutil import relativedelta
-import random
 import json
+import random
 import urllib
 import urlparse
 
 from openerp import tools
-from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
@@ -537,15 +536,13 @@ class MassMailing(osv.Model):
 
     def get_recipients(self, cr, uid, mailing, context=None):
         domain = eval(mailing.mailing_domain)
-        # self.pool['mail.mass_mailing.list'].get_global_domain(
-            # cr, uid, [l.id for l in mailing.contact_list_ids], context=context
-        # )[mailing.mailing_model]
         res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
 
         # randomly choose a fragment
         if mailing.contact_ab_pc < 100:
-            topick = mailing.contact_ab_nbr
-            if mailing.mass_mailing_campaign_id and mailing.ab_testing:
+            contact_nbr = self.pool[mailing.mailing_model].search(cr, uid, domain, count=True, context=context)
+            topick = int(contact_nbr / 100.0 * mailing.contact_ab_pc)
+            if mailing.mass_mailing_campaign_id and mailing.mass_mailing_campaign_id.unique_ab_testing:
                 already_mailed = self.pool['mail.mass_mailing.campaign'].get_recipients(cr, uid, [mailing.mass_mailing_campaign_id.id], context=context)[mailing.mass_mailing_campaign_id.id]
             else:
                 already_mailed = set([])
@@ -568,8 +565,6 @@ class MassMailing(osv.Model):
     def send_mail(self, cr, uid, ids, context=None):
         author_id = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id
         for mailing in self.browse(cr, uid, ids, context=context):
-            if not mailing.contact_nbr:
-                raise Warning('Please select recipients.')
             # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
             comp_ctx = dict(context, active_ids=res_ids)
@@ -584,7 +579,7 @@ class MassMailing(osv.Model):
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
             }
-            if mailing.reply_specified:
+            if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
             composer_id = self.pool['mail.compose.message'].create(cr, uid, composer_values, context=comp_ctx)
             self.pool['mail.compose.message'].send_mail(cr, uid, [composer_id], context=comp_ctx)
