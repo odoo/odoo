@@ -20,15 +20,12 @@ def run(args):
     registry = openerp.modules.registry.RegistryManager.get(
         args.database, update_module=False)
     model = registry[args.model]
-    cr = registry.db.cursor() # TODO context manager
     field_names = [args.field] if args.field else []
     if args.short:
         # ignore --field
         field_names = ['name']
-    try:
+    with registry.cursor() as cr:
         xs = model.read(cr, 1, args.id, field_names, {})
-    finally:
-        cr.close()
 
     if xs:
         print "Records (model `%s`, database `%s`):" % (args.model, args.database)

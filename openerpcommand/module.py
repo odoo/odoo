@@ -33,12 +33,9 @@ def run(args):
  
         xs = []
         ir_module_module = registry.get('ir.module.module')
-        cr = registry.db.cursor() # TODO context manager
-        try:
+        with registry.cursor() as cr:
             ids = ir_module_module.search(cr, openerp.SUPERUSER_ID, [], {})
             xs = ir_module_module.read(cr, openerp.SUPERUSER_ID, ids, [], {})
-        finally:
-            cr.close()
  
         if xs:
             print "Modules (database `%s`):" % (args.database,)

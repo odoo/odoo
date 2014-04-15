@@ -344,6 +344,29 @@ class date(_column):
                               exc_info=True)
         return (context_today or today).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
+    def date_to_datetime(self, cr, uid, userdate, context=None):
+        """ Convert date values expressed in user's timezone to
+        server-side UTC timestamp, assuming a default arbitrary
+        time of 12:00 AM - because a time is needed.
+    
+        :param str userdate: date string in in user time zone
+        :return: UTC datetime string for server-side use
+        """
+        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
+        if context and context.get('tz'):
+            tz_name = context['tz']
+        else:
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + timedelta(hours=12.0)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+
 class datetime(_column):
     _type = 'datetime'
 
@@ -648,7 +671,10 @@ class one2many(_column):
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
-                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(_table, self._fields_id), (act[1], id))
+                # table of the field (parent_model in case of inherit)
+                field_model = self._fields_id in obj.pool[self._obj]._columns and self._obj or obj.pool[self._obj]._all_columns[self._fields_id].parent_model
+                field_table = obj.pool[field_model]._table
+                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
                     obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
