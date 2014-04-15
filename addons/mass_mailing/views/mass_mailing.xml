@@ -246,7 +246,7 @@
                             <page string="Mail Body">
                                 <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight" states="draft"/>
                                 <button name="action_edit_html" type="object" string="Change Email Design" states="test"/>
-                                <div attrs="{'invisible' : ['|', ('state', '=', 'done'), ('body_html','!=',False)]}" class="oe_view_nocontent oe_clear">
+                                <div attrs="{'invisible' : ['|', '|', ('state', '=', 'done'), ('body_html','!=',False), ('mailing_domain', '=', False)]}" class="oe_view_nocontent oe_clear">
                                     <p class="oe_view_nocontent_create oe_edit_only">
                                         Click to design your email.
                                     </p>
