@@ -10,9 +10,7 @@
 Bridge module between Mass Mailing and HR Recruitment
     """,
     'website': 'http://www.openerp.com',
-    'data': [
-        'views/hr_applicant.xml',
-    ],
+    'data': [],
     'demo': [],
     'installable': True,
     'auto_install': True,
