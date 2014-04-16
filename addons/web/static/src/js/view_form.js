@@ -478,6 +478,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (onchange === "1" || onchange === "true") {
                 return this.parse_on_change_v8(onchange, widget);
             }
+            if (onchange === "0" || onchange === "false") {
+                return {};
+            }
             throw new Error(_.str.sprintf(_t("Wrong on change format: %s"), onchange));
         }
 
@@ -550,21 +553,21 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var widget = on_change_obj.widget;
         var processed = on_change_obj.processed;
         try {
-            var def;
+            var def = $.when({});
             processed = processed || [];
             processed.push(widget.name);
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                var ids = [];
-                if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
-                    // In case of a o2m virtual id, we should pass an empty ids list
-                    ids.push(self.datarecord.id);
+                if (change_spec.method) {
+                    var ids = [];
+                    if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
+                        // In case of a o2m virtual id, we should pass an empty ids list
+                        ids.push(self.datarecord.id);
+                    }
+                    def = self.alive(new instance.web.Model(self.dataset.model).call(
+                        change_spec.method, [ids].concat(change_spec.args)));
                 }
-                def = self.alive(new instance.web.Model(self.dataset.model).call(
-                    change_spec.method, [ids].concat(change_spec.args)));
-            } else {
-                def = $.when({});
             }
             return def.then(function(response) {
                 if (widget.field['change_default']) {
