@@ -47,7 +47,7 @@
                             </h1>
                             <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
                             <div>
-                                <field name="user_domain" />
+                                <field name="user_domain" widget="char_domain" options="{'model': 'res.users'}" />
                             </div>
                         </div>
 
