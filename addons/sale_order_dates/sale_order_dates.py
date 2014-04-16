@@ -37,7 +37,7 @@ class sale_order_dates(osv.osv):
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         """Compute the expected date from the requested date, not the order date"""
         if order and order.requested_date:
-            planned_str = fields.date.date_to_datetime(cr, uid, order.requested_date, context)
+            planned_str = fields.date.date_to_datetime(self, cr, uid, order.requested_date, context)
             date_planned = datetime.strptime(planned_str, DEFAULT_SERVER_DATETIME_FORMAT)
             date_planned -= timedelta(days=order.company_id.security_lead)
             return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
