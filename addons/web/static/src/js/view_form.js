@@ -2464,9 +2464,9 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         var self = this;
         this.$el.html(instance.web.qweb.render("FieldCharDomain", {widget: this}));
         if (this.get('value')) {
+            var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
             var domain = instance.web.pyeval.eval('domain', this.get('value'));
-            var relation = this.getParent().fields.mailing_model.get('value')[0];
-            var ds = new instance.web.DataSetStatic(self, relation, self.build_context());
+            var ds = new instance.web.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 $('.oe_domain_count', self.$el).text(results + ' records selected');
                 $('button span', self.$el).text(' Change selection');
