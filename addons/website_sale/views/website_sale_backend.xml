@@ -110,17 +110,6 @@
         <field name="domain">[('state', 'not in', ('draft', 'shopping_cart', 'sent', 'cancel'))]</field>
     </record>
 
-    <record id="shopping_cart_filter_search_view" model="ir.ui.view">
-        <field name="name">shopping.cart.filter.search.inherit</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='draft']" position="after">
-                <filter icon="terp-document-new" string="Shopping Cart" domain="[('state','=','shopping_cart')]" help="The quotations which are in shopping cart."/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="action_shopping_cart_quotations" model="ir.actions.act_window">
         <field name="name">Shopping Cart</field>
         <field name="type">ir.actions.act_window</field>
