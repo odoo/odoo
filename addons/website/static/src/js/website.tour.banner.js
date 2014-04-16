@@ -12,9 +12,10 @@
             {
                 title:     _t("Welcome to your website!"),
                 content:   _t("This tutorial will guide you to build your home page. We will start by adding a banner."),
-                popover:   { next:  _t("Start Tutorial"), end:   _t("Skip It") },
+                popover:   { next: _t("Start Tutorial"), end: _t("Skip It") },
             },
             {
+                waitNot:   '.popover.tour',
                 element:   'button[data-action=edit]',
                 placement: 'bottom',
                 title:     _t("Edit this page"),
@@ -37,11 +38,21 @@
             },
             {
                 waitFor:   '.oe_overlay_options .oe_options:visible',
-                element:   '#wrap .carousel:first .carousel-caption > div',
+                element:   '#wrap .carousel:first div.carousel-content',
                 placement: 'top',
                 title:     _t("Customize banner's text"),
                 content:   _t("Click in the text and start editing it."),
-                popover:   { next: _t("Continue") },
+                sampleText: 'Here, a customized text',
+            },
+            {
+                waitNot:   '#wrap .carousel:first div.carousel-content:has(h2:'+
+                    'containsExact('+_t('Your Banner Title')+')):has(h3:'+
+                    'containsExact('+_t('Click to customize this text')+'))',
+                element:   '.oe_snippet_parent:visible',
+                placement: 'bottom',
+                title:     _t("Get banner properties"),
+                content:   _t("Select the parent container to get the global options of the banner."),
+                popover:   { fixed: true },
             },
             {
                 element:   '.oe_overlay_options .oe_options:visible',
@@ -51,6 +62,7 @@
                 popover:   { next: _t("Continue") },
             },
             {
+                waitNot:   '.popover.tour',
                 element:   'button[data-action=snippet]',
                 placement: 'bottom',
                 title:     _t("Add Another Block"),
@@ -79,6 +91,7 @@
                 popover:   { next: _t("Continue") },
             },
             {
+                waitNot:   '.popover.tour',
                 element:   'a[data-action=show-mobile-preview]',
                 placement: 'bottom',
                 title:     _t("Test Your Mobile Version"),

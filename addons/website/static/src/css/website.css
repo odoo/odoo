@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -305,69 +306,6 @@ ul.nav-stacked > li > a {
   background-size: cover;
 }
 
-.carousel .carousel-caption {
-  position: absolute;
-  right: 50%;
-  left: 50%;
-  bottom: 20px;
-}
-.carousel .carousel-caption > div {
-  position: absolute;
-  text-align: left;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.4);
-  bottom: 20px;
-}
-.carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.carousel .carousel-image {
-  top: 5%;
-  bottom: 5%;
-  position: absolute;
-  max-height: 90%;
-  margin: 0 auto;
-}
-.carousel .item.text_only .carousel-image {
-  display: none !important;
-}
-.carousel .item.text_only .carousel-caption {
-  left: 10%;
-  right: 10%;
-  top: 10%;
-  bottom: auto;
-}
-.carousel .item.text_only .carousel-caption > div {
-  text-align: center;
-  background: transparent;
-  bottom: auto;
-  width: 100%;
-}
-.carousel .item.text_image .carousel-caption {
-  left: 10%;
-}
-.carousel .item.text_image .carousel-caption > div {
-  right: 50%;
-  margin-right: -20%;
-  max-width: 550px;
-}
-.carousel .item.text_image .carousel-image {
-  right: 10%;
-  left: 50%;
-}
-.carousel .item.image_text .carousel-caption {
-  right: 10%;
-}
-.carousel .item.image_text .carousel-caption > div {
-  left: 50%;
-  margin-left: -20%;
-  max-width: 550px;
-}
-.carousel .item.image_text .carousel-image {
-  right: 50%;
-  left: 10%;
-}
 .carousel .carousel-control {
   cursor: pointer;
 }
@@ -409,6 +347,16 @@ div.carousel .carousel-indicators li {
 }
 div.carousel .carousel-indicators .active {
   background-color: grey;
+}
+div.carousel span.carousel-img img, div.carousel div.carousel-content {
+  max-height: 95%;
+  padding: 10px;
+}
+div.carousel div.carousel-content {
+  background-color: black;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  margin-top: 75px;
 }
 
 .parallax {

@@ -470,22 +470,6 @@ var T = website.Tour = {
 
                 T.autoDragAndDropSnippet($element);
             
-            } else if (step.sampleText) {
-            
-                $element.trigger($.Event("keydown", { srcElement: $element }));
-                if ($element.is("input") ) {
-                    $element.val(step.sampleText);
-                } if ($element.is("select")) {
-                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
-                    $element.val(step.sampleText);
-                } else {
-                    $element.html(step.sampleText);
-                }
-                setTimeout(function () {
-                    $element.trigger($.Event("keyup", { srcElement: $element }));
-                    $element.trigger($.Event("change", { srcElement: $element }));
-                }, T.defaultDelay<<1);
-            
             } else if ($element.is(":visible")) {
 
                 $element.trigger($.Event("mouseenter", { srcElement: $element[0] }));
@@ -500,6 +484,23 @@ var T = website.Tour = {
                     $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
+            }
+            if (step.sampleText) {
+            
+                $element.trigger($.Event("keydown", { srcElement: $element }));
+                if ($element.is("input") ) {
+                    $element.val(step.sampleText);
+                } if ($element.is("select")) {
+                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
+                    $element.val(step.sampleText);
+                } else {
+                    $element.html(step.sampleText);
+                }
+                setTimeout(function () {
+                    $element.trigger($.Event("keyup", { srcElement: $element }));
+                    $element.trigger($.Event("change", { srcElement: $element }));
+                }, self.defaultDelay<<1);
+            
             }
         }
         T.testtimer = setTimeout(autoStep, 100);

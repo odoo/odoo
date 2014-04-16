@@ -29,7 +29,7 @@ from openerp.osv import osv
 _logger = logging.getLogger(__name__)
 
 
-class MailThread(osv.Model):
+class MailThread(osv.AbstractModel):
     """ Update MailThread to add the feature of bounced emails and replied emails
     in message_process. """
     _name = 'mail.thread'
