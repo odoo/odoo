@@ -1958,7 +1958,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = instance.web.Dialog(this, {
+                var dialog = new instance.web.Dialog(this, {
                     title: _t('Confirm'),
                     buttons: [
                         {text: _t("Cancel"), click: function() {
