@@ -97,6 +97,9 @@ class mail_thread(osv.AbstractModel):
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
 
+    # Mass mailing feature
+    _mail_mass_mailing = False
+
     def get_empty_list_help(self, cr, uid, help, context=None):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
             that adds alias information. """
@@ -662,15 +665,31 @@ class mail_thread(osv.AbstractModel):
     # Email specific
     #------------------------------------------------------
 
+    def message_get_default_recipients(self, cr, uid, ids, context=None):
+        if context and context.get('thread_model') and context['thread_model'] in self.pool and context['thread_model'] != self._name:
+            sub_ctx = dict(context)
+            sub_ctx.pop('thread_model')
+            return self.pool[context['thread_model']].message_get_default_recipients(cr, uid, ids, context=sub_ctx)
+        res = {}
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            recipient_ids, email_to, email_cc = set(), False, False
+            if 'partner_id' in self._all_columns and record.partner_id:
+                recipient_ids.add(record.partner_id.id)
+            elif 'email_from' in self._all_columns and record.email_from:
+                email_to = record.email_from
+            elif 'email' in self._all_columns:
+                email_to = record.email
+            res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
+        return res
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Returns the preferred reply-to email address that is basically
             the alias of the document, if it exists. """
         if not self._inherits.get('mail.alias'):
             return [False for id in ids]
-        return ["%s@%s" % (record['alias_name'], record['alias_domain'])
-                    if record.get('alias_domain') and record.get('alias_name')
-                    else False
-                    for record in self.read(cr, SUPERUSER_ID, ids, ['alias_name', 'alias_domain'], context=context)]
+        return ["%s@%s" % (record.alias_name, record.alias_domain)
+                if record.alias_domain and record.alias_name else False
+                for record in self.browse(cr, SUPERUSER_ID, ids, context=context)]
 
     #------------------------------------------------------
     # Mail gateway
