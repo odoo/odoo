@@ -30,12 +30,19 @@ $(document).ready(function () {
     var prefill_controller = the_form.attr("data-prefill");
     var validate_controller = the_form.attr("data-validate");
     var submit_controller = the_form.attr("data-submit");
+    var scores_controller = the_form.attr("data-scores");
     var print_mode = false;
+    var quiz_correction_mode = false;
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
         $('.js_surveyform :input').prop('disabled', true);
         print_mode = true;
+    }
+
+    // Quizz correction mode
+    if (! _.isUndefined(scores_controller)) {
+        quiz_correction_mode = true;
     }
 
     // Custom code for right behavior of radio buttons with comments box
@@ -88,6 +95,20 @@ $(document).ready(function () {
         return prefill_def;
     }
 
+    // Display score if quiz correction mode
+    function display_scores(){
+        var score_def = $.ajax(scores_controller, {dataType: "json"})
+            .done(function(json_data){
+                _.each(json_data, function(value, key){
+                    the_form.find("span[data-score-question=" + key + "]").text("Your score: " + value);
+                });
+            })
+            .fail(function(){
+                console.warn("[survey] Unable to load score data");
+            });
+        return score_def;
+    }
+
     // Parameters for form submission
     $('.js_surveyform').ajaxForm({
         url: submit_controller,
@@ -126,6 +147,9 @@ $(document).ready(function () {
 
     // Launch prefilling
     prefill();
+    if(quiz_correction_mode === true){
+        display_scores();
+    }
 
     console.debug("[survey] Custom JS for survey loaded!");
 });

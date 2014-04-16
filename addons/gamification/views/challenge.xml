@@ -45,9 +45,9 @@
                             <h1>    
                                 <field name="name" placeholder="e.g. Monthly Sales Objectives"/>
                             </h1>
-                            <label for="user_ids" class="oe_edit_only" string="Assign Challenge To"/>
+                            <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
                             <div>
-                                <field name="user_ids" widget="many2many_tags" />
+                                <field name="user_domain" widget="char_domain" options="{'model': 'res.users'}" />
                             </div>
                         </div>
 
@@ -94,7 +94,6 @@
                             </page>
                             <page string="Advanced Options">
                                 <group string="Subscriptions">
-                                    <field name="autojoin_group_id" />
                                     <field name="invited_user_ids" widget="many2many_tags" />
                                 </group>
                                 <group string="Notification Messages">
