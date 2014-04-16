@@ -166,7 +166,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         $dialog_content.openerpClass();
 
         this.$dialog_box.on('hidden.bs.modal', this, function(){
-            self.trigger("closing");
+            self.close();
         });
         this.$dialog_box.modal('show');
 
@@ -178,8 +178,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
     close: function(reason) {
-        if (this.dialog_inited && this.$el.is(":data(bs.modal)")) {
-            this.$el.parents('.modal').modal('hide');
+        if (this.dialog_inited) {
+            this.trigger("closing", reason);
+            if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
+		this.$el.parents('.modal').modal('hide');
+            }
         }
     },
     _closing: function() {
@@ -196,6 +199,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     */
     destroy: function (reason) {
         this.$buttons.remove();
+        var self = this;
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
@@ -205,7 +209,13 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_destroying = undefined;
         }
         if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(bs.modal)")) {
-            this.$el.parents('.modal').remove();
+            //we need this to put the instruction to remove modal from DOM at the end
+            //of the queue, otherwise it might already have been removed before the modal-backdrop
+            //is removed when pressing escape key
+            var $parent = this.$el.parents('.modal');
+            setTimeout(function () {
+                $parent.remove();
+            },0);
         }
         this._super();
     }

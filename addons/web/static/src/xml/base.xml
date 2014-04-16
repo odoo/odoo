@@ -612,10 +612,16 @@
     <div class="oe_sidebar">
         <t t-foreach="widget.sections" t-as="section">
             <div class="oe_form_dropdown_section">
-                <button class="oe_dropdown_toggle oe_dropdown_arrow">
+                <button class="oe_dropdown_toggle oe_dropdown_arrow" t-if="section.name != 'buttons'">
                     <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                     <t t-esc="section.label"/>
                 </button>
+                <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                    <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
+                        target="_blank" class="oe_sidebar_button oe_highlight">
+                        <t t-raw="item.label"/>
+                    </button>
+                </t>
                 <ul class="oe_dropdown_menu">
                     <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
                         <t t-if="section.name == 'files'">
@@ -792,11 +798,16 @@
         </span>
     </t>
 </t>
+<button t-name="ListView.row.text_button" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="disabled ? 'oe_list_button_disabled btn' : 'btn'">
+    <t t-esc="widget.string"/>
+</button>
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled' : undefined"
-    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-         t-att-alt="widget.string"/></button>
+        t-att-class="disabled ? 'oe_list_button_disabled btn_img' : 'btn_img'"
+        ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+        t-att-alt="widget.string"/></button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is
@@ -1069,6 +1080,16 @@
         </t>
     </div>
 </t>
+<t t-name="FieldCharDomain">
+    <div class="oe_form_field">
+        <span class="oe_domain_count"/>
+        <button class="oe_button oe_link select_records" type="button"
+            t-att-style="widget.node.attrs.style"
+            t-att-accesskey="widget.node.attrs.accesskey">
+            <span class="fa fa-arrow-right"/>
+        </button>
+    </div>
+</t>
 <t t-name="web.datepicker">
     <span>
         <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
@@ -1209,9 +1230,16 @@
     </span>
 </t>
 <t t-name="FieldPercentPie">
-    <span class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
+    <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
         <svg></svg>
-    </span>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </div>
+</t>
+<t t-name="FieldBarChart">
+    <div class="oe_form_field oe_form_field_bar_chart" t-att-style="widget.node.attrs.style">
+        <svg></svg>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </div>
 </t>
 <t t-name="FieldStatus">
     <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
@@ -1382,7 +1410,7 @@
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-accesskey="widget.node.attrs.accesskey">
         <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <div t-if="widget.is_stat_button" class="stat_button_icon"><t t-if="widget.icon" t-raw="widget.icon"/></div>
+        <div t-if="widget.is_stat_button and widget.icon" class="stat_button_icon"><t t-raw="widget.icon"/></div>
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
@@ -1958,5 +1986,6 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+    <strong><t t-esc="value"/></strong>
+    <t t-esc="text"/></t>
 </templates>
