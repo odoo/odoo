@@ -110,6 +110,49 @@
         <field name="domain">[('state', 'not in', ('draft', 'shopping_cart', 'sent', 'cancel'))]</field>
     </record>
 
+    <record id="view_shopping_cart_order_filter" model="ir.ui.view">
+        <field name="name">shopping.cart.order.filter</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Sales Order">
+                <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
+                <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <separator/>
+                <filter string="My" domain="[('user_id','=',uid)]" help="My Shopping Cart Orders" icon="terp-personal" name="my_sale_orders_filter"/>
+                <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                <field name="user_id"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Order Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                </group>
+           </search>
+        </field>
+    </record>
+
+    <record id="action_shopping_cart_orders" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar,graph</field>
+        <field name="search_view_id" ref="view_shopping_cart_order_filter"/>
+        <field name="context">{
+                'search_default_my_sale_orders_filter': 1
+            }
+        </field>
+        <field name="domain">[('state', 'not in', ('draft', 'shopping_cart', 'sent', 'cancel'))]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a quotation that can be converted into a sales
+                order.
+            </p><p>
+                OpenERP will help you efficiently handle the complete sales flow:
+                quotation, sales order, delivery, invoicing and payment.
+            </p>
+        </field>
+    </record>
+
     <record id="action_shopping_cart_quotations" model="ir.actions.act_window">
         <field name="name">Shopping Cart</field>
         <field name="type">ir.actions.act_window</field>
@@ -118,9 +161,9 @@
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="view_mode">tree,form,calendar,graph</field>
         <field name="domain">[('state','=','shopping_cart')]</field>
-        <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+        <field name="search_view_id" ref="view_shopping_cart_order_filter"/>
     </record>
-        
+
     <menuitem id="menu_shopping_cart_quotations"
             action="action_shopping_cart_quotations" parent="base.menu_sales"
             sequence="5"/>
