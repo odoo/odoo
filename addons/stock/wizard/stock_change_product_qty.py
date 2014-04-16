@@ -84,18 +84,23 @@ class stock_change_product_qty(osv.osv_memory):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         prod_obj_pool = self.pool.get('product.product')
 
-        res_original = prod_obj_pool.browse(cr, uid, rec_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
             if data.new_quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Quantity cannot be negative.'))
-            inventory_id = inventory_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name), 'product_id': rec_id, 'location_id': data.location_id.id, 'lot_id': data.lot_id.id}, context=context)
-            line_data ={
-                'inventory_id' : inventory_id,
-                'product_qty' : data.new_quantity,
-                'location_id' : data.location_id.id,
-                'product_id' : rec_id,
-                'product_uom_id' : res_original.uom_id.id,
-                'prod_lot_id' : data.lot_id.id
+            ctx = context.copy()
+            ctx['location'] = data.location_id.id
+            ctx['lot_id'] = data.lot_id.id
+            res_original = prod_obj_pool.browse(cr, uid, rec_id, context=ctx)
+            inventory_id = inventory_obj.create(cr, uid, {'name': _('INV: %s') % tools.ustr(res_original.name), 'product_id': rec_id, 'location_id': data.location_id.id, 'lot_id': data.lot_id.id}, context=context)
+            th_qty = res_original.qty_available
+            line_data = {
+                'inventory_id': inventory_id,
+                'product_qty': data.new_quantity,
+                'location_id': data.location_id.id,
+                'product_id': rec_id,
+                'product_uom_id': res_original.uom_id.id,
+                'th_qty': th_qty,
+                'prod_lot_id': data.lot_id.id
             }
             inventory_line_obj.create(cr , uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)

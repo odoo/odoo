@@ -90,6 +90,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockinventory.xml',
     ],
     'test': [
+        'test/wiseoperator.yml',
         'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',

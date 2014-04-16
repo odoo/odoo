@@ -102,7 +102,7 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a location without deleting it."),
-        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True,
+        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location')], 'Location Type', required=True,
                  help="""* Supplier Location: Virtual location representing the source location for products coming from your suppliers
                        \n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products
                        \n* Internal Location: Physical locations inside your own warehouses,
@@ -110,6 +110,7 @@ class stock_location(osv.osv):
                        \n* Inventory: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)
                        \n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (supplier or production) is not known yet. This location should be empty when the procurement scheduler has finished running.
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
+                       \n* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations
                       """, select=True),
 
         'complete_name': fields.function(_complete_name, type='char', string="Location Name",
@@ -127,7 +128,7 @@ class stock_location(osv.osv):
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
 
-        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between companies'),
         'scrap_location': fields.boolean('Is a Scrap Location?', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
         'putaway_strategy_id': fields.many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
@@ -343,11 +344,12 @@ class stock_quant(osv.osv):
         elif reserved_availability > 0 and not move.partially_available:
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
-    def quants_move(self, cr, uid, quants, move, location_to, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
+    def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
         """Moves all given stock.quant in the given destination location.
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
         :param location_to: browse record (stock.location) depicting where the quants have to be moved
+        :param location_from: optional browse record (stock.location) explaining where the quant has to be taken (may differ from the move source location in case a removal strategy applied). This parameter is only used to pass to _quant_create if a negative quant must be created
         :param lot_id: ID of the lot that must be set on the quants to move
         :param owner_id: ID of the partner that must own the quants to move
         :param src_package_id: ID of the package that contains the quants to move
@@ -359,7 +361,7 @@ class stock_quant(osv.osv):
         for quant, qty in quants:
             if not quant:
                 #If quant is None, we will create a quant to move (and potentially a negative counterpart too)
-                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location=location_to, context=context)
+                quant = self._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=location_from, force_location_to=location_to, context=context)
             else:
                 self._quant_split(cr, uid, quant, qty, context=context)
                 quant.refresh()
@@ -437,13 +439,14 @@ class stock_quant(osv.osv):
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
 
-    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False,
+                      force_location_from=False, force_location_to=False, context=None):
         '''Create a quant in the destination location and create a negative quant in the source location if it's an internal location.
         '''
         if context is None:
             context = {}
         price_unit = self.pool.get('stock.move').get_price_unit(cr, uid, move, context=context)
-        location = force_location or move.location_dest_id
+        location = force_location_to or move.location_dest_id
         vals = {
             'product_id': move.product_id.id,
             'location_id': location.id,
@@ -461,7 +464,7 @@ class stock_quant(osv.osv):
             #if we were trying to move something from an internal location and reach here (quant creation),
             #it means that a negative quant has to be created as well.
             negative_vals = vals.copy()
-            negative_vals['location_id'] = move.location_id.id
+            negative_vals['location_id'] = force_location_from and force_location_from.id or move.location_id.id
             negative_vals['qty'] = -qty
             negative_vals['cost'] = price_unit
             negative_vals['negative_move_id'] = move.id
@@ -551,7 +554,9 @@ class stock_quant(osv.osv):
                 self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
             if move.partially_available:
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
-            return self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
+            self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
+            for quant in move.reserved_quant_ids:
+                self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
         ''' Implementation of removal strategies
@@ -780,7 +785,7 @@ class stock_picking(osv.osv):
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
-        'move_type': 'one',
+        'move_type': 'direct',
         'priority': '1',  # normal
         'date': fields.datetime.now,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c),
@@ -803,16 +808,17 @@ class stock_picking(osv.osv):
         default['date_done'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
-
     def do_print_picking(self, cr, uid, ids, context=None):
         '''This function prints the picking list'''
+        context = context or {}
+        context['active_ids'] = ids
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
         todo_force_assign = []
         for picking in self.browse(cr, uid, ids, context=context):
-            if picking.picking_type_id.auto_force_assign:
+            if picking.location_id.usage in ('supplier', 'inventory', 'production'):
                 todo_force_assign.append(picking.id)
             for r in picking.move_lines:
                 if r.state == 'draft':
@@ -981,7 +987,7 @@ class stock_picking(osv.osv):
             else:
                 location = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, product, context=context)
                 product_putaway_strats[product.id] = location
-            return location or picking.picking_type_id.default_location_dest_id.id or picking.location_dest_id.id
+            return location or picking.location_dest_id.id
 
         pack_obj = self.pool.get("stock.quant.package")
         quant_obj = self.pool.get("stock.quant")
@@ -1026,7 +1032,7 @@ class stock_picking(osv.osv):
             if qty <= 0:
                 continue
             suggested_location_id = _picking_putaway_apply(product)
-            key = (product.id, False, False, False, picking.picking_type_id.default_location_src_id.id or picking.location_id.id, suggested_location_id)
+            key = (product.id, False, False, False, picking.location_id.id, suggested_location_id)
             if qtys_grouped.get(key):
                 qtys_grouped[key] += qty
             else:
@@ -1675,7 +1681,6 @@ class stock_move(osv.osv):
         'partner_id': _default_destination_address,
         'state': 'draft',
         'priority': '1',
-        'product_qty': 1.0,
         'product_uom_qty': 1.0,
         'scrapped': False,
         'date': fields.datetime.now,
@@ -2020,8 +2025,8 @@ class stock_move(osv.osv):
         """ Changes the state to assigned.
         @return: True
         """
-        #check putaway method
-        return self.write(cr, uid, ids, {'state': 'assigned'})
+        #when a MTO move availability is forced, it shouldn't be treated anymore as a MTO so we break the link with ancestors (to avoid further problems in re-reservation)
+        return self.write(cr, uid, ids, {'state': 'assigned', 'procure_method': 'make_to_stock', 'move_orig_ids': [(6, 0, [])]}, context=context)
 
     def check_tracking(self, cr, uid, move, lot_id, context=None):
         """ Checks if serial number is assigned to stock move or not and raise an error if it had to.
@@ -2048,7 +2053,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting', 'assigned'):
                 continue
-            if move.picking_type_id and move.picking_type_id.auto_force_assign:
+            if move.location_id.usage in ('supplier', 'inventory', 'production'):
                 to_assign_moves.append(move.id)
                 #in case the move is returned, we want to try to find quants before forcing the assignment
                 if not move.origin_returned_move_id:
@@ -2063,14 +2068,12 @@ class stock_move(osv.osv):
                 main_domain[move.id] = [('reservation_id', '=', False), ('qty', '>', 0)]
 
                 #if the move is preceeded, restrict the choice of quants in the ones moved previously in original move
-                move_orig_ids = []
-                move2 = move
-                while move2:
-                    move_orig_ids += [x.id for x in move2.move_orig_ids]
-                    #loop on the split_from to find the ancestor of split moves only if the move has not direct ancestor (priority goes to them)
-                    move2 = not move2.move_orig_ids and move2.split_from or False
-                if move_orig_ids:
-                    main_domain[move.id] += [('history_ids', 'in', move_orig_ids)]
+                ancestors = self.find_move_ancestors(cr, uid, move, context=context)
+                if move.state == 'waiting' and not ancestors:
+                    #if the waiting move hasn't yet any ancestor (PO/MO not confirmed yet), don't find any quant available in stock
+                    main_domain[move.id] += [('id', '=', False)]
+                elif ancestors:
+                    main_domain[move.id] += [('history_ids', 'in', ancestors)]
 
                 #if the move is returned from another, restrict the choice of quants to the ones that follow the returned move
                 if move.origin_returned_move_id:
@@ -2099,7 +2102,7 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain=[], fallback_domain=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
-        #force assignation of consumable products and picking type auto_force_assign
+        #force assignation of consumable products and incoming from supplier/inventory/production 
         if to_assign_moves:
             self.force_assign(cr, uid, to_assign_moves, context=context)
 
@@ -2134,6 +2137,29 @@ class stock_move(osv.osv):
             packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
+    def find_move_ancestors(self, cr, uid, move, context=None):
+        '''Find the first level ancestors of given move '''
+        ancestors = []
+        move2 = move
+        while move2:
+            ancestors += [x.id for x in move2.move_orig_ids]
+            #loop on the split_from to find the ancestor of split moves only if the move has not direct ancestor (priority goes to them)
+            move2 = not move2.move_orig_ids and move2.split_from or False
+        return ancestors
+
+    def check_quants_history(self, cr, uid, move, quants, context=None):
+        #raise an error in the case the move is chained MTO and the selected quants were not properly chained (manual change in pack operations) because:
+        #1) users must be wanred they break the MTO flow
+        #2) if left as it, it will create negative quants complex to reconcile as we allow to take quants only from ancestors,
+        #   and we allow reconciliation only of negative quants created by next move when receiving a chained quant.
+        ancestors = self.find_move_ancestors(cr, uid, move, context=context)
+        if move.state == 'waiting' and not ancestors:
+            raise osv.except_osv(_('Error'), _('You cannot the requested operation. As the move is chained you are supposed to take the same products as in the previous step. Please use the values proposed or force the availability of the move to break the link and process it as you like.'))
+        if ancestors:
+            for q, dummy in quants:
+                if not q or not (set(ancestors) & set([m.id for m in q.history_ids])):
+                    raise osv.except_osv(_('Error'), _('You cannot the requested operation. As the move is chained you are supposed to take the same products as in the previous step. Please use the values proposed or force the availability of the move to break the link and process it as you like.'))
+
     def action_done(self, cr, uid, ids, context=None):
         """ Process completly the moves given as ids and if all moves are done, it will finish the picking.
         """
@@ -2152,11 +2178,11 @@ class stock_move(osv.osv):
             move_qty[move.id] = move.product_qty
             for link in move.linked_move_operation_ids:
                 operations.add(link.operation_id)
-        
+
         #Sort operations according to entire packages first, then package + lot, package only, lot only
         operations = list(operations)
-        operations.sort(key = lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
-        
+        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+
         for ops in operations:
             if ops.picking_id:
                 pickings.add(ops.picking_id.id)
@@ -2164,15 +2190,12 @@ class stock_move(osv.osv):
             for record in ops.linked_move_operation_ids:
                 move = record.move_id
                 self.check_tracking(cr, uid, move, ops.package_id.id or ops.lot_id.id, context=context)
-                if record.reserved_quant_id:
-                    quants = [(record.reserved_quant_id, record.qty)]
-                else:
-                    prefered_domain = [('reservation_id', '=', move.id)]
-                    fallback_domain = [('reservation_id', '=', False)]
-                    dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
-                    quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain, 
-                                                              fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
-
+                prefered_domain = [('reservation_id', '=', move.id)]
+                fallback_domain = [('reservation_id', '=', False)]
+                dom = main_domain + self.pool.get('stock.move.operation.link').get_specific_domain(cr, uid, record, context=context)
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, ops.location_id, move.product_id, record.qty, domain=dom, prefered_domain=prefered_domain,
+                                                          fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                self.check_quants_history(cr, uid, move, quants, context=context)
                 if ops.result_package_id.id:
                     #if a result package is given, all quants go there
                     quant_dest_package_id = ops.result_package_id.id
@@ -2182,20 +2205,21 @@ class stock_move(osv.osv):
                 else:
                     #otherwise we keep the current pack of the quant, which may mean None
                     quant_dest_package_id = ops.package_id.id
-                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
+                quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id, lot_id=ops.lot_id.id, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id, dest_package_id=quant_dest_package_id, context=context)
                 # Handle pack in pack
                 if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
                     self.pool.get('stock.quant.package').write(cr, SUPERUSER_ID, [ops.package_id.id], {'parent_id': ops.result_package_id.id}, context=context)
                 move_qty[move.id] -= record.qty
-        #Check for remaining qtys and unreserve/check move_dest_id in 
+        #Check for remaining qtys and unreserve/check move_dest_id in
         for move in self.browse(cr, uid, ids, context=context):
-            if move_qty[move.id] > 0: #(=In case no pack operations in picking)
+            if move_qty[move.id] > 0:  # (=In case no pack operations in picking)
                 main_domain = [('qty', '>', 0)]
                 prefered_domain = [('reservation_id', '=', move.id)]
                 fallback_domain = [('reservation_id', '=', False)]
                 self.check_tracking(cr, uid, move, move.restrict_lot_id.id, context=context)
                 qty = move_qty[move.id]
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain=prefered_domain, fallback_domain=fallback_domain, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                self.check_quants_history(cr, uid, move, quants, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, move.location_dest_id, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
             #unreserve the quants and make them available for other operations/moves
             quant_obj.quants_unreserve(cr, uid, move, context=context)
@@ -2209,10 +2233,10 @@ class stock_move(osv.osv):
                     self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
             if move.procurement_id:
                 procurement_ids.append(move.procurement_id.id)
-        
+
         # Check the packages have been placed in the correct locations
         self._check_package_from_moves(cr, uid, ids, context=context)
-        # Apply on picking
+        #set the move as done
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         self.pool.get('procurement.order').check(cr, uid, procurement_ids, context=context)
         #check picking state to set the date_done is needed
@@ -2718,15 +2742,15 @@ class stock_warehouse(osv.osv):
         resupply_wh_ids = list(resupply_wh_ids)        
         return {'value': {'resupply_wh_ids': resupply_wh_ids}}
 
-    def _get_inter_wh_location(self, cr, uid, warehouse, context=None):
-        ''' returns a tuple made of the browse record of customer location and the browse record of supplier location'''
+    def _get_external_transit_location(self, cr, uid, warehouse, context=None):
+        ''' returns browse record of inter company transit location, if found'''
         data_obj = self.pool.get('ir.model.data')
+        location_obj = self.pool.get('stock.location')
         try:
             inter_wh_loc = data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_inter_wh')[1]
         except:
-            inter_wh_loc = False
-        return inter_wh_loc
-
+            return False
+        return location_obj.browse(cr, uid, inter_wh_loc, context=context)
 
     def _get_inter_wh_route(self, cr, uid, warehouse, wh, context=None):
         return {
@@ -2739,23 +2763,23 @@ class stock_warehouse(osv.osv):
         }
 
     def _create_resupply_routes(self, cr, uid, warehouse, supplier_warehouses, default_resupply_wh, context=None):
-        location_obj = self.pool.get('stock.location')
         route_obj = self.pool.get('stock.location.route')
         pull_obj = self.pool.get('procurement.rule')
         #create route selectable on the product to resupply the warehouse from another one
-        inter_wh_location_id = self._get_inter_wh_location(cr, uid, warehouse, context=context)
-        if inter_wh_location_id:
-            input_loc = warehouse.wh_input_stock_loc_id
-            if warehouse.reception_steps == 'one_step':
-                input_loc = warehouse.lot_stock_id
-            inter_wh_location = location_obj.browse(cr, uid, inter_wh_location_id, context=context)
-            for wh in supplier_warehouses:
+        external_transit_location = self._get_external_transit_location(cr, uid, warehouse, context=context)
+        internal_transit_location = warehouse.company_id.internal_transit_location_id
+        input_loc = warehouse.wh_input_stock_loc_id
+        if warehouse.reception_steps == 'one_step':
+            input_loc = warehouse.lot_stock_id
+        for wh in supplier_warehouses:
+            transit_location = wh.company_id.id == warehouse.company_id.id and internal_transit_location or external_transit_location
+            if transit_location:
                 output_loc = wh.wh_output_stock_loc_id
                 if wh.delivery_steps == 'ship_only':
                     output_loc = wh.lot_stock_id
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
-                values = [(output_loc, inter_wh_location, wh.out_type_id.id, wh), (inter_wh_location, input_loc, warehouse.in_type_id.id, warehouse)]
+                values = [(output_loc, transit_location, wh.out_type_id.id, wh), (transit_location, input_loc, warehouse.in_type_id.id, warehouse)]
                 pull_rules_list = self._get_supply_pull_rules(cr, uid, warehouse, values, inter_wh_route_id, context=context)
                 for pull_rule in pull_rules_list:
                     pull_obj.create(cr, uid, vals=pull_rule, context=context)
@@ -3098,7 +3122,6 @@ class stock_warehouse(osv.osv):
             'name': _('Receptions'),
             'warehouse_id': new_id,
             'code': 'incoming',
-            'auto_force_assign': True,
             'sequence_id': in_seq_id,
             'default_location_src_id': supplier_loc.id,
             'default_location_dest_id': input_loc.id,
@@ -3568,6 +3591,8 @@ class stock_package(osv.osv):
             default = {}
         if not default.get('name'):
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
+        default['quant_ids'] = []
+        default['children_ids'] = []
         return super(stock_package, self).copy(cr, uid, id, default, context=context)
 
     def copy_pack(self, cr, uid, id, default_pack_values=None, default=None, context=None):
@@ -3875,7 +3900,8 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_ids': fields.one2many('procurement.order', 'orderpoint_id', 'Created Procurements'),
-        'company_id': fields.many2one('res.company', 'Company', required=True)
+        'group_id': fields.many2one('procurement.group', 'Procurement Group', help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking."),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -3926,13 +3952,15 @@ class stock_warehouse_orderpoint(osv.osv):
             return {'value': v, 'domain': d}
         return {'domain': {'product_uom': []}}
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
+            'procurement_ids': [],
+            'group_id': False
         })
-        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
+        return super(stock_warehouse_orderpoint, self).copy_data(cr, uid, id, default, context=context)
 
 
 class stock_picking_type(osv.osv):
@@ -3941,9 +3969,8 @@ class stock_picking_type(osv.osv):
     _order = 'sequence'
 
     def open_barcode_interface(self, cr, uid, ids, context=None):
-        final_url="/barcode/web/#action=stock.ui&picking_type_id="+str(ids[0]) if len(ids) else '0'
-        return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
-
+        final_url = "/barcode/web/#action=stock.ui&picking_type_id=" + str(ids[0]) if len(ids) else '0'
+        return {'type': 'ir.actions.act_url', 'url': final_url, 'target': 'self'}
 
     def _get_tristate_values(self, cr, uid, ids, field_name, arg, context=None):
         picking_obj = self.pool.get('stock.picking')
@@ -4059,7 +4086,6 @@ class stock_picking_type(osv.osv):
     _columns = {
         'name': fields.char('Picking Type Name', translate=True, required=True),
         'complete_name': fields.function(_get_name, type='char', string='Name'),
-        'auto_force_assign': fields.boolean('Automatic Availability', help='This picking type does\'t need to check for the availability in source location.'),
         'color': fields.integer('Color'),
         'sequence': fields.integer('Sequence', help="Used to order the 'All Operations' kanban view"),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),

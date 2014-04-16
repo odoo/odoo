@@ -342,6 +342,7 @@ class procurement_order(osv.osv):
             'origin': orderpoint.name,
             'warehouse_id': orderpoint.warehouse_id.id,
             'orderpoint_id': orderpoint.id,
+            'group_id': orderpoint.group_id.id,
         }
 
     def _product_virtual_get(self, cr, uid, order_point):

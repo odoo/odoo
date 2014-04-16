@@ -104,7 +104,7 @@
                                     </t>
                                     <td>
                                         <span t-if="pack_operation.lot_id">
-                                            <img t-att-src="'/report/barcode/Standard39/%s' % pack_operation.lot_id"/>
+                                            <img t-att-src="'/report/barcode/Standard39/%s' % pack_operation.lot_id.name"/>
                                         </span>
                                         <span t-if="pack_operation.product_id and not pack_operation.lot_id and pack_operation.product_id.ean13">
                                             <img t-att-src="'/report/barcode/EAN13/%s' % pack_operation.product_id.ean13"/>
