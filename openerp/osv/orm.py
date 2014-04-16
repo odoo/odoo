@@ -5168,33 +5168,51 @@ class BaseModel(object):
     # Record traversal and update
     #
 
-    def _map_field(self, field_seq):
-        """ Return the union of `rec[f1]...[fn]` for all `rec` in `self`, where
-            `field_seq` is the dotted concatenation of `f1`, ..., `fn`.
-
-            :param field_seq: a dot-separated sequence of field names
+    def _map_func(self, func):
+        """ Apply function `func` on all records in `self`, and return the
+            result as a list or a recordset (if `func` return recordsets).
         """
-        recs, env = self, self._env
-        for name in field_seq.split('.'):
+        vals = [func(rec) for rec in self]
+        val0 = vals[0] if vals else func(self)
+        if isinstance(val0, BaseModel):
+            return reduce(operator.or_, vals, val0)
+        return vals
+
+    def map(self, func):
+        """ Apply `func` on all records in `self`, and return the result as a
+            list or a recordset (if `func` return recordsets).
+
+            :param func: a function or a dot-separated sequence of field names
+        """
+        if isinstance(func, basestring):
+            recs = self
+            for name in func.split('.'):
+                recs = recs._map_func(operator.itemgetter(name))
+            return recs
+        else:
+            return self._map_func(func)
+
+    def map_cache(self, name_seq):
+        """ Same as `~.map`, but `name_seq` is a dot-separated sequence of field
+            names, and only cached values are used.
+        """
+        recs = self
+        for name in name_seq.split('.'):
             field = recs._fields[name]
-            vals = filter(None, [rec[name] for rec in recs])
-            if field.relational:
-                recs = reduce(operator.or_, vals, field.null(env))
-            else:
-                recs = set(vals)
+            null = field.null(self._env)
+            recs = recs.map(lambda rec: rec._cache.get(field, null))
         return recs
 
-    def _map_cache(self, field_seq):
-        """ Same as `~._map_field`, but use cached values only. """
-        recs, env = self, self._env
-        for name in field_seq.split('.'):
-            field = recs._fields[name]
-            vals = filter(None, [rec._cache.get(field) for rec in recs])
-            if field.relational:
-                recs = reduce(operator.or_, vals, field.null(env))
-            else:
-                recs = set(vals)
-        return recs
+    def filter(self, func):
+        """ Select the records in `self` such that `func(rec)` is true, and
+            return them as a recordset.
+
+            :param func: a function or a dot-separated sequence of field names
+        """
+        if isinstance(func, basestring):
+            name = func
+            func = lambda rec: filter(None, rec.map(name))
+        return self.browse([rec._id for rec in self if func(rec)])
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5526,7 +5544,7 @@ class BaseModel(object):
 
             # compute function fields on secondary records (one2many, many2many)
             for field_seq in (tocheck or ()):
-                record._map_field(field_seq)
+                record.map(field_seq)
 
             # map fields to the corresponding set of subfields to consider
             subfields = defaultdict(set)

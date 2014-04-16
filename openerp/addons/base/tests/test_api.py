@@ -404,3 +404,39 @@ class TestAPI(common.TransactionCase):
         with self.assertRaises(except_orm):
             res = ps >= ms
 
+    @mute_logger('openerp.osv.orm')
+    def test_80_filter(self):
+        """ Check filter on recordsets. """
+        ps = self.env['res.partner'].search([])
+        customers = ps.browse([p.id for p in ps if p.customer])
+
+        # filter on a single field
+        self.assertEqual(ps.filter(lambda p: p.customer), customers)
+        self.assertEqual(ps.filter('customer'), customers)
+
+        # filter on a sequence of fields
+        self.assertEqual(
+            ps.filter(lambda p: p.parent_id.customer),
+            ps.filter('parent_id.customer')
+        )
+
+    @mute_logger('openerp.osv.orm')
+    def test_80_map(self):
+        """ Check map on recordsets. """
+        ps = self.env['res.partner'].search([])
+        parents = ps.browse()
+        for p in ps: parents |= p.parent_id
+
+        # map a single field
+        self.assertEqual(ps.map(lambda p: p.parent_id), parents)
+        self.assertEqual(ps.map('parent_id'), parents)
+
+        # map a sequence of fields
+        self.assertEqual(
+            ps.map(lambda p: p.parent_id.name),
+            [p.parent_id.name for p in ps]
+        )
+        self.assertEqual(
+            ps.map('parent_id.name'),
+            [p.name for p in parents]
+        )

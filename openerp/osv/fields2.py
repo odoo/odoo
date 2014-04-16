@@ -559,7 +559,7 @@ class Field(object):
             else:
                 target = env[field.model_name]
                 for record in target.browse(env.cache[field]):
-                    if record._map_cache(path) & records:
+                    if record.map_cache(path) & records:
                         target += record
             if target:
                 spec.append((field, target._ids))
