@@ -29,8 +29,8 @@
             <div class="col-md-3 css_noprint bs-sidebar" id="left_column">
                 <ul class="nav nav-pills nav-stacked">
                     <t t-foreach="documentaion_toc" t-as="toc">
-                        <li t-att-class="content == toc.name and 'active' or ''">
-                            <a t-attf-href="/doc?{{ keep_query(content=toc.name) }}">
+                        <li t-att-class="topic == toc and 'active' or ''">
+                            <a t-attf-href="/doc/#{ slug(toc) }">
                                 <t t-esc="toc.name"/>
                                 <!--span class="badge pull-right" t-if="toc.post_ids"><t t-esc="toc.post_ids"/></span-->
                             </a>
@@ -38,11 +38,11 @@
                     </t>
                 </ul>
             </div>
-            <div class="col-md-9" t-if="toc_id">
+            <div class="col-md-9">
                 <div>
-                    <h2 t-esc="toc_id.name" class="text-center"/>
+                    <h2 t-esc="topic.name" class="text-center"/>
                 </div>
-                <div t-foreach="toc_id.post_ids" t-as="post">
+                <div t-foreach="topic.post_ids" t-as="post">
                     <h2><a class="faq-question"><t t-esc="post.name"/></a></h2>
                     <div t-if="post.pertinent_answer_id">
                         <p><t t-raw="post.pertinent_answer_id.content"/></p>

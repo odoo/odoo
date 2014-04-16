@@ -17,18 +17,15 @@ controllers = controllers()
 
 class WebsiteDoc(http.Controller):
 
-    @http.route(['/doc'], type='http', auth="public", website=True, multilang=True)
-    def documentation(self, content='', **kwargs):
+    @http.route(['/doc', '/doc/<model("documentation.toc"):toc>'], type='http', auth="public", website=True, multilang=True)
+    def documentation(self, toc='', **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
         TOC = request.registry['documentation.toc']
         obj_ids = TOC.search(cr, uid, [], context=context)
-        toc = TOC.browse(cr, uid, obj_ids, context=context)
-        if content:
-            toc_ids = TOC.search(cr, uid, [('name', '=', content)], context=context)
-            toc_id = TOC.browse(cr, uid, toc_ids, context=context)[0]
+        toc_ids = TOC.browse(cr, uid, obj_ids, context=context)
         value = {
-            'documentaion_toc': toc,
-            'toc_id': toc_id,
+            'documentaion_toc': toc_ids,
+            'topic': toc or toc_ids[0],
         }
         return request.website.render("website_doc.documentation", value)
 
@@ -37,7 +34,7 @@ class WebsiteDoc(http.Controller):
         toc_id = request.registry['documentation.toc'].create(request.cr, request.uid, {
             'name': toc_name,
         }, context=request.context)
-        return request.redirect("/doc/%s" % slug(toc_id))
+        return request.redirect("/doc/%s" % toc_id)
 
     #---------------------
     # Forum Posts
