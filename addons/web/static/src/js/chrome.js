@@ -212,8 +212,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             //we need this to put the instruction to remove modal from DOM at the end
             //of the queue, otherwise it might already have been removed before the modal-backdrop
             //is removed when pressing escape key
+            var $parent = this.$el.parents('.modal');
             setTimeout(function () {
-                self.$el.parents('.modal').remove();
+                $parent.remove();
             },0);
         }
         this._super();
