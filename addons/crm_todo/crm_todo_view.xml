@@ -42,6 +42,17 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="project_task_crm_form">
+        <field name="name">project.task.form.crm</field>
+        <field name="model">project.task</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="lead_id" invisible="not context.get('lead_id', False)"/>
+            </field>
+        </field>
+    </record>
 
     <record model="ir.actions.act_window" id="crm_todo_action">
         <field name="name">My Tasks</field>
