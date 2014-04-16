@@ -170,6 +170,11 @@ class WebsiteForum(http.Controller):
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
+    def prepare_question_values(self, forum=None, **kwargs):
+        '''Overwrite value in website_doc'''
+        values = self._prepare_forum_values(forum=forum, searches=kwargs)
+        return values
+
     @http.route(['/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -177,7 +182,7 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].set_viewed(cr, SUPERUSER_ID, [question.id], context=context)
 
         filters = 'question'
-        values = self._prepare_forum_values(forum=forum, searches=post)
+        values = self.prepare_question_values(forum=forum, kwargs=post)
         values.update({
             'question': question,
             'header': {'question_data': True},

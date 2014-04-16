@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Table Of Content -->
+        <record id="toc_0" model="documentation.toc">
+            <field name="name">CMS &amp; eCommerce</field>
+        </record>
+        <record id="toc_1" model="documentation.toc">
+            <field name="name">Employee Contract</field>
+        </record>
+
+        <!-- Questions -->
+        <record id="website_forum.question_0" model="forum.post">
+            <field name="toc_id" ref="toc_1"/>
+        </record>
+        <record id="website_forum.question_1" model="forum.post">
+            <field name="toc_id" ref="toc_0"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- DOCUMENTATION TOC VIEWS -->
+        <record id="view_documentation_toc_list" model="ir.ui.view">
+            <field name="name">documentation.toc.list</field>
+            <field name="model">documentation.toc</field>
+            <field name="arch" type="xml">
+                <tree string="Documentation TOC">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_documentation_toc_form" model="ir.ui.view">
+            <field name="name">documentation.toc.form</field>
+            <field name="model">documentation.toc</field>
+            <field name="arch" type="xml">
+                <form string="Documentation TOC" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <separator string="Posts"/>
+                        <field name="post_ids"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_documentation_toc" model="ir.actions.act_window">
+            <field name="name">Documentation TOC</field>
+            <field name="res_model">documentation.toc</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_documentation" parent="website_forum.menu_website_forum" name="Documentation TOC" action="action_documentation_toc" sequence="10"/>
+
+    </data>
+</openerp>

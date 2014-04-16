@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Editor custo -->
+<template id="editor_head" inherit_id="website.editor_head"
+    name="Event Editor">
+    <xpath expr="//script[@id='website_tour_js']" position="after">
+        <script type="text/javascript" src="/website_doc/static/src/js/website_doc.editor.js"/>
+    </xpath>
+</template>
+
+<!-- Layout add nav and footer -->
+<template id="header_footer_custom" inherit_id="website.layout"
+    name="Footer Documentation Link">
+    <xpath expr="//footer//ul[@name='products']" position="inside">
+        <li><a href="/doc">Documentation</a></li>
+    </xpath>
+</template>
+
+<!-- Page Index -->
+<template id="documentation" name="Documentation Index">
+    <t t-call="website.layout">
+        <t t-set="head">
+            <link rel='stylesheet' href='/website_doc/static/src/css/website_doc.css'/>
+            <script type="text/javascript" src="/website_doc/static/src/js/website_doc.js"/>
+        </t>
+        <div class="container mt16">
+            <div class="col-md-3 css_noprint bs-sidebar" id="left_column">
+                <ul class="nav nav-pills nav-stacked">
+                    <t t-foreach="documentaion_toc" t-as="toc">
+                        <li t-att-class="content == toc.name and 'active' or ''">
+                            <a t-attf-href="/doc?{{ keep_query(content=toc.name) }}">
+                                <t t-esc="toc.name"/>
+                                <!--span class="badge pull-right" t-if="toc.post_ids"><t t-esc="toc.post_ids"/></span-->
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="col-md-9" t-if="toc_id">
+                <div>
+                    <h2 t-esc="toc_id.name" class="text-center"/>
+                </div>
+                <div t-foreach="toc_id.post_ids" t-as="post">
+                    <h2><a class="faq-question"><t t-esc="post.name"/></a></h2>
+                    <div t-if="post.pertinent_answer_id">
+                        <p><t t-raw="post.pertinent_answer_id.content"/></p>
+                    </div>
+                    <div class="pull-right">
+                        <a class="" t-attf-href="/forum/#{ slug(post.forum_id) }/question/#{ slug(post) }">Read More About This..</a>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!--TOC ON FORUM POST-->
+<template id="forum_question_right_column" inherit_id="website_forum.header" name="Table of Content">
+    <xpath expr="//script[@src='/website_forum/static/src/js/website_forum.js']" position="after">
+        <script type="text/javascript" src="/website_doc/static/src/js/website_doc.js"/>
+    </xpath>
+    <xpath expr="//div[@id='about_forum']" position="before">
+        <div t-if="header.get('question_data')">
+            <span type="hidden" t-attf-value="#{question.id}" id="question"/>
+            <div class="panel panel-default">
+                <div class="panel-heading" id="about_forum">
+                    <h3 class="panel-title">Documentation</h3>
+                </div>
+                <div class="panel-body">
+                    <select class="form-control post_toc" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/toc" name="Table of Content">
+                        <option value="">Table of Content...</option>
+                        <t t-foreach="documentaion_toc or []" t-as="toc">
+                            <option t-att-value="toc.id" t-att-selected="toc.id == question.toc_id.id"><t t-esc="toc.name"/></option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+    </data>
+</openerp>
