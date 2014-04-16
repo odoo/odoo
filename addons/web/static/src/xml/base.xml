@@ -1024,10 +1024,10 @@
 <t t-name="DropdownSelection">
     <span class="btn-group state">
         <t t-foreach="states" t-as="rec">
-            <a t-att-class="rec.state_icon" t-if="widget.get('value') === rec.name" t-att-title="rec.state_name" >
+            <a>
                 <a class="oe_legend dropdown-toggle" data-toggle="dropdown">
-                <span class="caret hidden"></span>
-                <span class="sr-only">Toggle Dropdown</span> </a>
+                <span t-att-class="rec.state_icon" t-if="widget.get('value') === rec.name" t-att-title="rec.state_name"></span>
+                <span class="sr-only">Toggle Dropdown</span></a>
             </a>
         </t>
         <ul class="dropdown-menu state" role="menu">
