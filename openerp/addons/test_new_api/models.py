@@ -82,10 +82,14 @@ class Discussion(Model):
     _name = 'test_new_api.discussion'
 
     name            = fields.Char(string='Title', required=True)
+    moderator       = fields.Many2one('res.users')
     categories      = fields.Many2many('test_new_api.category',
                             'test_new_api_discussion_category', 'discussion', 'category')
     participants    = fields.Many2many('res.users')
     messages        = fields.One2many('test_new_api.message', 'discussion')
+
+    def onchange_moderator(self):
+        self.participants |= self.moderator
 
 
 class Message(Model):

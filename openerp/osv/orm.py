@@ -5506,16 +5506,14 @@ class BaseModel(object):
         assert not env.dirty
 
         with env.do_in_draft():
-            # check for a field-specific onchange method
-            method = getattr(record, 'onchange_' + field_name, None)
-            if method is None:
-                # apply the change on the record
-                record[field_name] = field_value
-            else:
-                # invoke specific onchange method, which may return a result
-                result = method(field_value)
-                if result is not None:
-                    return result
+            # apply the change on the record
+            record[field_name] = field_value
+
+            # invoke field-specific onchange method if present
+            try:
+                result = getattr(record, 'onchange_' + field_name)()
+            except (AttributeError, TypeError):
+                result = None
 
             # compute function fields on secondary records (one2many, many2many)
             for field_seq in (tocheck or ()):
@@ -5528,16 +5526,16 @@ class BaseModel(object):
                     name, subname = dotname.split('.')
                     subfields[name].add(subname)
 
-            # determine result, and return it
-            changed = {}
+            # add changed values to result, and return it
+            result = result or {}
+            changed = result.setdefault('value', {})
             for name, oldval in record_values.iteritems():
                 newval = record[name]
-                if newval != oldval or \
-                        isinstance(newval, BaseModel) and newval._dirty:
+                if newval != oldval or getattr(newval, '_dirty', False):
                     field = self._fields[name]
                     changed[name] = field.convert_to_write(newval, self, subfields[name])
 
-            return {'value': changed}
+            return result
 
 
 class RecordCache(MutableMapping):

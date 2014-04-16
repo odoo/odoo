@@ -65,6 +65,7 @@ class TestOnChange(common.TransactionCase):
         result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
+            'moderator': False,
             'participants': [],
             'messages': [
                 (0, 0, {
@@ -102,6 +103,7 @@ class TestOnChange(common.TransactionCase):
         result = self.Discussion.onchange({
             'name': "Foo",
             'categories': [],
+            'moderator': False,
             'participants': [],
             'messages': [
                 (0, 0, {
@@ -128,3 +130,30 @@ class TestOnChange(common.TransactionCase):
                 'size': len(BODY),
             }),
         ])
+
+    def test_new_onchange_specific(self):
+        """ test the effect of field-specific onchange method """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        demo = self.env.ref('base.user_demo')
+
+        # first remove demo user from participants
+        discussion.participants -= demo
+        self.assertNotIn(demo, discussion.participants)
+
+        # check that demo_user is added to participants when set as moderator
+        name = discussion.name
+        categories = [(4, cat.id) for cat in discussion.categories]
+        participants = [(4, usr.id) for usr in discussion.participants]
+        messages = [(4, msg.id) for msg in discussion.messages]
+
+        self.env.invalidate_all()
+        result = discussion.onchange({
+            'name': name,
+            'categories': categories,
+            'moderator': demo.id,
+            'participants': participants,
+            'messages': messages,
+        }, 'moderator')
+
+        self.assertItemsEqual(list(result['value']), ['participants'])
+        self.assertItemsEqual(result['value']['participants'], participants + [(4, demo.id)])
