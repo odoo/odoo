@@ -273,7 +273,8 @@ class WebsiteSurvey(http.Controller):
         return request.website.render('survey.survey_print',
                                       {'survey': survey,
                                        'token': token,
-                                       'page_nr': 0})
+                                       'page_nr': 0,
+                                       'quizz_correction': True if survey.quizz_mode and token else False})
 
     @http.route(['/survey/results/<model("survey.survey"):survey>'],
                 type='http', auth='user', multilang=True, website=True)
