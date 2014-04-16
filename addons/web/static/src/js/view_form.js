@@ -2364,65 +2364,18 @@ instance.web.form.DropdownSelection = instance.web.form.FieldChar.extend({
             self.$el.find('.caret').toggleClass('hidden', e.type == 'mouseleave');
         });
     },
-    on_click_block_reason: function(event) {
-        var self = this;
-        var li = $(event.target).closest( "li" );
-        $('div.oe_edit_actions').remove();
-        self.$dialog = new instance.web.dialog($('<div class="oe_edit_actions"><textarea id="txtReason"rows="3" cols="40"></textarea></div>'), {
-            modal: true,
-            width: 'auto',
-            height: 'auto',
-            title: _t('Reason for blocking'),
-            buttons: [
-                        {   
-                            class: 'oe_highlight',
-                            text: _t("Block"), click: function() { 
-                                if ($("#txtReason").val() == "") {
-                                    alert('Reason Required');                                            
-                                } else {                                  
-                                    value = {}
-                                    value[self.name] = String(li.data('value'));
-                                    var reason = $("#txtReason").val()
-                                    $(this).dialog("close");
-                                    if (self.record_id) {
-                                        self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()])
-                                        return self.view.dataset._model.call('message_post', [[self.record_id], reason]).done(self.reload_record.bind(self));
-                                    } else {
-                                        return self.view.on_button_save().done(function(result) {
-                                            if (result) {
-                                                self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self)); 
-                                            }
-                                        });
-                                    }
-                                };
-                            }
-                        },
-                        { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
-                    ],
-        });
-    },
     do_action: function(e) {
         var self = this;
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
             value[self.name] = String(li.data('value'));
-            if (self.view.datarecord.stage_id) {
-                var stage_id = _.isArray(self.view.datarecord.stage_id) ? self.view.datarecord.stage_id[0] : self.view.datarecord.stage_id
-                new openerp.web.Model(self.view.fields.stage_id.field.relation).query([])
-                    .filter([["id", "=", stage_id]]).first().then(function(res) {
-                    if ((res.block_reason) && value[self.name] == 'blocked') {
-                        self.on_click_block_reason(e);
-                    } else {
-                        if (self.record_id) {
-                            return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                        } else {
-                            return self.view.on_button_save().done(function(result) {
-                                if (result) {
-                                    self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
-                                }
-                            });
-                        }
+            if (self.record_id) {
+                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+            } else {
+                return self.view.on_button_save().done(function(result) {
+                    if (result) {
+                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
                     }
                 });
             }
