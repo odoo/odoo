@@ -588,23 +588,6 @@ class mail_thread(osv.AbstractModel):
         model_obj.check_access_rights(cr, uid, check_operation)
         model_obj.check_access_rule(cr, uid, mids, check_operation, context=context)
 
-    def _get_formview_action(self, cr, uid, id, model=None, context=None):
-        """ Return an action to open the document. This method is meant to be
-            overridden in addons that want to give specific view ids for example.
-
-            :param int id: id of the document to open
-            :param string model: specific model that overrides self._name
-        """
-        return {
-                'type': 'ir.actions.act_window',
-                'res_model': model or self._name,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'views': [(False, 'form')],
-                'target': 'current',
-                'res_id': id,
-            }
-
     def _get_inbox_action_xml_id(self, cr, uid, context=None):
         """ When redirecting towards the Inbox, choose which action xml_id has
             to be fetched. This method is meant to be inherited, at least in portal
@@ -647,10 +630,7 @@ class mail_thread(osv.AbstractModel):
             if model_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
-                    if not hasattr(model_obj, '_get_formview_action'):
-                        action = self.pool.get('mail.thread')._get_formview_action(cr, uid, res_id, model=model, context=context)
-                    else:
-                        action = model_obj._get_formview_action(cr, uid, res_id, context=context)
+                    action = model_obj.get_formview_action(cr, uid, res_id, context=context)
                 except (osv.except_osv, orm.except_orm):
                     pass
             action.update({
