@@ -30,6 +30,13 @@ class MassMailController(http.Controller):
             record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('list_id', 'in', list_ids), ('id', '=', res_id), ('email', 'ilike', email)], context=context)
             request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
         else:
-            record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('id', '=', res_id), ('email', 'ilike', email)], context=context)
-            request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
+            email_fname = None
+            if 'email_from' in request.registry[mailing.mailing_model]._all_columns:
+                email_fname = 'email_from'
+            elif 'email' in request.registry[mailing.mailing_model]._all_columns:
+                email_fname = 'email'
+            if email_fname:
+                record_ids = request.registry[mailing.mailing_model].search(cr, SUPERUSER_ID, [('id', '=', res_id), (email_fname, 'ilike', email)], context=context)
+            if 'opt_out' in request.registry[mailing.mailing_model]._all_columns:
+                request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
         return 'OK'

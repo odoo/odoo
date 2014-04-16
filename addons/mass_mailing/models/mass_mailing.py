@@ -299,10 +299,13 @@ class MassMailing(osv.Model):
         return results
 
     def _get_mailing_model(self, cr, uid, context=None):
-        return [
-            ('res.partner', _('Customers')),
-            ('mail.mass_mailing.contact', _('Mailing List'))
-        ]
+        res = []
+        for model_name in self.pool:
+            model = self.pool[model_name]
+            if hasattr(model, '_mail_mass_mailing') and getattr(model, '_mail_mass_mailing'):
+                res.append((model._name, getattr(model, '_mail_mass_mailing')))
+        res.append(('mail.mass_mailing.contact', _('Mailing List')))
+        return res
 
     # indirections for inheritance
     _mailing_model = lambda self, *args, **kwargs: self._get_mailing_model(*args, **kwargs)

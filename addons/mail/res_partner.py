@@ -28,6 +28,7 @@ class res_partner_mail(osv.Model):
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
     _mail_flat_thread = False
+    _mail_mass_mailing = _('Customers')
 
     _columns = {
         'notification_email_send': fields.selection([

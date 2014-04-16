@@ -96,6 +96,9 @@ class mail_thread(osv.AbstractModel):
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
 
+    # Mass mailing feature
+    _mail_mass_mailing = False
+
     def get_empty_list_help(self, cr, uid, help, context=None):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
             that adds alias information. """
