@@ -3,9 +3,6 @@
     var website = openerp.website;
 
     website.snippet.BuildingBlock.include({
-        // init: function (parent) {
-        //     this._super.apply(this, arguments);
-        // },
         _get_snippet_url: function () {
             return '/website_mail/snippets';
         }
@@ -18,7 +15,7 @@
             $('#email_template').hide();
             $(".js_content", $(this).parent()).children().clone().appendTo('#email_body');
 
-            // Todo: switch to edit mode
+            openerp.website.editor_bar.edit();
             event.preventDefault();
         });
     });

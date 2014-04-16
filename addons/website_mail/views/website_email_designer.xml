@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
 
-<!-- Email Designer main page -->
-<template id="designer_index" name="Email Designer">
+<!-- Template Choice page -->
+<template id="email_designer" name="Email Designer">
     <t t-call="website.layout">
         <t t-set="head">
             <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
         </t>
         <div id="wrap" class="container" t-ignore="True">
-            <div id="email_template" t-att-style="(object.body_html and len(templates)&gt;0) and 'display: none'" class="mb32">
+            <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
                 <a class="mt16 btn btn-default pull-right" 
                   t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
                     Back
@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div id="email_designer" t-att-style="not (object.body_html and len(templates)&gt; 0) and 'display: none'" class="mb32">
+            <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
                 <a class="mt16 btn btn-primary pull-right" 
                   t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
                     Save and Continue
@@ -43,28 +43,40 @@
                     Design Your Email
                 </h1>
                 <div class="form-horizontal">
-                    <div class="form-group">
+                    <!-- email_from fields-->
+                    <div class="form-group" t-if="email_from_field == 'email_from'">
                         <label class="col-sm-2 control-label">From:</label>
-                        <div class="col-sm-7">
-                            <span t-field="object.email_from" class="form-control"/>
-                        </div>
+                        <div class="col-sm-7"><span t-field="record.email_from" class="form-control"/></div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" t-if="email_from_field == 'email'">
+                        <label class="col-sm-2 control-label">From:</label>
+                        <div class="col-sm-7"><span t-field="record.email" class="form-control"/></div>
+                    </div>
+                    <!-- email_from fields-->
+                    <div class="form-group" t-if="subject_field == 'subject'">
                         <label class="col-sm-2 control-label">Subject:</label>
-                        <div class="col-sm-7">
-                            <span t-field="object.name" class="form-control"/>
-                        </div>
+                        <div class="col-sm-7"><span t-field="record.subject" class="form-control"/></div>
+                    </div>
+                    <div class="form-group" t-if="subject_field == 'name'">
+                        <label class="col-sm-2 control-label">Subject:</label>
+                        <div class="col-sm-7"><span t-field="record.name" class="form-control"/></div>
                     </div>
                 </div>
                 <hr/>
-                <div t-field="object.body_html" id="email_body"/>
+                <!-- body fields -->
+                <div t-if="body_field == 'body_html'">
+                    <div t-field="record.body_html" id="email_body_html"/>
+                </div>
+                <div t-if="body_field == 'body'">
+                    <div t-field="record.body" id="email_body"/>
+                </div>
             </div>
         </div>
     </t>
     <t t-set="website.footer"></t>
 </template>
 
-</data>
+    </data>
 </openerp>
 
 
