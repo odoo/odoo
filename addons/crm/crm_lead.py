@@ -79,6 +79,7 @@ class crm_lead(format_address, osv.osv):
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.fold and obj.stage_id.sequence > 1,
         },
     }
+    _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         if context.get('default_type') == 'lead':
