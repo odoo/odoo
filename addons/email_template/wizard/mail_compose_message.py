@@ -152,7 +152,7 @@ class mail_compose_message(osv.TransientModel):
         returned_fields = fields + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        ctx = dict(context)
+        ctx = dict(context, tpl_partners_only=True)
         template_values = self.pool.get('email.template').generate_email_batch(cr, uid, template_id, res_ids, fields=fields, context=ctx)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
