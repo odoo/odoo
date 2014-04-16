@@ -61,13 +61,12 @@ class res_users_gamification_group(osv.Model):
                 challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
         return write_res
 
-    # def get_goals_todo_info(self, cr, uid, context=None):
+    def get_serialised_gamification_summary(self, cr, uid, excluded_categories=None, context=None):
+        return self._serialised_goals_summary(cr, uid, user_id=uid, excluded_categories=excluded_categories, context=context)
 
-    def get_serialised_gamification_summary(self, cr, uid, context=None):
-        return self._serialised_goals_summary(cr, uid, user_id=uid, context=context)
-
-    def _serialised_goals_summary(self, cr, uid, user_id, context=None):
+    def _serialised_goals_summary(self, cr, uid, user_id, excluded_categories=None, context=None):
         """Return a serialised list of goals assigned to the user, grouped by challenge
+        :excluded_categories: list of challenge categories to exclude in search
 
         [
             {
@@ -81,9 +80,11 @@ class res_users_gamification_group(osv.Model):
         """
         all_goals_info = []
         challenge_obj = self.pool.get('gamification.challenge')
-
+        domain = [('user_ids', 'in', uid), ('state', '=', 'inprogress')]
+        if excluded_categories and isinstance(excluded_categories, list):
+            domain.append(('category', 'not in', excluded_categories))
         user = self.browse(cr, uid, uid, context=context)
-        challenge_ids = challenge_obj.search(cr, uid, [('user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
+        challenge_ids = challenge_obj.search(cr, uid, domain, context=context)
         for challenge in challenge_obj.browse(cr, uid, challenge_ids, context=context):
             # serialize goals info to be able to use it in javascript
             lines = challenge_obj._get_serialized_challenge_lines(cr, uid, challenge, user_id, restrict_top=MAX_VISIBILITY_RANKING, context=context)
