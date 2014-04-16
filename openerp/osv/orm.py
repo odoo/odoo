@@ -5475,6 +5475,15 @@ class BaseModel(object):
     # Generic onchange method
     #
 
+    def _has_onchange(self, field, other_fields):
+        """ Return whether `field` should trigger an onchange event in the
+            presence of `other_fields`.
+        """
+        # test whether self has an onchange method for field, or field is a
+        # dependency of any field in other_fields
+        return callable(getattr(self, 'onchange_' + field.name, None)) or \
+            any(dep in other_fields for dep in field.dependents)
+
     @api.multi
     def onchange(self, values, field_name, tocheck=None):
         """ Perform an onchange on the given field.

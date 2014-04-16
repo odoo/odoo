@@ -658,9 +658,10 @@ class view(osv.osv):
         collect(arch, self.pool[model_name])
 
         for field, nodes in field_nodes.iteritems():
-            # if any of the fields that depend on field is in arch, add
-            # on_change="1" on the nodes referring to field
-            if any(dep in field_nodes for dep in field.dependents):
+            # if field should trigger an onchange, add on_change="1" on the
+            # nodes referring to field
+            model = self.pool[field.model_name]
+            if model._has_onchange(field, field_nodes):
                 for node in nodes:
                     if not node.get('on_change'):
                         node.set('on_change', '1')
