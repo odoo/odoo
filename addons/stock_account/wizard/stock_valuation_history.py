@@ -29,7 +29,7 @@ class wizard_valuation_history(osv.osv_memory):
             'domain': "[('date', '<=', '" + data['date'] + "')]",
             'name': _('Stock Value At Date'),
             'view_type': 'form',
-            'view_mode': 'tree, graph',
+            'view_mode': 'tree,graph',
             'res_model': 'stock.history',
             'type': 'ir.actions.act_window',
             'context': ctx,
@@ -43,7 +43,7 @@ class stock_history(osv.osv):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
-        prod_dict= {}
+        prod_dict = {}
         if 'inventory_value' in fields:
             for line in res:
                 if '__domain' in line:
@@ -57,14 +57,14 @@ class stock_history(osv.osv):
                                 prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
                             else:
                                 prod_dict[line_rec.product_id.id] = product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, context=context)
-                        inv_value += prod_dict[line_rec.product_id.id]
+                        inv_value += prod_dict[line_rec.product_id.id] * line_rec.quantity
                     line['inventory_value'] = inv_value
         return res
 
     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
         product_obj = self.pool.get("product.product")
         res = {}
-        #Browse takes an immense amount of time because it seems to reload the report
+        # Browse takes an immense amount of time because it seems to reload the report
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
@@ -74,7 +74,7 @@ class stock_history(osv.osv):
 
     _columns = {
         'move_id': fields.many2one('stock.move', 'Stock Move', required=True),
-        #'quant_id': fields.many2one('stock.quant'),
+        # 'quant_id': fields.many2one('stock.quant'),
         'company_id': fields.related('move_id', 'company_id', type='many2one', relation='res.company', string='Company', required=True, select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -93,7 +93,7 @@ class stock_history(osv.osv):
                 (SELECT
                     stock_move.id::text || '-' || quant.id::text AS id,
                     stock_move.id AS move_id,
-                    stock_move.location_dest_id AS location_id,
+                    location.location_id AS location_id,
                     stock_move.product_id AS product_id,
                     product_template.categ_id AS product_categ_id,
                     quant.qty AS quantity,
@@ -101,22 +101,25 @@ class stock_history(osv.osv):
                     ir_property.value_text AS cost_method,
                     quant.cost as price_unit_on_quant
                 FROM
-                    stock_quant as quant, stock_quant_move_rel, stock_move
+                    stock_quant as quant LEFT JOIN
+                    stock_location quant_location ON quant.location_id = quant_location.id, stock_quant_move_rel, stock_move
                 LEFT JOIN
                    stock_location location ON stock_move.location_dest_id = location.id
+                LEFT JOIN
+                    stock_location other_location ON stock_move.location_id = other_location.id
                 LEFT JOIN
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
                 LEFT JOIN
                     ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
-                AND stock_quant_move_rel.move_id = stock_move.id
+                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND other_location.usage != 'internal' AND stock_quant_move_rel.quant_id = quant.id 
+                AND stock_quant_move_rel.move_id = stock_move.id 
                 ) UNION
                 (SELECT
                     '-' || stock_move.id::text || '-' || quant.id::text AS id,
                     stock_move.id AS move_id,
-                    stock_move.location_id AS location_id,
+                    location.location_id AS location_id,
                     stock_move.product_id AS product_id,
                     product_template.categ_id AS product_categ_id,
                     - quant.qty AS quantity,
@@ -126,7 +129,9 @@ class stock_history(osv.osv):
                 FROM
                     stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
-                   stock_location location ON stock_move.location_id = location.id
+                    stock_location location ON stock_move.location_id = location.id
+                LEFT JOIN
+                    stock_location other_location ON stock_move.location_dest_id = other_location.id
                 LEFT JOIN
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
@@ -134,6 +139,6 @@ class stock_history(osv.osv):
                 LEFT JOIN
                     ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
                 WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
-                AND stock_quant_move_rel.move_id = stock_move.id
+                AND stock_quant_move_rel.move_id = stock_move.id AND other_location.usage != 'internal'
                 )
             )""")
