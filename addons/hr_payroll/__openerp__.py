@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
     'name': 'Payroll',
     'version': '1.0',
@@ -37,9 +38,14 @@ Generic Payroll system.
     * Monthly Payroll Register
     * Integrated with Holiday Management
     """,
-    'author':'OpenERP SA',
-    'website':'http://www.openerp.com',
-    'images': ['images/hr_company_contributions.jpeg','images/hr_salary_heads.jpeg','images/hr_salary_structure.jpeg','images/hr_employee_payslip.jpeg'],
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'images': [
+        'images/hr_company_contributions.jpeg',
+        'images/hr_salary_heads.jpeg',
+        'images/hr_salary_structure.jpeg',
+        'images/hr_employee_payslip.jpeg'
+    ],
     'depends': [
         'hr',
         'hr_contract',
@@ -57,12 +63,12 @@ Generic Payroll system.
         'security/ir.model.access.csv',
         'wizard/hr_payroll_contribution_register_report.xml',
         'res_config_view.xml',
+        'views/report_contributionregister.xml',
+        'views/report_payslip.xml',
+        'views/report_payslipdetails.xml',
     ],
     'test': [
         'test/payslip.yml',
-#        'test/payment_advice.yml',
-#        'test/payroll_register.yml',
-       # 'test/hr_payroll_report.yml',
     ],
     'demo': ['hr_payroll_demo.xml'],
     'installable': True,

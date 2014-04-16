@@ -840,16 +840,11 @@ class account_journal(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if context.get('journal_type', False):
-            args += [('type','=',context.get('journal_type'))]
-        if name:
-            ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit, context=context)
-        if not ids:
-            ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
-
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
 
@@ -938,13 +933,11 @@ class account_fiscalyear(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit)
-        if not ids:
-            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
 
@@ -1040,19 +1033,11 @@ class account_period(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user,
-                              [('code', 'ilike', name)] + args,
-                              limit=limit,
-                              context=context)
-        if not ids:
-            ids = self.search(cr, user,
-                              [('name', operator, name)] + args,
-                              limit=limit,
-                              context=context)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1186,36 +1171,6 @@ class account_move(osv.osv):
             'ref': ref,
             'company_id': company_id,
         }
-
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-        """
-        Returns a list of tupples containing id, name, as internally it is called {def name_get}
-        result format: {[(id, name), (id, name), ...]}
-
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param name: name to search
-        @param args: other arguments
-        @param operator: default operator is 'ilike', it can be changed
-        @param context: context arguments, like lang, time zone
-        @param limit: Returns first 'n' ids of complete result, default is 80.
-
-        @return: Returns a list of tuples containing id and name
-        """
-
-        if not args:
-          args = []
-        ids = []
-        if name:
-            ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
-
-        if not ids and name and type(name) == int:
-            ids += self.search(cr, user, [('id','=',name)]+args, limit=limit, context=context)
-
-        if not ids:
-            ids += self.search(cr, user, args, limit=limit, context=context)
-
-        return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cursor, user, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -1842,10 +1797,12 @@ class account_tax_code(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
-        if context is None:
-            context = {}
-        ids = self.search(cr, user, ['|',('name',operator,name),('code',operator,name)] + args, limit=limit, context=context)
-        return self.name_get(cr, user, ids, context)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -1974,15 +1931,11 @@ class account_tax(osv.osv):
         """
         if not args:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user, [('description', '=', name)] + args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('description', operator, name), ('name', operator, name)]
         else:
-            ids = self.search(cr, user, args, limit=limit, context=context or {})
+            domain = ['|', ('description', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
