@@ -932,7 +932,6 @@
 </t>
 <t t-name="FormRenderingLabel">
     <label  t-att-for="_for"
-            t-att-title="help"
             t-attf-class="#{classnames} oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
         <t t-esc="string"/>
     </label>
@@ -994,7 +993,7 @@
         </li>
         <li t-if="widget.field and widget.field.selection" data-item="selection">
             <span class="oe_tooltip_technical_title">Selection:</span>
-            <ul>
+            <ul class="oe_tooltip_technical">
                 <li t-foreach="widget.field.selection" t-as="option">
                     [<t t-esc="option[0]"/>]
                     <t t-if="option[1]"> - </t>
