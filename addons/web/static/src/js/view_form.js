@@ -3451,20 +3451,25 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 return;
             }
             var pop = new instance.web.form.FormOpenPopup(self);
-            pop.show_element(
-                self.field.relation,
-                self.get("value"),
-                self.build_context(),
-                {
-                    title: _t("Open: ") + self.string
-                }
-            );
-            pop.on('write_completed', self, function(){
-                self.display_value = {};
-                self.display_value_backup = {};
-                self.render_value();
-                self.focus();
-                self.view.do_onchange(self);
+            var context = self.build_context().eval();
+            var model_obj = new instance.web.Model(self.field.relation);
+            model_obj.call('get_formview_id', [self.get("value"), context]).then(function(view_id){
+                pop.show_element(
+                    self.field.relation,
+                    self.get("value"),
+                    self.build_context(),
+                    {
+                        title: _t("Open: ") + self.string,
+                        view_id: view_id
+                    }
+                );
+                pop.on('write_completed', self, function(){
+                    self.display_value = {};
+                    self.display_value_backup = {};
+                    self.render_value();
+                    self.focus();
+                    self.view.do_onchange(self);
+                });
             });
         });
 
@@ -3660,13 +3665,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                  .html(link);
             if (! this.options.no_open)
                 $link.click(function () {
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value"),
-                        views: [[false, 'form']],
-                        target: 'current',
-                        context: self.build_context().eval(),
+                    var context = self.build_context().eval();
+                    var model_obj = new instance.web.Model(self.field.relation);
+                    model_obj.call('get_formview_action', [self.get("value"), context]).then(function(action){
+                        self.do_action(action);
                     });
                     return false;
                  });
