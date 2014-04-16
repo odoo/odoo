@@ -657,18 +657,29 @@ class Date(Field):
     """ Date field. """
     type = 'date'
 
+    @staticmethod
+    def today(*args):
+        return date.today().strftime(DATE_FORMAT)
+
+    @staticmethod
+    def from_string(value):
+        value = value[:DATE_LENGTH]
+        return datetime.strptime(value, DATE_FORMAT).date()
+
+    @staticmethod
+    def to_string(value):
+        return value.strftime(DATE_FORMAT)
+
     def convert_to_cache(self, value, env):
-        if isinstance(value, (date, datetime)):
-            value = value.strftime(DATE_FORMAT)
-        elif value:
-            # check the date format
-            value = value[:DATE_LENGTH]
-            datetime.strptime(value, DATE_FORMAT)
-        return value or False
+        if not value:
+            return False
+        if isinstance(value, basestring):
+            value = self.from_string(value)
+        return value.strftime(DATE_FORMAT)
 
     def convert_to_export(self, value, env):
         if value and env.context.get('export_raw_data'):
-            return datetime.strptime(value, DATE_FORMAT).date()
+            return self.from_string(value)
         return bool(value) and ustr(value)
 
 
@@ -676,20 +687,31 @@ class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
 
+    @staticmethod
+    def now(*args):
+        return datetime.now().strftime(DATETIME_FORMAT)
+
+    @staticmethod
+    def from_string(value):
+        value = value[:DATETIME_LENGTH]
+        if len(value) == DATE_LENGTH:
+            value += " 00:00:00"
+        return datetime.strptime(value, DATETIME_FORMAT)
+
+    @staticmethod
+    def to_string(value):
+        return value.strftime(DATETIME_FORMAT)
+
     def convert_to_cache(self, value, env):
-        if isinstance(value, (date, datetime)):
-            value = value.strftime(DATETIME_FORMAT)
-        elif value:
-            # check the datetime format
-            value = value[:DATETIME_LENGTH]
-            if len(value) == DATE_LENGTH:
-                value += " 00:00:00"
-            datetime.strptime(value, DATETIME_FORMAT)
-        return value or False
+        if not value:
+            return False
+        if isinstance(value, basestring):
+            value = self.from_string(value)
+        return value.strftime(DATETIME_FORMAT)
 
     def convert_to_export(self, value, env):
         if value and env.context.get('export_raw_data'):
-            return datetime.strptime(value, DATETIME_FORMAT)
+            return self.from_string(value)
         return bool(value) and ustr(value)
 
 
