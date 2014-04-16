@@ -22,11 +22,13 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 from datetime import date, datetime, timedelta
 import calendar
 import logging
+import functools
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
@@ -115,6 +117,12 @@ class gamification_challenge(osv.Model):
         except ValueError:
             return False
 
+    def _get_challenger_users(self, cr, uid, domain, context=None):
+        ref = functools.partial(self.pool['ir.model.data'].xmlid_to_res_id, cr, uid)
+        user_domain = eval(domain, {'ref': ref})
+        return self.pool['res.users'].search(cr, uid, user_domain, context=context)
+
+
     _order = 'end_date, start_date, name, id'
     _columns = {
         'name': fields.char('Challenge Name', required=True, translate=True),
@@ -131,9 +139,7 @@ class gamification_challenge(osv.Model):
         'user_ids': fields.many2many('res.users', 'user_ids',
             string='Users',
             help="List of users participating to the challenge"),
-        'autojoin_group_id': fields.many2one('res.groups',
-            string='Auto-subscription Group',
-            help='Group of users whose members will be automatically added to user_ids once the challenge is started'),
+        'user_domain': fields.char('User domain', help="Alternative to a list of users"),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
@@ -213,12 +219,12 @@ class gamification_challenge(osv.Model):
         """Overwrite the create method to add the user of groups"""
 
         # add users when change the group auto-subscription
-        if vals.get('autojoin_group_id'):
-            new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
+        if vals.get('user_domain'):
+            user_ids = self._get_challenger_users(cr, uid, vals.get('user_domain'), context=context)
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
-            vals['user_ids'] += [(4, user.id) for user in new_group.users]
+            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
 
         create_res = super(gamification_challenge, self).create(cr, uid, vals, context=context)
 
@@ -234,23 +240,12 @@ class gamification_challenge(osv.Model):
         if isinstance(ids, (int,long)):
             ids = [ids]
 
-        # add users when change the group auto-subscription
-        if vals.get('autojoin_group_id'):
-            new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
-
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'] += [(4, user.id) for user in new_group.users]
-
         if vals.get('state') == 'inprogress':
-            # starting a challenge
-            if not vals.get('autojoin_group_id'):
-                # starting challenge, add users in autojoin group
-                if not vals.get('user_ids'):
-                    vals['user_ids'] = []
-                for challenge in self.browse(cr, uid, ids, context=context):
-                    if challenge.autojoin_group_id:
-                        vals['user_ids'] += [(4, user.id) for user in challenge.autojoin_group_id.users]
+            for challenge in self.browse(cr, uid, ids, context=context):
+                user_ids = self._get_challenger_users(cr, uid, challenge.user_domain, context=context)
+                write_op = [(4, user_id) for user_id in user_ids]
+                self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)            
+                self.message_subscribe_users(cr, uid, [challenge.id], user_ids, context=context)
 
             self.generate_goals_from_challenge(cr, uid, ids, context=context)
 
@@ -264,11 +259,6 @@ class gamification_challenge(osv.Model):
         
         write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
 
-        # subscribe new users to the challenge
-        if vals.get('user_ids'):
-            # done with browse after super if changes in groups
-            for challenge in self.browse(cr, uid, ids, context=context):
-                self.message_subscribe_users(cr, uid, [challenge.id], [user.id for user in challenge.user_ids], context=context)
 
         return write_res
 
@@ -325,9 +315,16 @@ class gamification_challenge(osv.Model):
         goal_obj.update(cr, uid, goal_ids, context=context)
 
         for challenge in self.browse(cr, uid, ids, context=context):
-            if challenge.autojoin_group_id:
-                # check in case of new users in challenge, this happens if manager removed users in challenge manually
-                self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
+            # in case of new users matching the domain
+            old_user_ids = [user.id for user in challenge.user_ids]
+            new_user_ids = self._get_challenger_users(cr, uid, challenge.user_domain, context=context)
+            to_remove_ids = list(set(old_user_ids) - set(new_user_ids))
+            to_add_ids = list(set(new_user_ids) - set(old_user_ids))
+
+            write_op = [(3, user_id) for user_id in to_remove_ids]
+            write_op += [(4, user_id) for user_id in to_add_ids]
+            self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)            
+
             self.generate_goals_from_challenge(cr, uid, [challenge.id], context=context)
 
             # goals closed but still opened at the last report date
