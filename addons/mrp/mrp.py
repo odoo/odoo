@@ -1000,6 +1000,7 @@ class mrp_production(osv.osv):
             'move_dest_id': production.move_prod_id.id,
             'company_id': production.company_id.id,
             'production_id': production.id,
+            'origin': production.name,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
         #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
@@ -1041,6 +1042,7 @@ class mrp_production(osv.osv):
             'raw_material_production_id': production.id,
             #this saves us a browse in create()
             'price_unit': production_line.product_id.standard_price,
+            'origin': production.name,
         })
         return move_id
 

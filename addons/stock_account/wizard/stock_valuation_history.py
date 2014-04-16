@@ -74,16 +74,17 @@ class stock_history(osv.osv):
 
     _columns = {
         'move_id': fields.many2one('stock.move', 'Stock Move', required=True),
-        # 'quant_id': fields.many2one('stock.quant'),
-        'company_id': fields.related('move_id', 'company_id', type='many2one', relation='res.company', string='Company', required=True, select=True),
+        'quant_id': fields.many2one('stock.quant', 'Quant', required=True),
+        'quant_location_id': fields.related('quant_id', 'location_id', type='many2one', relation='stock.location', string='Actual Quant Location', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
         'quantity': fields.integer('Product Quantity'),
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
-        'cost_method': fields.char('Cost Method'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
+        'source': fields.char('Source')
     }
 
     def init(self, cr):
@@ -92,17 +93,18 @@ class stock_history(osv.osv):
             CREATE OR REPLACE VIEW stock_history AS (
                 (SELECT
                     stock_move.id::text || '-' || quant.id::text AS id,
+                    quant.id AS quant_id,
                     stock_move.id AS move_id,
                     location.location_id AS location_id,
+                    location.company_id AS company_id, 
                     stock_move.product_id AS product_id,
                     product_template.categ_id AS product_categ_id,
                     quant.qty AS quantity,
                     stock_move.date AS date,
-                    ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant
+                    quant.cost as price_unit_on_quant,
+                    stock_move.origin AS source
                 FROM
-                    stock_quant as quant LEFT JOIN
-                    stock_location quant_location ON quant.location_id = quant_location.id, stock_quant_move_rel, stock_move
+                    stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
                    stock_location location ON stock_move.location_dest_id = location.id
                 LEFT JOIN
@@ -111,21 +113,22 @@ class stock_history(osv.osv):
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                LEFT JOIN
-                    ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND other_location.usage != 'internal' AND stock_quant_move_rel.quant_id = quant.id 
-                AND stock_quant_move_rel.move_id = stock_move.id 
+                WHERE stock_move.state = 'done' AND location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id 
+                AND stock_quant_move_rel.move_id = stock_move.id AND ((other_location.company_id is null and location.company_id is not null) or 
+                (other_location.company_id is not null and location.company_id is null) or other_location.company_id != location.company_id)
                 ) UNION
                 (SELECT
                     '-' || stock_move.id::text || '-' || quant.id::text AS id,
+                    quant.id AS quant_id, 
                     stock_move.id AS move_id,
                     location.location_id AS location_id,
+                    location.company_id AS company_id, 
                     stock_move.product_id AS product_id,
                     product_template.categ_id AS product_categ_id,
                     - quant.qty AS quantity,
                     stock_move.date AS date,
-                    ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant
+                    quant.cost as price_unit_on_quant,
+                    stock_move.origin AS source
                 FROM
                     stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
@@ -136,9 +139,8 @@ class stock_history(osv.osv):
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                LEFT JOIN
-                    ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
-                AND stock_quant_move_rel.move_id = stock_move.id AND other_location.usage != 'internal'
+                WHERE stock_move.state = 'done' AND location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id 
+                AND stock_quant_move_rel.move_id = stock_move.id AND ((other_location.company_id is null and location.company_id is not null) or 
+                (other_location.company_id is not null and location.company_id is null) or other_location.company_id != location.company_id)
                 )
             )""")
