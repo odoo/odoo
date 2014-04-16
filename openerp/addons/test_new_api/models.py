@@ -40,18 +40,17 @@ class res_partner(osv.Model):
     }
 
 
-from openerp import Model, fields
-from openerp import constrains, depends, model, multi, one
+from openerp import Model, Integer, Float, Char, Text, Date, Selection, \
+    Reference, Many2one, One2many, Many2many, constrains, depends, model, one, _
 
 
 class Category(Model):
     _name = 'test_new_api.category'
 
-    name            = fields.Char(required=True)
-    parent          = fields.Many2one('test_new_api.category')
-    display_name    = fields.Char(store=False, readonly=True,
-                            compute='_compute_display_name',
-                            inverse='_inverse_display_name')
+    name = Char(required=True)
+    parent = Many2one('test_new_api.category')
+    display_name = Char(store=False, readonly=True,
+        compute='_compute_display_name', inverse='_inverse_display_name')
 
     @one
     @depends('name', 'parent.display_name')     # this definition is recursive
@@ -81,12 +80,12 @@ class Category(Model):
 class Discussion(Model):
     _name = 'test_new_api.discussion'
 
-    name            = fields.Char(string='Title', required=True)
-    moderator       = fields.Many2one('res.users')
-    categories      = fields.Many2many('test_new_api.category',
-                            'test_new_api_discussion_category', 'discussion', 'category')
-    participants    = fields.Many2many('res.users')
-    messages        = fields.One2many('test_new_api.message', 'discussion')
+    name = Char(string='Title', required=True)
+    moderator = Many2one('res.users')
+    categories = Many2many('test_new_api.category',
+        'test_new_api_discussion_category', 'discussion', 'category')
+    participants = Many2many('res.users')
+    messages = One2many('test_new_api.message', 'discussion')
 
     def onchange_moderator(self):
         self.participants |= self.moderator
@@ -95,17 +94,16 @@ class Discussion(Model):
 class Message(Model):
     _name = 'test_new_api.message'
 
-    discussion      = fields.Many2one('test_new_api.discussion',
-                            ondelete='cascade')
-    body            = fields.Text()
-    author          = fields.Many2one('res.users', compute='_default_author')
-    name            = fields.Char(string='Title', store=True, readonly=True,
-                            compute='_compute_name')
-    display_name    = fields.Char(string='Abstract', store=False, readonly=True,
-                            compute='_compute_display_name')
-    size            = fields.Integer(store=False, readonly=True,
-                            compute='_compute_size', search='_search_size')
-    discussion_name = fields.Char(related='discussion.name', store=False)
+    discussion = Many2one('test_new_api.discussion', ondelete='cascade')
+    body = Text()
+    author = Many2one('res.users', compute='_default_author')
+    name = Char(string='Title', store=True, readonly=True,
+        compute='_compute_name')
+    display_name = Char(string='Abstract', store=False, readonly=True,
+        compute='_compute_display_name')
+    size = Integer(store=False, readonly=True,
+        compute='_compute_size', search='_search_size')
+    discussion_name = Char(related='discussion.name', store=False)
 
     @one
     def _default_author(self):
@@ -115,7 +113,7 @@ class Message(Model):
     @constrains('author', 'discussion')
     def _check_author(self):
         if self.discussion and self.author not in self.discussion.participants:
-            raise ValueError("Author must be among the discussion participants.")
+            raise ValueError(_("Author must be among the discussion participants."))
 
     @one
     @depends('author.name', 'discussion.name')
@@ -147,16 +145,17 @@ class Message(Model):
 class Talk(Model):
     _name = 'test_new_api.talk'
 
-    parent = fields.Many2one('test_new_api.discussion', delegate=True)
+    parent = Many2one('test_new_api.discussion', delegate=True)
 
 
 class MixedModel(Model):
     _name = 'test_new_api.mixed'
 
-    number      = fields.Float(digits=(10, 2), default=3.14)
-    date        = fields.Date()
-    lang        = fields.Selection(string='Language', selection='_get_lang')
-    reference   = fields.Reference(string='Related Document', selection='_reference_models')
+    number = Float(digits=(10, 2), default=3.14)
+    date = Date()
+    lang = Selection(string='Language', selection='_get_lang')
+    reference = Reference(string='Related Document',
+        selection='_reference_models')
 
     @model
     def _get_lang(self):
