@@ -10,7 +10,8 @@ import os
 import re
 import sys
 import xml  # FIXME use lxml and etree
-import lxml
+import itertools
+import lxml.html
 from urlparse import urlparse
 
 import babel
@@ -939,7 +940,7 @@ def get_field_type(column, options):
     return options.get('widget', column._type)
 
 class AssetsBundle(object):
-    cache = dict()
+    cache = {}
     rx_css_charset = re.compile("(@charset.+;$)", re.M)
     rx_css_import = re.compile("(@import.+;$)", re.M)
 
@@ -955,17 +956,17 @@ class AssetsBundle(object):
     def parse(self, html):
         fragments = lxml.html.fragments_fromstring(html)
         for el in fragments:
-            if type(el) is basestring:
+            if isinstance(el, basestring):
                 self.remains.append(el)
-            elif type(el) is lxml.html.HtmlElement:
-                src = el.attrib.get('src')
-                href = el.attrib.get('href')
+            elif isinstance(el, lxml.html.HtmlElement):
+                src = el.get('src')
+                href = el.get('href')
                 if el.tag == 'style':
-                    self.stylesheets.append(StylesheetAsset(inline=el.text))
-                elif el.tag == 'link' and el.attrib['rel'] == 'stylesheet' and self.can_aggregate(href):
+                    self.stylesheets.append(StylesheetAsset(source=el.text))
+                elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
                     self.stylesheets.append(StylesheetAsset(url=href))
                 elif el.tag == 'script' and not src:
-                    self.javascripts.append(JavascriptAsset(inline=el.text))
+                    self.javascripts.append(JavascriptAsset(source=el.text))
                 elif el.tag == 'script' and self.can_aggregate(src):
                     self.javascripts.append(JavascriptAsset(url=src))
                 else:
@@ -978,27 +979,31 @@ class AssetsBundle(object):
                     raise NotImplementedError
 
     def can_aggregate(self, url):
-        return not urlparse(url).netloc and not url.startswith('/web/css') and not url.startswith('/web/js')
+        return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
     def to_html(self, sep='\n'):
-        response = list(self.remains)
-        if self.javascripts:
-            response.insert(0, '<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        response = []
         if self.stylesheets:
-            response.insert(0, '<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+            response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+        if self.javascripts:
+            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        response.extend(self.remains)
+
         return sep.join(response)
 
     @property
     def last_modified(self):
-        jsdates = [asset.last_modified for asset in self.javascripts]
-        cssdates = [asset.last_modified for asset in self.stylesheets]
-        return max(jsdates + cssdates) or datetime.datetime(1970, 1, 1)
+        return max(itertools.chain(
+            (asset.last_modified for asset in self.javascripts),
+            (asset.last_modified for asset in self.stylesheets),
+            [datetime.datetime(1970, 1, 1)],
+        ))
 
     @property
     def checksum(self):
         if self._checksum is None:
             checksum = hashlib.new('sha1')
-            for asset in self.javascripts + self.stylesheets:
+            for asset in itertools.chain(self.javascripts, self.stylesheets):
                 checksum.update(asset.content.encode("utf-8"))
             self._checksum = checksum.hexdigest()
         return self._checksum
@@ -1006,14 +1011,14 @@ class AssetsBundle(object):
     def js(self):
         key = 'js_' + self.checksum
         if key not in self.cache:
-            content =';\n'.join([asset.minify() for asset in self.javascripts])
+            content =';\n'.join(asset.minify() for asset in self.javascripts)
             self.cache[key] = content
         return self.cache[key]
 
     def css(self):
         key = 'css_' + self.checksum
         if key not in self.cache:
-            content = '\n'.join([asset.minify() for asset in self.stylesheets])
+            content = '\n'.join(asset.minify() for asset in self.stylesheets)
             # move up all @import and @charset rules to the top
             matches = []
             def push(matchobj):
@@ -1038,7 +1043,7 @@ class WebAsset(object):
     @property
     def filename(self):
         if self._filename is None:
-            module = filter(bool, self.url.split('/'))[0]
+            module = filter(None, self.url.split('/'))[0]
             mpath = openerp.http.addons_manifest[module]['addons_path']
             self._filename = mpath + self.url.replace('/', os.path.sep)
         return self._filename
@@ -1051,23 +1056,19 @@ class WebAsset(object):
 
     def get_content(self):
         if self.source:
-            data = self.source
-        else:
-            with open(self.filename, 'rb') as fp:
-                data = fp.read().decode('utf-8')
-        return data
+            return self.source
+
+        with open(self.filename, 'rb') as fp:
+            return fp.read().decode('utf-8')
 
     def minify(self):
         return self.content
-
-    def compute_checksum(self):
-        return 'fewfwe'
 
     @property
     def last_modified(self):
         if self.source:
             # TODO: return last_update of bundle's ir.ui.view
-            return datetime.datetime(1970, 1, 1)
+            return datetime.datetime.utcnow()
         return datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
 
 class JavascriptAsset(WebAsset):
