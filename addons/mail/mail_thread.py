@@ -31,6 +31,7 @@ except ImportError:
 from lxml import etree
 import logging
 import pytz
+import socket
 import time
 import xmlrpclib
 from email.message import Message
@@ -880,25 +881,30 @@ class mail_thread(osv.AbstractModel):
         # 2. message is a reply to an existign thread (6.1 compatibility)
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
-            thread_id = int(ref_match.group(1))
-            model = ref_match.group(2) or fallback_model
-            if thread_id and model in self.pool:
-                model_obj = self.pool[model]
-                compat_mail_msg_ids = mail_msg_obj.search(
-                    cr, uid, [
-                        ('message_id', '=', False),
-                        ('model', '=', model),
-                        ('res_id', '=', thread_id),
-                    ], context=context)
-                if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
-                    _logger.info(
-                        'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                        email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    route = self.message_route_verify(
-                        cr, uid, message, message_dict,
-                        (model, thread_id, custom_values, uid, None),
-                        update_author=True, assert_model=True, create_fallback=True, context=context)
-                    return route and [route] or []
+            reply_thread_id = int(ref_match.group(1))
+            reply_model = ref_match.group(2) or fallback_model
+            reply_hostname = ref_match.group(3)
+            local_hostname = socket.gethostname()
+            # do not match forwarded emails from another OpenERP system (thread_id collision!)
+            if local_hostname == reply_hostname:
+                thread_id, model = reply_thread_id, reply_model
+                if thread_id and model in self.pool:
+                    model_obj = self.pool[model]
+                    compat_mail_msg_ids = mail_msg_obj.search(
+                        cr, uid, [
+                            ('message_id', '=', False),
+                            ('model', '=', model),
+                            ('res_id', '=', thread_id),
+                        ], context=context)
+                    if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
+                        _logger.info(
+                            'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                            email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                        route = self.message_route_verify(
+                            cr, uid, message, message_dict,
+                            (model, thread_id, custom_values, uid, None),
+                            update_author=True, assert_model=True, create_fallback=True, context=context)
+                        return route and [route] or []
 
         # 2. Reply to a private message
         if in_reply_to:
@@ -1511,8 +1517,7 @@ class mail_thread(osv.AbstractModel):
         if subtype:
             if '.' not in subtype:
                 subtype = 'mail.%s' % subtype
-            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, *subtype.split('.'))
-            subtype_id = ref and ref[1] or False
+            subtype_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, subtype)
 
         # automatically subscribe recipients if asked to
         if context.get('mail_post_autofollow') and thread_id and partner_ids:

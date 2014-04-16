@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
 
 class account_inverted_analytic_balance(report_sxw.rml_parse):
@@ -120,8 +120,11 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
                 WHERE account_id IN %s AND date>=%s AND date<=%s", (tuple(ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
-report_sxw.report_sxw('report.account.analytic.account.inverted.balance', 'account.analytic.account', 'addons/account/project/report/inverted_analytic_balance.rml',parser=account_inverted_analytic_balance, header="internal")
 
+class report_invertedanalyticbalance(osv.AbstractModel):
+    _name = 'report.account.report_invertedanalyticbalance'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_invertedanalyticbalance'
+    _wrapped_report_class = account_inverted_analytic_balance
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
