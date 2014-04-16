@@ -553,6 +553,30 @@ keep only the datetime and location:
 
 .. patch::
 
+Moving lectures and TAs
+~~~~~~~~~~~~~~~~~~~~~~~
+
+There are already demonstration data in events and event types, so we'll want
+to delete them before inserting our own. The gist of the operation is fairly
+simple, but there are lots of changes:
+
+* The custom models can be removed as we'll be using standard objects
+* The controller has to be altered to fetch from standard objects
+  (``event.event`` and ``res.users``), we'll use groups to discriminate
+  between our academy objects and other demo objects, so that has to be used
+  as well
+* HTML templates have to be slightly edited to match the new objects
+  (our lecture's ``date`` field is replaced by ``event.event``'s
+  ``date_begin``)
+* Missing parts of the standard events have to be added (``res.partner``,
+  which is where "personal" informations are stored for ``res.users``, does
+  not have a biographical field. We have to add it)
+* Finally demo files must be converted, and existing demo data should be
+  purged if we do not need it (e.g. existing non-lectures events and event
+  types can be removed before adding our own)
+
+.. patch::
+
 .. [#taprofile] the teaching assistants profile view ends up broken for now,
                 but don't worry we'll get around to it
 
