@@ -96,7 +96,7 @@ class Message(Model):
 
     discussion = Many2one('test_new_api.discussion', ondelete='cascade')
     body = Text()
-    author = Many2one('res.users', compute='_default_author')
+    author = Many2one('res.users', default=lambda self: self._env.user)
     name = Char(string='Title', store=True, readonly=True,
         compute='_compute_name')
     display_name = Char(string='Abstract', store=False, readonly=True,
@@ -104,10 +104,6 @@ class Message(Model):
     size = Integer(store=False, readonly=True,
         compute='_compute_size', search='_search_size')
     discussion_name = Char(related='discussion.name', store=False)
-
-    @one
-    def _default_author(self):
-        self.author = self._env.user
 
     @one
     @constrains('author', 'discussion')

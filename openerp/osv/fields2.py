@@ -57,11 +57,15 @@ def _check_value(value):
 
 
 def default_compute(field, value):
-    """ Return a compute function that provides a constant default value. """
-    def compute(records):
-        for record in records:
-            record[field.name] = value
-    return value if callable(value) else compute
+    """ Return a compute function for the given default `value`; `value` is
+        either a constant, or a unary function returning the default value.
+    """
+    name = field.name
+    func = value if callable(value) else lambda rec: value
+    def compute(recs):
+        for rec in recs:
+            rec[name] = func(rec)
+    return compute
 
 
 class MetaField(type):
