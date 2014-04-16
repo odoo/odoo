@@ -3,9 +3,7 @@
 - 
   !record {model: product.category, id: product.product_category_001}:
     name : Lifo Category
-    removal_strategy_ids: 
-      - method: lifo
-        location_id: stock.stock_location_stock
+    removal_strategy_id: stock.removal_lifo
 -
   Set a product as using lifo price
 -
