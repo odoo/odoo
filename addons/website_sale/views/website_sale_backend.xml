@@ -110,10 +110,6 @@
         <field name="domain">[('state', 'not in', ('draft', 'shopping_cart', 'sent', 'cancel'))]</field>
     </record>
 
-    <record id="sale.action_quotations" model="ir.actions.act_window">
-        <field name="domain">[('state','in',('draft','shopping_cart','sent','cancel'))]</field>
-    </record>
-
     <record id="shopping_cart_filter_search_view" model="ir.ui.view">
         <field name="name">shopping.cart.filter.search.inherit</field>
         <field name="model">sale.order</field>
