@@ -1216,7 +1216,7 @@ class DataSet(http.Controller):
                 records = getattr(request.session.model(model), method)(*args, **kwargs)
                 for record in records:
                     record['display_name'] = \
-                        names.get(record['id']) or "%s#%d" % (model, (record['id']))
+                        names.get(record['id']) or "{0}#{1}".format(model, (record['id']))
                 return records
 
         if method.startswith('_'):
