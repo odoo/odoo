@@ -1915,6 +1915,31 @@ class BaseModel(object):
             }
         return result
 
+    def get_formview_id(self, cr, uid, id, context=None):
+        """ Return an view id to open the document with. This method is meant to be
+            overridden in addons that want to give specific view ids for example.
+
+            :param int id: id of the document to open
+        """
+        return False
+
+    def get_formview_action(self, cr, uid, id, context=None):
+        """ Return an action to open the document. This method is meant to be
+            overridden in addons that want to give specific view ids for example.
+
+            :param int id: id of the document to open
+        """
+        view_id = self.get_formview_id(cr, uid, id, context=context)
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': self._name,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'views': [(view_id, 'form')],
+                'target': 'current',
+                'res_id': id,
+            }
+
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
         return self.pool['ir.ui.view'].postprocess_and_fields(
             cr, uid, self._name, node, view_id, context=context)
