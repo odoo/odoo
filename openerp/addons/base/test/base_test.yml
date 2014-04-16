@@ -302,3 +302,17 @@
             float_round(0.01, precision_digits=3, precision_rounding=0.01)
         except AssertionError:
             pass
+-
+   Test res.groups name search
+-
+     !python {model: res.groups}: |
+         all_groups = self.search(cr, uid, [])
+         full_names = [(group.id, group.full_name) for group in self.browse(cr, uid, all_groups)]
+         group_ids = self.search(cr, uid, [('full_name', 'like', '%Sale%')])
+         assert set(group_ids) == set([id for (id, full_name) in full_names if 'Sale' in full_name]), "did not match search for 'Sale'"
+         group_ids = self.search(cr, uid, [('full_name', 'like', '%Technical%')])
+         assert set(group_ids) == set([id for (id, full_name) in full_names if 'Technical' in full_name]), "did not match search for 'Technical'"
+         group_ids = self.search(cr, uid, [('full_name', 'like', '%Sales /%')])
+         assert set(group_ids) == set([id for (id, full_name) in full_names if 'Sales /' in full_name]), "did not match search for 'Sales /'"
+         group_ids = self.search(cr, uid, [('full_name', 'in', ['Administration / Access Rights','Contact Creation'])])
+         assert group_ids, "did not match search for 'Administration / Access Rights' and 'Contact Creation'"
