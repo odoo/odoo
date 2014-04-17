@@ -788,7 +788,7 @@ class module_dependency(osv.Model):
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
         names = list(set(dep.name for dep in self))
-        mods = self._env['ir.module.module'].search([('name', 'in', names)])
+        mods = self.env['ir.module.module'].search([('name', 'in', names)])
 
         # index modules by name, and assign dependencies
         name_mod = dict((mod.name, mod) for mod in mods)

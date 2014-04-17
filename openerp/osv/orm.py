@@ -935,7 +935,7 @@ class BaseModel(object):
 
     def __export_xml_id(self):
         """ Return a valid xml_id for the record `self`. """
-        ir_model_data = self.sudo()._env['ir.model.data']
+        ir_model_data = self.sudo().env['ir.model.data']
         data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
         if data:
             if data.module:
@@ -992,7 +992,7 @@ class BaseModel(object):
                     # this part could be simpler, but it has to be done this way
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
-                        current[i] = field.convert_to_export(value, self._env)
+                        current[i] = field.convert_to_export(value, self.env)
                     else:
                         primary_done.append(name)
 
@@ -1327,8 +1327,8 @@ class BaseModel(object):
         field_names = set(field_names)
 
         # old-style constraint methods
-        trans = self._env['ir.translation']
-        cr, uid, context = self._env.args
+        trans = self.env['ir.translation']
+        cr, uid, context = self.env.args
         ids = self.unbrowse()
         errors = []
         for fun, msg, names in self._constraints:
@@ -1347,7 +1347,7 @@ class BaseModel(object):
                         template, params = res_msg
                         res_msg = template % params
                 else:
-                    res_msg = trans._get_source(self._name, 'constraint', self._env.lang, msg)
+                    res_msg = trans._get_source(self._name, 'constraint', self.env.lang, msg)
                 if extra_error:
                     res_msg += "\n\n%s\n%s" % (_('Error details:'), extra_error)
                 errors.append(
@@ -1394,7 +1394,7 @@ class BaseModel(object):
             ``self[name] = value``.
         """
         assert not self._id, "Expected new record: %s" % self
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         field = self._fields[name]
 
         # 1. look up context
@@ -1405,7 +1405,7 @@ class BaseModel(object):
 
         # 2. look up ir_values
         #    Note: performance is good, because get_defaults_dict is cached!
-        ir_values_dict = self._env['ir.values'].get_defaults_dict(self._name)
+        ir_values_dict = self.env['ir.values'].get_defaults_dict(self._name)
         if name in ir_values_dict:
             self[name] = ir_values_dict[name]
             return
@@ -1414,7 +1414,7 @@ class BaseModel(object):
         #    TODO: get rid of this one
         column = self._columns.get(name)
         if isinstance(column, fields.property):
-            self[name] = self._env['ir.property'].get(name, self._name)
+            self[name] = self.env['ir.property'].get(name, self._name)
             return
 
         # 4. look up _defaults
@@ -3054,7 +3054,7 @@ class BaseModel(object):
         """ method called on all models after updating the registry """
         # complete the initialization of all fields
         for field in self._fields.itervalues():
-            field.setup(self._env)
+            field.setup(self.env)
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -3079,7 +3079,7 @@ class BaseModel(object):
                 continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
-            res[fname] = field.get_description(recs._env)
+            res[fname] = field.get_description(recs.env)
 
         # if user cannot create or modify records, make all fields readonly
         has_access = functools.partial(recs.check_access_rights, raise_exception=False)
@@ -3198,12 +3198,12 @@ class BaseModel(object):
         if self.pool._init:
             # columns may be missing from database, do not prefetch other fields
             pass
-        elif self._env.draft:
+        elif self.env.draft:
             # we may be doing an onchange, do not prefetch other fields
             pass
-        elif field in self._env.todo:
+        elif field in self.env.todo:
             # field must be recomputed, do not prefetch records to recompute
-            records -= self._env.todo[field]
+            records -= self.env.todo[field]
         elif self._columns[field.name]._prefetch:
             # here we can optimize: prefetch all classic and many2one fields
             fnames = set(fname
@@ -3231,7 +3231,7 @@ class BaseModel(object):
         """ Read the given fields of the records in `self` from the database,
             and store them in cache. Access errors are also stored in cache.
         """
-        env = self._env
+        env = self.env
         cr, user, context = env.args
 
         # Construct a clause for the security rules.
@@ -3669,7 +3669,7 @@ class BaseModel(object):
         if not self:
             return True
 
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         self._check_concurrency(self._ids)
         self.check_access_rights('write')
 
@@ -5101,7 +5101,7 @@ class BaseModel(object):
             ids.
         """
         records = object.__new__(cls)
-        records._env = env
+        records.env = env
         records._ids = ids
         env.prefetch[cls._name].update(ids)
         return records
@@ -5109,14 +5109,14 @@ class BaseModel(object):
     @api.new
     def browse(self, arg=None):
         """ Return an instance corresponding to `arg` and attached to
-            `self._env`; `arg` is either a record id, or a collection of record ids.
+            `self.env`; `arg` is either a record id, or a collection of record ids.
         """
         if isinstance(arg, Iterable) and not isinstance(arg, basestring):
             ids = tuple(arg)
         else:
             ids = (arg,) if arg else ()
         assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
-        return self._browse(self._env, ids)
+        return self._browse(self.env, ids)
 
     @browse.old
     def browse(self, cr, uid, arg=None, context=None):
@@ -5137,9 +5137,9 @@ class BaseModel(object):
         return bool(self._ids) and self._ids[0]
 
     # backward-compatibility with former browse records
-    _cr = property(lambda self: self._env.cr)
-    _uid = property(lambda self: self._env.uid)
-    _context = property(lambda self: self._env.context)
+    _cr = property(lambda self: self.env.cr)
+    _uid = property(lambda self: self.env.uid)
+    _context = property(lambda self: self.env.context)
 
     #
     # Conversion methods
@@ -5161,7 +5161,7 @@ class BaseModel(object):
     @api.new
     def sudo(self, cr=None, user=None, context=None, **kwargs):
         """ Return an instance equivalent to `self` attached to an environment
-            based on `self._env` and modified by parameters.
+            based on `self.env` and modified by parameters.
 
             :param cr: an optional cursor object
             :param user: a user record or id
@@ -5173,7 +5173,7 @@ class BaseModel(object):
         """
         if (cr, user, context) == (None, None, None) and not kwargs:
             user = SUPERUSER_ID
-        return self._attach_env(self._env(cr, user, context, **kwargs))
+        return self._attach_env(self.env(cr, user, context, **kwargs))
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """
@@ -5182,7 +5182,7 @@ class BaseModel(object):
     def _convert_to_cache(self, values):
         """ Convert the `values` dictionary into cached values. """
         return dict(
-            (name, self._fields[name].convert_to_cache(value, self._env))
+            (name, self._fields[name].convert_to_cache(value, self.env))
             for name, value in values.iteritems()
         )
 
@@ -5229,7 +5229,7 @@ class BaseModel(object):
         recs = self
         for name in name_seq.split('.'):
             field = recs._fields[name]
-            null = field.null(self._env)
+            null = field.null(self.env)
             recs = recs.map(lambda rec: rec._cache.get(field, null))
         return recs
 
@@ -5256,7 +5256,7 @@ class BaseModel(object):
 
     @api.model
     def new(self, values={}):
-        """ Return a new record instance attached to `self._env`, and
+        """ Return a new record instance attached to `self.env`, and
             initialized with the `values` dictionary. Such a record does not
             exist in the database.
         """
@@ -5265,7 +5265,7 @@ class BaseModel(object):
         record = self.browse([new_id])
         record._cache.update(self._convert_to_cache(values))
 
-        if record._env.draft:
+        if record.env.draft:
             # The cache update does not set inverse fields, so do it manually.
             # This is useful for computing a function field on secondary
             # records, if that field depends on the main record.
@@ -5283,16 +5283,16 @@ class BaseModel(object):
     @property
     def _dirty(self):
         """ Return whether any record in `self` is dirty. """
-        dirty = self._env.dirty
+        dirty = self.env.dirty
         return any(record in dirty for record in self)
 
     @_dirty.setter
     def _dirty(self, value):
         """ Mark the records in `self` as dirty. """
         if value:
-            map(self._env.dirty.add, self)
+            map(self.env.dirty.add, self)
         else:
-            map(self._env.dirty.discard, self)
+            map(self.env.dirty.discard, self)
 
     #
     # "Dunder" methods
@@ -5309,7 +5309,7 @@ class BaseModel(object):
     def __iter__(self):
         """ Return an iterator over `self`. """
         for id in self._ids:
-            yield self._browse(self._env, (id,))
+            yield self._browse(self.env, (id,))
 
     def __contains__(self, item):
         """ Test whether `item` is a subset of `self` or a field name. """
@@ -5395,7 +5395,7 @@ class BaseModel(object):
 
     def __getitem__(self, key):
         """ If `key` is an integer or a slice, return the corresponding record
-            selection as an instance (attached to `self._env`).
+            selection as an instance (attached to `self.env`).
             Otherwise read the field `key` of the first record in `self`.
 
             Examples::
@@ -5409,9 +5409,9 @@ class BaseModel(object):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
-            return self._browse(self._env, self._ids[key])
+            return self._browse(self.env, self._ids[key])
         else:
-            return self._browse(self._env, (self._ids[key],))
+            return self._browse(self.env, (self._ids[key],))
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
@@ -5433,7 +5433,7 @@ class BaseModel(object):
             the records of model `self` in cache that have no value for `field`
             (:class:`Field` instance).
         """
-        env = self._env
+        env = self.env
         prefetch_ids = env.prefetch[self._name]
         prefetch_ids.update(self._ids)
         ids = filter(None, prefetch_ids - set(env.cache[field]))
@@ -5458,7 +5458,7 @@ class BaseModel(object):
         """
         if fnames is None:
             if ids is None:
-                return self._env.invalidate_all()
+                return self.env.invalidate_all()
             fields = self._fields.values()
         else:
             fields = map(self._fields.__getitem__, fnames)
@@ -5466,7 +5466,7 @@ class BaseModel(object):
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
                [(f.inverse_field, None) for f in fields if f.inverse_field]
-        self._env.invalidate(spec)
+        self.env.invalidate(spec)
 
     @api.multi
     def modified(self, fnames):
@@ -5485,36 +5485,36 @@ class BaseModel(object):
         # HACK: invalidate all non-stored fields.function
         spec += [(f, None) for f in self.pool.pure_function_fields]
 
-        self._env.invalidate(spec)
+        self.env.invalidate(spec)
 
     @api.new
     def _recompute_check(self, field):
         """ If `field` must be recomputed on some record in `self`, return the
             corresponding records that must be recomputed.
         """
-        for env in [self._env] + list(self._env.all):
+        for env in [self.env] + list(self.env.all):
             if env.todo.get(field) and env.todo[field] & self:
                 return env.todo[field]
 
     @api.new
     def _recompute_todo(self, field):
         """ Mark `field` to be recomputed. """
-        todo = self._env.todo
+        todo = self.env.todo
         todo[field] = (todo.get(field) or self.browse()) | self
 
     @api.new
     def _recompute_done(self, field):
         """ Mark `field` as being recomputed. """
-        recs = self._env.todo.pop(field) - self
+        recs = self.env.todo.pop(field) - self
         if recs:
-            self._env.todo[field] = recs
+            self.env.todo[field] = recs
 
     @api.model
     def recompute(self):
         """ Recompute stored function fields. The fields and records to
             recompute have been determined by method :meth:`modified`.
         """
-        for env in list(self._env.all):
+        for env in list(self.env.all):
             while env.todo:
                 field, recs = env.todo.popitem()
                 field.compute_value(recs, check_exists=True)
@@ -5542,7 +5542,7 @@ class BaseModel(object):
             :param tocheck: list of (dot-separated) field names to check; use
                 this for secondary fields that are not keys of `values`
         """
-        env = self._env
+        env = self.env
 
         with env.do_in_draft():
             # create a new record with the values, except field_name
@@ -5607,13 +5607,13 @@ class RecordCache(MutableMapping):
         """ Return whether `records[0]` has a value for `field` in cache. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        return self._recs._id in self._recs._env.cache[field]
+        return self._recs._id in self._recs.env.cache[field]
 
     def __getitem__(self, field):
         """ Return the cached value of `field` for `records[0]`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        value = self._recs._env.cache[field][self._recs._id]
+        value = self._recs.env.cache[field][self._recs._id]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def __setitem__(self, field, value):
@@ -5621,7 +5621,7 @@ class RecordCache(MutableMapping):
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         values = dict.fromkeys(self._recs._ids, value)
-        self._recs._env.cache[field].update(values)
+        self._recs.env.cache[field].update(values)
 
     def update(self, *args, **kwargs):
         """ Update the cache of all records in `records`. If the argument is a
@@ -5631,7 +5631,7 @@ class RecordCache(MutableMapping):
             values = dict.fromkeys(self._recs._ids, args[0])
             for name, field in self._recs._fields.iteritems():
                 if name not in MAGIC_COLUMNS:
-                    self._recs._env.cache[field].update(values)
+                    self._recs.env.cache[field].update(values)
         else:
             return super(RecordCache, self).update(*args, **kwargs)
 
@@ -5639,13 +5639,13 @@ class RecordCache(MutableMapping):
         """ Remove the cached value of `field` for all `records`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        field_cache = self._recs._env.cache[field]
+        field_cache = self._recs.env.cache[field]
         for id in self._recs._ids:
             field_cache.pop(id, None)
 
     def __iter__(self):
         """ Iterate over the field names with a regular value in cache. """
-        cache, id = self._recs._env.cache, self._recs._id
+        cache, id = self._recs.env.cache, self._recs._id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
             if name not in MAGIC_COLUMNS and \

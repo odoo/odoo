@@ -230,7 +230,7 @@ def get_upgrade(method):
         if model == 'self':
             return lambda self, value: self.browse(value)
         else:
-            return lambda self, value: self._env[model].browse(value)
+            return lambda self, value: self.env[model].browse(value)
     else:
         return lambda self, value: value
 
@@ -246,7 +246,7 @@ def get_aggregate(method):
         if model == 'self':
             return lambda self, value: sum(value, self.browse())
         else:
-            return lambda self, value: sum(value, self._env[model].browse())
+            return lambda self, value: sum(value, self.env[model].browse())
     else:
         return lambda self, value: value
 
@@ -372,7 +372,7 @@ def cr(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         result = method(self._model, cr, *args, **kwargs)
         return upgrade(self, result)
 
@@ -385,7 +385,7 @@ def cr_context(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         kwargs['context'] = context
         result = method(self._model, cr, *args, **kwargs)
         return upgrade(self, result)
@@ -399,7 +399,7 @@ def cr_uid(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         result = method(self._model, cr, uid, *args, **kwargs)
         return upgrade(self, result)
 
@@ -420,7 +420,7 @@ def cr_uid_context(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         kwargs['context'] = context
         result = method(self._model, cr, uid, *args, **kwargs)
         return upgrade(self, result)
@@ -437,7 +437,7 @@ def cr_uid_id(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
         return upgrade(self, result)
 
@@ -463,7 +463,7 @@ def cr_uid_id_context(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         kwargs['context'] = context
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
         return upgrade(self, result)
@@ -480,7 +480,7 @@ def cr_uid_ids(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         result = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
         return upgrade(self, result)
 
@@ -508,7 +508,7 @@ def cr_uid_ids_context(method):
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         kwargs['context'] = context
         result = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
         return upgrade(self, result)

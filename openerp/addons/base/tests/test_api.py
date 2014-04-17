@@ -205,11 +205,11 @@ class TestAPI(common.TransactionCase):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
         partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
-        self.assertEqual(partners._env, self.env)
+        self.assertEqual(partners.env, self.env)
         for x in (partners, partners[0], partners[0].company_id):
-            self.assertEqual(x._env, self.env)
+            self.assertEqual(x.env, self.env)
         for p in partners:
-            self.assertEqual(p._env, self.env)
+            self.assertEqual(p.env, self.env)
 
         # check that the current user can read and modify company data
         partners[0].company_id.name
@@ -221,19 +221,19 @@ class TestAPI(common.TransactionCase):
         self.assertNotEqual(demo_env, self.env)
 
         # partners and related records are still attached to self.env
-        self.assertEqual(partners._env, self.env)
+        self.assertEqual(partners.env, self.env)
         for x in (partners, partners[0], partners[0].company_id):
-            self.assertEqual(x._env, self.env)
+            self.assertEqual(x.env, self.env)
         for p in partners:
-            self.assertEqual(p._env, self.env)
+            self.assertEqual(p.env, self.env)
 
         # create record instances attached to demo_env
         demo_partners = partners.sudo(user=demo)
-        self.assertEqual(demo_partners._env, demo_env)
+        self.assertEqual(demo_partners.env, demo_env)
         for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
-            self.assertEqual(x._env, demo_env)
+            self.assertEqual(x.env, demo_env)
         for p in demo_partners:
-            self.assertEqual(p._env, demo_env)
+            self.assertEqual(p.env, demo_env)
 
         # demo user can read but not modify company data
         demo_partners[0].company_id.name

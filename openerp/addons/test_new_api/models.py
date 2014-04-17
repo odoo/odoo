@@ -96,7 +96,7 @@ class Message(Model):
 
     discussion = Many2one('test_new_api.discussion', ondelete='cascade')
     body = Text()
-    author = Many2one('res.users', default=lambda self: self._env.user)
+    author = Many2one('res.users', default=lambda self: self.env.user)
     name = Char(string='Title', store=True, readonly=True,
         compute='_compute_name')
     display_name = Char(string='Abstract', store=False, readonly=True,
@@ -133,8 +133,8 @@ class Message(Model):
         # retrieve all the messages that match with a specific SQL query
         query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
-        self._env.cr.execute(query, (value,))
-        ids = [t[0] for t in self._env.cr.fetchall()]
+        self.env.cr.execute(query, (value,))
+        ids = [t[0] for t in self.env.cr.fetchall()]
         return [('id', 'in', ids)]
 
 
@@ -155,12 +155,12 @@ class MixedModel(Model):
 
     @model
     def _get_lang(self):
-        langs = self._env['res.lang'].search([])
+        langs = self.env['res.lang'].search([])
         return [(lang.code, lang.name) for lang in langs]
 
     @model
     def _reference_models(self):
-        models = self._env['ir.model'].search([('state', '!=', 'manual')])
+        models = self.env['ir.model'].search([('state', '!=', 'manual')])
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]

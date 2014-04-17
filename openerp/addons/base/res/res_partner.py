@@ -61,7 +61,7 @@ ADDRESS_FORMAT_LAYOUTS = {
 class format_address(object):
     @model
     def fields_view_get_address(self, arch):
-        fmt = self._env.user.company_id.country_id.address_format or ''
+        fmt = self.env.user.company_id.country_id.address_format or ''
         for k, v in ADDRESS_FORMAT_LAYOUTS.items():
             if k in fmt:
                 doc = etree.fromstring(arch)
@@ -159,7 +159,7 @@ class res_partner_title(osv.osv):
 
 @model
 def _lang_get(self):
-    languages = self._env['res.lang'].search([])
+    languages = self.env['res.lang'].search([])
     return [(language.code, language.name) for language in languages]
 
 # fields copy if 'use_parent_address' is checked
@@ -305,7 +305,7 @@ class res_partner(osv.Model, format_address):
 
     @model
     def _default_category(self):
-        category_id = self._env.context.get('category_id', False)
+        category_id = self.env.context.get('category_id', False)
         return [category_id] if category_id else False
 
     @model
@@ -331,12 +331,12 @@ class res_partner(osv.Model, format_address):
 
     @model
     def _default_company(self):
-        return self._env['res.company']._company_default_get('res.partner')
+        return self.env['res.company']._company_default_get('res.partner')
 
     _defaults = {
         'active': True,
-        'lang': model(lambda self: self._env.lang),
-        'tz': model(lambda self: self._env.context.get('tz', False)),
+        'lang': model(lambda self: self.env.lang),
+        'tz': model(lambda self: self.env.context.get('tz', False)),
         'customer': True,
         'category_id': _default_category,
         'company_id': _default_company,
@@ -392,7 +392,7 @@ class res_partner(osv.Model, format_address):
     @multi
     def onchange_state(self, state_id):
         if state_id:
-            state = self._env['res.country.state'].browse(state_id)
+            state = self.env['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
 
@@ -519,7 +519,7 @@ class res_partner(osv.Model, format_address):
         # if setting the company_id to False (this is compatible with any user
         # company)
         if vals.get('company_id'):
-            company = self._env['res.company'].browse(vals['company_id'])
+            company = self.env['res.company'].browse(vals['company_id'])
             for partner in self:
                 if partner.user_ids:
                     companies = set(user.company_id for user in partner.user_ids)
@@ -744,7 +744,7 @@ class res_partner(osv.Model, format_address):
     @returns('self')
     def main_partner(self):
         ''' Return the main partner '''
-        return self._env.ref('base.main_partner')
+        return self.env.ref('base.main_partner')
 
     def _display_address(self, cr, uid, address, without_company=False, context=None):
 

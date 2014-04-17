@@ -60,7 +60,7 @@ class ir_ui_menu(osv.osv):
             Uses a cache for speeding up the computation.
         """
         with self._menu_cache_lock:
-            groups = self._env.user.groups_id
+            groups = self.env.user.groups_id
 
             # visibility is entirely based on the user's groups;
             # self._menu_cache[key] gives the ids of all visible menus
@@ -83,7 +83,7 @@ class ir_ui_menu(osv.osv):
                 visible = self.browse()
 
                 # process action menus, check whether their action is allowed
-                access = self._env['ir.model.access']
+                access = self.env['ir.model.access']
                 model_fname = {
                     'ir.actions.act_window': 'res_model',
                     'ir.actions.report.xml': 'model',

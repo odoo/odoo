@@ -195,27 +195,27 @@ class TestNewFields(common.TransactionCase):
         message = self.env.ref('test_new_api.message_0_0')
 
         # check environment of record and related records
-        self.assertEqual(message._env, self.env)
-        self.assertEqual(message.discussion._env, self.env)
+        self.assertEqual(message.env, self.env)
+        self.assertEqual(message.discussion.env, self.env)
 
         demo_env = self.env(user=demo)
         self.assertNotEqual(demo_env, self.env)
 
         # check environment of record and related records
-        self.assertEqual(message._env, self.env)
-        self.assertEqual(message.discussion._env, self.env)
+        self.assertEqual(message.env, self.env)
+        self.assertEqual(message.discussion.env, self.env)
 
         # "migrate" message into demo_env, and check again
         demo_message = message.sudo(user=demo)
-        self.assertEqual(demo_message._env, demo_env)
-        self.assertEqual(demo_message.discussion._env, demo_env)
+        self.assertEqual(demo_message.env, demo_env)
+        self.assertEqual(demo_message.discussion.env, demo_env)
 
         # assign record's parent to a record in demo_env
         message.discussion = message.discussion.copy({'name': 'Copy'})
 
         # both message and its parent field must be in self.env
-        self.assertEqual(message._env, self.env)
-        self.assertEqual(message.discussion._env, self.env)
+        self.assertEqual(message.env, self.env)
+        self.assertEqual(message.discussion.env, self.env)
 
     def test_24_reference(self):
         """ test reference fields. """

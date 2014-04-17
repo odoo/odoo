@@ -254,7 +254,7 @@ class Field(object):
             `self`, and `path0` is the sequence of field names from `self.model`
             to `model`.
         """
-        env = model._env
+        env = model.env
         head, tail = path1[0], path1[1:]
 
         if head == '*':
@@ -419,7 +419,7 @@ class Field(object):
             record.add_default_value(self.name)
         else:
             # null record -> return the null value for this field
-            return self.null(record._env)
+            return self.null(record.env)
 
         # the result should be in cache now
         return record._cache[self]
@@ -430,7 +430,7 @@ class Field(object):
             raise Warning("Null record %s may not be assigned" % record)
 
         # only one record is updated
-        env = record._env
+        env = record.env
         record = record[0]
 
         # adapt value to the cache level
@@ -487,7 +487,7 @@ class Field(object):
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
-        env = record._env
+        env = record.env
         if self.store and not (self.compute and env.draft):
             # recompute field on record if required
             recs_todo = record._recompute_check(self)
@@ -511,7 +511,7 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._cache[self] = SpecialValue(self.null(record._env))
+        record._cache[self] = SpecialValue(self.null(record.env))
         if self.compute:
             self.compute_value(record)
 
@@ -536,7 +536,7 @@ class Field(object):
             fields/records to recompute, and return a spec indicating what to
             invalidate.
         """
-        env = records._env(user=SUPERUSER_ID, context={'active_test': False})
+        env = records.env(user=SUPERUSER_ID, context={'active_test': False})
 
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
@@ -553,7 +553,7 @@ class Field(object):
 
     def modified_draft(self, records):
         """ Same as :meth:`modified`, but in draft mode. """
-        env = records._env
+        env = records.env
 
         # invalidate the fields on the records in cache that depend on `records`
         spec = []
@@ -749,7 +749,7 @@ class Selection(Field):
         super(Selection, self)._setup_related(env)
         # selection must be computed on related field
         field = self.related_field
-        self.selection = lambda model: field._description_selection(model._env)
+        self.selection = lambda model: field._description_selection(model.env)
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -942,7 +942,7 @@ class Many2one(_Relational):
             value = record[self.name]
             if not value:
                 # the default value cannot be null, use a new record instead
-                record[self.name] = record._env[self.comodel_name].new()
+                record[self.name] = record.env[self.comodel_name].new()
 
 
 class _RelationalMulti(_Relational):
