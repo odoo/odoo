@@ -3,19 +3,64 @@
     <data>
 
         <!-- Table Of Content -->
-        <record id="toc_0" model="documentation.toc">
-            <field name="name">CMS &amp; eCommerce</field>
+        <record id="toc_functional_doc" model="documentation.toc">
+            <field name="name">Functional Documentation</field>
         </record>
-        <record id="toc_1" model="documentation.toc">
+        <record id="toc_sale" model="documentation.toc">
+            <field name="name">Sales Management</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+        </record>
+        <record id="toc_sale_customer" model="documentation.toc">
+            <field name="name">Customers</field>
+            <field name="parent_id" ref="toc_sale"/>
+        </record>
+        <record id="toc_sale_so" model="documentation.toc">
+            <field name="name">Sales orders</field>
+            <field name="parent_id" ref="toc_sale"/>
+        </record>
+        <record id="toc_0" model="documentation.toc">
+            <field name="name">Sales &amp; Warehouse</field>
+            <field name="parent_id" ref="toc_sale"/>
+        </record>
+        <record id="toc_crm" model="documentation.toc">
+            <field name="name">Customer Relationship Management</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+        </record>
+        <record id="toc_crm_lead" model="documentation.toc">
+            <field name="name">Lead &amp; Opportunity</field>
+            <field name="parent_id" ref="toc_crm"/>
+        </record>
+        <record id="toc_crm_claim" model="documentation.toc">
+            <field name="name">Claims</field>
+            <field name="parent_id" ref="toc_crm"/>
+        </record>
+        <record id="toc_crm_after_sale" model="documentation.toc">
+            <field name="name">After-sale communication</field>
+            <field name="parent_id" ref="toc_crm"/>
+        </record>
+        <record id="toc_website" model="documentation.toc">
+            <field name="name">Website</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+        </record>
+        <record id="toc_cms_ecommerce" model="documentation.toc">
+            <field name="name">CMS &amp; eCommerce</field>
+            <field name="parent_id" ref="toc_website"/>
+        </record>
+        <record id="toc_hrm" model="documentation.toc">
+            <field name="name">Human Resources Management</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+        </record>
+        <record id="toc_hrm_contract" model="documentation.toc">
             <field name="name">Employee Contract</field>
+            <field name="parent_id" ref="toc_hrm"/>
         </record>
 
         <!-- Questions -->
         <record id="website_forum.question_0" model="forum.post">
-            <field name="toc_id" ref="toc_1"/>
+            <field name="toc_id" ref="toc_hrm_contract"/>
         </record>
         <record id="website_forum.question_1" model="forum.post">
-            <field name="toc_id" ref="toc_0"/>
+            <field name="toc_id" ref="toc_cms_ecommerce"/>
         </record>
 
     </data>

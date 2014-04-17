@@ -12,6 +12,8 @@ class Documentation(osv.Model):
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
+        'parent_id': fields.many2one('documentation.toc', 'Parent Table Of Content'),
+        'child_ids': fields.one2many('documentation.toc', 'parent_id', 'Children Table Of Content'),
         'post_ids': fields.one2many('forum.post', 'toc_id', 'Posts'),
     }
 

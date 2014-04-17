@@ -21,7 +21,7 @@ class WebsiteDoc(http.Controller):
     def documentation(self, toc='', **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
         TOC = request.registry['documentation.toc']
-        obj_ids = TOC.search(cr, uid, [], context=context)
+        obj_ids = TOC.search(cr, uid, [('parent_id', '=', False)], context=context)
         toc_ids = TOC.browse(cr, uid, obj_ids, context=context)
         value = {
             'documentaion_toc': toc_ids,
@@ -45,14 +45,14 @@ class WebsiteForum(WebsiteForum):
     def prepare_question_values(self, forum, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         TOC = request.registry['documentation.toc']
-        obj_ids = TOC.search(cr, uid, [], context=context)
+        obj_ids = TOC.search(cr, uid, [('child_ids', '=', False)], context=context)
         toc = TOC.browse(cr, uid, obj_ids, context=context)
         values = super(WebsiteForum, self).prepare_question_values(forum=forum, kwargs=kwargs)
         values.update({'documentaion_toc': toc})
         return values
 
-    @http.route('/forum/question/toc', type='json', auth="user", multilang=True, website=True)
-    def post_toc(self, post_id, toc_id):
-        toc_id = int(toc_id) if toc_id else False
-        request.registry['forum.post'].write(request.cr, request.uid, [int(post_id)], {'toc_id': toc_id}, context=request.context)
-        return True
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/toc', type='http', auth="user", multilang=True, website=True)
+    def post_toc(self, forum, post, **kwargs):
+        toc_id = int(kwargs.get('content')) if kwargs.get('content') else False
+        request.registry['forum.post'].write(request.cr, request.uid, [post.id], {'toc_id': toc_id}, context=request.context)
+        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))

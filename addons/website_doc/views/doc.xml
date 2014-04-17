@@ -3,6 +3,18 @@
     <data>
 
         <!-- DOCUMENTATION TOC VIEWS -->
+
+        <record id="view_documentation_toc_hierarchy" model="ir.ui.view">
+            <field name="name">documentation.toc.list</field>
+            <field name="model">documentation.toc</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Documentation TOC">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_documentation_toc_list" model="ir.ui.view">
             <field name="name">documentation.toc.list</field>
             <field name="model">documentation.toc</field>
@@ -21,22 +33,32 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="parent_id"/>
                         </group>
-                        <separator string="Posts"/>
-                        <field name="post_ids"/>
                     </sheet>
                 </form>
             </field>
         </record>
 
         <record id="action_documentation_toc" model="ir.actions.act_window">
-            <field name="name">Documentation TOC</field>
+            <field name="name">Documentation</field>
             <field name="res_model">documentation.toc</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_documentation" parent="website_forum.menu_website_forum" name="Documentation TOC" action="action_documentation_toc" sequence="10"/>
+        <menuitem id="menu_documentation" parent="website_forum.menu_website_forum" name="Documentation" action="action_documentation_toc" sequence="20"/>
+
+        <record id="action_documentation_toc_hierarchy" model="ir.actions.act_window">
+            <field name="name">Documentation Hierarchy</field>
+            <field name="res_model">documentation.toc</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_id" ref="view_documentation_toc_hierarchy"/>
+        </record>
+
+        <menuitem id="menu_documentation_hierarchy" parent="website_forum.menu_website_forum" name="Documentation Hierarchy" action="action_documentation_toc_hierarchy" sequence="25"/>
 
     </data>
 </openerp>

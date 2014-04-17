@@ -25,36 +25,44 @@
             <link rel='stylesheet' href='/website_doc/static/src/css/website_doc.css'/>
             <script type="text/javascript" src="/website_doc/static/src/js/website_doc.js"/>
         </t>
-        <div class="container mt16">
-            <div class="col-md-3 css_noprint bs-sidebar" id="left_column">
-                <ul class="nav nav-pills nav-stacked">
-                    <t t-foreach="documentaion_toc" t-as="toc">
-                        <li t-att-class="topic == toc and 'active' or ''">
-                            <a t-attf-href="/doc/#{ slug(toc) }">
-                                <t t-esc="toc.name"/>
-                                <!--span class="badge pull-right" t-if="toc.post_ids"><t t-esc="toc.post_ids"/></span-->
-                            </a>
-                        </li>
-                    </t>
-                </ul>
+        <div class="container mt16 document">
+            <div class="col-md-3 mt32 css_noprint bs-sidebar menu-tree">
+                <t t-call="website_doc.side_panel"><t t-set="documentation" t-value="documentaion_toc"/></t>
             </div>
-            <div class="col-md-9">
-                <div>
-                    <h2 t-esc="topic.name" class="text-center"/>
-                </div>
+            <div class="col-md-9 mt32 document_page">
+                <strong><h2 t-esc="topic.name" class="text-center"/></strong>
                 <div t-foreach="topic.post_ids" t-as="post">
-                    <h2><a class="faq-question"><t t-esc="post.name"/></a></h2>
+                    <h2><p class="faq-question" t-esc="post.name"/></h2>
                     <div t-if="post.pertinent_answer_id">
                         <p><t t-raw="post.pertinent_answer_id.content"/></p>
                     </div>
                     <div class="pull-right">
-                        <a class="" t-attf-href="/forum/#{ slug(post.forum_id) }/question/#{ slug(post) }">Read More About This..</a>
+                        <a t-attf-href="/forum/#{ slug(post.forum_id) }/question/#{ slug(post) }">Read More About This..</a>
                     </div>
                 </div>
             </div>
             <div class="oe_structure"/>
         </div>
     </t>
+</template>
+
+<!--MENU LIST-->
+<template id="side_panel">
+    <ul class="nav nav-pills nav-stacked">
+        <t t-foreach="documentation" t-as="toc">
+            <li t-attf-class="tree_toggler #{ topic==toc and 'active' or ''}">
+                <a t-attf-href="/doc/#{ slug(toc) }" t-if="not toc.child_ids">
+                    <t t-esc="toc.name"/>
+                </a>
+                <a t-attf-href="" t-if="toc.child_ids">
+                    <t t-esc="toc.name"/>
+                </a>
+                <t t-if="toc.child_ids">
+                    <t t-call="website_doc.side_panel"><t t-set="documentation" t-value="toc.child_ids"/></t>
+                </t>
+            </li>
+        </t>
+    </ul>
 </template>
 
 <!--TOC ON FORUM POST-->
@@ -64,18 +72,24 @@
     </xpath>
     <xpath expr="//div[@id='about_forum']" position="before">
         <div t-if="header.get('question_data')">
-            <span type="hidden" t-attf-value="#{question.id}" id="question"/>
             <div class="panel panel-default">
                 <div class="panel-heading" id="about_forum">
                     <h3 class="panel-title">Documentation</h3>
                 </div>
                 <div class="panel-body">
-                    <select class="form-control post_toc" t-attf-href="/forum/#{ slug(forum) }/question/#{ question.id }/toc" name="Table of Content">
-                        <option value="">Table of Content...</option>
-                        <t t-foreach="documentaion_toc or []" t-as="toc">
-                            <option t-att-value="toc.id" t-att-selected="toc.id == question.toc_id.id"><t t-esc="toc.name"/></option>
-                        </t>
-                    </select>
+                    <form t-attf-action="/forum/#{ slug(forum) }/question/#{ slug(question) }/toc" role="form" method="post">
+                        <div class="input-group navbar-right">
+                            <select class="form-control" name="content">
+                                <option value=""></option>
+                                <t t-foreach="documentaion_toc or []" t-as="toc">
+                                    <option t-att-value="toc.id" t-att-selected="toc.id == question.toc_id.id"><t t-esc="toc.name"/></option>
+                                </t>
+                            </select>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary ">save</button>
+                            </span>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
