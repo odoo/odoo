@@ -74,7 +74,7 @@ class sale_order(osv.Model):
             if not grid_id:
                 raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))
 
-            if order.state not in ['draft', context.get('shopping_cart', False)]:
+            if order.state in ['sent', 'cancel', 'progress', 'manual', 'done']:
                 raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)

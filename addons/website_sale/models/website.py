@@ -146,7 +146,7 @@ class Website(orm.Model):
         SaleOrder = self.pool.get('sale.order')
         quotation_values = self._ecommerce_get_quotation_values(cr, uid, context=context)
         quotation_values['user_id'] = False
-        quotation_values['section_id'] = self.pool.get('crm.case.section').search(cr, SUPERUSER_ID, [('code', '=', 'SPC')], context=context)[0]
+        quotation_values['section_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_sale', 'crm_case_section_shopping_cart')[1]
         quotation_values['state'] = 'shopping_cart'
         return SaleOrder.create(cr, SUPERUSER_ID, quotation_values, context=context)
 
@@ -222,21 +222,3 @@ class Website(orm.Model):
 
     def ecommerce_get_product_domain(self):
         return [("sale_ok", "=", True),("product_variant_ids","!=",False)]
-
-class sale_order(osv.osv):
-    _inherit = "sale.order"
-
-    _columns = {
-        'state': fields.selection([
-            ('draft', 'Draft Quotation'),
-            ('shopping_cart', 'Shopping Cart'),
-            ('sent', 'Quotation Sent'),
-            ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done'),
-            ], 'Status', readonly=True,
-            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
-    }

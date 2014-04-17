@@ -2,12 +2,15 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.addons.web.http import request
+from openerp.addons.sale import sale
 
+sale.AVAILABLE_STATES.insert(1,('shopping_cart', 'Shopping Cart'))
 
 class SaleOrder(osv.Model):
     _inherit = "sale.order"
 
     _columns = {
+        'state': fields.selection(sale.AVAILABLE_STATES, 'Status'),
         'website_session_id': fields.char('Session UUID4'),
         'website_order_line': fields.one2many(
             'sale.order.line', 'order_id',
