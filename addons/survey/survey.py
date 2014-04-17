@@ -34,6 +34,27 @@ import uuid
 
 _logger = logging.getLogger(__name__)
 
+class survey_stage(osv.Model):
+    """Stages for Kanban view of surveys"""
+
+    _name = 'survey.stage'
+    _description = 'Survey Stage'
+    _order = 'sequence asc'
+
+    _columns = {
+        'name': fields.char(string="Name", required=True, translate=True),
+        'sequence': fields.integer(string="Sequence"),
+        'closed': fields.boolean(string="Closed", help="If closed, people won't be able to answer to surveys in this column."),
+        'fold': fields.boolean(string="Folded in kanban view")
+    }
+    _defaults = {
+        'sequence': 1,
+        'closed': False
+    }
+    _sql_constraints = [
+        ('positive_sequence', 'CHECK(sequence >= 0)', 'Sequence number MUST be a natural')
+    ]
+
 
 class survey_survey(osv.Model):
     '''Settings for a multi-page/multi-question survey.
@@ -175,9 +196,15 @@ class survey_survey(osv.Model):
         'quizz_mode': fields.boolean(string='Quizz mode')
     }
 
+    def _default_stage(self, cr, uid, context=None):
+        ids = self.pool['survey.stage'].search(cr, uid, [], limit=1, context=context)
+        if ids:
+            return ids[0]
+        return False
+
     _defaults = {
         'color': 0,
-        'stage_id': lambda self, cr, uid, context: self.pool.get('survey.stage').search_read(cr, uid, fields=['id'], order='sequence asc', limit=1, context=context)[0]['id']
+        'stage_id': lambda self, *a, **kw: self._default_stage(*a, **kw)
     }
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
@@ -456,26 +483,6 @@ class survey_survey(osv.Model):
         }
 
 
-class survey_stage(osv.Model):
-    """Stages for Kanban view of surveys"""
-
-    _name = 'survey.stage'
-    _description = 'Survey Stage'
-    _order = 'sequence asc'
-
-    _columns = {
-        'name': fields.char(string="Name", required=True, translate=True),
-        'sequence': fields.integer(string="Sequence"),
-        'closed': fields.boolean(string="Closed", help="If closed, people won't be able to answer to surveys in this column."),
-        'fold': fields.boolean(string="Folded in kanban view")
-    }
-    _defaults = {
-        'sequence': 1,
-        'closed': False
-    }
-    _sql_constraints = [
-        ('positive_sequence', 'CHECK(sequence >= 0)', 'Sequence number MUST be a natural')
-    ]
 
 
 class survey_page(osv.Model):
