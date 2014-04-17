@@ -368,12 +368,35 @@ class stock_quant(osv.osv):
                 to_move_quants.append(quant)
             quants_reconcile.append(quant)
         if to_move_quants:
+            self.recalculate_other_move_states(cr, uid, to_move_quants, move, context=context)
             self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, context=context)
         if location_to.usage == 'internal':
             if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context):
                 for quant in quants_reconcile:
                     quant.refresh()
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+
+    def recalculate_other_move_states(self, cr, uid, quants, move, context=None):
+        move_obj = self.pool.get("stock.move")
+        other_moves = [x.reservation_id for x in quants if x.reservation_id and x.reservation_id.id != move.id]
+        for o_move in other_moves:
+            vals = {}
+            reserved_quant_ids = o_move.reserved_quant_ids
+            if len(reserved_quant_ids) > 0 and not o_move.partially_available:
+                # Partially available is true
+                vals['partially_available'] = True
+            if len(reserved_quant_ids) == 0 and o_move.partially_available:
+                vals['partially_available'] = False
+            if o_move.state == 'assigned':
+                if move_obj.find_move_ancestors(cr, uid, move, context=context):
+                    vals['state'] = 'waiting'
+                else:
+                    vals['state'] = 'confirmed'
+            if vals:
+                move_obj.write(cr, uid, [o_move.id], vals, context=context)
+                
+                
+        
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
         vals = {'location_id': location_dest_id.id,
@@ -3510,9 +3533,9 @@ class stock_package(osv.osv):
             while parent.parent_id:
                 parent = parent.parent_id
             quant_ids = self.get_content(cr, uid, [parent.id], context=context)
-            quants = quant_obj.browse(cr, uid, quant_ids, context=context)
+            quants = [x for x in quant_obj.browse(cr, uid, quant_ids, context=context) if x.qty > 0]
             location_id = quants and quants[0].location_id.id or False
-            if not [quant.location_id.id == location_id for quant in quants if quant.qty > 0]:
+            if not [quant.location_id.id == location_id for quant in quants]:
                 raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
         return True
 
