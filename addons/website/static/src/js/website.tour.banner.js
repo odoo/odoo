@@ -45,13 +45,23 @@
                     content:   _t("Drag the Banner block and drop it in your page."),
                     popover:   { fixed: true },
                 },
-                {
+               {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
-                    element:   '#wrap .carousel:first .carousel-caption > div',
+                    element:   '#wrap .carousel:first div.carousel-content',
                     placement: 'top',
                     title:     _t("Customize banner's text"),
                     content:   _t("Click in the text and start editing it."),
-                    popover:   { next: _t("Continue") },
+                    sampleText: 'Here, a customized text',
+                },
+                {
+                    waitNot:   '#wrap .carousel:first div.carousel-content:has(h2:'+
+                        'containsExact('+_t('Your Banner Title')+')):has(h3:'+
+                        'containsExact('+_t('Click to customize this text')+'))',
+                    element:   '.oe_snippet_parent:visible',
+                    placement: 'bottom',
+                    title:     _t("Get banner properties"),
+                    content:   _t("Select the parent container to get the global options of the banner."),
+                    popover:   { fixed: true },
                 },
                 {
                     element:   '.oe_overlay_options .oe_options:visible',

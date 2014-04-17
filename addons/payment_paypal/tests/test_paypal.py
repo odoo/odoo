@@ -39,7 +39,7 @@ class PaypalServer2Server(PaypalCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
         paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
-        self.assertEqual(paypal.env, 'test', 'test without test env')
+        self.assertEqual(paypal.environment, 'test', 'test without test environment')
 
         res = self.payment_acquirer._paypal_s2s_get_access_token(cr, uid, [self.paypal_id], context=context)
         self.assertTrue(res[self.paypal_id] is not False, 'paypal: did not generate access token')
@@ -73,7 +73,7 @@ class PaypalForm(PaypalCommon):
         # be sure not to do stupid things
         self.payment_acquirer.write(cr, uid, self.paypal_id, {'fees_active': False}, context)
         paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
-        self.assertEqual(paypal.env, 'test', 'test without test env')
+        self.assertEqual(paypal.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -122,7 +122,7 @@ class PaypalForm(PaypalCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
         paypal = self.payment_acquirer.browse(self.cr, self.uid, self.paypal_id, None)
-        self.assertEqual(paypal.env, 'test', 'test without test env')
+        self.assertEqual(paypal.environment, 'test', 'test without test environment')
 
         # update acquirer: compute fees
         self.payment_acquirer.write(cr, uid, self.paypal_id, {
@@ -156,7 +156,7 @@ class PaypalForm(PaypalCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
         paypal = self.payment_acquirer.browse(cr, uid, self.paypal_id, context)
-        self.assertEqual(paypal.env, 'test', 'test without test env')
+        self.assertEqual(paypal.environment, 'test', 'test without test environment')
 
         # typical data posted by paypal after client has successfully paid
         paypal_post_data = {

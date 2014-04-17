@@ -23,6 +23,7 @@ import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_analytic_profit(osv.osv_memory):
     _name = 'hr.timesheet.analytic.profit'
     _description = 'Print Timesheet Profit'
@@ -60,15 +61,12 @@ class account_analytic_profit(osv.osv_memory):
         data['form']['journal_ids'] = [(6, 0, data['form']['journal_ids'])] # Improve me => Change the rml/sxw so that it can support withou [0][2]
         data['form']['employee_ids'] = [(6, 0, data['form']['employee_ids'])]
         datas = {
-             'ids': [],
-             'model': 'account.analytic.line',
-             'form': data['form']
-             }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.profit',
-            'datas': datas,
-             }
-
+            'ids': [],
+            'model': 'account.analytic.line',
+            'form': data['form']
+        }
+        return self.pool['report'].get_action(
+            cr, uid, [], 'hr_timesheet_invoice.report_analyticprofit', data=datas, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
