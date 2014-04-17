@@ -721,7 +721,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_save: function(e) {
         var self = this;
-        $(e.delegateTarget).attr("disabled", true);
+        $(e.target).attr("disabled", true);
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.reload().then(function() {
@@ -732,7 +732,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
             });
         }).always(function(){
-            $(e.delegateTarget).attr("disabled", false);
+            $(e.target).attr("disabled", false);
         });
     },
     on_button_cancel: function(event) {
