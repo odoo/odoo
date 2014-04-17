@@ -790,7 +790,7 @@ instance.web.unblockUI = function() {
 
 
 /* Bootstrap defaults overwrite */
-$.fn.tooltip.Constructor.DEFAULTS.placement = 'auto top';
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'bottom';
 $.fn.tooltip.Constructor.DEFAULTS.html = true;
 
 /**
