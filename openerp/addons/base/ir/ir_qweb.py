@@ -1066,7 +1066,7 @@ class WebAsset(object):
     def last_modified(self):
         if self.source:
             # TODO: return last_update of bundle's ir.ui.view
-            return datetime.datetime.utcnow()
+            return datetime.datetime(1970, 1, 1)
         return datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
 
 class JavascriptAsset(WebAsset):
