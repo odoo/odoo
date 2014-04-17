@@ -166,7 +166,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         $dialog_content.openerpClass();
 
         this.$dialog_box.on('hidden.bs.modal', this, function(){
-            self.trigger("closing");
+            self.close();
         });
         this.$dialog_box.modal('show');
 
@@ -178,8 +178,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
     close: function(reason) {
-        if (this.dialog_inited && this.$el.is(":data(bs.modal)")) {
-            this.$el.parents('.modal').modal('hide');
+        if (this.dialog_inited) {
+            this.trigger("closing", reason);
+            if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
+		this.$el.parents('.modal').modal('hide');
+            }
         }
     },
     _closing: function() {
