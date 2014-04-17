@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-02-06 15:56+0000\n"
-"PO-Revision-Date: 2014-04-08 06:46+0000\n"
+"PO-Revision-Date: 2014-04-17 04:26+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-09 07:06+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-04-17 06:53+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -400,7 +400,7 @@ msgstr "伙伴"
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claim on deliveries"
-msgstr ""
+msgstr "允許在出貨單上有索賠選項"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -920,7 +920,7 @@ msgstr "編號必須在同一公司內唯一！"
 #: code:addons/stock/product.py:448
 #, python-format
 msgid "Future Receptions"
-msgstr ""
+msgstr "日後收貨"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -1209,7 +1209,7 @@ msgstr "檢視"
 #. module: stock
 #: field:stock.location,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "左父項"
 
 #. module: stock
 #: field:product.category,property_stock_valuation_account_id:0
@@ -2404,7 +2404,7 @@ msgstr "總值"
 msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
-msgstr ""
+msgstr "如果連鎖類型並不是Transparent，連動調撥時會寫入庫存日記帳簿。 (如果保持空白，日記簿則不使用)"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -3560,7 +3560,7 @@ msgstr "消耗產品"
 #. module: stock
 #: field:stock.location,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "右父項"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -4575,7 +4575,7 @@ msgstr "未計劃量"
 #. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
-msgstr ""
+msgstr "連動公司"
 
 #. module: stock
 #: view:stock.picking:0
@@ -4599,7 +4599,7 @@ msgid ""
 "This allows you to manage products by using serial numbers. When you select "
 "a serial number on product moves, you can get the upstream or downstream "
 "traceability of that product."
-msgstr ""
+msgstr "這裡允許您透過使用序號管理存貨。當您在存貨調動選擇一個序號時，您將看到該產品的上下游回溯情形。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:128
@@ -4658,6 +4658,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊新增此產品的出貨單。\n"
+"              </p><p>\n"
+"                您將在此找到所有此產品相關的送貨記錄，以及所有需出貨給\n"
+"                客戶的產品。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -4726,13 +4733,13 @@ msgstr "目的地點"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Picking Slip"
-msgstr ""
+msgstr "提貨單"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "指定包裝的屬性，例如類型、產品數量等等。"
 
 #. module: stock
 #: view:product.product:0
