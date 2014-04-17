@@ -283,7 +283,7 @@ class stock_quant(osv.osv):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         ''' Overwrite the read_group in order to sum the function field 'inventory_value' in group by'''
-        res = super(stock_quant, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=True)
+        res = super(stock_quant, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
         if 'inventory_value' in fields:
             for line in res:
                 if '__domain' in line:
@@ -555,8 +555,10 @@ class stock_quant(osv.osv):
             if move.partially_available:
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
             self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
-            for quant in move.reserved_quant_ids:
-                self._quant_reconcile_negative(cr, uid, quant, move, context=context)
+            ancestors = self.find_move_ancestors(cr, uid, move, context=context)
+            if move.state == 'waiting' or ancestors:
+                for quant in move.reserved_quant_ids:
+                    self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
         ''' Implementation of removal strategies
@@ -2134,7 +2136,7 @@ class stock_move(osv.osv):
         pack_obj = self.pool.get("stock.quant.package")
         packs = set()
         for move in self.browse(cr, uid, ids, context=context):
-            packs |= set([q.package_id.id for q in move.quant_ids if q.package_id and q.qty > 0])
+            packs |= set([q.package_id for q in move.quant_ids if q.package_id and q.qty > 0])
         return pack_obj._check_location_constraint(cr, uid, list(packs), context=context)
 
     def find_move_ancestors(self, cr, uid, move, context=None):
@@ -3513,13 +3515,13 @@ class stock_package(osv.osv):
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
     }
 
-    def _check_location_constraint(self, cr, uid, ids, context=None):
+    def _check_location_constraint(self, cr, uid, packs, context=None):
         '''checks that all quants in a package are stored in the same location. This function cannot be used
            as a constraint because it needs to be checked on pack operations (they may not call write on the
            package)
         '''
         quant_obj = self.pool.get('stock.quant')
-        for pack in self.browse(cr, uid, ids, context=context):
+        for pack in packs:
             parent = pack
             while parent.parent_id:
                 parent = parent.parent_id
