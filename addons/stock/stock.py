@@ -555,10 +555,6 @@ class stock_quant(osv.osv):
             if move.partially_available:
                 self.pool.get("stock.move").write(cr, uid, [move.id], {'partially_available': False}, context=context)
             self.write(cr, SUPERUSER_ID, related_quants, {'reservation_id': False}, context=context)
-            ancestors = self.find_move_ancestors(cr, uid, move, context=context)
-            if move.state == 'waiting' or ancestors:
-                for quant in move.reserved_quant_ids:
-                    self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
         ''' Implementation of removal strategies
