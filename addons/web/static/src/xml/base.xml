@@ -1410,7 +1410,7 @@
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-accesskey="widget.node.attrs.accesskey">
         <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <div t-if="widget.is_stat_button and widget.icon" class="stat_button_icon"><t t-raw="widget.icon"/></div>
+        <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>

@@ -1922,7 +1922,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
         this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
-        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + " fa-fw\"></span>";
+        this.icon_class = node.attrs.icon && "stat_button_icon fa " + node.attrs.icon + " fa-fw";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
