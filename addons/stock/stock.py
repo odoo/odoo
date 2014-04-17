@@ -648,7 +648,7 @@ class stock_picking(osv.osv):
         '''The state of a picking depends on the state of its related stock.move
             draft: the picking has no line or any one of the lines is draft
             done, draft, cancel: all lines are done / draft / cancel
-            confirmed, auto, assigned depends on move_type (all at once or direct)
+            confirmed, waiting, assigned, partially_available depends on move_type (all at once or partial)
         '''
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
@@ -673,11 +673,14 @@ class stock_picking(osv.osv):
                 #in partially available state, otherwise, picking is in waiting or confirmed state
                 res[pick.id] = order_inv[max(lst)]
                 if not all(x == 2 for x in lst):
-                    #if all moves aren't assigned, check if we have one product partially available
-                    for move in pick.move_lines:
-                        if move.partially_available:
-                            res[pick.id] = 'partially_available'
-                            break
+                    if any(x == 2 for x in lst):
+                        res[pick.id] = 'partially_available'
+                    else:
+                        #if all moves aren't assigned, check if we have one product partially available
+                        for move in pick.move_lines:
+                            if move.partially_available:
+                                res[pick.id] = 'partially_available'
+                                break
         return res
 
     def _get_pickings(self, cr, uid, ids, context=None):
@@ -3377,7 +3380,7 @@ class stock_location_path(osv.osv):
     }
     _defaults = {
         'auto': 'auto',
-        'delay': 1,
+        'delay': 0,
         'invoice_state': 'none',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c),
         'propagate': True,
