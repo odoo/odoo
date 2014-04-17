@@ -4,7 +4,7 @@
 
 <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" inherit_option_id="website.contactus">
     <xpath expr="//div[@name='mail_button']" position="replace">
-        <form action="/crm/contactus" method="post" class="form-horizontal mt32" >
+        <form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
             <t t-foreach="kwargs" t-as="kwarg">
                 <input type="hidden" t-att-name="kwarg[0]" t-att-value="kwarg[1]"/>
             </t>

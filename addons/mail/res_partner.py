@@ -28,6 +28,7 @@ class res_partner_mail(osv.Model):
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
     _mail_flat_thread = False
+    _mail_mass_mailing = _('Customers')
 
     _columns = {
         'notification_email_send': fields.selection([
@@ -53,4 +54,5 @@ class res_partner_mail(osv.Model):
             self._message_add_suggested_recipient(cr, uid, recipients, partner, partner=partner, reason=_('Partner Profile'))
         return recipients
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def message_get_default_recipients(self, cr, uid, ids, context=None):
+        return dict((id, {'partner_ids': [id], 'email_to': False, 'email_cc': False}) for id in ids)
