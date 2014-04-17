@@ -427,6 +427,7 @@
                 editor.edit();
             }
         });
+        website.editor_bar = editor;
     };
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */

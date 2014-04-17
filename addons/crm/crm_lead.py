@@ -79,6 +79,7 @@ class crm_lead(format_address, osv.osv):
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.fold and obj.stage_id.sequence > 1,
         },
     }
+    _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         if context.get('default_type') == 'lead':
@@ -980,15 +981,13 @@ class crm_lead(format_address, osv.osv):
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
 
-    def _get_formview_action(self, cr, uid, id, context=None):
-        action = super(crm_lead, self)._get_formview_action(cr, uid, id, context=context)
+    def get_formview_id(self, cr, uid, id, context=None):
         obj = self.browse(cr, uid, id, context=context)
         if obj.type == 'opportunity':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
-        return action
+        else:
+            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, model=model, context=context)
+        return view_id
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)

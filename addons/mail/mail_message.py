@@ -81,22 +81,6 @@ class mail_message(osv.Model):
             context = dict(context, default_type=None)
         return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
-    def _shorten_name(self, name):
-        if len(name) <= (self._message_record_name_length + 3):
-            return name
-        return name[:self._message_record_name_length] + '...'
-
-    def _get_record_name(self, cr, uid, ids, name, arg, context=None):
-        """ Return the related document name, using name_get. It is done using
-            SUPERUSER_ID, to be sure to have the record name correctly stored. """
-        # TDE note: regroup by model/ids, to have less queries to perform
-        result = dict.fromkeys(ids, False)
-        for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message.get('model') or not message.get('res_id') or message['model'] not in self.pool:
-                continue
-            result[message['id']] = self.pool[message['model']].name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1]
-        return result
-
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, False) for id in ids)
@@ -135,16 +119,6 @@ class mail_message(osv.Model):
             inversed because we search unread message on a read column. """
         return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.starred', '=', domain[0][2])]
 
-    def name_get(self, cr, uid, ids, context=None):
-        # name_get may receive int id instead of an id list
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = []
-        for message in self.browse(cr, uid, ids, context=context):
-            name = '%s: %s' % (message.subject or '', strip_tags(message.body or '') or '')
-            res.append((message.id, self._shorten_name(name.lstrip(' :'))))
-        return res
-
     _columns = {
         'type': fields.selection([
                         ('email', 'Email'),
@@ -172,9 +146,7 @@ class mail_message(osv.Model):
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(_get_record_name, type='char',
-            store=True, string='Message Record Name',
-            help="Name get of the related document."),
+        'record_name': fields.char('Message Record Name', help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
             string='Notifications', auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
@@ -783,6 +755,13 @@ class mail_message(osv.Model):
                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                             (self._description, operation))
 
+    def _get_record_name(self, cr, uid, values, context=None):
+        """ Return the related document name, using name_get. It is done using
+            SUPERUSER_ID, to be sure to have the record name correctly stored. """
+        if not values.get('model') or not values.get('res_id') or values['model'] not in self.pool:
+            return False
+        return self.pool[values['model']].name_get(cr, SUPERUSER_ID, [values['res_id']], context=context)[0][1]
+
     def _get_reply_to(self, cr, uid, values, context=None):
         """ Return a specific reply_to: alias of the document through message_get_reply_to
             or take the email_from
@@ -841,8 +820,11 @@ class mail_message(osv.Model):
             values['message_id'] = self._get_message_id(cr, uid, values, context=context)
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(cr, uid, values, context=context)
+        if 'record_name' not in values and 'default_record_name' not in context:
+            values['record_name'] = self._get_record_name(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
+
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
                      user_signature=context.get('mail_notify_user_signature', True))
@@ -887,78 +869,6 @@ class mail_message(osv.Model):
     # Messaging API
     #------------------------------------------------------
 
-    # TDE note: this code is not used currently, will be improved in a future merge, when quoted context
-    # will be added to email send for notifications. Currently only WIP.
-    MAIL_TEMPLATE = """<div>
-    % if message:
-        ${display_message(message)}
-    % endif
-    % for ctx_msg in context_messages:
-        ${display_message(ctx_msg)}
-    % endfor
-    % if add_expandable:
-        ${display_expandable()}
-    % endif
-    ${display_message(header_message)}
-    </div>
-
-    <%def name="display_message(message)">
-        <div>
-            Subject: ${message.subject}<br />
-            Body: ${message.body}
-        </div>
-    </%def>
-
-    <%def name="display_expandable()">
-        <div>This is an expandable.</div>
-    </%def>
-    """
-
-    def message_quote_context(self, cr, uid, id, context=None, limit=3, add_original=False):
-        """
-            1. message.parent_id = False: new thread, no quote_context
-            2. get the lasts messages in the thread before message
-            3. get the message header
-            4. add an expandable between them
-
-            :param dict quote_context: options for quoting
-            :return string: html quote
-        """
-        add_expandable = False
-
-        message = self.browse(cr, uid, id, context=context)
-        if not message.parent_id:
-            return ''
-        context_ids = self.search(cr, uid, [
-            ('parent_id', '=', message.parent_id.id),
-            ('id', '<', message.id),
-            ], limit=limit, context=context)
-
-        if len(context_ids) >= limit:
-            add_expandable = True
-            context_ids = context_ids[0:-1]
-
-        context_ids.append(message.parent_id.id)
-        context_messages = self.browse(cr, uid, context_ids, context=context)
-        header_message = context_messages.pop()
-
-        try:
-            if not add_original:
-                message = False
-            result = MakoTemplate(self.MAIL_TEMPLATE).render_unicode(message=message,
-                                                        context_messages=context_messages,
-                                                        header_message=header_message,
-                                                        add_expandable=add_expandable,
-                                                        # context kw would clash with mako internals
-                                                        ctx=context,
-                                                        format_exceptions=True)
-            result = result.strip()
-            return result
-        except Exception:
-            _logger.exception("failed to render mako template for quoting message")
-            return ''
-        return result
-
     def _notify(self, cr, uid, newid, context=None, force_send=False, user_signature=True):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
@@ -975,9 +885,11 @@ class mail_message(osv.Model):
                 cr, SUPERUSER_ID, [
                     ('res_model', '=', message.model),
                     ('res_id', '=', message.res_id),
-                    ('subtype_ids', 'in', message.subtype_id.id)
                 ], context=context)
-            partners_to_notify |= set(fo.partner_id.id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context))
+            partners_to_notify |= set(
+                fo.partner_id.id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)
+                if message.subtype_id.id in [st.id for st in fo.subtype_ids]
+            )
         # remove me from notified partners, unless the message is written on my own wall
         if message.subtype_id and message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
             partners_to_notify |= set([message.author_id.id])
@@ -1006,25 +918,3 @@ class mail_message(osv.Model):
                         'partner_id': partner.id,
                         'read': True,
                     }, context=context)
-
-    #------------------------------------------------------
-    # Tools
-    #------------------------------------------------------
-
-    def check_partners_email(self, cr, uid, partner_ids, context=None):
-        """ Verify that selected partner_ids have an email_address defined.
-            Otherwise throw a warning. """
-        partner_wo_email_lst = []
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
-            if not partner.email:
-                partner_wo_email_lst.append(partner)
-        if not partner_wo_email_lst:
-            return {}
-        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
-        for partner in partner_wo_email_lst:
-            warning_msg += '\n- %s' % (partner.name)
-        return {'warning': {
-                    'title': _('Partners email addresses not found'),
-                    'message': warning_msg,
-                    }
-                }

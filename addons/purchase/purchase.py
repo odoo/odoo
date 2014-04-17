@@ -133,10 +133,7 @@ class purchase_order(osv.osv):
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            invoiced = False
-            if purchase.invoiced_rate == 100.00:
-                invoiced = True
-            res[purchase.id] = invoiced
+            res[purchase.id] = all(line.invoiced for line in purchase.order_line)
         return res
     
     def _get_journal(self, cr, uid, context=None):
@@ -555,7 +552,7 @@ class purchase_order(osv.osv):
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
-                po_line.write({'invoiced': True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoice_lines': [(4, inv_line_id)]}, context=context)
 
             # get invoice data and create invoice
             inv_data = {
@@ -1261,10 +1258,10 @@ class mail_mail(osv.Model):
     _name = 'mail.mail'
     _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.model == 'purchase.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent and mail.model == 'purchase.order':
             self.pool.get('purchase.order').signal_send_rfq(cr, uid, [mail.res_id])
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)
 
 
 class product_template(osv.Model):
@@ -1322,9 +1319,15 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for po_id in po_ids:
-            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
-            workflow.trg_write(uid, 'purchase.order', po_id, cr)
+        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+            purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
+            invoiced = []
+            for po_line in order.order_line:
+                if any(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                    invoiced.append(po_line.id)
+            if invoiced:
+                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
+            workflow.trg_write(uid, 'purchase.order', order.id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

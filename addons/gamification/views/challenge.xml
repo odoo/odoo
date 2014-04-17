@@ -45,9 +45,9 @@
                             <h1>    
                                 <field name="name" placeholder="e.g. Monthly Sales Objectives"/>
                             </h1>
-                            <label for="user_ids" class="oe_edit_only" string="Assign Challenge To"/>
+                            <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
                             <div>
-                                <field name="user_ids" widget="many2many_tags" />
+                                <field name="user_domain" widget="char_domain" options="{'model': 'res.users'}" />
                             </div>
                         </div>
 
@@ -87,12 +87,12 @@
                             </page>
                             <page string="Reward">
                                 <group>
-                                    <field name="reward_id"/>
+                                    <field name="reward_id" attrs="{'required': [('reward_realtime','=', True)]}" />
                                     <field name="reward_first_id" />
                                     <field name="reward_second_id" attrs="{'invisible': [('reward_first_id','=', False)]}" />
                                     <field name="reward_third_id" attrs="{'invisible': ['|',('reward_first_id','=', False),('reward_second_id','=', False)]}" />
                                     <field name="reward_failure" attrs="{'invisible': [('reward_first_id','=', False)]}" />
-                                    <field name="reward_realtime" attrs="{'readonly': [('reward_id','=', False)], 'required': [('reward_id','!=', False)]}" />
+                                    <field name="reward_realtime" />
                                 </group>
                                 <div class="oe_grey">
                                     <p>Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed.</p>
@@ -100,7 +100,6 @@
                             </page>
                             <page string="Advanced Options">
                                 <group string="Subscriptions">
-                                    <field name="autojoin_group_id" />
                                     <field name="invited_user_ids" widget="many2many_tags" />
                                 </group>
                                 <group string="Notification Messages">

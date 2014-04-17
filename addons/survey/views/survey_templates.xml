@@ -10,7 +10,7 @@
                         <h1>Thank you!</h1>
                         <div t-field="survey.thank_you_message" />
                         <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
-                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">print your answers</a>.</div>
+                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">review your answers</a>.</div>
                     </div>
                 </div>
             </div>
@@ -178,7 +178,7 @@
         </div>
         <div t-if="question.display_mode == 'columns' " class="row js_radio">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label>
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -200,7 +200,7 @@
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
             <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
-                <label>
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
@@ -256,7 +256,7 @@
                             <h1><span t-field='survey.title'/></h1>
                             <t t-if="survey.description"><div t-field='survey.description'/></t>
                         </div>
-                        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)">
+                        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)" t-att-data-scores="'/survey/scores/%s/%s' % (slug(survey), token) if quizz_correction else ''">
                             <t t-foreach="survey.page_ids" t-as="page">
                                 <div class="page-header">
                                     <h1 t-field='page.title' />
@@ -268,6 +268,7 @@
                                         <h2>
                                             <span t-field='question.question' />
                                             <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                                            <span t-if="quizz_correction" class="badge" t-att-data-score-question="question.id"></span>
                                         </h2>
                                         <t t-if="question.description"><div class="text-muted" t-field='question.description' /></t>
                                         <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
