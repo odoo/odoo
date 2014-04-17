@@ -821,7 +821,7 @@ class Reference(Selection):
     def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name in self.get_values(env) and len(value) <= 1:
-                return value.attach_env(env) or False
+                return value._attach_env(env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
             return env[res_model].browse(int(res_id))
@@ -904,7 +904,7 @@ class Many2one(_Relational):
     def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
-                return value.attach_env(env)
+                return value._attach_env(env)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
             return env[self.comodel_name].browse(value[0])
@@ -952,7 +952,7 @@ class _RelationalMulti(_Relational):
     def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
-                return value.attach_env(env)
+                return value._attach_env(env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             result = env[self.comodel_name]

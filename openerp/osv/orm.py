@@ -1035,7 +1035,7 @@ class BaseModel(object):
         """
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         if raw_data:
-            self = self.attach_env(self._env(export_raw_data=True))
+            self = self.sudo(export_raw_data=True)
         return {'datas': self.__export_rows(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
@@ -5128,22 +5128,27 @@ class BaseModel(object):
             return self
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    def attach_env(self, env):
+    def _attach_env(self, env):
         """ Return an instance equivalent to `self` attached to `env`.
         """
         return self._browse(env, self._ids)
 
     @api.new
-    def sudo(self, cr=None, user=SUPERUSER_ID, context=(), **kwargs):
+    def sudo(self, cr=None, user=None, context=None, **kwargs):
         """ Return an instance equivalent to `self` attached to an environment
             based on `self._env` and modified by parameters.
 
             :param cr: an optional cursor object
-            :param user: a user record or id, by default the superuser
+            :param user: a user record or id
             :param context: an optional context dictionary
             :param kwargs: key-value pairs to modify the context
+
+            When called without parameters, ``self.sudo()`` is equivalent to
+            ``self.sudo(user=SUPERUSER_ID)``.
         """
-        return self.attach_env(self._env(cr, user, context, **kwargs))
+        if (cr, user, context) == (None, None, None) and not kwargs:
+            user = SUPERUSER_ID
+        return self._attach_env(self._env(cr, user, context, **kwargs))
 
     def unbrowse(self):
         """ Return the list of record ids of this instance. """
