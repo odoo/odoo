@@ -28,7 +28,7 @@ class ViewCase(common.TransactionCase):
             self.assertTreesEqual(c1, c2, msg)
 
 
-class TestNodeLocator(common.BaseCase):
+class TestNodeLocator(common.TransactionCase):
     """
     The node locator returns None when it can not find a node, and the first
     match when it finds something (no jquery-style node sets)

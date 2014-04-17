@@ -1915,6 +1915,31 @@ class BaseModel(object):
             }
         return result
 
+    def get_formview_id(self, cr, uid, id, context=None):
+        """ Return an view id to open the document with. This method is meant to be
+            overridden in addons that want to give specific view ids for example.
+
+            :param int id: id of the document to open
+        """
+        return False
+
+    def get_formview_action(self, cr, uid, id, context=None):
+        """ Return an action to open the document. This method is meant to be
+            overridden in addons that want to give specific view ids for example.
+
+            :param int id: id of the document to open
+        """
+        view_id = self.get_formview_id(cr, uid, id, context=context)
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': self._name,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'views': [(view_id, 'form')],
+                'target': 'current',
+                'res_id': id,
+            }
+
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
         return self.pool['ir.ui.view'].postprocess_and_fields(
             cr, uid, self._name, node, view_id, context=context)
@@ -2259,7 +2284,7 @@ class BaseModel(object):
                 'year': 'YYYY'
             }
             time_intervals = {
-                'day': dateutil.relativedelta.relativedelta(months=3),
+                'day': dateutil.relativedelta.relativedelta(days=1),
                 'week': datetime.timedelta(days=7),
                 'month': dateutil.relativedelta.relativedelta(months=1),
                 'quarter': dateutil.relativedelta.relativedelta(months=3),
@@ -2332,7 +2357,7 @@ class BaseModel(object):
         del data['id']
         return data
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context={}, orderby=False, lazy=True):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
 
@@ -2364,6 +2389,8 @@ class BaseModel(object):
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
+        if context is None:
+            context = {}
         self.check_access_rights(cr, uid, 'read')
         query = self._where_calc(cr, uid, domain, context=context) 
         fields = fields or self._columns.keys()
