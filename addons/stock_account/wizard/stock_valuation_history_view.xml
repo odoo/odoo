@@ -48,6 +48,7 @@
                 <field name="move_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date"/>
+                <field name="source"/>
                 <field name="quantity" sum="# of Products "/>
                 <field name="inventory_value" sum="Total Value"/>
            </tree>
@@ -91,7 +92,6 @@
             <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_stock_history_report_tree"/>
     </record>
     <menuitem action="action_history_tree"
             id="menu_action_history_tree"
