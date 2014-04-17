@@ -49,7 +49,7 @@
 - 
   Make a delivery order of 5 pieces to the customer
 - 
-  !record {model: stock.picking, id: delivery_order1}:
+  !record {model: stock.picking, id: delivery_order_wise1}:
     name: outgoing picking
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
@@ -62,13 +62,13 @@
   Assign and confirm
 - 
   !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('delivery_order1')], context=context)
-    self.action_assign(cr, uid, [ref('delivery_order1')])
-    self.do_prepare_partial(cr, uid, [ref('delivery_order1')])
+    self.action_confirm(cr, uid, [ref('delivery_order_wise1')], context=context)
+    self.action_assign(cr, uid, [ref('delivery_order_wise1')])
+    self.do_prepare_partial(cr, uid, [ref('delivery_order_wise1')])
 - 
   Make a delivery order of 5 pieces to the customer
 - 
-  !record {model: stock.picking, id: delivery_order2}:
+  !record {model: stock.picking, id: delivery_order_wise2}:
     name: outgoing picking
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
@@ -81,16 +81,16 @@
   Assign and confirm
 - 
   !python {model: stock.picking}: |
-    self.action_confirm(cr, uid, [ref('delivery_order2')], context=context)
-    self.action_assign(cr, uid, [ref('delivery_order2')])
-    self.do_prepare_partial(cr, uid, [ref('delivery_order2')])
+    self.action_confirm(cr, uid, [ref('delivery_order_wise2')], context=context)
+    self.action_assign(cr, uid, [ref('delivery_order_wise2')])
+    self.do_prepare_partial(cr, uid, [ref('delivery_order_wise2')])
 - 
   The operator is a wise guy and decides to do the opposite as OpenERP proposes.  He uses the products reserved on picking 1 on picking 2 and vice versa 
 - 
   !python {model: stock.picking}: |
     stock_pack = self.pool.get('stock.pack.operation')
-    picking1 = self.browse(cr, uid, ref('delivery_order1'))
-    picking2 = self.browse(cr, uid, ref('delivery_order2'))
+    picking1 = self.browse(cr, uid, ref('delivery_order_wise1'))
+    picking2 = self.browse(cr, uid, ref('delivery_order_wise2'))
     pack_ids1 = [x.id for x in picking1.pack_operation_ids]
     pack_ids2 = [x.id for x in picking2.pack_operation_ids]
     stock_pack.write(cr, uid, pack_ids1, {'picking_id': picking2.id})
@@ -100,7 +100,7 @@
   Process this picking
 - 
   !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('delivery_order1')], context=context)
+    self.do_transfer(cr, uid, [ref('delivery_order_wise1')], context=context)
 - 
   Check a negative quant was created by this picking 
 - 
@@ -111,7 +111,7 @@
   Process the second picking
 - 
   !python {model: stock.picking}: |
-    self.do_transfer(cr, uid, [ref('delivery_order2')], context=context)
+    self.do_transfer(cr, uid, [ref('delivery_order_wise2')], context=context)
 - 
   Check all quants are in Customers and there are no negative quants anymore
 - 

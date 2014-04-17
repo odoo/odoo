@@ -3525,8 +3525,13 @@ class stock_package(osv.osv):
                 parent = parent.parent_id
             quant_ids = self.get_content(cr, uid, [parent.id], context=context)
             quants = quant_obj.browse(cr, uid, quant_ids, context=context)
-            location_id = quants and quants[0].location_id.id or False
-            if not all([quant.location_id.id == location_id for quant in quants if quant.qty > 0]):
+            normal_quants = [x for x in quants if not x.propagated_from_id if x.qty > 0]
+            propagated_quants = [x for x in quants if x.propagated_from_id if x.qty > 0]
+            location_id = normal_quants and normal_quants[0].location_id.id or False
+            prop_loc_id = propagated_quants and propagated_quants[0].location_id.id or False
+            all_normal = all([quant.location_id.id == location_id for quant in normal_quants])
+            all_propagated = all([quant.location_id.id == prop_loc_id for quant in propagated_quants])
+            if not all_normal or not all_propagated:
                 raise osv.except_osv(_('Error'), _('Everything inside a package should be in the same location'))
         return True
 
