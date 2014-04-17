@@ -103,7 +103,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr, uid, context = self._env.args
+        cr, uid, context = self.env.args
         if options is None:
             options = {}
 
