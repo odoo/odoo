@@ -366,24 +366,12 @@ class res_partner(osv.osv, format_address):
             domain = {'title': [('domain', '=', 'contact')]}
         return {'value': value, 'domain': domain}
 
-    def onchange_use_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, empty_fields=False, context=None):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-        result = {}
+        result = {'value': {}}
         address_fields = self._address_fields(cr, uid, context=context)
-        if parent_id and use_parent_address:
-            parent_company = self.browse(cr, uid, parent_id, context=context)
-            result['value'] = dict((key, value_or_id(parent_company[key])) for key in address_fields)
-        else:
-            result['value'] = dict((key,"") for key in address_fields)
-        return result
-
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
-        def value_or_id(val):
-            """ return val or val.id if val is a browse record """
-            return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-        result = {}
         if parent_id:
             if ids:
                 partner = self.browse(cr, uid, ids[0], context=context)
@@ -394,11 +382,13 @@ class res_partner(osv.osv, format_address):
                                                       'company then a new contact should be created under that new '
                                                       'company. You can use the "Discard" button to abandon this change.')}
             parent_company = self.browse(cr, uid, parent_id, context=context)
-            address_fields = self._address_fields(cr, uid, context=context)
             if use_parent_address:
                 result['value'] = dict((key, value_or_id(parent_company[key])) for key in address_fields)
+            if empty_fields and not use_parent_address: 
+                result['value'] = dict((key,"") for key in address_fields)
         else:
-            result['value'] = {'use_parent_address': False}
+            if use_parent_address: result['value'] = dict((key,"") for key in address_fields)
+            result['value']['use_parent_address'] = False
         return result
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
