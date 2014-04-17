@@ -396,12 +396,12 @@ class QWeb(orm.AbstractModel):
     def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
         """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
         name = template_attributes['call-assets']
-        template_attributes['call'] = name
 
         # Backward compatibility hack for manifest usage
         qwebcontext['manifest_list'] = openerp.addons.web.controllers.main.manifest_list
 
-        content = self.render_tag_call(element, template_attributes, generated_attributes, qwebcontext)
+        content = self.render_tag_call(
+            element, {'call': name}, generated_attributes, qwebcontext)
         if qwebcontext.get('debug'):
             return content
         bundle = AssetsBundle(name, html=content)
