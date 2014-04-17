@@ -1078,8 +1078,8 @@ instance.web.Client = instance.web.Widget.extend({
     },
     bind_events: function() {
         var self = this;
-        this.$el.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
-            $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
+        this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
+            $(this).attr('data-toggle', 'tooltip').tooltip().trigger('mouseenter');
         });
         this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
@@ -1103,7 +1103,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
-            $.fn.tipsy.clear();
+            $.fn.tooltip('destroy');
             if (!$(ev.target).is('input[type=file]')) {
                 self.$el.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }

@@ -452,7 +452,7 @@ $sheet-padding: 16px
                 display: inline-block
                 height: 12px
                 width: 12px
-                vertical-align: bottom
+                vertical-align: top
                 border-radius: 10px
                 margin: 1px 0
             &.oe_form_invalid
@@ -471,33 +471,6 @@ $sheet-padding: 16px
                 font-style: italic
                 text-decoration: none
         margin-bottom: 1px
-    // }}}
-    // Tooltips {{{
-    &.oe_tooltip
-        font-size: 12px
-        .oe_tooltip_string
-            color: #FD5
-            font-weight: bold
-            font-size: 13px
-        .oe_tooltip_help
-            white-space: pre-wrap
-        .oe_tooltip_technical
-            padding: 0 0 4px 0
-            margin: 5px 0 0 15px
-            li
-                list-style: circle
-        .oe_tooltip_technical_title
-            font-weight: bold
-        .oe_tooltip_close
-            margin: -5px 0 0 2px
-            cursor: default
-            float: right
-            color: white
-            &:hover
-                color: #999
-                cursor: pointer
-        .oe_tooltip_message
-            max-width: 310px
     // }}}
     // Notebook {{{
     .oe_notebook
@@ -1577,7 +1550,7 @@ $sheet-padding: 16px
     // FormView.header {{{
     .oe_form > :not(.oe_form_nosheet) header
         padding-left: 2px
-        ul
+        ul:not(.oe_tooltip_technical)
             display: inline-block
             float: right
         .oe_button
@@ -2703,6 +2676,44 @@ body.oe_single_form
             overflow: hidden !important
 // }}}
 
+// End of customize
+
+// Customize bootstrap3 for tooltip
+.tooltip
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 12px
+    background: white
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+    background-color: transparent
+    .tooltip-inner
+        text-align: left !important
+        max-width: 350px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
 
 // Hack for ui icon {{{
 .ui-icon
