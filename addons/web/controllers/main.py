@@ -316,7 +316,7 @@ def get_last_modified(files):
                    for f in files)
     return datetime.datetime(1970, 1, 1)
 
-def make_conditional(response, last_modified=None, etag=None):
+def make_conditional(response, last_modified=None, etag=None, max_age=0):
     """ Makes the provided response conditional based upon the request,
     and mandates revalidation from clients
 
@@ -331,7 +331,7 @@ def make_conditional(response, last_modified=None, etag=None):
     :rtype: werkzeug.wrappers.Response
     """
     response.cache_control.must_revalidate = True
-    response.cache_control.max_age = 0
+    response.cache_control.max_age = max_age
     if last_modified:
         response.last_modified = last_modified
     if etag:
@@ -589,40 +589,30 @@ class Home(http.Controller):
 
     @http.route('/web/js/<xmlid>', type='http', auth="none")
     def js_bundle(self, xmlid, **kw):
-        values = dict(manifest_list=manifest_list) # manifest backward compatible mode, to be removed
+        # manifest backward compatible mode, to be removed
+        values = {'manifest_list': manifest_list}
         assets_html = request.render(xmlid, lazy=False, qcontext=values)
         bundle = AssetsBundle(xmlid, assets_html)
-        bundle.last_modified
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
-            return werkzeug.wrappers.Response(status=304)
-        headers = [('Content-Type', 'application/javascript')]
 
-        if True:
-            # WIP: decide best cache settings
-            headers.append(('Cache-Control', 'max-age=%s' % (60*5)))
-            return request.make_response(bundle.js(), headers)
+        response = request.make_response(
+            bundle.js(), [('Content-Type', 'application/javascript')])
 
+        # TODO: check that we don't do weird lazy overriding of __call__ which break body-removal
         return make_conditional(
-            request.make_response(bundle.js(), headers),
-            bundle.last_modified, bundle.checksum)
+            response, bundle.last_modified, bundle.checksum, max_age=60*5)
 
     @http.route('/web/css/<xmlid>', type='http', auth='none')
     def css_bundle(self, xmlid, **kw):
-        values = dict(manifest_list=manifest_list) # manifest backward compatible mode, to be removed
+        values = {'manifest_list': manifest_list} # manifest backward compatible mode, to be removed
         assets_html = request.render(xmlid, lazy=False, qcontext=values)
         bundle = AssetsBundle(xmlid, assets_html)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= bundle.last_modified:
-            return werkzeug.wrappers.Response(status=304)
-        headers = [('Content-Type', 'text/css')]
 
-        if True:
-            # WIP: decide best cache settings
-            headers.append(('Cache-Control', 'max-age=%s' % (60*5)))
-            return request.make_response(bundle.css(), headers)
+        response = request.make_response(
+            bundle.css(), [('Content-Type', 'text/css')])
 
         return make_conditional(
-            request.make_response(bundle.css(), headers),
-            bundle.last_modified, bundle.checksum)
+            response, bundle.last_modified, bundle.checksum, max_age=60*5)
+
 
 class WebClient(http.Controller):
 
