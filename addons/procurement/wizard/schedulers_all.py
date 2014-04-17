@@ -40,7 +40,7 @@ class procurement_compute_all(osv.osv_memory):
         """
         proc_obj = self.pool.get('procurement.order')
         #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-        new_cr = self.pool.db.cursor()
+        new_cr = self.pool.cursor()
         proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, context=context)
         #close the new cursor
         new_cr.close()

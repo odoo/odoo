@@ -19,8 +19,9 @@
 #
 ##############################################################################
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -116,9 +117,11 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                         AND journal_id IN %s",(tuple(ids), date1, date2, tuple(journal_ids)))
         return self.cr.fetchone()[0] or 0.0
 
-report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',
-        'account.analytic.account',
-        'addons/account/project/report/quantity_cost_ledger.rml',
-        parser=account_analytic_quantity_cost_ledger, header="internal")
+
+class report_analyticcostledgerquantity(osv.AbstractModel):
+    _name = 'report.account.report_analyticcostledgerquantity'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_analyticcostledgerquantity'
+    _wrapped_report_class = account_analytic_quantity_cost_ledger
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

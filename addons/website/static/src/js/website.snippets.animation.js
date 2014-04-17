@@ -34,7 +34,6 @@
             var $snipped_id = $(this);
             if ($snipped_id.data("snippet-view")) {
                 $snipped_id.data("snippet-view").stop();
-                $snipped_id.data("snippet-view", false);
             }
         });
     };
@@ -146,6 +145,13 @@
                     });
                 }
             });
+        },
+    });
+
+    website.snippet.animationRegistry.media_video = website.snippet.Animation.extend({
+        selector: ".media_iframe_video",
+        start: function () {
+            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
         },
     });
 })();

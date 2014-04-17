@@ -24,4 +24,10 @@
         #avoid the xml id and the associated resource being dropped by the orm by manually making a hit on it
         self._update_dummy(cr, uid, xml_record['model'], xml_record['module'], xml_record['name'])
     
+-
+  !python {model: res.company}: |
+    #create the transit location for each company existing
+    company_ids = self.search(cr, uid, [('internal_transit_location_id', '=', False)], context=context)
+    for company in self.browse(cr, uid, company_ids, context=context):
+        self.create_transit_location(cr, uid, company.id, company.name, context=context)
 

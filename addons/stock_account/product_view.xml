@@ -43,7 +43,7 @@
 		</xpath>
 		<xpath expr="//field[@name='standard_price']" position='replace'>
                     <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                    <field name="cost_method" groups="product.group_costing_method"/>
+                    <field name="cost_method" groups="stock_account.group_inventory_valuation"/>
 		</xpath>
             </field>
         </record>
@@ -54,13 +54,13 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace" version="7.0">
-                    <field name="cost_method" groups="product.group_costing_method" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                    <field name="cost_method" groups="stock_account.group_inventory_valuation" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
                         <field name="standard_price" attrs="{'readonly':['|', ('is_only_child', '=', False), '&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
                             type="action" attrs="{'invisible':['|', '|', ('is_only_child', '=', False), ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
-                            class="oe_link" groups="product.group_costing_method"/>
+                            class="oe_link" groups="stock_account.group_inventory_valuation"/>
                     </div>
                 </field>
             </field>
@@ -73,7 +73,7 @@
             <field name="priority">26</field>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='properties']" position="before">
-                    <group>
+                    <group groups="stock_account.group_stock_inventory_valuation">
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>

@@ -49,21 +49,6 @@ openerp.gamification = function(instance) {
                         self.get_goal_todo_info();
                     });
                 });
-            },
-            'click .oe_goal h4': function(event) {
-                var self = this;
-                this.kkeys = [];
-                $(document).on('keydown.klistener', function(event) {
-                    if ("37,38,39,40,65,66".indexOf(event.keyCode) < 0) {
-                        $(document).off('keydown.klistener');
-                    } else {
-                        self.kkeys.push(event.keyCode);
-                        if (self.kkeys.toString().indexOf("38,38,40,40,37,39,37,39,66,65") >= 0) {
-                            new instance.web.Model('gamification.badge').call('check_progress', []);
-                            $(document).off('keydown.klistener');
-                        }
-                    }
-                });
             }
         },
         start: function() {
@@ -123,6 +108,13 @@ openerp.gamification = function(instance) {
                 var url = instance.session.url('/web/binary/image', {model: 'res.users', field: 'image_small', id: user_id});
                 $(this).attr("src", url);
             });
+        }
+    });
+
+    instance.web.WebClient.include({
+        to_kitten: function() {
+            this._super();
+            new instance.web.Model('gamification.badge').call('check_progress', []);
         }
     });
 

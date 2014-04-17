@@ -29,7 +29,7 @@
     'sequence': 18,
     'summary': 'Manufacturing Orders, Bill of Materials, Routing',
     'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/manufacturing_analysis.jpeg', 'images/production_dashboard.jpeg','images/routings.jpeg','images/work_centers.jpeg'],
-    'depends': ['product','procurement', 'stock_account', 'resource','process'],
+    'depends': ['product','procurement', 'stock_account', 'resource', 'process', 'report'],
     'description': """
 Manage the Manufacturing process in OpenERP
 ===========================================

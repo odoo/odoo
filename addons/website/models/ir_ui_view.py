@@ -123,13 +123,11 @@ class view(osv.osv):
         return arch
 
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
-        if getattr(request, 'website_enabled', False):
+        if request and getattr(request, 'website_enabled', False):
             engine='website.qweb'
 
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
-            if isinstance(id_or_xml_id, (int, long)):
-                id_or_xml_id = self.get_view_xmlid(cr, uid, id_or_xml_id)
 
             if not context:
                 context = {}

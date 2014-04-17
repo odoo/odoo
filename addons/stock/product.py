@@ -323,37 +323,61 @@ class product_template(osv.osv):
     _defaults = {
         'sale_delay': 7,
     }
-    
-  
+
+
 class product_removal_strategy(osv.osv):
     _name = 'product.removal'
     _description = 'Removal Strategy'
-    _order = 'sequence'
+
     _columns = {
-        'product_categ_id': fields.many2one('product.category', 'Category', required=True), 
-        'sequence': fields.integer('Sequence'),
-        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO')], "Method", required = True),
-        'location_id': fields.many2one('stock.location', 'Locations', required=True),
+        'name': fields.char('Name', required=True),
+        'method': fields.char("Method", required=True, help="FIFO, LIFO..."),
     }
 
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'
     _description = 'Put Away Strategy'
+
+    def _get_putaway_options(self, cr, uid, context=None):
+        return [('fixed', 'Fixed Location')]
+
     _columns = {
-        'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
-        'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen", required=True), #domain=[('type', '=', 'parent')], 
-        'method': fields.selection([('fixed', 'Fixed Location')], "Method", required = True),
-        'location_spec_id': fields.many2one('stock.location','Specific Location', help="When the location is specific, it will be put over there"), #domain=[('type', '=', 'parent')],
+        'name': fields.char('Name', required=True),
+        'method': fields.selection(_get_putaway_options, "Method", required=True),
+        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products"),
+    }
+
+    _defaults = {
+        'method': 'fixed',
+    }
+
+    def putaway_apply(self, cr, uid, putaway_strat, product, context=None):
+        if putaway_strat.method == 'fixed':
+            for strat in putaway_strat.fixed_location_ids:
+                categ = product.categ_id
+                while categ:
+                    if strat.category_id.id == categ.id:
+                        return strat.fixed_location_id.id
+                    categ = categ.parent_id
+
+
+class fixed_putaway_strat(osv.osv):
+    _name = 'stock.fixed.putaway.strat'
+    _order = 'sequence'
+    _columns = {
+        'putaway_id': fields.many2one('product.putaway', 'Put Away Method', required=True),
+        'category_id': fields.many2one('product.category', 'Product Category', required=True),
+        'fixed_location_id': fields.many2one('stock.location', 'Location', required=True),
+        'sequence': fields.integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list."),
     }
 
 
 class product_category(osv.osv):
     _inherit = 'product.category'
-    
+
     def calculate_total_routes(self, cr, uid, ids, name, args, context=None):
         res = {}
-        route_obj = self.pool.get("stock.location.route")
         for categ in self.browse(cr, uid, ids, context=context):
             categ2 = categ
             routes = [x.id for x in categ.route_ids]
@@ -362,11 +386,10 @@ class product_category(osv.osv):
                 routes += [x.id for x in categ2.route_ids]
             res[categ.id] = routes
         return res
-        
+
     _columns = {
         'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
-        'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
-        'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
+        'removal_strategy_id': fields.many2one('product.removal', 'Force Removal Strategy', help="Set a specific removal strategy that will be used regardless of the source location for this product category"),
         'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
     }
 

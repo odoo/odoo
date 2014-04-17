@@ -132,10 +132,7 @@ class purchase_order(osv.osv):
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            invoiced = False
-            if purchase.invoiced_rate == 100.00:
-                invoiced = True
-            res[purchase.id] = invoiced
+            res[purchase.id] = all(line.invoiced for line in purchase.order_line)
         return res
     
     def _get_journal(self, cr, uid, context=None):
@@ -578,7 +575,7 @@ class purchase_order(osv.osv):
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
 
-                po_line.write({'invoiced': True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoice_lines': [(4, inv_line_id)]}, context=context)
 
             # get invoice data and create invoice
             inv_data = {
@@ -641,29 +638,6 @@ class purchase_order(osv.osv):
         self.signal_purchase_cancel(cr, uid, ids)
         return True
 
-    def date_to_datetime(self, cr, uid, userdate, context=None):
-        """ Convert date values expressed in user's timezone to
-        server-side UTC timestamp, assuming a default arbitrary
-        time of 12:00 AM - because a time is needed.
-
-        :param str userdate: date string in in user time zone
-        :return: UTC datetime string for server-side use
-        """
-        # TODO: move to fields.datetime in server after 7.0
-        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
-        if context and context.get('tz'):
-            tz_name = context['tz']
-        else:
-            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
-        if tz_name:
-            utc = pytz.timezone('UTC')
-            context_tz = pytz.timezone(tz_name)
-            user_datetime = user_date + relativedelta(hours=12.0)
-            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
-            user_datetime = local_timestamp.astimezone(utc)
-            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, group_id, context=None):
         ''' prepare the stock move data from the PO line. This function returns a list of dictionary ready to be used in stock.move's create()'''
         product_uom = self.pool.get('product.uom')
@@ -679,8 +653,8 @@ class purchase_order(osv.osv):
             'product_id': order_line.product_id.id,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
-            'date': self.date_to_datetime(cr, uid, order.date_order, context),
-            'date_expected': self.date_to_datetime(cr, uid, order_line.date_planned, context),
+            'date': fields.date.date_to_datetime(self, cr, uid, order.date_order, context),
+            'date_expected': fields.date.date_to_datetime(self, cr, uid, order_line.date_planned, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
@@ -1335,12 +1309,12 @@ class mail_mail(osv.Model):
     _name = 'mail.mail'
     _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.model == 'purchase.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent and mail.model == 'purchase.order':
             obj = self.pool.get('purchase.order').browse(cr, uid, mail.res_id, context=context)
             if obj.state == 'draft':
                 self.pool.get('purchase.order').signal_send_rfq(cr, uid, [mail.res_id])
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)
 
 
 class product_template(osv.Model):
@@ -1379,9 +1353,15 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for po_id in po_ids:
-            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
-            workflow.trg_write(uid, 'purchase.order', po_id, cr)
+        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+            purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
+            invoiced = []
+            for po_line in order.order_line:
+                if any(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                    invoiced.append(po_line.id)
+            if invoiced:
+                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
+            workflow.trg_write(uid, 'purchase.order', order.id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

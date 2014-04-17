@@ -19,13 +19,27 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 import logging
 _logger = logging.getLogger(__name__)
+
+
+class stock_inventory(osv.osv):
+    _inherit = "stock.inventory"
+    _columns = {
+        'period_id': fields.many2one('account.period', 'Force Valuation Period', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
+    }
+
+    def post_inventory(self, cr, uid, inv, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        if inv.period_id:
+            ctx['force_period'] = inv.period_id.id
+        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
+
 
 #----------------------------------------------------------
 # Stock Location
@@ -88,11 +102,9 @@ class stock_quant(osv.osv):
             context = {}
         location_obj = self.pool.get('stock.location')
         location_from = move.location_id
-        location_to = quants[0].location_id 
+        location_to = quants[0].location_id
         company_from = location_obj._location_owner(cr, uid, location_from, context=context)
         company_to = location_obj._location_owner(cr, uid, location_to, context=context)
-        if company_from == company_to:
-            return False
 
         if move.product_id.valuation != 'real_time':
             return False
@@ -106,8 +118,9 @@ class stock_quant(osv.osv):
                 #to make the adjustments when we know the real cost price.
                 return False
 
+        #in case of routes making the link between several warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         # Create Journal Entry for products arriving in the company
-        if company_to:
+        if company_to and (move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage == 'internal' or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_to.id
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
@@ -118,7 +131,7 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quants, move, acc_src, acc_valuation, journal_id, context=ctx)
 
         # Create Journal Entry for products leaving the company
-        if company_from:
+        if company_from and (move.location_id.usage == 'internal' and move.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
             ctx = context.copy()
             ctx['force_company'] = company_from.id
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
@@ -128,8 +141,8 @@ class stock_quant(osv.osv):
             else:
                 self._create_account_move_line(cr, uid, quants, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
-    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location=False, context=None):
-        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id, owner_id, src_package_id, dest_package_id, force_location, context=context)
+    def _quant_create(self, cr, uid, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False, context=None):
+        quant = super(stock_quant, self)._quant_create(cr, uid, qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, [quant], move, context)
         return quant
@@ -227,9 +240,10 @@ class stock_quant(osv.osv):
         move_obj = self.pool.get('account.move')
         for cost, qty in quant_cost_qty.items():
             move_lines = self._prepare_account_move_line(cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=context)
-            return move_obj.create(cr, uid, {'journal_id': journal_id,
+            period_id = context.get('force_period', self.pool.get('account.period').find(cr, uid, move.date, context=context)[0])
+            move_obj.create(cr, uid, {'journal_id': journal_id,
                                       'line_id': move_lines,
-                                      'period_id': self.pool.get('account.period').find(cr, uid, move.date, context=context)[0],
+                                      'period_id': period_id,
                                       'date': move.date,
                                       'ref': move.picking_id and move.picking_id.name}, context=context)
 

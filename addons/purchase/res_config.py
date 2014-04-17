@@ -39,8 +39,8 @@ class purchase_config_settings(osv.osv_memory):
         'group_uom':fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_costing_method':fields.boolean("The default costing method applied to all products",
-            implied_group='product.group_costing_method',
+        'group_costing_method':fields.boolean("Use 'Real Price' or 'Average' costing methods.",
+            implied_group='stock_account.group_inventory_valuation',
             help="""Allows you to compute product cost price based on average cost."""),
         'module_warning': fields.boolean("Alerts by products or supplier",
             help='Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n'
@@ -69,7 +69,7 @@ class purchase_config_settings(osv.osv_memory):
     }
 
     _defaults = {
-        'default_invoice_method': 'manual',
+        'default_invoice_method': 'order',
     }
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):

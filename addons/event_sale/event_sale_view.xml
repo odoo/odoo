@@ -17,6 +17,28 @@
              </field>
         </record>
 
+        <record model="ir.ui.view" id="view_event_registration_ticket_search">
+            <field name="name">event.registration.ticket.search</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_registration_search" />
+            <field name="arch" type="xml">
+                <filter name="group_event" position="after">
+                    <filter string="Ticket Type" domain="[]" context="{'group_by':'event_ticket_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_registration_ticket_tree">
+            <field name="name">event.registration.ticket.tree</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_tree" />
+            <field name="arch" type="xml">
+                <field name="event_id" position="after">
+                    <field name="event_ticket_id"/>
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="event_sale_product_template_form">
              <field name="model">product.template</field>
              <field name="inherit_id" ref="product.product_template_form_view" />

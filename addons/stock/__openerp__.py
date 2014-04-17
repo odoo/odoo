@@ -36,12 +36,10 @@ OpenERP has the capacity to manage lots and serial numbers ensuring compliance w
 Key Features
 ------------
 * Moves history and planning,
-* Stock valuation (standard or average price, ...)
-* Robustness faced with Inventory differences
-* Automatic reordering rules
+* Minimum stock rules
 * Support for barcodes
 * Rapid detection of mistakes through double entry system
-* Traceability (Upstream / Downstream, Serial numbers, ...)
+* Traceability (Serial Numbers, Packages, ...)
 
 Dashboard / Reports for Warehouse Management will include:
 ----------------------------------------------------------
@@ -92,6 +90,7 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockinventory.xml',
     ],
     'test': [
+        'test/wiseoperator.yml',
         'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',

@@ -20,8 +20,10 @@
 ##############################################################################
 
 import time
-from common_report_header import common_report_header
+from openerp.osv import osv
 from openerp.report import report_sxw
+from common_report_header import common_report_header
+
 
 class journal_print(report_sxw.rml_parse, common_report_header):
 
@@ -196,7 +198,18 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return self._translate('Reference Number')
         return self._translate('Date')
 
-report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='external')
-report_sxw.report_sxw('report.account.journal.period.print.sale.purchase', 'account.journal.period', 'addons/account/report/account_journal_sale_purchase.rml', parser=journal_print, header='external')
+
+class report_journal(osv.AbstractModel):
+    _name = 'report.account.report_journal'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_journal'
+    _wrapped_report_class = journal_print
+
+
+class report_salepurchasejournal(osv.AbstractModel):
+    _name = 'report.account.report_salepurchasejournal'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_salepurchasejournal'
+    _wrapped_report_class = journal_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

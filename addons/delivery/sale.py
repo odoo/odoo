@@ -58,20 +58,18 @@ class sale_order(osv.Model):
         result.update(carrier_id=order.carrier_id.id)
         return result
 
-    def _delivery_unset(self, cr, uid, order, context=None):
-        line_ids = [line.id for line in order.order_line if line.is_delivery]
-        self.pool['sale.order.line'].unlink(cr, uid, line_ids, context=context)
-        order.refresh()
-        return True
+    def _delivery_unset(self, cr, uid, ids, context=None):
+        sale_obj = self.pool['sale.order.line']
+        line_ids = sale_obj.search(cr, uid, [('order_id', 'in', ids), ('is_delivery', '=', True)],context=context)
+        sale_obj.unlink(cr, uid, line_ids, context=context)
 
     def delivery_set(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('sale.order.line')
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
-
+        self._delivery_unset(cr, uid, ids, context=context)
         for order in self.browse(cr, uid, ids, context=context):
-            self._delivery_unset(cr, uid, order, context=context)
             grid_id = carrier_obj.grid_get(cr, uid, [order.carrier_id.id], order.partner_shipping_id.id)
             if not grid_id:
                 raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))

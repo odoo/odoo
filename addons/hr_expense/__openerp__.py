@@ -59,6 +59,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'report/hr_expense_report_view.xml',
         'board_hr_expense_view.xml',
         'hr_expense_installer_view.xml',
+        'views/report_expense.xml',
     ],
     'demo': ['hr_expense_demo.xml'],
     'test': [
@@ -69,4 +70,5 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'auto_install': False,
     'application': True,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

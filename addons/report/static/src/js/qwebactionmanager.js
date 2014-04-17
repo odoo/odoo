@@ -1,6 +1,15 @@
 openerp.report = function(instance) {
     var wkhtmltopdf_state;
 
+    var trigger_download = function(session, response, c) {
+        session.get_file({
+            url: '/report/download',
+            data: {data: JSON.stringify(response)},
+            complete: openerp.web.unblockUI,
+            error: c.rpc_error.bind(c)
+        });
+    }
+
     instance.web.ActionManager = instance.web.ActionManager.extend({
         ir_actions_report_xml: function(action, options) {
             var self = this;
@@ -13,49 +22,40 @@ openerp.report = function(instance) {
                 var report_url = '';
                 switch (action.report_type) {
                     case 'qweb-html':
-                        report_url = '/report/' + action.report_name;
+                        report_url = '/report/html/' + action.report_name;
                         break;
                     case 'qweb-pdf':
-                        report_url = '/report/pdf/report/' + action.report_name;
+                        report_url = '/report/pdf/' + action.report_name;
                         break;
                     case 'controller':
                         report_url = action.report_file;
                         break;
                     default:
-                        report_url = '/report/' + action.report_name;
+                        report_url = '/report/html/' + action.report_name;
                         break;
                 }
 
-                // single/multiple id(s): no query string
-                // wizard: query string of action.datas.form
-                if (!('datas' in action)) {
+                // generic report: no query string
+                // particular: query string of action.data.form and context
+                if (!('data' in action) || !(action.data)) {
                     if ('active_ids' in action.context) {
                         report_url += "/" + action.context.active_ids.join(',');
                     }
                 } else {
-                    _.each(action.datas.form, function(value, key) {
-                        // will be erased when all wizards are rewritten
-                        if (key.substring(0, 12) === 'used_context') {
-                            delete action.datas.form[key];                                
-                        }
-
-                        if ($.type(value) === 'array') {
-                            action.datas.form[key] = value.join(',');
-                        }
-                    });
-                    report_url += "?" + $.param(action.datas.form);
+                    report_url += "?options=" + encodeURIComponent(JSON.stringify(action.data));
+                    report_url += "&context=" + encodeURIComponent(JSON.stringify(action.context));
                 }
+
+                var response = new Array();
+                response[0] = report_url;
+                response[1] = action.report_type;
+                var c = openerp.webclient.crashmanager;
+
                 if (action.report_type == 'qweb-html') {
-                    // Open the html report in a popup
                     window.open(report_url, '_blank', 'height=900,width=1280');
                     instance.web.unblockUI();
-                    return;
                 } else {
                     // Trigger the download of the pdf/controller report
-                    var c = openerp.webclient.crashmanager;
-                    var response = new Array();
-                    response[0] = report_url;
-                    response[1] = action.report_type;
 
                     if (action.report_type == 'qweb-pdf') {
                         (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
@@ -64,8 +64,10 @@ openerp.report = function(instance) {
                                 self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
     system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
     wkhtmltopdf.org</a>'), true);
-                                window.open(report_url.substring(12), '_blank', 'height=768,width=1024');
+                                report_url = report_url.substring(12)
+                                window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
                                 instance.web.unblockUI();
+                                return;
                             } else {
                                 if (presence == 'upgrade') {
                                     self.do_notify(_t('Report'), _t('You should upgrade your version of\
@@ -73,22 +75,13 @@ openerp.report = function(instance) {
      support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
      target="_blank">wkhtmltopdf.org</a>'), true);
                                 }
-                                self.session.get_file({
-                                    url: '/report/download',
-                                    data: {data: JSON.stringify(response)},
-                                    complete: openerp.web.unblockUI,
-                                    error: c.rpc_error.bind(c)
-                                });
                             }
+                            return trigger_download(self.session, response, c);
                         });
-                    } else {
-                        self.session.get_file({
-                            url: '/report/download',
-                            data: {data: JSON.stringify(response)},
-                            complete: openerp.web.unblockUI,
-                            error: c.rpc_error.bind(c)
-                        });          
-                    }   
+                    }
+                    else if (action.report_type == 'controller') {
+                        return trigger_download(self.session, response, c);
+                    }
                 }                     
             } else {
                 return self._super(action, options);

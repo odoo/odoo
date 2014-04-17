@@ -23,7 +23,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="Traceability"/>
-                    <group>
+                    <group name="traceability">
                         <label for="id" string="Traceability"/>
                         <div>
                             <div>
@@ -49,14 +49,6 @@
                         <label for="id" string="Accounting"/>
                         <div>
                             <div>
-                                <field name="module_stock_account" class="oe_inline"/>
-                                <label for="module_stock_account"/>
-                            </div>
-                            <div>
-                                <field name="module_stock_invoice_directly" class="oe_inline"/>
-                                <label for="module_stock_invoice_directly"/>
-                            </div>
-                            <div>
                                 <field name="module_stock_landed_costs" class="oe_inline"/>
                                 <label for="module_stock_landed_costs"/>
                             </div>
@@ -75,24 +67,12 @@
                                 <label for="group_stock_multiple_locations"/>  
                             </div>
                             <div>
-                                <field name="module_claim_from_delivery" class="oe_inline"/>
-                                <label for="module_claim_from_delivery"/>
-                            </div>            
-                            <div>
-                                <field name="group_stock_adv_location" class="oe_inline"/>
+                                <field name="group_stock_adv_location" class="oe_inline" on_change="onchange_adv_location(group_stock_adv_location)"/>
                                 <label for="group_stock_adv_location"/>
                             </div>
                             <div attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
                                 <label for="propagation_minimum_delta"/>
                                 <field name="propagation_minimum_delta" class="oe_inline"/>
-                            </div>
-                            <div>
-                                <field name="module_stock_dropshipping" class="oe_inline"/>
-                                <label for="module_stock_dropshipping"/>
-                            </div>
-                            <div>
-                                <field name="module_stock_picking_wave" class="oe_inline"/>
-                                <label for="module_stock_picking_wave"/>
                             </div>
                         </div>
                     </group>
@@ -116,6 +96,23 @@
                                 <label for="group_uos" />
                             </div>
                         </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Additional Features"/>
+                            <div>
+                                <div>
+                                    <field name="module_claim_from_delivery" class="oe_inline"/>
+                                    <label for="module_claim_from_delivery"/>
+                                </div>
+                                <div>
+                                    <field name="module_stock_dropshipping" class="oe_inline"/>
+                                    <label for="module_stock_dropshipping"/>
+                                </div>
+                                <div>
+                                    <field name="module_stock_picking_wave" class="oe_inline"/>
+                                    <label for="module_stock_picking_wave"/>
+                                </div>
+                            </div>
                     </group>
                 </form>
             </field>

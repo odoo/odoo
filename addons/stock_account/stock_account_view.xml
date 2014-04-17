@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="view_inventory_form_inherit" model="ir.ui.view">
+            <field name="name">stock.inventory.form.inherit</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="period_id"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="view_location_form_inherit" model="ir.ui.view">
             <field name="name">stock.location.form.inherit</field>
@@ -15,7 +25,6 @@
                 </xpath>
             </field>
         </record>
-
 
         <record id="view_picking_inherit_form2" model="ir.ui.view">
             <field name="name">stock.picking.form.inherit</field>

@@ -2,6 +2,14 @@
 <openerp>
     <data>
         
+        <record id="removal_fifo" model="product.removal">
+            <field name="name">First In First Out (FIFO)</field>
+            <field name="method">fifo</field>
+        </record>
+        <record id="removal_lifo" model="product.removal">
+            <field name="name">Last In First Out (LIFO)</field>
+            <field name="method">lifo</field>
+        </record>
         
                 <!--
     Resource: stock.location
@@ -63,9 +71,10 @@
         </record>
         
         <record id="stock_location_inter_wh" model="stock.location">
-            <field name="name">Inter Warehouse</field>
+            <field name="name">Inter Company Transit</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">transit</field>
+            <field name="company_id"></field>
         </record>
 
     </data>

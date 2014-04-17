@@ -157,7 +157,7 @@ class DateTime(orm.AbstractModel):
             value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
         if value:
-            value = column.context_timestamp(
+            value = fields.datetime.context_timestamp(
                 cr, uid, timestamp=value, context=context)
             value = value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -382,6 +382,10 @@ class RelativeDatetime(orm.AbstractModel):
 class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
+
+class QwebView(orm.AbstractModel):
+    _name = 'website.qweb.field.qweb'
+    _inherit = ['ir.qweb.field.qweb']
 
 
 def html_to_text(element):

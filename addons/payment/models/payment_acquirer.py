@@ -52,8 +52,15 @@ class PaymentAcquirer(osv.Model):
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
 
+    def _get_providers(self, cr, uid, context=None):
+        return []
+
+    # indirection to ease inheritance
+    _provider_selection = lambda self, *args, **kwargs: self._get_providers(*args, **kwargs)
+
     _columns = {
         'name': fields.char('Name', required=True),
+        'provider': fields.selection(_provider_selection, string='Provider', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Message', help='Message displayed to explain and help the payment process.'),
         'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
@@ -62,9 +69,9 @@ class PaymentAcquirer(osv.Model):
             string='Process Method',
             help='Static payments are payments like transfer, that require manual steps.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
-        'env': fields.selection(
+        'environment': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
-            string='Environment'),
+            string='Environment', oldname='env'),
         'website_published': fields.boolean(
             'Visible in Portal / Website',
             help="Make this payment acquirer available (Customer invoices, etc.)"),
@@ -78,16 +85,16 @@ class PaymentAcquirer(osv.Model):
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
-        'env': 'test',
+        'environment': 'test',
         'validation': 'automatic',
         'website_published': True,
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
-        """ If the field has 'required_if_provider="<name>"' attribute, then it
-        required if record.name is <name>. """
+        """ If the field has 'required_if_provider="<provider>"' attribute, then it
+        required if record.provider is <provider>. """
         for acquirer in self.browse(cr, uid, ids, context=context):
-            if any(c for c, f in self._all_columns.items() if getattr(f.column, 'required_if_provider', None) == acquirer.name and not acquirer[c]):
+            if any(c for c, f in self._all_columns.items() if getattr(f.column, 'required_if_provider', None) == acquirer.provider and not acquirer[c]):
                 return False
         return True
 
@@ -98,8 +105,8 @@ class PaymentAcquirer(osv.Model):
     def get_form_action_url(self, cr, uid, id, context=None):
         """ Returns the form action URL, for form-based acquirer implementations. """
         acquirer = self.browse(cr, uid, id, context=context)
-        if hasattr(self, '%s_get_form_action_url' % acquirer.name):
-            return getattr(self, '%s_get_form_action_url' % acquirer.name)(cr, uid, id, context=context)
+        if hasattr(self, '%s_get_form_action_url' % acquirer.provider):
+            return getattr(self, '%s_get_form_action_url' % acquirer.provider)(cr, uid, id, context=context)
         return False
 
     def form_preprocess_values(self, cr, uid, id, reference, amount, currency_id, tx_id, partner_id, partner_values, tx_values, context=None):
@@ -178,7 +185,7 @@ class PaymentAcquirer(osv.Model):
         })
 
         # compute fees
-        fees_method_name = '%s_compute_fees' % acquirer.name
+        fees_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(self, fees_method_name):
             fees = getattr(self, fees_method_name)(
                 cr, uid, id, tx_data['amount'], tx_data['currency_id'], partner_data['country_id'], context=None)
@@ -237,7 +244,7 @@ class PaymentAcquirer(osv.Model):
             partner_values, tx_values, context=context)
 
         # call <name>_form_generate_values to update the tx dict with acqurier specific values
-        cust_method_name = '%s_form_generate_values' % (acquirer.name)
+        cust_method_name = '%s_form_generate_values' % (acquirer.provider)
         if hasattr(self, cust_method_name):
             method = getattr(self, cust_method_name)
             partner_values, tx_values = method(cr, uid, id, partner_values, tx_values, context=context)
@@ -383,14 +390,14 @@ class PaymentTransaction(osv.Model):
             acquirer = self.pool['payment.acquirer'].browse(cr, uid, values.get('acquirer_id'), context=context)
 
             # compute fees
-            custom_method_name = '%s_compute_fees' % acquirer.name
+            custom_method_name = '%s_compute_fees' % acquirer.provider
             if hasattr(Acquirer, custom_method_name):
                 fees = getattr(Acquirer, custom_method_name)(
                     cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('country_id'), context=None)
                 values['fees'] = float_round(fees, 2)
 
             # custom create
-            custom_method_name = '%s_create' % acquirer.name
+            custom_method_name = '%s_create' % acquirer.provider
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))
 
@@ -469,7 +476,7 @@ class PaymentTransaction(osv.Model):
 
         if values.get('acquirer_id'):
             acquirer = self.pool['payment.acquirer'].browse(cr, uid, values.get('acquirer_id'), context=context)
-            custom_method_name = '_%s_s2s_send' % acquirer.name
+            custom_method_name = '_%s_s2s_send' % acquirer.provider
             if hasattr(self, custom_method_name):
                 tx_id, result = getattr(self, custom_method_name)(cr, uid, values, cc_values, context=context)
 
@@ -482,7 +489,7 @@ class PaymentTransaction(osv.Model):
         tx = self.browse(cr, uid, tx_id, context=context)
         invalid_parameters = None
 
-        invalid_param_method_name = '_%s_s2s_get_invalid_parameters' % tx.acquirer_id.name
+        invalid_param_method_name = '_%s_s2s_get_invalid_parameters' % tx.acquirer_id.provider
         if hasattr(self, invalid_param_method_name):
             invalid_parameters = getattr(self, invalid_param_method_name)(cr, uid, tx, data, context=context)
 
@@ -493,7 +500,7 @@ class PaymentTransaction(osv.Model):
             _logger.error(_error_message)
             return False
 
-        feedback_method_name = '_%s_s2s_validate' % tx.acquirer_id.name
+        feedback_method_name = '_%s_s2s_validate' % tx.acquirer_id.provider
         if hasattr(self, feedback_method_name):
             return getattr(self, feedback_method_name)(cr, uid, tx, data, context=context)
 
@@ -503,7 +510,7 @@ class PaymentTransaction(osv.Model):
         """ Get the tx status. """
         tx = self.browse(cr, uid, tx_id, context=context)
 
-        invalid_param_method_name = '_%s_s2s_get_tx_status' % tx.acquirer_id.name
+        invalid_param_method_name = '_%s_s2s_get_tx_status' % tx.acquirer_id.provider
         if hasattr(self, invalid_param_method_name):
             return getattr(self, invalid_param_method_name)(cr, uid, tx, context=context)
 
