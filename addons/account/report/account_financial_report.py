@@ -23,6 +23,8 @@ import time
 from openerp.report import report_sxw
 from common_report_header import common_report_header
 from openerp.tools.translate import _
+from openerp.osv import osv
+
 
 class report_account_common(report_sxw.rml_parse, common_report_header):
 
@@ -105,8 +107,11 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         lines.append(vals)
         return lines
 
-report_sxw.report_sxw('report.account.financial.report', 'account.financial.report',
-    'addons/account/report/account_financial_report.rml', parser=report_account_common, header='internal')
 
+class report_financial(osv.AbstractModel):
+    _name = 'report.account.report_financial'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_financial'
+    _wrapped_report_class = report_account_common
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

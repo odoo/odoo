@@ -43,7 +43,7 @@ class CheckoutInfo(object):
         result = dict((prefix + field_name, getattr(partner, field_name)) for field_name in self.string_billing_fields if getattr(partner, field_name))
         result[prefix + 'state_id'] = partner.state_id and partner.state_id.id or ''
         result[prefix + 'country_id'] = partner.country_id and partner.country_id.id or ''
-        result[prefix + 'company'] = partner.parent_id and partner.parent_id.name or ''
+        result[prefix + 'company'] = partner.commercial_partner_id and partner.commercial_partner_id.is_company and partner.commercial_partner_id.name or ''
         return result
 
     def from_post(self, post):
@@ -383,6 +383,8 @@ class Ecommerce(http.Controller):
     def add_cart(self, product_id, remove=None, **kw):
         request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=int(product_id),
+            number=float(kw.get('number',1)),
+            set_number=float(kw.get('set_number',-1)),
             context=request.context)
         return request.redirect("/shop/mycart")
 
@@ -409,8 +411,10 @@ class Ecommerce(http.Controller):
         quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, set_number=set_number,
             context=request.context)
-        return quantity
-
+        order = self.get_order()
+        return [quantity,
+                order.get_number_of_products()]
+    
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -512,14 +516,7 @@ class Ecommerce(http.Controller):
         if error:
             return request.website.render("website_sale.checkout", values)
 
-        company_name = checkout['company']
-        company_id = None
-        if post['company']:
-            company_ids = orm_partner.search(cr, SUPERUSER_ID, [("name", "ilike", company_name), ('is_company', '=', True)], context=context)
-            company_id = (company_ids and company_ids[0]) or orm_partner.create(cr, SUPERUSER_ID, {'name': company_name, 'is_company': True}, context)
-
         billing_info = dict((k, v) for k,v in checkout.items() if "shipping_" not in k and k != "company")
-        billing_info['parent_id'] = company_id
 
         partner_id = None
         public_id = request.registry['website'].get_public_user(cr, uid, context)
@@ -540,7 +537,8 @@ class Ecommerce(http.Controller):
             shipping_info = {
                 'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
-                'street': post['shipping_street'],
+                'street': checkout['company'],
+                'street2': post['shipping_street'],
                 'city': post['shipping_city'],
                 'name': post['shipping_name'],
                 'email': post['email'],

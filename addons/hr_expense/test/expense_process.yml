@@ -32,11 +32,3 @@
   !python {model: hr.expense.expense}: |
     duplicate_id = self.copy(cr, uid, ref('sep_expenses'), context=context)
     self.expense_canceled(cr, uid, [duplicate_id])
--
-  I print a report of the expenses.
-- 
-  !python {model: hr.expense.expense}: |
-    data, format = self.print_report(cr, uid, [ref('hr_expense.sep_expenses')], 'hr.expense', {}, {})
-    if openerp.tools.config['test_report_directory']:
-        import os
-        file(os.path.join(openerp.tools.config['test_report_directory'], 'hr_expense-report.'+format), 'wb+').write(data)

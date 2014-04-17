@@ -158,16 +158,16 @@ class event_event(osv.osv):
         'seats_min': fields.integer('Minimum Reserved Seats', oldname='register_min', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'seats_reserved': fields.function(_get_seats, oldname='register_current', string='Reserved Seats', type='integer', multi='seats_reserved',
             store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max'], 20)}),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'seats_available': fields.function(_get_seats, oldname='register_avail', string='Available Seats', type='integer', multi='seats_reserved',
             store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max'], 20)}),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'seats_unconfirmed': fields.function(_get_seats, oldname='register_prospect', string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved',
             store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max'], 20)}),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'seats_used': fields.function(_get_seats, oldname='register_attended', string='Number of Participations', type='integer', multi='seats_reserved',
             store={'event.registration': (_get_events_from_registrations, ['state'], 10),
-                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max'], 20)}),
+                   'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -185,7 +185,7 @@ class event_event(osv.osv):
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country', readonly=False, states={'done': [('readonly', True)]}, store=True),
         'description': fields.html(
-            'Description', readonly=False,
+            'Description', readonly=False, translate=True,
             states={'done': [('readonly', True)]},
             oldname='note'),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -201,7 +201,6 @@ class event_event(osv.osv):
     }
 
     def _check_seats_limit(self, cr, uid, ids, context=None):
-        print "event _check_seats_limit"
         for event in self.browse(cr, uid, ids, context=context):
             if event.seats_max and event.seats_available < 0:
                 return False
