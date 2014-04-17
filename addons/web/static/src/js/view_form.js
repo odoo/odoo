@@ -1876,8 +1876,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                         widget: widget
                     });
                 },
-                placement: "auto top",
-                html: true,
             }, options || {});
         $(trigger).tooltip(options);
     },
