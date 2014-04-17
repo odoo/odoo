@@ -118,6 +118,7 @@
                                         </div>
                                         <field name="company_id" groups="base.group_multi_company" widget="selection"
                                             attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                        <field name="active" />
                                     </group>
                                 </group>
                                 <field name="description" placeholder="describe the product characteristics..."
@@ -221,7 +222,6 @@
                 <kanban>
                     <field name="color"/>
                     <field name="type"/>
-                    <field name="image_small"/>
                     <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">

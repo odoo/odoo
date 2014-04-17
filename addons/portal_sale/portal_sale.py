@@ -39,7 +39,7 @@ class sale_order(osv.Model):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
-                    partner_id=this.partner_id.id, context=context)
+                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -90,7 +90,7 @@ class account_invoice(osv.Model):
             if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.number, this.residual, this.currency_id.id,
-                    partner_id=this.partner_id.id, context=context)
+                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
@@ -126,8 +126,8 @@ class account_invoice(osv.Model):
 class mail_mail(osv.osv):
     _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.model == 'sale.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent and mail.model == 'sale.order':
             so_obj = self.pool.get('sale.order')
             order = so_obj.browse(cr, uid, mail.res_id, context=context)
             partner = order.partner_id
@@ -138,4 +138,4 @@ class mail_mail(osv.osv):
             for p in mail.partner_ids:
                 if p.id not in order.message_follower_ids:
                     so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)

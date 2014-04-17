@@ -14,19 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:37+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 08:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Mako"
-msgstr ""
+msgstr "Mako"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:50
 #, python-format
 msgid "Please select at least one user to share with"
-msgstr "Ole hyvä ja valitse ainakin yksi käyttäjä jonka kanssa jaetaan"
+msgstr "Valitse ainakin yksi käyttäjä, jonka kanssa jaetaan"
 
 #. module: portal
 #: view:portal.wizard:0
@@ -37,21 +37,27 @@ msgid ""
 "                        If necessary, you can fix any contact's email "
 "address directly in the list."
 msgstr ""
+"Valitse alla olevasta luettelosta kontaktit, joiden pitäisi kuulua "
+"portaaliin.\n"
+"                        Sähköpostiosoite valitulle kontaktille pitää olla "
+"voimassa oleva ja ainutkertainen.\n"
+"                        Jos tarpeen, voit korjata kontaktin "
+"sähköpostiosoitteen suoraan luetteloon."
 
 #. module: portal
 #: model:mail.group,name:portal.company_jobs
 msgid "Company Jobs"
-msgstr "Yhtiön työpaikat"
+msgstr "Avoimet työpaikat"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "amount: the total amount to pay, as a float"
-msgstr ""
+msgstr "amount: maksettava kokonaissumma, liukuluku"
 
 #. module: portal
 #: view:portal.wizard.user:0
 msgid "Contacts"
-msgstr ""
+msgstr "Yhteystiedot"
 
 #. module: portal
 #: view:share.wizard:0
@@ -62,28 +68,28 @@ msgstr "Olemassaolevat ryhmät"
 #. module: portal
 #: view:res.groups:0
 msgid "Portal Groups"
-msgstr ""
+msgstr "Portaaliryhmät"
 
 #. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
-msgstr ""
+msgstr "Kutsuviesti"
 
 #. module: portal
 #: view:res.groups:0
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Ei-Portaali ryhmät"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:54
 #, python-format
 msgid "Please select at least one group to share with"
-msgstr "Ole hyvä ja valitse ainakin yksi ryhmä jonka kanssa jaetaan"
+msgstr "Valitse ainakin yksi ryhmä, jolle jaetaan"
 
 #. module: portal
 #: view:share.wizard:0
 msgid "Details"
-msgstr ""
+msgstr "Tiedot"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
@@ -93,7 +99,7 @@ msgstr ""
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "reference: the reference number of the document to pay"
-msgstr ""
+msgstr "reference: maksettavan laskun numero"
 
 #. module: portal
 #: help:portal.payment.acquirer,visible:0
@@ -101,16 +107,18 @@ msgid ""
 "Make this payment acquirer available in portal forms (Customer invoices, "
 "etc.)"
 msgstr ""
+"Tee tämä maksun vastaanottaja näkyväksi portaalin lomakkeilla esim. "
+"myyntilaskuilla jne."
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
 msgid "Share Wizard"
-msgstr "Jakovelho"
+msgstr "Jakoavustaja"
 
 #. module: portal
 #: field:portal.wizard.user,email:0
 msgid "Email"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -120,6 +128,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Sinulla ei ole lukemattomia yritysuutisia.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -134,7 +146,7 @@ msgstr ""
 #: model:ir.actions.client,name:portal.action_jobs
 #: model:ir.ui.menu,name:portal.portal_jobs
 msgid "Jobs"
-msgstr ""
+msgstr "Työpaikat"
 
 #. module: portal
 #: field:portal.wizard,user_ids:0
@@ -145,13 +157,13 @@ msgstr "Käyttäjät"
 #: code:addons/portal/acquirer.py:82
 #, python-format
 msgid "Pay safely online"
-msgstr ""
+msgstr "Maksa turvallisesti verkossa"
 
 #. module: portal
 #: code:addons/portal/acquirer.py:77
 #, python-format
 msgid "No online payment acquirers configured"
-msgstr ""
+msgstr "Verkkomaksun saajia ei ole konfiguroitu"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -159,17 +171,19 @@ msgid ""
 "kind: the kind of document on which the payment form is rendered (translated "
 "to user language, e.g. \"Invoice\")"
 msgstr ""
+"kind: dokumenttilaji, jollaiseksi maksulomake sovitetaan (käännetty "
+"käyttäjän kielelle esim. \"Lasku)"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portaali johon käyttäjät voidaan yhdistää tai erottaa."
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:38
 #, python-format
 msgid "Users you already shared with"
-msgstr ""
+msgstr "Käyttäjät joiden kanssa jo jaat"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_jobs
@@ -179,6 +193,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Sinulla ei ole lukemattomia työtarjouksia.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -186,6 +204,9 @@ msgid ""
 ", so it may use Mako expressions.\n"
 "                                The Mako evaluation context provides:"
 msgstr ""
+", voi käyttää Mako lausekkeita, ks. lisätietoja "
+"http://www.makotemplates.org\n"
+"                                Makon arviointiympäristö sisältää:"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -193,34 +214,34 @@ msgstr ""
 #: field:res.groups,is_portal:0
 #: model:res.groups,name:portal.group_portal
 msgid "Portal"
-msgstr "Porttaali"
+msgstr "Portaali"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:34
 #, python-format
 msgid "Your OpenERP account at %(company)s"
-msgstr "OpenERP tunnuksesi kohteessa %(company)s"
+msgstr "OpenERP tunnuksesi on %(company)s"
 
 #. module: portal
 #: model:res.groups,name:portal.group_anonymous
 msgid "Anonymous"
-msgstr ""
+msgstr "Anonyymi"
 
 #. module: portal
 #: field:portal.wizard.user,in_portal:0
 msgid "In Portal"
-msgstr ""
+msgstr "Portaalissa"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_news
 #: model:ir.ui.menu,name:portal.portal_company_news
 msgid "News"
-msgstr ""
+msgstr "Uutiset"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "Asiakaspalvelu"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
@@ -229,17 +250,20 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
+"Portaalijäsenillä on rajoitetut käyttöoikeudet (säännöt tietueille ja "
+"rajoitetut valikot).\n"
+"                Normaalisti eivät kuulu tavallisiin OpenERP käyttäjäryhmiin."
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.action_acquirer_list
 #: view:portal.payment.acquirer:0
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Maksu vastaanottajat"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
 msgid "Projects"
-msgstr ""
+msgstr "Projektit"
 
 #. module: portal
 #: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
@@ -266,12 +290,12 @@ msgstr "Nimi"
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Käyttöoikeusryhmät"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "uid: the current user id"
-msgstr ""
+msgstr "uid: nykykäyttäjän tunniste"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -279,26 +303,27 @@ msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
+"quote(): menetelmä, jolla erikoismerkit muunnetaan linkiiin (URL) sopiviksi"
 
 #. module: portal
 #: help:res.groups,is_portal:0
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Jos valittu, niin tämä ryhmä on käytettävissä portaaliryhmänä"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
 msgid "Payment form template (HTML)"
-msgstr ""
+msgstr "Maksulomakemalli (HTML)"
 
 #. module: portal
 #: field:portal.wizard.user,partner_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Yhteystieto"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Lähtevät sähköpostit"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:193
@@ -309,7 +334,7 @@ msgstr "Sähköposti vaaditaan"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
-msgstr ""
+msgstr "Viestit"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
@@ -325,7 +350,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
-msgstr ""
+msgstr "Verkkomaksun vastaanottaja"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -338,11 +363,13 @@ msgstr "Yritysuutiset"
 msgid ""
 "You can finish the configuration in the <a href=\"%s\">Bank&Cash settings</a>"
 msgstr ""
+"Voit viimeistellä konfiguraation <a href=\"%s\">Pankki ja Käteinen -"
+"asetuksissa</a>"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "cr: the current database cursor"
-msgstr ""
+msgstr "cr: nykyisen tietokannan kohdistin"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
@@ -358,6 +385,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Hyvää työtä!</b> Saapuvien postilaatikkosi on tyhjä.\n"
+"                </p><p>\n"
+"                    Sinun saapuvien postilaatikkosi sisältää sinulle "
+"lähetettyjä\n"
+"                    yksityisiä viestejä, sähköposteja tai informaatiota "
+"dokumenteista\n"
+"                    tai henkilöistä, joita seuraat.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -365,16 +402,20 @@ msgid ""
 "object: the document on which the payment form is rendered (usually an "
 "invoice or sales order record)"
 msgstr ""
+"object: kohdedokumentti, jollaiseksi maksulomake muunnetaan (yleensä laskun "
+"tai myyntitilauksen tietue)"
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Tämä teksti liitetään uudelle portaallikäyttäjälle lähetettävään "
+"sähköpostiin."
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_company
 msgid "About Us"
-msgstr ""
+msgstr "Tietoja meistä"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -382,11 +423,12 @@ msgid ""
 "currency: the currency record in which the document is issued (e.g. "
 "currency.name could be EUR)"
 msgstr ""
+"currency: dokumentssa käytetty valuutta (esim. valuutta.nimi voi olla EUR)"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Maksun vastaanottaja"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:35
@@ -409,11 +451,31 @@ msgid ""
 "OpenERP - Open Source Business Applications\n"
 "http://www.openerp.com\n"
 msgstr ""
+"Hyvä  %(name)s,\n"
+"\n"
+"Sinulle on myönnetty - niin halutessasi - oikeus käyttää portaaliamme:  "
+"%(portal)s.\n"
+"\n"
+"Käyttäjätietosi ovat:\n"
+"Tietokanta: %(db)s\n"
+"Käyttäjä: %(login)s\n"
+"\n"
+"Suorittaaksesi käyttöoikeuden vastaanoton loppuun, klikkaa oheista linkkiä: "
+"\n"
+"%(url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"Open Invest Group\n"
+"http://www.opeinvest.fi\n"
+"http://www.openverso.com\n"
+"http://www.openjobs.fi\n"
 
 #. module: portal
 #: view:portal.wizard:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
@@ -440,7 +502,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr "Porttaalikäyttäjien konfiguraatio"
+msgstr "Porttaalikäyttäjän konfigurointi"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -452,13 +514,13 @@ msgstr ""
 #. module: portal
 #: field:portal.payment.acquirer,visible:0
 msgid "Visible"
-msgstr ""
+msgstr "Näkyvä"
 
 #. module: portal
 #: code:addons/portal/wizard/share_wizard.py:39
 #, python-format
 msgid "Existing Groups (e.g Portal Groups)"
-msgstr ""
+msgstr "Olemassa olevat ryhmät (esim. portaaliryhmät)"
 
 #. module: portal
 #: view:portal.wizard:0
@@ -468,12 +530,12 @@ msgstr "Peruuta"
 #. module: portal
 #: view:portal.wizard:0
 msgid "Apply"
-msgstr ""
+msgstr "Käytä"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
-msgstr ""
+msgstr "ctx: nykyinen asiayhteyshakemisto"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -492,14 +554,14 @@ msgstr ""
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Form Template"
-msgstr ""
+msgstr "Lomakemalli"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: view:portal.wizard:0
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Portaallin käytönhallinta"
 
 #~ msgid "Portal Name"
 #~ msgstr "Porttaalin nimi"

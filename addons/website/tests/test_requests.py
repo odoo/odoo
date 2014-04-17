@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import collections
 import urlparse
 import unittest2
 import urllib2
@@ -7,42 +6,12 @@ import werkzeug.urls
 
 import lxml.html
 
+import openerp
 from openerp import tools
 
+import cases
+
 __all__ = ['load_tests', 'CrawlSuite']
-
-class URLCase(unittest2.TestCase):
-    """
-    URLCase moved out of test_requests, otherwise discovery attempts to
-    instantiate and run it
-    """
-    def __init__(self, user, url, source, result):
-        super(URLCase, self).__init__()
-        self.user = user
-        self.url = url
-        self.source = source
-        self.result = result
-
-    @property
-    def username(self):
-        return self.user or "Anonymous Coward"
-
-    def __str__(self):
-        if self.source:
-            return "%s (from %s, as %s)" % (self.url, self.source, self.username)
-        return "%s (as %s)" % (self.url, self.username)
-
-    __repr__ = __str__
-
-    def shortDescription(self):
-        return ""
-
-    def runTest(self):
-        code = self.result.getcode()
-        self.assertIn(
-            code, xrange(200, 300),
-            "Fetching %s as %s returned an error response (%d)" % (
-                self.url, self.username, code))
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):
     """
@@ -75,15 +44,23 @@ class CrawlSuite(unittest2.TestSuite):
     def __init__(self, user=None, password=None):
         super(CrawlSuite, self).__init__()
 
-        self.opener = urllib2.OpenerDirector()
-        self.opener.add_handler(urllib2.UnknownHandler())
-        self.opener.add_handler(urllib2.HTTPHandler())
-        self.opener.add_handler(urllib2.HTTPSHandler())
-        self.opener.add_handler(urllib2.HTTPCookieProcessor())
-        self.opener.add_handler(RedirectHandler())
+        registry = openerp.registry(tools.config['db_name'])
+        try:
+            # switch registry to test mode, so that requests can be made
+            registry.enter_test_mode()
 
-        self._authenticate(user, password)
-        self.user = user
+            self.opener = urllib2.OpenerDirector()
+            self.opener.add_handler(urllib2.UnknownHandler())
+            self.opener.add_handler(urllib2.HTTPHandler())
+            self.opener.add_handler(urllib2.HTTPSHandler())
+            self.opener.add_handler(urllib2.HTTPCookieProcessor())
+            self.opener.add_handler(RedirectHandler())
+
+            self._authenticate(user, password)
+            self.user = user
+
+        finally:
+            registry.leave_test_mode()
 
     def _request(self, path):
         return self.opener.open(urlparse.urlunsplit([
@@ -96,12 +73,12 @@ class CrawlSuite(unittest2.TestSuite):
         # blow up in multidb situations
         self.opener.open('http://localhost:{port}/web/?db={db}'.format(
             port=tools.config['xmlrpc_port'],
-            db=werkzeug.url_quote_plus(tools.config['db_name']),
+            db=werkzeug.urls.url_quote_plus(tools.config['db_name']),
         ))
         if user is not None:
             url = 'http://localhost:{port}/login?{query}'.format(
                 port=tools.config['xmlrpc_port'],
-                query=werkzeug.url_encode({
+                query=werkzeug.urls.url_encode({
                     'db': tools.config['db_name'],
                     'login': user,
                     'key': password,
@@ -111,37 +88,45 @@ class CrawlSuite(unittest2.TestSuite):
             assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
     def _wrapped_run(self, result, debug=False):
-        paths = [URL('/'), URL('/sitemap')]
-        seen = set(paths)
+        registry = openerp.registry(tools.config['db_name'])
+        try:
+            # switch registry to test mode, so that requests can be made
+            registry.enter_test_mode()
 
-        while paths:
-            url = paths.pop(0)
-            r = self._request(url.url)
-            url.to_case(self.user, r).run(result)
+            paths = [URL('/'), URL('/sitemap')]
+            seen = set(paths)
 
-            if r.info().gettype() != 'text/html':
-                continue
+            while paths:
+                url = paths.pop(0)
+                r = self._request(url.url)
+                url.to_case(self.user, r).run(result)
 
-            doc = lxml.html.fromstring(r.read())
-            for link in doc.xpath('//a[@href]'):
-                href = link.get('href')
-
-                # avoid repeats, even for links we won't crawl no need to
-                # bother splitting them if we've already ignored them
-                # previously
-                if href in seen: continue
-                seen.add(href)
-
-                parts = urlparse.urlsplit(href)
-
-                if parts.netloc or \
-                    not parts.path.startswith('/') or \
-                    parts.path == '/web' or\
-                    parts.path.startswith('/web/') or \
-                    (parts.scheme and parts.scheme not in ('http', 'https')):
+                if r.info().gettype() != 'text/html':
                     continue
 
-                paths.append(URL(href, url.url))
+                doc = lxml.html.fromstring(r.read())
+                for link in doc.xpath('//a[@href]'):
+                    href = link.get('href')
+
+                    # avoid repeats, even for links we won't crawl no need to
+                    # bother splitting them if we've already ignored them
+                    # previously
+                    if href in seen: continue
+                    seen.add(href)
+
+                    parts = urlparse.urlsplit(href)
+
+                    if parts.netloc or \
+                        not parts.path.startswith('/') or \
+                        parts.path == '/web' or\
+                        parts.path.startswith('/web/') or \
+                        (parts.scheme and parts.scheme not in ('http', 'https')):
+                        continue
+
+                    paths.append(URL(href, url.url))
+
+        finally:
+            registry.leave_test_mode()
 
 class URL(object):
     def __init__(self, url, source=None):
@@ -149,10 +134,10 @@ class URL(object):
         self.source = source
 
     def to_case(self, user, result):
-        return URLCase(user, self.url, self.source, result)
+        return cases.URLCase(user, self.url, self.source, result)
 
 def load_tests(loader, base, _):
     base.addTest(CrawlSuite())
-    base.addTest(CrawlSuite('admin', tools.config['admin_passwd']))
+    base.addTest(CrawlSuite('admin', 'admin'))
     base.addTest(CrawlSuite('demo', 'demo'))
     return base

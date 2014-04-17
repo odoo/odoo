@@ -21,19 +21,19 @@ _logger = logging.getLogger(__name__)
 class AcquirerAdyen(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_adyen_urls(self, cr, uid, env, context=None):
+    def _get_adyen_urls(self, cr, uid, environment, context=None):
         """ Adyen URLs
 
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
-        if env == 'prod':
-            return {
-                'adyen_form_url': 'https://prod.adyen.com/hpp/pay.shtml',
-            }
-        else:
-            return {
-                'adyen_form_url': 'https://test.adyen.com/hpp/pay.shtml',
-            }
+        return {
+            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % environment,
+        }
+
+    def _get_providers(self, cr, uid, context=None):
+        providers = super(AcquirerAdyen, self)._get_providers(cr, uid, context=context)
+        providers.append(['adyen', 'Adyen'])
+        return providers
 
     _columns = {
         'adyen_merchant_account': fields.char('Merchant Account', required_if_provider='adyen'),
@@ -54,7 +54,7 @@ class AcquirerAdyen(osv.Model):
         :return string: shasign
         """
         assert inout in ('in', 'out')
-        assert acquirer.name == 'adyen'
+        assert acquirer.provider == 'adyen'
 
         if inout == 'in':
             keys = "paymentAmount currencyCode shipBeforeDate merchantReference skinCode merchantAccount sessionValidity shopperEmail shopperReference recurringContract allowedMethods blockedMethods shopperStatement merchantReturnData billingAddressType deliveryAddressType offset".split()
@@ -97,7 +97,7 @@ class AcquirerAdyen(osv.Model):
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_adyen_urls(cr, uid, acquirer.env, context=context)['adyen_form_url']
+        return self._get_adyen_urls(cr, uid, acquirer.environment, context=context)['adyen_form_url']
 
 
 class TxAdyen(osv.Model):

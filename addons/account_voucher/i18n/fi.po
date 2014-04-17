@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:17+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -81,7 +81,7 @@ msgstr "Tuo kirjaukset"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr ""
+msgstr "Tositteen vienti"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -111,12 +111,12 @@ msgstr "Aseta ehdotukseksi"
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr "Tapahtuman referenssinumero"
+msgstr "Tapahtuman viitenumero"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by year of Invoice Date"
-msgstr ""
+msgstr "Ryhmitä laskutusvuoden mukaan"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -127,7 +127,7 @@ msgstr "Myyjä"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "Tositetilastot"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1641
@@ -170,7 +170,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Search Vouchers"
-msgstr ""
+msgstr "Hae tositteet"
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
@@ -205,12 +205,12 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Eräpäivä"
 
 #. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
-msgstr ""
+msgstr "Muistiinpanot"
 
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
@@ -341,7 +341,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr ""
+msgstr "(päivitys)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -360,7 +360,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
-msgstr ""
+msgstr "Väärä tositerivi"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -405,7 +405,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Voucher"
-msgstr ""
+msgstr "Ostotosite"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -427,7 +427,7 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "kpl tositerivejä"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -438,13 +438,13 @@ msgstr ""
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
-msgstr ""
+msgstr "Proformatositteet"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr ""
+msgstr "Tositteen viennit"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -466,7 +466,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "Tositteiden viennit"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -481,7 +481,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr ""
+msgstr "Monivaluuttatosite"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -505,6 +505,13 @@ msgid ""
 "\n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+" * 'Luonnos' on uuden syötetyn ja vielä vahvistamattoman tositteen tila.     "
+"                                              \n"
+"* 'Proforma' -tilassa on tosite, jolle ei ole annettu tositenumeroa.         "
+"                                                       \n"
+"* 'Kirjattu' -tila syntyy tositteelle, joka on viety kirjanpitoon ja on "
+"saanut samalla tositenumeron.     \n"
+"* 'Peruttu' -tila syntyy, kun käyttäjä peruu tositteen."
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -537,7 +544,7 @@ msgstr ""
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Validated Vouchers"
-msgstr ""
+msgstr "Vahvistetut tositteet"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -568,7 +575,7 @@ msgstr ""
 #: field:account.config.settings,expense_currency_exchange_account_id:0
 #: field:res.company,expense_currency_exchange_account_id:0
 msgid "Loss Exchange Rate Account"
-msgstr ""
+msgstr "Tappiotili valuttakurssierolle"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -638,7 +645,7 @@ msgstr ""
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by month of Invoice Date"
-msgstr ""
+msgstr "Ryhmitä laskutuskuukauden mukaan"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -662,12 +669,12 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Payment"
-msgstr ""
+msgstr "Tositteen maksaminen"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "Tositteen tilat"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -685,7 +692,7 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "Tosite on kokonaan maksettu"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -702,25 +709,25 @@ msgstr ""
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Tositeluonnokset"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "Yhteensä (verollinen)"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Ostotosite"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -741,7 +748,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate Payment"
-msgstr ""
+msgstr "Vahvista maksusuoritus"
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -780,7 +787,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Myyntikuitit"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -797,7 +804,7 @@ msgstr ""
 #: field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
-msgstr ""
+msgstr "Päivä"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -850,7 +857,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr ""
+msgstr "Päiväkirjatositteet"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
@@ -878,19 +885,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Asiakkaan maksut"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Myyntikuittien analyysi"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "Ryhmitä laskupäivänän mukaan"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -906,12 +913,12 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr ""
+msgstr "Yhteensä (veroton)"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Date"
-msgstr ""
+msgstr "Laskupäivä"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -922,12 +929,12 @@ msgstr ""
 #: view:account.voucher:0
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr ""
+msgstr "Kirjanpitotosite"
 
 #. module: account_voucher
 #: field:account.voucher,number:0
 msgid "Number"
-msgstr ""
+msgstr "Numero"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -959,7 +966,7 @@ msgstr ""
 #: field:account.voucher.line,voucher_id:0
 #: model:res.request.link,name:account_voucher.req_link_voucher
 msgid "Voucher"
-msgstr ""
+msgstr "Tosite"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
@@ -969,7 +976,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Items"
-msgstr ""
+msgstr "Tositteen kohteet"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -1043,7 +1050,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Kirjatut tositteet"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
@@ -1081,7 +1088,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Sisäiset muistiinpanot"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1141,7 +1148,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,reference:0
 msgid "Ref #"
-msgstr ""
+msgstr "Viitenro"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1153,7 +1160,7 @@ msgstr ""
 #: field:account.config.settings,income_currency_exchange_account_id:0
 #: field:res.company,income_currency_exchange_account_id:0
 msgid "Gain Exchange Rate Account"
-msgstr ""
+msgstr "Voittotili valuttakurssierolle"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -1190,7 +1197,7 @@ msgstr ""
 #: view:account.voucher:0
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr ""
+msgstr "Yhteensä"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -1208,17 +1215,17 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "Avattua tai maksettua tositetta ei voi poistaa!"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Kirjanpitovientien arvopäivä"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "Tilan muuttuminen"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -1230,7 +1237,7 @@ msgstr ""
 #: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr ""
+msgstr "Tositerivit"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1255,7 +1262,7 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0

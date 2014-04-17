@@ -22,7 +22,7 @@ _logger = logging.getLogger(__name__)
 class PaymentAcquirerOgone(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_ogone_urls(self, cr, uid, env, context=None):
+    def _get_ogone_urls(self, cr, uid, environment, context=None):
         """ Ogone URLS:
 
          - standard order: POST address for form-based
@@ -30,11 +30,16 @@ class PaymentAcquirerOgone(osv.Model):
         @TDETODO: complete me
         """
         return {
-            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard.asp' % env,
-            'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % env,
-            'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect.asp' % env,
-            'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % env,
+            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard_utf8.asp' % (environment,),
+            'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect_utf8.asp' % (environment,),
+            'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect_utf8.asp' % (environment,),
+            'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
         }
+
+    def _get_providers(self, cr, uid, context=None):
+        providers = super(PaymentAcquirerOgone, self)._get_providers(cr, uid, context=context)
+        providers.append(['ogone', 'Ogone'])
+        return providers
 
     _columns = {
         'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
@@ -57,7 +62,7 @@ class PaymentAcquirerOgone(osv.Model):
         :return string: shasign
         """
         assert inout in ('in', 'out')
-        assert acquirer.name == 'ogone'
+        assert acquirer.provider == 'ogone'
         key = getattr(acquirer, 'ogone_shakey_' + inout)
 
         def filter_key(key):
@@ -105,7 +110,7 @@ class PaymentAcquirerOgone(osv.Model):
 
     def ogone_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_ogone_urls(cr, uid, acquirer.env, context=context)['ogone_standard_order_url']
+        return self._get_ogone_urls(cr, uid, acquirer.environment, context=context)['ogone_standard_order_url']
 
 
 class PaymentTxOgone(osv.Model):
@@ -346,7 +351,7 @@ class PaymentTxOgone(osv.Model):
             PSWD=tx.acquirer_id.ogone_password,
             ID=payid,
         )
-        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (tx.acquirer_id.env,)
+        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (tx.acquirer_id.environment,)
 
         tries = 2
         tx_done = False

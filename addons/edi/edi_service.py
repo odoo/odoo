@@ -34,18 +34,14 @@ def _edi_dispatch(db_name, method_name, *method_args):
     try:
         registry = openerp.modules.registry.RegistryManager.get(db_name)
         assert registry, 'Unknown database %s' % db_name
-        edi = registry['edi.edi']
-        cr = registry.db.cursor()
-        res = None
-        res = getattr(edi, method_name)(cr, *method_args)
-        cr.commit()
+        with registry.cursor() as cr:
+            edi = registry['edi.edi']
+            return getattr(edi, method_name)(cr, *method_args)
+
     except Exception, e:
         _logger.exception('Failed to execute EDI method %s with args %r.',
             method_name, method_args)
         raise
-    finally:
-        cr.close()
-    return res
 
 def exp_import_edi_document(db_name, uid, passwd, edi_document, context=None):
     return _edi_dispatch(db_name, 'import_edi', uid, edi_document, None)

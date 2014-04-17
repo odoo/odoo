@@ -29,7 +29,7 @@
     'sequence': 18,
     'summary': 'Manufacturing Orders, Bill of Materials, Routing',
     'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/manufacturing_analysis.jpeg', 'images/production_dashboard.jpeg','images/routings.jpeg','images/work_centers.jpeg'],
-    'depends': ['product','procurement', 'stock', 'resource', 'purchase'],
+    'depends': ['product','procurement', 'stock', 'resource', 'purchase', 'report'],
     'description': """
 Manage the Manufacturing process in OpenERP
 ===========================================
@@ -66,13 +66,13 @@ Dashboard / Reports for MRP will include:
         'mrp_report.xml',
         'company_view.xml',
         'report/mrp_report_view.xml',
-        'report/mrp_production_order_view.xml',
         'board_manufacturing_view.xml',
         'res_config_view.xml',
+
+        'views/report_mrporder.xml',
+        'views/report_mrpbomstructure.xml',
     ],
     'demo': ['mrp_demo.xml'],
-    #TODO: This yml tests are needed to be completely reviewed again because the product wood panel is removed in product demo as it does not suit for new demo context of computer and consultant company
-    # so the ymls are too complex to change at this stage
     'test': [
          'test/bom_with_service_type_product.yml',
          'test/mrp_users.yml',

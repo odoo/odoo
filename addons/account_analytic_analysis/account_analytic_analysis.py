@@ -543,33 +543,40 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, fix_price_invoices=False, invoice_on_timesheets=False, recurring_invoices=False, context=None):
         if not template_id:
             return {}
         obj_analytic_line = self.pool.get('account.analytic.invoice.line')
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
 
         template = self.browse(cr, uid, template_id, context=context)
-        invoice_line_ids = []
-        for x in template.recurring_invoice_line_ids:
-            invoice_line_ids.append((0, 0, {
-                'product_id': x.product_id.id,
-                'uom_id': x.uom_id.id,
-                'name': x.name,
-                'quantity': x.quantity,
-                'price_unit': x.price_unit,
-                'analytic_account_id': x.analytic_account_id and x.analytic_account_id.id or False,
-            }))
-        res['value']['fix_price_invoices'] = template.fix_price_invoices
-        res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
-        res['value']['hours_qtt_est'] = template.hours_qtt_est
-        res['value']['amount_max'] = template.amount_max
-        res['value']['to_invoice'] = template.to_invoice.id
-        res['value']['pricelist_id'] = template.pricelist_id.id
-        res['value']['recurring_invoices'] = template.recurring_invoices
-        res['value']['recurring_interval'] = template.recurring_interval
-        res['value']['recurring_rule_type'] = template.recurring_rule_type
-        res['value']['recurring_invoice_line_ids'] = invoice_line_ids
+        
+        if not fix_price_invoices:
+            res['value']['fix_price_invoices'] = template.fix_price_invoices
+            res['value']['amount_max'] = template.amount_max
+        if not invoice_on_timesheets:
+            res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
+            res['value']['hours_qtt_est'] = template.hours_qtt_est
+        
+        if template.to_invoice.id:
+            res['value']['to_invoice'] = template.to_invoice.id
+        if template.pricelist_id.id:
+            res['value']['pricelist_id'] = template.pricelist_id.id
+        if not recurring_invoices:
+            invoice_line_ids = []
+            for x in template.recurring_invoice_line_ids:
+                invoice_line_ids.append((0, 0, {
+                    'product_id': x.product_id.id,
+                    'uom_id': x.uom_id.id,
+                    'name': x.name,
+                    'quantity': x.quantity,
+                    'price_unit': x.price_unit,
+                    'analytic_account_id': x.analytic_account_id and x.analytic_account_id.id or False,
+                }))
+            res['value']['recurring_invoices'] = template.recurring_invoices
+            res['value']['recurring_interval'] = template.recurring_interval
+            res['value']['recurring_rule_type'] = template.recurring_rule_type
+            res['value']['recurring_invoice_line_ids'] = invoice_line_ids
         return res
 
     def onchange_recurring_invoices(self, cr, uid, ids, recurring_invoices, date_start=False, context=None):
@@ -664,13 +671,20 @@ class account_analytic_account(osv.osv):
 
         partner_payment_term = contract.partner_id.property_payment_term and contract.partner_id.property_payment_term.id or False
 
+        currency_id = False
+        if contract.pricelist_id:
+            currency_id = contract.pricelist_id.currency_id.id
+        elif contract.partner_id.property_product_pricelist:
+            currency_id = contract.partner_id.property_product_pricelist.currency_id.id
+        elif contract.company_id:
+            currency_id = contract.company_id.currency_id.id
 
         inv_data = {
            'reference': contract.code or False,
            'account_id': contract.partner_id.property_account_receivable.id,
            'type': 'out_invoice',
            'partner_id': contract.partner_id.id,
-           'currency_id': contract.partner_id.property_product_pricelist.id or False,
+           'currency_id': currency_id,
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
            'origin': contract.name,

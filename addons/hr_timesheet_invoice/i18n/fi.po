@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:11+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:37+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -26,7 +26,7 @@ msgstr "Käyttäjän tuntikortti"
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
 msgid "Internal Name"
-msgstr ""
+msgstr "Sisäinen nimi"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -44,18 +44,18 @@ msgstr ""
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "No record(s) found for this report."
-msgstr ""
+msgstr "Tälle raportille ei löydy tietorivejä."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Tietoa liian vähän!"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittely..."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -65,22 +65,22 @@ msgstr "Pakota tietyn tuotteen käyttö"
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Income"
-msgstr ""
+msgstr "Tulo"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,name:0
 msgid "Log of Activity"
-msgstr ""
+msgstr "Toimenpideloki"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Re-open project"
-msgstr ""
+msgstr "Avaa projekti uudelleen"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,product_uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Yksikkö"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
@@ -94,7 +94,7 @@ msgstr "Tuntikortit päivittäin"
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Maaliskuu"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -105,12 +105,12 @@ msgstr "Tuotto"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
-msgstr ""
+msgstr "Et voi muuttaa laskutettua anlyyttistä riviä!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
 msgid "Invoice Rate"
-msgstr ""
+msgstr "Laskutusaste"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,time:0
@@ -121,7 +121,7 @@ msgstr "Näytä aika työhistoriassa"
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,day:0
 msgid "Day"
-msgstr ""
+msgstr "Päivä"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,product:0
@@ -146,11 +146,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikkaa lisätäksesi uusi laskutyyppi.\n"
+"              </p><p>\n"
+"                OpenERP mahdollistaa laskutyypin luomisen oletusmalliks. "
+"Voit \n"
+"                joutua säännöllisesti antamaan alennuksia tietyn sopimuksen "
+"vuoksi\n"
+"                asiakkaalle. Tästä valikosta voit luoda lisää laskutyyppejä "
+"nopeuttaaksesi\n"
+"                laskutustasi.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Account"
-msgstr ""
+msgstr "Tili"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,time:0
@@ -160,18 +172,18 @@ msgstr "Käytetty aika"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Laskutettu määrä"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:185
 #, python-format
 msgid "Analytic Account incomplete !"
-msgstr ""
+msgstr "Analyyttinen tili on puutteellinen!"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekti"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -181,7 +193,7 @@ msgstr "Työkorttin valintoihin perustuva lasku"
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Määrä"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
@@ -191,7 +203,7 @@ msgstr "Jokaisen tehdyn työn yksityiskohdat näytetään laskussa"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Hinnasto"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
@@ -206,7 +218,7 @@ msgstr "Loppupäivämäärän aikajakso"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
 msgid "Analytic account to close"
-msgstr ""
+msgstr "Analyyttinen tili päättämiseen"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
@@ -234,23 +246,23 @@ msgstr "Päivittinen tuntikortti tileittäin"
 #: field:report_timesheet.account,account_id:0
 #: field:report_timesheet.account.date,account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyyttinen tili"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,date_deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Määräaika"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Konfiguraatiovirhe!"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,time:0
@@ -260,35 +272,35 @@ msgstr "Jokaiseen tehtyyn työhön käytetty aika näytetään laskussa"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Cancel Contract"
-msgstr ""
+msgstr "Peruuta sopimus"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
 msgid "From"
-msgstr ""
+msgstr "Lähettäjä"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "User or Journal Name"
-msgstr ""
+msgstr "Käyttäjän tai päiväkirjan nimi"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
 msgid "Costs to invoice"
-msgstr ""
+msgstr "Laskuta kulut"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
 #, python-format
 msgid "Please define income account for product '%s'."
-msgstr ""
+msgstr "Määritä tulotili tuottelle '%s'."
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,account_id:0
 #: field:report.analytic.account.close,name:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analyyttinen tili"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -306,11 +318,13 @@ msgid ""
 "The cost of each work done will be displayed on the invoice. You probably "
 "don't want to check this"
 msgstr ""
+"Jokaisen tehdyn työn kustannus näytetään laskulla. Todennäköisestiet halua "
+"valita tätä!"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Force to use a special product"
-msgstr ""
+msgstr "Pakota käyttämään erityistuotetta"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
@@ -322,7 +336,7 @@ msgstr "Käyttäjän tuntikortit"
 #: view:hr.analytic.timesheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "To Invoice"
-msgstr ""
+msgstr "Laskuta"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -340,7 +354,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Contract Finished"
-msgstr ""
+msgstr "Sopimus toimitettu"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -349,18 +363,18 @@ msgstr ""
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Heinäkuu"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoiceable"
-msgstr ""
+msgstr "Laskutettavissa"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varoitus!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -376,12 +390,12 @@ msgstr "Teoreettinen"
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
 msgid "Free of charge"
-msgstr ""
+msgstr "Veloituksetta"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
-msgstr ""
+msgstr "Analyyttiset rivit laskuraportille"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
@@ -414,7 +428,7 @@ msgstr "Tuntikortit käyttäjittäin"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:68
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "Laskut"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -423,12 +437,12 @@ msgstr ""
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Joulukuu"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Invoice contract"
-msgstr ""
+msgstr "Laskuta sopimus"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
@@ -438,12 +452,12 @@ msgstr ""
 #: field:report_timesheet.account.date,month:0
 #: field:report_timesheet.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Kuukausi"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuutta"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -455,7 +469,7 @@ msgstr "Kohdistamattomat tuntikortit käyttäjille"
 #: view:hr.analytic.timesheet:0
 #: field:report.timesheet.line,invoice_id:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Laskutettu"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity_max:0
@@ -476,7 +490,7 @@ msgstr "Tuntiikortit tileittäin"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "Odottaa"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0
@@ -486,12 +500,12 @@ msgstr "Laskutettu kaikkiaan"
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,state:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analyyttinen rivi"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -535,7 +549,7 @@ msgstr "Tuntiikortit tileittäin"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Päiväkirjan tapahtumat"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -554,7 +568,7 @@ msgstr "Laajennetut suodattimet..."
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,amount_invoice:0
 msgid "To invoice"
-msgstr ""
+msgstr "Laskuta"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -614,13 +628,13 @@ msgstr "Luo lasku lopullisesta tuntikortista"
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,quantity:0
 #: view:report.timesheet.line:0
 msgid "Quantity"
-msgstr ""
+msgstr "Määrä"
 
 #. module: hr_timesheet_invoice
 #: field:report.timesheet.line,general_account_id:0
@@ -635,13 +649,13 @@ msgstr "Tulosta tuntilistan tulos"
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Totals:"
-msgstr ""
+msgstr "Yhteensä:"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
 #: view:report.account.analytic.line.to.invoice:0
 msgid "Analytic Lines to Invoice"
-msgstr ""
+msgstr "Laskuta analyyttiset rivit"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -649,6 +663,8 @@ msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
 msgstr ""
+"Sallii alennusten antamisen laskulla, pidä tyhjänä, jos toimenpiteitä ei "
+"pidäisi laskuttaa."
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_max:0
@@ -667,21 +683,21 @@ msgstr "Tuntikortin laskutusaste"
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "September"
-msgstr ""
+msgstr "Syyskuu"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
 #: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
 #: view:report.timesheet.line:0
 msgid "Invoice"
-msgstr ""
+msgstr "Lasku"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peru"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
@@ -694,22 +710,22 @@ msgstr "Tuntikortin rivi"
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Billing Data"
-msgstr ""
+msgstr "Laskutustiedot"
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
 msgid "Label for the customer"
-msgstr ""
+msgstr "Selite asiakkaalle"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_to:0
 msgid "To"
-msgstr ""
+msgstr "Vastaanottaja"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
 msgid "Do you want to show details of work in invoice?"
-msgstr ""
+msgstr "Haluatko näyttää työn yksityiskohdat laskulla?"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -717,7 +733,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
 msgid "Create Invoice"
-msgstr ""
+msgstr "Luo lasku"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
@@ -744,7 +760,7 @@ msgstr "Laskutettavat tuntikortit"
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
-msgstr ""
+msgstr "Sopimus keskeneräinen. Täytä asiakas- ja hinnastokentät."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
@@ -776,17 +792,17 @@ msgstr "Laskutus"
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,journal_ids:0
 msgid "Journal"
-msgstr ""
+msgstr "Päiväkirja"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,product:0
 msgid "The product that will be used to invoice the remaining amount"
-msgstr ""
+msgstr "Tuote jota käytetään laskutettaessa jäljelläoleva määrä"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,time:0
@@ -796,12 +812,12 @@ msgstr "Käytetty aika"
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_max:0
 msgid "Keep empty if this contract is not limited to a total fixed price."
-msgstr ""
+msgstr "Täytä jos tällä sopimuksella on kiinteä kokonaishinta."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want to show details of each activity to your customer?"
-msgstr ""
+msgstr "Haluatko näyttää jokaisen toimenpiteen yksityiskohdat asiakkaallesi?"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
@@ -820,17 +836,17 @@ msgstr "Aikajakso aloittamispäivämäärästä"
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Helmikuu"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,customer_name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
 msgid "Analytic Lines"
-msgstr ""
+msgstr "Analyyttiset rivit"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
@@ -840,7 +856,7 @@ msgstr "Päivän tuntikortti tileittäin"
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,sale_price:0
 msgid "Sale price"
-msgstr ""
+msgstr "Myyntihinta"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
@@ -854,7 +870,7 @@ msgstr "Tuntikortit päivittäin"
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "April"
-msgstr ""
+msgstr "Huhtikuu"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
@@ -863,22 +879,26 @@ msgid ""
 "There is no product defined. Please select one or force the product through "
 "the wizard."
 msgstr ""
+"Tuotetta ei ole määritelty. Valitse yksi tai pakota tuote ohjatun toiminnon "
+"läpi."
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,factor:0
 msgid "Discount in percentage"
-msgstr ""
+msgstr "Anna alennus prosentteina"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Invoice is already linked to some of the analytic line(s)!"
 msgstr ""
+"Lasku on jo yhdistetty johonkin analyyttiseen tiliin tai joihinkin "
+"analyyttisiin riveihin!"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,name:0
 msgid "Description"
-msgstr ""
+msgstr "Kuvaus"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -891,24 +911,24 @@ msgstr "Yksikköä"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Virhe!"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor4
 msgid "80%"
-msgstr ""
+msgstr "80 %"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Esimies"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -918,7 +938,7 @@ msgstr ""
 #: field:report.timesheet.line,cost:0
 #: field:report_timesheet.user,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Kulut"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
@@ -928,12 +948,12 @@ msgstr ""
 #: field:report_timesheet.account.date,name:0
 #: field:report_timesheet.user,name:0
 msgid "Year"
-msgstr ""
+msgstr "Vuosi"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
 msgid "Duration"
-msgstr ""
+msgstr "Kesto"
 
 #~ msgid "Invoice analytic lines"
 #~ msgstr "Laskun analyyttiset rivit"

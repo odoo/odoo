@@ -20,7 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class bom_structure(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -56,7 +58,11 @@ class bom_structure(report_sxw.rml_parse):
 
         return children
 
-report_sxw.report_sxw('report.bom.structure','mrp.bom','mrp/report/bom_structure.rml',parser=bom_structure,header='internal')
 
+class report_lunchorder(osv.AbstractModel):
+    _name = 'report.mrp.report_mrpbomstructure'
+    _inherit = 'report.abstract_report'
+    _template = 'mpr.report_mrpbomstructure'
+    _wrapped_report_class = bom_structure
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

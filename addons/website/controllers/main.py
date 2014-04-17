@@ -19,7 +19,7 @@ import openerp
 from openerp.osv import fields
 from openerp.addons.website.models import website
 from openerp.addons.web import http
-from openerp.addons.web.http import request, LazyResponse
+from openerp.http import request, Response
 
 logger = logging.getLogger(__name__)
 
@@ -45,11 +45,8 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route(website=True, auth="public", multilang=True)
     def web_login(self, *args, **kw):
-        response = super(Website, self).web_login(*args, **kw)
-        if isinstance(response, LazyResponse):
-            values = dict(response.params['values'], disable_footer=True)
-            response = request.website.render(response.params['template'], values)
-        return response
+        # TODO: can't we just put auth=public, ... in web client ?
+        return super(Website, self).web_login(*args, **kw)
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
     def page(self, page, **opt):
@@ -69,34 +66,41 @@ class Website(openerp.addons.web.controllers.main.Home):
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)
 
-        return request.website.render(page, values)
+        return request.render(page, values)
 
     @http.route(['/robots.txt'], type='http', auth="public", website=True)
     def robots(self):
-        response = request.website.render('website.robots', {'url_root': request.httprequest.url_root})
-        response.mimetype = 'text/plain'
-        return response
+        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap', type='http', auth='public', website=True, multilang=True)
     def sitemap(self):
-        return request.website.render('website.sitemap', {
+        return request.render('website.sitemap', {
             'pages': request.website.enumerate_pages()
         })
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml(self):
-        response = request.website.render('website.sitemap_xml', {
+        values = {
             'pages': request.website.enumerate_pages()
-        })
-        response.headers['Content-Type'] = 'application/xml;charset=utf-8'
-        return response
+        }
+        headers = {
+            'Content-Type': 'application/xml;charset=utf-8',
+        }
+        return request.render('website.sitemap_xml', values, headers=headers)
 
     #------------------------------------------------------
     # Edit
     #------------------------------------------------------
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
-    def pagenew(self, path, noredirect=False):
+    def pagenew(self, path, noredirect=False, add_menu=None):
         xml_id = request.registry['website'].new_page(request.cr, request.uid, path, context=request.context)
+        if add_menu:
+            model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
+            request.registry['website.menu'].create(request.cr, request.uid, {
+                    'name': path,
+                    'url': "/page/" + xml_id,
+                    'parent_id': id,
+                }, context=request.context)
         url = "/page/" + xml_id
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
@@ -122,7 +126,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             view.write(request.cr, request.uid, [view_id],
                        {'inherit_id': view_option_id}, context=request.context)
 
-        return request.website.render('website.themes', {'theme_changed': True})
+        return request.render('website.themes', {'theme_changed': True})
 
     @http.route(['/website/snippets'], type='json', auth="public", website=True)
     def snippets(self):
@@ -202,7 +206,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
-        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value'], context=request.context)
+        return irt.search_read(request.cr, request.uid, domain, ['id', 'res_id', 'value','state','gengo_translation'], context=request.context)
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -236,43 +240,54 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'source': initial_content,
                         'value': new_content,
                     }
+                    if t.get('gengo_translation'):
+                        new_trans['gengo_translation'] = t.get('gengo_translation')
+                        new_trans['gengo_comment'] = t.get('gengo_comment')
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
-    def attach(self, func, upload):
+    def attach(self, func, upload=None, url=None):
+        Attachments = request.registry['ir.attachment']
 
-        url = message = None
-        try:
-            image_data = upload.read()
-            image = Image.open(cStringIO.StringIO(image_data))
-            w, h = image.size
-            if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                raise ValueError(
-                    u"Image size excessive, uploaded images must be smaller "
-                    u"than 42 million pixel")
-
-            attachment_id = request.registry['ir.attachment'].create(request.cr, request.uid, {
-                'name': upload.filename,
-                'datas': image_data.encode('base64'),
-                'datas_fname': upload.filename,
+        website_url = message = None
+        if not upload:
+            website_url = url
+            name = url.split("/").pop()
+            attachment_id = Attachments.create(request.cr, request.uid, {
+                'name':name,
+                'type': 'url',
+                'url': url,
                 'res_model': 'ir.ui.view',
             }, request.context)
+        else:
+            try:
+                image_data = upload.read()
+                image = Image.open(cStringIO.StringIO(image_data))
+                w, h = image.size
+                if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                    raise ValueError(
+                        u"Image size excessive, uploaded images must be smaller "
+                        u"than 42 million pixel")
 
-            url = website.urlplus('/website/image', {
-                'model': 'ir.attachment',
-                'id': attachment_id,
-                'field': 'datas',
-                'max_height': MAX_IMAGE_HEIGHT,
-                'max_width': MAX_IMAGE_WIDTH,
-            })
-        except Exception, e:
-            logger.exception("Failed to upload image to attachment")
-            message = unicode(e)
+                attachment_id = Attachments.create(request.cr, request.uid, {
+                    'name': upload.filename,
+                    'datas': image_data.encode('base64'),
+                    'datas_fname': upload.filename,
+                    'res_model': 'ir.ui.view',
+                }, request.context)
+
+                [attachment] = Attachments.read(
+                    request.cr, request.uid, [attachment_id], ['website_url'],
+                    context=request.context)
+                website_url = attachment['website_url']
+            except Exception, e:
+                logger.exception("Failed to upload image to attachment")
+                message = unicode(e)
 
         return """<script type='text/javascript'>
             window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(url), json.dumps(message))
+        </script>""" % (func, json.dumps(website_url), json.dumps(message))
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):
@@ -283,8 +298,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         values = {}
         if 'website_published' in _object._all_columns:
             values['website_published'] = not obj.website_published
-        if 'website_published_datetime' in _object._all_columns and values.get('website_published'):
-            values['website_published_datetime'] = fields.datetime.now()
         _object.write(request.cr, request.uid, [_id],
                       values, context=request.context)
 
@@ -294,7 +307,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Helpers
     #------------------------------------------------------
-    @http.route(['/website/kanban/'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/website/kanban'], type='http', auth="public", methods=['POST'], website=True)
     def kanban(self, **post):
         return request.website.kanban_col(**post)
 
@@ -312,6 +325,23 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image/<model>/<id>/<field>'
         ], auth="public", website=True)
     def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
+        """ Fetches the requested field and ensures it does not go above
+        (max_width, max_height), resizing it if necessary.
+
+        Resizing is bypassed if the object provides a $field_big, which will
+        be interpreted as a pre-resized version of the base field.
+
+        If the record is not found or does not have the requested field,
+        returns a placeholder image via :meth:`~.placeholder`.
+
+        Sets and checks conditional response parameters:
+        * :mailheader:`ETag` is always set (and checked)
+        * :mailheader:`Last-Modified is set iif the record has a concurrency
+          field (``__last_update``)
+
+        The requested field is assumed to be base64-encoded image data in
+        all cases.
+        """
         Model = request.registry[model]
 
         response = werkzeug.wrappers.Response()
@@ -319,16 +349,19 @@ class Website(openerp.addons.web.controllers.main.Home):
         id = int(id)
 
         ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context) \
-            or Model.search(request.cr, openerp.SUPERUSER_ID,
-                            [('id', '=', id), ('website_published', '=', True)], context=request.context)
+                           [('id', '=', id)], context=request.context)
+        if not ids and 'website_published' in Model._all_columns:
+            ids = Model.search(request.cr, openerp.SUPERUSER_ID,
+                               [('id', '=', id), ('website_published', '=', True)], context=request.context)
 
         if not ids:
             return self.placeholder(response)
 
+        presized = '%s_big' % field
         concurrency = '__last_update'
         [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field], context=request.context)
+                              [concurrency, field, presized],
+                              context=request.context)
 
         if concurrency in record:
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -352,25 +385,28 @@ class Website(openerp.addons.web.controllers.main.Home):
         if response.status_code == 304:
             return response
 
-        data = record[field].decode('base64')
-        fit = int(max_width), int(max_height)
+        data = (record.get(presized) or record[field]).decode('base64')
 
-        buf = cStringIO.StringIO(data)
-
-        image = Image.open(buf)
-        image.load()
+        image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 
+        # record provides a pre-resized version of the base field, use that
+        # directly
+        if record.get(presized):
+            response.set_data(data)
+            return response
+
+        fit = int(max_width), int(max_height)
         w, h = image.size
         max_w, max_h = fit
 
         if w < max_w and h < max_h:
-            response.data = data
+            response.set_data(data)
         else:
             image.thumbnail(fit, Image.ANTIALIAS)
             image.save(response.stream, image.format)
-            # invalidate content-length computed by make_conditional as writing
-            # to response.stream does not do it (as of werkzeug 0.9.3)
+            # invalidate content-length computed by make_conditional as
+            # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
 
         return response
@@ -378,31 +414,37 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-    @http.route(['/website/action/<id_or_xml_id>'], type='http', auth="public", website=True)
-    def actions_server(self, id_or_xml_id, **post):
+    @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
+    def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None
         ServerActions = request.registry['ir.actions.server']
 
-        # find the action_id, either an int, an int into a basestring, or an xml_id
-        if isinstance(id_or_xml_id, basestring) and '.' in id_or_xml_id:
-            action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, id_or_xml_id, raise_if_not_found=False)
-        else:
+        # find the action_id: either an xml_id, the path, or an ID
+        if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:
+            action_id = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, request.uid, path_or_xml_id_or_id, raise_if_not_found=False)
+        if not action_id:
+            action_ids = ServerActions.search(cr, uid, [('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], context=context)
+            action_id = action_ids and action_ids[0] or None
+        if not action_id:
             try:
-                action_id = int(id_or_xml_id)
+                action_id = int(path_or_xml_id_or_id)
             except ValueError:
                 pass
+
         # check it effectively exists
         if action_id:
             action_ids = ServerActions.exists(cr, uid, [action_id], context=context)
             action_id = action_ids and action_ids[0] or None
-        # run it, return only LazyResponse that are templates to be rendered
+        # run it, return only if we got a Response object
         if action_id:
             action = ServerActions.browse(cr, uid, action_id, context=context)
             if action.state == 'code' and action.website_published:
                 action_res = ServerActions.run(cr, uid, [action_id], context=context)
-                if isinstance(action_res, LazyResponse):
+                if isinstance(action_res, Response):
                     res = action_res
         if res:
             return res
         return request.redirect('/')
+
+# vim:et:

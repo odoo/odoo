@@ -14,24 +14,24 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:25+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 08:02+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_select:0
 #: field:hr.salary.rule,condition_select:0
 msgid "Condition Based on"
-msgstr ""
+msgstr "Edellytykset perustuvat"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Monthly"
-msgstr ""
+msgstr "Kuukausittain"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "Osuus (%)"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:0
@@ -43,7 +43,7 @@ msgstr ""
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_days:0
 msgid "Number of Days"
-msgstr ""
+msgstr "Päivien lukumäärä"
 
 #. module: hr_payroll
 #: help:hr.salary.rule.category,parent_id:0
@@ -57,12 +57,12 @@ msgstr ""
 #: view:hr.payslip.line:0
 #: view:hr.salary.rule:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittely..."
 
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "States"
-msgstr ""
+msgstr "Tilat"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,input_ids:0
@@ -85,7 +85,7 @@ msgstr ""
 #: field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
-msgstr ""
+msgstr "Palkkalaskelma"
 
 #. module: hr_payroll
 #: field:hr.payroll.structure,parent_id:0
@@ -138,6 +138,8 @@ msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the "
 "dates and credit note specified on Payslips Run."
 msgstr ""
+"Tämä avustaja luo palkkalaskelmat kaikille valituille työntekijöille "
+"perustuen palkkalaskelma-ajossa määriteltyihin päivämääriin ja kululaskuihin."
 
 #. module: hr_payroll
 #: report:contribution.register.lines:0
@@ -158,7 +160,7 @@ msgstr ""
 #: model:ir.model,name:hr_payroll.model_hr_payslip
 #: report:payslip:0
 msgid "Pay Slip"
-msgstr ""
+msgstr "Palkkalaskelma"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:0
@@ -190,12 +192,12 @@ msgstr ""
 #. module: hr_payroll
 #: constraint:hr.payslip:0
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr ""
+msgstr "Palkkalaskelman 'Alkupäivä.' on oltava aiempi kuin 'Loppupäivä.'"
 
 #. module: hr_payroll
 #: view:hr.salary.rule.category:0
 msgid "Notes"
-msgstr ""
+msgstr "Muistiinpanot"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:871
@@ -221,7 +223,7 @@ msgstr ""
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
-msgstr ""
+msgstr "Palkkalaskelman rivi"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -272,13 +274,13 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Draft Slip"
-msgstr ""
+msgstr "Palkkalaskelman luonnos"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:432
 #, python-format
 msgid "Normal Working Days paid at 100%"
-msgstr ""
+msgstr "Tavallisilta työpäiviltä maksetaan 100 % palkka"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,condition_range_max:0
@@ -305,7 +307,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Total Working Days"
-msgstr ""
+msgstr "Työpäivien kokonaismäärä"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,code:0
@@ -420,7 +422,7 @@ msgstr ""
 #: field:hr.payslip.line,amount_percentage_base:0
 #: field:hr.salary.rule,amount_percentage_base:0
 msgid "Percentage based on"
-msgstr ""
+msgstr "Prosenttiosuus perustuen"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:90
@@ -449,7 +451,7 @@ msgstr ""
 #: view:hr.payslip.line:0
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 msgid "Payslip Lines"
-msgstr ""
+msgstr "Palkkalaskelman rivit"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -474,7 +476,7 @@ msgstr ""
 #: code:addons/hr_payroll/hr_payroll.py:341
 #, python-format
 msgid "Refund: "
-msgstr ""
+msgstr "Hyvitys: "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
@@ -492,7 +494,7 @@ msgstr ""
 #: field:hr.payslip.line,appears_on_payslip:0
 #: field:hr.salary.rule,appears_on_payslip:0
 msgid "Appears on Payslip"
-msgstr ""
+msgstr "Näkyy palkkalaskelmassa"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
@@ -535,13 +537,13 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
 msgid "PaySlip Lines"
-msgstr ""
+msgstr "Palkkalaskelman rivit"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,register_id:0
 #: help:hr.salary.rule,register_id:0
 msgid "Eventual third party involved in the salary payment of the employees."
-msgstr ""
+msgstr "Työntekijöiden palkanmaksuun mahdollisesti liittyvä kolmas osapuoli."
 
 #. module: hr_payroll
 #: field:hr.payslip.worked_days,number_of_hours:0
@@ -595,7 +597,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Payslip"
-msgstr ""
+msgstr "Palkkalaskelma"
 
 #. module: hr_payroll
 #: field:hr.payslip,credit_note:0
@@ -607,7 +609,7 @@ msgstr ""
 #: view:hr.payslip:0
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
-msgstr ""
+msgstr "Palkkalaskelman laskennan yksityiskohdat"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,appears_on_payslip:0
@@ -677,6 +679,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
+"Tämän valitseminen tarkoittaa sitä, että kaikki tässä luodut palkkalaskelmat "
+"ovat hyvityksiäpalkkalaskelmia."
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:876
@@ -755,7 +759,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_report
 msgid "Employee PaySlip"
-msgstr ""
+msgstr "Työntekijän palkkalaskelma"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,salary_rule_id:0
@@ -1108,7 +1112,7 @@ msgstr ""
 #: help:hr.payslip.line,amount_percentage:0
 #: help:hr.salary.rule,amount_percentage:0
 msgid "For example, enter 50.0 to apply a percentage of 50%"
-msgstr ""
+msgstr "Esimerkki: Syötä arvo 50,0 käyttääksesi prosenttiosuutta 50 %"
 
 #. module: hr_payroll
 #: view:hr.payroll.structure:0
@@ -1192,7 +1196,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Salary Computation"
-msgstr ""
+msgstr "Palkanlaskenta"
 
 #. module: hr_payroll
 #: view:hr.payslip:0

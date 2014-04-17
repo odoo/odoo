@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-12 17:49+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
+"PO-Revision-Date: 2014-04-04 19:44+0000\n"
+"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:51+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:06+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -109,7 +109,7 @@ msgstr "Kroki monitowania płatności"
 #. module: account_followup
 #: field:account_followup.print,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "Treść email"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
@@ -403,7 +403,7 @@ msgstr "Monity o płatność"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Dni zwłoki"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -419,7 +419,7 @@ msgstr "Ostatni monit o płatność"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "Uzgadnianie Faktur i Płatności"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
@@ -429,7 +429,7 @@ msgstr "Wykonaj manualnie monit o płatność"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Sp."
 
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
@@ -499,6 +499,7 @@ msgstr "Monitowanie płatności"
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
 msgstr ""
+"Email nie został wysłany ponieważ adres email partnera nie został wypełniony"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -511,6 +512,8 @@ msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
 msgstr ""
+"Opcjonalnie możesz przypisać użytkownika do tego pola, który stanie się "
+"odpowiedzialny za tę akcję."
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
@@ -528,7 +531,7 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
+msgstr " ręczna akcja przypisana do:"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -548,13 +551,13 @@ msgstr "Przeszukaj monity o płatność"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Account Move line"
-msgstr ""
+msgstr "Pozycja zapisu"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:237
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Listy i Email: Podsumowanie akcji"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -916,7 +919,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odpowiedzialny"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
@@ -945,7 +948,7 @@ msgstr "Działanie monitowania płatności"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Załącz pozycje dziennika oznaczone jako sporne"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0

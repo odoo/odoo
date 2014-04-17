@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-11-08 09:37+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2014-03-06 02:20+0000\n"
+"Last-Translator: Baich-info <baich.info@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:03+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -306,9 +306,9 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                点击创建一个客户退款. \n"
 "              </p><p>\n"
-"                退款是全部或部分借记销售传票的证明。\n"
+"                退款是全部或部分借记销售发票的证明。\n"
 "              </p><p>\n"
-"                可以直接从与客户相关联的传票直接生成退款，以代替手工创建客户退款。.\n"
+"                可以直接从与客户相关联的发票直接生成退款，以代替手工创建客户退款。.\n"
 "              </p>\n"
 "            "
 
@@ -436,7 +436,7 @@ msgid ""
 msgstr ""
 "此处可以管理属于公司或者个人的资产.\n"
 "                跟踪资产折旧的发生，创建折旧明细账户。.\n"
-"                要安装account_asset模块. 如果不检查box, 可以处理传票和付款,\n"
+"                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n"
 "                但不能处理账记(分录明细, 科目表, ...)"
 
 #. module: account
@@ -804,7 +804,7 @@ msgstr "打印发票"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "不能 %s 已经核销的发票, 发票必须被首先反核销.。只能退还这张发票。"
+msgstr "不能 %s 已经核销的发票, 发票必须被首先反核销。只能退还这张发票。"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -1428,7 +1428,7 @@ msgstr "级别"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr "您只能修改发票草稿的货币。"
+msgstr "您只能修改发票草稿的币种。"
 
 #. module: account
 #: report:account.invoice:0
@@ -1629,12 +1629,12 @@ msgstr "未执行。"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Credit Note"
-msgstr "冲销传票"
+msgstr "冲销发票"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "eInvoicing & Payments"
-msgstr "电子传票和支付"
+msgstr "电子发票和支付"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -1662,7 +1662,7 @@ msgstr "用于仪表盘视图的临时表"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "供应商红字传票"
+msgstr "供应商红字发票"
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -1858,7 +1858,7 @@ msgstr "15 天"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr "开传票"
+msgstr "开发票"
 
 #. module: account
 #: code:addons/account/report/account_partner_balance.py:115
@@ -2156,6 +2156,11 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"点击登记银行对账单</p><p>\n"
+"银行对账单是一个银行帐户在一定会计期间所发生的全部交易往来的汇总。你可以从银行周期性获得。\n"
+"</p><p>\n"
+"OpenERP允许对账单行直接和相关的销售或采购发票进行核销。\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2437,7 +2442,7 @@ msgstr "检查供应商发票合计"
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Pro-forma"
-msgstr "形式传票"
+msgstr "形式发票"
 
 #. module: account
 #: help:account.account.template,type:0
@@ -2593,7 +2598,7 @@ msgstr "当账目记录有数据时，您将不能把它由关闭状态改变到
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr "传票明细"
+msgstr "发票明细"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -2609,8 +2614,8 @@ msgid ""
 "amount greater than the total invoiced amount. In order to avoid rounding "
 "issues, the latest line of your payment term must be of type 'balance'."
 msgstr ""
-"无法创建传票。\n"
-"相关的支付记录可能未确认核实，因为合计的总额大于传票的开票总额。为避免统计错误，请您确认最新的支付记录都在平衡状态。"
+"无法创建发票。\n"
+"相关的支付记录可能未确认核实，因为合计的总额大于发票的开票总额。为避免统计错误，请您确认最新的支付记录都在平衡状态。"
 
 #. module: account
 #: view:account.move:0
@@ -3329,7 +3334,7 @@ msgstr "搜寻会计周期"
 #. module: account
 #: view:account.change.currency:0
 msgid "Invoice Currency"
-msgstr "发票币别"
+msgstr "发票币种"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
@@ -4005,7 +4010,7 @@ msgstr "如果您不选择会计期间，它将取所有开启的会计期间"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_cashbox_line
 msgid "account.journal.cashbox.line"
-msgstr ""
+msgstr "account.journal.cashbox.line"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
@@ -4186,7 +4191,7 @@ msgstr "应付账"
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #, python-format
 msgid "The periods to generate opening entries cannot be found."
-msgstr ""
+msgstr "要生成分录的 会计区间没有找到。"
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -4251,7 +4256,7 @@ msgstr "还没有配置好公司"
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "预计一个会计科目表"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -4472,7 +4477,7 @@ msgstr "辅助核算余额"
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "该付款方式将代替销售记录和客户发票的默认值。"
 
 #. module: account
 #: view:account.config.settings:0
@@ -4496,7 +4501,7 @@ msgstr "已记账分录明细"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "未跟进"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4583,6 +4588,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
 msgstr ""
+"错误!\n"
+"你不能循环创建税代码"
 
 #. module: account
 #: constraint:account.period:0
@@ -4590,6 +4597,8 @@ msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
 msgstr ""
+"错误!\n"
+"这个会计期间的持续时间不合法。"
 
 #. module: account
 #: field:account.entries.report,month:0
@@ -4606,7 +4615,7 @@ msgstr "月份"
 #: code:addons/account/account.py:668
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
-msgstr ""
+msgstr "你不能改变已经包含了账簿项目的 科目代码!"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -4627,7 +4636,7 @@ msgstr ""
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "产品计量单位"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -4682,7 +4691,7 @@ msgstr "税基编码"
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
-msgstr ""
+msgstr "你必须提供一个科目来勾销/兑换凭证差异。"
 
 #. module: account
 #: help:res.company,paypal_account:0
@@ -4736,7 +4745,7 @@ msgstr ""
 #. module: account
 #: selection:account.move.line,state:0
 msgid "Balanced"
-msgstr ""
+msgstr "已平衡"
 
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
@@ -4749,7 +4758,7 @@ msgstr "发票或付款清单"
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
-msgstr ""
+msgstr "目前还没有公司缺少科目表。因此，该向导不会被执行。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -4764,7 +4773,7 @@ msgstr "科目一览表"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "付款参考"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4833,7 +4842,7 @@ msgstr "欠款单据"
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr ""
+msgstr "待调整日记账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -5771,7 +5780,7 @@ msgstr "税编码"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr "客户红字传票"
+msgstr "客户红字发票"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -6295,7 +6304,7 @@ msgstr "无"
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "客户红字传票"
+msgstr "客户红字发票"
 
 #. module: account
 #: field:account.account,foreign_balance:0
@@ -6806,7 +6815,7 @@ msgstr "你不能修改已经存在凭证的公司帐户。"
 #: selection:report.invoice.created,type:0
 #, python-format
 msgid "Supplier Refund"
-msgstr "供应商红字传票"
+msgstr "供应商红字发票"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -7367,7 +7376,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
 msgid "A statement with manual entries becomes a draft statement."
-msgstr "手工输入的传票是草稿状态"
+msgstr "手工输入的发票是草稿状态"
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -7723,7 +7732,7 @@ msgstr "发票明细"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer And Supplier Refunds"
-msgstr "客户和供应商红字传票"
+msgstr "客户和供应商红字发票"
 
 #. module: account
 #: field:account.financial.report,sign:0
@@ -7766,7 +7775,7 @@ msgstr "OPEJ"
 #: report:account.invoice:0
 #: view:account.invoice:0
 msgid "PRO-FORMA"
-msgstr "形式传票"
+msgstr "形式发票"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -8381,7 +8390,7 @@ msgstr "如果在计算未来的税前这税额必须包含在税基金额里，
 #: code:addons/account/account.py:3196
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr "采购红字传票账簿"
+msgstr "采购红字发票账簿"
 
 #. module: account
 #: code:addons/account/account.py:1333
@@ -8698,7 +8707,7 @@ msgstr "关闭一个会计年度"
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "红字传票账簿"
+msgstr "红字发票账簿"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8937,7 +8946,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Invoicing & Payments"
-msgstr "传票与付款"
+msgstr "发票与付款"
 
 #. module: account
 #: help:account.invoice,internal_number:0
@@ -9182,7 +9191,7 @@ msgstr ""
 #: code:addons/account/account.py:3195
 #, python-format
 msgid "Sales Refund Journal"
-msgstr "销售红字传票账簿"
+msgstr "销售红字发票账簿"
 
 #. module: account
 #: view:account.move:0

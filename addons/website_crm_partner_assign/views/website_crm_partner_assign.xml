@@ -5,7 +5,7 @@
 <!-- Layout add nav and footer -->
 <template id="footer_custom" inherit_id="website.layout" name="Footer Partners Link">
     <xpath expr="//footer//div[@name='info']/ul" position="inside">
-        <li><a href="/partners/">Resellers</a></li>
+        <li><a href="/partners">Resellers</a></li>
     </xpath>
 </template>
 
@@ -55,7 +55,7 @@
                     <t t-foreach="countries" t-as="country_dict">
                         <t t-if="country_dict['country_id']">
                             <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                <a t-attf-href="#{ country_dict['country_id'][0] and ('/partners/country/%s' % slug(country_dict['country_id'])) or '/partners/' }#{ search_path }">
+                                <a t-attf-href="#{ country_dict['country_id'][0] and ('/partners/country/%s' % slug(country_dict['country_id'])) or '/partners' }#{ search_path }">
                                     <span class="badge pull-right" t-esc="country_dict['country_id_count'] or ''"/>
                                     <t t-esc="country_dict['country_id'][1]"/> 
                                 </a>
@@ -93,11 +93,11 @@
                             <t t-set="internal_gid" t-value="partner_data['grade_id'][1]"/>
                         </t>
                         <div class="media">
-                            <a class="pull-left" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/">
+                            <a class="pull-left" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
                                 <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data['image_small']}"/>
                             </a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }/"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
+                                <a class="media-heading" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
                                 <div t-esc="partner_data['website_short_description']"/>
                             </div>
                         </div>
@@ -112,7 +112,7 @@
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <h3>World Map</h3>
         <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+            <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners"
                 style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
         </ul>
     </xpath>

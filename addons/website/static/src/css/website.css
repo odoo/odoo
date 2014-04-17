@@ -1,3 +1,4 @@
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
@@ -102,7 +103,15 @@ header a.navbar-brand img {
   max-height: 50px;
 }
 
+#wrapwrap p:empty:after {
+  content: "\2060";
+}
+
 /* ----- Snippets Styles ----- */
+.para_large {
+  font-size: 120%;
+}
+
 .readable {
   font-size: 120%;
   max-width: 700px;
@@ -116,9 +125,10 @@ header a.navbar-brand img {
 }
 
 /* ----- BOOTSTRAP FIX ----- */
-.container .container {
+.container .container, .readable .container {
   padding-left: 0;
   padding-right: 0;
+  width: auto;
 }
 
 /* ----- BOOTSTRAP HACK FOR HEADER NAV BAR ----- */
@@ -216,7 +226,6 @@ footer {
 /* -- Hack for removing double scrollbar from mobile preview -- */
 div#mobile-preview.modal {
   overflow: hidden;
-  overflow-y: hidden;
 }
 
 ul.nav-stacked > li > a {
@@ -236,7 +245,7 @@ ul.nav-stacked > li > a {
   display: none;
 }
 
-[data-publish='off'] {
+[data-publish='off'] > *:not(.css_options) {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
@@ -280,12 +289,12 @@ ul.nav-stacked > li > a {
   background-size: 100%;
 }
 
-[data-snippet-id], .colmd, .hr, .blockquote {
+.carousel, .parallax, .blockquote {
   overflow: hidden;
 }
 
 @media (max-width: 400px) {
-  [data-snippet-id]:not([data-snippet-id="carousel"]) {
+  section, .parallax, .row, .hr, .blockquote {
     height: auto !important;
   }
 }
@@ -297,44 +306,6 @@ ul.nav-stacked > li > a {
   background-size: cover;
 }
 
-.carousel .carousel-caption {
-  left: auto;
-  right: auto;
-  bottom: 10%;
-  text-align: left;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.4);
-}
-.carousel .carousel-caption h1, .carousel .carousel-caption h2, .carousel .carousel-caption h3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.carousel .carousel-image {
-  right: 50%;
-  left: 50%;
-  top: 5%;
-  bottom: 5%;
-  position: absolute;
-  max-height: 90%;
-  margin: 0 auto;
-}
-.carousel .item.text_only .carousel-image {
-  display: none !important;
-}
-.carousel .item.text_only .carousel-caption {
-  left: 10%;
-  right: 10%;
-  top: 10%;
-  bottom: auto;
-  text-align: center;
-  background: transparent;
-}
-.carousel .item.image_text .carousel-caption {
-  right: 10%;
-}
-.carousel .item.image_text .carousel-image {
-  left: 10%;
-}
 .carousel .carousel-control {
   cursor: pointer;
 }
@@ -343,42 +314,61 @@ ul.nav-stacked > li > a {
   position: absolute;
   margin-top: -8px;
 }
-.carousel .carousel-control.left span {
-  left: 10px;
+.carousel .carousel-control.left {
+  left: -10px;
 }
-.carousel .carousel-control.right span {
-  right: 10px;
+.carousel .carousel-control.left * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  right: 50%;
+}
+.carousel .carousel-control.right {
+  right: -10px;
+}
+.carousel .carousel-control.right * {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  left: 50%;
 }
 
 .quotecarousel {
   padding-bottom: 16px;
 }
 
+.hr {
+  padding: 4px 0;
+}
+
 /* Parallax Theme */
-div.carousel[data-snippet-id="slider"] .carousel-indicators li {
+div.carousel .carousel-indicators li {
   border: 1px solid grey;
 }
-div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
+div.carousel .carousel-indicators .active {
   background-color: grey;
+}
+div.carousel span.carousel-img img, div.carousel div.carousel-content {
+  max-height: 95%;
+  padding: 10px;
+}
+div.carousel div.carousel-content {
+  background-color: black;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  margin-top: 75px;
 }
 
 .parallax {
-  position: relative;
   background-size: cover;
-  display: table;
-  width: 100%;
-  min-height: 100px;
-}
-.parallax.oe_small {
-  min-height: 200px;
-}
-.parallax.oe_medium {
-  min-height: 300px;
-}
-.parallax.oe_big {
-  min-height: 450px;
 }
 .parallax > div {
+  position: relative;
+  display: table;
+  width: 100%;
+  min-height: 200px;
+}
+.parallax > div > div {
   display: table-cell;
   vertical-align: middle;
   padding: 32px 0;
@@ -388,9 +378,6 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 .oe_dark {
   background: #eff8f8;
   background: rgba(200, 200, 200, 0.14);
-  -webkit-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  -moz-box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
-  box-shadow: 0px 5px 9px -7px rgba(0, 0, 255, 0.5) inset, 0px -3px 9px -7px rgba(0, 0, 255, 0.5) inset;
 }
 
 .oe_black {
@@ -399,7 +386,7 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 .oe_green {
-  background-color: #51d466;
+  background-color: #169c78;
   color: white;
 }
 .oe_green .text-muted {
@@ -407,7 +394,7 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 .oe_blue_light {
-  background-color: #4791d2;
+  background-color: #41b6ab;
   color: white;
 }
 .oe_blue_light .text-muted {
@@ -420,7 +407,7 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 .oe_orange {
-  background-color: #e67e22;
+  background-color: #f05442;
   color: white;
 }
 .oe_orange .text-muted {
@@ -436,7 +423,7 @@ div.carousel[data-snippet-id="slider"] .carousel-indicators .active {
 }
 
 .oe_red {
-  background-color: #f75353;
+  background-color: #9c1b31;
   color: white;
 }
 .oe_red .text-muted {
@@ -503,4 +490,34 @@ span[data-oe-type="monetary"] {
 .oe_website_login_container {
   width: 400px;
   margin: 40px auto;
+}
+
+div.media_iframe_video {
+  height: 0;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 66.5%;
+}
+div.media_iframe_video iframe {
+  width: 100%;
+  height: 100%;
+}
+div.media_iframe_video div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+    transform: none !important;
+  }
 }

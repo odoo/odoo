@@ -1,32 +1,65 @@
 (function () {
     'use strict';
 
-var website = openerp.website;
-
-if (typeof QWeb2 !== "undefined")
-website.add_template_file('/website/static/src/xml/website.tour.xml');
-
-if (website.EditorBar)
-website.EditorBar.include({
-    tours: [],
-    start: function () {
-        var self = this;
-        var menu = $('#help-menu');
-        _.each(this.tours, function (tour) {
-            var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
-            $menuItem.click(function () {
-                tour.reset();
-                tour.run();
-            });
-            menu.append($menuItem);
-        });
-        return this._super();
-    },
-    registerTour: function (tour) {
-        website.Tour.add(tour);
-        this.tours.push(tour);
+// raise an error in test mode if openerp don't exist
+if (typeof openerp === "undefined") {
+    var error = "openerp is undefined"
+                + "\nhref: " + window.location.href
+                + "\nreferrer: " + document.referrer
+                + "\nlocalStorage: " + JSON.stringify(window.localStorage);
+    if (typeof $ !== "undefined") {
+        error += '\n\n' + $("body").html();
     }
-});
+    throw new Error(error);
+}
+
+var website = window.openerp.website;
+
+// don't rewrite website.Tour in test mode
+if (typeof website.Tour !== "undefined") {
+    return;
+}
+
+// don't need template to use bootstrap Tour in automatic mode
+if (typeof QWeb2 !== "undefined") {
+    website.add_template_file('/website/static/src/xml/website.tour.xml');
+
+}
+
+// don't need to use bootstrap Tour to launch an automatic tour
+function bootstrap_tour_stub () {
+    if (typeof Tour === "undefined") {
+        window.Tour = function Tour() {};
+        Tour.prototype.addSteps = function () {};
+        Tour.prototype.end = function () {};
+        Tour.prototype.goto = function () {};
+    }
+}
+
+
+
+if (website.EditorBar) {
+    website.EditorBar.include({
+        tours: [],
+        start: function () {
+            var self = this;
+            var menu = $('#help-menu');
+            _.each(this.tours, function (tour) {
+                var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
+                $menuItem.click(function () {
+                    tour.reset();
+                    tour.run();
+                });
+                menu.append($menuItem);
+            });
+            return this._super();
+        },
+        registerTour: function (tour) {
+            website.Tour.add(tour);
+            this.tours.push(tour);
+        }
+    });
+}
 
 
 /////////////////////////////////////////////////
@@ -77,7 +110,11 @@ website.Tour = openerp.Class.extend({
 
         website.Tour.busy = true;
 
-        this.localStorage.setItem("tour-"+this.id+"-test-automatic", automatic);
+        if (automatic) {
+            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
+        } else {
+            this.localStorage.removeItem("tour-"+this.id+"-test-automatic");
+        }
         this.automatic = automatic;
 
         if (this.path) {
@@ -171,6 +208,9 @@ website.Tour = openerp.Class.extend({
     },
 
     registerTour: function () {
+        if (this.automatic) {
+            bootstrap_tour_stub();
+        }
         this.tour = new Tour({
             name: this.id,
             storage: this.tourStorage,
@@ -201,7 +241,7 @@ website.Tour = openerp.Class.extend({
 
             if (!step.element) step.orphan = true;
             if (step.snippet) {
-                step.element = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
             }
 
         }
@@ -277,10 +317,19 @@ website.Tour = openerp.Class.extend({
                     self.nextStep(step.stepId, callback, overlaps);
                 }, self.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
+                if (self.current.element) {
+                    var $popover = $(".popover.tour");
+                    if(!$(self.current.element).is(":visible")) {
+                        $popover.data("hide", true).fadeOut(300);
+                    } else if($popover.data("hide")) {
+                        $popover.data("hide", false).fadeIn(150);
+                    }
+                }
                 self.timer = setTimeout(checkNext, self.defaultDelay);
             } else {
                 self.reset();
-                throw new Error("Time overlaps to arrive to step " + step.stepId + ": '" + step._title + "'"
+                throw new Error("Can't arrive to step " + step.stepId + ": '" + step._title + "'"
+                    + '\nhref: ' + window.location.href
                     + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
                     + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
                     + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
@@ -335,12 +384,13 @@ website.Tour = openerp.Class.extend({
         }
     },
     endTour: function () {
-        if (parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1) {
-            console.log('{ "event": "success" }');
-        } else {
-            console.log('{ "event": "canceled" }');
-        }
+        var test = parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1;
         this.reset();
+        if (test) {
+            console.log('ok');
+        } else {
+            console.log('error');
+        }
     },
     autoNextStep: function () {
         var self = this;
@@ -365,28 +415,12 @@ website.Tour = openerp.Class.extend({
 
             if (step.snippet) {
             
-                var selector = '#oe_snippets div.oe_snippet[data-snippet-id="'+step.snippet+'"] .oe_snippet_thumbnail';
+                var selector = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
                 self.autoDragAndDropSnippet(selector);
             
             } else if (step.element.match(/#oe_snippets .* \.oe_snippet_thumbnail/)) {
             
                 self.autoDragAndDropSnippet($element);
-            
-            } else if (step.sampleText) {
-            
-                $element.trigger($.Event("keydown", { srcElement: $element }));
-                if ($element.is("input") ) {
-                    $element.val(step.sampleText);
-                } if ($element.is("select")) {
-                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
-                    $element.val(step.sampleText);
-                } else {
-                    $element.html(step.sampleText);
-                }
-                setTimeout(function () {
-                    $element.trigger($.Event("keyup", { srcElement: $element }));
-                    $element.trigger($.Event("change", { srcElement: $element }));
-                }, self.defaultDelay<<1);
             
             } else if ($element.is(":visible")) {
 
@@ -402,6 +436,23 @@ website.Tour = openerp.Class.extend({
                     $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
+            }
+            if (step.sampleText) {
+            
+                $element.trigger($.Event("keydown", { srcElement: $element }));
+                if ($element.is("input") ) {
+                    $element.val(step.sampleText);
+                } if ($element.is("select")) {
+                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
+                    $element.val(step.sampleText);
+                } else {
+                    $element.html(step.sampleText);
+                }
+                setTimeout(function () {
+                    $element.trigger($.Event("keyup", { srcElement: $element }));
+                    $element.trigger($.Event("change", { srcElement: $element }));
+                }, self.defaultDelay<<1);
+            
             }
         }
         self.testtimer = setTimeout(autoStep, 100);

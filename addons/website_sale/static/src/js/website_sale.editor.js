@@ -44,7 +44,7 @@
             sequence = "up";
         else if ($a.hasClass('js_go_down'))
             sequence = "down";
-        openerp.jsonRpc('/shop/change_sequence/', 'call', {'id': $data.data('id'), 'sequence': sequence})
+        openerp.jsonRpc('/shop/change_sequence', 'call', {'id': $data.data('id'), 'sequence': sequence})
             .then(reload_enable_editor);
     });
 
@@ -55,7 +55,7 @@
         var $product = $a.parents(".oe_product:first");
 
         $li.parent().removeClass("active");
-        openerp.jsonRpc('/shop/change_styles/', 'call', {'id': $data.data('id'), 'style_id': $a.data("id")})
+        openerp.jsonRpc('/shop/change_styles', 'call', {'id': $data.data('id'), 'style_id': $a.data("id")})
             .then(function (result) {
                 $product.toggleClass($a.data("class"));
                 $li.toggleClass("active", result);
@@ -89,7 +89,7 @@
         var $data = $td.parents(".js_options:first");
         var x = $td.index()+1;
         var y = $td.parent().index()+1;
-        openerp.jsonRpc('/shop/change_size/', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
+        openerp.jsonRpc('/shop/change_size', 'call', {'id': $data.data('id'), 'x': x, 'y': y})
             .then(reload_enable_editor);
     });
 

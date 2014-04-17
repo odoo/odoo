@@ -20,8 +20,10 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
+
 
 class aged_trial_report(report_sxw.rml_parse, common_report_header):
 
@@ -375,8 +377,11 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
             return self._translate('Receivable and Payable Accounts')
         return ''
 
-report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
-        'addons/account/report/account_aged_partner_balance.rml',parser=aged_trial_report, header="internal landscape")
 
+class report_agedpartnerbalance(osv.AbstractModel):
+    _name = 'report.account.report_agedpartnerbalance'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_agedpartnerbalance'
+    _wrapped_report_class = aged_trial_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

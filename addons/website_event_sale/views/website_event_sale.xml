@@ -51,8 +51,8 @@
                                    "widget": "monetary",
                                    "display_currency": "website.pricelist_id.currency_id"
                               }'/>
-                              <meta itemprop="price" t-att-content="ticket.price"/>
-                              <meta itemprop="priceCurrency" t-att-content="website.pricelist_id.currency_id.name"/>
+                              <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
+                              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                             </t>
                             <t t-if="not ticket.price and not editable">
                                 <span>Free</span>

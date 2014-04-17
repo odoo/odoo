@@ -3,7 +3,6 @@
     <data noupdate="1">
         <record id="base.public_user" model="res.users">
             <field eval="[(4, ref('group_share_user'))]" name="groups_id"/>
-            <field name="share" eval="True" />
         </record>
     </data>
 </openerp>

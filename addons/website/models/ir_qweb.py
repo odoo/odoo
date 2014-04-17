@@ -157,7 +157,7 @@ class DateTime(orm.AbstractModel):
             value = datetime.datetime.strptime(
                 value, DEFAULT_SERVER_DATETIME_FORMAT)
         if value:
-            value = column.context_timestamp(
+            value = fields.datetime.context_timestamp(
                 cr, uid, timestamp=value, context=context)
             value = value.strftime(openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -381,42 +381,12 @@ class RelativeDatetime(orm.AbstractModel):
 
 class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
-    _inherit = ['website.qweb.field', 'website.qweb.field.many2one']
+    _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
-    def from_html(self, cr, uid, model, column, element, context=None):
-        # FIXME: this behavior is really weird, what if the user wanted to edit the name of the related thingy? Should m2os really be editable without a widget?
-        divs = element.xpath(".//div")
-        for div in divs:
-            if div != divs[0]:
-                div.getparent().remove(div)
-        return super(Contact, self).from_html(cr, uid, model, column, element, context=context)
+class QwebView(orm.AbstractModel):
+    _name = 'website.qweb.field.qweb'
+    _inherit = ['ir.qweb.field.qweb']
 
-    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
-        opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
-
-        if not getattr(record, field_name):
-            return None
-
-        id = getattr(record, field_name).id
-        field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
-        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
-
-        val = {
-            'name': value.split("\n")[0],
-            'address': werkzeug.utils.escape("\n".join(value.split("\n")[1:])),
-            'phone': field_browse.phone,
-            'mobile': field_browse.mobile,
-            'fax': field_browse.fax,
-            'city': field_browse.city,
-            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
-            'email': field_browse.email,
-            'fields': opf,
-            'options': options
-        }
-
-        html = self.pool["ir.ui.view"].render(cr, uid, "website.contact", val, engine='website.qweb', context=context).decode('utf8')
-
-        return ir_qweb.HTMLSafe(html)
 
 def html_to_text(element):
     """ Converts HTML content with HTML-specified line breaks (br, p, div, ...)

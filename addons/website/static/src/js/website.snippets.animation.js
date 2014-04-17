@@ -2,23 +2,29 @@
     'use strict';
 
     var website = openerp.website;
-    website.snippet = {};
+    if (!website.snippet) website.snippet = {};
     website.snippet.readyAnimation = [];
 
-    website.snippet.start_animation = function () {
+    website.snippet.start_animation = function (editable_mode, $target) {
         for (var k in website.snippet.animationRegistry) {
             var Animation = website.snippet.animationRegistry[k];
-            var selector = "[data-snippet-id='"+k+"']";
+            var selector = "";
             if (Animation.prototype.selector) {
-                selector += ", " + Animation.prototype.selector;
+                if (selector != "") selector += ", " 
+                selector += Animation.prototype.selector;
             }
+            if ($target) {
+                if ($target.is(selector)) selector = $target;
+                else continue;
+            }
+
             $(selector).each(function() {
                 var $snipped_id = $(this);
                 if (    !$snipped_id.parents("#oe_snippets").length &&
                         !$snipped_id.parent("body").length &&
                         !$snipped_id.data("snippet-view")) {
                     website.snippet.readyAnimation.push($snipped_id);
-                    $snipped_id.data("snippet-view", new Animation($snipped_id));
+                    $snipped_id.data("snippet-view", new Animation($snipped_id, editable_mode));
                 }
             });
         }
@@ -28,11 +34,12 @@
             var $snipped_id = $(this);
             if ($snipped_id.data("snippet-view")) {
                 $snipped_id.data("snippet-view").stop();
-                $snipped_id.data("snippet-view", false);
             }
         });
     };
-    $(document).ready(website.snippet.start_animation);
+    $(document).ready(function () {
+        website.snippet.start_animation();
+    });
 
 
     website.snippet.animationRegistry = {};
@@ -41,9 +48,9 @@
         $: function () {
             return this.$el.find.apply(this.$el, arguments);
         },
-        init: function (dom) {
+        init: function (dom, editable_mode) {
             this.$el = this.$target = $(dom);
-            this.start();
+            this.start(editable_mode);
         },
         /*
         *  start
@@ -64,10 +71,14 @@
         start: function () {
             this.$target.carousel({interval: 10000});
         },
+        stop: function () {
+            this.$target.carousel('pause');
+            this.$target.removeData("bs.carousel");
+        },
     });
 
     website.snippet.animationRegistry.parallax = website.snippet.Animation.extend({
-        parallax: ".parallax",
+        selector: ".parallax",
         start: function () {
             var self = this;
             setTimeout(function () {self.set_values();});
@@ -104,7 +115,7 @@
             img.onload = function () {
                 var offset = 0;
                 var padding =  parseInt($(document.body).css("padding-top"));
-                if (speed < 1) {
+                if (speed > 1) {
                     var inner_offset = - self.$target.outerHeight() + this.height / this.width * document.body.clientWidth;
                     var outer_offset = self.$target.offset().top - (document.body.clientHeight - self.$target.outerHeight()) - padding;
                     offset = - outer_offset * speed + inner_offset;
@@ -119,4 +130,28 @@
         }
     });
 
+    website.snippet.animationRegistry.share = website.snippet.Animation.extend({
+        selector: ".oe_share",
+        start: function () {
+            var url = encodeURIComponent(window.location.href);
+            var title = encodeURIComponent($("title").text());
+            this.$target.find("a").each(function () {
+                var $a = $(this);
+                $a.attr("href", $(this).attr("href").replace("{url}", url).replace("{title}", title));
+                if ($a.attr("target") && $a.attr("target").match(/_blank/i)) {
+                    $a.click(function () {
+                        window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
+                        return false;
+                    });
+                }
+            });
+        },
+    });
+
+    website.snippet.animationRegistry.media_video = website.snippet.Animation.extend({
+        selector: ".media_iframe_video",
+        start: function () {
+            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+        },
+    });
 })();

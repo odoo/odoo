@@ -23,7 +23,6 @@
             <field name="active" eval="False" />
         </record>
 
-
         <record id="badge_idea" model="gamification.badge">
             <field name="name">Brilliant</field>
             <field name="description">With your brilliant ideas, you are an inspiration to others.</field>
@@ -32,6 +31,16 @@
             <field name="rule_max_number">2</field>
             <field name="image" type="base64" file="gamification/static/img/badge_idea-image.png"/>
         </record>
+
+        <!-- subtype for badge allocation -->
+        <record id="mt_badge_granted" model="mail.message.subtype">
+            <field name="name">Badge Granted</field>
+            <field name="res_model">res.users</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Badge Granted</field>
+        </record>
+
     </data>
 
 

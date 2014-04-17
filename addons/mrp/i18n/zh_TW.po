@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2011-12-06 10:25+0000\n"
-"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
+"PO-Revision-Date: 2014-02-12 04:36+0000\n"
+"Last-Translator: Bluce <igamall@yahoo.com.tw>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:39+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:47+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -47,7 +47,7 @@ msgstr "工作中心使用率"
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr "途程工作中心"
+msgstr "製程工作中心"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -83,12 +83,12 @@ msgstr "MRP 工作中心"
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "途程"
+msgstr "製程"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
-msgstr "搜尋材料清單"
+msgstr "搜尋物料清單"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
@@ -244,6 +244,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"點選建立一個製程(Routing)。\n"
+"</p><p>\n"
+"製程(Routing)允許您建立並管理在工作中心內應被遵循的製造程序(即工作順序)，用以生產產品。\n"
+"它們被附加於用以定義所需原物料的物料清單(BOM)。\n"
+"</p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -299,7 +306,7 @@ msgstr "預定之貨品"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Sets / Phantom"
-msgstr "套件 / 虛項"
+msgstr "組 / 虛擬物料"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -315,7 +322,7 @@ msgstr "於外部計劃中之位置的引用。"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr "管理途程"
+msgstr "管理製程"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -393,7 +400,7 @@ msgstr "確認生產"
 msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
-msgstr ""
+msgstr "系統依據已售數量與產品參數建立一個供給訂單(製造單或採購單)。"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -461,6 +468,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點選建立一個新的屬性。\n"
+"              </p><p>\n"
+"                OpenERP的屬性(properties)是使用於選擇正確的物料表(BoM)於製造產品，\n"
+"　　　　當您有不同的方法來建立同一產品。您能指定數個屬性給每一個物料表。\n"
+"　　　　當一位業務人員建立一張銷售訂單時，他們可以將銷售訂單關聯至數個屬性，\n"
+"　　　　並且OpenERP將根據需求自動選擇物料表(BoM)。\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -539,7 +555,7 @@ msgstr ""
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
-msgstr ""
+msgstr "物料清單(BOM)已連結至一個製程(工作順序)，如各工作中心的接續"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -566,7 +582,7 @@ msgstr "強制預留"
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr ""
+msgstr "庫存評價"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
@@ -773,7 +789,7 @@ msgstr "每月"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "度量單位(UoM)是庫存管理的計算單位。"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -824,7 +840,7 @@ msgstr "標示為開始"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Partial"
-msgstr "部份"
+msgstr "分批"
 
 #. module: mrp
 #: report:mrp.production.order:0

@@ -46,7 +46,7 @@ Dashboard / Reports for Purchase Management will include:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images' : ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['stock', 'procurement'],
+    'depends': ['stock', 'procurement', 'report'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
@@ -64,6 +64,9 @@ Dashboard / Reports for Purchase Management will include:
         'board_purchase_view.xml',
         'edi/purchase_order_action_data.xml',
         'res_config_view.xml',
+
+        'views/report_purchaseorder.xml',
+        'views/report_purchasequotation.xml',
     ],
     'test': [
         'test/ui/purchase_users.yml',
@@ -74,7 +77,6 @@ Dashboard / Reports for Purchase Management will include:
         'test/process/merge_order.yml',
         'test/process/edi_purchase_order.yml',
         'test/process/invoice_on_poline.yml',
-        'test/ui/print_report.yml',
         'test/ui/duplicate_order.yml',
         'test/ui/delete_order.yml',
     ],

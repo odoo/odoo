@@ -53,9 +53,9 @@ class product_product(osv.osv):
                 states = ('draft', 'open', 'paid')
 
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(l.quantity) as avg_unit_price,
+                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
                     sum(l.quantity) as num_qty,
-                    sum(l.quantity * (l.price_subtotal/l.quantity)) as total,
+                    sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pt.list_price) as sale_expected,
                     sum(l.quantity * pt.standard_price) as normal_cost
                 from account_invoice_line l

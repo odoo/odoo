@@ -1125,8 +1125,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         is_paid: function(){
             var currentOrder = this.pos.get('selectedOrder');
-            return (currentOrder.getTotalTaxIncluded() >= 0.000001 
-                   && currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
+            return (currentOrder.getTotalTaxIncluded() < 0.000001 
+                   || currentOrder.getPaidTotal() + 0.000001 >= currentOrder.getTotalTaxIncluded());
 
         },
         validate_order: function(options) {
@@ -1172,7 +1172,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             }else{
                 this.pos.push_order(currentOrder) 
                 if(this.pos.config.iface_print_via_proxy){
-                    this.pos.proxy.print_receipt(currentOrder.export_for_printing());
+                    var receipt = currentOrder.export_for_printing();
+                    this.pos.proxy.print_receipt(QWeb.render('XmlReceipt',{
+                        receipt: receipt
+                    }));
                     this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
                 }else{
                     this.pos_widget.screen_selector.set_current_screen(this.next_screen);

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:47+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:59+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -96,7 +96,7 @@ msgstr "ステージ名"
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "販売担当者"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
@@ -113,7 +113,7 @@ msgstr "日"
 #. module: crm
 #: view:crm.lead:0
 msgid "Company Name"
-msgstr ""
+msgstr "会社名"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor6
@@ -479,7 +479,7 @@ msgstr "商談のための通常または電話ミーティング"
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "ステータス"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -602,7 +602,7 @@ msgstr "営業チームのコードは固有である必要があります。"
 #. module: crm
 #: help:crm.lead,email_from:0
 msgid "Email address of the contact"
-msgstr ""
+msgstr "連絡先のメールアドレス"
 
 #. module: crm
 #: selection:crm.case.stage,state:0
@@ -1179,7 +1179,7 @@ msgstr "この項目をチェックした場合、この段階が各営業チー
 msgid ""
 "This field is used to distinguish stages related to Leads from stages "
 "related to Opportunities, or to specify stages available for both types."
-msgstr ""
+msgstr "このフィールドは商談とリードの区別、あるいは両方を指定するために使用します。"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -1234,7 +1234,7 @@ msgstr "日付"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_4
 msgid "Online Support"
-msgstr ""
+msgstr "オンラインサポート"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1260,6 +1260,7 @@ msgid ""
 "set to 'Done'. If the case needs to be reviewed then the Status is  set to "
 "'Pending'."
 msgstr ""
+"作成された状態は「ドラフト」です。進行中は「オープン」になります。終了すると「完了」に設定されます。レビューが必要な場合は「保留中」に設定されます。"
 
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_1
@@ -1313,7 +1314,7 @@ msgstr "コード"
 #. module: crm
 #: view:sale.config.settings:0
 msgid "Features"
-msgstr ""
+msgstr "特徴"
 
 #. module: crm
 #: field:crm.case.section,child_ids:0
@@ -1397,7 +1398,7 @@ msgstr ""
 #. module: crm
 #: help:crm.case.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "ステージの順位に使用します。 低いほど良好です。"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
@@ -1564,6 +1565,8 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"選択されたステージに関する文書のステータスは自動で変更されます。例えば、ステージが「閉じる」に関連する場合、このステージに到達すると文書は自動で閉じられま"
+"す。"
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -1589,7 +1592,7 @@ msgstr ""
 #. module: crm
 #: field:sale.config.settings,module_crm_claim:0
 msgid "Manage Customer Claims"
-msgstr ""
+msgstr "顧客クレーム管理"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -1713,7 +1716,7 @@ msgstr "リードからパートナの商談へ"
 #. module: crm
 #: help:crm.lead,partner_id:0
 msgid "Linked partner (optional). Usually created when converting the lead."
-msgstr ""
+msgstr "リンクされた取引先(オプション)。通常は見込み客となった場合に作成されます。"
 
 #. module: crm
 #: field:crm.lead,payment_mode:0
@@ -1801,7 +1804,7 @@ msgstr "リード / 顧客"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_2
 msgid "Support Department"
-msgstr ""
+msgstr "サポート部門"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1895,7 +1898,7 @@ msgstr "ユーザのEメール"
 msgid ""
 "The name of the future partner company that will be created while converting "
 "the lead into opportunity"
-msgstr ""
+msgstr "見込みから営業案件となった、将来の取引先企業の名前。"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,note:0
@@ -2051,7 +2054,7 @@ msgstr "リード・商談"
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Call Done"
-msgstr ""
+msgstr "通話完了"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2062,7 +2065,7 @@ msgstr "担当"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_3
 msgid "Direct Marketing"
-msgstr ""
+msgstr "ダイレクトマーケティング"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor1
@@ -2089,7 +2092,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Address"
-msgstr ""
+msgstr "住所"
 
 #. module: crm
 #: help:crm.case.section,alias_id:0
@@ -2194,7 +2197,7 @@ msgstr ""
 msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
-msgstr ""
+msgstr "ステータスバーやかんばんビューで表示すべきレコードが存在しない場合、このステージは表示されません。"
 
 #. module: crm
 #: field:crm.lead.report,nbr:0
@@ -2270,7 +2273,7 @@ msgstr ""
 #. module: crm
 #: view:sale.config.settings:0
 msgid "After-Sale Services"
-msgstr ""
+msgstr "アフターサービス"
 
 #. module: crm
 #: field:crm.case.section,message_ids:0
@@ -2611,7 +2614,7 @@ msgstr ""
 #. module: crm
 #: help:crm.lead,date_deadline:0
 msgid "Estimate of the date on which the opportunity will be won."
-msgstr ""
+msgstr "案件を獲得できる推定日"
 
 #. module: crm
 #: help:crm.lead,email_cc:0
@@ -2672,7 +2675,7 @@ msgstr "番地"
 #. module: crm
 #: field:sale.config.settings,module_crm_helpdesk:0
 msgid "Manage Helpdesk and Support"
-msgstr ""
+msgstr "ヘルプデスクおよびサポート管理"
 
 #. module: crm
 #: field:crm.lead.report,delay_open:0
@@ -2850,7 +2853,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "内部メモ"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2870,7 +2873,7 @@ msgstr "通り"
 #. module: crm
 #: field:crm.lead,referred:0
 msgid "Referred By"
-msgstr ""
+msgstr "紹介者"
 
 #. module: crm
 #: view:crm.phonecall:0

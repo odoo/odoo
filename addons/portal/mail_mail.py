@@ -39,7 +39,7 @@ class mail_mail(osv.Model):
         if partner and not partner.user_ids:
             contex_signup = dict(context, signup_valid=True)
             signup_url = partner_obj._get_signup_url_for_action(cr, SUPERUSER_ID, [partner.id],
-                                                                    action='login', model=mail.model, res_id=mail.res_id,
+                                                                    model=mail.model, res_id=mail.res_id,
                                                                     context=contex_signup)[partner.id]
             return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents through <a style='color:inherit' href="%s">our Customer Portal</a></small></span>""") % signup_url
         else:

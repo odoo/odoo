@@ -24,6 +24,8 @@ import base64
 import datetime
 import dateutil.relativedelta as relativedelta
 import logging
+import lxml
+import urlparse
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -61,6 +63,15 @@ try:
         'quote': quote,
         'urlencode': urlencode,
         'datetime': datetime,
+        'len': len,
+        'abs': abs,
+        'min': min,
+        'max': max,
+        'sum': sum,
+        'filter': filter,
+        'reduce': reduce,
+        'map': map,
+        'round': round,
 
         # dateutil.relativedelta is an old-style class and cannot be directly
         # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
@@ -69,6 +80,7 @@ try:
     })
 except ImportError:
     _logger.warning("jinja2 not available, templating features will not work!")
+
 
 class email_template(osv.osv):
     "Templates for sending email"
@@ -82,7 +94,48 @@ class email_template(osv.osv):
             res['model_id'] = self.pool['ir.model'].search(cr, uid, [('model', '=', res.pop('model'))], context=context)[0]
         return res
 
-    def render_template_batch(self, cr, uid, template, model, res_ids, context=None):
+    def _replace_local_links(self, cr, uid, html, context=None):
+        """ Post-processing of html content to replace local links to absolute
+        links, using web.base.url as base url. """
+        if not html:
+            return html
+
+        # form a tree
+        root = lxml.html.fromstring(html)
+        if not len(root) and root.text is None and root.tail is None:
+            html = '<div>%s</div>' % html
+            root = lxml.html.fromstring(html)
+
+        base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
+        (base_scheme, base_netloc, bpath, bparams, bquery, bfragment) = urlparse.urlparse(base_url)
+
+        def _process_link(url):
+            new_url = url
+            (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(url)
+            if not scheme and not netloc:
+                new_url = urlparse.urlunparse((base_scheme, base_netloc, path, params, query, fragment))
+            return new_url
+
+        # check all nodes, replace :
+        # - img src -> check URL
+        # - a href -> check URL
+        for node in root.iter():
+            if node.tag == 'a':
+                node.set('href', _process_link(node.get('href')))
+            elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
+                node.set('src', _process_link(node.get('src')))
+
+        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+        if html.startswith('<div>') and html.endswith('</div>'):
+            html = html[5:-6]
+        return html
+
+    def render_post_process(self, cr, uid, html, context=None):
+        html = self._replace_local_links(cr, uid, html, context=context)
+        return html
+
+    def render_template_batch(self, cr, uid, template, model, res_ids, context=None, post_process=False):
         """Render the given template text, replace mako expressions ``${expr}``
            with the result of evaluating these expressions with
            an evaluation context containing:
@@ -125,6 +178,10 @@ class email_template(osv.osv):
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
+
+        if post_process:
+            for res_id, result in results.iteritems():
+                results[res_id] = self.render_post_process(cr, uid, result, context=context)
         return results
 
     def get_email_template_batch(self, cr, uid, template_id=False, res_ids=None, context=None):
@@ -174,6 +231,11 @@ class email_template(osv.osv):
         'email_from': fields.char('From',
             help="Sender address (placeholders may be used here). If not set, the default "
                     "value will be the author's email alias if configured, or email address."),
+        'use_default_to': fields.boolean(
+            'Default recipients',
+            help="Default recipients of the record:\n"
+                 "- partner (using id on a partner or the partner_id field) OR\n"
+                 "- email (using email_from or email field)"),
         'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
         'partner_to': fields.char('To (Partners)',
             help="Comma-separated ids of recipient partners (placeholders may be used here)",
@@ -183,7 +245,7 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_html': fields.html('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.html('Body', translate=True, sanitize=False, help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'report_name': fields.char('Report Filename', translate=True,
                                    help="Name to use for the generated report file (may contain placeholders)\n"
                                         "The extension can be omitted and will then come from the report type."),
@@ -329,6 +391,37 @@ class email_template(osv.osv):
                         })
         return {'value': result}
 
+    def generate_recipients_batch(self, cr, uid, results, template_id, res_ids, context=None):
+        """Generates the recipients of the template. Default values can ben generated
+        instead of the template values if requested by template or context.
+        Emails (email_to, email_cc) can be transformed into partners if requested
+        in the context. """
+        if context is None:
+            context = {}
+        template = self.browse(cr, uid, template_id, context=context)
+
+        if template.use_default_to or context.get('tpl_force_default_to'):
+            ctx = dict(context, thread_model=template.model)
+            default_recipients = self.pool['mail.thread'].message_get_default_recipients(cr, uid, res_ids, context=ctx)
+            for res_id, recipients in default_recipients.iteritems():
+                results[res_id].pop('partner_to', None)
+                results[res_id].update(recipients)
+
+        for res_id, values in results.iteritems():
+            partner_ids = values.get('partner_ids', list())
+            if context and context.get('tpl_partners_only'):
+                mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
+                for mail in mails:
+                    partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+                    partner_ids.append(partner_id)
+            partner_to = values.pop('partner_to', '')
+            if partner_to:
+                # placeholders could generate '', 3, 2 due to some empty field values
+                tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
+                partner_ids += self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)
+            results[res_id]['partner_ids'] = partner_ids
+        return results
+
     def generate_email_batch(self, cr, uid, template_id, res_ids, context=None, fields=None):
         """Generates an email from the template for given the given model based on
         records given by res_ids.
@@ -356,18 +449,25 @@ class email_template(osv.osv):
         results = dict()
         for template, template_res_ids in templates_to_res_ids.iteritems():
             # generate fields value for all res_ids linked to the current template
-            for field in ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']:
-                generated_field_values = self.render_template_batch(cr, uid, getattr(template, field), template.model, template_res_ids, context=context)
+            for field in fields:
+                generated_field_values = self.render_template_batch(
+                    cr, uid, getattr(template, field), template.model, template_res_ids,
+                    post_process=(field == 'body_html'),
+                    context=context)
                 for res_id, field_value in generated_field_values.iteritems():
                     results.setdefault(res_id, dict())[field] = field_value
+            # compute recipients
+            results = self.generate_recipients_batch(cr, uid, results, template.id, template_res_ids, context=context)
             # update values for all res_ids
             for res_id in template_res_ids:
                 values = results[res_id]
-                if template.user_signature:
+                # body: add user signature, sanitize
+                if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
                     values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
-                if values['body_html']:
+                if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
+                # technical settings
                 values.update(
                     mail_server_id=template.mail_server_id.id or False,
                     auto_delete=template.auto_delete,
@@ -381,12 +481,18 @@ class email_template(osv.osv):
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
-                    report_service = report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+                    report = report_xml_pool.browse(cr, uid, template.report_template.id, context)
+                    report_service = report.report_name
                     # Ensure report is rendered using template's language
                     ctx = context.copy()
                     if template.lang:
                         ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
-                    result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
+
+                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                        result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'
+                    else:
+                        result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
+
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service
@@ -418,17 +524,8 @@ class email_template(osv.osv):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         if not values.get('email_from'):
-            raise osv.except_osv(_('Warning!'),_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
-        # process partner_to field that is a comma separated list of partner_ids -> recipient_ids
-        # NOTE: only usable if force_send is True, because otherwise the value is
-        # not stored on the mail_mail, and therefore lost -> fixed in v8
-        values['recipient_ids'] = []
-        partner_to = values.pop('partner_to', '')
-        if partner_to:
-            # placeholders could generate '', 3, 2 due to some empty field values
-            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
-            values['recipient_ids'] += [(4, pid) for pid in self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)]
-
+            raise osv.except_osv(_('Warning!'), _("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+        values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)

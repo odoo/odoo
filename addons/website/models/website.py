@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import hashlib
 import inspect
 import itertools
 import logging
 import math
+import mimetypes
 import re
 import urlparse
 
 import werkzeug
 import werkzeug.exceptions
+import werkzeug.utils
 import werkzeug.wrappers
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -18,7 +21,7 @@ except ImportError:
 import openerp
 from openerp.osv import orm, osv, fields
 from openerp.tools.safe_eval import safe_eval
-from openerp.addons.web.http import request, LazyResponse
+from openerp.addons.web.http import request
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +90,10 @@ def slug(value):
     else:
         # assume name_search result tuple
         id, name = value
-    return "%s-%d" % (slugify(name), id)
+    slugname = slugify(name or '')
+    if not slugname:
+        return str(id)
+    return "%s-%d" % (slugname, id)
 
 def urlplus(url, params):
     return werkzeug.Href(url)(params or None)
@@ -175,10 +181,8 @@ class website(osv.osv):
         return '%s.%s' % (module, slugify(name, max_length=50))
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
-        page = self.page_for_name(cr, uid, ids, name, module=module, context=context)
-
         try:
-           self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
+           return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
         except:
             return False
 
@@ -217,10 +221,13 @@ class website(osv.osv):
         )
 
     def get_template(self, cr, uid, ids, template, context=None):
-        if '.' not in template:
-            template = 'website.%s' % template
-        module, xmlid = template.split('.', 1)
-        model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+        if isinstance(template, (int, long)):
+            view_id = template
+        else:
+            if '.' not in template:
+                template = 'website.%s' % template
+            module, xmlid = template.split('.', 1)
+            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
@@ -228,11 +235,8 @@ class website(osv.osv):
         return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
 
     def render(self, cr, uid, ids, template, values=None, status_code=None, context=None):
-        def callback(template, values, context):
-            return self._render(cr, uid, ids, template, values, context)
-        if values is None:
-            values = {}
-        return LazyResponse(callback, status_code=status_code, template=template, values=values, context=context)
+        # TODO: remove this. (just kept for backward api compatibility for saas-3)
+        return request.render(template, values, uid=uid)
 
     def pager(self, cr, uid, ids, url, total, page=1, step=30, scope=5, url_args=None, context=None):
         # Compute Pager
@@ -248,7 +252,7 @@ class website(osv.osv):
             pmin = pmax - scope if pmax - scope > 0 else 1
 
         def get_url(page):
-            _url = "%spage/%s/" % (url, page)
+            _url = "%s/page/%s" % (url, page) if page > 1 else url
             if url_args:
                 _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
             return _url
@@ -348,6 +352,7 @@ class website(osv.osv):
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         uid = self.get_public_user(cr, uid, context=context)
+        url_list = []
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
@@ -369,7 +374,9 @@ class website(osv.osv):
             for values in generated:
                 domain_part, url = rule.build(values, append_unknown=False)
                 page = {'name': url, 'url': url}
-
+                if url in url_list:
+                    continue
+                url_list.append(url)
                 if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
                     continue
                 yield page
@@ -494,9 +501,14 @@ class website_menu(osv.osv):
         'parent_left': fields.integer('Parent Left', select=True),
         'parent_right': fields.integer('Parent Right', select=True),
     }
+
+    def __defaults_sequence(self, cr, uid, context):
+        menu = self.search_read(cr, uid, [(1,"=",1)], ["sequence"], limit=1, order="sequence DESC", context=context)
+        return menu and menu[0]["sequence"] or 0
+
     _defaults = {
         'url': '',
-        'sequence': 0,
+        'sequence': __defaults_sequence,
         'new_window': False,
     }
     _parent_store = True
@@ -545,7 +557,7 @@ class ir_attachment(osv.osv):
     def _website_url_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for attach in self.browse(cr, uid, ids, context=context):
-            if attach.type == 'url':
+            if attach.url:
                 result[attach.id] = attach.url
             else:
                 result[attach.id] = urlplus('/website/image', {
@@ -556,9 +568,89 @@ class ir_attachment(osv.osv):
                     'max_height': 768,
                 })
         return result
+    def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
+        return dict(
+            (attach['id'], self._compute_checksum(attach))
+            for attach in self.read(
+                cr, uid, ids, ['res_model', 'res_id', 'type', 'datas'],
+                context=context)
+        )
+
+    def _compute_checksum(self, attachment_dict):
+        if attachment_dict.get('res_model') == 'ir.ui.view'\
+                and not attachment_dict.get('res_id') and not attachment_dict.get('url')\
+                and attachment_dict.get('type', 'binary') == 'binary'\
+                and attachment_dict.get('datas'):
+            return hashlib.new('sha1', attachment_dict['datas']).hexdigest()
+        return None
+
+    def _datas_big(self, cr, uid, ids, name, arg, context=None):
+        result = dict.fromkeys(ids, False)
+        if context and context.get('bin_size'):
+            return result
+
+        for record in self.browse(cr, uid, ids, context=context):
+            if not record.datas: continue
+            try:
+                result[record.id] = openerp.tools.image_resize_image_big(record.datas)
+            except IOError: # apparently the error PIL.Image.open raises
+                pass
+
+        return result
+
     _columns = {
-        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char')
+        'datas_checksum': fields.function(_datas_checksum, size=40,
+              string="Datas checksum", type='char', store=True, select=True),
+        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
+        'datas_big': fields.function (_datas_big, type='binary', store=True,
+                                      string="Resized file content"),
+        'mimetype': fields.char('Mime Type', readonly=True),
     }
+
+    def _add_mimetype_if_needed(self, values):
+        if values.get('datas_fname'):
+            values['mimetype'] = mimetypes.guess_type(values.get('datas_fname'))[0] or 'application/octet-stream'
+
+    def create(self, cr, uid, values, context=None):
+        chk = self._compute_checksum(values)
+        if chk:
+            match = self.search(cr, uid, [('datas_checksum', '=', chk)], context=context)
+            if match:
+                return match[0]
+        self._add_mimetype_if_needed(values)
+        return super(ir_attachment, self).create(
+            cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        self._add_mimetype_if_needed(values)
+        return super(ir_attachment, self).write(cr, uid, ids, values, context=context)
+
+    def try_remove(self, cr, uid, ids, context=None):
+        """ Removes a web-based image attachment if it is used by no view
+        (template)
+
+        Returns a dict mapping attachments which would not be removed (if any)
+        mapped to the views preventing their removal
+        """
+        Views = self.pool['ir.ui.view']
+        attachments_to_remove = []
+        # views blocking removal of the attachment
+        removal_blocked_by = {}
+
+        for attachment in self.browse(cr, uid, ids, context=context):
+            # in-document URLs are html-escaped, a straight search will not
+            # find them
+            url = werkzeug.utils.escape(attachment.website_url)
+            ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
+
+            if ids:
+                removal_blocked_by[attachment.id] = Views.read(
+                    cr, uid, ids, ['name'], context=context)
+            else:
+                attachments_to_remove.append(attachment.id)
+        if attachments_to_remove:
+            self.unlink(cr, uid, attachments_to_remove, context=context)
+        return removal_blocked_by
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -566,7 +658,7 @@ class res_partner(osv.osv):
     def google_map_img(self, cr, uid, ids, zoom=8, width=298, height=298, context=None):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
-            'center': '%s, %s %s, %s' % (partner.street, partner.city, partner.zip, partner.country_id and partner.country_id.name_get()[0][1] or ''),
+            'center': '%s, %s %s, %s' % (partner.street or '', partner.city or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
             'size': "%sx%s" % (height, width),
             'zoom': zoom,
             'sensor': 'false',

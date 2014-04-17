@@ -162,25 +162,37 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
 
         // find a proxy and connects to it. for options see find_proxy
+        //   - force_ip : only try to connect to the specified ip. 
+        //   - port: what port to listen to (default 8069)
+        //   - progress(fac) : callback for search progress ( fac in [0,1] ) 
         autoconnect: function(options){
             var self = this;
             this.set_connection_status('connecting',{});
+            var found_url = new $.Deferred();
             var success = new $.Deferred();
-            this.find_proxy(options)
-                .then(function(proxies){
-                    if(proxies.length > 0){
-                        self.connect(proxies[0])
-                            .then(function(){
-                                success.resolve();
-                            },function(){
-                                self.set_connection_status('disconnected');
-                                success.reject();
-                            });
-                    }else{
-                        self.set_connection_status('disconnected');
-                        success.reject();
-                    }
+
+            if ( options.force_ip ){
+                // if the ip is forced by server config, bailout on fail
+                found_url = this.try_hard_to_connect(options.force_ip, options)
+            }else if( localStorage['hw_proxy_url'] ){
+                // try harder when we remember a good proxy url
+                found_url = this.try_hard_to_connect(localStorage['hw_proxy_url'], options)
+                    .then(null,function(){
+                        return self.find_proxy(options);
+                    });
+            }else{
+                // just find something quick
+                found_url = this.find_proxy(options);
+            }
+
+            success = found_url.then(function(url){
+                    return self.connect(url);
                 });
+
+            success.fail(function(){
+                self.set_connection_status('disconnected');
+            });
+
             return success;
         },
 
@@ -217,10 +229,50 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
-        // returns as a deferred a list of valid hosts urls that can be used as proxy.
+        // try several time to connect to a known proxy url
+        try_hard_to_connect: function(url,options){
+            options   = options || {};
+            var port  = ':' + (options.port || '8069');
+
+            this.set_connection_status('connecting');
+
+            if(url.indexOf('//') < 0){
+                url = 'http://'+url;
+            }
+
+            if(url.indexOf(':',5) < 0){
+                url = url+port;
+            }
+
+            // try real hard to connect to url, with a 1sec timeout and up to 'retries' retries
+            function try_real_hard_to_connect(url, retries, done){
+
+                done = done || new $.Deferred();
+
+                var c = $.ajax({
+                    url: url + '/hw_proxy/hello',
+                    method: 'GET',
+                    timeout: 1000,
+                })
+                .done(function(){
+                    done.resolve(url);
+                })
+                .fail(function(){
+                    if(retries > 0){
+                        try_real_hard_to_connect(url,retries-1,done);
+                    }else{
+                        done.reject();
+                    }
+                });
+                return done;
+            }
+
+            return try_real_hard_to_connect(url,3);
+        },
+
+        // returns as a deferred a valid host url that can be used as proxy.
         // options:
         //   - port: what port to listen to (default 8069)
-        //   - force_ip : limit the search to the specified ip
         //   - progress(fac) : callback for search progress ( fac in [0,1] ) 
         find_proxy: function(options){
             options = options || {};
@@ -228,36 +280,17 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             var port  = ':' + (options.port || '8069');
             var urls  = [];
             var found = false;
-            var proxies = [];
-            var done  = new $.Deferred();
             var parallel = 8;
+            var done = new $.Deferred(); // will be resolved with the proxies valid urls
             var threads  = [];
             var progress = 0;
 
-            this.set_connection_status('connecting');
 
-            if(options.force_ip){
-                var url = options.force_ip;
-                if(url.indexOf('//') < 0){
-                    url = 'http://'+url;
-                }
-                if(url.indexOf(':',5) < 0){
-                    url = url+port;
-                }
-                urls.push(url);
-            }else{
-                if(localStorage['hw_proxy_url']){
-                    urls.push(localStorage['hw_proxy_url']);
-                }
-
-                urls.push('http://localhost'+port);
-
-                for(var i = 0; i < 256; i++){
-                    urls.push('http://192.168.0.'+i+port);
-                    urls.push('http://192.168.1.'+i+port);
-                    urls.push('http://192.168.2.'+i+port);
-                    urls.push('http://10.0.0.'+i+port);
-                }
+            urls.push('http://localhost'+port);
+            for(var i = 0; i < 256; i++){
+                urls.push('http://192.168.0.'+i+port);
+                urls.push('http://192.168.1.'+i+port);
+                urls.push('http://10.0.0.'+i+port);
             }
 
             var prog_inc = 1/urls.length; 
@@ -269,39 +302,38 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 }
             }
 
-            function thread(url,done){
-                if(!url){ 
+            function thread(done){
+                var url = urls.shift();
+
+                done = done || new $.Deferred();
+
+                if( !url || found || !self.searching_for_proxy ){ 
                     done.resolve();
+                    return done;
                 }
+
                 var c = $.ajax({
                         url: url + '/hw_proxy/hello',
                         method: 'GET',
-                        timeout: 300, 
+                        timeout: 400, 
                     }).done(function(){
                         found = true;
                         update_progress();
-                        proxies.push(url);
                         done.resolve(url);
                     })
                     .fail(function(){
                         update_progress();
-                        var next_url = urls.shift();
-                        if(found ||! self.searching_for_proxy || !next_url){
-                            done.resolve();
-                        }else{
-                            thread(next_url,done);
-                        }
+                        thread(done);
                     });
+
                 return done;
             }
 
             this.searching_for_proxy = true;
 
-            for(var i = 0; i < Math.min(parallel,urls.length); i++){
-                threads.push(thread(urls.shift(),new $.Deferred()));
+            for(var i = 0, len = Math.min(parallel,urls.length); i < len; i++){
+                threads.push(thread());
             }
-            
-            var done = new $.Deferred();
             
             $.when.apply($,threads).then(function(){
                 var urls = [];
@@ -310,7 +342,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                         urls.push(arguments[i]);
                     }
                 }
-                done.resolve(urls);
+                done.resolve(urls[0]);
             });
 
             return done;
@@ -479,43 +511,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             return this.message('open_cashbox');
         },
 
-        /* ask the printer to print a receipt
-         * receipt is a JSON object with the following specs:
-         * receipt{
-         *  - orderlines : list of orderlines :
-         *     {
-         *          quantity:           (number) the number of items, or the weight, 
-         *          unit_name:          (string) the name of the item's unit (kg, dozen, ...)
-         *          price:              (number) the price of one unit of the item before discount
-         *          discount:           (number) the discount on the product in % [0,100] 
-         *          product_name:       (string) the name of the product
-         *          price_with_tax:     (number) the price paid for this orderline, tax included
-         *          price_without_tax:  (number) the price paid for this orderline, without taxes
-         *          tax:                (number) the price paid in taxes on this orderline
-         *          product_description:         (string) generic description of the product
-         *          product_description_sale:    (string) sales related information of the product
-         *     }
-         *  - paymentlines : list of paymentlines :
-         *     {
-         *          amount:             (number) the amount paid
-         *          journal:            (string) the name of the journal on wich the payment has been made  
-         *     }
-         *  - total_with_tax:     (number) the total of the receipt tax included
-         *  - total_without_tax:  (number) the total of the receipt without taxes
-         *  - total_tax:          (number) the total amount of taxes paid
-         *  - total_paid:         (number) the total sum paid by the client
-         *  - change:             (number) the amount of change given back to the client
-         *  - name:               (string) a unique name for this order
-         *  - client:             (string) name of the client. or null if no client is logged
-         *  - cashier:            (string) the name of the cashier
-         *  - date: {             the date at wich the payment has been done
-         *      year:             (number) the year  [2012, ...]
-         *      month:            (number) the month [0,11]
-         *      date:             (number) the day of the month [1,31]
-         *      day:              (number) the day of the week  [0,6] 
-         *      hour:             (number) the hour [0,23]
-         *      minute:           (number) the minute [0,59]
-         *    }
+        /* 
+         * ask the printer to print a receipt
          */
         print_receipt: function(receipt){
             var self = this;
@@ -526,7 +523,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             function send_printing_job(){
                 if (self.receipt_queue.length > 0){
                     var r = self.receipt_queue.shift();
-                    self.message('print_receipt',{ receipt: r },{ timeout: 5000 })
+                    self.message('print_xml_receipt',{ receipt: r },{ timeout: 5000 })
                         .then(function(){
                             send_printing_job();
                         },function(){
@@ -640,7 +637,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns true if the ean is a valid EAN codebar number by checking the control digit.
         // ean must be a string
         check_ean: function(ean){
-            return this.ean_checksum(ean) === Number(ean[ean.length-1]);
+            return /^\d+$/.test(ean) && this.ean_checksum(ean) === Number(ean[ean.length-1]);
         },
         // returns a valid zero padded ean13 from an ean prefix. the ean prefix must be a string.
         sanitize_ean:function(ean){
@@ -725,8 +722,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         scan: function(code){
             if(code.length < 3){
                 return;
-            }else if(code.length === 13 && /^\d+$/.test(code)){
+            }else if(code.length === 13 && this.check_ean(code)){
                 var parse_result = this.parse_ean(code);
+            }else if(code.length === 12 && this.check_ean('0'+code)){
+                // many barcode scanners strip the leading zero of ean13 barcodes.
+                // This is because ean-13 are UCP-A with an additional zero at the beginning,
+                // so by stripping zeros you get retrocompatibility with UCP-A systems.
+                var parse_result = this.parse_ean('0'+code);
             }else if(this.pos.db.get_product_by_reference(code)){
                 var parse_result = {
                     encoding: 'reference',
@@ -735,12 +737,16 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     prefix: '',
                 };
             }else{
+                var parse_result = {
+                    encoding: 'error',
+                    type: 'error',
+                    code: code,
+                    prefix: '',
+                };
                 return;
             }
 
-            if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                console.warn('WARNING: barcode checksum error:',parse_result);
-            }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
+            if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parse_result);
                 }

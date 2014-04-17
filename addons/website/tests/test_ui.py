@@ -1,14 +1,13 @@
-import openerp
+import openerp.tests
 
 class TestUi(openerp.tests.HttpCase):
-    def test_admin(self):
-        self.phantom_js("/", "console.log('ok')", "window.openerp.website")
-        self.phantom_js("/", "openerp.website.Tour.run_test('banner')", "openerp.website.Tour")
+    def test_01_public_homepage(self):
+        self.phantom_js("/", "console.log('ok')", "openerp.website.snippet")
 
-    def test_public(self):
-        inject = [
-            "./../../../website/static/src/js/website.tour.test.js",
-            "./../../../website/static/src/js/website.tour.test.admin.js"i
-        ]
-        self.phantom_js("/", "openerp.website.Tour.run_test('login_edit')", "openerp.website.Tour", inject=inject);
+    def test_03_admin_homepage(self):
+        self.phantom_js("/", "console.log('ok')", "openerp.website.editor", login='admin')
 
+    def test_04_admin_tour_banner(self):
+        self.phantom_js("/", "openerp.website.Tour.run_test('banner')", "openerp.website.Tour.tours.banner", login='admin')
+
+# vim:et:

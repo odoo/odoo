@@ -421,62 +421,67 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // it is therefore important to only call this method from inside a mutex
         // this method returns a deferred indicating wether the sending was successful or not
         // there is a timeout parameter which is set to 2 seconds by default. 
-        _flush_order: function(order_id, options){
-            var self   = this;
-            options = options || {};
-            timeout = typeof options.timeout === 'number' ? options.timeout : 7500;
-
-            this.set('synch',{state:'connecting', pending: this.get('synch').pending});
-
-            var order  = this.db.get_order(order_id);
-            order.to_invoice = options.to_invoice || false;
-
-            if(!order){
-                // flushing a non existing order always fails
-                return (new $.Deferred()).reject();
-            }
-
-            // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
-            // then we want to notify the user that we are waiting on something )
-            var rpc = (new instance.web.Model('pos.order')).call('create_from_ui',[[order]],undefined,{shadow: !options.to_invoice, timeout:timeout});
-
-            rpc.fail(function(unused,event){
-                // prevent an error popup creation by the rpc failure
-                // we want the failure to be silent as we send the orders in the background
-                event.preventDefault();
-                console.error('Failed to send order:',order);
-            });
-
-            rpc.done(function(){
-                self.db.remove_order(order_id);
-                var pending = self.db.get_orders().length;
-                self.set('synch',{state: pending ? 'connecting' : 'connected', pending:pending});
-            });
-
-            return rpc;
+        _flush_order: function( order_id, options) {
+            return this._flush_all_orders([this.db.get_order(order_id)], options);
         },
         
         // attempts to send all the locally stored orders. As with _flush_order, it should only be
         // called from within a mutex. 
         // this method returns a deferred that always succeeds when all orders have been tried to be sent,
         // even if none of them could actually be sent. 
-        _flush_all_orders: function(){
+        _flush_all_orders: function () {
             var self = this;
-            var orders = this.db.get_orders();
-            var tried_all = new $.Deferred();
+            self.set('synch', {
+                state: 'connecting',
+                pending: self.get('synch').pending
+            });
+            return self._save_to_server(self.db.get_orders()).done(function () {
+                var pending = self.db.get_orders().length;
+                self.set('synch', {
+                    state: pending ? 'connecting' : 'connected',
+                    pending: pending
+                });
+            });
+        },
 
-            function rec_flush(index){
-                if(index < orders.length){
-                    self._flush_order(orders[index].id).always(function(){ 
-                        rec_flush(index+1); 
-                    })
-                }else{
-                    tried_all.resolve();
-                }
+        // send an array of orders to the server
+        // available options:
+        // - timeout: timeout for the rpc call in ms
+        _save_to_server: function (orders, options) {
+            if (!orders || !orders.length) {
+                var result = $.Deferred();
+                result.resolve();
+                return result;
             }
-            rec_flush(0);
+                
+            options = options || {};
 
-            return tried_all;
+            var self = this;
+            var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
+
+            // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
+            // then we want to notify the user that we are waiting on something )
+            var posOrderModel = new instance.web.Model('pos.order');
+            return posOrderModel.call('create_from_ui',
+                [_.map(orders, function (order) {
+                    order.to_invoice = options.to_invoice || false;
+                    return order;
+                })],
+                undefined,
+                {
+                    shadow: !options.to_invoice,
+                    timeout: timeout
+                }
+            ).then(function () {
+                _.each(orders, function (order) {
+                    self.db.remove_order(order.id);
+                });
+            }).fail(function (unused, event){
+                // prevent an error popup creation by the rpc failure
+                // we want the failure to be silent as we send the orders in the background
+                event.preventDefault();
+                console.error('Failed to send orders:', orders);
+            });
         },
 
         scan_product: function(parsed_code){
@@ -544,11 +549,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 this.order.removeOrderline(this);
                 return;
             }else{
-                var quant = Math.max(parseFloat(quantity) || 0, 0);
+                var quant = parseFloat(quantity) || 0;
                 var unit = this.get_unit();
                 if(unit){
-                    this.quantity    = Math.max(unit.rounding, round_pr(quant, unit.rounding));
-                    this.quantityStr = this.quantity.toFixed(Math.max(0,Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10))));
+                    this.quantity    = round_pr(quant, unit.rounding);
+                    this.quantityStr = this.quantity.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
                 }else{
                     this.quantity    = quant;
                     this.quantityStr = '' + this.quantity;
@@ -982,6 +987,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     hour: date.getHours(), 
                     minute: date.getMinutes() ,
                     isostring: date.toISOString(),
+                    localestring: date.toLocaleString(),
                 }, 
                 company:{
                     email: company.email,
@@ -1104,10 +1110,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }
         },
         switchSign: function() {
+            console.log('switchsing');
             var oldBuffer;
             oldBuffer = this.get('buffer');
             this.set({
-                buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer
+                buffer: oldBuffer[0] === '-' ? oldBuffer.substr(1) : "-" + oldBuffer 
             });
             this.trigger('set_value',this.get('buffer'));
         },

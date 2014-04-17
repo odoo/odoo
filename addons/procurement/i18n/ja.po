@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:30+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 08:10+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -72,7 +72,7 @@ msgstr "調達方法"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "製造"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -162,7 +162,7 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "取消済"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -366,7 +366,7 @@ msgstr "数量"
 #: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr "十分な在庫がなく、かつ最小発注点ルールが定義されていません。"
+msgstr "在庫不足かつ最小発注点規則の定義がありません。"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -406,7 +406,7 @@ msgstr ""
 msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
-msgstr "調達を手動で作成する場合、あなたは恐らくオーダー方法のための型を使うことを望むでしょう。"
+msgstr "調達をマニュアル作成する場合、特別な理由がなければ「オーダ」を選択してください。"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -491,6 +491,12 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"調達が作成されると、ステータスは「ドラフト」に設定されます。\n"
+"調達が確認された場合、ステータスは「確認済」に設定されます。\n"
+"確認後のステータスは「実行中」に設定されます。\n"
+"注文で例外が発生すると、ステータスは「例外」に設定されます。\n"
+"例外が除去されると、ステータスは「準備完了」になります。\n"
+"調達が別の状態の終了を待つ場合、「待ち」状態になります。"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -536,7 +542,7 @@ msgstr "調達行"
 msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
-msgstr ""
+msgstr "ことを考慮します(その結果、手元数量がマイナスになる場合もあります)。"
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -613,7 +619,7 @@ msgstr ""
 #: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
-msgstr "十分な在庫ではありません。"
+msgstr "在庫不足です。"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -648,7 +654,7 @@ msgstr "例外"
 msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
-msgstr ""
+msgstr "この製品を販売する場合、配送オーダーも作成されます。OpenERPは消耗品として"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
@@ -897,7 +903,7 @@ msgstr "調達方法は製品タイプに依存します。"
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr "この製品を販売する場合、OpenERPは配送のために利用可能在庫を使用します。"
+msgstr "この製品を販売する場合、OpenERPは"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -928,7 +934,7 @@ msgstr "再発注規則"
 #: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "%s ステータスの調達オーダは削除できません。"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -1014,7 +1020,7 @@ msgstr "調達 %d：オーダー中 - %3.2f %-5s - %s"
 #: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "製品在庫が確保されました。"
 
 #, python-format
 #~ msgid "No supplier defined for this product !"

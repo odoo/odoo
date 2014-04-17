@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:56+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:13+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -395,7 +395,7 @@ msgstr "担当"
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
-msgstr ""
+msgstr "account.bank.accounts.wizard"
 
 #. module: account
 #: field:account.move.line,date_created:0
@@ -488,7 +488,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr ""
+msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -650,7 +650,7 @@ msgstr "レポート値"
 msgid ""
 "Specified journal does not have any account move entries in draft state for "
 "this period."
-msgstr ""
+msgstr "指定の仕訳帳は当期間でドラフト状態の仕訳はありません。"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -661,7 +661,7 @@ msgstr "税マッピング"
 #. module: account
 #: report:account.central.journal:0
 msgid "Centralized Journal"
-msgstr "一元化仕訳帳"
+msgstr "仕訳帳別勘定サマリ"
 
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
@@ -695,7 +695,7 @@ msgstr "勘定タイプ別売上レポート"
 #: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
-msgstr ""
+msgstr "SAJ"
 
 #. module: account
 #: code:addons/account/account.py:1591
@@ -1010,7 +1010,7 @@ msgstr "仕入仕訳帳"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "請求書支払い"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1058,7 +1058,7 @@ msgstr "拡張フィルタ…"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "仕訳帳の一元化"
+msgstr "仕訳帳別勘定サマリ"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -1155,7 +1155,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
 msgid "Account Name."
-msgstr "アカウント名"
+msgstr "勘定科目名"
 
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
@@ -1529,6 +1529,8 @@ msgid ""
 "And after getting confirmation from the bank it will be in 'Confirmed' "
 "status."
 msgstr ""
+"新しい明細書が作成されるとステータスは「ドラフト」になります。\n"
+"また、銀行からの確認後は「確認済み」状態になります。"
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -1990,7 +1992,7 @@ msgstr "ドラフト取引明細書"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "請求書検証"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2241,7 +2243,7 @@ msgstr "アカウント年齢試算表レポート"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr ""
+msgstr "会計年度を閉じる"
 
 #. module: account
 #. openerp-web
@@ -2341,7 +2343,7 @@ msgstr "斜体テキスト（小）"
 msgid ""
 "If you want the journal should be control at opening/closing, check this "
 "option"
-msgstr ""
+msgstr "オープン/クローズ時に仕訳を制御する場合は、このオプションをチェックします。"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3898,10 +3900,10 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                クリックして顧客請求書を登録してください。\n"
 "              </p><p>\n"
-"                OpenERPの電子請求は顧客入金の回収を容易にします。\n"
-"                顧客は電子メールで請求書を受け取り、顧客のシステムがオンラインで支払うかインポートすることができます。\n"
+"                OpenERPの電子請求で顧客入金処理が簡単になります。\n"
+"                顧客はEメールで請求書を受け取り、そのままオンラインで支払ったり、システムにインポートしたりすることができます。\n"
 "              </p><p>\n"
-"                顧客との議論は各請求書の下部に自動で表示されます。\n"
+"                顧客とのコミュニケーション履歴は各請求書の下部に自動で表示されます。\n"
 "              </p>\n"
 "            "
 
@@ -4173,7 +4175,7 @@ msgstr "適用可能コード（タイプがコードの時）"
 msgid ""
 "When monthly periods are created. The status is 'Draft'. At the end of "
 "monthly period it is in 'Done' status."
-msgstr ""
+msgstr "毎月の期間が作成されると、ステータスは「ドラフト」です。毎月の期間の終りには「完了」状態になります。"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4801,7 +4803,7 @@ msgstr "メインタイトル1（太字、アンダーライン）"
 #: report:account.analytic.account.balance:0
 #: report:account.central.journal:0
 msgid "Account Name"
-msgstr "アカウント名"
+msgstr "勘定科目名"
 
 #. module: account
 #: help:account.fiscalyear.close,report_name:0
@@ -4969,7 +4971,7 @@ msgstr "それは貸方金額のデフォルトアカウントとして動作し
 #. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "キャッシュレジスタから現金を取り出した理由を説明して下さい。"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -5833,7 +5835,7 @@ msgstr "ドラフト返金 "
 #. module: account
 #: view:cash.box.in:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "キャッシュレジスタに現金を入れる場合はこのフォームに記入して下さい。"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -6124,7 +6126,7 @@ msgstr "3月"
 #. module: account
 #: report:account.analytic.account.journal:0
 msgid "Account n°"
-msgstr "アカウント番号"
+msgstr "勘定科目"
 
 #. module: account
 #: code:addons/account/account_invoice.py:95
@@ -6287,6 +6289,8 @@ msgid ""
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
 msgstr ""
+"通常、マニュアルで作成されたすべての新しい仕訳は「未転記」状態ですが、関連する仕訳でその状態をスキップするためのオプションを設定できます。その場合、ドキュ"
+"メント検証システムによって請求書や銀行取引明細書などの仕訳は自動で作成され、「転記」状態になります。"
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -9375,6 +9379,11 @@ msgid ""
 "related journal entries may or may not be reconciled.             \n"
 "* The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" *「ドラフト」状態はユーザーが新しくコード化されて請求書が未確認の場合に使用されます。\n"
+"* 請求が「試算」状態の場合、請求書は請求番号を持ちません。\n"
+"*「オープン」状態はユーザーが請求書を作成する場合に使用され、請求番号が生成されます。ユーザーが請求を支払うまでは、この状態です。\n"
+"*「支払済」状態は請求の支払いがあると自動で設定されます。関連する仕訳記入が消し込みされるとは限りません。\n"
+"*「キャンセル済」状態はユーザーが請求をキャンセルした場合に使用されます。"
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -9623,7 +9632,7 @@ msgstr "日付 / 期間"
 #. module: account
 #: report:account.central.journal:0
 msgid "A/C No."
-msgstr "アカウント番号"
+msgstr "勘定科目"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -10059,7 +10068,7 @@ msgstr "ドラフト請求書 "
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr "一般仕訳帳"
+msgstr "期間別仕訳帳サマリ"
 
 #. module: account
 #: view:account.model:0
@@ -10231,7 +10240,7 @@ msgstr "内部タイプ"
 #. module: account
 #: field:account.subscription.generate,date:0
 msgid "Generate Entries Before"
-msgstr ""
+msgstr "以前のエントリー生成"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running

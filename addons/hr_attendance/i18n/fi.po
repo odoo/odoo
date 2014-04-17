@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:18+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:50+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -25,12 +25,12 @@ msgstr "Tulosta kuukausittainen läsnäoloraportti"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
-msgstr "HR läsnäolo haku"
+msgstr "Henkilöstöhallinnan läsnäolohaku"
 
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
 msgid "Last Sign"
-msgstr ""
+msgstr "Viimeinen kirjaantuminen"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -45,24 +45,28 @@ msgstr "Läsnäolo"
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
 msgstr ""
+"Viimeinen sisäänkirjaantuminen: %s,<br />%s.<br />Klikkaa kirjaantuaksesi "
+"ulos."
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
+"Virhe! Sisään kirjaantumista pitää seurata ulos kirjaantuminen (ja "
+"päinvastoin)."
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Määrittelee sisäänkirjauksen/uloskirjauksen syyn"
+msgstr "Määrittelee sisäänkirjaantumisen / uloskirjaantumisen syyn."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
-"(*) Positiivinen viivästys tarkoittaa, että työntekijä käytti vähemmän aikaa "
-"kuin oli suunnitteltu."
+"(*) Positiivinen myöhästyminen tarkoittaa, että työntekijä teki työtä "
+"vähemmän kuin kirjasi aikaa."
 
 #. module: hr_attendance
 #: view:hr.attendance.month:0
@@ -73,7 +77,7 @@ msgstr "Tulosta läsnäoloraportti kuukausittain"
 #: code:addons/hr_attendance/report/timesheet.py:120
 #, python-format
 msgid "Attendances by Week"
-msgstr ""
+msgstr "Läsnäolo viikottain"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -83,7 +87,7 @@ msgstr "Kirjaudu ulos"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Delay"
-msgstr "Viive"
+msgstr "Myöhästyminen"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -112,7 +116,7 @@ msgstr "Kirjaudu ulos"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "Valintaasi vastaavi akirjauksi ei löydy!"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -136,7 +140,7 @@ msgstr "Kuukausi"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
-msgstr "Päiväys tallennettu"
+msgstr "Päivä kirjattu"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:154
@@ -150,7 +154,7 @@ msgstr "Kirjaudu sisään"
 #: field:hr.attendance.error,init_date:0
 #: field:hr.attendance.week,init_date:0
 msgid "Starting Date"
-msgstr "Aloituspäivämäärä"
+msgstr "Aloituspäivä"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -178,7 +182,7 @@ msgstr "Varoitus"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr ""
+msgstr "Allokoi läsnäoloryhmä kaikille käyttäjille."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -194,7 +198,7 @@ msgstr "Kesäkuu"
 #: code:addons/hr_attendance/report/attendance_by_month.py:190
 #, python-format
 msgid "Attendances by Month"
-msgstr ""
+msgstr "Läsnäolot kuukausittain"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
@@ -204,7 +208,7 @@ msgstr "Läsnäolot viikoittain"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr "Tulosta läsnäolon virheraportti"
+msgstr "Tulosta läsnäolon poikkeamaraportti"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -219,7 +223,7 @@ msgstr "Syy"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Print Attendance Report Error"
-msgstr "Tulosta läsnäoloraporttien virheet"
+msgstr "Tulosta läsnäoloraporttien poikkeamat"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
@@ -240,17 +244,17 @@ msgstr "Tänään"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr "Kirjautumispäivä"
+msgstr "Kirjaantumispäivä"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
 msgid "Date"
-msgstr "Päiväys"
+msgstr "Päivä"
 
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
 msgid "Track attendances for all employees"
-msgstr ""
+msgstr "Jäljitä kaikkein työntekijöiden läsnäolot"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -261,7 +265,7 @@ msgstr "Heinäkuu"
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
 #: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
 msgid "Attendance Error Report"
-msgstr "Läsnäolon virheraportti"
+msgstr "Läsnäolon poikkeamaraportti"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -288,7 +292,7 @@ msgstr "Helmikuu"
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action Reason"
-msgstr "Toiminnon syy"
+msgstr "Toimenpiteen syy"
 
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
@@ -298,7 +302,7 @@ msgstr "Vuosi"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Min Delay"
-msgstr "Pienin viivästys"
+msgstr "Pienin myöhästyminen"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -308,7 +312,7 @@ msgstr "Työntekijöiden läsnäolot"
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
-msgstr "Määrittle läsnäolon syy"
+msgstr "Määrittele läsnäolon syy"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -334,7 +338,7 @@ msgstr "Tammikuu"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available !"
-msgstr ""
+msgstr "Tietoa ei ole saatavissa!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -349,13 +353,13 @@ msgstr "Tulosta läsnäoloraportti viikoittain"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Attendance Errors"
-msgstr "Läsnäolovirheet"
+msgstr "Läsnäolopoikkemat"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
 msgid "Action"
-msgstr "Toiminto"
+msgstr "Toimenpide"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -376,18 +380,18 @@ msgstr "Marraskuu"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Tätä viivettä pienemmät viiveet katsotaan vapaaehtoisiksi."
+msgstr "Tämän myöhästymisen alapuolella poikkema katsotaan vapaaehtoiseksi"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
 msgid "Max. Delay (Min)"
-msgstr "Viive korkeintaan (min.)"
+msgstr "Suurin myöhästyminen (min.)"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,end_date:0
 #: field:hr.attendance.week,end_date:0
 msgid "Ending Date"
-msgstr "Lopetuspäivämäärä"
+msgstr "Loppupäivä"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -414,12 +418,12 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "Klikkaa kirjataksesi sisään:  %s."
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action Type"
-msgstr ""
+msgstr "Toimenpiteen tyyppi"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -433,6 +437,9 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the HR Manager to correct attendances."
 msgstr ""
+"Yritit %s päivämäärällä, joka edeltää toista tapahtumaa!\n"
+"Ota yhteyttä henkilöstöpäällikköön (HR-päällikkö)\n"
+"korjataksesi läsnäolot."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -456,15 +463,15 @@ msgstr "Toiminto"
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
-"(*) negatiivine viive tarkoittaa että työntekijä oli töissä enemmän kuin oli "
-"syöttänyt tunteja"
+"(*) Negatiivine myöhästyminen tarkoittaa, että työntekijä teki töitä "
+"kauemman kuin oli kirjannut tunteja."
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0

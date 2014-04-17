@@ -30,7 +30,7 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
-from openerp.tools.float_utils import float_round
+from openerp.tools.float_utils import float_round as round
 
 import openerp.addons.decimal_precision as dp
 
@@ -729,8 +729,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
-
+        'allow_date':fields.boolean('Check Date in Period', help= 'If checked, the entry won\'t be created if the entry date is not included into the selected period'),
         'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
@@ -841,16 +840,11 @@ class account_journal(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if context.get('journal_type', False):
-            args += [('type','=',context.get('journal_type'))]
-        if name:
-            ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit, context=context)
-        if not ids:
-            ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
-
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
 
@@ -939,13 +933,11 @@ class account_fiscalyear(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user, [('code', 'ilike', name)]+ args, limit=limit)
-        if not ids:
-            ids = self.search(cr, user, [('name', operator, name)]+ args, limit=limit)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
 
@@ -1041,19 +1033,11 @@ class account_period(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if args is None:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user,
-                              [('code', 'ilike', name)] + args,
-                              limit=limit,
-                              context=context)
-        if not ids:
-            ids = self.search(cr, user,
-                              [('name', operator, name)] + args,
-                              limit=limit,
-                              context=context)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1187,36 +1171,6 @@ class account_move(osv.osv):
             'ref': ref,
             'company_id': company_id,
         }
-
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-        """
-        Returns a list of tupples containing id, name, as internally it is called {def name_get}
-        result format: {[(id, name), (id, name), ...]}
-
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param name: name to search
-        @param args: other arguments
-        @param operator: default operator is 'ilike', it can be changed
-        @param context: context arguments, like lang, time zone
-        @param limit: Returns first 'n' ids of complete result, default is 80.
-
-        @return: Returns a list of tuples containing id and name
-        """
-
-        if not args:
-          args = []
-        ids = []
-        if name:
-            ids += self.search(cr, user, [('name','ilike',name)]+args, limit=limit, context=context)
-
-        if not ids and name and type(name) == int:
-            ids += self.search(cr, user, [('id','=',name)]+args, limit=limit, context=context)
-
-        if not ids:
-            ids += self.search(cr, user, args, limit=limit, context=context)
-
-        return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cursor, user, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -1843,10 +1797,12 @@ class account_tax_code(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
-        if context is None:
-            context = {}
-        ids = self.search(cr, user, ['|',('name',operator,name),('code',operator,name)] + args, limit=limit, context=context)
-        return self.name_get(cr, user, ids, context)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('code', operator, name), ('name', operator, name)]
+        else:
+            domain = ['|', ('code', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -1938,15 +1894,15 @@ class account_tax(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code'),
@@ -1975,15 +1931,11 @@ class account_tax(osv.osv):
         """
         if not args:
             args = []
-        if context is None:
-            context = {}
-        ids = []
-        if name:
-            ids = self.search(cr, user, [('description', '=', name)] + args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('description', operator, name), ('name', operator, name)]
         else:
-            ids = self.search(cr, user, args, limit=limit, context=context or {})
+            domain = ['|', ('description', operator, name), ('name', operator, name)]
+        ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -2144,7 +2096,7 @@ class account_tax(osv.osv):
         tax_compute_precision = precision
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
-        totalin = totalex = float_round(price_unit * quantity, precision)
+        totalin = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
         for tax in taxes:

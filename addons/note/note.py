@@ -72,12 +72,6 @@ class note_note(osv.osv):
     def onclick_note_not_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'open': True}, context=context)
 
-    #used for undisplay the follower if it's the current user
-    def _get_my_current_partner(self, cr, uid, ids, name, args, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        pid = user.partner_id and user.partner_id.id or False
-        return dict.fromkeys(ids, pid)
-
     #return the default stage for the uid user
     def _get_default_stage_id(self,cr,uid,context=None):
         ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
@@ -101,6 +95,7 @@ class note_note(osv.osv):
         'name': fields.function(_get_note_first_line, 
             string='Note Summary', 
             type='text', store=True),
+        'user_id': fields.many2one('res.users', 'Owner'),
         'memo': fields.html('Note Content'),
         'sequence': fields.integer('Sequence'),
         'stage_id': fields.function(_get_stage_per_user, 
@@ -113,15 +108,15 @@ class note_note(osv.osv):
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
-        'current_partner_id' : fields.function(_get_my_current_partner, type="many2one", relation='res.partner', string="Owner"),
     }
     _defaults = {
+        'user_id': lambda self, cr, uid, ctx=None: uid,
         'open' : 1,
         'stage_id' : _get_default_stage_id,
     }
     _order = 'sequence'
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         if groupby and groupby[0]=="stage_id":
 
             #search all stages
@@ -174,7 +169,7 @@ class note_note(osv.osv):
 
         else:
             return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
-                offset=offset, limit=limit, context=context, orderby=orderby)
+                offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
 
 
 #upgrade config setting page to configure pad, fancy and tags mode
