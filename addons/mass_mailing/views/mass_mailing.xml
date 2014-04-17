@@ -215,12 +215,11 @@
                                 <field name="replied_dayly" string="Replied Daily" widget="barchart"/>
                             </button>
                         </div>
-                        <div class="oe_button_box" attrs="{'invisible': [('total', '=', 0)]}" style="margin-bottom: 32px">
-                            <button name="%(action_view_mass_mailing_contacts)d" type="action"
-                                icon="fa-envelope-o" class="oe_stat_button">
-                                <field name="total" string="Emails" widget="statinfo"/>
-                            </button>
-                        </div>
+                        <button name="%(action_view_mass_mailing_contacts)d" type="action"
+                            icon="fa-envelope-o" class="oe_stat_button"
+                            attrs="{'invisible': [('total', '=', 0)]}" >
+                            <field name="total" string="Emails" widget="statinfo"/>
+                        </button>
 
                         <group>
                             <field name="email_from"/>
