@@ -106,7 +106,7 @@
 - 
   !python {model: stock.quant}: |
     reco_id = self.search(cr ,uid , [('product_id','=',ref('product_wise')), ('qty', '<', 0.0)], context=context)
-    assert len(reco_id) > 0, 'This should have created a negative quant'
+    assert len(reco_id) == 0, 'This should not have created a negative quant'
 - 
   Process the second picking
 - 
