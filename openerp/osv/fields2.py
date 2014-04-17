@@ -591,6 +591,10 @@ class Integer(Field):
     def convert_to_cache(self, value, env):
         return int(value or 0)
 
+    def _update(self, records, value):
+        # special case, when an integer field is used as inverse for a one2many
+        records._cache[self] = value.id or 0
+
 
 class Float(Field):
     """ Float field. """
