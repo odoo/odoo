@@ -3022,6 +3022,9 @@ class stock_picking_in(osv.osv):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        return self.pool['stock.picking'].read_group(cr, uid, domain, fields, groupby, offset=offset, limit=None, context=context, orderby=orderby)
+
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object
         return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
@@ -3091,6 +3094,9 @@ class stock_picking_out(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        return self.pool['stock.picking'].read_group(cr, uid, domain, fields, groupby, offset=offset, limit=None, context=context, orderby=orderby)
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object
