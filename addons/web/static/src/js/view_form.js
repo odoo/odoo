@@ -1835,7 +1835,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         this.$el.addClass(this.node.attrs["class"] || "");
     },
     destroy: function() {
-        $.fn.tipsy.clear();
+        $.fn.tooltip('destroy');
         this._super.apply(this, arguments);
     },
     /**
@@ -1867,9 +1867,8 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         widget = widget || this;
         trigger = trigger || this.$el;
         options = _.extend({
-                delayIn: 500,
-                delayOut: 0,
-                fade: true,
+                delay: { show: 500, hide: 0 },
+                trigger: 'hover',
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -1880,12 +1879,12 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                         widget: widget
                     });
                 },
-                gravity: $.fn.tipsy.autoBounds(50, 'nw'),
-                html: true,
-                opacity: 0.85,
-                trigger: 'hover'
             }, options || {});
-        $(trigger).tipsy(options);
+        //only show tooltip if we are in debug or if we have a help to show, otherwise it will display
+        //as empty
+        if (instance.session.debug || widget.node.attrs.help || (widget.field && widget.field.help)){
+            $(trigger).tooltip(options);
+        }
     },
     /**
      * Builds a new context usable for operations related to fields by merging
@@ -2122,8 +2121,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
         this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
+        this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (instance.session.debug) {
-            this.do_attach_tooltip(this, this.$label[0] || this.$el);
             this.$label.off('dblclick').on('dblclick', function() {
                 console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);
                 window.w = self;

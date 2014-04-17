@@ -788,6 +788,11 @@ instance.web.unblockUI = function() {
     return $.unblockUI.apply($, arguments);
 };
 
+
+/* Bootstrap defaults overwrite */
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'bottom';
+$.fn.tooltip.Constructor.DEFAULTS.html = true;
+
 /**
  * Registry for all the client actions key: tag value: widget
  */
