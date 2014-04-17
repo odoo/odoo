@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -314,55 +314,57 @@
 .openerp .oe_form_dirty button.oe_highlight_on_dirty:hover {
   background: #ed6f6a;
 }
-.openerp .oe_button_box {
-  width: 400px;
-  text-align: right;
-}
-.openerp .oe_button_box .oe_stat_button:hover {
-  background: #7c7bad;
-  color: white;
-}
-.openerp .oe_button_box .oe_stat_button:hover .fa {
-  color: white;
-}
-.openerp .oe_button_box .oe_stat_button {
+.openerp .oe_stat_button {
   font-weight: normal;
-  display: inline-table;
-  width: 33% !important;
   height: 42px;
-  margin: 0px -1px -1px 0px;
-  padding: 0;
   color: #666666;
   border: 1px solid #dddddd;
   border-radius: 0;
   box-shadow: none;
   background: white;
 }
-.openerp .oe_button_box .oe_stat_button > div {
+.openerp .oe_stat_button > div {
   display: table-cell;
   vertical-align: middle;
   text-align: left;
   padding: 0;
   line-height: 120%;
 }
-.openerp .oe_button_box .oe_stat_button .stat_button_icon {
+.openerp .oe_stat_button .stat_button_icon {
   color: #7c7bad;
   font-size: 24px;
   padding: 0px 3px;
   width: 37px;
   text-align: center;
 }
-.openerp .oe_button_box .oe_stat_button .oe_form_field_percent_pie {
+.openerp .oe_stat_button .oe_form_field_percent_pie {
   width: 42px;
 }
-.openerp .oe_button_box .oe_stat_button .oe_form_field_bar_chart {
+.openerp .oe_stat_button .oe_form_field_bar_chart {
   width: 42px;
 }
-.openerp .oe_button_box .oe_stat_button svg {
+.openerp .oe_stat_button svg {
   width: 38px;
   height: 38px;
   display: inline;
   vertical-align: middle;
+}
+.openerp .oe_stat_button:hover {
+  background: #7c7bad;
+  color: white;
+}
+.openerp .oe_stat_button:hover .fa {
+  color: white;
+}
+.openerp .oe_button_box {
+  width: 400px;
+  text-align: right;
+}
+.openerp .oe_button_box .oe_stat_button {
+  display: inline-table;
+  width: 33% !important;
+  margin: 0px -1px -1px 0px;
+  padding: 0;
 }
 .openerp .oe_avatar > img {
   max-height: 90px;
@@ -3331,6 +3333,7 @@ body.oe_single_form .oe_single_form_container {
   width: 18px;
   height: 18px;
 }
+
 .modal .modal-header button.close {
   border: none;
   background: none;
@@ -3341,12 +3344,13 @@ body.oe_single_form .oe_single_form_container {
 .modal .modal-footer {
   text-align: left;
 }
-.modal .oe_act_window.modal-body{
-  padding: 0;
-}
-.modal .oe_button{
+.modal .oe_button {
   margin: 0 4px 0 0;
 }
+.modal .oe_act_window.modal-body {
+  padding: 0;
+}
+
 input[type="radio"], input[type="checkbox"] {
   margin-right: 4px;
   margin-left: 4px;
