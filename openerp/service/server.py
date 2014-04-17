@@ -280,7 +280,7 @@ class ThreadedServer(CommonServer):
         t.start()
         _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
 
-    def start(self):
+    def start(self, stop=False):
         _logger.debug("Setting signal handlers")
         if os.name == 'posix':
             signal.signal(signal.SIGINT, self.signal_handler)
@@ -291,8 +291,11 @@ class ThreadedServer(CommonServer):
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
-        self.cron_spawn()
-        self.http_spawn()
+
+        if not stop:
+            # only relevant if we are not in "--stop-after-init" mode
+            self.cron_spawn()
+            self.http_spawn()
 
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
@@ -329,7 +332,7 @@ class ThreadedServer(CommonServer):
         The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
         a second one if any will force an immediate exit.
         """
-        self.start()
+        self.start(stop=stop)
 
         rc = preload_registries(preload)
 
