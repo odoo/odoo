@@ -941,7 +941,7 @@ def get_field_type(column, options):
 
 class AssetsBundle(object):
     cache = {}
-    rx_css_import = re.compile("(@import.+;$)", re.M)
+    rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
 
     def __init__(self, xmlid, html=None):
         self.xmlid = xmlid
