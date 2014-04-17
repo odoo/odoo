@@ -353,7 +353,7 @@ class WebsiteForum(http.Controller):
             return {'error': 'own_post'}
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
         if user.karma <= 5:
-            return {'error': 'not_enough_karma', 'karma': 5}
+            return {'error': 'not_enough_karma', 'karma': 1}
         return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=True, context=request.context)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", multilang=True, website=True)

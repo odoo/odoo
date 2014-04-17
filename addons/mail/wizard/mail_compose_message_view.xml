@@ -11,6 +11,7 @@
                         <field name="composition_mode" invisible="1"/>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
+                        <field name="is_log" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
                         <!-- Various warnings -->
@@ -28,29 +29,27 @@
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="subject" placeholder="Subject..." required="True"/>
-                        <!-- classic message composer -->
-                        <label for="partner_ids" string="Recipients"
-                            attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}"/>
-                        <div groups="base.group_user"
-                            attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}">
-                            <span attrs="{'invisible':[('model', '=', False)]}">
-                                Followers of
-                                <field name="record_name" readonly="1" class="oe_inline oe_compose_recipients"/>
-                                and
+                        <!-- recipients -->
+                        <label for="partner_ids" string="Recipients"  attrs="{'invisible': [('is_log', '=', True)]}" groups="base.group_user"/>
+                        <div groups="base.group_user" attrs="{'invisible': [('is_log', '=', True)]}">
+                            <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
+                                <strong>Email mass mailing</strong> on
+                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">the selected records</span>
+                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">the current search filter</span>.
                             </span>
+                            <span attrs="{'invisible':[('composition_mode', '!=', 'comment')]}">Followers of the document and</span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
-                                context="{'force_email':True, 'show_email':True}"/>
+                                context="{'force_email':True, 'show_email':True}"
+                                attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
                         </div>
-                        <!-- mass post / mass mailing -->
-                        <field name="post"
-                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <!-- mass post -->
                         <field name="notify"
-                            attrs="{'invisible':['|', ('post', '!=', True), ('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="same_thread"
-                            attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_mail'), ('post', '=', False)]}"/>
-                        <field name="reply_to" placeholder="Email address te redirect replies..."
-                            attrs="{'invisible':['|', '&amp;', ('same_thread', '=', True), ('post', '=', True), ('composition_mode', '!=', 'mass_mail')],
-                                    'required':['&amp;', '|', ('post', '=', False), ('same_thread', '=', False), ('composition_mode', '=', 'mass_mail')]}"/>
+                            attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_post')]}"/>
+                        <!-- mass mailing -->
+                        <field name="same_thread" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="reply_to" placeholder="Email address to redirect replies..."
+                            attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
+                                    'required':[('same_thread', '!=', True), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
                     <field name="body"/>
                     <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_analyticprofit">
+    <t t-call="report.html_container">
+        <t t-call="report.external_layout">
+            <div class="page">
+                <h2>Invoice rate by user</h2>
+
+                <div class="row mt32 mb32">
+                    <div class="col-xs-3">
+                        <strong>Period from startdate:</strong>
+                        <p t-esc="formatLang(data['form']['date_from'],date=True)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Period to enddate:</strong>
+                        <p t-esc="formatLang(data['form']['date_to'],date=True)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Currency:</strong>
+                        <p t-esc="res_company.currency_id.name"/>
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>User or Journal Name</th>
+                            <th>Units</th>
+                            <th>Theorical</th>
+                            <th>Income</th>
+                            <th>Cost</th>
+                            <th>Profit</th>
+                            <th>Eff.</th>
+                        </tr>
+                    </thead>
+                    <tbdody>
+                        <tr>
+                            <td>Totals:</td>
+                            <td><span t-esc="reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)"/></td>
+                            <td></td>
+                            <td><span t-esc="reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)"/></td>
+                            <td><span t-esc="reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)"/></td>
+                            <td><span t-esc="reduce(lambda x, y: x+y['profit'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)"/></td>
+                            <td><span t-esc="reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) and round(reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* -100, 2)"/><span> %</span></td>
+                        </tr>
+                        <t t-foreach="user_ids(lines(data['form']))" t-as="e">
+                            <t t-foreach="journal_ids(data['form'], [e.id])" t-as="j">
+                                <tr>
+                                    <td><span t-esc="e.name"/></td>
+                                    <td><span t-esc="reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0) "/></td>
+                                    <td><span t-esc="reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0)"/></td>
+                                    <td><span t-esc="reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0)"/></td>
+                                    <td><span t-esc="reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) "/></td>
+                                    <td><span t-esc="reduce(lambda x, y: x+y['profit'], line(data['form'], [j.id], [e.id]), 0)"/></td>
+                                    <td>
+                                        <t t-if="reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0)">
+                                            <span t-esc="reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * -100.0"/>
+                                            <span> %</span>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th colspan="7"><span t-esc="j.name"/></th>
+                                </tr>
+                                <tr t-foreach="line(data['form'], [j.id],[e.id])" t-as="l">
+                                    <td><span t-esc="l['name']"/></td>
+                                    <td><span t-esc="l['unit_amount']"/></td>
+                                    <td><span t-esc="l['amount_th']"/></td>
+                                    <td><span t-esc="l['amount']"/></td>
+                                    <td><span t-esc="l['cost']"/></td>
+                                    <td><span t-esc="l['profit']"/></td>
+                                    <td><span t-esc="l['eff']"/><span> %</span></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbdody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
