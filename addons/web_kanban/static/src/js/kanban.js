@@ -441,7 +441,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
-        $.fn.tipsy.clear();
+        record.$el.find('[title]').tooltip('destroy');
         $(old_group.$el).add(new_group.$el).find('.oe_kanban_aggregates, .oe_kanban_group_length').hide();
         if (old_group === new_group) {
             new_group.records.splice(old_index, 1);
@@ -648,7 +648,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
         var add_btn = this.$el.find('.oe_kanban_add');
-        add_btn.tipsy({delayIn: 500, delayOut: 1000});
+        add_btn.tooltip({delay: { show: 500, hide:1000 }});
         this.$records.find(".oe_kanban_column_cards").click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
@@ -688,7 +688,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             return (new instance.web.Model(field.relation)).query([options.tooltip_on_group_by])
                     .filter([["id", "=", this.value]]).first().then(function(res) {
                 self.tooltip = res[options.tooltip_on_group_by];
-                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tipsy({html: true});
+                self.$(".oe_kanban_group_title_text").attr("title", self.tooltip || self.title || "").tooltip();
             });
         }
     },
@@ -925,10 +925,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     bind_events: function() {
         var self = this;
         this.setup_color_picker();
-        this.$el.find('[tooltip]').tipsy({
-            delayIn: 500,
-            delayOut: 0,
-            fade: true,
+        this.$el.find('[title]').tooltip({
+            delay: { show: 500, hide: 0},
             title: function() {
                 var template = $(this).attr('tooltip');
                 if (!self.view.qweb.has_template(template)) {
@@ -936,10 +934,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 }
                 return self.view.qweb.render(template, self.qweb_context);
             },
-            gravity: 's',
-            html: true,
-            opacity: 0.8,
-            trigger: 'hover'
         });
 
         // If no draghandle is found, make the whole card as draghandle (provided one can edit)
