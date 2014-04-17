@@ -41,9 +41,6 @@ class project_configuration(osv.osv_memory):
                  'the timesheet line entries for particular date and user, with the effect of creating, '
                  'editing and deleting either ways.\n'
                  '-This installs the module project_timesheet.'),
-        'module_project_long_term': fields.boolean("Manage resources planning on gantt view",
-            help='A long term project management module that tracks planning, scheduling, and resource allocation.\n'
-                 '-This installs the module project_long_term.'),
         'module_project_issue': fields.boolean("Track issues and bugs",
             help='Provides management of issues/bugs in projects.\n'
                  '-This installs the module project_issue.'),
