@@ -941,7 +941,6 @@ def get_field_type(column, options):
 
 class AssetsBundle(object):
     cache = {}
-    rx_css_charset = re.compile("(@charset.+;$)", re.M)
     rx_css_import = re.compile("(@import.+;$)", re.M)
 
     def __init__(self, xmlid, html=None):
@@ -1025,11 +1024,10 @@ class AssetsBundle(object):
                 matches.append(matchobj.group(0))
                 return ''
 
-            content = re.sub(self.rx_css_charset, push, content)
             content = re.sub(self.rx_css_import, push, content)
 
             matches.append(content)
-            content = '\n'.join(matches)
+            content = u'\n'.join(matches)
             self.cache[key] = content
         return self.cache[key]
 
@@ -1080,8 +1078,24 @@ class StylesheetAsset(WebAsset):
     rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
     rx_comments = re.compile(r"""/\*.*\*/""", re.S)
 
+    def _get_content(self):
+        if self.source:
+            return self.source
+
+        with open(self.filename, 'rb') as fp:
+            firstline = fp.readline()
+            m = re.match(r'@charset "([^"]+)";', firstline)
+            if m:
+                encoding = m.group(1)
+            else:
+                encoding = "utf-8"
+                # "reinject" first line as it's not @charset
+                fp.seek(0)
+
+            return fp.read().decode(encoding)
+
     def get_content(self):
-        content = super(StylesheetAsset, self).get_content()
+        content = self._get_content()
         if self.url:
             web_dir = os.path.dirname(self.url)
 
