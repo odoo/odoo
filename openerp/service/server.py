@@ -292,10 +292,14 @@ class ThreadedServer(CommonServer):
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
+        test_mode = config['test_enable'] or config['test_file']
+        if not stop or test_mode:
+            # some tests need the http deamon to be available...
+            self.http_spawn()
+
         if not stop:
             # only relevant if we are not in "--stop-after-init" mode
             self.cron_spawn()
-            self.http_spawn()
 
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
