@@ -1077,6 +1077,7 @@ class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
     rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
     rx_comments = re.compile(r"""/\*.*\*/""", re.S)
+    rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
 
     def _get_content(self):
         if self.source:
@@ -1099,21 +1100,21 @@ class StylesheetAsset(WebAsset):
         if self.url:
             web_dir = os.path.dirname(self.url)
 
-            content = re.sub(
-                self.rx_import,
+            content = self.rx_import.sub(
                 r"""@import \1%s/""" % (web_dir,),
                 content,
             )
 
-            content = re.sub(
-                self.rx_url,
+            content = self.rx_url.sub(
                 r"url(\1%s/" % (web_dir,),
                 content,
             )
         return content
 
-    # def minify(self):
-    #     return self.rx_comments.sub('', self.content)
+    def minify(self):
+        # remove existing sourcemaps, make no sense after re-mini
+        return self.rx_sourceMap.sub('', self.content)
+        # return self.rx_comments.sub('', self.content)
 
 def rjsmin(script):
     """ Minify js with a clever regex.
