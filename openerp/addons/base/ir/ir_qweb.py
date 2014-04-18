@@ -21,6 +21,7 @@ from PIL import Image
 
 import openerp.http
 import openerp.tools
+import openerp.tools.func
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
@@ -990,7 +991,7 @@ class AssetsBundle(object):
 
         return sep.join(response)
 
-    @property
+    @openerp.tools.func.lazy_property
     def last_modified(self):
         return max(itertools.chain(
             (asset.last_modified for asset in self.javascripts),
@@ -998,14 +999,12 @@ class AssetsBundle(object):
             [datetime.datetime(1970, 1, 1)],
         ))
 
-    @property
+    @openerp.tools.func.lazy_property
     def checksum(self):
-        if self._checksum is None:
-            checksum = hashlib.new('sha1')
-            for asset in itertools.chain(self.javascripts, self.stylesheets):
-                checksum.update(asset.content.encode("utf-8"))
-            self._checksum = checksum.hexdigest()
-        return self._checksum
+        checksum = hashlib.new('sha1')
+        for asset in itertools.chain(self.javascripts, self.stylesheets):
+            checksum.update(asset.content.encode("utf-8"))
+        return checksum.hexdigest()
 
     def js(self):
         key = 'js_' + self.checksum
