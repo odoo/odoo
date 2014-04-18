@@ -58,7 +58,6 @@ class WebsiteForum(http.Controller):
         Forum = request.registry['forum.forum']
         karma = hasattr(Forum, karma_name) and getattr(Forum, karma_name) or 0
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, uid or request.uid, context=request.context)
-        print karma_name, karma, user.karma
         if user.karma < karma:
             return False, {'error': 'not_enough_karma', 'karma': karma}
         return True, {}
