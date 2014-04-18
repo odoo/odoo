@@ -32,12 +32,21 @@ class WebsiteForum(http.Controller):
         return msg
 
     def _prepare_forum_values(self, forum=None, **kwargs):
+        Forum = request.registry['forum.forum']
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, context=request.context)
         public_uid = request.registry['website'].get_public_user(request.cr, request.uid, request.context)
         values = {'user': user, 'is_public_user': user.id == public_uid,
                   'notifications': self._get_notifications(),
                   'header': kwargs.get('header', dict()),
-                  'searches': kwargs.get('searches', dict())}
+                  'searches': kwargs.get('searches', dict()),
+                  'can_edit_own': True,
+                  'can_edit_all': user.karma > Forum._karma_modo_edit_all,
+                  'can_close_own': user.karma > Forum._karma_modo_close_own,
+                  'can_close_all': user.karma > Forum._karma_modo_close_all,
+                  'can_unlink_own': user.karma > Forum._karma_modo_unlink_own,
+                  'can_unlink_all': user.karma > Forum._karma_modo_unlink_all,
+                  'can_unlink_comment': user.karma > Forum._karma_modo_unlink_comment,
+                  }
         if forum:
             values['forum'] = forum
         elif kwargs.get('forum_id'):

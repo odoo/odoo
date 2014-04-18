@@ -17,15 +17,21 @@ class Forum(osv.Model):
     _karma_upvote = 5  # done
     _karma_downvote = 50  # done
     _karma_answer_accept_own = 20  # done
-    _karma_answer_own_question_immediately = 50
+    _karma_answer_accept_own_now = 50
+    _karma_answer_accept_all = 500
     _karma_editor_link_files = 30  # done
     _karma_editor_clickable_link = 50
+    _karma_comment = 1
     _karma_modo_retag = 75
-    _karma_modo_close_own = 100
-    _karma_modo_edit_all = 300
-    _karma_modo_unlink_comment = 400
-    _karma_modo_close_all = 900
-    _karma_modo_unlink_all = 1000
+    _karma_modo_flag = 100
+    _karma_modo_flag_see_all = 300
+    _karma_modo_unlink_comment = 750
+    _karma_modo_edit_own = 1  # done
+    _karma_modo_edit_all = 300  # done
+    _karma_modo_close_own = 100  # done
+    _karma_modo_close_all = 900  # done
+    _karma_modo_unlink_own = 500  # done
+    _karma_modo_unlink_all = 1000  # done
     # karma generation
     _karma_gen_quest_new = 2  # done
     _karma_gen_upvote_quest = 5  # done

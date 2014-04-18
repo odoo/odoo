@@ -430,19 +430,19 @@
                                     comment
                                 </a>
                             </li>
-                            <li t-if="question.state != 'close' and (user.id == question.create_uid.id or user.karma&gt;=100)">
+                            <li t-if="question.state != 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close">close</a>
                             </li>
-                            <li t-if="question.state == 'close' and user.karma&gt;=500">
+                            <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen">reopen</a>
                             </li>
-                            <li t-if="user.id == question.create_uid.id or user.karma&gt;=300">
+                            <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit">edit</a>
                             </li>
-                            <li t-if="question.active and user.id == question.create_uid.id or user.karma&gt;=1000">
+                            <li t-if="question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete">delete</a>
                             </li>
-                            <li t-if="uid == question.create_uid.id and not question.active">
+                            <li t-if="not question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete">undelete</a>
                             </li>
                             <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}">share</a></li>
@@ -496,10 +496,10 @@
                                       t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
                                 </a>
                             </li>
-                            <li t-if="user.id == answer.create_uid.id or user.karma&gt;=300">
+                            <li t-if="(user.id == answer.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit">edit</a>
                             </li>
-                            <li t-if="user.id == answer.create_uid.id or user.karma&gt;=1000">
+                            <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete">delete</a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
