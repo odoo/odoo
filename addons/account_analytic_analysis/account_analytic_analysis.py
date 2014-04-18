@@ -727,7 +727,7 @@ class account_analytic_account(osv.osv):
         if ids:
             contract_ids = ids
         else:
-            contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True)])
+            contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
         for contract in self.browse(cr, uid, contract_ids, context=context):
             try:
                 invoice_id = self._prepare_invoice(cr, uid, contract, context=context)
