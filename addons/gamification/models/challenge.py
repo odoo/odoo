@@ -117,12 +117,6 @@ class gamification_challenge(osv.Model):
         except ValueError:
             return False
 
-    def _get_challenger_users(self, cr, uid, domain, context=None):
-        ref = functools.partial(self.pool['ir.model.data'].xmlid_to_res_id, cr, uid)
-        user_domain = eval(domain, {'ref': ref})
-        return self.pool['res.users'].search(cr, uid, user_domain, context=context)
-
-
     _order = 'end_date, start_date, name, id'
     _columns = {
         'name': fields.char('Challenge Name', required=True, translate=True),
@@ -239,14 +233,11 @@ class gamification_challenge(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int,long)):
             ids = [ids]
+        
+        write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
 
         if vals.get('state') == 'inprogress':
-            for challenge in self.browse(cr, uid, ids, context=context):
-                user_ids = self._get_challenger_users(cr, uid, challenge.user_domain, context=context)
-                write_op = [(4, user_id) for user_id in user_ids]
-                self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)            
-                self.message_subscribe_users(cr, uid, [challenge.id], user_ids, context=context)
-
+            self._recompute_challenge_users(cr, uid, ids, context=context):
             self.generate_goals_from_challenge(cr, uid, ids, context=context)
 
         elif vals.get('state') == 'done':
@@ -256,9 +247,6 @@ class gamification_challenge(osv.Model):
             # resetting progress
             if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context):
                 raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
-        
-        write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
-
 
         return write_res
 
@@ -314,18 +302,10 @@ class gamification_challenge(osv.Model):
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
+        self._recompute_challenge_users(cr, uid, ids, context=context):
+        self.generate_goals_from_challenge(cr, uid, ids, context=context)
+
         for challenge in self.browse(cr, uid, ids, context=context):
-            # in case of new users matching the domain
-            old_user_ids = [user.id for user in challenge.user_ids]
-            new_user_ids = self._get_challenger_users(cr, uid, challenge.user_domain, context=context)
-            to_remove_ids = list(set(old_user_ids) - set(new_user_ids))
-            to_add_ids = list(set(new_user_ids) - set(old_user_ids))
-
-            write_op = [(3, user_id) for user_id in to_remove_ids]
-            write_op += [(4, user_id) for user_id in to_add_ids]
-            self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)            
-
-            self.generate_goals_from_challenge(cr, uid, [challenge.id], context=context)
 
             # goals closed but still opened at the last report date
             closed_goals_to_report = goal_obj.search(cr, uid, [
@@ -345,9 +325,35 @@ class gamification_challenge(osv.Model):
         return True
 
     def quick_update(self, cr, uid, challenge_id, context=None):
-        """Update all the goals of a challenge, no generation of new goals"""
+        """Update all the goals of a specific challenge, no generation of new goals"""
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
+        return True
+
+    def _get_challenger_users(self, cr, uid, domain, context=None):
+        ref = functools.partial(self.pool['ir.model.data'].xmlid_to_res_id, cr, uid)
+        user_domain = eval(domain, {'ref': ref})
+        return self.pool['res.users'].search(cr, uid, user_domain, context=context)
+
+    def _recompute_challenge_users(self, cr, uid, challenge_ids, context=None):
+        """Recompute the domain to add new users and remove the one no longer matching the domain"""
+        for challenge in self.browse(cr, uid, challenge_ids, context=context):
+            if challenge.user_domain:
+
+                old_user_ids = [user.id for user in challenge.user_ids]
+                new_user_ids = self._get_challenger_users(cr, uid, challenge.user_domain, context=context)
+                to_remove_ids = list(set(old_user_ids) - set(new_user_ids))
+                to_add_ids = list(set(new_user_ids) - set(old_user_ids))
+
+                write_op = [(3, user_id) for user_id in to_remove_ids]
+                write_op += [(4, user_id) for user_id in to_add_ids]
+                self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)
+
+                if to_remove_ids:
+                    self.message_unsubscribe_users(cr, uid, [challenge.id], to_remove_ids, context=None)
+                if to_add_ids:
+                    self.message_subscribe_users(cr, uid, [challenge.id], new_user_ids, context=context)
+
         return True
 
 
@@ -370,6 +376,10 @@ class gamification_challenge(osv.Model):
     ##### Automatic actions #####
 
     def generate_goals_from_challenge(self, cr, uid, ids, context=None):
+        _logger.warning("Deprecated, use private method _generate_goals_from_challenge(...) instead.")
+        return self._generate_goals_from_challenge(cr, uid, )
+
+    def _generate_goals_from_challenge(self, cr, uid, ids, context=None):
         """Generate the goals for each line and user.
 
         If goals already exist for this line and user, the line is skipped. This
@@ -388,7 +398,7 @@ class gamification_challenge(osv.Model):
                 end_date = challenge.end_date
 
             for line in challenge.line_ids:
-                # FIXME: allow to restrict to a subset of users
+                # TODO: allow to restrict to a subset of users
                 for user in challenge.user_ids:
 
                     domain = [('line_id', '=', line.id), ('user_id', '=', user.id)]
