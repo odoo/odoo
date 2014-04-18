@@ -34,10 +34,10 @@ Documentation based on question and pertinent answers of Forum
     'data': [
         'data/doc_data.xml',
         'data/cron.xml',
-        'views/doc.xml',
-        'views/website_doc.xml',
         'security/ir.model.access.csv',
         'security/doc_security.xml',
+        'views/doc.xml',
+        'views/website_doc.xml',
     ],
     'qweb': [
         'static/src/xml/*.xml'
