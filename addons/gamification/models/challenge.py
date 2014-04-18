@@ -337,8 +337,7 @@ class gamification_challenge(osv.Model):
         return True
 
     def _get_challenger_users(self, cr, uid, domain, context=None):
-        ref = functools.partial(self.pool['ir.model.data'].xmlid_to_res_id, cr, uid)
-        user_domain = eval(domain, {'ref': ref})
+        user_domain = eval(domain)
         return self.pool['res.users'].search(cr, uid, user_domain, context=context)
 
     def _recompute_challenge_users(self, cr, uid, challenge_ids, context=None):
