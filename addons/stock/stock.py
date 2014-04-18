@@ -3860,11 +3860,13 @@ class stock_warehouse_orderpoint(osv.osv):
         '''
         qty = 0
         for procurement in orderpoint.procurement_ids:
-            if procurement in ('cancel', 'done'):
+            if procurement.state in ('cancel', 'done'):
                 continue
+            qty2 = procurement.product_qty
             for move in procurement.move_ids:
                 if move.state not in ('draft', 'cancel'):
-                    qty += move.product_qty
+                    qty2 -= move.product_qty
+            qty += qty2
         return qty
 
     def _check_product_uom(self, cr, uid, ids, context=None):
