@@ -22,6 +22,7 @@ from PIL import Image
 import openerp.http
 import openerp.tools
 import openerp.tools.func
+import openerp.tools.lru
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
@@ -941,7 +942,7 @@ def get_field_type(column, options):
     return options.get('widget', column._type)
 
 class AssetsBundle(object):
-    cache = {}
+    cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
 
     def __init__(self, xmlid, html=None):
