@@ -436,6 +436,16 @@ class WebsiteForum(http.Controller):
 
         return request.website.render("website_forum.users", values)
 
+    @http.route(['/forum/<model("forum.forum"):forum>/partner/<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
+    def open_partner(self, forum, partner_id=0, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        pids = request.registry['res.partner'].search(cr, SUPERUSER_ID, [('id', '=', partner_id)], context=context)
+        if pids:
+            partner = request.registry['res.partner'].browse(cr, SUPERUSER_ID, pids[0], context=context)
+            if partner.user_ids:
+                return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
+        return werkzeug.utils.redirect("/forum/%s" % slug(forum))
+
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True, multilang=True)
     def open_user(self, forum, user_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context

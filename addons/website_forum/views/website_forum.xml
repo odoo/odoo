@@ -543,7 +543,7 @@
                         t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
                         class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
-                    <a t-attf-href="/forum/#{slug(forum)}/user/#{message.id}"
+                    <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
                         t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
                     on <span t-field="message.date" t-field-options='{"format":"short"}'/>
