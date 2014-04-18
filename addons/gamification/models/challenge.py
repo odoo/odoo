@@ -237,7 +237,7 @@ class gamification_challenge(osv.Model):
         write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
 
         if vals.get('state') == 'inprogress':
-            self._recompute_challenge_users(cr, uid, ids, context=context):
+            self._recompute_challenge_users(cr, uid, ids, context=context)
             self.generate_goals_from_challenge(cr, uid, ids, context=context)
 
         elif vals.get('state') == 'done':
@@ -302,7 +302,7 @@ class gamification_challenge(osv.Model):
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
-        self._recompute_challenge_users(cr, uid, ids, context=context):
+        self._recompute_challenge_users(cr, uid, ids, context=context)
         self.generate_goals_from_challenge(cr, uid, ids, context=context)
 
         for challenge in self.browse(cr, uid, ids, context=context):
@@ -377,7 +377,7 @@ class gamification_challenge(osv.Model):
 
     def generate_goals_from_challenge(self, cr, uid, ids, context=None):
         _logger.warning("Deprecated, use private method _generate_goals_from_challenge(...) instead.")
-        return self._generate_goals_from_challenge(cr, uid, )
+        return self._generate_goals_from_challenge(cr, uid, ids, context=context)
 
     def _generate_goals_from_challenge(self, cr, uid, ids, context=None):
         """Generate the goals for each line and user.
@@ -398,44 +398,46 @@ class gamification_challenge(osv.Model):
                 end_date = challenge.end_date
 
             for line in challenge.line_ids:
-                # TODO: allow to restrict to a subset of users
-                for user in challenge.user_ids:
 
-                    domain = [('line_id', '=', line.id), ('user_id', '=', user.id)]
-                    if start_date:
-                        domain.append(('start_date', '=', start_date))
+                # there is potentially a lot of users
+                # detect the ones with no goal linked to this line
+                date_clause = ""
+                query_params = [line.id]
+                if start_date:
+                    date_clause += "AND g.start_date = %s"
+                    query_params.append(start_date)
+                if end_date:
+                    date_clause += "AND g.end_date = %s"
+                    query_params.append(end_date)
+            
+                query = """SELECT u.id AS user_id
+                             FROM res_users u
+                        LEFT JOIN gamification_goal g
+                               ON (u.id = g.user_id)
+                            WHERE line_id = %s
+                              {date_clause}
+                        """.format(date_clause=date_clause)
+                cr.execute(query, query_params)
+                user_with_goal_ids = cr.dictfetchall()
+                user_without_goal_ids = list(set([user.id for user in challenge.user_ids]) - set([user['user_id'] for user in user_with_goal_ids]))
 
-                    # goal already existing for this line ?
-                    if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
+                values = {
+                    'definition_id': line.definition_id.id,
+                    'line_id': line.id,
+                    'target_goal': line.target_goal,
+                    'state': 'inprogress',
+                }
 
-                        # resume canceled goals
-                        domain.append(('state', '=', 'canceled'))
-                        canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                        if canceled_goal_ids:
-                            goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
-                            to_update.extend(canceled_goal_ids)
+                if start_date:
+                    values['start_date'] = start_date
+                if end_date:
+                    values['end_date'] = end_date
 
-                        # skip to next user
-                        continue
+                if challenge.remind_update_delay:
+                    values['remind_update_delay'] = challenge.remind_update_delay
 
-                    values = {
-                        'definition_id': line.definition_id.id,
-                        'line_id': line.id,
-                        'user_id': user.id,
-                        'target_goal': line.target_goal,
-                        'state': 'inprogress',
-                    }
-
-                    if start_date:
-                        values['start_date'] = start_date
-                    if end_date:
-                        values['end_date'] = end_date
-
-                    if challenge.remind_update_delay:
-                        values['remind_update_delay'] = challenge.remind_update_delay
-
-                    new_goal_id = goal_obj.create(cr, uid, values, context=context)
-                    to_update.append(new_goal_id)
+                for user_id in user_without_goal_ids:
+                    values.update({'user_id': user_id})
 
             goal_obj.update(cr, uid, to_update, context=context)
 

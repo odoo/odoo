@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp.osv import osv
 from challenge import MAX_VISIBILITY_RANKING
 
