@@ -859,6 +859,12 @@ instance.web.Menu =  instance.web.Widget.extend({
                 $clicked_menu.parent().addClass('active');
             }
         }
+        this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
+            var $el = $(this);
+            if (this.scrollWidth > this.clientWidth) {
+                $el.tooltip({title: $el.attr('title', $el.text().trim())});
+            }
+       });
     },
     /**
      * Call open_menu with the first menu_item matching an action_id
