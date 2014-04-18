@@ -2444,8 +2444,8 @@
                         <field name="sign"/>
                         <field name="style_overwrite"/>
                     </group>
-                    <notebook>
-                        <page string="Report" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}">
+                    <notebook attrs="{'invisible': [('type','not in',['accounts','account_type'])]}">
+                        <page string="Report">
                             <group>
                                 <field name="display_detail" attrs="{'invisible': [('type','not in',['accounts','account_type'])]}"/>
                                 <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
