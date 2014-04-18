@@ -1018,7 +1018,7 @@ class AssetsBundle(object):
         key = 'css_' + self.checksum
         if key not in self.cache:
             content = '\n'.join(asset.minify() for asset in self.stylesheets)
-            # move up all @import and @charset rules to the top
+            # move up all @import rules to the top
             matches = []
             def push(matchobj):
                 matches.append(matchobj.group(0))
