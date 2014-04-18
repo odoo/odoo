@@ -93,7 +93,7 @@ OpenERP Automatic Email
            <field name="interval_type">days</field>
            <field name="numbercall">-1</field>
            <field name="model" eval="'account.analytic.account'"/>
-           <field name="function" eval="'recurring_create_invoice'"/>
+           <field name="function" eval="'_cron_recurring_create_invoice'"/>
            <field name="args" eval="'()'"/>
         </record>
 
