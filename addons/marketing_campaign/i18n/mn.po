@@ -14,29 +14,31 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:33+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 08:15+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Manual Mode"
-msgstr "Зааврын арга"
+msgstr "Гар Горим"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,activity_from_id:0
 msgid "Previous Activity"
-msgstr "Өмнөх"
+msgstr "Өмнөх Үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
+"Энэ зүйл дахь идэвхтэй алхам нь урьдчилан харах имэйл эсвэл тайлан байхгүй "
+"байна."
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr "The To/From Activity of transition must be of the same Campaign "
+msgstr "Хэнээс/Хэнд шилжилтийн үйл ажиллагаа нь ижил Аян дотор байх ёстой. "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -46,7 +48,7 @@ msgstr "Цаг"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Custom Action"
-msgstr "Custom Action"
+msgstr "Өөриймшүүлсэн Үйлдэл"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -63,14 +65,14 @@ msgid ""
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
 msgstr ""
-"Set an expected revenue if you consider that every campaign item that has "
-"reached this point has generated a certain revenue. You can get revenue "
-"statistics in the Reporting section"
+"Хэрэв та аяны зүйл бүр нь энэ цэгт хүрэхээрээ тодорхой оролго үүсгэдэг "
+"байхаар бодож байгаа бол таамагласан оролгыг тохируулна. Тайлан хэсэгт "
+"оролгын статистикийг харж болно."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
-msgstr ""
+msgstr "Өдөөгч"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -80,12 +82,12 @@ msgstr "Мөшгөлт"
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
 msgid "# of Actions"
-msgstr "# Үйлдлийн"
+msgstr "Үйлдлийн #"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Editor"
-msgstr "Засварлах"
+msgstr "Аян Засварлагч"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -93,7 +95,7 @@ msgstr "Засварлах"
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
-msgstr "Ачааллаж байна"
+msgstr "Ажиллаж байна"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
@@ -101,11 +103,12 @@ msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle "
 "of our Gold Partners"
 msgstr ""
+"Сайн байна уу, Танд манай Алтан түнш болсныг дуулгахдаа бид таатай байна."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "March"
-msgstr "3 сар"
+msgstr "3-р сар"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,object_id:0
@@ -116,6 +119,7 @@ msgstr "Обьект"
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records created after last sync"
 msgstr ""
+"Ижилтгэх горим: Зөвхөн сүүлийн ижилтгэлээс хойш үүссэн бичлэгүүдийн хувьд"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
@@ -129,14 +133,14 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
-"   - activity: the campaign activity\n"
-"   - workitem: the campaign workitem\n"
-"   - resource: the resource object this campaign item represents\n"
-"   - transitions: list of campaign transitions outgoing from this activity\n"
-"...- re: Python regular expression module"
+"Үйл ажиллагааг ажиллуулах эсэхийг шийдэхн Python илэрхийлэл, үгүй бол энэ "
+"устгагдах юмуу цуцлагдана. Илэрхийлэл нь дараах [тольдох] хувьсагчдийг "
+"хэрэглэх боломжтой:\n"
+"   - activity: аяны үйл ажиллагаа\n"
+"   - workitem: аяны ажил\n"
+"   - resource: энэ аяны илтгэж байгаа нөөцийн обьект\n"
+"   - transitions: энэ үйл ажиллагаанаас шилжсэн аяны шилжилтийн жагсаалт\n"
+"...- re: Python-н regular expression модуль"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -148,7 +152,7 @@ msgstr "Ноороглох"
 #: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
-msgstr "Дараагийн үйлдэл"
+msgstr "Дараагийн үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:148
@@ -157,11 +161,13 @@ msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
 msgstr ""
+"Аянг эхлүүлэх боломжгүй. Энэ нь эхлэлийн ямар ч үйл ажиллагаагүй байна. Аяны "
+"үйл явдлуудын нэгийг эхлэлийн цэг болгон тэмдэглэнэ үү."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "Энэ үйл ажиллагаа идэвхжихэд илгээх эмэйл."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -178,27 +184,27 @@ msgstr "Өдөр"
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "Гарах шилжилтүүд"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Reset"
-msgstr ""
+msgstr "Шинэчлэх"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Энэ аян явагдах нөөцийг сонгоно уу"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr "Марктинг цэс нээх"
+msgstr "Маркетинг цэс нээх"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
-msgstr "Сүүлийн синхрончлол"
+msgstr "Сүүлийн Ижилтгэл"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -211,6 +217,7 @@ msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
 msgstr ""
+"Энэ сегмент хамгийн сүүлд ижилтгэл хийгдсэн огноо (автоматаар эсвэл гараар)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -237,19 +244,20 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
+"Тест - Энэ нь бүх үйл ажиллагааг шууд үүсгэж боловсруүлдаг (шилжилтүүд даар "
+"огт хүлээдэггүй) боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй.\n"
+"Бодит хугацаанд тестлэх - Энэ нь бүх үйл ажиллагааг шууд үүсгэж "
+"боловсруүлдаг боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй..\n"
+"Гар баталгаажилттай - аян хэвийн явагдах боловч хэрэглэгч ажил бүрийг гараар "
+"баталгаажуулах шаардлагатай.\n"
+"Хэвийн - Аян хэвийн явагдах бөгөөд автоматаар бүх эмэйл болон тайланг "
+"илгээдэг (энэ горимыг хэрэглэхдээ маш болгоомжтой байх хэрэгтэй, учир нь "
+"бодит амьдрал дээр явагдана)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
 msgid "Initial start date of this segment."
-msgstr ""
+msgstr "Энэ сегментийн эхлүүлэх эхлэлийн огноо"
 
 #. module: marketing_campaign
 #: view:res.partner:0
@@ -266,12 +274,13 @@ msgstr "Худал"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,campaign_id:0
 msgid "Campaign"
-msgstr "Компанит ажил"
+msgstr "Аян"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
 msgstr ""
+"Сайн байна уу? Таныг урьсан багцыг товчхоноор эмэйлээр та хүлээн авах болно."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -280,13 +289,14 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,segment_id:0
 msgid "Segment"
-msgstr "Хуваалт"
+msgstr "Сегмент"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
 msgstr ""
+"Та аянг хувилах боломжгүй, одоогоор хувилах үйлдэл дэмжигдээгүй байгаа."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -299,18 +309,19 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
-"The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"Ямарваа зүйл энэ үйл ажиллагаанд орж ирэхэд хийгдэх үйлдлийн төрөл, "
+"тухайлбал:\n"
+"   - Эмэйл: Урьдчилан тодорхойлсон үлгэр ашиглан эмэйл илгээгдэнэ\n"
+"   - Тайлан: нөөц дээр тодорхойлогдсон тайлан хэвлэж түүнийгээ тодорхой "
+"директорт хадгалдаг\n"
+"   - Өөриймшүүлсэн Үйлдэл: урьдчилан тодорхойлсон үйлдлийг хэрэгжүүлнэ, ж: "
+"нөөцийн бичлэгүүдийг засварлах\n"
 "  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
+msgstr "Дараачийн удаа ижилтгэх ажил автоматаар ажиллахаар товлогдлоо"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -328,7 +339,7 @@ msgstr "Харилцагч"
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr ""
+msgstr "Харилцагч"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -344,12 +355,12 @@ msgstr "Шинэ"
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "Интервал нь эерэг юмуу тэг байх ёстой"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr "Имэйл"
+msgstr "Эмэйл"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -367,40 +378,40 @@ msgstr "Нөөцийн нэр"
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
 msgid "Synchronization mode"
-msgstr "Синхрончлох арга"
+msgstr "Ижилтгэх Горим"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Run"
-msgstr "Ачааллах"
+msgstr "Ажиллуулах"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
-msgstr "Өмнөх"
+msgstr "Өмнөх Үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Баяр хүргэе! Та одоо Мөнгөн Түнш!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Энэ сегмент хамгийн сүүлд хаагдсан эсвэл цуцлагдсан огноо."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activities"
-msgstr "Компанит ажлын маркетинг"
+msgstr "Маркетингийн Аяны Үйл ажиллагаанууд"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,error_msg:0
 msgid "Error Message"
-msgstr "Алдааны мэссэж"
+msgstr "Алдааны Мэдэгдэл"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
@@ -409,12 +420,12 @@ msgstr "Алдааны мэссэж"
 #: view:marketing.campaign:0
 #: view:res.partner:0
 msgid "Campaigns"
-msgstr "Компанит ажил"
+msgstr "Аянууд"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_type:0
 msgid "Interval Unit"
-msgstr ""
+msgstr "Интервал нэгж"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,country_id:0
@@ -425,12 +436,12 @@ msgstr "Улс"
 #: field:marketing.campaign.activity,report_id:0
 #: selection:marketing.campaign.activity,type:0
 msgid "Report"
-msgstr "Мэдээлэл"
+msgstr "Тайлан"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "July"
-msgstr "7 сар"
+msgstr "7-р сар"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_configuration
@@ -444,6 +455,9 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Хэрэв та аяны зүйл бүр нь энэ цэгт хүрээд тодорхой өртөгийг дагуулахаар "
+"бодож байгаа бол хувьсах өртөгийг тохируулна уу. Тайлан хэсгээс "
+"статистикуудыг харах боломжтой."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -453,7 +467,7 @@ msgstr "Хугацаа(ууд)"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
-msgstr "Компанит ажлын хуваалт"
+msgstr "Аяны Сегмент"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -461,27 +475,29 @@ msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
+"Энэ сонголтыг идэвхжүүлснээр нөхцөл биелээгүйн улмаас биелэгдээгүй ажлыг "
+"устгахын оронд цуцлагдсан гэж тэмдэглэдэг."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "Exceptions"
-msgstr ""
+msgstr "Саатлууд"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
-msgstr ""
+msgstr "Ажлууд"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
 msgid "Fixed Cost"
-msgstr "Үнэ тогтоох"
+msgstr "Тогтмол Өртөг"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
-msgstr "Шинэ засвар"
+msgstr "Шинээр засварлагдсан"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -504,11 +520,29 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Маркетингийн аян үүсгэхдээ дарна уу.\n"
+"          </p><p>\n"
+"            OpenERP-н маркетингийн аян нь ирээдүйтэй харилцагчидтай харилцаа "
+"\n"
+"            үүсгэх ажлыг автоматжуулдаг. Сэжим болон харилцагчид дээр "
+"сегментүүдийг \n"
+"            (нөхцлүүд) тодорхойлж болно.\n"
+"          </p><p>\n"
+"            Аян нь эмэйл илгээх, захиа хэвлэх, багийг оноох гэх мэт олон "
+"ажлуудыг \n"
+"            хийж болно. Эдгээр үйл ажиллагаа нь тодорхой нөхцөл байдлуудаар "
+"өдөөгдөнө; \n"
+"            холбогчийн маягт, анхны харилцааны 10 хоногийн дараа, хэрэв "
+"сэжим хаагдаагүй \n"
+"            бол гэх мэт нөхцөл байдлууд байж болно.\n"
+"          </p>\n"
+"        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
 msgid "Interval Value"
-msgstr "Завсрын утга"
+msgstr "Интервалын утга"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,revenue:0
@@ -519,12 +553,12 @@ msgstr "Орлого"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "September"
-msgstr "9 сар"
+msgstr "9-р сар"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "December"
-msgstr "12 сар"
+msgstr "12-р сар"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
@@ -534,6 +568,9 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Энэ ажлууд нь энэ бичлэгт холбогдсон харилцагчидад холбогдоно. Хэрэв энэ "
+"бичлэг нь өөрөө харилцагч бол энэ талбарыг хоосон үлдээ. Энэ нь Аяны "
+"шинжилгээ, Аяны мөшгөлт зэрэг харагдацаас тайланг харахад хэрэгтэй байдаг."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -551,17 +588,18 @@ msgstr "Дараагийн үйл ажиллагаа"
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
-msgstr "Компанит ажлын мөшгөлт"
+msgstr "Аяны мөшгөлт"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Test Mode"
-msgstr "Тестийн арга"
+msgstr "Тестийн горим"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr "Зөвхөн бичлэгийг өөрчлөгдсөний дараа холбох(хуулбарлагдахгүй)"
+msgstr ""
+"Зөвхөн сүүлийн ижилтгэлээс хойш өөрчлөгдсөн бичлэгүүд(давхардал үгүй)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
@@ -571,12 +609,12 @@ msgstr "ir.actions.report.xml"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Statistics"
-msgstr "Статистик"
+msgstr "Аяны Статистик"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "Үйл ажиллагаа идэвхжихэд хийгдэх үйлдэл"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
@@ -589,7 +627,7 @@ msgstr "Харилцагч талбар"
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
 msgid "Campaign Analysis"
-msgstr "Шинжилгээ"
+msgstr "Аяны Шинжилгээ"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
@@ -601,6 +639,11 @@ msgid ""
 "records which have the same value for the unique field as other records that "
 "already entered the campaign."
 msgstr ""
+"Аянд шинэ бичлэгүүдийг нэмэхээр шүүх үед хэрэглэх шүүлтүүрийн нэмэлт "
+"нөхцөлийг тодорхойлдог. \"Давхардал үгүй\" нь аянд урьд нь нэмэгдсэн "
+"бичлэгийг дахин сонгуулдаггүй. Хэрэв аян нь \"үл давцах талбар\"-тай бол "
+"\"давхардал үгүй\" нь өмнө нь аянд нэмэгдсэн бөгөөд давхацсан утгатай "
+"талбартай байвал тэдгээрийг сонгуулдаггүй."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -610,7 +653,7 @@ msgstr "Бодит хугацааны тест"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr "Тестийн чиглэл"
+msgstr "Шууд Тестлэх"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -626,7 +669,7 @@ msgstr "Ноорог"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "Аяны үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -643,12 +686,12 @@ msgstr "Урьдчилж харах"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "August"
-msgstr "8 сар"
+msgstr "8-р сар"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -658,7 +701,7 @@ msgstr "Хэвийн"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
 msgid "This activity is launched when the campaign starts."
-msgstr ""
+msgstr "Энэ үйл ажиллагаа нь аян эхлэхэд дуудагдаж эхлэнэ."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
@@ -666,6 +709,8 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Сигналтай үйл ажиллагаа нь програмчлагдан дуудагдаж болно. Сигнал илгээх "
+"бүрт ажил үүсдэг тул болгоомжтой байгаарай."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -673,27 +718,27 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "To Do"
-msgstr ""
+msgstr "Хийх"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "June"
-msgstr "6 сар"
+msgstr "6-р сар"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr "Имэйл Үлгэрүүд"
+msgstr "Эмэйл Үлгэрүүд"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: all records"
-msgstr "Холыох горим: бүх бичлэгүүд"
+msgstr "Ижилтгэх горим: бүх бичлэгүүд"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr "Бүх бичлэг (хуулж болохгүй)"
+msgstr "Бүх бичлэг (давхардал үгүй)"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -708,17 +753,17 @@ msgstr "Огноо"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "November"
-msgstr "11 сар"
+msgstr "11-р сар"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
-msgstr "Болзол"
+msgstr "Нөхцөл"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
-msgstr ""
+msgstr "Энэ үйл ажиллагаа идэвхжихэд үүсэх тайлан"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
@@ -730,22 +775,22 @@ msgstr "Үл давхцах талбар"
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Саатал"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "October"
-msgstr "10 сар"
+msgstr "10-р сар"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,email_template_id:0
 msgid "Email Template"
-msgstr "Э-мэйл загвар"
+msgstr "Э-мэйл үлгэр"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "January"
-msgstr "1 сар"
+msgstr "1-р сар"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -756,17 +801,17 @@ msgstr "Гүйцэтгэх огноо"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Аяны ажил"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
 msgid "Campaign Activity"
-msgstr "Идэвхтэй компанит ажил"
+msgstr "Аяны Үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
 msgid "This folder is used to store the generated reports"
-msgstr "Мэдээлэл нөөцлөхөд энэ хавтсыг хэрэглэсэн байна"
+msgstr "Энэ хавтас нь үүсгэсэн тайлангуудыг хадгалахад хэрэглэгддэг"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
@@ -779,13 +824,13 @@ msgstr "Алдаа"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
-msgstr "Үйл ажиллагаа"
+msgstr "Vйлдэл"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:528
 #, python-format
 msgid "Automatic transition"
-msgstr "Автомат өөрчлөлт"
+msgstr "Автомат шилжилт"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,start:0
@@ -801,19 +846,19 @@ msgstr "Урьдчилж харахгүй"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
-msgstr ""
+msgstr "Процесс"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:530
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr "Гоо сайхны бараа"
+msgstr "Гоо сайхны"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
-msgstr ""
+msgstr "Зорилтот ажил яаж өдөөгдөх"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -823,13 +868,13 @@ msgstr ""
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
-msgstr "Дууссан"
+msgstr "Хийгдсэн"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "Operation not supported"
-msgstr "Системийн дэмжлэггүй"
+msgstr "Үйлдэл дэмжигдээгүй"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -844,12 +889,12 @@ msgstr "Хаах"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
+msgstr "Шүүлтүүрийн модель нь аяны нөөцийн модельтой ижил байх ёстой "
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
-msgstr ""
+msgstr "Гараар Ижилтгэх"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -860,12 +905,12 @@ msgstr "Нөөц ID"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "Аяны шилжилт"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Маркетингийн аяны сегмент"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -874,17 +919,17 @@ msgstr ""
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
-msgstr "Хуваалт"
+msgstr "Сегментүүд"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "Ажлыг битгий устга"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Ирж буй шилжилтүүд"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -896,17 +941,17 @@ msgstr "Өдөр(үүд)"
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
-msgstr "Ажлууд"
+msgstr "Үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr ""
+msgstr "Гар Баталгаагаар"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr "5 сар"
+msgstr "5-р сар"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,type:0
@@ -916,7 +961,7 @@ msgstr "Төрөл"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Баяр хүргэе! Та одоо Алтан Түнш боллоо."
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -930,18 +975,26 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Хэрэв сонгосон бол энэ талбар нь \"давхардал үгүй\" горимоор ажиллаж байгаа "
+"сегментүүдэд төстэй бичлэгийг хоёр дахин сонгохоос зайлсхийхэд тусладаг. "
+"Төстэй бичлэг гэдэг нь үл давхцах талбар дээрээ ижил утгатай бичлэгүүдийг "
+"хэлдэг. Тухайлбал \"email_from\" талбарыг CRM сэжимээс сонгосноор нэг аянг "
+"нэг хаяг руу дахин дахин эмэйлээр илгээхээс зайлсхийнэ. Хэрэв сонгоогүй бол "
+"\"давхардал үгүй\" аян нь ижил бичлэгийг дахин оруулахаас л зайлсхийнэ. "
+"Зөвхөн хялбархан харьцуулж болох текст, тоо, сонголт талбаруудыг л ашиглах "
+"боломжтой."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr "Дараа %(interval_nbr)d %(interval_type)s"
+msgstr "%(interval_nbr)d %(interval_type)s-н дараа"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 #: view:marketing.campaign:0
 msgid "Marketing Campaign"
-msgstr "Маркетинг"
+msgstr "Маркетингийн Аян"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
@@ -951,7 +1004,7 @@ msgstr "Дуусах огноо"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "February"
-msgstr "2 сар"
+msgstr "2-р сар"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -971,6 +1024,9 @@ msgid ""
 "revenue on each campaign activity. Cost and Revenue statistics are included "
 "in Campaign Reporting."
 msgstr ""
+"Энэ аянг ажиллуулахад тогтмол өртөгтэй. Аяны үйл ажиллагаа бүр дээр хувьсах "
+"өртөг болон орлогыг зааж өгч болно. Өртөг болон Орлого нь Аяны тайлагналд "
+"агуулагддаг."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -992,24 +1048,24 @@ msgstr "Сигнал"
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
+msgstr "Хэрэв огноог тохируулаагүй бол энэ ажилыг гараар ажлуулах хэрэгтэй"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
-msgstr "4 сар"
+msgstr "4-р сар"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:158
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "Бүх сегментүүдийг хаахаас өмнө аянг хийгдсэнээр тэмдэглэх боломжгүй."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: field:marketing.campaign,mode:0
 msgid "Mode"
-msgstr "Арга"
+msgstr "Горим"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -1017,7 +1073,7 @@ msgstr "Арга"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
-msgstr "Идэвхтэй"
+msgstr "Үйл ажиллагаа"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,ir_filter_id:0
@@ -1027,23 +1083,29 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Энэ сегментэд харъяалагдах нөөцийн бичлэгүүдийг сонгохдоо шүүнэ. Шинэ "
+"шүүтүүүр нь нөөцийн жагсаалт харагдац дээрх дэлгэрүүлсэн хайлтыг ашиглан "
+"үүсгэж, хадгалж болно. Хэрэв шүүлтүүр тохируулагдаагүй бол бүх бичлэг "
+"шүүтүүргүйгээр сонгогдоно. Мөн ижилтгэх горим нь шүүх нөхцөлийг нэмж болно."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "Аян эхлэх боломжгүй. Дотор нь ямар ч үйл ажиллагаа алга."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
 msgid "Next Synchronization"
-msgstr "Дараагийн синхрончлол"
+msgstr "Дараагийн ижилтгэл"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
 msgstr ""
+"Сайн байна уу? Өнөөдөр таныг манай Мөнгөн харилцагч болсныг мэдэгдэхэд "
+"таатай байна!"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
@@ -1058,23 +1120,23 @@ msgstr "Бүх"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "Зөвхөн хамгийн сүүлийн ижилтгэлээс хойш үүссэн бичлэгүүд"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
 msgid "Variable Cost"
-msgstr "Хувьсах үнэ"
+msgstr "Хувьсах өртөг"
 
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the OpenERP Partner Channel!"
-msgstr ""
+msgstr "OpenERP-н түншүүдийн сувагтай тавтай морилно уу!"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
 msgid "Cost"
-msgstr "Үнэ"
+msgstr "Өртөг"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0

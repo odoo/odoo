@@ -48,8 +48,9 @@ class project_issue(osv.Model):
     _mail_post_access = 'read'
     _track = {
         'stage_id': {
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
         },
         'user_id': {
             'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
@@ -74,7 +75,7 @@ class project_issue(osv.Model):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('sequence', '=', 1)], context=context)
+        return self.stage_find(cr, uid, [], project_id, [('fold', '=', False)], context=context)
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
@@ -263,9 +264,9 @@ class project_issue(osv.Model):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        track_visibility='onchange',
+                        track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]"),
-        'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
+        'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -529,8 +530,8 @@ class account_analytic_account(osv.Model):
         'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
     }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
         if template_id and 'value' in res:
             template = self.browse(cr, uid, template_id, context=context)
             res['value']['use_issues'] = template.use_issues

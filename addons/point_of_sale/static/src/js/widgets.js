@@ -943,8 +943,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         start: function() {
             var self = this;
             return self.pos.ready.done(function() {
-                $('.oe_tooltip').remove();  // remove tooltip from the start session button
-                
                 // remove default webclient handlers that induce click delay
                 $(document).off();
                 $(window).off();

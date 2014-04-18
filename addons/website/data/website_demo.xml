@@ -25,7 +25,7 @@
     <t t-set="additional_title">Partner Detail</t>
     <div id="wrap">
         <div class="oe_structure">
-            <section data-snippet-id="title">
+            <section>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
@@ -43,6 +43,7 @@
             <field name="name">Website Partner Post and Thanks Demo</field>
             <field name="condition">True</field>
             <field name="website_published" eval="True"/>
+            <field name="website_path">partner_thanks</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="code">
 partner_id, partner = False, None
@@ -72,7 +73,7 @@ response = request.website.render("website.template_partner_post", values)
     <t t-set="additional_title">Partners</t>
     <div id="wrap">
         <div class="oe_structure">
-            <section data-snippet-id="title">
+            <section>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
@@ -118,6 +119,7 @@ response = request.website.render("website.template_partner_post", values)
             <field name="name">Website Partners Comment Form</field>
             <field name="condition">True</field>
             <field name="website_published" eval="True"/>
+            <field name="website_path">partner_comment</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="code">
 partner_ids = pool['res.partner'].search(cr, uid, [('customer', '=', True)], context=context)
@@ -125,7 +127,7 @@ partners = pool['res.partner'].browse(cr, uid, partner_ids, context=context)
 values = {
     'partners': partners,
 }
-response = request.website.render("website.template_partner_comment", values)
+response = request.render("website.template_partner_comment", values)
             </field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>

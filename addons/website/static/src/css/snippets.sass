@@ -64,9 +64,7 @@
     overflow: hidden
     +user-select(none)
     cursor: move
-    pointer-events: none
     .oe_snippet_thumbnail
-        pointer-events: auto
         text-align: center
         height: 100%
         background: transparent
@@ -147,24 +145,21 @@
 
 .resize_editor_busy
     background-color: rgba(0,0,0,0.3)
+
 .oe_overlay
     display: none
+    height: 0
     position: absolute
     background: transparent
+    z-index: 1001
     //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.02) ,rgba(255,255,255,.02) 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 75px))
     +border-radius(3px)
     @include transition(opacity 100ms linear)
     +box-sizing(border-box)
-    pointer-events: none
     &.oe_active
         display: block
-        border-style: dashed
-        border-width: 1px
-        +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.3), 0px 0px 0px 1px rgba(255,255,255,0.3) inset)
-        border-color: rgba(0, 0, 0, 0.3)
     .oe_handle
         display: block !important
-        pointer-events: auto
         position: absolute
         top: 50%
         left: 50%
@@ -172,7 +167,15 @@
         width: 16px
         height: 16px
         margin: -2px
+        > div
+            z-index: 1
+            position: absolute
+            border-style: dashed
+            border-width: 1px
+            border-color: #666666
+            +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 0px 1px rgba(255,255,255,0.5) inset)
         &.e:before, &.w:before, &.s:before, &.n:before, &.size .oe_handle_button
+            z-index: 2
             position: relative
             top: 50%
             left: 50%
@@ -194,72 +197,89 @@
                 background: rgba(0, 0, 0, .5)
                 color: #fff
                 +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+        &.e, &.w
+            top: 4px
+            height: 100%
+            &:before
+                content: "\f0d9-\f0da"
+                line-height: 16px
+            > div
+                width: 0
+                height: 100%
+                top: 2px
+                left: 8px
         &.e
             left: auto
-            top: 2px
-            height: 100%
             right: -6px
             cursor: w-resize
+        &.w
+            left: -6px
+            cursor: e-resize
+        &.s, &.n
+            left: 2px
+            width: 100%
             &:before
-                content: "\F061"
+                content: "\f07d"
+                text-align: center
+                padding: 1px
+            > div
+                width: 100%
+                height: 0
+                top: 7px
+                left: 1px
         &.s
             top: auto
-            left: 2px
-            width: 100%
-            bottom: -6px
             cursor: n-resize
-            &:before
-                z-index: 0
-                content: "\F063"
+        &.n
+            cursor: s-resize
+            > div
+                top: 5px
         &.size
+            z-index: 3
             top: auto
-            left: 2px
-            width: 100%
+            left: 50%
             bottom: -6px
+            margin-left: -50px
             .oe_handle_button
-                z-index: 1
-                content: "Resize"
-                width: 64px
+                position: relative
+                z-index: 3
                 text-align: center
-                margin-left: -32px
+                margin-left: -52px
                 margin-top: -10px
-                cursor: row-resize
+                left: 0px
                 &:hover
                     background: rgba(30, 30, 30, .8)
                     color: #fff
                     +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
-            div
-                border-style: dashed
-                border-width: 0 0 1px 0
-                border-color: rgba(0, 0, 0, 0.5)
-                position: relative
-                top: 8px
-        &.w
-            top: 2px
-            height: 100%
-            left: -6px
-            cursor: e-resize
-            &:before
-                content: "\F060"
-        &.n
-            left: 2px
-            width: 100%
-            top: -6px
-            cursor: s-resize
-            &:before
-                content: "\F062"
+            .size
+                position: absolute
+                width: 64px
+                cursor: row-resize
+                top: 9px
+                margin-left: 52px
+                padding: 0 5px
+            .auto_size
+                position: absolute
+                width: 100px
+                top: 9px
+                cursor: pointer
+        &.readonly
+            cursor: auto !important
+            &:before, &.size
+                display: none !important
 
     .icon.btn
         display: inline-block
 
     .oe_overlay_options
         position: absolute
-        width: 100%
+        left: 50% !important
         text-align: center
-        top: -11px
+        top: -20px
         z-index: 1002
+        > .btn-group
+            left: -50%
         .btn, a
-            pointer-events: auto
             cursor: pointer
         .dropdown
             display: inline-block
@@ -268,6 +288,29 @@
             min-width: 180px
         .dropdown-menu select,.dropdown-menu input
             display: block
+
+    &.block-w-left .w:before
+        content: "\F061" !important
+    &.block-w-right .w:before
+        content: "\F060" !important
+    &.block-w-left.block-w-right .w
+        display: none !important
+    &.block-e-left .e:before
+        content: "\F061" !important
+    &.block-e-right .e:before
+        content: "\F060" !important
+    &.block-e-left.block-e-right .e
+        display: none !important
+
+    &.block-s-top .s:before
+        content: "\F063" !important
+    &.block-s-bottom .s:before
+        content: "\f062" !important
+    &.block-n-top .n:before
+        content: "\F063" !important
+    &.block-n-bottom .n:before
+        content: "\f062" !important
+
 
 .s-resize-important, .s-resize-important *
     cursor: s-resize !important
@@ -367,7 +410,6 @@
             border: 2px solid rgb(151, 137, 255)
             box-shadow: 0px 3px 17px rgba(99, 53, 150, 0.59)
         & > *
-            pointer-events: none
             margin-top: 16px
             line-height: 1em
             zoom: 0.6
@@ -457,10 +499,6 @@
             width: 16px
             height: 16px
             display: inline-block
-
-[data-snippet-id] 
-    min-height: 10px
-    min-width: 10px
 
 
 

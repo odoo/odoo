@@ -15,10 +15,10 @@
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
-                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center" t-foreach="event.sponsor_ids" t-as="sponsor">
+                <div t-attf-class="col-md-#{(len(event.sponsor_ids) > 6) and 2 or (12/ len(event.sponsor_ids))} text-center mb16" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
                         <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
+                            <span t-field="sponsor.image_medium"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -27,7 +27,7 @@
                     </t>
                     <t t-if="not sponsor.url">
                         <span style="position: relative; display: inline-block;">
-                            <span t-field="sponsor.partner_id.image"
+                            <span t-field="sponsor.image_medium"
                                 t-field-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
                                 <div t-field="sponsor.sponsor_type_id" t-attf-class="ribbon ribbon_#{sponsor.sponsor_type_id.name}"/>
@@ -42,85 +42,69 @@
 
 <template id="agenda">
     <t t-call="website_event.layout">
-        <section data-snippet-id="title">
-            <h1 class="text-center mb0" t-field="event.name"/>
-        </section>
+        <t t-set="head">
+          <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track.js"></script>
+          <t t-raw="head or ''"/>
+        </t>
         <section class="container">
-          <div class="row">
-            <div id="left_column">
+            <h1 class="text-center" t-field="event.name"/>
+            <div class="form-inline pull-right">
+                <label class="invisible text-muted" id="search_summary"><span id="search_number">0</span> Found </label>
+                <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
             </div>
-            <div class="col-md-12" id="right_column">
-                <p class="text-muted fa fa-info-circle"> You can click on cells to highlight your interests.</p>
-                <h3 class="page-header mt0">
-                    Monday, 3rd June
-                    <small>23 talks</small>
-                </h3>
-                <table class="table table-bordered table-condensed">
-                    <tr>
-                        <th></th>
-                        <th class="active"><a href="#">Room 1</a></th>
-                        <th class="active"><a href="#">Room 2</a></th>
-                        <th class="active"><a href="#">Room 3</a></th>
-                        <th class="active"><a href="#">Room 5</a></th>
-                        <th class="active"><a href="#">Room 6</a></th>
-                    </tr>
-                    <tr>
-                        <td class="active"><b>09:00</b><br/><span class="text-muted">10:00</span></td>
-                        <th colspan="5" class="success text-center">
-                            <a href="#">Plenary Session</a><br/>
-                            Room 5
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
-                        <td><a href="#">fkdsj kl jkl sdfjksdfj kl</a></td>
-                        <td rowspan="2" class="danger"><a href="#">Learning Python</a></td>
-                        <td></td>
-                        <td><a href="#">Learning Pytdon</a></td>
-                        <td><a href="#">Boost your Sales Witd OpenERP CRM</a></td>
-                    </tr>
-                    <tr>
-                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
-                        <td></td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr>
-                    <tr>
-                        <th class="active">11:00<br/><span class="text-muted">12:00</span></th>
-                        <td class="danger">Learning Pytdon</td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td>this is a test</td>
-                    </tr>
-                    <tr class="active">
-                        <td colspan="6" class="text-center text-muted"><span class="fa fa-clock-o"/></td>
-                    </tr>
-                    <tr>
-                        <th class="active">14:00<br/><span class="text-muted">15:00</span></th>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td class="danger">Learning Pytdon</td>
-                        <td></td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr><tr>
-                        <td class="active"><b>10:00</b><br/><span class="text-muted">10:30</span></td>
-                        <td>fkdsj kl jkl sdfjksdfj kl</td>
-                        <td rowspan="2" class="danger">Learning Python</td>
-                        <td></td>
-                        <td>Learning Pytdon</td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                    </tr>
-                    <tr>
-                        <th class="active">10:30<br/><span class="text-muted">11:00</span></th>
-                        <td></td>
-                        <td>Boost your Sales Witd OpenERP CRM</td>
-                        <td>Learning Pytdon</td>
-                        <td rowspan="2">fkdsj kl jkl sdfjksdfj kl</td>
-                    </tr>
-                </table>
-            </div>
-          </div>
+        </section>
+        <section class="container" t-foreach="days.keys()" t-as="day">
+            <t t-set="locations" t-value="days[day]['locations']"/>
+            <t t-set="dates" t-value="days[day]['dates']"/>
+            <h3 class="page-header mt0">
+                <t t-esc="day"/>
+                <small><t t-esc="days_nbr[day]"/> talks</small>
+            </h3>
+            <table id="table_search" class="table table-bordered table-condensed">
+            <tr>
+                <th/>
+                <t t-foreach="locations.keys()" t-as="location">
+                    <th t-if="location" class="active">
+                        <span t-esc="location and location.name or 'Unknown'"/>
+                    </th>
+                </t>
+            </tr>
+            <tr t-foreach="dates" t-as="dt">
+                <td class="active">
+                    <b t-esc="dt[0].strftime('%H:%M')"/>
+                </td>
+                <t t-if="dt[2]"> <!-- Not a multi location -->
+                    <t t-foreach="locations" t-as="location">
+                        <t t-if="location and dt[1].get(location, False)">
+                            <t t-set="track" t-value="dt[1][location][0]"/>
+                            <t t-if="track">
+                                <td t-att-rowspan="dt[1][location][3]" t-attf-class="event_color_#{track.color} #{track and 'event_track' or ''}">
+                                    <t t-if="track">
+                                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                                            <span t-esc="track and track.name"/>
+                                        </a>
+                                        <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
+                                            <small t-esc="speaker.display_name"/>
+                                        </div>
+                                    </t>
+                                </td>
+                            </t>
+                            <td t-if="not track" t-att-rowspan="dt[1][location][3]" class="event_track"/>
+                        </t>
+                    </t>
+                </t><t t-if="not dt[2]">
+                    <t t-set="track" t-value="dt[1][False][0]"/>
+                    <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
+                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                            <span t-esc="track.name"/><br/>
+                            <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
+                                <small t-esc="speaker.display_name"/>
+                            </div>
+                        </a>
+                    </td>
+                </t>
+            </tr>
+            </table>
         </section>
     </t>
 </template>
@@ -152,7 +136,7 @@
                                 <t t-esc="speaker.name"/>, 
                             </t>
                         </li>
-                        <li class="text-muted fa fa-calendar"> <span t-field="track.date"/></li>
+                        <li class="text-muted fa fa-calendar"> <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/></li>
                         <li class="text-muted fa fa-map-marker" t-if="track.location_id">
                             <span t-field="track.location_id"/>
                         </li>
@@ -174,7 +158,7 @@
 <template id="tracks_filter" inherit_id="website_event_track.tracks" inherit_option_id="website_event_track.tracks" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
-            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track/">All Tags</a></li>
+            <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
                 <li t-att-class="searches.get('tag') == tag.id and 'active' or ''">
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
@@ -194,10 +178,17 @@
 <template id="track_view">
     <t t-call="website_event.layout">
         <div class="container">
+            <t t-call="website.publish_management">
+                <t t-set="object" t-value="track"/>
+                <t t-set="publish_edit" t-value="True"/>
+            </t>
+            <div class="clearfix"/>
+
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id" class="fa fa-tags">
+                <li t-foreach="track.tag_ids" t-as="tag_id">
+                    <span class="fa fa-tags"></span>
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
                     </a>
@@ -229,9 +220,9 @@
                         </div>
                         <div class="panel-body">
                             <b>Date</b><br/>
-                            <span t-field="track.date"/><br/>
+                            <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/><br/>
                             <b>Duration</b><br/>
-                            <span t-field="track.duration"/> minutes<br/>
+                            <span t-esc="'%.2f' % (track.duration)"/> hours<br/>
                             <b>Location</b><br/>
                             <span t-field="track.location_id"/><br/>
                         </div>
@@ -381,9 +372,9 @@
                             <ul class="list-unstyled">
                                 <li>
                                     <strong>Regular Talks</strong>. These are standard talks with slides,
-                                    alocated in slots of 30 minutes.
+                                    alocated in slots of 60 minutes.
                                 </li><li>
-                                    <strong>Lightning Talks</strong>. These are 10 minutes talks on many
+                                    <strong>Lightning Talks</strong>. These are 30 minutes talks on many
                                     different topics. Most topics are accepted in lightning talks.
                                 </li>
                             </ul>

@@ -88,10 +88,10 @@ class Scanner(Thread):
         }
 
     def lockedstart(self):
-        self.lock.acquire()
-        if not self.isAlive():
-            self.start()
-        self.lock.release()
+        with self.lock:
+            if not self.isAlive():
+                self.daemon = True
+                self.start()
 
     def set_status(self, status, message = None):
         if status == self.status['status']:
@@ -129,10 +129,6 @@ class Scanner(Thread):
             self.set_status('error',str(e))
             return None
 
-    @http.route('/hw_proxy/Vis_scanner_connected', type='json', auth='none', cors='*')
-    def is_scanner_connected(self):
-        return self.get_device() != None
-    
     def get_barcode(self):
         """ Returns a scanned barcode. Will wait at most 5 seconds to get a barcode, and will
             return barcode scanned in the past if they are not older than 5 seconds and have not

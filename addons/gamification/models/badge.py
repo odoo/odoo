@@ -35,11 +35,13 @@ class gamification_badge_user(osv.Model):
     _name = 'gamification.badge.user'
     _description = 'Gamification user badge'
     _order = "create_date desc"
+    _rec_name = "badge_name"
 
     _columns = {
         'user_id': fields.many2one('res.users', string="User", required=True),
         'sender_id': fields.many2one('res.users', string="Sender", help="The user who has send the badge"),
-        'badge_id': fields.many2one('gamification.badge', string='Badge', required=True),
+        'badge_id': fields.many2one('gamification.badge', string='Badge', required=True, ondelete="cascade"),
+        'challenge_id': fields.many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge"),
         'comment': fields.text('Comment'),
         'badge_name': fields.related('badge_id', 'name', type="char", string="Badge Name"),
         'create_date': fields.datetime('Created', readonly=True),
@@ -61,7 +63,12 @@ class gamification_badge_user(osv.Model):
         template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
         for badge_user in self.browse(cr, uid, ids, context=context):
             body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=context)
-            res = user_obj.message_post(cr, uid, badge_user.user_id.id, body=body_html, context=context)
+            res = user_obj.message_post(
+                cr, uid, badge_user.user_id.id,
+                body=body_html,
+                subtype='gamification.mt_badge_granted',
+                partner_ids=[badge_user.user_id.partner_id.id],
+                context=context)
         return res
 
     def create(self, cr, uid, vals, context=None):
@@ -263,7 +270,7 @@ class gamification_badge(osv.Model):
 
     def check_progress(self, cr, uid, context=None):
         try:
-            model, res_id = template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'badge_hidden')
+            model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'badge_hidden')
         except ValueError:
             return True
         badge_user_obj = self.pool.get('gamification.badge.user')

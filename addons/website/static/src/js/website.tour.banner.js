@@ -35,26 +35,36 @@
                     element:   'button[data-action=snippet]',
                     placement: 'bottom',
                     title:     _t("Insert building blocks"),
-                    content:   _t("To add content in a page, you can insert building blocks."),
+                    content:   _t("Click here to insert blocks of content in the page."),
                     popover:   { fixed: true },
                 },
                 {
-                    snippet:   'carousel',
+                    snippet:   '#snippet_structure .oe_snippet:first',
                     placement: 'bottom',
                     title:     _t("Drag & Drop a Banner"),
                     content:   _t("Drag the Banner block and drop it in your page."),
                     popover:   { fixed: true },
                 },
-                {
+               {
                     waitFor:   '.oe_overlay_options .oe_options:visible',
-                    element:   '#wrap [data-snippet-id=carousel]:first .carousel-caption',
+                    element:   '#wrap .carousel:first div.carousel-content',
                     placement: 'top',
-                    title:     _("Customize banner's text"),
-                    content:   _("Click in the text and start editing it."),
-                    popover:   { next: _t("Continue") },
+                    title:     _t("Customize banner's text"),
+                    content:   _t("Click in the text and start editing it."),
+                    sampleText: 'Here, a customized text',
                 },
                 {
-                    element:   '.oe_overlay_options .oe_options',
+                    waitNot:   '#wrap .carousel:first div.carousel-content:has(h2:'+
+                        'containsExact('+_t('Your Banner Title')+')):has(h3:'+
+                        'containsExact('+_t('Click to customize this text')+'))',
+                    element:   '.oe_snippet_parent:visible',
+                    placement: 'bottom',
+                    title:     _t("Get banner properties"),
+                    content:   _t("Select the parent container to get the global options of the banner."),
+                    popover:   { fixed: true },
+                },
+                {
+                    element:   '.oe_overlay_options .oe_options:visible',
                     placement: 'left',
                     title:     _t("Customize the banner"),
                     content:   _t("Customize any block through this menu. Try to change the background of the banner."),
@@ -69,10 +79,10 @@
                     popover:   { fixed: true },
                 },
                 {
-                    snippet:   'three-columns',
+                    snippet:   '#snippet_structure .oe_snippet:eq(6)',
                     placement: 'bottom',
                     title:     _t("Drag & Drop This Block"),
-                    content:   _t("Drag the <em>'Three Columns'</em> block and drop it below the banner."),
+                    content:   _t("Drag the <em>'Features'</em> block and drop it below the banner."),
                     popover:   { fixed: true },
                 },
                 {
@@ -85,8 +95,8 @@
                 },
                 {
                     waitFor:   'button[data-action=edit]:visible',
-                    title:     _("Good Job!"),
-                    content:   _("Well done, you created your homepage."),
+                    title:     _t("Good Job!"),
+                    content:   _t("Well done, you created your homepage."),
                     popover:   { next: _t("Continue") },
                 },
                 {
@@ -100,13 +110,14 @@
                 {
                     element:   '.modal:has(#mobile-viewport) button[data-dismiss=modal]',
                     placement: 'right',
-                    title:     _t("Close Mobile Preview"),
-                    content:   _t("Scroll in the mobile preview to test the rendering. Once it's ok, close this dialog."),
+                    title:     _t("Check Mobile Preview"),
+                    content:   _t("Scroll to check rendering and then close the mobile preview."),
+                    popover:   { next: _t("Continue") },
                 },
                 {
                     waitNot:   '.modal',
                     element:   '#content-menu-button',
-                    placement: 'bottom',
+                    placement: 'left',
                     title:     _t("Add new pages and menus"),
                     content:   _t("The 'Content' menu allows you to add pages or add the top menu."),
                     popover:   { next: _t("Close Tutorial") },

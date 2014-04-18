@@ -22,7 +22,6 @@
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website.models import website
 import werkzeug
 import datetime
 import time
@@ -43,8 +42,8 @@ class sale_quote(http.Controller):
             if token != order.access_token:
                 return request.website.render('website.404')
             # Log only once a day
-            if request.httprequest.session.get('view_quote',False)!=now:
-                request.httprequest.session['view_quote'] = now
+            if request.session.get('view_quote',False)!=now:
+                request.session['view_quote'] = now
                 body=_('Quotation viewed by customer')
                 self.__message_post(body, order_id, type='comment')
         days = 0
@@ -130,7 +129,7 @@ class sale_quote(http.Controller):
         order_line_obj.write(request.cr, SUPERUSER_ID, [line_id], {'product_uom_qty': (quantity)}, context=request.context)
         return [str(quantity), str(order.amount_total)]
 
-    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
+    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True, multilang=True)
     def template_view(self, quote, **post):
         values = { 'template': quote }
         return request.website.render('website_quote.so_template', values)

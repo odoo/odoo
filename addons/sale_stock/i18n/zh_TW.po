@@ -13,15 +13,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:39+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 08:28+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
+msgstr "讓您的業務人員可用選單項目「依出貨單開立發票」來依出貨單開立發票。"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
@@ -54,11 +54,13 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"您選擇了 %d 單位的數量，但它無法相容於所選擇的包裝方式。\n"
+"根據包裝方式的數量建議： EAN： %s / 數量: %s 類型的 ul: %s"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_packinglist0
 msgid "Document of the move to the output or to the customer."
-msgstr ""
+msgstr "調動至出庫倉位或至客戶的文件。"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_multiple_shops:0
@@ -75,7 +77,7 @@ msgstr "審核"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "您必須先取消與此銷售訂單相關的所有出貨單。"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -92,7 +94,7 @@ msgstr "銷貨單"
 msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
-msgstr ""
+msgstr "對每一銷售訂單細項，建立一張採購單以供應售出的產品。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:615
@@ -121,7 +123,7 @@ msgstr "商店"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
-msgstr ""
+msgstr "由每一銷售訂單細項自動產生採購單。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -185,7 +187,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
+msgstr "銷售訂單確認後，提貨單及採購訂單隨之建立，代表指派給銷售訂單的部分貨物 。會有一張根據可供貨的銷售訂單細項的提貨單。"
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -221,7 +223,7 @@ msgstr "出貨準備時間"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_deliveryorder0
 msgid "Document of the move to the customer."
-msgstr ""
+msgstr "調動至客戶的文件。"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -275,7 +277,7 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr ""
+msgstr "採購單於銷售訂單確認後，或當發票已經付款時，自動建立。依採購規則及銷售訂單的參數，啟動採購及產品生產。 "
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -317,6 +319,9 @@ msgid ""
 "prices.\n"
 "                This installs the module delivery."
 msgstr ""
+"允許您在銷售訂單及出貨單中增加運送方式。\n"
+"                您可以依價格考量設定你的貨運廠商及貨運網絡。\n"
+"                此功能將安裝 delivery 模組。"
 
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
@@ -360,7 +365,7 @@ msgstr "銷售店點"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr ""
+msgstr "指出銷售訂單已經出貨。此欄位只有在排程器執行後更新。"
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
@@ -399,6 +404,9 @@ msgid ""
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
 msgstr ""
+"讓您轉移為專案管理定義的工作項目，到針對特定日期及特定使用者的工時表\n"
+"                項目，具有新增、編輯及刪除等功能，並且可自動從採購細項建立專案工作項目。\n"
+"                此功能將安裝模組 project_timesheet 和 project_mrp。"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_sale_delivery_address:0
@@ -412,7 +420,7 @@ msgstr "讓您在一張銷售訂單上，指定不同的交貨及發票地址。
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
-msgstr ""
+msgstr "一張採購訂單對應單一的銷售細項以及對應單一的零件。"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_assign0
@@ -430,7 +438,7 @@ msgstr "庫存不足！ "
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "訂單確認後與產品出貨至客戶間的天數"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -438,7 +446,7 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
+msgstr "銷售訂單預設將設為「一次全部出貨」代替「可供貨產品先出貨」。這可能會影響到貨運價格。"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -463,6 +471,8 @@ msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
+"為了刪除已確認的銷售訂單，您必須先取消它。\n"
+"在此之前，您必須先取消與交貨單相關的提貨單。"
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -482,18 +492,18 @@ msgstr "開立發票"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "依工時狀況開立發票"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "訂單預付款發票"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
+msgstr "您必須先取消與此銷售訂單相關的所有庫存調動。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:561
@@ -510,7 +520,7 @@ msgstr "國際商業用語"
 #: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
+msgstr "無法取消銷售訂單細項！"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -520,17 +530,17 @@ msgstr "取消指派"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
 msgid "Based on the shipped or on the ordered quantities."
-msgstr ""
+msgstr "依出貨或訂貨數量。"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "一次全部交貨"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr ""
+msgstr "相關提貨"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
@@ -542,22 +552,22 @@ msgstr ""
 msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
-msgstr ""
+msgstr "這是針對此份銷售訂單所產生的交貨單列表。"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "銷售訂單請求"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
+msgstr "建立出貨單"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "忽略例外情形"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:614
@@ -566,16 +576,18 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+"您計畫售出  %.2f %s ，但您只有 %.2f %s 可用！\n"
+"實際庫存是 %.2f %s。 (不含已預定保留)"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "重新建立出貨單"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
 msgid "This allows to configure and use multiple shops."
-msgstr ""
+msgstr "讓您配置及使用多個店點。"
 
 #. module: sale_stock
 #: field:sale.order,picked_rate:0
@@ -585,12 +597,12 @@ msgstr "已提貨"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "可供貨產品先出貨"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_packing0
 msgid "Create Pick List"
-msgstr ""
+msgstr "建立提貨單"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_deliver0
@@ -598,4 +610,4 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr ""
+msgstr "依照出庫倉位配置，在出庫區與客戶間的調動是手動或自動透過出貨單完成。"

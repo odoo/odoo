@@ -21,7 +21,7 @@
 
 from openerp.osv import osv, fields
 
-
+# TODO for trunk, remove me
 class MailThread(osv.Model):
     _inherit = 'mail.thread'
 
@@ -35,3 +35,7 @@ class MailThread(osv.Model):
             help="Website communication history",
         ),
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default['website_message_ids'] = []
+        return super(MailThread, self).copy(cr, uid, id, default=default, context=context)

@@ -2232,14 +2232,14 @@ class stock_move(osv.osv):
                 if move.picking_id:
                     pickings.add(move.picking_id.id)
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
-                self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
+                self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
                     workflow.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-        self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
+        self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
         if not context.get('call_unlink',False):
             for pick in self.pool.get('stock.picking').browse(cr, uid, list(pickings), context=context):
                 if all(move.state == 'cancel' for move in pick.move_lines):
-                    self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
+                    self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'}, context=context)
 
         for id in ids:
             workflow.trg_trigger(uid, 'stock.move', id, cr)

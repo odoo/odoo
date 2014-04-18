@@ -3,6 +3,7 @@ import commands
 import logging
 import simplejson
 import os
+import os.path
 import io
 import base64
 import openerp
@@ -11,7 +12,10 @@ import random
 import math
 import md5
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
+import pickle
+import re
 import subprocess
+import traceback
 from threading import Thread, Lock
 from Queue import Queue, Empty
 
@@ -36,6 +40,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class EscposDriver(Thread):
     def __init__(self):
         Thread.__init__(self)
@@ -43,19 +48,67 @@ class EscposDriver(Thread):
         self.lock  = Lock()
         self.status = {'status':'connecting', 'messages':[]}
 
+    def supported_devices(self):
+        if not os.path.isfile('escpos_devices.pickle'):
+            return supported_devices.device_list
+        else:
+            try:
+                f = open('escpos_devices.pickle','r')
+                return pickle.load(f)
+                f.close()
+            except Exception as e:
+                self.set_status('error',str(e))
+                return supported_devices.device_list
+
+    def add_supported_device(self,device_string):
+        r = re.compile('[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}');
+        match = r.search(device_string)
+        if match:
+            match = match.group().split(':')
+            vendor = int(match[0],16)
+            product = int(match[1],16)
+            name = device_string.split('ID')
+            if len(name) >= 2:
+                name = name[1]
+            else:
+                name = name[0]
+            _logger.info('ESC/POS: adding support for device: '+match[0]+':'+match[1]+' '+name)
+            
+            device_list = supported_devices.device_list[:]
+            if os.path.isfile('escpos_devices.pickle'):
+                try:
+                    f = open('escpos_devices.pickle','r')
+                    device_list = pickle.load(f)
+                    f.close()
+                except Exception as e:
+                    self.set_status('error',str(e))
+            device_list.append({
+                'vendor': vendor,
+                'product': product,
+                'name': name,
+            })
+
+            try:
+                f = open('escpos_devices.pickle','w+')
+                f.seek(0)
+                pickle.dump(device_list,f)
+                f.close()
+            except Exception as e:
+                self.set_status('error',str(e))
+
     def connected_usb_devices(self):
         connected = []
-        for device in supported_devices.device_list:
+        
+        for device in self.supported_devices():
             if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                 connected.append(device)
         return connected
 
     def lockedstart(self):
-        self.lock.acquire()
-        if not self.isAlive():
-            self.daemon = True
-            self.start()
-        self.lock.release()
+        with self.lock:
+            if not self.isAlive():
+                self.daemon = True
+                self.start()
     
     def get_escpos_printer(self):
         try:
@@ -74,13 +127,16 @@ class EscposDriver(Thread):
         self.push_task('status')
         return self.status
 
+
+
     def open_cashbox(self,printer):
         printer.cashdraw(2)
         printer.cashdraw(5)
 
     def set_status(self, status, message = None):
+        _logger.info(status+' : '+ (message or 'no message'))
         if status == self.status['status']:
-            if message != None and message != self.status['messages'][-1]:
+            if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
                 self.status['messages'].append(message)
         else:
             self.status['status'] = status
@@ -95,6 +151,9 @@ class EscposDriver(Thread):
             _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
+        if not escpos:
+            _logger.error('ESC/POS cannot initialize, please verify system dependencies.')
+            return
         while True:
             try:
                 timestamp, task, data = self.queue.get(True)
@@ -110,6 +169,9 @@ class EscposDriver(Thread):
                     if timestamp >= time.time() - 1 * 60 * 60:
                         self.print_receipt_body(printer,data)
                         printer.cut()
+                elif task == 'xml_receipt':
+                    if timestamp >= time.time() - 1 * 60 * 60:
+                        printer.receipt(data)
                 elif task == 'cashbox':
                     if timestamp >= time.time() - 12:
                         self.open_cashbox(printer)
@@ -120,7 +182,8 @@ class EscposDriver(Thread):
 
             except Exception as e:
                 self.set_status('error', str(e))
-                _logger.error(e);
+                errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
+                _logger.error(errmsg);
 
     def push_task(self,task, data = None):
         self.lockedstart()
@@ -139,11 +202,14 @@ class EscposDriver(Thread):
         if len(ips) == 0:
             eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')
         elif len(ips) == 1:
-            eprint.text('IP Address\n'+ips[0]+'\n')
+            eprint.text('IP Address:\n'+ips[0]+'\n')
         else:
-            eprint.text('IP Addresses\n')
+            eprint.text('IP Addresses:\n')
             for ip in ips:
                 eprint.text(ip+'\n')
+
+        if len(ips) >= 1:
+            eprint.text('\nHomepage:\nhttp://'+ips[0]+':8069\n')
 
         eprint.text('\n\n')
         eprint.cut()
@@ -273,12 +339,13 @@ class EscposDriver(Thread):
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
 
+
 driver = EscposDriver()
+
+driver.push_task('printstatus')
 
 hw_proxy.drivers['escpos'] = driver
 
-driver.push_task('printstatus')
-        
 class EscposProxy(hw_proxy.Proxy):
     
     @http.route('/hw_proxy/open_cashbox', type='json', auth='none', cors='*')
@@ -290,4 +357,24 @@ class EscposProxy(hw_proxy.Proxy):
     def print_receipt(self, receipt):
         _logger.info('ESC/POS: PRINT RECEIPT') 
         driver.push_task('receipt',receipt)
+
+    @http.route('/hw_proxy/print_xml_receipt', type='json', auth='none', cors='*')
+    def print_xml_receipt(self, receipt):
+        _logger.info('ESC/POS: PRINT XML RECEIPT') 
+        driver.push_task('xml_receipt',receipt)
+
+    @http.route('/hw_proxy/escpos/add_supported_device', type='http', auth='none', cors='*')
+    def add_supported_device(self, device_string):
+        _logger.info('ESC/POS: ADDED NEW DEVICE:'+device_string) 
+        driver.add_supported_device(device_string)
+        return "The device:\n"+device_string+"\n has been added to the list of supported devices.<br/><a href='/hw_proxy/status'>Ok</a>"
+
+    @http.route('/hw_proxy/escpos/reset_supported_devices', type='http', auth='none', cors='*')
+    def reset_supported_devices(self):
+        try:
+            os.remove('escpos_devices.pickle')
+        except Exception as e:
+            pass
+        return 'The list of supported devices has been reset to factory defaults.<br/><a href="/hw_proxy/status">Ok</a>'
+
     

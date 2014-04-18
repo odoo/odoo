@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="html_container">
+    &lt;!DOCTYPE html&gt;
+    <html t-att-lang="lang and lang.replace('_', '-')"
+          t-att-data-editable="'1' if editable else None"
+          t-att-data-view-xmlid="xmlid if editable else None"
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-report-margin-top="data_report_margin_top if data_report_margin_top else None"
+          t-att-data-report-header-spacing="data_report_header_spacing if data_report_header_spacing else None"
+          t-att-data-report-dpi="data_report_dpi if data_report_dpi else None">
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+            <t t-if="main_object and 'website_meta_title' in main_object">
+                <t t-set="title" t-value="main_object.website_meta_title"/>
+            </t>
+            <t t-if="not title and main_object and 'name' in main_object">
+                <t t-set="additional_title" t-value="main_object.name"/>
+            </t>
+            <meta name="openerp.company" t-att-value="res_company.name"/>
+            <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
+                and main_object.website_meta_description or website_meta_description"/>
+            <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
+                and main_object.website_meta_keywords or website_meta_keywords"/>
+
+            <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
+            <link rel="stylesheet" type="text/css"  href='/website/static/src/css/website.css'/>
+            <style type="text/css">
+                <t t-call="report.style"/>
+            </style>
+
+            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
+
+            <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+            <script type="text/javascript">
+                // Bootstrap and jQuery UI conflicts
+                $.fn.bstooltip = $.fn.tooltip;
+                $.fn.bsbutton = $.fn.button;
+            </script>
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" src="/website/static/src/js/website.js"></script>
+            <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
+            <t t-raw="head or ''" name='layout_head'/>
+        </head>
+        <body class="container">
+            <div id="wrapwrap">
+                <t t-raw="0"/>
+            </div>
+        </body>
+    </html>
+</template>
+
+<template id="style">
+    body {
+        color: #000 !important;
+    }
+    .border-black td {
+        border-top: 1px solid black !important;
+    }
+    .table-condensed > thead > tr > th {
+        border-bottom: 1px solid black !important;
+    }
+    .zero_min_height {
+        min-height: 0px !important;
+    }
+</template>
+
+<template id="external_layout">
+    <!-- Multicompany -->
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="report.external_layout_header" />
+    <t t-raw="0" />
+    <t t-call="report.external_layout_footer" />
+</template>
+
+<template id="external_layout_header">
+    <div class="header">
+        <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+            </div>
+            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
+        </div>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <div t-field="company.partner_id" 
+                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    style="border-bottom: 1px solid black;"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="external_layout_footer">
+    <div class="footer">
+        <div class="text-center" style="border-top: 1px solid black;">
+            <ul class="list-inline">
+                <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
+
+                <li t-if="company.fax and company.phone">&amp;bull;</li>
+                <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+
+                <li t-if="company.email">&amp;bull;</li>
+                <li t-if="company.email">Email: <span t-field="company.email"/></li>
+
+                <li t-if="website">&amp;bull;</li>
+                <li t-if="website">Website: <span t-esc="website.name"/></li>
+            <br/>
+                <li><span t-field="company.rml_footer"/></li>
+                <li t-if="company.rml_footer">|</li>
+                <li>Page:</li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>
+        </div>
+    </div>      
+</template>
+
+<template id="internal_layout">
+    <!-- Multicompany -->
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <div class="header">
+        <div class="row">
+            <div class="col-xs-3">
+                <span t-esc="time.strftime('%Y-%m-%d')"/>
+                <span t-esc="time.strftime('%H:%M')"/>
+            </div>
+            <div class="col-xs-2 col-xs-offset-2 text-center">
+                <span t-esc="company.name"/>
+            </div>
+            <div class="col-xs-2 col-xs-offset-3 text-right">
+                <ul class="list-inline">
+                    <li><span class="page"/></li>
+                    <li>/</li>
+                    <li><span class="topage"/></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <t t-raw="0" />
+</template>
+
+</data>
+</openerp>

@@ -20,12 +20,12 @@
 ##############################################################################
 from datetime import datetime, timedelta
 import random
-from urllib import urlencode
 from urlparse import urljoin
+import werkzeug
 
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv, fields
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
 from openerp.tools.translate import _
 
@@ -53,7 +53,7 @@ class res_partner(osv.Model):
                                 (not partner.signup_expiration or dt <= partner.signup_expiration)
         return res
 
-    def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, model=None, context=None):
+    def _get_signup_url_for_action(self, cr, uid, ids, action=None, view_type=None, menu_id=None, res_id=None, model=None, context=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
         if context is None:
@@ -66,11 +66,12 @@ class res_partner(osv.Model):
                 self.signup_prepare(cr, uid, [partner.id], context=context)
                 partner.refresh()
 
+            route = 'login'
             # the parameters to encode for the query
             query = dict(db=cr.dbname)
             signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
             if signup_type:
-                query['mode'] = signup_type
+                route = 'reset_password' if signup_type == 'reset' else signup_type
 
             if partner.signup_token and signup_type:
                 query['token'] = partner.signup_token
@@ -80,6 +81,8 @@ class res_partner(osv.Model):
                 continue        # no signup token, no user, thus no signup url!
 
             fragment = dict()
+            if action:
+                fragment['action'] = action
             if view_type:
                 fragment['view_type'] = view_type
             if menu_id:
@@ -89,7 +92,10 @@ class res_partner(osv.Model):
             if res_id:
                 fragment['id'] = res_id
 
-            res[partner.id] = urljoin(base_url, "/web/login?%s#%s" % (urlencode(query), urlencode(fragment)))
+            if fragment:
+                query['redirect'] = '/web#' + werkzeug.url_encode(fragment)
+
+            res[partner.id] = urljoin(base_url, "/web/%s?%s" % (route, werkzeug.url_encode(query)))
 
         return res
 
@@ -236,7 +242,12 @@ class res_users(osv.Model):
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
         context = dict(context or {}, no_reset_password=True)
-        return self.copy(cr, uid, template_user_id, values, context=context)
+        try:
+            with cr.savepoint():
+                return self.copy(cr, uid, template_user_id, values, context=context)
+        except Exception, e:
+            # copy may failed if asked login is not available.
+            raise SignupError(ustr(e))
 
     def reset_password(self, cr, uid, login, context=None):
         """ retrieve the user corresponding to login (login or email),

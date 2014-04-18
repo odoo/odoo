@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:40+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:49+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -127,7 +127,7 @@ msgstr "発注標準価格"
 #: code:addons/purchase/purchase.py:1037
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "この製品には仕入先が定義されていません。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -227,7 +227,7 @@ msgstr ""
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "この製品を販売する場合、OpenERPは調達先に必要な数量を購入するため"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -595,7 +595,7 @@ msgstr "ドラフト状態の発注"
 #. module: purchase
 #: view:product.product:0
 msgid "Suppliers"
-msgstr ""
+msgstr "仕入先"
 
 #. module: purchase
 #: view:product.product:0
@@ -622,7 +622,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoices and Receptions"
-msgstr ""
+msgstr "請求と受領"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -692,7 +692,7 @@ msgstr "オーダー行"
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr ""
+msgstr "発注書の作成時に自動で計算される固有の番号です。"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -765,7 +765,7 @@ msgstr "税額"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "入荷比率"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -864,7 +864,7 @@ msgstr "会社"
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders?"
-msgstr "本当にこれらのオーダーを集約しますか？"
+msgstr "これらオーダの結合をご確認ください。"
 
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
@@ -1038,7 +1038,7 @@ msgstr "年順"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "見積依頼と購入"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
@@ -1168,7 +1168,7 @@ msgstr "ドラフトに設定"
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
+msgstr "この発注を生成したドキュメント(受注または内部調達)を参照します。"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1290,7 +1290,7 @@ msgid ""
 "                        The delivery order will be ready after having "
 "received the\n"
 "                        products."
-msgstr ""
+msgstr "をトリガします。配送オーダーは製品を受け取った後に準備完了となります。"
 
 #. module: purchase
 #: view:product.product:0
@@ -1329,7 +1329,7 @@ msgstr "請求書の受領"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Products"
-msgstr "製品の受領"
+msgstr "製品入荷"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1790,6 +1790,9 @@ msgid ""
 "paid and received, the status becomes 'Done'. If a cancel action occurs in "
 "the invoice or in the reception of goods, the status becomes in exception."
 msgstr ""
+"発注書または見積り要求の状態。見積りは「ドラフト」状態の発注書です。注文はユーザーによって確認されなければならず、ステータスは「確認済」に変化します。ステ"
+"ータスを「承認済」に変えるため、仕入先は注文を確認しなければなりません。発注の受領と支払いが済むと、ステータスは「完了」になります。請求や商品の受領でキャ"
+"ンセル動作が発生すると、ステータスは例外になります。"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -2176,15 +2179,15 @@ msgid ""
 "\n"
 " "
 msgstr ""
-" 次のことに注意して下さい： \n"
+" 次の点にご注意ください。 \n"
 " \n"
-" 次の条件の時にのみオーダーは集約されます： \n"
-" ・ 発注オーダーがドラフトである。\n"
-" ・ 発注オーダーが同じ仕入先に属している\n"
-" ・ 発注オーダーが同じ在庫場所で同じ価格リストである\n"
+" オーダの結合条件は次の通り： \n"
+" ・ 発注ステータスがドラフト\n"
+" ・ 発注の仕入先が同じ\n"
+" ・ 発注の在庫ロケーションおよび価格リストが同じ\n"
 " \n"
-" 次の条件の時に行は集約されます：\n"
-" ・ オーダー行は製品の数量と単位以外は完全に同じである \n"
+" 明細の結合条件は次の通り：\n"
+" ・ 明細製品の数量と単位以外が同じ \n"
 " "
 
 #. module: purchase

@@ -76,8 +76,8 @@ openerp.mail = function (session) {
          */
         get_text2html: function (text) {
             return text
-                .replace(/[\n\r]/g,'<br/>')
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
+                .replace(/[\n\r]/g,'<br/>')                
         },
 
         /* Returns the complete domain with "&" 
@@ -507,18 +507,15 @@ openerp.mail = function (session) {
             }
             $.when(recipient_done).done(function (partner_ids) {
                 var context = {
-                    'default_composition_mode': default_composition_mode,
                     'default_parent_id': self.id,
                     'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
                     'default_partner_ids': partner_ids,
+                    'default_is_log': self.is_log,
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
                     'is_private': self.is_private
                 };
-                if (self.is_log) {
-                    _.extend(context, {'mail_compose_log': true});
-                }
                 if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
                     context.default_model = self.context.default_model;
                     context.default_res_id = self.context.default_res_id;
@@ -925,20 +922,12 @@ openerp.mail = function (session) {
         },
 
         on_record_clicked: function  (event) {
-            event.stopPropagation();
             var state = {
                 'model': this.model,
                 'id': this.res_id,
                 'title': this.record_name
             };
             session.webclient.action_manager.do_push_state(state);
-            this.do_action({
-                res_model: state.model,
-                res_id: state.id,
-                type: 'ir.actions.act_window',
-                views: [[false, 'form']]
-            });
-            return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */

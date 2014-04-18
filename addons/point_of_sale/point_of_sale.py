@@ -69,7 +69,7 @@ class pos_config(osv.osv):
         'currency_id' : fields.function(_get_currency, type="many2one", string="Currency", relation="res.currency"),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
-        'iface_cashdrawer' : fields.boolean('Cashdrawer',help="Automatically open the cashdrawer"),
+        'iface_cashdrawer' : fields.boolean('Cashdrawer', help="Automatically open the cashdrawer"),
         'iface_payment_terminal' : fields.boolean('Payment Terminal', help="Enables Payment Terminal integration"),
         'iface_electronic_scale' : fields.boolean('Electronic Scale', help="Enables Electronic Scale integration"),
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard', help="Enables an integrated Virtual Keyboard"),
@@ -474,11 +474,12 @@ class pos_session(osv.osv):
         account_move_obj = self.pool.get('account.move')
         pos_order_obj = self.pool.get('pos.order')
         for session in self.browse(cr, uid, ids, context=context):
+            local_context = dict(context or {}, force_company=session.config_id.journal_id.company_id.id)
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
-            move_id = account_move_obj.create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
+            move_id = account_move_obj.create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=local_context)
 
-            pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
+            pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
 
             for order in session.order_ids:
                 if order.state not in ('paid', 'invoiced'):
@@ -512,13 +513,19 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def create_from_ui(self, cr, uid, orders, context=None):
-        #_logger.info("orders: %r", orders)
+    def create_from_ui(self, cr, uid, orders, context=None):      
+        
+        # Keep only new orders
+        submitted_references = [o['data']['name'] for o in orders]
+        existing_order_ids = self.search(cr, uid, [('pos_reference', 'in', submitted_references)], context=context)
+        existing_orders = self.read(cr, uid, existing_order_ids, ['pos_reference'], context=context)
+        existing_references = set([o['pos_reference'] for o in existing_orders])
+        orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
+
         order_ids = []
-        for tmp_order in orders:
+        for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
-
 
             order_id = self.create(cr, uid, {
                 'name': order['name'],
@@ -541,7 +548,6 @@ class pos_order(osv.osv):
             if order['amount_return']:
                 session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
                 cash_journal = session.cash_journal_id
-                cash_statement = False
                 if not cash_journal:
                     cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
                     if not len(cash_journal_ids):
@@ -555,7 +561,11 @@ class pos_order(osv.osv):
                     'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
-            self.signal_paid(cr, uid, [order_id])
+
+            try:
+                self.signal_paid(cr, uid, [order_id])
+            except Exception as e:
+                _logger.error('Could not mark POS Order as Paid: %s', tools.ustr(e))
 
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
@@ -948,21 +958,15 @@ class pos_order(osv.osv):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
-        account_move_line_obj = self.pool.get('account.move.line')
         account_period_obj = self.pool.get('account.period')
         account_tax_obj = self.pool.get('account.tax')
-        user_proxy = self.pool.get('res.users')
         property_obj = self.pool.get('ir.property')
         cur_obj = self.pool.get('res.currency')
-
-        period = account_period_obj.find(cr, uid, context=context)[0]
 
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
         if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
             raise osv.except_osv(_('Error!'), _('Selected orders do not have the same session!'))
-
-        current_company = user_proxy.browse(cr, uid, uid, context=context).company_id
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
@@ -983,7 +987,7 @@ class pos_order(osv.osv):
             if order.state != 'paid':
                 continue
 
-            user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
+            current_company = order.sale_journal.company_id
 
             group_tax = {}
             account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
@@ -1004,6 +1008,7 @@ class pos_order(osv.osv):
                 # if have_to_group_by:
 
                 sale_journal_id = order.sale_journal.id
+                period = account_period_obj.find(cr, uid, context=dict(context or {}, company_id=current_company.id))[0]
 
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
@@ -1013,7 +1018,7 @@ class pos_order(osv.osv):
                     'journal_id' : sale_journal_id,
                     'period_id' : period,
                     'move_id' : move_id,
-                    'company_id': user_company and user_company.id or False,
+                    'company_id': current_company.id,
                 })
 
                 if data_type == 'product':
@@ -1054,7 +1059,10 @@ class pos_order(osv.osv):
             cur = order.pricelist_id.currency_id
             for line in order.lines:
                 tax_amount = 0
-                taxes = [t for t in line.product_id.taxes_id]
+                taxes = []
+                for t in line.product_id.taxes_id:
+                    if t.company_id.id == current_company.id:
+                        taxes.append(t)
                 computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:
@@ -1305,7 +1313,7 @@ class product_product(osv.osv):
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
-        'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
+        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
     _defaults = {

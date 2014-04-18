@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_vat_declaration(osv.osv_memory):
     _name = 'account.vat.declaration'
     _description = 'Account Vat Declaration'
@@ -46,18 +47,20 @@ class account_vat_declaration(osv.osv_memory):
     def create_vat(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+
         datas = {'ids': context.get('active_ids', [])}
         datas['model'] = 'account.tax.code'
         datas['form'] = self.read(cr, uid, ids, context=context)[0]
+
         for field in datas['form'].keys():
             if isinstance(datas['form'][field], tuple):
                 datas['form'][field] = datas['form'][field][0]
-        datas['form']['company_id'] = self.pool.get('account.tax.code').browse(cr, uid, [datas['form']['chart_tax_id']], context=context)[0].company_id.id
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.vat.declaration',
-            'datas': datas,
-        }
 
+        taxcode_obj = self.pool.get('account.tax.code')
+        taxcode_id = datas['form']['chart_tax_id']
+        taxcode = taxcode_obj.browse(cr, uid, [taxcode_id], context=context)[0]
+        datas['form']['company_id'] = taxcode.company_id.id
+
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_vat', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

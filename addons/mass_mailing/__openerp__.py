@@ -21,26 +21,33 @@
 
 {
     'name': 'Mass Mailing Campaigns',
+    'summary': 'Design, send and track emails',
     'description': """
 Easily send mass mailing to your leads, opportunities or customers. Track
 marketing campaigns performance to improve conversion rates. Design
 professional emails and reuse templates in a few clicks.
     """,
-    'version': '1.0',
+    'version': '2.0',
     'author': 'OpenERP',
     'website': 'http://www.openerp.com',
     'category': 'Marketing',
     'depends': [
         'mail',
         'email_template',
+        'marketing',
         'web_kanban_gauge',
         'web_kanban_sparkline',
+        'website_mail',
     ],
     'data': [
-        'mail_data.xml',
+        'data/mail_data.xml',
+        'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',
-        'wizard/mail_mass_mailing_create_segment.xml',
-        'mass_mailing_view.xml',
+        'wizard/test_mailing.xml',
+        'views/mass_mailing.xml',
+        'views/res_config.xml',
+        'views/res_partner.xml',
+        'views/email_template.xml',
         'security/ir.model.access.csv',
     ],
     'js': [
@@ -48,10 +55,11 @@ professional emails and reuse templates in a few clicks.
     ],
     'qweb': [],
     'css': [
-        'static/src/css/mass_mailing.css'
+        'static/src/css/mass_mailing.css',
+        'static/src/css/email_template.css'
     ],
     'demo': [
-        'mass_mailing_demo.xml',
+        'data/mass_mailing_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:39+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -80,7 +80,7 @@ msgstr "Хүснэгтийн мөр"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Хүргэлтийн үйлчилгээ хийдэг харилцагч."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -92,6 +92,8 @@ msgstr "Хүргэх захиалга"
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Сонгосон хүргэлтийн сүлжээнд тохирох хүргэлтийн мөр болон захиалга байхгүй "
+"байна."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -132,6 +134,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Тухайлсан бүс нутагт зориулсан хүргэлтийн үнийн хүснэгтийг "
+"үүсгэхдээ дарна уу.\n"
+"              </p><p>\n"
+"                Хүргэлтийн үнийн хүснэгт нь хүргэх барааны жин болон бусад "
+"үзүүлэлт дээр суурилан\n"
+"                хүргэлтийн өртөг болон зарах үнэ ямар байх тооцооллыг хийх "
+"боломжийг олгоно. Хүргэлтийн\n"
+"                арга тус бүрт хэд хэдэн үнийн хүснэгт тодорхойлох боломжтой: "
+"улс эсвэл бүс нутаг. тухайлсан улсын  \n"
+"                хувьд бүс нутаг нь шуудангийн кодын интервалаар "
+"тодорхойлогдоно.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -151,7 +167,7 @@ msgstr "Дүн"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr "Дурдах"
+msgstr "Үнийн саналд Нэмэх"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -180,7 +196,7 @@ msgstr "Барааны хөдөлгөөн"
 #: field:stock.picking,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Хүргэгчийн Мөр хөөх Сурвалж"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -232,6 +248,8 @@ msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing "
 "based on delivery order(s)."
 msgstr ""
+"Хэрэв 'Үнийн саналд Нэмэх' гээгүй бол, нарийвчилсан үнэ нь хүргэлтийн "
+"захиалгаас нэхэмжлэх үүсэхэд тооцоологдоно."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -264,18 +282,20 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Хэрэв захиалга нь тодорхой үнийн дүнгээс өндөр байвал захиалагч үнэгүй "
+"хүргэлт авч болно."
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr ""
+msgstr "Үнэгүй хүргэх захиалгын үнд нь компанийн валютаар илэрхийлэгдэнэ."
 
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Хэрэв дүнгээс захиалга нь өндөр дүнтэй бол үнэгүй"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -288,6 +308,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Хэрэв идэвхтэй талбар нь Худал бол хүргэлтийн сүлжээг устгалгүйгээр нууна."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -298,7 +319,7 @@ msgstr "Зиплэх"
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Үндсэн үнэ"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -340,18 +361,22 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Захиалгын хүргэх газар, жин, дүн зэрэгээс хамааруулж хүргэлтийн үнийг "
+"удирдахаар бол энэ сонголтыг сонгоно."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Хэрэв үнэ нь хүргэх газараас хамаарсан ахисан үнэлгээнээс хамаардаг бол "
+"хоосон үлдээ."
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Сүлжээ алга !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -404,7 +429,7 @@ msgstr "Хувьсах"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Бэлтгэлээс нэхэмжлэх тохиолдолд энэ хүргэх арга хэрэглэгдэнэ."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -426,6 +451,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ хүргэх арга тодорхойлохдоо дарна уу. \n"
+"              </p><p>\n"
+"                Хүргэлтийн компани бүр нь хэд хэдэн хүргэх аргатай байж "
+"болох бөгөөд\n"
+"                арга бүр нь ялгаатай үнийн хүснэгтүүдтэй байж болно.\n"
+"              </p><p>\n"
+"                Эдгээр хүргэлтийн аргууд нь таны тохиргооноос хамааруулан "
+"хүргэх үнийг\n"
+"                автоматаар тооцоолох боломжийг олгоно; борлуулалтын захиалга "
+"дээр \n"
+"                (үнийн санал дээр суурилж) эсвэл нэхэмжлэл дээр (хүргэлтийн "
+"захиалга дээр суурилж).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -440,24 +480,26 @@ msgstr "Тоо хэмжээ"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "Эхлэх Zip"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Хэрэв бэлтгэлт дээр суурилан нэхэмжлэхээр төлөвлөж байгаа бол энэ талбарыг "
+"бөглөнө."
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Хэрэв %.2f-с их бол үнэгүй"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Ирж буй хүргэлтүүд"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -480,6 +522,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Хэрэв идэвхтэй талбар Худал бол хүргэгч компанийг устгалгүйгээр хасна."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -498,7 +541,7 @@ msgstr "Үнэ"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Энэ хүргэлтийн компанид тохирох сүлжээ алга !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -515,7 +558,7 @@ msgstr "Жин * Эзлэхүүн"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Хүргэлтийн компани %s (id: %d)-д хүргэлтийн сүлжээ алга!"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -525,7 +568,7 @@ msgstr "Үнийн мэдээлэл"
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Хүргэлт бүрийн ахисан үнэлгээ"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -547,7 +590,7 @@ msgstr "Хүргэлтийн арга"
 #: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "Хүргэлтийн мөр нэмэхийн тулд захиалгын төлөв ноорог байх ёстой."
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -579,7 +622,7 @@ msgstr "Төлвүүд"
 #: help:stock.move,weight_uom_id:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "Хэмжих нэгж нь жинг хэмжих нэгж юм"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0

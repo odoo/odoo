@@ -49,7 +49,7 @@ for a particular financial year and for preparation of vouchers there is a modul
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi'],
+    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi', 'report'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -123,7 +123,27 @@ for a particular financial year and for preparation of vouchers there is a modul
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',
         'res_config_view.xml',
-        'account_pre_install.yml'
+        'account_pre_install.yml',
+
+        'views/report_vat.xml',
+        'views/report_invoice.xml',
+        'views/report_trialbalance.xml',
+        'views/report_centraljournal.xml',
+        'views/report_overdue.xml',
+        'views/report_generaljournal.xml',
+        'views/report_journal.xml',
+        'views/report_salepurchasejournal.xml',
+        'views/report_partnerbalance.xml',
+        'views/report_agedpartnerbalance.xml',
+        'views/report_partnerledger.xml',
+        'views/report_partnerledgerother.xml',
+        'views/report_financial.xml',
+        'views/report_generalledger.xml',
+        'project/views/report_analyticbalance.xml',
+        'project/views/report_analyticjournal.xml',
+        'project/views/report_analyticcostledgerquantity.xml',
+        'project/views/report_analyticcostledger.xml',
+        'project/views/report_invertedanalyticbalance.xml',
     ],
     'js': [
         'static/src/js/account_move_reconciliation.js',
@@ -155,8 +175,6 @@ for a particular financial year and for preparation of vouchers there is a modul
         'test/account_period_close.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
-        #'test/account_bank_statement.yml',
-        #'test/account_cash_statement.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
         'test/account_fiscalyear_close.yml', #last test, as it will definitively close the demo fiscalyear
@@ -164,4 +182,5 @@ for a particular financial year and for preparation of vouchers there is a modul
     'installable': True,
     'auto_install': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

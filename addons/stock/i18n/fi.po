@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 05:33+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 06:39+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -125,8 +125,8 @@ msgid "Product Moves"
 msgstr "Tuotesiirrot"
 
 #. module: stock
-#: code:addons/stock/stock.py:2524
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2568
+#: code:addons/stock/stock.py:2629
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Anna anna asianmukainen määrä."
@@ -146,13 +146,13 @@ msgstr ""
 "sarjanumerosta"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:59
+#: code:addons/stock/wizard/stock_fill_inventory.py:63
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr "Et voi tehdä tätä toimintoa enemmälle kuin yhdelle varastolle."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:91
+#: code:addons/stock/wizard/stock_change_product_qty.py:95
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "Määrä ei voi olla negatiivinen"
@@ -180,6 +180,8 @@ msgstr "Keräilylista"
 #: field:stock.partial.move.line,quantity:0
 #: field:stock.partial.picking.line,quantity:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: field:stock.report.prodlots,qty:0
 #: field:stock.report.tracklots,name:0
 #: field:stock.return.picking.memory,quantity:0
@@ -313,7 +315,7 @@ msgid "Reference"
 msgstr "Viite"
 
 #. module: stock
-#: code:addons/stock/stock.py:1548
+#: code:addons/stock/stock.py:1565
 #, python-format
 msgid "Products to Process"
 msgstr "Käsiteltävät tuotteet"
@@ -354,12 +356,12 @@ msgstr ""
 "valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
 
 #. module: stock
-#: code:addons/stock/stock.py:768
-#: code:addons/stock/stock.py:2473
-#: code:addons/stock/stock.py:2524
-#: code:addons/stock/stock.py:2585
-#: code:addons/stock/wizard/stock_change_product_qty.py:91
-#: code:addons/stock/wizard/stock_fill_inventory.py:124
+#: code:addons/stock/stock.py:782
+#: code:addons/stock/stock.py:2517
+#: code:addons/stock/stock.py:2568
+#: code:addons/stock/stock.py:2629
+#: code:addons/stock/wizard/stock_change_product_qty.py:95
+#: code:addons/stock/wizard/stock_fill_inventory.py:128
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
 #: code:addons/stock/wizard/stock_inventory_merge.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
@@ -369,7 +371,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:192
 #: code:addons/stock/wizard/stock_return_picking.py:102
 #: code:addons/stock/wizard/stock_return_picking.py:109
-#: code:addons/stock/wizard/stock_return_picking.py:208
+#: code:addons/stock/wizard/stock_return_picking.py:212
 #, python-format
 msgid "Warning!"
 msgstr "Varoitus!"
@@ -487,6 +489,8 @@ msgstr "Toiminnon seurattavuus "
 #: selection:stock.picking,state:0
 #: selection:stock.picking.in,state:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
 msgstr "Odottaa saatavuutta"
@@ -496,6 +500,8 @@ msgstr "Odottaa saatavuutta"
 #: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
@@ -568,7 +574,7 @@ msgstr ""
 "tuotteiden toimitukseen. Tämän ajan lupaat asiakkaallesi."
 
 #. module: stock
-#: code:addons/stock/product.py:196
+#: code:addons/stock/product.py:195
 #, python-format
 msgid "Products: "
 msgstr "Tuotteet: "
@@ -585,7 +591,7 @@ msgid "Draft Physical Inventories"
 msgstr "Luonnos fyysisitä varastoista"
 
 #. module: stock
-#: code:addons/stock/stock.py:1777
+#: code:addons/stock/stock.py:1806
 #, python-format
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
@@ -633,7 +639,7 @@ msgid "Item Labels"
 msgstr "Nimikkeen tarrat"
 
 #. module: stock
-#: code:addons/stock/stock.py:1356
+#: code:addons/stock/stock.py:1373
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
 msgstr "Jälkitoimitus <em>%s</em> on <b>luotu</b>."
@@ -713,6 +719,8 @@ msgstr ""
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Order(Origin)"
 msgstr "Tilaus (Lähde)"
 
@@ -752,6 +760,7 @@ msgid "Destination Address "
 msgstr "Kohdeosoite "
 
 #. module: stock
+#: view:product.product:0
 #: field:product.product,reception_count:0
 msgid "Reception"
 msgstr "Vastaanotto"
@@ -802,6 +811,8 @@ msgstr "Suunniteltu vuosi"
 #: view:stock.picking.in:0
 #: field:stock.picking.in,state:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: field:stock.picking.out,state:0
 msgid "Status"
 msgstr "Tila"
@@ -893,7 +904,7 @@ msgstr ""
 "johon tapahtumat lisätään automaattisesti kun varastosiirtoja käsitellään."
 
 #. module: stock
-#: code:addons/stock/stock.py:2252
+#: code:addons/stock/stock.py:2296
 #, python-format
 msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
@@ -929,7 +940,7 @@ msgid "Time"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:449
+#: code:addons/stock/product.py:448
 #, python-format
 msgid "Future Receptions"
 msgstr "Tulevat saapumiset"
@@ -968,6 +979,8 @@ msgstr "- päivitys"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Weight"
 msgstr "Paino"
 
@@ -1013,7 +1026,7 @@ msgid "Transit Location for Inter-Companies Transfers"
 msgstr "Siirtopaikka yritysten välisille siirroille"
 
 #. module: stock
-#: code:addons/stock/stock.py:1190
+#: code:addons/stock/stock.py:1204
 #, python-format
 msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
@@ -1037,7 +1050,7 @@ msgid "Change Product Quantity"
 msgstr "Muuta tuotteen määrää"
 
 #. module: stock
-#: code:addons/stock/product.py:465
+#: code:addons/stock/product.py:464
 #, python-format
 msgid "Future P&L"
 msgstr "Tulevat P&L"
@@ -1067,7 +1080,7 @@ msgid "You must assign a serial number for this product."
 msgstr "Määritä tälle tuotteelle sarjanumero."
 
 #. module: stock
-#: code:addons/stock/stock.py:2255
+#: code:addons/stock/stock.py:2299
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr "Määrittele päiväkirja tälle tuoteryhmälle: \"%s\" (id: %d)"
@@ -1114,6 +1127,8 @@ msgstr "Valuutta"
 #: view:stock.picking:0
 #: view:stock.picking.in:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Journal"
 msgstr "Päiväkirja"
 
@@ -1299,7 +1314,7 @@ msgid "Author"
 msgstr "Tekijä"
 
 #. module: stock
-#: code:addons/stock/stock.py:1822
+#: code:addons/stock/stock.py:1851
 #, python-format
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
@@ -1309,6 +1324,8 @@ msgstr ""
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Internal Shipment :"
 msgstr "Sisäinen lähetys:"
 
@@ -1336,7 +1353,7 @@ msgid "Supplier"
 msgstr "Toimittaja"
 
 #. module: stock
-#: code:addons/stock/stock.py:2864
+#: code:addons/stock/stock.py:2908
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1451,6 +1468,8 @@ msgstr "Käyttävä siirto"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Delivery Order :"
 msgstr "Toimitustilaus"
 
@@ -1522,7 +1541,7 @@ msgstr ""
 "käyttäjä syötti keräilyvahvistuksessa (kun keskihinta menetelemää käytetään)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1890
+#: code:addons/stock/stock.py:1919
 #, python-format
 msgid "Warning: No Back Order"
 msgstr "Varoitus: Ei jälkitoimitusta"
@@ -1544,13 +1563,13 @@ msgid "To be refunded/invoiced"
 msgstr "Tulee hyvittää/laskuttaa"
 
 #. module: stock
-#: code:addons/stock/stock.py:2448
+#: code:addons/stock/stock.py:2492
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Voit poistaa ainoastaan luonnossiirtoja."
 
 #. module: stock
-#: code:addons/stock/stock.py:1665
+#: code:addons/stock/stock.py:1682
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
 msgstr ""
@@ -1589,7 +1608,7 @@ msgid "Additional Info"
 msgstr "Lisätietoa"
 
 #. module: stock
-#: code:addons/stock/stock.py:2653
+#: code:addons/stock/stock.py:2697
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr "Osa keräilytiedoista puuttuu siirrosta #%s."
@@ -1779,7 +1798,7 @@ msgid "Order Date"
 msgstr "Tilauksen päivämäärä"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:92
+#: code:addons/stock/wizard/stock_change_product_qty.py:96
 #, python-format
 msgid "INV: %s"
 msgstr "VAR: %s"
@@ -1817,7 +1836,7 @@ msgid "Stock Invoice Onshipping"
 msgstr "Varastolaskutus toimitettaessa"
 
 #. module: stock
-#: code:addons/stock/stock.py:2473
+#: code:addons/stock/stock.py:2517
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr "Anna positiivinen romutettava määrä."
@@ -1882,6 +1901,8 @@ msgstr "on tilattava"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Incoming Shipment :"
 msgstr "Saapuva lähetys:"
 
@@ -1966,7 +1987,7 @@ msgid "Shelf 2"
 msgstr "Hylly 2"
 
 #. module: stock
-#: code:addons/stock/stock.py:528
+#: code:addons/stock/stock.py:543
 #, python-format
 msgid "You cannot remove a lot line."
 msgstr "Et voi poistaa eräriviä."
@@ -1990,7 +2011,7 @@ msgid "Localization"
 msgstr "Lokalisointi"
 
 #. module: stock
-#: code:addons/stock/product.py:461
+#: code:addons/stock/product.py:460
 #, python-format
 msgid "Delivered Qty"
 msgstr "Toimitettu määrä"
@@ -2273,7 +2294,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr "Luo oma kirjanpito vienti jokaiselle varastosiirrolle"
 
 #. module: stock
-#: code:addons/stock/product.py:451
+#: code:addons/stock/product.py:450
 #, python-format
 msgid "Received Qty"
 msgstr "Vastaanotettu määrä"
@@ -2313,6 +2334,8 @@ msgstr "Nimi"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Supplier Address :"
 msgstr "Toimittajaosoite:"
 
@@ -2342,8 +2365,8 @@ msgid "Customer Locations"
 msgstr "Asiakkaan paikat"
 
 #. module: stock
-#: code:addons/stock/stock.py:2448
-#: code:addons/stock/stock.py:2863
+#: code:addons/stock/stock.py:2492
+#: code:addons/stock/stock.py:2907
 #, python-format
 msgid "User Error!"
 msgstr "Käyttäjän virhe!"
@@ -2568,10 +2591,10 @@ msgstr "Sisäiset paikat"
 #. module: stock
 #: view:board.board:0
 msgid "Warehouse board"
-msgstr "Varastohallinnan työpöytä"
+msgstr "Varastohallinnan mittaritaulu"
 
 #. module: stock
-#: code:addons/stock/product.py:471
+#: code:addons/stock/product.py:470
 #, python-format
 msgid "Future Qty"
 msgstr "Tuleva määrä"
@@ -2587,7 +2610,7 @@ msgstr "Hallitse sarjanumeroita"
 #: field:stock.picking.in,note:0
 #: field:stock.picking.out,note:0
 msgid "Notes"
-msgstr "Huomautukset"
+msgstr "Muistiinpanot"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -2633,7 +2656,7 @@ msgid "Products"
 msgstr "Tuotteet"
 
 #. module: stock
-#: code:addons/stock/stock.py:2243
+#: code:addons/stock/stock.py:2287
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
@@ -2673,7 +2696,7 @@ msgid "Outgoing Products"
 msgstr "Lähtevät tuotteet"
 
 #. module: stock
-#: code:addons/stock/stock.py:2249
+#: code:addons/stock/stock.py:2293
 #, python-format
 msgid ""
 "Please define stock input account for this product or its category: \"%s\" "
@@ -2695,7 +2718,7 @@ msgid "Move"
 msgstr "Siirrä"
 
 #. module: stock
-#: code:addons/stock/product.py:467
+#: code:addons/stock/product.py:466
 #, python-format
 msgid "P&L Qty"
 msgstr "P&L Määrä"
@@ -2780,6 +2803,8 @@ msgstr "Lähde"
 #: field:stock.picking,location_id:0
 #: field:stock.picking.in,location_id:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: field:stock.picking.out,location_id:0
 #: field:stock.report.prodlots,location_id:0
 #: field:stock.report.tracklots,location_id:0
@@ -2803,7 +2828,7 @@ msgid "Support multiple variants per products  "
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2246
+#: code:addons/stock/stock.py:2290
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
@@ -2827,7 +2852,7 @@ msgid "scrap"
 msgstr "romutetut"
 
 #. module: stock
-#: code:addons/stock/stock.py:1891
+#: code:addons/stock/stock.py:1920
 #, python-format
 msgid ""
 "By changing the quantity here, you accept the new quantity as complete: "
@@ -2911,13 +2936,13 @@ msgid "Stock Journal"
 msgstr "Varastopäiväkirja"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:174
+#: code:addons/stock/wizard/stock_return_picking.py:176
 #, python-format
 msgid "%s-%s-return"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:82
+#: code:addons/stock/wizard/stock_change_product_qty.py:86
 #, python-format
 msgid "Active ID is not set in Context"
 msgstr "Aktiivista ID:tä ei ole asetettu kontekstissä"
@@ -2985,7 +3010,7 @@ msgid "Date of Completion"
 msgstr "Valmistumispäivä"
 
 #. module: stock
-#: code:addons/stock/stock.py:1663
+#: code:addons/stock/stock.py:1680
 #, python-format
 msgid "You cannot move product %s from a location of type view %s."
 msgstr ""
@@ -3064,6 +3089,8 @@ msgstr "Revision pvm."
 #: view:report.stock.inventory:0
 #: field:report.stock.inventory,prodlot_id:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Lot"
 msgstr "Erä"
 
@@ -3094,6 +3121,8 @@ msgstr "Aseta saataville"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Contact Address :"
 msgstr "Toimitusosoite"
 
@@ -3267,7 +3296,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2501
+#: code:addons/stock/stock.py:2545
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr "%s %s %s on <b>siirretty</b> romutettavaksi."
@@ -3287,6 +3316,8 @@ msgstr "Asiakkaan pakkaukset"
 #: view:stock.picking:0
 #: view:stock.picking.in:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Done"
 msgstr "Valmis"
 
@@ -3315,7 +3346,7 @@ msgid "Date done"
 msgstr "Valmis pvm."
 
 #. module: stock
-#: code:addons/stock/stock.py:1121
+#: code:addons/stock/stock.py:1135
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -3385,7 +3416,7 @@ msgid "Stock"
 msgstr "Varasto"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:222
+#: code:addons/stock/wizard/stock_return_picking.py:226
 #, python-format
 msgid "Returned Picking"
 msgstr "Palautettu keräily"
@@ -3451,7 +3482,7 @@ msgid "Assigned Internal Moves"
 msgstr "Määritellyt sisäiset siirrot"
 
 #. module: stock
-#: code:addons/stock/stock.py:790
+#: code:addons/stock/stock.py:804
 #, python-format
 msgid "You cannot process picking without stock moves."
 msgstr "Et voi käsitellä keräilyä ilman varastosiirtoja."
@@ -3648,6 +3679,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klikkaa luodaksesi saapuvan toimituksen.\n"
+"              </p><p>\n"
+"                Saapuva toimitus on luettelo kaikista vastaanotettavista "
+"tilauksilta,\n"
+"                jotka saapuvat toimittajilta. Saapuva toimitus sisältää "
+"luettelon \n"
+"                alkuperäisen ostotilauksen mukaisesti vastaanotettavista "
+"tuotteista.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.move:0
@@ -3667,7 +3709,7 @@ msgid "Inventory Move"
 msgstr "Varastosiirto"
 
 #. module: stock
-#: code:addons/stock/product.py:477
+#: code:addons/stock/product.py:476
 #, python-format
 msgid "Future Productions"
 msgstr "Tulevat tuotannot"
@@ -3788,6 +3830,8 @@ msgstr "Erän tavaraluettelo"
 #: field:stock.partial.move.line,prodlot_id:0
 #: field:stock.partial.picking.line,prodlot_id:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
@@ -3845,7 +3889,7 @@ msgid "Non European Customers"
 msgstr "Ei-eurooppalaiset asiakkat"
 
 #. module: stock
-#: code:addons/stock/product.py:96
+#: code:addons/stock/product.py:100
 #: code:addons/stock/product.py:110
 #: code:addons/stock/product.py:113
 #: code:addons/stock/product.py:120
@@ -3853,19 +3897,19 @@ msgstr "Ei-eurooppalaiset asiakkat"
 #: code:addons/stock/product.py:167
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
-#: code:addons/stock/stock.py:528
-#: code:addons/stock/stock.py:790
-#: code:addons/stock/stock.py:1190
-#: code:addons/stock/stock.py:1199
-#: code:addons/stock/stock.py:2243
-#: code:addons/stock/stock.py:2246
-#: code:addons/stock/stock.py:2249
-#: code:addons/stock/stock.py:2252
-#: code:addons/stock/stock.py:2255
-#: code:addons/stock/stock.py:2258
-#: code:addons/stock/stock.py:2481
-#: code:addons/stock/stock.py:2590
-#: code:addons/stock/wizard/stock_fill_inventory.py:59
+#: code:addons/stock/stock.py:543
+#: code:addons/stock/stock.py:804
+#: code:addons/stock/stock.py:1204
+#: code:addons/stock/stock.py:1213
+#: code:addons/stock/stock.py:2287
+#: code:addons/stock/stock.py:2290
+#: code:addons/stock/stock.py:2293
+#: code:addons/stock/stock.py:2296
+#: code:addons/stock/stock.py:2299
+#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2525
+#: code:addons/stock/stock.py:2634
+#: code:addons/stock/wizard/stock_fill_inventory.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
 #, python-format
@@ -3949,7 +3993,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1853
+#: code:addons/stock/stock.py:1882
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -4023,7 +4067,7 @@ msgid "Followers"
 msgstr "Seuraajat"
 
 #. module: stock
-#: code:addons/stock/stock.py:2590
+#: code:addons/stock/stock.py:2634
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Siirrossa ei voi olla negatiivista tai nollaa määränä."
@@ -4099,7 +4143,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2816
+#: code:addons/stock/stock.py:2860
 #, python-format
 msgid "INV:"
 msgstr "VAR:"
@@ -4118,7 +4162,7 @@ msgid "Chaining Journal"
 msgstr "Ketjupäiväkirja"
 
 #. module: stock
-#: code:addons/stock/stock.py:768
+#: code:addons/stock/stock.py:782
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr "Ei tarpeeksi varstoa, ei voida varata tuotteita"
@@ -4150,7 +4194,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:459
+#: code:addons/stock/product.py:458
 #, python-format
 msgid "Future Deliveries"
 msgstr "Tulevat toimitukset"
@@ -4173,7 +4217,7 @@ msgid "Auto Validate"
 msgstr "Automaattinen hyväksyntä"
 
 #. module: stock
-#: code:addons/stock/stock.py:1821
+#: code:addons/stock/stock.py:1850
 #, python-format
 msgid "Insufficient Stock for Serial Number !"
 msgstr "Riittämätön varasto sarjanumerolle!"
@@ -4266,14 +4310,14 @@ msgid "Invoiced"
 msgstr "Laskutettu"
 
 #. module: stock
-#: code:addons/stock/stock.py:1852
+#: code:addons/stock/stock.py:1881
 #: view:product.template:0
 #, python-format
 msgid "Information"
 msgstr "Tiedot"
 
 #. module: stock
-#: code:addons/stock/stock.py:1199
+#: code:addons/stock/stock.py:1213
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
 msgstr "Et voi poistaa keräilyä, joka on tilassa: %s!"
@@ -4309,6 +4353,8 @@ msgstr "Automaattikeräily"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Customer Address :"
 msgstr "Asiakkaan osoite :"
 
@@ -4369,7 +4415,7 @@ msgid "Shelves (Y)"
 msgstr "Hyllyt (Y)"
 
 #. module: stock
-#: code:addons/stock/stock.py:2258
+#: code:addons/stock/stock.py:2302
 #, python-format
 msgid ""
 "Please define inventory valuation account on the product category: \"%s\" "
@@ -4382,7 +4428,7 @@ msgid "Serial Number Revision"
 msgstr "Sarjanumerorevisiot"
 
 #. module: stock
-#: code:addons/stock/product.py:96
+#: code:addons/stock/product.py:100
 #, python-format
 msgid "Specify valuation Account for Product Category: %s."
 msgstr "Määritä varastoarvostustili tuoteryhmälle: %s."
@@ -4395,7 +4441,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:208
+#: code:addons/stock/wizard/stock_return_picking.py:212
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr "Määritä vähintään yksi nollasta poikkeava määrä."
@@ -4428,7 +4474,7 @@ msgid "November"
 msgstr "Marraskuu"
 
 #. module: stock
-#: code:addons/stock/product.py:473
+#: code:addons/stock/product.py:472
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Ei suunniteltu määrä"
@@ -4439,7 +4485,7 @@ msgid "Chained Company"
 msgstr "Ketjutettu yritys"
 
 #. module: stock
-#: view:stock.picking.out:0
+#: view:stock.picking:0
 msgid "Check Availability"
 msgstr "Tarkista saatavuus"
 
@@ -4465,7 +4511,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:124
+#: code:addons/stock/wizard/stock_fill_inventory.py:128
 #, python-format
 msgid ""
 "No product in this location. Please select a location in the product form."
@@ -4482,14 +4528,14 @@ msgid "Move History (parent moves)"
 msgstr "Siirtohistoria (ylätason siirrot)"
 
 #. module: stock
-#: code:addons/stock/product.py:455
+#: code:addons/stock/product.py:454
 #, python-format
 msgid "Future Stock"
 msgstr "Tuleva varasto"
 
 #. module: stock
-#: code:addons/stock/stock.py:1663
-#: code:addons/stock/stock.py:1665
+#: code:addons/stock/stock.py:1680
+#: code:addons/stock/stock.py:1682
 #, python-format
 msgid "Error"
 msgstr "Virhe"
@@ -4605,6 +4651,8 @@ msgstr "Viivästykset"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Schedule Date"
 msgstr "Ajoitus"
 
@@ -4642,6 +4690,8 @@ msgstr "Todellinen"
 #. module: stock
 #: field:stock.move,name:0
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 #: view:stock.production.lot.revision:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
@@ -4665,6 +4715,7 @@ msgid "Deliver"
 msgstr "Toimita"
 
 #. module: stock
+#: view:product.product:0
 #: field:product.product,delivery_count:0
 msgid "Delivery"
 msgstr "Toimitus"
@@ -4686,7 +4737,7 @@ msgid "Location Content"
 msgstr "Paikan sisältö"
 
 #. module: stock
-#: code:addons/stock/product.py:479
+#: code:addons/stock/product.py:478
 #, python-format
 msgid "Produced Qty"
 msgstr "Tuotettu määrä"
@@ -4882,6 +4933,8 @@ msgstr "Valmiina käsiteltäväksi"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Warehouse Address :"
 msgstr "Varaston osoite:"
 

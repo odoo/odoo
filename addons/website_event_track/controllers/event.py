@@ -23,11 +23,14 @@ import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.controllers.main import Website as controllers
+import datetime
 
 import re
 import werkzeug.utils
 
 controllers = controllers()
+import pytz
+from pytz import timezone
 
 class website_event(http.Controller):
     @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, multilang=True)
@@ -37,17 +40,68 @@ class website_event(http.Controller):
         values = { 'track': track, 'event': track.event_id, 'main_object': track }
         return request.website.render("website_event_track.track_view", values)
 
-    # TODO: not implemented
-    @http.route(['/event/<model("event.event"):event>/agenda/'], type='http', auth="public", website=True, multilang=True)
-    def event_agenda(self, event, tag=None, **post):
-        values = {
-            'event': event,
-            'main_object': event,
+    def _prepare_calendar(self, event, event_track_ids):
+        local_tz = pytz.timezone(event.timezone_of_event or 'UTC')
+        locations = {}                  # { location: [track, start_date, end_date, rowspan]}
+        dates = []                      # [ (date, {}) ]
+        for track in event_track_ids:
+            locations.setdefault(track.location_id or False, [])
+
+        forcetr = True
+        for track in event_track_ids:
+            start_date = (datetime.datetime.strptime(track.date, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=pytz.utc).astimezone(local_tz)
+            end_date = start_date + datetime.timedelta(hours = (track.duration or 30))
+            location = track.location_id or False
+            locations.setdefault(location, [])
+
+            # New TR, align all events
+            if forcetr or (start_date>dates[-1][0]) or not location:
+                dates.append((start_date, {}, bool(location)))
+                for loc in locations.keys():
+                    if locations[loc] and (locations[loc][-1][2] > start_date):
+                        locations[loc][-1][3] += 1
+                    elif not locations[loc] or locations[loc][-1][2] < start_date:
+                        locations[loc].append([False, locations[loc] and locations[loc][-1][2] or dates[0][0], start_date, 1])
+                        dates[-1][1][loc] = locations[loc][-1]
+                forcetr = not bool(location)
+
+            # Add event
+            if locations[location] and locations[location][-1][1] > start_date:
+                locations[location][-1][3] -= 1
+            locations[location].append([track, start_date, end_date, 1])
+            dates[-1][1][location] = locations[location][-1]
+        return {
+            'locations': locations,
+            'dates': dates
         }
-        return request.website.render("website_event_track.agenda", values)
+
+
+    # TODO: not implemented
+    @http.route(['/event/<model("event.event"):event>/agenda'], type='http', auth="public", website=True, multilang=True)
+    def event_agenda(self, event, tag=None, **post):
+        comp = lambda x: (x.date, bool(x.location_id))
+        event.track_ids.sort(lambda x,y: cmp(comp(x), comp(y)))
+
+        days = {}
+        days_nbr = {}
+        for track in event.track_ids:
+            if not track.date: continue
+            days.setdefault(track.date[:10], [])
+            days[track.date[:10]].append(track)
+
+        for d in days:
+            days_nbr[d] = len(days[d])
+            days[d] = self._prepare_calendar(event, days[d])
+
+        return request.website.render("website_event_track.agenda", {
+            'event': event,
+            'days': days,
+            'days_nbr': days_nbr,
+            'tag': tag
+        })
 
     @http.route([
-        '/event/<model("event.event"):event>/track/',
+        '/event/<model("event.event"):event>/track',
         '/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'
         ], type='http', auth="public", website=True, multilang=True)
     def event_tracks(self, event, tag=None, **post):
@@ -74,7 +128,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event_track.tracks", values)
 
-    @http.route(['/event/<model("event.event"):event>/track_proposal/'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/track_proposal'], type='http', auth="public", website=True, multilang=True)
     def event_track_proposal(self, event, **post):
         values = { 'event': event }
         return request.website.render("website_event_track.event_track_proposal", values)

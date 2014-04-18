@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-28 06:09+0000\n"
-"X-Generator: Launchpad (build 16914)\n"
+"X-Launchpad-Export-Date: 2014-04-12 07:33+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -77,7 +77,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "Analyyttinen loki"
+msgstr "Analyyttinen päiväkirja"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -292,6 +292,9 @@ msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
 msgstr ""
+"Projektille ei ole määritelty analyyttistä tiliä. \n"
+"Ole hyvä ja määrittele yksi tai tuntikorttille ei tiliä voi automaatisesti "
+"näyttää."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -305,6 +308,9 @@ msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
 msgstr ""
+"Työntekijälle '%s' ei ole määritelty  'Analyyttistä tiliä' \n"
+"Määrittele työntekijä valitulle käyttäjälle ja aseta 'Analyyttinen "
+"päiväkirja'!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -394,6 +400,9 @@ msgid ""
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Sinun pitäisi määritellä analyyttisen kirjanpidon rakenne sen mukaan miten "
+"haluat analysoida kuluja ja tuloja. OpenERP:ssä analyyttisten tilien avulla "
+"voi seurata myös asiakassopimuksia."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -416,6 +425,8 @@ msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
 msgstr ""
+"Työntekijälle '%s' ei ole määritelty analyyttistä tiliä.\n"
+"Sinun pitäisi määritellä anayyttinen päiväkirja työntekijälomakkeelle."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:41
@@ -538,6 +549,10 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"Työntekijät voivat syöttää käytetyn ajan niille projekteille, joihin heidät "
+"on kiinnitetty. Projekti on analyyttinen tili ja projektille kirjattu aika "
+"kumuloi kustannukset kyseiselle analyyttiselle tilille. Tämä ominaisuus "
+"sallii tuntien kirjaamisen tuntikortille ja osallistumisen projektille."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0

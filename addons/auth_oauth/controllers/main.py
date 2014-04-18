@@ -2,18 +2,20 @@ import functools
 import logging
 
 import simplejson
+import urlparse
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import http
-from openerp.http import request, LazyResponse
-from openerp.addons.web.controllers.main import db_monodb, set_cookie_and_redirect, login_and_redirect
+from openerp.http import request
+from openerp.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
 from openerp.modules.registry import RegistryManager
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
+
 
 #----------------------------------------------------------
 # helpers
@@ -25,15 +27,19 @@ def fragment_to_query_string(func):
             return """<html><head><script>
                 var l = window.location;
                 var q = l.hash.substring(1);
-                var r = '/' + l.search;
+                var r = l.pathname + l.search;
                 if(q.length !== 0) {
                     var s = l.search ? (l.search === '?' ? '' : '&') : '?';
                     r = l.pathname + l.search + s + q;
+                }
+                if (r == l.pathname) {
+                    r = '/';
                 }
                 window.location = r;
             </script></head><body></body></html>"""
         return func(self, *a, **kw)
     return wrapper
+
 
 #----------------------------------------------------------
 # Controller
@@ -61,17 +67,26 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
         return providers
 
     def get_state(self, provider):
-        return dict(
+        state = dict(
             d=request.session.db,
-            p=provider['id']
+            p=provider['id'],
+            r=request.httprequest.full_path
         )
+        token = request.params.get('token')
+        if token:
+            state['t'] = token
+        return state
 
     @http.route()
     def web_login(self, *args, **kw):
+        ensure_db()
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
-        if isinstance(response, LazyResponse):
+        if response.is_qweb:
             error = request.params.get('oauth_error')
             if error == '1':
                 error = _("Sign up is not allowed on this database.")
@@ -82,11 +97,30 @@ class OAuthLogin(openerp.addons.web.controllers.main.Home):
             else:
                 error = None
 
-            response.params['values']['providers'] = providers
+            response.qcontext['providers'] = providers
             if error:
-                response.params['values']['error'] = error
+                response.qcontext['error'] = error
 
         return response
+
+    @http.route()
+    def web_auth_signup(self, *args, **kw):
+        providers = self.list_providers()
+        if len(providers) == 1:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+        response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
+        response.qcontext.update(providers=providers)
+        return response
+
+    @http.route()
+    def web_auth_reset_password(self, *args, **kw):
+        providers = self.list_providers()
+        if len(providers) == 1:
+            werkzeug.exceptions.abort(werkzeug.utils.redirect(providers[0]['auth_link'], 303))
+        response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
+        response.qcontext.update(providers=providers)
+        return response
+
 
 class OAuthController(http.Controller):
 
@@ -105,8 +139,12 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
+                redirect = state.get('r')
                 url = '/web'
-                if action:
+                if redirect and not redirect.startswith('/auth_oauth/signin') and \
+                (not redirect.startswith('/web/login') or 'redirect' in urlparse.urlsplit(redirect).query):
+                    url = redirect
+                elif action:
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
