@@ -34,20 +34,19 @@ class lazy_property(object):
     """
     def __init__(self, fget):
         self.fget = fget
-        self.name = fget.__name__
 
     def __get__(self, obj, cls):
         if obj is None:
             return self
         value = self.fget(obj)
-        setattr(obj, self.name, value)
+        setattr(obj, self.fget.__name__, value)
         return value
 
     @staticmethod
     def reset_all(obj):
         """ Reset all lazy properties on the instance `obj`. """
         cls = type(obj)
-        obj_dict = obj.__dict__
+        obj_dict = vars(obj)
         for name in obj_dict.keys():
             if isinstance(getattr(cls, name, None), lazy_property):
                 obj_dict.pop(name)
