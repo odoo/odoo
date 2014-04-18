@@ -1866,9 +1866,17 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
         trigger = trigger || this.$el;
+        var container = 'body';
+        //in the case we have a modal currently showing, attach tooltip
+        //to the modal to prevent the tooltip to show in the body in the
+        //case we close the modal too fast
+        if (window.$('.modal.in').length>0){
+            container = window.$('.modal.in:last()');
+        }
         options = _.extend({
                 delay: { show: 500, hide: 0 },
                 trigger: 'hover',
+                container: container,
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
