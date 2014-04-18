@@ -138,7 +138,7 @@
         <div class="pull-left text-center">
             <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
                 <span t-esc="question.child_count"/>
-                <span t-if="question.is_correct" class="fa fa-2x fa-check-circle"/>
+                <span t-if="question.has_validated_answer" class="fa fa-2x fa-check-circle"/>
                 <div t-if="question.child_count&gt;1">Answers</div>
                 <div t-if="question.child_count&lt;=1">Answer</div>
             </div>
@@ -336,16 +336,16 @@
 <template id="close_question">
     <t t-call="website_forum.header">
         <h3 class=""><b>Close question</b></h3><br/>
-        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(question)}/close" method="post" role="form">
-            <input name="post_id" t-att-value="post.id" type="hidden"/>
+        <form t-attf-action="/forum/#{slug(forum)}/question/#{slug(question)}/close" method="post" role="form">
+            <input name="post_id" t-att-value="question.id" type="hidden"/>
             <span class="pull-left">Close the question:</span>
-            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
+            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
             <div class="mt16">
                 <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
                 <div class="col-md-9 mb16">
                     <select class="form-control" name="reason">
                         <t t-foreach="reasons or []" t-as="reason">
-                            <option t-att-value="reason.id" t-att-selected="reason.id == post.closed_reason_id.id"><t t-esc="reason.name"/></option>
+                            <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
                         </t>
                     </select>
                 </div>
@@ -430,19 +430,19 @@
                                     comment
                                 </a>
                             </li>
-                            <li t-if="question.state != 'close' and (user.id == question.create_uid.id or user.karma&gt;=100)">
+                            <li t-if="question.state != 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close">close</a>
                             </li>
-                            <li t-if="question.state == 'close' and user.karma&gt;=500">
+                            <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen">reopen</a>
                             </li>
-                            <li t-if="user.id == question.create_uid.id or user.karma&gt;=300">
+                            <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit">edit</a>
                             </li>
-                            <li t-if="question.active and user.id == question.create_uid.id or user.karma&gt;=1000">
+                            <li t-if="question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete">delete</a>
                             </li>
-                            <li t-if="uid == question.create_uid.id and not question.active">
+                            <li t-if="not question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete">undelete</a>
                             </li>
                             <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}">share</a></li>
@@ -496,10 +496,10 @@
                                       t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
                                 </a>
                             </li>
-                            <li t-if="user.id == answer.create_uid.id or user.karma&gt;=300">
+                            <li t-if="(user.id == answer.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit">edit</a>
                             </li>
-                            <li t-if="user.id == answer.create_uid.id or user.karma&gt;=1000">
+                            <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete">delete</a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
@@ -543,7 +543,7 @@
                         t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
                         class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
-                    <a t-attf-href="/forum/#{slug(forum)}/user/#{message.id}"
+                    <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
                         t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
                     on <span t-field="message.date" t-field-options='{"format":"short"}'/>
