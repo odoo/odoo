@@ -212,7 +212,6 @@ class gamification_challenge(osv.Model):
     def create(self, cr, uid, vals, context=None):
         """Overwrite the create method to add the user of groups"""
 
-        # add users when change the group auto-subscription
         if vals.get('user_domain'):
             user_ids = self._get_challenger_users(cr, uid, vals.get('user_domain'), context=context)
 
@@ -233,7 +232,14 @@ class gamification_challenge(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int,long)):
             ids = [ids]
-        
+
+        if vals.get('user_domain'):
+            user_ids = self._get_challenger_users(cr, uid, vals.get('user_domain'), context=context)
+
+            if not vals.get('user_ids'):
+                vals['user_ids'] = []
+            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
+
         write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
 
         if vals.get('state') == 'inprogress':
