@@ -69,7 +69,7 @@
                         icon="fa-pencil-square-o"
                         name="%(account.action_invoice_tree)d" 
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
-                        <field string="Invoices" name="invoice_count" widget="statinfo" attrs="{'readonly':1}"/>
+                        <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
                     </button>
                     <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-list">
                         <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        

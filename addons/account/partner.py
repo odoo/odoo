@@ -162,13 +162,22 @@ class res_partner(osv.osv):
     def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
-    def _invoice_journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'invoice_count': 0, 'journal_item_count': 0, 'contracts_count': 0 }), ids))
+    def _invoice_total(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        account_invoice_report = self.pool.get('account.invoice.report')
+        for partner in self.browse(cr, uid, ids, context=context):
+            invoice_ids = account_invoice_report.search(cr, uid, [('partner_id','child_of',partner.id)], context=context)
+            invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
+            result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
+        return result
+
+    def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'journal_item_count': 0, 'contracts_count': 0 }), ids))
+
         # the user may not have access rights 
         try:
-            for partner in self.browse(cr, uid, ids, context):
+            for partner in self.browse(cr, uid, ids, context=context):
                 res[partner.id] = {
-                    'invoice_count': len(partner.invoice_ids),
                     'journal_item_count': len(partner.journal_item_ids),
                     'contracts_count': len(partner.contract_ids)
                 }
@@ -204,10 +213,10 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
-        'invoice_count': fields.function(_invoice_journal_item_count, string="Invoices", type='integer', multi="invoice_journal"),
-        'contracts_count': fields.function(_invoice_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
+        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float'),
+        'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
         'journal_item_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
-        'journal_item_count': fields.function(_invoice_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
+        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',
