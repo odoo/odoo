@@ -3859,10 +3859,11 @@ class stock_warehouse_orderpoint(osv.osv):
         '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
         '''
         qty = 0
+        uom_obj = self.pool.get("product.uom")
         for procurement in orderpoint.procurement_ids:
             if procurement.state in ('cancel', 'done'):
                 continue
-            qty2 = procurement.product_qty
+            qty2 = uom_obj._compute_qty_obj(cr, uid, procurement.uom_id, procurement.product_qty, procurement.product_id.uom_id, context=context)
             for move in procurement.move_ids:
                 if move.state not in ('draft', 'cancel'):
                     qty2 -= move.product_qty
@@ -3901,7 +3902,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'product_uom': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='Product Unit of Measure', readonly=True, required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
             "a procurement to bring the forecasted quantity to the Max Quantity."),
