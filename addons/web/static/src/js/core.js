@@ -792,6 +792,7 @@ instance.web.unblockUI = function() {
 /* Bootstrap defaults overwrite */
 $.fn.tooltip.Constructor.DEFAULTS.placement = 'bottom';
 $.fn.tooltip.Constructor.DEFAULTS.html = true;
+$.fn.tooltip.Constructor.DEFAULTS.container = 'body';
 
 /**
  * Registry for all the client actions key: tag value: widget
