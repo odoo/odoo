@@ -218,7 +218,7 @@ $sheet-padding: 16px
         font-size: inherit
     // }}}
     // Button style {{{
-    a.button:link, a.button:visited, button, .oe_button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+    a.button:link, a.button:visited, button, .oe_button, input[type='submit']
         display: inline-block
         border: 1px solid rgba(0,0,0,0.4)
         color: #4c4c4c
@@ -233,18 +233,18 @@ $sheet-padding: 16px
         -webkit-font-smoothing: antialiased
         outline: none
 
-    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
+    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         cursor: pointer
         background-position: 0
 
-    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
+    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus
         border: 1px solid #80bfff
         background-position: 0
         @include vertical-gradient(#f6f6f6, #e3e3e3)
         @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
+    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active
         @include vertical-gradient(#e3e3e3, #f6f6f6)
         @include box-shadow(none)
 
@@ -272,105 +272,6 @@ $sheet-padding: 16px
     .ui-tabs
         position: static
 
-    // Modal box
-    &.ui-dialog
-        display: none
-        height: auto !important
-        padding: 6px
-        //overflow: hidden
-        background-color: rgba(60,60,60,0.7)
-        border: 1px solid
-        border-color: #888 #555 #444
-        //overflow: hidden
-        @include radius(8px)
-        @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
-        @include background-clip()
-        .ui-dialog-content
-            padding: 0
-        .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
-            padding: 16px
-        .ui-dialog-titlebar
-            border-top: none
-            border-left: none
-            border-right: none
-            border-bottom: 1px solid #cacaca
-            @include radius(2px 2px 0 0)
-            @include vertical-gradient(#FCFCFC, #DEDEDE)
-            .ui-dialog-title
-                margin: 0
-                padding: 0
-        .ui-dialog-content
-            background: white
-            width: auto !important
-        .ui-dialog-buttonpane
-            border-top: 1px solid #e0e0e0
-            background: #f5f7f9
-            margin: 0
-            @include radius(0 0 2px 2px)
-            button
-                margin: 0 4px 0 0
-            .ui-dialog-buttonset
-                float: left
-                .ui-button
-                    margin-right: 4px
-        .ui-dialog-titlebar-close
-            padding: 0
-            .ui-icon-closethick
-                display: none
-            &:before
-                content: "×"
-                font-size: 18px
-                font-weight: bold
-                line-height: 16px
-                color: black
-                text-shadow: 0 1px 0 white
-                padding: 0
-                cursor: pointer
-                background: transparent
-                border: 0
-                &:hover
-                    color: black
-                    text-decoration: none
-        .oe_about
-            background-color: white
-            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-            @include radius(0 0 2px 2px)
-            a
-                color: $link-color
-                &:hover
-                    text-decoration: underline
-                &:focus
-                    outline: none
-            .oe_logo
-                margin-left: -6px
-            .oe_bottom
-                position: absolute
-                top: 50%
-                left: 0
-                right: 0
-                bottom: 0
-                text-shadow: 0 1px 1px #999999
-                @include vertical-gradient(#b41616, #600606)
-                color: #eee
-                padding: 0 16px
-                @include radius(0 0 2px 2px)
-                a
-                    color: #eee
-
-    &.ui-dialog.oe_act_window
-        .ui-dialog-content
-            padding: 0px
-
-    .modal-backdrop
-        position: fixed
-        top: 0
-        right: 0
-        bottom: 0
-        left: 0
-        z-index: 1040
-        background-color: black
-        @include opacity(.3)
-
     // }}}
     // Generic classes {{{
     .oe_i
@@ -385,6 +286,7 @@ $sheet-padding: 16px
     .oe_left
         float: left
         margin-right: 8px
+        width: 305px
     .oe_right
         float: right
         margin-left: 8px
@@ -429,10 +331,46 @@ $sheet-padding: 16px
             &:hover
                 background: #ED6F6A
     .oe_button_box
-        width: 270px
-        text-align: right
-        button
-            margin: 4px
+        width: 400px
+        text-align: left
+        .oe_stat_button:hover
+            background: #7c7bad
+            color: white
+            .fa
+                color: white
+        .oe_stat_button
+            font-weight: normal
+            display: inline-table
+            width: 33% !important
+            height: 42px
+            margin: 0px -1px -1px 0px
+            padding: 0
+            color: #666
+            border: 1px solid #dddddd
+            border-radius: 0
+            box-shadow: none
+            background: white
+            > div
+                display: table-cell
+                vertical-align: middle
+                text-align: left
+                padding: 0
+                line-height: 120%
+            .stat_button_icon
+                color: #7C7BAD
+                font-size: 24px
+                padding: 0px 3px
+                width: 37px
+                text-align: center
+            .oe_form_field_percent_pie
+                width: 42px
+            .oe_form_field_bar_chart
+                width: 42px
+            svg
+                width: 38px
+                height: 38px
+                display: inline
+                vertical-align: middle
     .oe_avatar
         > img
             max-height: 90px
@@ -514,7 +452,7 @@ $sheet-padding: 16px
                 display: inline-block
                 height: 12px
                 width: 12px
-                vertical-align: bottom
+                vertical-align: top
                 border-radius: 10px
                 margin: 1px 0
             &.oe_form_invalid
@@ -533,33 +471,6 @@ $sheet-padding: 16px
                 font-style: italic
                 text-decoration: none
         margin-bottom: 1px
-    // }}}
-    // Tooltips {{{
-    &.oe_tooltip
-        font-size: 12px
-        .oe_tooltip_string
-            color: #FD5
-            font-weight: bold
-            font-size: 13px
-        .oe_tooltip_help
-            white-space: pre-wrap
-        .oe_tooltip_technical
-            padding: 0 0 4px 0
-            margin: 5px 0 0 15px
-            li
-                list-style: circle
-        .oe_tooltip_technical_title
-            font-weight: bold
-        .oe_tooltip_close
-            margin: -5px 0 0 2px
-            cursor: default
-            float: right
-            color: white
-            &:hover
-                color: #999
-                cursor: pointer
-        .oe_tooltip_message
-            max-width: 310px
     // }}}
     // Notebook {{{
     .oe_notebook
@@ -999,11 +910,6 @@ $sheet-padding: 16px
         .oe_logo
             margin-left: -6px
         .oe_bottom
-            position: absolute
-            top: 50%
-            left: 0
-            right: 0
-            bottom: 0
             text-shadow: 0 1px 1px #999999
             @include vertical-gradient(#b41616, #600606)
             color: #eee
@@ -1037,10 +943,12 @@ $sheet-padding: 16px
         height: inherit
         width: 100%
         .oe_view_manager_body
-            display: table-row
             height: inherit
         .oe_view_manager_view_kanban:not(:empty)
             height: inherit
+        &[data-view-type=kanban]
+            .oe_view_manager_body
+                display: table-row
 
         table.oe_view_manager_header
             border-collapse: separate
@@ -1642,7 +1550,7 @@ $sheet-padding: 16px
     // FormView.header {{{
     .oe_form > :not(.oe_form_nosheet) header
         padding-left: 2px
-        ul
+        ul:not(.oe_tooltip_technical)
             display: inline-block
             float: right
         .oe_button
@@ -1893,10 +1801,9 @@ $sheet-padding: 16px
                 overflow: hidden
         .oe_form_embedded_html
             position: relative
-            width: 600px
-            margin-left: 130px
-            margin-top: 32px
-            margin-bottom: 32px
+            width: 100%
+            margin: auto
+            overflow: auto            
             text-align: justify
         .oe_form_field_html .oe_input_icon
             float: right
@@ -2313,7 +2220,7 @@ $sheet-padding: 16px
                     padding: 3px 6px
                     white-space: pre-line
                 > td, > th
-                    > button
+                    > button.btn_img
                         border: none
                         background: transparent
                         padding: 0
@@ -2732,9 +2639,6 @@ body.oe_single_form
             > .arrow span
                 background-color: #729fcf !important
 
-    // jquery ui for ie
-    .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endColorstr='#D8D8D8')
 // }}}
 
 // @media print {{{
@@ -2772,12 +2676,65 @@ body.oe_single_form
             overflow: hidden !important
 // }}}
 
+// End of customize
+
+// Customize bootstrap3 for tooltip
+.tooltip
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 12px
+    background: white
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+    background-color: transparent
+    .tooltip-inner
+        text-align: left !important
+        max-width: 350px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
 
 // Hack for ui icon {{{
 .ui-icon
     width: 18px
     height: 18px
 // End hack}}}
+
+// Customized modal according bootstrap3
+.modal
+    .modal-header button.close
+        border: none
+        background: none
+        padding: 1px
+        height: 18px
+        font-size: 20px
+    .modal-footer
+        text-align: left
+    .oe_button
+        margin: 0 4px 0 0
+    .oe_act_window.modal-body
+        padding: 0
 
 input[type="radio"], input[type="checkbox"]
     margin-right: 4px

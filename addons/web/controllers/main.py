@@ -14,6 +14,7 @@ import hashlib
 import os
 import re
 import simplejson
+import sys
 import time
 import urllib2
 import zlib
@@ -33,14 +34,18 @@ import openerp.modules.registry
 from openerp.tools.translate import _
 from openerp import http
 
-from openerp.http import request, serialize_exception as _serialize_exception, LazyResponse
+from openerp.http import request, serialize_exception as _serialize_exception
 
 _logger = logging.getLogger(__name__)
 
-env = jinja2.Environment(
-    loader=jinja2.PackageLoader('openerp.addons.web', "views"),
-    autoescape=True
-)
+if hasattr(sys, 'frozen'):
+    # When running on compiled windows binary, we don't have access to package loader.
+    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
+    loader = jinja2.FileSystemLoader(path)
+else:
+    loader = jinja2.PackageLoader('openerp.addons.web', "views")
+
+env = jinja2.Environment(loader=loader, autoescape=True)
 env.filters["json"] = simplejson.dumps
 
 #----------------------------------------------------------
@@ -119,6 +124,12 @@ def redirect_with_hash(*args, **kw):
     """
     return http.redirect_with_hash(*args, **kw)
 
+def abort_and_redirect(url):
+    r = request.httprequest
+    response = werkzeug.utils.redirect(url, 302)
+    response = r.app.get_response(r, response, explicit_session=False)
+    werkzeug.exceptions.abort(response)
+
 def ensure_db(redirect='/web/database/selector'):
     # This helper should be used in web client auth="none" routes
     # if those routes needs a db to work with.
@@ -141,11 +152,14 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        response = werkzeug.utils.redirect(r.url, 302)
+        url_redirect = r.base_url
+        if r.query_string:
+            # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
+            # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
+            url_redirect += '?' + r.query_string
+        response = werkzeug.utils.redirect(url_redirect, 302)
         request.session.db = db
-        response = r.app.get_response(r, response, explicit_session=False)
-        werkzeug.exceptions.abort(response)
-        return
+        abort_and_redirect(url_redirect)
 
     # if db not provided, use the session one
     if not db:
@@ -163,6 +177,7 @@ def ensure_db(redirect='/web/database/selector'):
     # always switch the session to the computed db
     if db != request.session.db:
         request.session.logout()
+        abort_and_redirect(request.httprequest.url)
 
     request.session.db = db
 
@@ -356,7 +371,13 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((None, pattern))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    r.append((path, fs2web(path[len(addons_path):])))
+                    # Hack for IE, who limit 288Ko, 4095 rules, 31 sheets
+                    # http://support.microsoft.com/kb/262161/en
+                    if pattern == "static/lib/bootstrap/css/bootstrap.css":
+                        if include_remotes:
+                            r.insert(0, (None, fs2web(path[len(addons_path):])))
+                    else:
+                        r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(extension, mods=None, db=None, debug=False):
@@ -420,6 +441,15 @@ def set_cookie_and_redirect(redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
+
+def login_redirect():
+    url = '/web/login?'
+    if request.debug:
+        url += 'debug&'
+    return """<html><head><script>
+        window.location = '%sredirect=' + encodeURIComponent(window.location);
+    </script></head></html>
+    """ % (url,)
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
@@ -591,12 +621,13 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-def render_bootstrap_template(db, template, values=None, debug=False, lazy=False, **kw):
-    if request and request.debug:
+def render_bootstrap_template(template, values=None, debug=False, db=None, **kw):
+    if not db:
+        db = request.db
+    if request.debug:
         debug = True
     if values is None:
         values = {}
-    values.update(kw)
     values['debug'] = debug
     values['current_db'] = db
     try:
@@ -612,35 +643,39 @@ def render_bootstrap_template(db, template, values=None, debug=False, lazy=False
         values['modules'] = module_boot(db=db)
     values['modules'] = simplejson.dumps(values['modules'])
 
-    def callback(template, values):
-        registry = openerp.modules.registry.RegistryManager.get(db)
-        with registry.cursor() as cr:
-            view_obj = registry["ir.ui.view"]
-            return view_obj.render(cr, openerp.SUPERUSER_ID, template, values)
-    if lazy:
-        return LazyResponse(callback, template=template, values=values)
-    else:
-        return callback(template, values)
+    return request.render(template, values, **kw)
 
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return http.local_redirect('/web', query=request.params)
+        return http.local_redirect('/web', query=request.params, keep_hash=True)
 
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
 
         if request.session.uid:
-            html = render_bootstrap_template(request.session.db, "web.webclient_bootstrap")
-            return request.make_response(html, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
+            if kw.get('redirect'):
+                return werkzeug.utils.redirect(kw.get('redirect'), 303)
+
+            headers = {
+                'Cache-Control': 'no-cache',
+                'Content-Type': 'text/html; charset=utf-8',
+            }
+            return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
         else:
-            return http.local_redirect('/web/login', query=request.params)
+            return login_redirect()
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
+
+        if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            return http.redirect_with_hash(redirect)
+
+        if not request.uid:
+            request.uid = openerp.SUPERUSER_ID
 
         values = request.params.copy()
         if not redirect:
@@ -651,7 +686,7 @@ class Home(http.Controller):
             if uid is not False:
                 return http.redirect_with_hash(redirect)
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template(request.session.db, 'web.login', values, lazy=True)
+        return render_bootstrap_template('web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
@@ -928,10 +963,11 @@ class Database(http.Controller):
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
-    def restore(self, db_file, restore_pwd, new_db):
+    def restore(self, db_file, restore_pwd, new_db, mode):
         try:
+            copy = mode == 'copy'
             data = base64.b64encode(db_file.read())
-            request.session.proxy("db").restore(restore_pwd, new_db, data)
+            request.session.proxy("db").restore(restore_pwd, new_db, data, copy)
             return ''
         except openerp.exceptions.AccessDenied, e:
             raise Exception("AccessDenied")
@@ -1179,11 +1215,14 @@ class DataSet(http.Controller):
 
     def _call_kw(self, model, method, args, kwargs):
         # Temporary implements future display_name special field for model#read()
-        if method == 'read' and kwargs.get('context', {}).get('future_display_name'):
+        if method in ('read', 'search_read') and kwargs.get('context', {}).get('future_display_name'):
             if 'display_name' in args[1]:
-                names = dict(request.session.model(model).name_get(args[0], **kwargs))
+                if method == 'read':
+                    names = dict(request.session.model(model).name_get(args[0], **kwargs))
+                else:
+                    names = dict(request.session.model(model).name_search('', args[0], **kwargs))
                 args[1].remove('display_name')
-                records = request.session.model(model).read(*args, **kwargs)
+                records = getattr(request.session.model(model), method)(*args, **kwargs)
                 for record in records:
                     record['display_name'] = \
                         names.get(record['id']) or "%s#%d" % (model, (record['id']))
@@ -1596,8 +1635,8 @@ class Export(http.Controller):
             model, map(operator.itemgetter('name'), export_fields_list))
 
         return [
-            {'name': field_name, 'label': fields_data[field_name]}
-            for field_name in fields_data.keys()
+            {'name': field['name'], 'label': fields_data[field['name']]}
+            for field in export_fields_list
         ]
 
     def fields_info(self, model, export_fields):
@@ -1656,6 +1695,8 @@ class Export(http.Controller):
             for k, v in self.fields_info(model, export_fields).iteritems())
 
 class ExportFormat(object):
+    raw_data = False
+
     @property
     def content_type(self):
         """ Provides the format's content type """
@@ -1688,7 +1729,7 @@ class ExportFormat(object):
         ids = ids or Model.search(domain, 0, False, False, request.context)
 
         field_names = map(operator.itemgetter('name'), fields)
-        import_data = Model.export_data(ids, field_names, request.context).get('datas',[])
+        import_data = Model.export_data(ids, field_names, self.raw_data, context=request.context).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
@@ -1741,6 +1782,8 @@ class CSVExport(ExportFormat, http.Controller):
         return data
 
 class ExcelExport(ExportFormat, http.Controller):
+    # Excel needs raw data to correctly handle numbers and date values
+    raw_data = True
 
     @http.route('/web/export/xls', type='http', auth="user")
     @serialize_exception
@@ -1762,14 +1805,20 @@ class ExcelExport(ExportFormat, http.Controller):
             worksheet.write(0, i, fieldname)
             worksheet.col(i).width = 8000 # around 220 pixels
 
-        style = xlwt.easyxf('align: wrap yes')
+        base_style = xlwt.easyxf('align: wrap yes')
+        date_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD')
+        datetime_style = xlwt.easyxf('align: wrap yes', num_format_str='YYYY-MM-DD HH:mm:SS')
 
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
+                cell_style = base_style
                 if isinstance(cell_value, basestring):
                     cell_value = re.sub("\r", " ", cell_value)
-                if cell_value is False: cell_value = None
-                worksheet.write(row_index + 1, cell_index, cell_value, style)
+                elif isinstance(cell_value, datetime.datetime):
+                    cell_style = datetime_style
+                elif isinstance(cell_value, datetime.date):
+                    cell_style = date_style
+                worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
         fp = StringIO()
         workbook.save(fp)

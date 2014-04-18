@@ -271,7 +271,12 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
             if(cookie.indexOf(nameEQ) === 0) {
-                return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+                try {
+                    return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+                } catch(err) {
+                    // wrong cookie, delete it
+                    this.set_cookie(name, '', -1);
+                }
             }
         }
         return null;
@@ -782,6 +787,11 @@ instance.web.unblockUI = function() {
     });
     return $.unblockUI.apply($, arguments);
 };
+
+
+/* Bootstrap defaults overwrite */
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'bottom';
+$.fn.tooltip.Constructor.DEFAULTS.html = true;
 
 /**
  * Registry for all the client actions key: tag value: widget

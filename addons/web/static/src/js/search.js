@@ -355,7 +355,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
         },
         'autocompleteopen': function () {
-            this.$el.autocomplete('widget').css('z-index', 1004);
+            this.$el.autocomplete('widget').css('z-index', 9999);
         },
     },
     /**
@@ -677,6 +677,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @returns instance.web.search.Field
      */
     make_field: function (item, field, parent) {
+        // M2O combined with selection widget is pointless and broken in search views,
+        // but has been used in the past for unsupported hacks -> ignore it
+        if (field.type === "many2one" && item.attrs.widget === "selection"){
+            item.attrs.widget = undefined;
+        }
         var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
         if(obj) {
             return new (obj) (item, field, parent || this);
@@ -1555,9 +1560,6 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
-        if (this.attrs.operator || this.attrs.filter_domain) {
-            return this._super(needle);
-        }
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         var context = instance.web.pyeval.eval(

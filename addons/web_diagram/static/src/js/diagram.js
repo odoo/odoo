@@ -101,7 +101,6 @@ instance.web.DiagramView = instance.web.View.extend({
             params['connectors_fields'].push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
             params['connectors'].push(conn.attrs.name);
         });
-
         this.rpc(
             '/web_diagram/diagram/get_diagram_info',params).done(function(result) {
                 self.draw_diagram(result);
@@ -179,11 +178,6 @@ instance.web.DiagramView = instance.web.View.extend({
         var r  = new Raphael(canvas, '100%','100%');
 
         var graph  = new CuteGraph(r,style,canvas.parentNode);
-        
-        var confirm_dialog = $('#dialog').dialog({ 
-            autoOpen: false,
-            title: _t("Are you sure?") });
-        
 
         _.each(res_nodes, function(node) {
             var n = new CuteNode(
@@ -344,7 +338,7 @@ instance.web.DiagramView = instance.web.View.extend({
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
         // This is not a problem since the diagram is completely redrawn on saved changes.
-        pop.$el.bind("dialogbeforeclose",function(){
+        pop.$el.parents('.modal').on('hidden.bs.modal', function (e){
             if(dummy_cuteedge){
                 dummy_cuteedge.remove();
             }
