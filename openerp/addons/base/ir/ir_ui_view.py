@@ -73,11 +73,17 @@ class view_custom(osv.osv):
 class view(osv.osv):
     _name = 'ir.ui.view'
 
-    def _get_model_data(self, cr, uid, ids, *args, **kwargs):
-        ir_model_data = self.pool.get('ir.model.data')
-        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
-        result = dict(zip(ids, data_ids))
+    def _get_model_data(self, cr, uid, ids, fname, args, context=None):
+        result = dict.fromkeys(ids, False)
+        IMD = self.pool['ir.model.data']
+        data_ids = IMD.search_read(cr, uid, [('res_id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
+        result.update(map(itemgetter('res_id', 'id'), data_ids))
         return result
+
+    def _views_from_model_data(self, cr, uid, ids, context=None):
+        IMD = self.pool['ir.model.data']
+        data_ids = IMD.search_read(cr, uid, [('id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
+        return map(itemgetter('res_id'), data_ids)
 
     _columns = {
         'name': fields.char('View Name', required=True),
@@ -97,7 +103,11 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
-        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data", store=True),
+        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
+                                         store={
+                                             _name: (lambda s, c, u, i, ctx=None: i, None, 10),
+                                             'ir.model.data': (_views_from_model_data, ['model', 'res_id'], 10),
+                                         }),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -316,14 +326,14 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id, source_id):
+    def inherit_branding(self, specs_tree, view_id, root_id):
         for node in specs_tree.iterchildren(tag=etree.Element):
             xpath = node.getroottree().getpath(node)
             if node.tag == 'data' or node.tag == 'xpath':
-                self.inherit_branding(node, view_id, source_id)
+                self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(source_id))
+                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -397,7 +407,7 @@ class view(osv.osv):
 
         return source
 
-    def apply_view_inheritance(self, cr, uid, source, source_id, model, context=None):
+    def apply_view_inheritance(self, cr, uid, source, source_id, model, root_id=None, context=None):
         """ Apply all the (directly and indirectly) inheriting views.
 
         :param source: a parent architecture to modify (with parent modifications already applied)
@@ -408,13 +418,15 @@ class view(osv.osv):
         :return: a modified source where all the modifying architecture are applied
         """
         if context is None: context = {}
+        if root_id is None:
+            root_id = source_id
         sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
-                self.inherit_branding(specs_tree, view_id, source_id)
+                self.inherit_branding(specs_tree, view_id, root_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
-            source = self.apply_view_inheritance(cr, uid, source, view_id, model, context=context)
+            source = self.apply_view_inheritance(cr, uid, source, view_id, model, root_id=root_id, context=context)
         return source
 
     def read_combined(self, cr, uid, view_id, fields=None, context=None):
@@ -686,6 +698,16 @@ class view(osv.osv):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
+        if node.tag in ('kanban'):
+            group_by_field = node.get('default_group_by')
+            if group_by_field and Model._all_columns.get(group_by_field):
+                group_by_column = Model._all_columns[group_by_field].column
+                if group_by_column._type == 'many2one':
+                    group_by_model = Model.pool.get(group_by_column._obj)
+                    for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
+                        if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
+                            node.set(action, 'false')
+
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
             if k not in fields_def:
@@ -707,10 +729,13 @@ class view(osv.osv):
     #------------------------------------------------------
     @tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
     def read_template(self, cr, uid, xml_id, context=None):
-        if '.' not in xml_id:
-            raise ValueError('Invalid template id: %r' % (xml_id,))
+        if isinstance(xml_id, (int, long)):
+            view_id = xml_id
+        else:
+            if '.' not in xml_id:
+                raise ValueError('Invalid template id: %r' % (xml_id,))
+            view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
 
-        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
@@ -726,9 +751,26 @@ class view(osv.osv):
     def clear_cache(self):
         self.read_template.clear_cache(self)
 
+    def _contains_branded(self, node):
+        return node.tag == 't'\
+            or 't-raw' in node.attrib\
+            or any(self.is_node_branded(child) for child in node.iterdescendants())
+
+    def _pop_view_branding(self, element):
+        distributed_branding = dict(
+            (attribute, element.attrib.pop(attribute))
+            for attribute in MOVABLE_BRANDING
+            if element.get(attribute))
+        return distributed_branding
+
     def distribute_branding(self, e, branding=None, parent_xpath='',
                             index_map=misc.ConstantMapping(1)):
         if e.get('t-ignore') or e.tag == 'head':
+            # remove any view branding possibly injected by inheritance
+            attrs = set(MOVABLE_BRANDING)
+            for descendant in e.iterdescendants(tag=etree.Element):
+                if not attrs.intersection(descendant.attrib): continue
+                self._pop_view_branding(descendant)
             # TODO: find a better name and check if we have a string to boolean helper
             return
 
@@ -740,25 +782,30 @@ class view(osv.osv):
             e.set('data-oe-xpath', node_path)
         if not e.get('data-oe-model'): return
 
-        # if a branded element contains branded elements distribute own
-        # branding to children unless it's t-raw, then just remove branding
-        # on current element
-        if e.tag == 't' or 't-raw' in e.attrib or \
-                any(self.is_node_branded(child) for child in e.iterdescendants()):
-            distributed_branding = dict(
-                (attribute, e.attrib.pop(attribute))
-                for attribute in MOVABLE_BRANDING
-                if e.get(attribute))
+        if set(('t-esc', 't-escf', 't-raw', 't-rawf')).intersection(e.attrib):
+            # nodes which fully generate their content and have no reason to
+            # be branded because they can not sensibly be edited
+            self._pop_view_branding(e)
+        elif self._contains_branded(e):
+            # if a branded element contains branded elements distribute own
+            # branding to children unless it's t-raw, then just remove branding
+            # on current element
+            distributed_branding = self._pop_view_branding(e)
 
             if 't-raw' not in e.attrib:
                 # TODO: collections.Counter if remove p2.6 compat
                 # running index by tag type, for XPath query generation
                 indexes = collections.defaultdict(lambda: 0)
                 for child in e.iterchildren(tag=etree.Element):
-                    indexes[child.tag] += 1
-                    self.distribute_branding(child, distributed_branding,
-                                             parent_xpath=node_path,
-                                             index_map=indexes)
+                    if child.get('data-oe-xpath'):
+                        # injected by view inheritance, skip otherwise
+                        # generated xpath is incorrect
+                        self.distribute_branding(child)
+                    else:
+                        indexes[child.tag] += 1
+                        self.distribute_branding(
+                            child, distributed_branding,
+                            parent_xpath=node_path, index_map=indexes)
 
     def is_node_branded(self, node):
         """ Finds out whether a node is branded or qweb-active (bears a
@@ -813,9 +860,6 @@ class view(osv.osv):
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]
-        tname = id_or_xml_id
-        if isinstance(tname, (int, long)):
-            tname = self.get_view_xmlid(cr, uid, tname)
 
         if not context:
             context = {}
@@ -833,7 +877,7 @@ class view(osv.osv):
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, tname, qcontext, loader=loader, context=context)
+        return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
 
     #------------------------------------------------------
     # Misc

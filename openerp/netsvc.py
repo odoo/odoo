@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2004-2014 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,22 +19,28 @@
 #
 ##############################################################################
 
-
 import logging
 import logging.handlers
 import os
+import pprint
 import release
 import sys
 import threading
-import time
-import types
-from pprint import pformat
-import psutil
 
-import tools
+import psycopg2
+
 import openerp
+import sql_db
+import tools
 
 _logger = logging.getLogger(__name__)
+
+def log(logger, level, prefix, msg, depth=None):
+    indent=''
+    indent_after=' '*len(prefix)
+    for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
+        logger.log(level, indent+line)
+        indent=indent_after
 
 def LocalService(name):
     """
@@ -61,6 +67,36 @@ def LocalService(name):
                 registry = openerp.modules.registry.RegistryManager.get(dbname)
                 with registry.cursor() as cr:
                     return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
+
+class PostgreSQLHandler(logging.Handler):
+    """ PostgreSQL Loggin Handler will store logs in the database, by default
+    the current database, can be set using --log-db=DBNAME
+    """
+    def emit(self, record):
+        ct = threading.current_thread()
+        ct_db = getattr(ct, 'dbname', None)
+        ct_uid = getattr(ct, 'uid', None)
+        dbname = tools.config['log_db'] or ct_db
+        if dbname:
+            cr = None
+            try:
+                cr = sql_db.db_connect(dbname).cursor()
+                msg = unicode(record.msg)
+                traceback = getattr(record, 'exc_text', '')
+                if traceback:
+                    msg = "%s\n%s" % (msg, traceback)
+                level = logging.getLevelName(record.levelno)
+                val = (ct_uid, ct_uid, 'server', ct_db, record.name, level, msg, record.pathname, record.lineno, record.funcName)
+                cr.execute("""
+                    INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
+                    VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, val )
+                cr.commit()
+            except Exception, e:
+                pass
+            finally:
+                if cr:
+                    cr.close()
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -89,7 +125,13 @@ class ColoredFormatter(DBFormatter):
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
         return DBFormatter.format(self, record)
 
+_logger_init = False
 def init_logger():
+    global _logger_init
+    if _logger_init:
+        return
+    _logger_init = True
+
     from tools.translate import resetlocale
     resetlocale()
 
@@ -101,7 +143,7 @@ def init_logger():
         if os.name == 'nt':
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
         else:
-            handler = logging.handlers.SysLogHandler('/dev/log')
+            handler = logging.handlers.SysLogHandler()
         format = '%s %s' % (release.description, release.version) \
                 + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
@@ -109,11 +151,12 @@ def init_logger():
         # LogFile Handler
         logf = tools.config['logfile']
         try:
+            # We check we have the right location for the log files
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
             if tools.config['logrotate'] is not False:
-                handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
+                handler = logging.handlers.TimedRotatingFileHandler(filename=logf, when='D', interval=1, backupCount=30)
             elif os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
@@ -129,15 +172,23 @@ def init_logger():
     # behind Apache with mod_wsgi, handler.stream will have type mod_wsgi.Log,
     # which has no fileno() method. (mod_wsgi.Log is what is being bound to
     # sys.stderr when the logging.StreamHandler is being constructed above.)
-    if isinstance(handler, logging.StreamHandler) \
-        and hasattr(handler.stream, 'fileno') \
-        and os.isatty(handler.stream.fileno()):
+    def is_a_tty(stream):
+        return hasattr(stream, 'fileno') and os.isatty(stream.fileno())
+
+    if isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
         formatter = ColoredFormatter(format)
     else:
         formatter = DBFormatter(format)
     handler.setFormatter(formatter)
 
-    # Configure handlers
+    logging.getLogger().addHandler(handler)
+
+    if tools.config['log_db']:
+        postgresqlHandler = PostgreSQLHandler()
+        postgresqlHandler.setLevel(logging.WARNING)
+        logging.getLogger().addHandler(postgresqlHandler)
+
+    # Configure loggers levels
     pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
 
     logconfig = tools.config['log_handler']
@@ -147,26 +198,22 @@ def init_logger():
         loggername, level = logconfig_item.split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
-        logger.handlers = []
         logger.setLevel(level)
-        logger.addHandler(handler)
-        if loggername != '':
-            logger.propagate = False
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
 
 DEFAULT_LOG_CONFIGURATION = [
     'openerp.workflow.workitem:WARNING',
-    'openerp.netsvc.rpc.request:INFO',
-    'openerp.netsvc.rpc.response:INFO',
+    'openerp.http.rpc.request:INFO',
+    'openerp.http.rpc.response:INFO',
     'openerp.addons.web.http:INFO',
     'openerp.sql_db:INFO',
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG', 'openerp.netsvc.rpc.response:DEBUG'],
-    'debug_rpc': ['openerp:DEBUG','openerp.netsvc.rpc.request:DEBUG'],
+    'debug_rpc_answer': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG', 'openerp.http.rpc.response:DEBUG'],
+    'debug_rpc': ['openerp:DEBUG','openerp.http.rpc.request:DEBUG'],
     'debug': ['openerp:DEBUG'],
     'debug_sql': ['openerp.sql_db:DEBUG'],
     'info': [],
@@ -174,100 +221,5 @@ PSEUDOCONFIG_MAPPER = {
     'error': ['openerp:ERROR'],
     'critical': ['openerp:CRITICAL'],
 }
-
-# A alternative logging scheme for automated runs of the
-# server intended to test it.
-def init_alternative_logger():
-    class H(logging.Handler):
-        def emit(self, record):
-            if record.levelno > 20:
-                print record.levelno, record.pathname, record.msg
-    handler = H()
-    # Add the handler to the 'openerp' logger.
-    logger = logging.getLogger('openerp')
-    logger.addHandler(handler)
-    logger.setLevel(logging.ERROR)
-
-def replace_request_password(args):
-    # password is always 3rd argument in a request, we replace it in RPC logs
-    # so it's easier to forward logs for diagnostics/debugging purposes...
-    if len(args) > 2:
-        args = list(args)
-        args[2] = '*'
-    return tuple(args)
-
-def log(logger, level, prefix, msg, depth=None):
-    indent=''
-    indent_after=' '*len(prefix)
-    for line in (prefix+pformat(msg, depth=depth)).split('\n'):
-        logger.log(level, indent+line)
-        indent=indent_after
-
-def dispatch_rpc(service_name, method, params):
-    """ Handle a RPC call.
-
-    This is pure Python code, the actual marshalling (from/to XML-RPC) is done
-    in a upper layer.
-    """
-    try:
-        rpc_request = logging.getLogger(__name__ + '.rpc.request')
-        rpc_response = logging.getLogger(__name__ + '.rpc.response')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        rpc_response_flag = rpc_response.isEnabledFor(logging.DEBUG)
-        if rpc_request_flag or rpc_response_flag:
-            start_time = time.time()
-            start_rss, start_vms = 0, 0
-            start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
-            if rpc_request and rpc_response_flag:
-                log(rpc_request,logging.DEBUG,'%s.%s'%(service_name,method), replace_request_password(params))
-
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
-        if service_name == 'common':
-            dispatch = openerp.service.common.dispatch
-        elif service_name == 'db':
-            dispatch = openerp.service.db.dispatch
-        elif service_name == 'object':
-            dispatch = openerp.service.model.dispatch
-        elif service_name == 'report':
-            dispatch = openerp.service.report.dispatch
-        else:
-            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
-        result = dispatch(method, params)
-
-        if rpc_request_flag or rpc_response_flag:
-            end_time = time.time()
-            end_rss, end_vms = 0, 0
-            end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
-            logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
-            if rpc_response_flag:
-                log(rpc_response,logging.DEBUG, logline, result)
-            else:
-                log(rpc_request,logging.DEBUG, logline, replace_request_password(params), depth=1)
-
-        return result
-    except openerp.osv.orm.except_orm:
-        raise
-    except openerp.exceptions.AccessError:
-        raise
-    except openerp.exceptions.AccessDenied:
-        raise
-    except openerp.exceptions.Warning:
-        raise
-    except openerp.exceptions.RedirectWarning:
-        raise
-    except openerp.exceptions.DeferredException, e:
-        _logger.exception(tools.exception_to_unicode(e))
-        post_mortem(e.traceback)
-        raise
-    except Exception, e:
-        _logger.exception(tools.exception_to_unicode(e))
-        post_mortem(sys.exc_info())
-        raise
-
-def post_mortem(info):
-    if tools.config['debug_mode'] and isinstance(info[2], types.TracebackType):
-        import pdb
-        pdb.post_mortem(info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

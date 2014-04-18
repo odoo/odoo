@@ -8,6 +8,7 @@
 #      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence
 # This assume an existing database.
 import psycopg2
+import psycopg2.errorcodes
 import unittest2
 
 import openerp
@@ -20,7 +21,7 @@ def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
 
 def cursor():
-    return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+    return openerp.modules.registry.RegistryManager.get(DB).cursor()
 
 
 def drop_sequence(code):
@@ -111,11 +112,11 @@ class test_ir_sequence_no_gap(unittest2.TestCase):
         cr0 = cursor()
         cr1 = cursor()
         cr1._default_log_exceptions = False # Prevent logging a traceback
-        msg_re = '^could not obtain lock on row in relation "ir_sequence"$'
-        with self.assertRaisesRegexp(psycopg2.OperationalError, msg_re):
+        with self.assertRaises(psycopg2.OperationalError) as e:
             n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
             assert n0
             n1 = registry('ir.sequence').next_by_code(cr1, ADMIN_USER_ID, 'test_sequence_type_2', {})
+        self.assertEqual(e.exception.pgcode, psycopg2.errorcodes.LOCK_NOT_AVAILABLE, msg="postgresql returned an incorrect errcode")
         cr0.close()
         cr1.close()
 

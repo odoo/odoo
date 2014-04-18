@@ -26,6 +26,8 @@ import os
 import re
 
 from openerp import tools
+from openerp.tools.translate import _
+from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
 from openerp import SUPERUSER_ID
 
@@ -64,22 +66,56 @@ class ir_attachment(osv.osv):
                 data[attachment.id] = False
         return data
 
+    def _storage(self, cr, uid, context=None):
+        return self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'ir_attachment.location', 'file')
+
+    @tools.ormcache()
+    def _filestore(self, cr, uid, context=None):
+        return tools.config.filestore(cr.dbname)
+
+    def force_storage(self, cr, uid, context=None):
+        """Force all attachments to be stored in the currently configured storage"""
+        if not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise AccessError(_('Only administrators can execute this action.'))
+
+        location = self._storage(cr, uid, context)
+        domain = {
+            'db': [('store_fname', '!=', False)],
+            'file': [('db_datas', '!=', False)],
+        }[location]
+
+        ids = self.search(cr, uid, domain, context=context)
+        for attach in self.browse(cr, uid, ids, context=context):
+            attach.write({'datas': attach.datas})
+        return True
+
     # 'data' field implementation
-    def _full_path(self, cr, uid, location, path):
-        # location = 'file:filestore'
-        assert location.startswith('file:'), "Unhandled filestore location %s" % location
-        location = location[5:]
-
-        # sanitize location name and path
-        location = re.sub('[.]','',location)
-        location = location.strip('/\\')
-
-        path = re.sub('[.]','',path)
+    def _full_path(self, cr, uid, path):
+        # sanitize ath
+        path = re.sub('[.]', '', path)
         path = path.strip('/\\')
-        return os.path.join(tools.config['root_path'], location, cr.dbname, path)
+        return os.path.join(self._filestore(cr, uid), path)
 
-    def _file_read(self, cr, uid, location, fname, bin_size=False):
-        full_path = self._full_path(cr, uid, location, fname)
+    def _get_path(self, cr, uid, bin_data):
+        sha = hashlib.sha1(bin_data).hexdigest()
+
+        # retro compatibility
+        fname = sha[:3] + '/' + sha
+        full_path = self._full_path(cr, uid, fname)
+        if os.path.isfile(full_path):
+            return fname, full_path        # keep existing path
+
+        # scatter files across 256 dirs
+        # we use '/' in the db (even on windows)
+        fname = sha[:2] + '/' + sha
+        full_path = self._full_path(cr, uid, fname)
+        dirname = os.path.dirname(full_path)
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+        return fname, full_path
+
+    def _file_read(self, cr, uid, fname, bin_size=False):
+        full_path = self._full_path(cr, uid, fname)
         r = ''
         try:
             if bin_size:
@@ -90,26 +126,21 @@ class ir_attachment(osv.osv):
             _logger.error("_read_file reading %s",full_path)
         return r
 
-    def _file_write(self, cr, uid, location, value):
+    def _file_write(self, cr, uid, value):
         bin_value = value.decode('base64')
-        fname = hashlib.sha1(bin_value).hexdigest()
-        # scatter files across 1024 dirs
-        # we use '/' in the db (even on windows)
-        fname = fname[:3] + '/' + fname
-        full_path = self._full_path(cr, uid, location, fname)
-        try:
-            dirname = os.path.dirname(full_path)
-            if not os.path.isdir(dirname):
-                os.makedirs(dirname)
-            open(full_path,'wb').write(bin_value)
-        except IOError:
-            _logger.error("_file_write writing %s",full_path)
+        fname, full_path = self._get_path(cr, uid, bin_value)
+        if not os.path.exists(full_path):
+            try:
+                with open(full_path, 'wb') as fp:
+                    fp.write(bin_value)
+            except IOError:
+                _logger.error("_file_write writing %s", full_path)
         return fname
 
-    def _file_delete(self, cr, uid, location, fname):
+    def _file_delete(self, cr, uid, fname):
         count = self.search(cr, 1, [('store_fname','=',fname)], count=True)
-        if count <= 1:
-            full_path = self._full_path(cr, uid, location, fname)
+        full_path = self._full_path(cr, uid, fname)
+        if count <= 1 and os.path.exists(full_path):
             try:
                 os.unlink(full_path)
             except OSError:
@@ -122,11 +153,10 @@ class ir_attachment(osv.osv):
         if context is None:
             context = {}
         result = {}
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
         bin_size = context.get('bin_size')
         for attach in self.browse(cr, uid, ids, context=context):
-            if location and attach.store_fname:
-                result[attach.id] = self._file_read(cr, uid, location, attach.store_fname, bin_size)
+            if attach.store_fname:
+                result[attach.id] = self._file_read(cr, uid, attach.store_fname, bin_size)
             else:
                 result[attach.id] = attach.db_datas
         return result
@@ -137,17 +167,17 @@ class ir_attachment(osv.osv):
             return True
         if context is None:
             context = {}
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
+        location = self._storage(cr, uid, context)
         file_size = len(value.decode('base64'))
-        if location:
-            attach = self.browse(cr, uid, id, context=context)
-            if attach.store_fname:
-                self._file_delete(cr, uid, location, attach.store_fname)
-            fname = self._file_write(cr, uid, location, value)
+        attach = self.browse(cr, uid, id, context=context)
+        if attach.store_fname:
+            self._file_delete(cr, uid, attach.store_fname)
+        if location != 'db':
+            fname = self._file_write(cr, uid, value)
             # SUPERUSER_ID as probably don't have write access, trigger during create
-            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'store_fname': fname, 'file_size': file_size}, context=context)
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'store_fname': fname, 'file_size': file_size, 'db_datas': False}, context=context)
         else:
-            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'db_datas': value, 'file_size': file_size}, context=context)
+            super(ir_attachment, self).write(cr, SUPERUSER_ID, [id], {'db_datas': value, 'file_size': file_size, 'store_fname': False}, context=context)
         return True
 
     _name = 'ir.attachment'
@@ -285,11 +315,9 @@ class ir_attachment(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         self.check(cr, uid, ids, 'unlink', context=context)
-        location = self.pool.get('ir.config_parameter').get_param(cr, uid, 'ir_attachment.location')
-        if location:
-            for attach in self.browse(cr, uid, ids, context=context):
-                if attach.store_fname:
-                    self._file_delete(cr, uid, location, attach.store_fname)
+        for attach in self.browse(cr, uid, ids, context=context):
+            if attach.store_fname:
+                self._file_delete(cr, uid, attach.store_fname)
         return super(ir_attachment, self).unlink(cr, uid, ids, context)
 
     def create(self, cr, uid, values, context=None):
@@ -303,4 +331,3 @@ class ir_attachment(osv.osv):
             cr, uid, 'base', 'action_attachment', context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

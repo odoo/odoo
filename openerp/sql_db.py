@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,8 +27,11 @@ the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
 
+from contextlib import contextmanager
 from functools import wraps
 import logging
+import time
+import uuid
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
@@ -145,7 +148,7 @@ class Cursor(object):
     def check(f):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
-            if self.__closed:
+            if self._closed:
                 msg = 'Unable to use a closed cursor.'
                 if self.__closer:
                     msg += ' It was closed at %s, line %s' % self.__closer
@@ -162,9 +165,9 @@ class Cursor(object):
         self.sql_log = _logger.isEnabledFor(logging.DEBUG)
 
         self.sql_log_count = 0
-        self.__closed = True    # avoid the call of close() (by __del__) if an exception
+        self._closed = True    # avoid the call of close() (by __del__) if an exception
                                 # is raised by any of the following initialisations
-        self._pool = pool
+        self.__pool = pool
         self.dbname = dbname
 
         # Whether to enable snapshot isolation level for this cursor.
@@ -177,7 +180,7 @@ class Cursor(object):
             self.__caller = frame_codeinfo(currentframe(),2)
         else:
             self.__caller = False
-        self.__closed = False   # real initialisation value
+        self._closed = False   # real initialisation value
         self.autocommit(False)
         self.__closer = False
 
@@ -186,7 +189,7 @@ class Cursor(object):
         self.cache = {}
 
     def __del__(self):
-        if not self.__closed and not self._cnx.closed:
+        if not self._closed and not self._cnx.closed:
             # Oops. 'self' has not been closed explicitly.
             # The cursor will be deleted by the garbage collector,
             # but the database connection is not put back into the connection
@@ -299,7 +302,7 @@ class Cursor(object):
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
         del self._obj
-        self.__closed = True
+        self._closed = True
 
         # Clean the underlying connection.
         self._cnx.rollback()
@@ -310,7 +313,7 @@ class Cursor(object):
             chosen_template = tools.config['db_template']
             templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
             keep_in_pool = self.dbname not in templates_list
-            self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+            self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check
     def autocommit(self, on):
@@ -344,9 +347,76 @@ class Cursor(object):
         """
         return self._cnx.rollback()
 
+    def __enter__(self):
+        """ Using the cursor as a contextmanager automatically commits and
+            closes it::
+
+                with cr:
+                    cr.execute(...)
+
+                # cr is committed if no failure occurred
+                # cr is closed in any case
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type is None:
+            self.commit()
+        self.close()
+
+    @contextmanager
+    @check
+    def savepoint(self):
+        """context manager entering in a new savepoint"""
+        name = uuid.uuid1().hex
+        self.execute('SAVEPOINT "%s"' % name)
+        try:
+            yield
+            self.execute('RELEASE SAVEPOINT "%s"' % name)
+        except:
+            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
+            raise
+
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
+
+class TestCursor(Cursor):
+    """ A cursor to be used for tests. It keeps the transaction open across
+        several requests, and simulates committing, rolling back, and closing.
+    """
+    def __init__(self, *args, **kwargs):
+        super(TestCursor, self).__init__(*args, **kwargs)
+        # in order to simulate commit and rollback, the cursor maintains a
+        # savepoint at its last commit
+        self.execute("SAVEPOINT test_cursor")
+        # we use a lock to serialize concurrent requests
+        self._lock = threading.RLock()
+
+    def acquire(self):
+        self._lock.acquire()
+
+    def release(self):
+        self._lock.release()
+
+    def force_close(self):
+        super(TestCursor, self).close()
+
+    def close(self):
+        if not self._closed:
+            self.rollback()             # for stuff that has not been committed
+        self.release()
+
+    def autocommit(self, on):
+        _logger.debug("TestCursor.autocommit(%r) does nothing", on)
+
+    def commit(self):
+        self.execute("RELEASE SAVEPOINT test_cursor")
+        self.execute("SAVEPOINT test_cursor")
+
+    def rollback(self):
+        self.execute("ROLLBACK TO SAVEPOINT test_cursor")
+        self.execute("SAVEPOINT test_cursor")
 
 class PsycoConnection(psycopg2.extensions.connection):
     pass
@@ -468,12 +538,17 @@ class Connection(object):
 
     def __init__(self, pool, dbname):
         self.dbname = dbname
-        self._pool = pool
+        self.__pool = pool
 
     def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dbname)
-        return Cursor(self._pool, self.dbname, serialized=serialized)
+        return Cursor(self.__pool, self.dbname, serialized=serialized)
+
+    def test_cursor(self, serialized=True):
+        cursor_type = serialized and 'serialized ' or ''
+        _logger.debug('create test %scursor to %r', cursor_type, self.dbname)
+        return TestCursor(self.__pool, self.dbname, serialized=serialized)
 
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor

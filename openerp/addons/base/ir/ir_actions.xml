@@ -57,38 +57,35 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="report_name"/>
                             <field name="model"/>
+                            <field name="report_type"/>
+                            <field name="report_name" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                            <field name="report_rml" attrs="{'invisible':[('report_type','!=', 'controller')]}"/>
                         </group>
                         <group>
-                            <field name="usage"/>
-                            <field name="report_type"/>
-                            <field name="report_file"/>
+                            <field name="multi"/>
+                            <field name="attachment_use" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
+                            <field name="attachment" attrs="{'invisible':[('report_type','=', 'controller')]}"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Other Configuration">
+                        <page string="Security">
+                            <field name="groups_id"/>
+                        </page>
+                        <page string="RML Configuration" attrs="{'invisible':[('report_type','not in',['pdf','sxw'])]}">
                             <group>
                                 <group string="RML Report">
                                     <field name="header"/>
+                                    <field name="report_file"/>
+                                    <field name="auto"/>
+                                    <field name="parser"/>
+                                    <field name="usage"/>
                                 </group>
                                 <group string="XML Report">
                                     <field name="report_xsl"/>
                                     <field name="report_xml"/>
                                 </group>
-                                <group string="Attachments">
-                                    <field name="attachment"/>
-                                    <field name="attachment_use"/>
-                                </group>
-                                <group string="Miscellaneous">
-                                    <field name="multi"/>
-                                    <field name="auto"/>
-                                    <field name="parser"/>
-                                </group>
                             </group>
-                        </page>
-                        <page string="Security">
-                            <field name="groups_id"/>
                         </page>
                     </notebook>
                 </form>
@@ -117,7 +114,8 @@
                         filter_domain="['|', '|', '|', '|', ('name','ilike',self), ('model','ilike',self), ('type','ilike',self), ('report_name','ilike',self), ('report_type','ilike',self)]"
                         string="Report"/>
                     <group expand="0" string="Group By" colspan="4">
-                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Report Type" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Report Model" domain="[]" context="{'group_by':'model'}"/>
                     </group>
                 </search>
             </field>
@@ -180,6 +178,7 @@
                                     <field name="auto_refresh"/>
                                     <field name="auto_search"/>
                                     <field name="filter"/>
+                                    <field name="multi"/>
                                 </group>
                             </group>
                             <group string="Help">
@@ -411,6 +410,7 @@
                                             <li>cr: database cursor</li>
                                             <li>uid: current user id</li>
                                             <li>context: current context</li>
+                                            <li>workflow: Workflow engine</li>
                                         </ul>
                                         <div>
                                             <p>Example of condition expression using Python</p>

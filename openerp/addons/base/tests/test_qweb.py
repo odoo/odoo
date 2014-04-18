@@ -14,7 +14,8 @@ class TestQWebTField(common.TransactionCase):
         self.engine = self.registry('ir.qweb')
 
     def context(self, values):
-        return ir_qweb.QWebContext(self.cr, self.uid, values)
+        return ir_qweb.QWebContext(
+            self.cr, self.uid, values, context={'inherit_branding': True})
 
     def test_trivial(self):
         field = document.createElement('span')
