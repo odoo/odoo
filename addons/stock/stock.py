@@ -368,35 +368,32 @@ class stock_quant(osv.osv):
                 to_move_quants.append(quant)
             quants_reconcile.append(quant)
         if to_move_quants:
-            self.recalculate_other_move_states(cr, uid, to_move_quants, move, context=context)
+            other_moves = [x.reservation_id for x in to_move_quants if x.reservation_id and x.reservation_id.id != move.id]
             self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, context=context)
+            self.recalculate_other_move_states(cr, uid, other_moves, context=context)
         if location_to.usage == 'internal':
             if self.search(cr, uid, [('product_id', '=', move.product_id.id), ('qty','<', 0)], limit=1, context=context):
                 for quant in quants_reconcile:
                     quant.refresh()
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
-    def recalculate_other_move_states(self, cr, uid, quants, move, context=None):
+    def recalculate_other_move_states(self, cr, uid, other_moves, context=None):
         move_obj = self.pool.get("stock.move")
-        other_moves = [x.reservation_id for x in quants if x.reservation_id and x.reservation_id.id != move.id]
         for o_move in other_moves:
             vals = {}
+            o_move.refresh()
             reserved_quant_ids = o_move.reserved_quant_ids
             if len(reserved_quant_ids) > 0 and not o_move.partially_available:
-                # Partially available is true
                 vals['partially_available'] = True
             if len(reserved_quant_ids) == 0 and o_move.partially_available:
                 vals['partially_available'] = False
             if o_move.state == 'assigned':
-                if move_obj.find_move_ancestors(cr, uid, move, context=context):
+                if move_obj.find_move_ancestors(cr, uid, o_move, context=context):
                     vals['state'] = 'waiting'
                 else:
                     vals['state'] = 'confirmed'
             if vals:
                 move_obj.write(cr, uid, [o_move.id], vals, context=context)
-                
-                
-        
 
     def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
         vals = {'location_id': location_dest_id.id,
@@ -1746,7 +1743,10 @@ class stock_move(osv.osv):
             if move.state in ('done', 'cancel'):
                 raise osv.except_osv(_('Operation Forbidden!'), _('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
-            self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
+            if self.find_move_ancestors(cr, uid, move, context=context):
+                self.write(cr, uid, [move.id], {'state': 'waiting'}, context=context)
+            else:
+                self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
 
     def _prepare_procurement_from_move(self, cr, uid, move, context=None):
         origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or "/")

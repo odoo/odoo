@@ -95,7 +95,6 @@
     pack_ids2 = [x.id for x in picking2.pack_operation_ids]
     stock_pack.write(cr, uid, pack_ids1, {'picking_id': picking2.id})
     stock_pack.write(cr, uid, pack_ids2, {'picking_id': picking1.id})
-    picking1.refresh()
 - 
   Process this picking
 - 
@@ -107,6 +106,11 @@
   !python {model: stock.quant}: |
     reco_id = self.search(cr ,uid , [('product_id','=',ref('product_wise')), ('qty', '<', 0.0)], context=context)
     assert len(reco_id) == 0, 'This should not have created a negative quant'
+- 
+  Check the other delivery order has changed its state back to partially available
+- 
+  !python {model: stock.picking}: |
+    assert self.browse(cr, uid, ref('delivery_order_wise2')).state == 'partially_available', "Delivery order 2 should be back in confirmed state"
 - 
   Process the second picking
 - 
