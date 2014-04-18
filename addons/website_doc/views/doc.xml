@@ -47,7 +47,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_documentation" parent="website_forum.menu_website_forum" name="Documentation" action="action_documentation_toc" sequence="20"/>
+        <menuitem id="menu_documentation" parent="website_forum.menu_website_forum" groups="website_doc.group_documentaion_moderator" name="Documentation" action="action_documentation_toc" sequence="20"/>
 
         <record id="action_documentation_toc_hierarchy" model="ir.actions.act_window">
             <field name="name">Documentation Hierarchy</field>
@@ -58,7 +58,7 @@
             <field name="view_id" ref="view_documentation_toc_hierarchy"/>
         </record>
 
-        <menuitem id="menu_documentation_hierarchy" parent="website_forum.menu_website_forum" name="Documentation Hierarchy" action="action_documentation_toc_hierarchy" sequence="25"/>
+        <menuitem id="menu_documentation_hierarchy" parent="website_forum.menu_website_forum" groups="website_doc.group_documentaion_moderator" name="Documentation Hierarchy" action="action_documentation_toc_hierarchy" sequence="25"/>
 
     </data>
 </openerp>

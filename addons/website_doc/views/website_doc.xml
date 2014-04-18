@@ -71,7 +71,7 @@
         <script type="text/javascript" src="/website_doc/static/src/js/website_doc.js"/>
     </xpath>
     <xpath expr="//div[@id='about_forum']" position="before">
-        <div t-if="header.get('question_data')">
+        <div t-if="header.get('question_data')" groups="website_doc.group_documentaion_moderator">
             <div class="panel panel-default">
                 <div class="panel-heading" id="about_forum">
                     <h3 class="panel-title">Documentation</h3>

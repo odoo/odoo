@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+
+    <record id="group_documentaion_moderator" model="res.groups">
+        <field name="name">Documentaion Moderator</field>
+        <field name="category_id" ref="base.module_category_website"/>
+        <field name="comment">the user will have access to add Table of content on questions to manage documentation.</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    <record id="base.group_website_publisher" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_documentaion_moderator'))]"/>
+    </record>
+
+</data>
+</openerp>
