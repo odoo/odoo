@@ -46,5 +46,4 @@ class WebsiteCertifiedPartners(http.Controller):
             'types': types
         }
 
-        # ici selectionner les partners certifies uniquement
         return request.website.render("website_certification.certified_partners", data)
