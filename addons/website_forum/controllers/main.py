@@ -208,7 +208,7 @@ class WebsiteForum(http.Controller):
 
         values = self._prepare_forum_values(**post)
         values.update({
-            'post': question,
+            'question': question,
             'forum': forum,
             'reasons': reasons,
         })
@@ -283,15 +283,19 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
+        if post.parent_id is False:
+            return request.redirect('/')
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        # if user have not access to accept answer then reise warning
-        if post.parent_id is False or post.parent_id.create_uid.id != uid:
+        user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
+        if post.parent_id.create_uid.id != uid:
             return {'error': 'own_post'}
+        if post.create_uid.id == user.id and user.karma < request.registry['forum.forum']._karma_answer_accept_own:
+            return {'error': 'not_enough_karma', 'karma': 20}
 
         # set all answers to False, only one can be accepted
         request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
-        request.registry['forum.post'].write(cr, uid, [post.id, post.parent_id.id], {'is_correct': not post.is_correct}, context=context)
+        request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not post.is_correct}, context=context)
         return not post.is_correct
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", multilang=True, website=True)
@@ -341,15 +345,15 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/upvote', type='json', auth="public", multilang=True, website=True)
     def post_upvote(self, forum, post, **kwargs):
-        # check for karma and not self vote
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        if user.karma <= 5:
-            return {'error': 'not_enough_karma', 'karma': 1}
-        return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=True, context=request.context)
+        if user.karma < request.registry['forum.forum']._karma_upvote:
+            return {'error': 'not_enough_karma', 'karma': request.registry['forum.forum']._karma_upvote}
+        upvote = True if not post.user_vote > 0 else False
+        return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=upvote, context=request.context)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/downvote', type='json', auth="public", multilang=True, website=True)
     def post_downvote(self, forum, post, **kwargs):
@@ -358,9 +362,10 @@ class WebsiteForum(http.Controller):
         if request.uid == post.create_uid.id:
             return {'error': 'own_post'}
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        if user.karma <= 50:
-            return {'error': 'not_enough_karma', 'karma': 50}
-        return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=False, context=request.context)
+        if user.karma < request.registry['forum.forum']._karma_downvote:
+            return {'error': 'not_enough_karma', 'karma': request.registry['forum.forum']._karma_downvote}
+        upvote = True if post.user_vote < 0 else False
+        return request.registry['forum.post'].vote(request.cr, request.uid, [post.id], upvote=upvote, context=request.context)
 
     # User
     # --------------------------------------------------

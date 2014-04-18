@@ -138,7 +138,7 @@
         <div class="pull-left text-center">
             <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
                 <span t-esc="question.child_count"/>
-                <span t-if="question.is_correct" class="fa fa-2x fa-check-circle"/>
+                <span t-if="question.has_validated_answer" class="fa fa-2x fa-check-circle"/>
                 <div t-if="question.child_count&gt;1">Answers</div>
                 <div t-if="question.child_count&lt;=1">Answer</div>
             </div>
@@ -336,16 +336,16 @@
 <template id="close_question">
     <t t-call="website_forum.header">
         <h3 class=""><b>Close question</b></h3><br/>
-        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(question)}/close" method="post" role="form">
-            <input name="post_id" t-att-value="post.id" type="hidden"/>
+        <form t-attf-action="/forum/#{slug(forum)}/question/#{slug(question)}/close" method="post" role="form">
+            <input name="post_id" t-att-value="question.id" type="hidden"/>
             <span class="pull-left">Close the question:</span>
-            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
+            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
             <div class="mt16">
                 <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
                 <div class="col-md-9 mb16">
                     <select class="form-control" name="reason">
                         <t t-foreach="reasons or []" t-as="reason">
-                            <option t-att-value="reason.id" t-att-selected="reason.id == post.closed_reason_id.id"><t t-esc="reason.name"/></option>
+                            <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
                         </t>
                     </select>
                 </div>
