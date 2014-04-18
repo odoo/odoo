@@ -32,7 +32,7 @@
   I generate all invoices from contracts having recurring invoicing
 -
   !python {model: account.analytic.account}: |
-    self.recurring_create_invoice(cr, uid)
+    self.recurring_create_invoice(cr, uid, [])
 -
   I test the generated invoice
 -
