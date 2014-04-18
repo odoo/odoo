@@ -21,14 +21,13 @@
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 from datetime import date, datetime, timedelta
 import calendar
 import logging
-import functools
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
@@ -337,7 +336,7 @@ class gamification_challenge(osv.Model):
         return True
 
     def _get_challenger_users(self, cr, uid, domain, context=None):
-        user_domain = eval(domain)
+        user_domain = eval(ustr(domain))
         return self.pool['res.users'].search(cr, uid, user_domain, context=context)
 
     def _recompute_challenge_users(self, cr, uid, challenge_ids, context=None):
