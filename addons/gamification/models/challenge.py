@@ -376,6 +376,7 @@ class gamification_challenge(osv.Model):
         can be called after each change in the list of users or lines.
         :param list(int) ids: the list of challenge concerned"""
 
+        goal_obj = self.pool.get('gamification.goal')
         to_update = []
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period)
@@ -390,7 +391,6 @@ class gamification_challenge(osv.Model):
                 # FIXME: allow to restrict to a subset of users
                 for user in challenge.user_ids:
 
-                    goal_obj = self.pool.get('gamification.goal')
                     domain = [('line_id', '=', line.id), ('user_id', '=', user.id)]
                     if start_date:
                         domain.append(('start_date', '=', start_date))
