@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record forcecreate="True" id="ir_cron_check_challenge" model="ir.cron">
+            <field name="name">Run Moderator Checker</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field name="model">res.users</field>
+            <field name="function">_cron_moderator_access_update</field>
+            <field name="args">()</field>
+        </record>
+    </data>
+</openerp>
