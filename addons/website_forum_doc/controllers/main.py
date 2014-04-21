@@ -38,24 +38,32 @@ class WebsiteDoc(http.Controller):
         }
         return request.website.render("website_forum_doc.documentation_post", value)
 
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/promote', type='http', auth="user", multilang=True, website=True)
+    def post_toc(self, forum, post, **kwargs):
+        cr, uid, context, toc_id = request.cr, request.uid, request.context, False
+        toc_obj = request.registry['forum.documentation.toc']
+        obj_ids = toc_obj.search(cr, uid, [], context=context)
+        tocs = toc_obj.browse(cr, uid, obj_ids, context=context)
+        value = {
+            'post': post,
+            'forum': post.forum_id,
+            'chapters': filter(lambda x: not x.child_ids, tocs)
+        }
+        return request.website.render("website_forum_doc.promote_question", value)
 
-#---------------------
-# Forum Posts
-# --------------------
-# 
-# class WebsiteForum(WebsiteForum):
-# 
-#     def prepare_question_values(self, forum, **kwargs):
-#         cr, uid, context = request.cr, request.uid, request.context
-#         TOC = request.registry['documentation.toc']
-#         obj_ids = TOC.search(cr, uid, [('child_ids', '=', False)], context=context)
-#         toc = TOC.browse(cr, uid, obj_ids, context=context)
-#         values = super(WebsiteForum, self).prepare_question_values(forum=forum, kwargs=kwargs)
-#         values.update({'documentaion_toc': toc})
-#         return values
-# 
-#     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/toc', type='http', auth="user", multilang=True, website=True)
-#     def post_toc(self, forum, post, **kwargs):
-#         toc_id = int(kwargs.get('content')) if kwargs.get('content') else False
-#         request.registry['forum.post'].write(request.cr, request.uid, [post.id], {'toc_id': toc_id}, context=request.context)
-#         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(post)))
+    @http.route('/forum/<model("forum.forum"):forum>/promote_ok', type='http', auth="user", multilang=True, website=True)
+    def post_toc_ok(self, forum, post_id, toc_id, **kwargs):
+        cr, uid, context = request.cr, request.uid, request.context
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        assert user.karma > 10, 'Not enough karma'
+
+        toc_obj = request.registry['forum.documentation.toc']
+        stage_ids = toc_obj.search(cr, uid, [], limit=1, context=context)
+
+        post_obj = request.registry['forum.post']
+        post_obj.write(cr, uid, [int(post_id)], {
+            'documentation_toc_id': toc_id and int(toc_id) or False,
+            'documentation_stage_id': stage_ids and stage_ids[0] or False
+        }, context=context)
+        return request.redirect('/forum/'+str(forum.id)+'/question/'+str(post_id))
+

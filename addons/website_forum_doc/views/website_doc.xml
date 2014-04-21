@@ -154,35 +154,105 @@
 
 
         <!--TOC ON FORUM POST-->
-        <template id="forum_question_right_column" inherit_id="website_forum.header" name="Table of Content">
-            <xpath expr="//script[@src='/website_forum/static/src/js/website_forum.js']" position="after">
-                <script type="text/javascript" src="/website_doc/static/src/js/website_doc.js"/>
-            </xpath>
-            <xpath expr="//div[@id='about_forum']" position="before">
-                <div t-if="header.get('question_data')" groups="website_doc.group_documentaion_moderator">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" id="about_forum">
-                            <h3 class="panel-title">Documentation</h3>
-                        </div>
-                        <div class="panel-body">
-                            <form t-attf-action="/forum/#{ slug(forum) }/question/#{ slug(question) }/toc" role="form" method="post">
-                                <div class="input-group navbar-right">
-                                    <select class="form-control" name="content">
-                                        <option value=""></option>
-                                        <t t-foreach="documentaion_toc or []" t-as="toc">
-                                            <option t-att-value="toc.id" t-att-selected="toc.id == question.toc_id.id"><t t-esc="toc.name"/></option>
-                                        </t>
-                                    </select>
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary ">save</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+        <template id="forum_question_doc" inherit_id="website_forum.post_description_full" name="Forum Post to Doc">
+            <xpath expr="//ul[@id='options']" position="inside">
+                <li t-if="(not question.documentation_stage_id) and user.karma&gt;=10">
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/promote" class="text-muted fa fa-bookmark-o">
+                        Promote to Doc
+                    </a>
+                </li>
             </xpath>
         </template>
+
+        <template id="promote_question">
+            <t t-call="website.layout">
+                <section class="container">
+                    <h1 class="page-header">Promote question to documentation</h1>
+                    <p>
+                        To be promoted in the official documentation the question
+                        and answer must satisfy the following criteria:
+                    </p>
+                    <ul>
+                        <li>The question title is short and descriptive</li>
+                        <li>The question describes a real business problem, not a software problem</li>
+                        <li>The answer is understandable for someone who does not know Odoo</li>
+                    </ul>
+                    <p>
+                        Before submiting the question, help us improve its quality by
+                        editing the question and the main answer.
+                    </p>
+                </section>
+                <div class="container">
+                    <div class="well">
+                        <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                            <input name="post_id" t-att-value="post.id" type="hidden"/>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="reason">Question:</label>
+                                <div class="col-md-8 mt8">
+                                    <span t-field="post.name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="reason">Publish in Chapter:</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" name="toc_id">
+                                        <option/>
+                                        <t t-foreach="chapters or []" t-as="chapter">
+                                            <option t-att-value="chapter.id"><t t-esc="chapter.display_name"/></option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-8">
+                                    <button class="btn btn-primary">Push to documentation</button>
+                                    <span class="text-muted">or</span>
+                                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <section class="container">
+                    <h2 class="page-header">Samples</h2>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Good question titles</h4>
+                            <ul>
+                                <li>How to forecast sales revenues?</li>
+                                <li>How to compute future inventories for a product?</li>
+                            </ul>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Bad questions</h4>
+                            <ul>
+                                <li>What report should I use to compute probabilities per stage?</li>
+                                <li>What's the available stock field?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row mb64">
+                        <div class="col-sm-6">
+                            <h4>Good answer structure</h4>
+                            <ol>
+                                <li>Describe the business solution</li>
+                                <li>Explain how to implement it in OpenERP</li>
+                                <li>Benefits of having done this setup</li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Bad answer structure</h4>
+                            <ol>
+                                <li>Explain how to configure in OpenERP</li>
+                                <li>No business benefit</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
 
     </data>
 </openerp>

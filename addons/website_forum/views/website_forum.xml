@@ -375,7 +375,6 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-
         <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
             <div class="text-center pull-left">
                 <t t-call="website_forum.vote">
@@ -417,7 +416,7 @@
                                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
                             </t>
                         </div>
-                        <ul class="list-inline">
+                        <ul class="list-inline" id="options">
                             <li t-if="user.id == question.create_uid.id or user.karma&gt;=50">
                                 <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                       t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">

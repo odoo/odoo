@@ -10,8 +10,27 @@ class Documentation(osv.Model):
     _order = "parent_left"
     _parent_order = "sequence, name"
     _parent_store = True
+    def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)) and not len(ids):
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
         'sequence': fields.integer('Sequence'),
+        'display_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'name': fields.char('Name', required=True, translate=True),
         'introduction': fields.html('Introduction', translate=True),
         'parent_id': fields.many2one('forum.documentation.toc', 'Parent Table Of Content'),
