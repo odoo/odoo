@@ -217,6 +217,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(**post)
         values.update({
             'post': question,
+            'question': question,
             'forum': forum,
             'reasons': reasons,
         })
@@ -236,7 +237,7 @@ class WebsiteForum(http.Controller):
             'state': 'close',
             'closed_uid': request.uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-            'closed_reason_id': post.get('reason_id', False),
+            'closed_reason_id': int(post.get('reason_id', False)),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 

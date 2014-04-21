@@ -302,23 +302,36 @@
 <!-- Moderation: close a question -->
 <template id="close_question">
     <t t-call="website_forum.header">
-        <h3 class=""><b>Close question</b></h3><br/>
-        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(question)}/close" method="post" role="form">
+        <h1 class="mt0">Close question</h1>
+        <p class="text-muted">
+            If you close this question, it will be hidden for most users. Only
+            users having a high karma can see closed questions to moderate
+            them.
+        </p>
+        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(post)}/close" method="post" role="form" class="form-horizontal mt32 mb64">
             <input name="post_id" t-att-value="post.id" type="hidden"/>
-            <span class="pull-left">Close the question:</span>
-            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }" t-field="post.name"/>
-            <div class="mt16">
-                <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
-                <div class="col-md-9 mb16">
-                    <select class="form-control" name="reason">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="reason">Question:</label>
+                <div class="col-md-8 mt8">
+                    <span t-field="post.name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="reason">Reason:</label>
+                <div class="col-md-8">
+                    <select class="form-control" name="reason_id">
                         <t t-foreach="reasons or []" t-as="reason">
                             <option t-att-value="reason.id" t-att-selected="reason.id == post.closed_reason_id.id"><t t-esc="reason.name"/></option>
                         </t>
                     </select>
                 </div>
             </div>
-            <div>
-                <button class="btn btn-primary btn-lg">Close</button>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-8">
+                    <button class="btn btn-primary">Close question</button>
+                    <span class="text-muted">or</span>
+                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">back to question</a>
+                </div>
             </div>
         </form>
     </t>
@@ -382,6 +395,19 @@
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                 </h1>
+                <div class="alert alert-info" t-if="question.state == 'close'">
+                    <p class="mt32 mb16 text-center">
+                        <b>The question has been closed for reason: <i t-esc="question.closed_reason_id.name"/>
+                        <br/>
+                        <t t-if="question.closed_uid">
+                            <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_uid) }" t-field="question.closed_uid"/> </i>
+                        </t>
+                        on <span t-field="question.closed_date"/></b>
+                    </p>
+                    <div t-if="question.state == 'close' and user.karma&gt;=500" class="mb24 text-center">
+                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"> Reopen</a>
+                    </div>
+                </div>
                 <t t-raw="question.content"/>
 
                 <div class="mt16 clearfix">
@@ -400,9 +426,6 @@
                             </li>
                             <li t-if="question.state != 'close' and (user.id == question.create_uid.id or user.karma&gt;=100)">
                                 <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
-                            </li>
-                            <li t-if="question.state == 'close' and user.karma&gt;=500">
-                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen"> Reopen</a>
                             </li>
                             <li t-if="user.id == question.create_uid.id or user.karma&gt;=300">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
@@ -424,15 +447,6 @@
                                 style="display: inline-block;"/>
                             <div t-field="question.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
                         </div>
-                    </div>
-                    <div class="alert alert-info" t-if="question.state == 'close'">
-                        <p class="mt32 mb32 text-center">
-                            <b>The question has been closed for the following reason "<span t-field="question.closed_reason_id.name"/>"
-                            <t t-if="question.closed_uid">
-                                <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_uid) }" t-field="question.closed_uid.name"/> </i>
-                            </t>
-                            <br/>close date <span t-field="question.closed_date"/></b>
-                        </p>
                     </div>
                 </div>
                 <t t-call="website_forum.post_comment">

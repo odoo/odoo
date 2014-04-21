@@ -230,8 +230,9 @@ class Post(osv.Model):
 class PostReason(osv.Model):
     _name = "forum.post.reason"
     _description = "Post Closing Reason"
+    _order = 'name'
     _columns = {
-        'name': fields.char('Post Reason', required=True),
+        'name': fields.char('Post Reason', required=True, translate=True),
     }
 
 
