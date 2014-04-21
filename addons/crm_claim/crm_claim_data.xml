@@ -8,19 +8,19 @@
         
         <record model="crm.case.categ" id="categ_claim1">
             <field name="name">Factual Claims</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sale_team.section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
         </record>
         
         <record model="crm.case.categ" id="categ_claim2">
             <field name="name">Value Claims</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sale_team.section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
         </record>
         
         <record model="crm.case.categ" id="categ_claim3">
             <field name="name">Policy Claims</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sale_team.section_sales_department"/>
             <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
         </record>
     
@@ -30,12 +30,12 @@
         
         <record model="crm.case.resource.type" id="type_claim1">
             <field name="name">Corrective</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sale_team.section_sales_department"/>
         </record>
         
         <record model="crm.case.resource.type" id="type_claim2">
             <field name="name">Preventive</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="section_id" ref="sale_team.section_sales_department"/>
         </record>
     
         <!--

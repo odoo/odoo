@@ -48,7 +48,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_crm_salesteams">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_sale_manager">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Sales Teams Settings</a></li>
@@ -58,6 +58,9 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4 class="oe_center"><field name="name"/></h4>
+                                    <div class="oe_kanban_alias oe_center" t-if="record.alias_id.value">
+                                        <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
+                                    </div>
                                     <div class="oe_clear"></div>
                                     <div class="oe_kanban_salesteams_avatars">
                                         <t t-foreach="record.member_ids.raw_value.slice(0,10)" t-as="member">
