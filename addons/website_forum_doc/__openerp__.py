@@ -39,9 +39,6 @@ Documentation based on question and pertinent answers of Forum
         'views/doc.xml',
         'views/website_doc.xml',
     ],
-    'qweb': [
-        'static/src/xml/*.xml'
-    ],
     'demo': [
         'data/doc_demo.xml',
     ],
