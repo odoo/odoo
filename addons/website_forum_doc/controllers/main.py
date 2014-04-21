@@ -41,6 +41,8 @@ class WebsiteDoc(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):post>/promote', type='http', auth="user", multilang=True, website=True)
     def post_toc(self, forum, post, **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
+        user = request.registry['res.users'].browse(cr, uid, uid, context=context)
+        assert user.karma >= 200, 'Not enough karma'
         toc_obj = request.registry['forum.documentation.toc']
         obj_ids = toc_obj.search(cr, uid, [], context=context)
         tocs = toc_obj.browse(cr, uid, obj_ids, context=context)
@@ -55,7 +57,7 @@ class WebsiteDoc(http.Controller):
     def post_toc_ok(self, forum, post_id, toc_id, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        assert user.karma > 10, 'Not enough karma'
+        assert user.karma >= 200, 'Not enough karma'
 
         toc_obj = request.registry['forum.documentation.toc']
         stage_ids = toc_obj.search(cr, uid, [], limit=1, context=context)

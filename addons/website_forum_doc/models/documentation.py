@@ -40,6 +40,7 @@ class Documentation(osv.Model):
         'post_ids': fields.one2many('forum.post', 'documentation_toc_id', 'Posts'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
     }
+
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
@@ -61,5 +62,14 @@ class Post(osv.Model):
         'documentation_toc_id': fields.many2one('forum.documentation.toc', 'Documentation ToC'),
         'documentation_stage_id': fields.many2one('forum.documentation.stage', 'Documentation Stage'),
         'color': fields.integer('Color Index')
+    }
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        stage_obj = self.pool.get('forum.documentation.stage')
+        stage_ids = stage_obj.search(cr, uid, [], context=context)
+        result = stage_obj.name_get(cr, uid, stage_ids, context=context)
+        return result, {}
+
+    _group_by_full = {
+        'documentation_stage_id': _read_group_stage_ids,
     }
 
