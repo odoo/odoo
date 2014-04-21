@@ -33,7 +33,7 @@ class Documentation(osv.Model):
         'display_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'name': fields.char('Name', required=True, translate=True),
         'introduction': fields.html('Introduction', translate=True),
-        'parent_id': fields.many2one('forum.documentation.toc', 'Parent Table Of Content'),
+        'parent_id': fields.many2one('forum.documentation.toc', 'Parent Table Of Content', ondelete='cascade'),
         'child_ids': fields.one2many('forum.documentation.toc', 'parent_id', 'Children Table Of Content'),
         'parent_left': fields.integer('Left Parent', select=True),
         'parent_right': fields.integer('Right Parent', select=True),
@@ -59,7 +59,7 @@ class DocumentationStage(osv.Model):
 class Post(osv.Model):
     _inherit = 'forum.post'
     _columns = {
-        'documentation_toc_id': fields.many2one('forum.documentation.toc', 'Documentation ToC'),
+        'documentation_toc_id': fields.many2one('forum.documentation.toc', 'Documentation ToC', ondelete='set null'),
         'documentation_stage_id': fields.many2one('forum.documentation.stage', 'Documentation Stage'),
         'color': fields.integer('Color Index')
     }
