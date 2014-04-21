@@ -57,9 +57,15 @@
                                 </field>
                             </group>
                         </group>
-                        <button name="compute_landed_cost" string="Compute" type="object" class="oe_right"/>
                         <group>
-                            <separator string="Valuation Adjustments" colspan="4"/>
+                            <group>
+                                <separator string="Valuation Adjustments"/>
+                            </group>
+                            <group>
+                                <button name="compute_landed_cost" string="Compute" type="object" class="oe_right"/>
+                            </group>
+                        </group>
+                        <group>
                             <group>
                                 <field name="valuation_adjustment_lines" nolabel="1">
                                     <form string="Valuation Adjustments" version="7.0">
