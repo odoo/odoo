@@ -93,6 +93,7 @@ class crm_case_section(osv.osv):
     _name = "crm.case.section"
     _inherit = 'crm.case.section'
     _description = "Sales Teams"
+    _alias_model_name = 'crm.lead'
 
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
         """ Get opportunities-related data for salesteam kanban view
@@ -140,14 +141,6 @@ class crm_case_section(osv.osv):
         'stage_ids': _get_stage_common,
         'use_leads': True,
     }
-
-    def unlink(self, cr, uid, ids, context=None):
-        # Cascade-delete mail aliases as well, as they should not exist without the sales team.
-        mail_alias = self.pool.get('mail.alias')
-        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
-        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
-        mail_alias.unlink(cr, uid, alias_ids, context=context)
-        return res
  
 class crm_case_categ(osv.osv):
     """ Category of Case """
