@@ -33,7 +33,6 @@ Documentation based on question and pertinent answers of Forum
     ],
     'data': [
         'data/doc_data.xml',
-        'data/cron.xml',
         'security/ir.model.access.csv',
         'security/doc_security.xml',
         'views/doc.xml',

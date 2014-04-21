@@ -5,8 +5,8 @@
         <!-- DOCUMENTATION TOC VIEWS -->
 
         <record id="view_documentation_toc_list" model="ir.ui.view">
-            <field name="name">documentation.toc.list</field>
-            <field name="model">documentation.toc</field>
+            <field name="name">forum.documentation.toc.list</field>
+            <field name="model">forum.documentation.toc</field>
             <field name="arch" type="xml">
                 <tree string="Documentation TOC" editable="bottom">
                     <field name="sequence" widget="handle"/>
@@ -17,7 +17,7 @@
         </record>
         <record id="action_documentation_toc" model="ir.actions.act_window">
             <field name="name">Documentation</field>
-            <field name="res_model">documentation.toc</field>
+            <field name="res_model">forum.documentation.toc</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
         </record>
@@ -27,8 +27,8 @@
 
 
         <record id="view_documentation_toc_list" model="ir.ui.view">
-            <field name="name">documentation.toc.list</field>
-            <field name="model">documentation.toc</field>
+            <field name="name">forum.documentation.toc.list</field>
+            <field name="model">forum.documentation.toc</field>
             <field name="arch" type="xml">
                 <tree string="Documentation TOC" editable="bottom">
                     <field name="sequence" widget="handle"/>
@@ -39,7 +39,7 @@
         </record>
         <record id="action_documentation_toc" model="ir.actions.act_window">
             <field name="name">Documentation</field>
-            <field name="res_model">documentation.toc</field>
+            <field name="res_model">forum.documentation.toc</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
         </record>
@@ -54,7 +54,7 @@
             <field name="model">forum.post</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="documentation_stage_id" >
-                    <field name="stage_id"/>
+                    <field name="documentation_stage_id"/>
                     <field name="create_uid"/>
                     <field name="color"/>
                     <templates>
@@ -71,9 +71,7 @@
 
                             <div class="oe_kanban_content">
                                 <div><b><field name="name"/></b></div>
-                                <div>
-                                    <field name="documentation_toc_id"/>
-                                </div>
+                                <field name="documentation_toc_id"/>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.create_id.raw_value)" t-att-title="record.create_uid.value" width="24" height="24" class="oe_kanban_avatar"/>
                                 </div>
@@ -84,8 +82,7 @@
                     </templates>
                 </kanban>
             </field>
-         </record>
-
+        </record>
 
         <record id="action_forum_doc_post" model="ir.actions.act_window">
             <field name="name">Documentation Posts</field>
@@ -95,7 +92,7 @@
             <field name="domain">[('documentation_toc_id','&lt;&gt;', False)]</field>
         </record>
         <menuitem id="menu_forum_doc_posts"
-            parent="menu_website_forum" name="Documentation Posts"
+            parent="website_forum.menu_website_forum" name="Documentation Posts"
             action="action_forum_doc_post" sequence="25"/>
 
 

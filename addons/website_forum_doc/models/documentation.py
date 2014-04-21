@@ -13,8 +13,8 @@ class Documentation(osv.Model):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Name', required=True, translate=True),
-        'parent_id': fields.many2one('documentation.toc', 'Parent Table Of Content'),
-        'child_ids': fields.one2many('documentation.toc', 'parent_id', 'Children Table Of Content'),
+        'parent_id': fields.many2one('forum.documentation.toc', 'Parent Table Of Content'),
+        'child_ids': fields.one2many('forum.documentation.toc', 'parent_id', 'Children Table Of Content'),
         'parent_left': fields.integer('Left Parent', select=True),
         'parent_right': fields.integer('Right Parent', select=True),
         'post_ids': fields.one2many('forum.post', 'documentation_toc_id', 'Posts'),
@@ -38,6 +38,7 @@ class Post(osv.Model):
     _inherit = 'forum.post'
     _columns = {
         'documentation_toc_id': fields.many2one('forum.documentation.toc', 'Documentation ToC'),
-        'documentation_stage_id': fields.many2one('forum.documentation.stage', 'Documentation Stage')
+        'documentation_stage_id': fields.many2one('forum.documentation.stage', 'Documentation Stage'),
+        'color': fields.integer('Color Index')
     }
 
