@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
  <!-- Update user form !-->
         <record model="ir.ui.view" id="res_user_form">
             <field name="name">Users Preferences</field>
