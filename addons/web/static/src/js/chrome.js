@@ -860,10 +860,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             }
         }
         this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
-            var $el = $(this);
-            if (this.scrollWidth > this.clientWidth) {
-                $el.tooltip({title: $el.attr('title', $el.text().trim())});
-            }
+            $(this).tooltip(this.scrollWidth > this.clientWidth? {title: $(this).text().trim()} :'destroy');
        });
     },
     /**
