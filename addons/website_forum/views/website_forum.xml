@@ -95,7 +95,7 @@
                             <h3 class="panel-title">About This Forum</h3>
                         </div>
                         <div class="panel-body">
-                            <t t-raw="forum.description"/><br/>
+                            <div t-raw="forum.description"/>
                             <a t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
                         </div>
                     </div>
@@ -112,38 +112,33 @@
 <template id="display_post">
     <div class="question clearfix">
         <div class="pull-left text-center">
-            <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
+            <div t-attf-class="box #{question.is_correct and 'oe_green' or 'oe_grey'} #{(question.child_count == 0) and 'text-muted' or ''}">
                 <span t-esc="question.child_count"/>
-                <span t-if="question.is_correct" class="fa fa-2x fa-check-circle"/>
-                <div t-if="question.child_count&gt;1">Answers</div>
-                <div t-if="question.child_count&lt;=1">Answer</div>
-            </div>
-            <div class="text-muted text-center">
-                <span t-field="question.views"/> Views
+                <div t-if="question.child_count&gt;1" class="subtitle">Answers</div>
+                <div t-if="question.child_count&lt;=1" class="subtitle">Answer</div>
             </div>
         </div>
-        <div class="pull-right text-center">
-            <div class="box oe_grey">
-                <span t-esc="question.vote_count or 0"/>
-                <div t-if="question.vote_count&gt;1">Votes</div>
-                <div t-if="question.vote_count&lt;=1">Vote</div>
-            </div>
-        </div>
-        <div style="margin-left: 95px;">
+        <div style="margin-left: 95px; margin-top:-8px;">
             <div class="question-name">
                 <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
             </div>
+            <t t-foreach="question.tag_ids" t-as="tag">
+                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge pull-right" t-field="tag.name"/>
+            </t>
             <div class="text-muted">
                 by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
                     t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
                 on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+                with <b t-field="question.views"/> views
+                <span t-if="question.vote_count&gt;0"> and 
+                    <b t-esc="question.vote_count or 0"/>
+                    <t t-if="question.vote_count&gt;1">votes</t>
+                    <t t-if="question.vote_count==1">vote</t>
+                </span>
             </div>
-            <t t-foreach="question.tag_ids" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
-            </t>
         </div>
     </div>
 </template>
@@ -359,8 +354,11 @@
         <span id="vote_count" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
             t-attf-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
-        <div>
+        <div t-if="vote_count &gt; 1" class="subtitle">
             votes
+        </div>
+        <div t-if="vote_count &lt; 2" class="subtitle">
+            vote
         </div>
     </div>
 </template>
@@ -374,12 +372,10 @@
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
                 </t>
-                <div class="text-muted">
-                    <span t-esc="question.child_count"/>
-                    <span t-if="question.child_count&gt;1">Answers</span>
-                    <span t-if="question.child_count&lt;=1">Answer</span>
+                <div class="text-muted text-center">
+                    <span t-field="question.views"/> Views
                 </div>
-                <div>
+                <div class="mt4">
                     <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                         t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                 </div>
@@ -403,25 +399,24 @@
                             <li t-if="user.id == question.create_uid.id or user.karma&gt;=50">
                                 <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                       t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
-                                    comment
+                                    Comment
                                 </a>
                             </li>
                             <li t-if="question.state != 'close' and (user.id == question.create_uid.id or user.karma&gt;=100)">
-                                <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close">close</a>
+                                <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
                             </li>
                             <li t-if="question.state == 'close' and user.karma&gt;=500">
-                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen">reopen</a>
+                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen"> Reopen</a>
                             </li>
                             <li t-if="user.id == question.create_uid.id or user.karma&gt;=300">
-                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit">edit</a>
+                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
                             </li>
                             <li t-if="question.active and user.id == question.create_uid.id or user.karma&gt;=1000">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete">delete</a>
+                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete"> Delete</a>
                             </li>
                             <li t-if="uid == question.create_uid.id and not question.active">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete">undelete</a>
+                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete"> Undelete</a>
                             </li>
-                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}">share</a></li>
                         </ul>
                     </div>
                     <div>
@@ -453,13 +448,13 @@
 
         <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
             <a t-attf-id="answer-#{str(answer.id)}"/>
-            <div t-attf-class="forum_answer #{answer.is_correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
+            <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
                 <div class="text-center pull-left">
                     <t t-call="website_forum.vote">
                         <t t-set="post" t-value="answer"/>
                     </t>
-                    <div class="text-muted">
-                        <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_true #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
+                    <div class="text-muted mt8">
+                        <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
                             t-attf-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                     </div>
                 </div>
@@ -469,19 +464,18 @@
                         <ul class="list-inline pull-right">
                             <li t-if="user.id == answer.create_uid.id or user.karma&gt;=50">
                                 <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
-                                      t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
+                                      t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                                 </a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id or user.karma&gt;=300">
-                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit">edit</a>
+                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit"> Edit</a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id or user.karma&gt;=1000">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete">delete</a>
+                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"> Delete</a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
-                                <a class="text-muted fa fa-magic" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment">Convert as a comment</a>
+                                <a class="text-muted fa fa-magic" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment"> Convert as a comment</a>
                             </li>
-                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/#answer_#{answer.id}">share</a></li>
                         </ul>
                         <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                         <div>
@@ -754,7 +748,7 @@
                 </tr>
                 </table>
                 <div class="well well-sm">
-                    <span t-field="user.partner_id.website_description"/>
+                    <span t-field="user.partner_id.website_description" class="oe_no_empty"/>
                     <t t-if="uid == user.id">
                         <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"> Edit Your Bio</a>
                     </t>
@@ -807,7 +801,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="followed_question">
-                <div t-foreach="followed" t-as="question">
+                <div t-foreach="followed" t-as="question" class="mb16">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>

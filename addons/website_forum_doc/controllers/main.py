@@ -6,17 +6,6 @@ from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
 
 
-# from openerp.addons.website.controllers.main import Website as controllers
-# import werkzeug.urls
-# from datetime import datetime
-# import simplejson
-# from openerp import tools
-# from openerp import SUPERUSER_ID
-# from openerp.addons.web.controllers.main import login_redirect
-# from openerp.addons.website_forum.controllers.main import WebsiteForum
-# 
-# controllers = controllers()
-
 class WebsiteDoc(http.Controller):
     @http.route(['/forum/how-to', '/forum/how-to/<model("forum.documentation.toc"):toc>'], type='http', auth="public", website=True, multilang=True)
     def toc(self, toc=None, **kwargs):
@@ -31,6 +20,7 @@ class WebsiteDoc(http.Controller):
             forum = sections and sections[0].forum_id or False
         value = {
             'toc': toc,
+            'main_object': toc or forum,
             'forum': forum,
             'sections': sections,
         }
@@ -43,6 +33,7 @@ class WebsiteDoc(http.Controller):
         value = {
             'toc': toc,
             'post': post,
+            'main_object': post,
             'forum': post.forum_id
         }
         return request.website.render("website_forum_doc.documentation_post", value)

@@ -49,7 +49,7 @@
             <t t-call="website.layout">
                 <section class="container mt16" t-if="toc">
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-sm-8">
                             <ol class="breadcrumb mb0">
                                 <t t-call="website_forum_doc.breadcrumb">
                                     <t t-set="toc" t-value="toc.parent_id"/>
@@ -59,8 +59,15 @@
                                 </li>
                             </ol>
                         </div>
-                        <div class="col-md-3 text-right">
-                            Search:
+                        <div class="col-sm-4 text-right">
+                            <form class="navbar-form navbar-right mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="form-group">
+                                    <input type="search" class="form-control"
+                                        name="search" placeholder="Search..."
+                                        t-att-value="search or ''"/>
+                                    <button type="submit" class="btn btn-default">Search</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </section>

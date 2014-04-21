@@ -105,6 +105,7 @@ class WebsiteForum(http.Controller):
 
         values = self._prepare_forum_values(forum=forum, searches=post)
         values.update({
+            'main_object': forum,
             'question_ids': question_ids,
             'pager': pager,
             'tag': tag,
@@ -134,6 +135,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
         values.update({
             'tags': tags,
+            'main_object': forum,
         })
         return request.website.render("website_forum.tag", values)
 
@@ -184,6 +186,7 @@ class WebsiteForum(http.Controller):
         filters = 'question'
         values = self.prepare_question_values(forum=forum, kwargs=post)
         values.update({
+            'main_object': question,
             'question': question,
             'header': {'question_data': True},
             'filters': filters,
@@ -386,6 +389,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum, searches=searches)
         values .update({
             'users': users,
+            'main_object': forum,
             'notifications': self._get_notifications(),
             'pager': pager,
         })
@@ -520,7 +524,6 @@ class WebsiteForum(http.Controller):
     def badge_users(self, forum, badge, **kwargs):
         user_ids = [badge_user.user_id.id for badge_user in badge.owner_ids]
         users = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, user_ids, context=request.context)
-
         values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
             'badge': badge,
