@@ -26,10 +26,6 @@
         <t t-set="head">
             <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
             <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
-            <!--
-            FP Note: Why do we need this ? Can we remove this code?
-            The problem is that you add your script for every page, not only for the forum
-            -->
             <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
             <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
             <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
@@ -507,7 +503,7 @@
 <template id="post_comment">
     <div class="row clearfix">
         <div class="col-sm-10 col-sm-offset-2">
-            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey mb8">
+            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey">
                 <small class="text-muted">
                     <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750"
                         t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
@@ -522,9 +518,9 @@
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
-                <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse"
+                <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey"
                         t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
-                    <input name="post_id" t-att-value="object.id" type="hidden"/>
+                    <input name="post_id" t-att-value="object.id" type="hidden" class="mt8"/>
                     <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
                     <button type="submit" class="btn btn-primary mt8">Post</button>
                 </form>
