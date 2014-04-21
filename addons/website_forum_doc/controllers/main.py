@@ -18,28 +18,34 @@ from openerp.addons.website.models.website import slug
 # controllers = controllers()
 
 class WebsiteDoc(http.Controller):
-    @http.route(['/forum/how-to', '/forum/how-to/<model("documentation.toc"):toc>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/how-to', '/forum/how-to/<model("forum.documentation.toc"):toc>'], type='http', auth="public", website=True, multilang=True)
     def toc(self, toc=None, **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
         if toc:
-            toc = [toc]
+            sections = toc.child_ids
+            forum = toc.forum_id
         else:
             toc_obj = request.registry['forum.documentation.toc']
             obj_ids = toc_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
-            toc = toc_obj.browse(cr, uid, obj_ids, context=context)
+            sections = toc_obj.browse(cr, uid, obj_ids, context=context)
+            forum = sections and sections[0].forum_id or False
         value = {
-            'sections': toc,
+            'toc': toc,
+            'forum': forum,
+            'sections': sections,
         }
         return request.website.render("website_forum_doc.documentation", value)
 
-    @http.route(['/forum/how-to/<model("documentation.toc"):toc>/<model("forum.post"):post>'], type='http', auth="public", website=True, multilang=True)
-    def how_to(self, toc, post, **kwargs):
-        assert post.documentation_toc_id.id == toc.id, "Wrong post, should implement a redirect here"
+    @http.route(['/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post"):post>'], type='http', auth="public", website=True, multilang=True)
+    def post(self, toc, post, **kwargs):
+        # TODO: implement a redirect instead of crash
+        assert post.documentation_toc_id.id == toc.id, "Wrong post!"
         value = {
-            'section': toc,
-            'post': post
+            'toc': toc,
+            'post': post,
+            'forum': post.forum_id
         }
-        return request.website.render("website_forum_doc.documentation.post", value)
+        return request.website.render("website_forum_doc.documentation_post", value)
 
 
 #---------------------

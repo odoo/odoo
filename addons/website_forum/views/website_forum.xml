@@ -100,30 +100,6 @@
                         </div>
                     </div>
                     <div t-if="header.get('question_data')">
-                        <div class="panel panel-default">
-                            <div class="panel-heading text-center">
-                                <h3 class="panel-title">Question tools</h3>
-                            </div>
-                            <div class="panel-body text-center">
-                                <t t-call="website_mail.follow"><t t-set="object" t-value="question"/></t>
-                                <div class="mt8">
-                                    <strong><t t-raw="len(question.message_follower_ids)"/></strong> follower(s)
-                                </div>
-                            </div>
-                            <div class="panel-heading text-center">
-                                <h3 class="panel-title ">Stats</h3>
-                            </div>
-                            <div class="panel-body"> 
-                                <table class="table">
-                                    <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-field-options='{"format":"short"}'/></strong></td></tr></thead>
-                                    <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
-                                        <span t-if="question.views&gt;1">times</span>
-                                        <span t-if="question.views&lt;=1">time</span>
-                                    </td></tr>
-                                    <tr><td> Last updated: <strong><span t-field="question.write_date" t-field-options='{"format":"short"}'/></strong></td></tr>
-                                </table>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

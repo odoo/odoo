@@ -13,11 +13,13 @@ class Documentation(osv.Model):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Name', required=True, translate=True),
+        'introduction': fields.html('Introduction', translate=True),
         'parent_id': fields.many2one('forum.documentation.toc', 'Parent Table Of Content'),
         'child_ids': fields.one2many('forum.documentation.toc', 'parent_id', 'Children Table Of Content'),
         'parent_left': fields.integer('Left Parent', select=True),
         'parent_right': fields.integer('Right Parent', select=True),
         'post_ids': fields.one2many('forum.post', 'documentation_toc_id', 'Posts'),
+        'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
     }
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
