@@ -268,7 +268,7 @@ class stock_valuation_adjustment_lines(osv.osv):
                 'former_cost_per_unit': 0.0,
                 'final_cost': 0.0,
             }
-            result[line.id]['former_cost_per_unit'] = (line.former_cost / line.quantity or 1.0)
+            result[line.id]['former_cost_per_unit'] = (line.former_cost / line.quantity if line.quantity else 1.0)
             result[line.id]['final_cost'] = (line.former_cost + line.additional_landed_cost)
         return result
 
