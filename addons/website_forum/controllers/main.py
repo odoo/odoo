@@ -105,7 +105,7 @@ class WebsiteForum(http.Controller):
 
         values = self._prepare_forum_values(forum=forum, searches=post)
         values.update({
-            'main_object': forum,
+            'main_object': tag or forum,
             'question_ids': question_ids,
             'pager': pager,
             'tag': tag,
