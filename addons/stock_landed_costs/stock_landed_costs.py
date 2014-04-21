@@ -191,41 +191,29 @@ class stock_landed_cost(osv.osv):
             dict = {}
             for line in cost.cost_lines:
                 for valuation in cost.valuation_adjustment_lines:
+                    value = 0.0
                     if valuation.cost_line_id and valuation.cost_line_id.id == line.id:
-                        if line.split_method == 'by_quantity':
+                        if line.split_method == 'by_quantity' and total_qty:
                             per_unit = (line.price_unit / total_qty)
                             value = valuation.quantity * per_unit
-                            if valuation.id not in dict:
-                                dict[valuation.id] = value
-                            else:
-                                dict[valuation.id] += value
-                        elif line.split_method == 'by_weight':
-                            per_unit = (line.price_unit / total_weight if total_weight else total_line)
-                            value = valuation.quantity * per_unit
-                            if valuation.id not in dict:
-                                dict[valuation.id] = value
-                            else:
-                                dict[valuation.id] += value
-                        elif line.split_method == 'by_volume':
-                            per_unit = (line.price_unit / total_volume if total_volume else total_line)
-                            value = valuation.quantity * per_unit
-                            if valuation.id not in dict:
-                                dict[valuation.id] = value
-                            else:
-                                dict[valuation.id] += value
+                        elif line.split_method == 'by_weight' and total_weight:
+                            per_unit = (line.price_unit / total_weight)
+                            value = valuation.weight * per_unit
+                        elif line.split_method == 'by_volume' and total_volume:
+                            per_unit = (line.price_unit / total_volume)
+                            value = valuation.volume * per_unit
                         elif line.split_method == 'equal':
-                            per_unit = (line.price_unit / total_line)
-                            if valuation.id not in dict:
-                                dict[valuation.id] = per_unit
-                            else:
-                                dict[valuation.id] += per_unit
-                        elif line.split_method == 'by_current_cost_price':
+                            value = (line.price_unit / total_line)
+                        elif line.split_method == 'by_current_cost_price' and total_cost:
                             per_unit = (line.price_unit / total_cost)
                             value = valuation.former_cost * per_unit
-                            if valuation.id not in dict:
-                                dict[valuation.id] = value
-                            else:
-                                dict[valuation.id] += value
+                        else:
+                            value = (line.price_unit / total_line)
+
+                        if valuation.id not in dict:
+                            dict[valuation.id] = value
+                        else:
+                            dict[valuation.id] += value
 
         for key, value in dict.items():
             line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
