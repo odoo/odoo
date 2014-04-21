@@ -34,7 +34,6 @@ Documentation based on question and pertinent answers of Forum
     'data': [
         'data/doc_data.xml',
         'security/ir.model.access.csv',
-        'security/doc_security.xml',
         'views/doc.xml',
         'views/website_doc.xml',
     ],
