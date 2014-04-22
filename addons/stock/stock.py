@@ -406,7 +406,7 @@ class stock_quant(osv.osv):
                 for quant in tmp_quants:
                     if quant[0]:
                         res_qty -= quant[1]
-                quants += unprefered_quants
+                quants += tmp_quants
         return quants
 
     def quants_get(self, cr, uid, location, product, qty, domain=None, restrict_lot_id=False, restrict_partner_id=False, context=None):
