@@ -1412,7 +1412,7 @@ class stock_production_lot(osv.osv):
         'name': fields.char('Serial Number', size=64, required=True, help="Unique Serial Number"),
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
-        'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants'),
+        'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants', readonly=True),
         'create_date': fields.datetime('Creation Date'),
     }
     _defaults = {

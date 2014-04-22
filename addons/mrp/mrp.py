@@ -1069,6 +1069,15 @@ class mrp_production(osv.osv):
             production.write({'state': 'confirmed'}, context=context)
         return 0
 
+    def action_assign(self, cr, uid, ids, context=None):
+        """
+        Checks the availability on the consume lines of the production order
+        """
+        move_obj = self.pool.get("stock.move")
+        for production in self.browse(cr, uid, ids, context=context):
+            move_obj.action_assign(cr, uid, [x.id for x in production.move_lines], context=context)
+
+
     def force_production(self, cr, uid, ids, *args):
         """ Assigns products.
         @param *args: Arguments
