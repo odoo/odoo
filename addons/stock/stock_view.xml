@@ -1640,8 +1640,8 @@
                         <field name="location_src_id" attrs="{'required': [('action', '=', 'move')]}"/>
                         <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}"/>
                         <label for="delay" string="Delay"  groups="stock.group_adv_location"/>
-                        <div>
-                           <field name="delay" class="oe_inline" groups="stock.group_adv_location"/>days
+                        <div groups="stock.group_adv_location">
+                           <field name="delay" class="oe_inline"/>days
                         </div>
                     </group>
                 </xpath>
