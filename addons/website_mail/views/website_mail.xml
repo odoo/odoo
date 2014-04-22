@@ -27,7 +27,7 @@
 </template>
 <template id="editor" inherit_id="website.editor_assets" name="Mail snippet">
     <xpath expr="/t" position="inside">
-        <script type="text/javascript" src="/website_mail/static/src/js/website_mail.editor.js" groups="base.group_website_publisher"></script>
+        <script t-if="not translatable" type="text/javascript" src="/website_mail/static/src/js/website_mail.editor.js" groups="base.group_website_publisher"></script>
     </xpath>
 </template>
 

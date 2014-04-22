@@ -355,7 +355,7 @@
 
 <template id="event_script" name="Country Events Snippet Script" inherit_id="website.layout">
     <xpath expr="//head" position="inside">
-        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+        <script t-if="not translatable" type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
     </xpath>
 </template>
 
