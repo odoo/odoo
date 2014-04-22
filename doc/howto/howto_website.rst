@@ -556,9 +556,7 @@ keep only the datetime and location:
 Moving lectures and TAs
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-There are already demonstration data in events and event types, so we'll want
-to delete them before inserting our own. The gist of the operation is fairly
-simple, but there are lots of changes:
+The gist of the operation is fairly simple, but there are lots of changes:
 
 * The custom models can be removed as we'll be using standard objects
 * The controller has to be altered to fetch from standard objects
@@ -576,6 +574,9 @@ simple, but there are lots of changes:
   types can be removed before adding our own)
 
 .. patch::
+
+Our data is back in the fontend (site), and in the backend we get
+administrative views for free, e.g. a calendar view of our lectures.
 
 .. [#taprofile] the teaching assistants profile view ends up broken for now,
                 but don't worry we'll get around to it
