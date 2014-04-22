@@ -451,6 +451,8 @@
                                 <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
                             </li>
                             <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
+                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen"> Reopen</a>
+                            </li>
                             <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
                             </li>
