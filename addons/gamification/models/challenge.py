@@ -243,7 +243,7 @@ class gamification_challenge(osv.Model):
 
         if vals.get('state') == 'inprogress':
             self._recompute_challenge_users(cr, uid, ids, context=context)
-            self.generate_goals_from_challenge(cr, uid, ids, context=context)
+            self._generate_goals_from_challenge(cr, uid, ids, context=context)
 
         elif vals.get('state') == 'done':
             self.check_challenge_reward(cr, uid, ids, force=True, context=context)
@@ -308,7 +308,7 @@ class gamification_challenge(osv.Model):
         goal_obj.update(cr, uid, goal_ids, context=context)
 
         self._recompute_challenge_users(cr, uid, ids, context=context)
-        self.generate_goals_from_challenge(cr, uid, ids, context=context)
+        self._generate_goals_from_challenge(cr, uid, ids, context=context)
 
         for challenge in self.browse(cr, uid, ids, context=context):
 
@@ -421,6 +421,7 @@ class gamification_challenge(osv.Model):
                             WHERE line_id = %s
                               {date_clause}
                         """.format(date_clause=date_clause)
+
                 cr.execute(query, query_params)
                 user_with_goal_ids = cr.dictfetchall()
                 user_without_goal_ids = list(set([user.id for user in challenge.user_ids]) - set([user['user_id'] for user in user_with_goal_ids]))
@@ -442,6 +443,8 @@ class gamification_challenge(osv.Model):
 
                 for user_id in user_without_goal_ids:
                     values.update({'user_id': user_id})
+                    goal_id = goal_obj.create(cr, uid, values, context=context)
+                    to_update.append(goal_id)
 
             goal_obj.update(cr, uid, to_update, context=context)
 
@@ -654,7 +657,7 @@ class gamification_challenge(osv.Model):
         message = "%s has joined the challenge" % user.name
         self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
         self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
-        return self.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
+        return self._generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
 
     # TODO in trunk, remove unused parameter user_id
     def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
