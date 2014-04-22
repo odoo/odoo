@@ -58,7 +58,7 @@ class AbstractReport(osv.AbstractModel):
         docargs = wrapped_report.localcontext
         docargs['docs'] = docargs.get('objects')
 
-        # Used in template translating (see render_doc method from report model)
+        # Used in template translation (see translate_doc method from report model)
         docargs['doc_ids'] = context['active_ids']
         docargs['doc_model'] = model
 

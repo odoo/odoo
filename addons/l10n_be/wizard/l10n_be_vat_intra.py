@@ -29,6 +29,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.report import report_sxw
 
+
 class partner_vat_intra(osv.osv_memory):
     """
     Partner Vat Intra
@@ -276,11 +277,9 @@ class partner_vat_intra(osv.osv_memory):
              'model': 'partner.vat.intra',
              'form': xml_data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'partner.vat.intra.print',
-            'datas': datas,
-        }
+        return self.pool['report'].get_action(
+            cr, uid, [], 'l10n_be.report_l10nvatintraprint', data=datas, context=context
+        )
 
 
 class vat_intra_print(report_sxw.rml_parse):
@@ -290,6 +289,11 @@ class vat_intra_print(report_sxw.rml_parse):
             'time': time,
         })
 
-report_sxw.report_sxw('report.partner.vat.intra.print', 'partner.vat.intra', 'addons/l10n_be/wizard/l10n_be_vat_intra_print.rml', parser=vat_intra_print, header="internal")
+
+class wrapped_vat_intra_print(osv.AbstractModel):
+    _name = 'report.l10n_be.report_l10nvatintraprint'
+    _inherit = 'report.abstract_report'
+    _template = 'l10n_be.report_l10nvatintraprint'
+    _wrapped_report_class = vat_intra_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

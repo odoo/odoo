@@ -28,6 +28,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_bilan_report(osv.osv_memory):
     _name = 'account.bilan.report'
     _description = 'Account Bilan Report'
@@ -41,7 +42,7 @@ class account_bilan_report(osv.osv_memory):
     }
 
     _defaults = {
-        'fiscalyear_id':_get_default_fiscalyear
+        'fiscalyear_id': _get_default_fiscalyear
     }
 
     def print_bilan_report(self, cr, uid, ids, context=None):
@@ -50,7 +51,8 @@ class account_bilan_report(osv.osv_memory):
         data['form'] = {}
         data['ids'] = active_ids
         data['form']['fiscalyear_id'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
-        return {'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.bilan', 'datas': data}
-
+        return self.pool['report'].get_action(
+            cr, uid, ids, 'l10n_fr.report_l10nfrbilan', data=data, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

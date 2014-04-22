@@ -262,15 +262,15 @@ class Report(osv.Model):
 
         :param report_name: Name of the template to generate an action for
         """
-        if context is None:
-            context = {}
-
         report_obj = self.pool['ir.actions.report.xml']
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
         try:
             report = report_obj.browse(cr, uid, idreport[0], context=context)
         except IndexError:
-            raise osv.except_osv(_('Bad Report'), _('This report is not loaded into the database.'))
+            raise osv.except_osv(
+                _('Bad Report Reference'),
+                _('This report is not loaded into the database: %s.' % report_name)
+            )
 
         action = {
             'context': context,
