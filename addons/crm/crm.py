@@ -118,6 +118,9 @@ class crm_case_section(osv.osv):
             res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
             res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'date_deadline'], 'planned_revenue', 'date_deadline', context=context)
         return res
+    def create(self, cr, uid, vals, context=None):
+        self._alias_model_name = 'crm.lead'
+        return super(crm_case_section, self).create(cr, uid, vals, context={'alias_model_name': self._alias_model_name})
 
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
