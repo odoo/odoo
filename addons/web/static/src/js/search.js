@@ -29,8 +29,8 @@ my.Facet = B.Model.extend({
         B.Model.prototype.initialize.apply(this, arguments);
 
         this.values = new my.FacetValues(values || []);
-        this.values.on('add remove change reset', function () {
-            this.trigger('change', this);
+        this.values.on('add remove change reset', function (_, options) {
+            this.trigger('change', this, options);
         }, this);
     },
     get: function (key) {
@@ -399,7 +399,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.setup_global_completion();
         this.query = new my.SearchQuery()
                 .on('add change reset remove', this.proxy('do_search'))
-                .on('add change reset remove', this.proxy('renderFacets'));
+                .on('change', this.proxy('renderChangedFacets'))
+                .on('add reset remove', this.proxy('renderFacets'));
 
         if (this.options.hidden) {
             this.$el.hide();
@@ -578,14 +579,20 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                      .trigger('blur');
     },
     /**
-     *
-     * @param {openerp.web.search.SearchQuery | openerp.web.search.Facet} _1
-     * @param {openerp.web.search.Facet} [_2]
+     * Call the renderFacets method with the correct arguments.
+     * This is due to the fact that change events are called with two arguments
+     * (model, options) while add, reset and remove events are called with
+     * (collection, model, options) as arguments
+     */
+    renderChangedFacets: function (model, options) {
+        this.renderFacets(undefined, model, options);
+    },
+    /**
+     * @param {openerp.web.search.SearchQuery | undefined} Undefined if event is change
+     * @param {openerp.web.search.Facet} 
      * @param {Object} [options]
      */
-    renderFacets: function (_1, _2, options) {
-        // _1: model if event=change, otherwise collection
-        // _2: undefined if event=change, otherwise model
+    renderFacets: function (collection, model, options) {
         var self = this;
         var started = [];
         var $e = this.$('div.oe_searchview_facets');
@@ -610,6 +617,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         });
 
         $.when.apply(null, started).then(function () {
+            if (options && options.focus_input === false) return;
             var input_to_focus;
             // options.at: facet inserted at given index, focus next input
             // otherwise just focus last input
@@ -618,7 +626,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             } else {
                 input_to_focus = self.input_subviews[(options.at + 1) * 2];
             }
-
             input_to_focus.$el.focus();
         });
     },
