@@ -296,9 +296,16 @@ class purchase_order(osv.osv):
 
     def set_order_line_status(self, cr, uid, ids, status, context=None):
         line = self.pool.get('purchase.order.line')
+        lines = []
+        proc_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             order_line_ids = [order_line.id for order_line in order.order_line]
+            lines += order_line_ids
             line.write(cr, uid, order_line_ids, {'state': status}, context=context)
+        if lines:
+            procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', lines)], context=context)
+            if procs:
+                proc_obj.write(cr, uid, procs, {'state': 'cancel'}, context=context)
         return True
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -616,6 +623,7 @@ class purchase_order(osv.osv):
     def wkf_action_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
+        
 
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
@@ -764,6 +772,15 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        # Do check on related procurements:
+        proc_obj = self.pool.get("procurement.order")
+        po_lines = []
+        for po in self.browse(cr, uid, ids, context=context):
+            po_lines += [x.id for x in po.order_line]
+        if po_lines:
+            procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', po_lines)], context=context)
+            if procs:
+                proc_obj.check(cr, uid, procs, context=context)
         self.message_post(cr, uid, ids, body=_("Products received"), context=context)
         return True
 
