@@ -211,13 +211,9 @@ class website(osv.osv):
         Access = request.registry['ir.model.access']
         is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
 
-        lang = request.context['lang']
-        is_master_lang = lang == request.website.default_lang_code
-
         request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
         request.context.update(
             editable=is_website_publisher,
-            translatable=not is_master_lang,
         )
 
     def get_template(self, cr, uid, ids, template, context=None):
