@@ -210,24 +210,6 @@ class test_mail(TestMail):
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
         self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
-    def test_10_message_quote_context(self):
-        """ Tests designed for message_post. """
-        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
-
-        msg1_id = self.mail_message.create(cr, uid, {'body': 'Thread header about Zap Brannigan', 'subject': 'My subject'})
-        msg2_id = self.mail_message.create(cr, uid, {'body': 'First answer, should not be displayed', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-        msg3_id = self.mail_message.create(cr, uid, {'body': 'Second answer', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-        msg4_id = self.mail_message.create(cr, uid, {'body': 'Third answer', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-        msg_new_id = self.mail_message.create(cr, uid, {'body': 'My answer I am propagating', 'subject': 'Re: My subject', 'parent_id': msg1_id})
-
-        result = self.mail_message.message_quote_context(cr, uid, msg_new_id, limit=3)
-        self.assertIn('Thread header about Zap Brannigan', result, 'Thread header content should be in quote.')
-        self.assertIn('Second answer', result, 'Answer should be in quote.')
-        self.assertIn('Third answer', result, 'Answer should be in quote.')
-        self.assertIn('expandable', result, 'Expandable should be present.')
-        self.assertNotIn('First answer, should not be displayed', result, 'Old answer should not be in quote.')
-        self.assertNotIn('My answer I am propagating', result, 'Thread header content should be in quote.')
-
     def test_11_notification_url(self):
         """ Tests designed to test the URL added in notification emails. """
         cr, uid, group_pigs = self.cr, self.uid, self.group_pigs
@@ -366,14 +348,14 @@ class test_mail(TestMail):
         # Data creation
         # --------------------------------------------------
         # 0 - Update existing users-partners
-        self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notification_email_send': 'comment'})
+        self.res_users.write(cr, uid, [uid], {'email': 'a@a', 'notify_email': 'always'})
         self.res_users.write(cr, uid, [self.user_raoul_id], {'email': 'r@r'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should receive emails for emails
-        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notify_email': 'none'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notify_email': 'always'})
         # 4 - Attachments
         attach1_id = self.ir_attachment.create(cr, user_raoul.id, {
             'name': 'Attach1', 'datas_fname': 'Attach1',
@@ -600,9 +582,9 @@ class test_mail(TestMail):
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should receive emails for emails
-        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notify_email': 'always'})
         # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notification_email_send': 'all'})
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'email': 'd@d', 'notify_email': 'always'})
         # 4 - Create a Bird mail.group, that will be used to test mass mailing
         group_bird_id = self.mail_group.create(cr, uid,
             {
@@ -674,7 +656,6 @@ class test_mail(TestMail):
                 'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]
             }, context={
                 'default_composition_mode': 'reply',
-                'default_model': 'mail.thread',
                 'default_res_id': self.group_pigs_id,
                 'default_parent_id': message.id
             })
@@ -699,11 +680,10 @@ class test_mail(TestMail):
         # --------------------------------------------------
 
         # Do: Compose in mass_mail_mode on pigs and bird
-        compose_id = mail_compose.create(cr, user_raoul.id,
-            {
+        compose_id = mail_compose.create(
+            cr, user_raoul.id, {
                 'subject': _subject,
                 'body': '${object.description}',
-                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',
@@ -718,6 +698,13 @@ class test_mail(TestMail):
                         'default_res_id': -1,
                         'active_ids': [self.group_pigs_id, group_bird_id]
                     })
+        # check mail_mail
+        mail_mail_ids = self.mail_mail.search(cr, uid, [('subject', '=', _subject)])
+        for mail_mail in self.mail_mail.browse(cr, uid, mail_mail_ids):
+            self.assertEqual(set([p.id for p in mail_mail.recipient_ids]), set([p_c_id, p_d_id]),
+                             'compose wizard: mail_mail mass mailing: mail.mail in mass mail incorrect recipients')
+
+        # check logged messages
         group_pigs.refresh()
         group_bird.refresh()
         message1 = group_pigs.message_ids[0]
@@ -733,14 +720,14 @@ class test_mail(TestMail):
                         'compose wizard: message_post: mail.message in mass mail subject incorrect')
         self.assertEqual(message1.body, '<p>%s</p>' % group_pigs.description,
                         'compose wizard: message_post: mail.message in mass mail body incorrect')
-        self.assertEqual(set([p.id for p in message1.notified_partner_ids]), set([p_c_id, p_d_id]),
-                        'compose wizard: message_post: mail.message in mass mail incorrect notified partners')
+        # self.assertEqual(set([p.id for p in message1.notified_partner_ids]), set([p_c_id, p_d_id]),
+        #                 'compose wizard: message_post: mail.message in mass mail incorrect notified partners')
         self.assertEqual(message2.subject, _subject,
                         'compose wizard: message_post: mail.message in mass mail subject incorrect')
         self.assertEqual(message2.body, '<p>%s</p>' % group_bird.description,
                         'compose wizard: message_post: mail.message in mass mail body incorrect')
-        self.assertEqual(set([p.id for p in message2.notified_partner_ids]), set([p_c_id, p_d_id]),
-                        'compose wizard: message_post: mail.message in mass mail incorrect notified partners')
+        # self.assertEqual(set([p.id for p in message2.notified_partner_ids]), set([p_c_id, p_d_id]),
+        #                 'compose wizard: message_post: mail.message in mass mail incorrect notified partners')
 
         # Test: mail.group followers: author not added as follower in mass mail mode
         pigs_pids = [p.id for p in group_pigs.message_follower_ids]
@@ -757,7 +744,6 @@ class test_mail(TestMail):
             {
                 'subject': _subject,
                 'body': '${object.description}',
-                'post': True,
                 'partner_ids': [(4, p_c_id), (4, p_d_id)],
             }, context={
                 'default_composition_mode': 'mass_mail',

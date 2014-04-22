@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-27 05:54+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-04-22 05:59+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -394,7 +394,7 @@ msgstr "伙伴"
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claim on deliveries"
-msgstr ""
+msgstr "允許在出貨單上有索賠選項"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -471,7 +471,7 @@ msgstr "可出貨"
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
 msgid "Action traceability "
-msgstr ""
+msgstr "動作追溯性 "
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -913,7 +913,7 @@ msgstr ""
 #: code:addons/stock/product.py:448
 #, python-format
 msgid "Future Receptions"
-msgstr ""
+msgstr "日後收貨"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -1201,7 +1201,7 @@ msgstr "檢視"
 #. module: stock
 #: field:stock.location,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "左父項"
 
 #. module: stock
 #: field:product.category,property_stock_valuation_account_id:0
@@ -2387,7 +2387,7 @@ msgstr "總值"
 msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
-msgstr ""
+msgstr "如果連鎖類型並不是Transparent，連動調撥時會寫入庫存日記帳簿。 (如果保持空白，日記簿則不使用)"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -3542,7 +3542,7 @@ msgstr "消耗產品"
 #. module: stock
 #: field:stock.location,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "右父項"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -4037,6 +4037,13 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Determines whether this location is chained to another location, i.e. any "
+"incoming product in this location \n"
+"決定這個倉位是否鏈結到另外一個倉位，也就是說任何在這個的倉位入庫產品下一步會被移到連鎖倉位。連\n"
+"鎖倉位是根據類別決定：\n"
+"* 無：無連鎖倉位。\n"
+"* 客戶：連鎖倉位將設為提貨單上的業務夥伴的「客戶倉位」欄位。\n"
+"* 固定庫位：連鎖倉位為下一個欄位「如果連鎖庫位為固定」的設定。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1882
@@ -4126,7 +4133,7 @@ msgstr "例如10進位精準度為2將允許重量如9.99公斤，而10進位精
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr ""
+msgstr "總出庫數量"
 
 #. module: stock
 #: field:stock.move,backorder_id:0
@@ -4134,7 +4141,7 @@ msgstr ""
 #: field:stock.picking.in,backorder_id:0
 #: field:stock.picking.out,backorder_id:0
 msgid "Back Order of"
-msgstr ""
+msgstr "延期交貨清單 -"
 
 #. module: stock
 #: help:stock.partial.move.line,cost:0
@@ -4154,7 +4161,7 @@ msgstr "產品分類"
 #. module: stock
 #: view:stock.move:0
 msgid "Serial  Number"
-msgstr ""
+msgstr "序號"
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -4164,7 +4171,7 @@ msgstr "開立發票"
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Internal Moves"
-msgstr ""
+msgstr "確認內部調動"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -4174,7 +4181,7 @@ msgstr "配置"
 #. module: stock
 #: model:res.groups,name:stock.group_locations
 msgid "Manage Multiple Locations and Warehouses"
-msgstr ""
+msgstr "管理多個倉位與倉庫"
 
 #. module: stock
 #: help:stock.change.standard.price,new_price:0
@@ -4185,6 +4192,8 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"如果成本價格增加，庫存變動科目為借方，出庫科目為貸方，其值等於 ( 差異金額 * 存貨數量)。\n"
+"如果成本價格減少，庫存變動科目為貸方，入庫科目為借方。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2860
@@ -4199,11 +4208,14 @@ msgid ""
 "                to be invoiced when you send or deliver goods.\n"
 "                This installs the module stock_invoice_directly."
 msgstr ""
+"如果設為寄出或交付貨物時開立發票時，允許自動執行開立發票精靈。\n"
+"                to be invoiced when you send or deliver goods.\n"
+"                這將安裝  stock_invoice_directly 模組。"
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr ""
+msgstr "連鎖倉位日記帳"
 
 #. module: stock
 #: code:addons/stock/stock.py:782
@@ -4249,7 +4261,7 @@ msgstr "未來交貨"
 #: field:stock.move,tracking_id:0
 #: view:stock.tracking:0
 msgid "Pack"
-msgstr ""
+msgstr "包裹"
 
 #. module: stock
 #: view:stock.move:0
@@ -4265,7 +4277,7 @@ msgstr "自動檢驗"
 #: code:addons/stock/stock.py:1850
 #, python-format
 msgid "Insufficient Stock for Serial Number !"
-msgstr ""
+msgstr "該序號的庫存不足！"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4297,7 +4309,7 @@ msgstr "退貨"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr ""
+msgstr "審核盤點結果"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -4309,24 +4321,24 @@ msgstr ""
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number, will be displayed as: PREFIX/SERIAL [INT_REF]"
-msgstr ""
+msgstr "唯一序號將顯示為 前綴字元/序號 [整數參考號]"
 
 #. module: stock
 #: code:addons/stock/product.py:142
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
-msgstr ""
+msgstr "請定義入庫會計科目給這個產品：「%s」（id: %d）。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in
 msgid "Incoming  Products"
-msgstr ""
+msgstr "入庫產品"
 
 #. module: stock
 #: view:product.product:0
 msgid "update"
-msgstr ""
+msgstr "更新"
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -4345,7 +4357,7 @@ msgstr ""
 #: view:stock.return.picking:0
 #: view:stock.split.into:0
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -4365,14 +4377,14 @@ msgstr "資訊"
 #: code:addons/stock/stock.py:1213
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
-msgstr ""
+msgstr "您不能移除 %s 狀態的提貨單"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
 msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
-msgstr ""
+msgstr "此倉位將會替代預設倉位，作為當您送貨至此業務夥伴的目標倉位。"
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -4385,7 +4397,7 @@ msgstr "套用(_A)"
 #: field:stock.picking.in,max_date:0
 #: field:stock.picking.out,max_date:0
 msgid "Max. Expected Date"
-msgstr ""
+msgstr "最大預計日期"
 
 #. module: stock
 #: field:stock.picking,auto_picking:0
@@ -4399,12 +4411,12 @@ msgstr "自動提貨"
 #: report:stock.picking.list.in:0
 #: report:stock.picking.list.out:0
 msgid "Customer Address :"
-msgstr ""
+msgstr "客戶地址："
 
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
 msgid "Chaining Type"
-msgstr ""
+msgstr "倉位鏈結類型"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -4430,7 +4442,7 @@ msgstr "行事曆檢視"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr ""
+msgstr "庫存盤點"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -4450,12 +4462,12 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory.merge:0
 msgid "Do you want to merge theses inventories?"
-msgstr ""
+msgstr "您想要合併這些庫存盤點？"
 
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Date of Delivery"
-msgstr ""
+msgstr "出貨日期"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -4468,18 +4480,18 @@ msgstr "貨架 (Y)"
 msgid ""
 "Please define inventory valuation account on the product category: \"%s\" "
 "(id: %d)"
-msgstr ""
+msgstr "請設定此產品分類的庫存估價科目：「%s」（id: %d）"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Serial Number Revision"
-msgstr ""
+msgstr "序號版本"
 
 #. module: stock
 #: code:addons/stock/product.py:100
 #, python-format
 msgid "Specify valuation Account for Product Category: %s."
-msgstr ""
+msgstr "為產品分類指定估價科目：%s"
 
 #. module: stock
 #: help:stock.config.settings,module_claim_from_delivery:0
@@ -4487,12 +4499,14 @@ msgid ""
 "Adds a Claim link to the delivery order.\n"
 "                This installs the module claim_from_delivery."
 msgstr ""
+"為送貨單添加一個索賠鏈接。\n"
+"這將會安裝 claim_from_delivery 模組，"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:212
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr ""
+msgstr "請指定至少一個不為零的數量"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -4502,7 +4516,7 @@ msgstr "設為零"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
 msgid "User"
-msgstr ""
+msgstr "使用者"
 
 #. module: stock
 #: field:stock.config.settings,module_stock_location:0
@@ -4530,12 +4544,12 @@ msgstr "未計劃量"
 #. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
-msgstr ""
+msgstr "連動公司"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Check Availability"
-msgstr ""
+msgstr "檢查可用數量"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -4546,7 +4560,7 @@ msgstr "一月"
 #. module: stock
 #: constraint:stock.move:0
 msgid "You cannot move products from or to a location of the type view."
-msgstr ""
+msgstr "不能將類型檢視的倉位作為調動的來源或目標倉位"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -4554,14 +4568,14 @@ msgid ""
 "This allows you to manage products by using serial numbers. When you select "
 "a serial number on product moves, you can get the upstream or downstream "
 "traceability of that product."
-msgstr ""
+msgstr "這裡允許您透過使用序號管理存貨。當您在存貨調動選擇一個序號時，您將看到該產品的上下游回溯情形。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:128
 #, python-format
 msgid ""
 "No product in this location. Please select a location in the product form."
-msgstr ""
+msgstr "該倉位沒有產品。請由產品表單選擇倉位。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
@@ -4613,6 +4627,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點擊新增此產品的出貨單。\n"
+"              </p><p>\n"
+"                您將在此找到所有此產品相關的送貨記錄，以及所有需出貨給\n"
+"                客戶的產品。\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -4648,7 +4669,7 @@ msgstr "前綴"
 #: view:stock.move:0
 #: view:stock.move.split:0
 msgid "Split in Serial Numbers"
-msgstr ""
+msgstr "序號分拆"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -4681,13 +4702,13 @@ msgstr "目的地點"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Picking Slip"
-msgstr ""
+msgstr "提貨單"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "指定包裝的屬性，例如類型、產品數量等等。"
 
 #. module: stock
 #: view:product.product:0

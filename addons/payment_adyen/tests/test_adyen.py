@@ -49,7 +49,7 @@ class AdyenForm(AdyenCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid things
         adyen = self.payment_acquirer.browse(self.cr, self.uid, self.adyen_id, None)
-        self.assertEqual(adyen.env, 'test', 'test without test env')
+        self.assertEqual(adyen.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
