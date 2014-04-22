@@ -37,14 +37,14 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
-                <div class="oe_edit_only pull-left">
-                    <label for="name" class="oe_inline"/>
+                <div class="pull-left">
+                    <label for="name" class="oe_edit_only oe_inline"/>
                     <h1>
                         <field name="name" class="oe_inline"/>
                     </h1>
                 </div>
-                <div class="oe_edit_only pull-left">
-                    <label for="origin" class="oe_inline"/>
+                <div class="pull-left">
+                    <label for="origin" class="oe_edit_only oe_inline"/>
                     <h1>
                         <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
                         <field name="origin" class="oe_inline" placeholder="e.g. PO0025"/>
