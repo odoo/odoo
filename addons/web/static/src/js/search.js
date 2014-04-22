@@ -1602,8 +1602,11 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return facetValue.get('label');
     },
     make_domain: function (name, operator, facetValue) {
-        if (operator === this.default_operator) {
+        switch(operator){
+        case this.default_operator:
             return [[name, '=', facetValue.get('value')]];
+        case 'child_of':
+            return [[name, 'child_of', facetValue.get('value')]];
         }
         return this._super(name, operator, facetValue);
     },
