@@ -206,7 +206,8 @@ class StockMove(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse'),
+        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse', 
+                                                  help="When products are manufactured, they can be manufactured in this warehouse."),
         'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
     }
 

@@ -92,7 +92,8 @@ class stock_picking(osv.osv):
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
-        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse'),
+        'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse', 
+                                          help="When products are bought, they can be delivered to this warehouse"),
         'buy_pull_id': fields.many2one('procurement.rule', 'BUY rule'),
     }
     _defaults = {
