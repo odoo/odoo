@@ -167,7 +167,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 row_search_facet = query.findWhere({category:'GroupBy'});
 
             if (row_search_facet) {
-                row_search_facet.values.reset(row_facet.values);
+                row_search_facet.values.reset(row_facet.values, {focus_input:false});
             } else {
                 if (row_groupby.length) {
                     query.add(row_facet);
@@ -181,7 +181,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 col_search_facet = query.findWhere({category:'ColGroupBy'});
 
             if (col_search_facet) {
-                col_search_facet.values.reset(col_facet.values);
+                col_search_facet.values.reset(col_facet.values, {focus_input:false});
             } else {
                 if (col_groupby.length) {
                     query.add(col_facet);
