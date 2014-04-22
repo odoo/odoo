@@ -485,7 +485,7 @@ class account_config_settings(osv.TransientModel):
     _inherit = 'account.config.settings'
     
     def open_followup_level_form(self, cr, uid, ids, context=None):
-        res_ids = self.pool.get('account_followup.followup').search(cr, uid,[])
+        res_ids = self.pool.get('account_followup.followup').search(cr, uid, [], context=context)
         
         return {
                  'type': 'ir.actions.act_window',
