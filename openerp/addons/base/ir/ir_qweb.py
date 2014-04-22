@@ -1012,10 +1012,10 @@ class AssetsBundle(object):
         key = 'js_' + self.checksum
         if key not in self.cache:
             content =';\n'.join(asset.minify() for asset in self.javascripts)
-            if self.debug:
-                content = "/*\n%s\n*/\n" % '\n'.join(
-                    [asset.filename for asset in self.javascripts if asset.filename]) + content
             self.cache[key] = content
+        if self.debug:
+            return "/*\n%s\n*/\n" % '\n'.join(
+                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
         return self.cache[key]
 
     def css(self):
@@ -1032,10 +1032,10 @@ class AssetsBundle(object):
 
             matches.append(content)
             content = u'\n'.join(matches)
-            if self.debug:
-                content = "/*\n%s\n*/\n" % '\n'.join(
-                    [asset.filename for asset in self.javascripts if asset.filename]) + content
             self.cache[key] = content
+        if self.debug:
+            return "/*\n%s\n*/\n" % '\n'.join(
+                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
         return self.cache[key]
 
 class WebAsset(object):
