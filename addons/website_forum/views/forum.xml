@@ -58,19 +58,31 @@
             <field name="arch" type="xml">
                 <form string="Forum Post" version="7.0">
                     <sheet>
-                        <h1><field name="name" placeholder="Name"/></h1>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
                         <group>
-                            <field name="tag_ids" widget="many2many_tags"/>
-                            <field name="forum_id"/>
-                            <field name="parent_id"/>
-                            <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
                             <group>
-                                <field name="create_date"/>
+                                <field name="forum_id"/>
+                                <field name="parent_id"/>
+                            </group><group>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="state"/>
+                                <field name="closed_reason_id"/>
+                                <field name="closed_uid"/>
+                                <field name="closed_date"/>
+                            </group><group>
                                 <field name="create_uid"/>
-                            </group>
-                            <group>
+                                <field name="create_date"/>
                                 <field name="write_uid"/>
                                 <field name="write_date"/>
+                            </group><group>
+                                <field name="is_correct"/>
+                                <field name="views"/>
+                                <field name="vote_count"/>
+                                <field name="favourite_count"/>
+                                <field name="child_count"/>
                             </group>
                         </group>
                     </sheet>

@@ -70,11 +70,10 @@ $(document).ready(function () {
                     $link.parent().append($warning);
                 }
             } else {
-                $link.parents().find(".oe_answer_true").removeClass("oe_answer_true alert alert-info").addClass('oe_answer_false');
-                $link.parents().find(".answer_correct").removeClass("answer_correct alert alert-info")
                 if (data) {
-                    $link.removeClass("oe_answer_false").addClass('oe_answer_true');
-                    $link.parents('.forum_answer').first().addClass("answer_correct alert alert-info");
+                    $link.addClass("oe_answer_true").removeClass('oe_answer_false');
+                } else {
+                    $link.removeClass("oe_answer_true").addClass('oe_answer_false');
                 }
             }
         });

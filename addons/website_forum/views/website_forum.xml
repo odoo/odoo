@@ -26,10 +26,6 @@
         <t t-set="head">
             <link rel='stylesheet' href="/web/static/lib/jquery.textext/jquery.textext.css"/>
             <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
-            <!--
-            FP Note: Why do we need this ? Can we remove this code?
-            The problem is that you add your script for every page, not only for the forum
-            -->
             <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
             <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"/>
             <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"/>
@@ -90,7 +86,7 @@
                 </div>
                 <div class="col-sm-3" id="right-column">
                     <a t-if="not header.get('ask_hide')" class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{slug(forum)}/ask">Ask a Question</a>
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" id="about_forum">
                         <div class="panel-heading">
                             <h3 class="panel-title">About This Forum</h3>
                         </div>
@@ -136,38 +132,33 @@
 <template id="display_post">
     <div class="question clearfix">
         <div class="pull-left text-center">
-            <div t-attf-class="box #{question.child_count and 'oe_green' or 'oe_grey'}">
+            <div t-attf-class="box #{question.is_correct and 'oe_green' or 'oe_grey'} #{(question.child_count == 0) and 'text-muted' or ''}">
                 <span t-esc="question.child_count"/>
-                <span t-if="question.has_validated_answer" class="fa fa-2x fa-check-circle"/>
-                <div t-if="question.child_count&gt;1">Answers</div>
-                <div t-if="question.child_count&lt;=1">Answer</div>
-            </div>
-            <div class="text-muted text-center">
-                <span t-field="question.views"/> Views
+                <div t-if="question.child_count&gt;1" class="subtitle">Answers</div>
+                <div t-if="question.child_count&lt;=1" class="subtitle">Answer</div>
             </div>
         </div>
-        <div class="pull-right text-center">
-            <div class="box oe_grey">
-                <span t-esc="question.vote_count or 0"/>
-                <div t-if="question.vote_count&gt;1">Votes</div>
-                <div t-if="question.vote_count&lt;=1">Vote</div>
-            </div>
-        </div>
-        <div style="margin-left: 95px;">
+        <div style="margin-left: 95px; margin-top:-8px;">
             <div class="question-name">
                 <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
             </div>
+            <t t-foreach="question.tag_ids" t-as="tag">
+                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge pull-right" t-field="tag.name"/>
+            </t>
             <div class="text-muted">
                 by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
                     t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
                 on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+                with <b t-field="question.views"/> views
+                <span t-if="question.vote_count&gt;0"> and 
+                    <b t-esc="question.vote_count or 0"/>
+                    <t t-if="question.vote_count&gt;1">votes</t>
+                    <t t-if="question.vote_count==1">vote</t>
+                </span>
             </div>
-            <t t-foreach="question.tag_ids" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
-            </t>
         </div>
     </div>
 </template>
@@ -335,23 +326,36 @@
 <!-- Moderation: close a question -->
 <template id="close_question">
     <t t-call="website_forum.header">
-        <h3 class=""><b>Close question</b></h3><br/>
-        <form t-attf-action="/forum/#{slug(forum)}/question/#{slug(question)}/close" method="post" role="form">
+        <h1 class="mt0">Close question</h1>
+        <p class="text-muted">
+            If you close this question, it will be hidden for most users. Only
+            users having a high karma can see closed questions to moderate
+            them.
+        </p>
+        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(post)}/close" method="post" role="form" class="form-horizontal mt32 mb64">
             <input name="post_id" t-att-value="question.id" type="hidden"/>
-            <span class="pull-left">Close the question:</span>
-            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
-            <div class="mt16">
-                <label class="col-md-2 control-label mb16" for="reason">Reasons:</label>
-                <div class="col-md-9 mb16">
-                    <select class="form-control" name="reason">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="reason">Question:</label>
+                <div class="col-md-8 mt8">
+                    <span t-field="post.name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="reason">Reason:</label>
+                <div class="col-md-8">
+                    <select class="form-control" name="reason_id">
                         <t t-foreach="reasons or []" t-as="reason">
                             <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
                         </t>
                     </select>
                 </div>
             </div>
-            <div>
-                <button class="btn btn-primary btn-lg">Close</button>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-8">
+                    <button class="btn btn-primary">Close question</button>
+                    <span class="text-muted">or</span>
+                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">back to question</a>
+                </div>
             </div>
         </form>
     </t>
@@ -383,8 +387,11 @@
         <span id="vote_count" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
             t-attf-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
-        <div>
+        <div t-if="vote_count &gt; 1" class="subtitle">
             votes
+        </div>
+        <div t-if="vote_count &lt; 2" class="subtitle">
+            vote
         </div>
     </div>
 </template>
@@ -392,18 +399,15 @@
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
     <t t-call="website_forum.header">
-
         <div t-attf-class="question #{not question.active and 'alert alert-danger' or ''}">
             <div class="text-center pull-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
                 </t>
-                <div class="text-muted">
-                    <span t-esc="question.child_count"/>
-                    <span t-if="question.child_count&gt;1">Answers</span>
-                    <span t-if="question.child_count&lt;=1">Answer</span>
+                <div class="text-muted text-center">
+                    <span t-field="question.views"/> Views
                 </div>
-                <div>
+                <div class="mt4">
                     <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                         t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                 </div>
@@ -414,6 +418,19 @@
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                 </h1>
+                <div class="alert alert-info" t-if="question.state == 'close'">
+                    <p class="mt32 mb16 text-center">
+                        <b>The question has been closed for reason: <i t-esc="question.closed_reason_id.name"/>
+                        <br/>
+                        <t t-if="question.closed_uid">
+                            <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_uid) }" t-field="question.closed_uid"/> </i>
+                        </t>
+                        on <span t-field="question.closed_date"/></b>
+                    </p>
+                    <div t-if="question.state == 'close' and user.karma&gt;=500" class="mb24 text-center">
+                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"> Reopen</a>
+                    </div>
+                </div>
                 <t t-raw="question.content"/>
 
                 <div class="mt16 clearfix">
@@ -423,29 +440,28 @@
                                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge" t-field="tag.name"/>
                             </t>
                         </div>
-                        <ul class="list-inline">
+                        <ul class="list-inline" id="options">
                             <li t-if="user.id == question.create_uid.id or user.karma&gt;=50">
                                 <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
                                       t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
-                                    comment
+                                    Comment
                                 </a>
                             </li>
                             <li t-if="question.state != 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
-                                <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close">close</a>
+                                <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
                             </li>
                             <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen">reopen</a>
                             </li>
                             <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
-                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit">edit</a>
+                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
                             </li>
                             <li t-if="question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete">delete</a>
+                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete"> Delete</a>
                             </li>
                             <li t-if="not question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete">undelete</a>
+                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete"> Undelete</a>
                             </li>
-                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}">share</a></li>
                         </ul>
                     </div>
                     <div>
@@ -458,15 +474,6 @@
                             <div t-field="question.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
                         </div>
                     </div>
-                    <div class="alert alert-info" t-if="question.state == 'close'">
-                        <p class="mt32 mb32 text-center">
-                            <b>The question has been closed for the following reason "<span t-field="question.closed_reason_id.name"/>"
-                            <t t-if="question.closed_uid">
-                                <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_uid) }" t-field="question.closed_uid.name"/> </i>
-                            </t>
-                            <br/>close date <span t-field="question.closed_date"/></b>
-                        </p>
-                    </div>
                 </div>
                 <t t-call="website_forum.post_comment">
                     <t t-set="object" t-value="question"/>
@@ -477,13 +484,13 @@
 
         <div t-foreach="question.child_ids" t-as="answer" class="mt16 mb32">
             <a t-attf-id="answer-#{str(answer.id)}"/>
-            <div t-attf-class="forum_answer #{answer.is_correct and 'alert alert-info answer_correct' or ''}" t-attf-id="answer_#{answer.id}" >
+            <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
                 <div class="text-center pull-left">
                     <t t-call="website_forum.vote">
                         <t t-set="post" t-value="answer"/>
                     </t>
-                    <div class="text-muted">
-                        <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration oe_answer_true #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
+                    <div class="text-muted mt8">
+                        <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
                             t-attf-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                     </div>
                 </div>
@@ -493,19 +500,18 @@
                         <ul class="list-inline pull-right">
                             <li t-if="user.id == answer.create_uid.id or user.karma&gt;=50">
                                 <a style="cursor: pointer" data-toggle="collapse" class="text-muted fa fa-comment-o"
-                                      t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }">comment
+                                      t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                                 </a>
                             </li>
                             <li t-if="(user.id == answer.create_uid.id and can_edit_own) or can_edit_all">
-                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit">edit</a>
+                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit"> Edit</a>
                             </li>
                             <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete">delete</a>
+                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"> Delete</a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
-                                <a class="text-muted fa fa-magic" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment">Convert as a comment</a>
+                                <a class="text-muted fa fa-magic" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment"> Convert as a comment</a>
                             </li>
-                            <li><a class="text-muted fa fa-share" t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/#answer_#{answer.id}">share</a></li>
                         </ul>
                         <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                         <div>
@@ -537,7 +543,7 @@
 <template id="post_comment">
     <div class="row clearfix">
         <div class="col-sm-10 col-sm-offset-2">
-            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey mb8">
+            <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey">
                 <small class="text-muted">
                     <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750"
                         t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
@@ -552,9 +558,9 @@
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
-                <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse"
+                <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey"
                         t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
-                    <input name="post_id" t-att-value="object.id" type="hidden"/>
+                    <input name="post_id" t-att-value="object.id" type="hidden" class="mt8"/>
                     <textarea name="comment" class="form-control" placeholder="Comment this post..."/>
                     <button type="submit" class="btn btn-primary mt8">Post</button>
                 </form>
@@ -778,7 +784,7 @@
                 </tr>
                 </table>
                 <div class="well well-sm">
-                    <span t-field="user.partner_id.website_description"/>
+                    <span t-field="user.partner_id.website_description" class="oe_no_empty"/>
                     <t t-if="uid == user.id">
                         <a class="fa fa-arrow-right" t-attf-href="/forum/#{slug(forum)}/user/#{slug(user)}/edit"> Edit Your Bio</a>
                     </t>
@@ -831,7 +837,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="followed_question">
-                <div t-foreach="followed" t-as="question">
+                <div t-foreach="followed" t-as="question" class="mb16">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
