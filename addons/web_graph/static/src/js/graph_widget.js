@@ -688,9 +688,12 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             dim_x = this.pivot.rows.groupby.length,
             dim_y = this.pivot.cols.groupby.length;
 
+        var rows = this.pivot.get_rows_with_depth(dim_x),
+            labels = _.pluck(rows, 'title');
+
         var data = _.map(this.pivot.get_cols_leaves(), function (col) {
-            var values = _.map(self.pivot.get_rows_with_depth(dim_x), function (row) {
-                return {x: row.title, y: self.pivot.get_values(row.id,col.id)[0] || 0};
+            var values = _.map(rows, function (row, index) {
+                return {x: index, y: self.pivot.get_values(row.id,col.id)[0] || 0};
             });
             var title = _.map(col.path, function (p) {
                 return p || _t('Undefined');
@@ -704,6 +707,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         nv.addGraph(function () {
             var chart = nv.models.lineChart()
                 .x(function (d,u) { return u; });
+
+            chart.xAxis.tickFormat(function (d,u) {return labels[d];});
 
             d3.select(self.svg)
                 .attr('width', self.width)
