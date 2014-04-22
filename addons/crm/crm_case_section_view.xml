@@ -92,7 +92,7 @@
                     <field name="monthly_open_leads"/>
                     <field name="monthly_planned_revenue"/>
                 </xpath>
-                <xpath expr="//div[@class='oe_clear']" position="before">
+                <xpath expr="//div[@name='avtar']" position="after">
                     <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
                         <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                     </div>

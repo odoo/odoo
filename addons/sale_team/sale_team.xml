@@ -58,7 +58,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4 class="oe_center"><field name="name"/></h4>
-                                    <div class="oe_kanban_alias oe_center" t-if="record.alias_id.value">
+                                    <div class="oe_kanban_alias oe_center" t-if="record.alias_id.value" name="avtar">
                                         <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                                     </div>
                                     <div class="oe_clear"></div>
