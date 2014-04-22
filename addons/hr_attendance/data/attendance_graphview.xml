@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_hr_attendance_graph" model="ir.ui.view">
+         <field name="name">hr.attendance.graph</field>
+         <field name="model">hr.attendance</field>
+         <field name="arch" type="xml">
+             <graph string="Attendance" type="pivot">
+                <field name="employee_id" type="row"/>
+                <field name="name" type="col"/>
+                <field name="worked_hours" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+
+    <record id="action_hr_attendance_graph" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_hr_attendance_graph"/>
+    </record>
+
+
+    <menuitem
+        action="action_hr_attendance_graph"
+        id="menu_hr_attendance_graph"
+        parent="hr.menu_hr_reporting"
+        sequence="3"
+    />
+</data>
+</openerp>

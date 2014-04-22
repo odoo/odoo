@@ -20,6 +20,8 @@
 ##############################################################################
 
 import time
+from datetime import datetime
+import math
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -50,12 +52,36 @@ class hr_attendance(osv.osv):
             res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
         return res
 
+    def _worked_hours_compute(self, cr, uid, ids, fieldnames, args, context=None):
+        """For each hr.attendance record of action sign-in: assign 0.
+        For each hr.attendance record of action sign-out: assign number of hours since last sign-in.
+        """
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.action == 'sign_in':
+                res[obj.id] = 0
+            elif obj.action == 'sign_out':
+                # Get the associated sign-in
+                last_signin_id = self.search(cr, uid, [
+                    ('employee_id', '=', obj.employee_id.id),
+                    ('name', '<', obj.name), ('action', '=', 'sign_in')
+                ], limit=1, order='name DESC')
+                last_signin = self.browse(cr, uid, last_signin_id, context=context)[0]
+
+                # Compute time elapsed between sign-in and sign-out
+                last_signin_datetime = datetime.strptime(last_signin.name, '%Y-%m-%d %H:%M:%S')
+                signout_datetime = datetime.strptime(obj.name, '%Y-%m-%d %H:%M:%S')
+                workedhours_datetime = (signout_datetime - last_signin_datetime)
+                res[obj.id] = ((workedhours_datetime.seconds) / 60) / 60
+        return res
+
     _columns = {
         'name': fields.datetime('Date', required=True, select=1),
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
         'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, select=True),
         'day': fields.function(_day_compute, type='char', string='Day', store=True, select=1, size=32),
+        'worked_hours': fields.function(_worked_hours_compute, type='float', string='Worked Hours', store=True),
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #please don't remove the lambda, if you remove it then the current time will not change
