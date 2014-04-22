@@ -655,7 +655,7 @@ class test_mail(TestMail):
             {
                 'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]
             }, context={
-                'default_composition_mode': 'reply',
+                'default_composition_mode': 'comment',
                 'default_res_id': self.group_pigs_id,
                 'default_parent_id': message.id
             })

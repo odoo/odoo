@@ -444,5 +444,5 @@ class TestMailMessage(TestMail):
         # Do: Raoul replies to a Jobs message using the composer
         compose_id = mail_compose.create(cr, user_raoul_id,
             {'subject': 'Subject', 'body': 'Body text'},
-            {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+            {'default_composition_mode': 'comment', 'default_parent_id': pigs_msg_id})
         mail_compose.send_mail(cr, user_raoul_id, [compose_id])
