@@ -297,13 +297,31 @@ website.Tour = openerp.Class.extend({
         $(".popover.tour button")
             .off()
             .on("click", function () {
-                $(".popover.tour").remove();
+                var help = $("#help-menu-button");
+                var offset = help.offset();
+                var left = (offset.left > 0) ? (offset.left + help.width()) : offset.left;
+                var top = (help.height() > 0) ? (offset.top + help.height()) : offset.top;
+
+                if ($(this).is("[data-role='next']") && step.element) {
+                    $(".popover.tour").remove();
+                }
                 if (step.busy) return;
-                if (!$(this).is("[data-role='next']")) {
-                    clearTimeout(self.timer);
-                    step.busy = true;
-                    self.tour.end();
-                    self.endTour(callback);
+                if (!$(this).is("[data-role='next']") || !step.element) {
+                    $('.popover.tour')
+                        .animate({
+                            left: left,
+                            top: top,
+                            width: '1px',
+                            height: '1px',
+                            opacity: 0
+                        }, 800,
+                        function(){
+                            $(".popover.tour").remove();
+                            clearTimeout(self.timer);
+                            step.busy = true;
+                            self.tour.end();
+                            self.endTour(callback);
+                        });
                 }
             });
 
