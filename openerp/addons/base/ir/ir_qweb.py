@@ -945,7 +945,8 @@ class AssetsBundle(object):
     cache = openerp.tools.lru.LRU(32)
     rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
 
-    def __init__(self, xmlid, html=None):
+    def __init__(self, xmlid, html=None, debug=False):
+        self.debug = debug
         self.xmlid = xmlid
         self.javascripts = []
         self.stylesheets = []
@@ -1011,6 +1012,9 @@ class AssetsBundle(object):
         key = 'js_' + self.checksum
         if key not in self.cache:
             content =';\n'.join(asset.minify() for asset in self.javascripts)
+            if self.debug:
+                content = "/*\n%s\n*/\n" % '\n'.join(
+                    [asset.filename for asset in self.javascripts if asset.filename]) + content
             self.cache[key] = content
         return self.cache[key]
 
@@ -1028,6 +1032,9 @@ class AssetsBundle(object):
 
             matches.append(content)
             content = u'\n'.join(matches)
+            if self.debug:
+                content = "/*\n%s\n*/\n" % '\n'.join(
+                    [asset.filename for asset in self.javascripts if asset.filename]) + content
             self.cache[key] = content
         return self.cache[key]
 
@@ -1040,7 +1047,7 @@ class WebAsset(object):
 
     @property
     def filename(self):
-        if self._filename is None:
+        if self._filename is None and self.url:
             module = filter(None, self.url.split('/'))[0]
             mpath = openerp.http.addons_manifest[module]['addons_path']
             self._filename = mpath + self.url.replace('/', os.path.sep)
