@@ -587,12 +587,12 @@ class Home(http.Controller):
     def login(self, db, login, key, redirect="/web", **kw):
         return login_and_redirect(db, login, key, redirect_url=redirect)
 
-    @http.route('/web/js/<xmlid>', type='http', auth="none")
+    @http.route('/web/js/<xmlid>', type='http', auth="user")
     def js_bundle(self, xmlid, **kw):
         # manifest backward compatible mode, to be removed
         values = {'manifest_list': manifest_list}
         assets_html = request.render(xmlid, lazy=False, qcontext=values)
-        bundle = AssetsBundle(xmlid, assets_html)
+        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
         response = request.make_response(
             bundle.js(), [('Content-Type', 'application/javascript')])
@@ -601,11 +601,11 @@ class Home(http.Controller):
         return make_conditional(
             response, bundle.last_modified, bundle.checksum, max_age=60*5)
 
-    @http.route('/web/css/<xmlid>', type='http', auth='none')
+    @http.route('/web/css/<xmlid>', type='http', auth='user')
     def css_bundle(self, xmlid, **kw):
         values = {'manifest_list': manifest_list} # manifest backward compatible mode, to be removed
         assets_html = request.render(xmlid, lazy=False, qcontext=values)
-        bundle = AssetsBundle(xmlid, assets_html)
+        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
         response = request.make_response(
             bundle.css(), [('Content-Type', 'text/css')])
