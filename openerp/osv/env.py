@@ -98,8 +98,7 @@ class Environment(object):
 
     def ref(self, xml_id):
         """ return the record corresponding to the given `xml_id` """
-        module, name = xml_id.split('.')
-        return self['ir.model.data'].get_object(module, name)
+        return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=True)
 
     @property
     def user(self):
