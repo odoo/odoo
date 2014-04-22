@@ -24,8 +24,9 @@
 import time
 from datetime import datetime
 from dateutil import relativedelta
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class contribution_register_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -44,7 +45,6 @@ class contribution_register_report(report_sxw.rml_parse):
         return self.regi_total
 
     def _get_payslip_lines(self, obj):
-        payslip_obj = self.pool.get('hr.payslip')
         payslip_line = self.pool.get('hr.payslip.line')
         payslip_lines = []
         res = []
@@ -69,6 +69,11 @@ class contribution_register_report(report_sxw.rml_parse):
             self.regi_total += line.total
         return res
 
-report_sxw.report_sxw('report.contribution.register.lines', 'hr.contribution.register', 'hr_payroll/report/report_contribution_register.rml', parser=contribution_register_report)
+
+class wrapped_report_contribution_register(osv.AbstractModel):
+    _name = 'report.hr_payroll.report_contributionregister'
+    _inherit = 'report.abstract_report'
+    _template = 'hr_payroll.report_contributionregister'
+    _wrapped_report_class = contribution_register_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
