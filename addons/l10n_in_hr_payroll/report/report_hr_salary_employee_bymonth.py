@@ -129,9 +129,9 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         return self.total
 
 class employee_salary_bymonth(osv.AbstractModel):
-    _name = 'report.l10n_in_hr_payroll.employee_salary_bymonth'
+    _name = 'report.l10n_in_hr_payroll.report_hrsalarybymonth'
     _inherit = 'report.abstract_report'
-    _template = 'l10n_in_hr_payroll.employee_salary_bymonth'
+    _template = 'l10n_in_hr_payroll.report_hrsalarybymonth'
     _wrapped_report_class = report_hr_salary_employee_bymonth
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

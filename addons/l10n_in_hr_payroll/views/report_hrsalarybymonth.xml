@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <template id="report_hrsalarybymonth">
+        <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <div class="text-center">
+                    <h4 class="text-center"><strong>Yearly Salary Details</strong></h4>
+                    <h5>From <u><span t-esc="formatLang(data['form']['start_date'], date=True)"/></u> To <u><span t-esc="formatLang(data['form']['end_date'], date=True)"/></u> of <u><span t-esc="data['form']['category_id'][1]"/></u> Category</h5>
+                </div>
+                <table class="table table-condensed">
+                    <tr>
+                        <th>Name</th>
+                        <t t-foreach="get_periods(data['form'])" t-as="m">
+                                <th class="text-right" t-esc="m[0]" />
+                                <th class="text-right" t-esc="m[1]" /> 
+                                <th class="text-right" t-esc="m[2]" />
+                                <th class="text-right" t-esc="m[3]" />
+                                <th class="text-right" t-esc="m[4]" />
+                                <th class="text-right" t-esc="m[5]" />
+                                <th class="text-right" t-esc="m[6]" />
+                                <th class="text-right" t-esc="m[7]" />
+                                <th class="text-right" t-esc="m[8]" />
+                                <th class="text-right" t-esc="m[9]" />
+                                <th class="text-right" t-esc="m[10]" />
+                                <th class="text-right" t-esc="m[11]" />
+                        </t>
+                        <th class="text-right">Total</th>
+                    </tr>
+                    <t t-foreach="get_employee(data['form'])" t-as="e">
+                        <tr>
+                            <td t-esc="e[0]" />
+                            <td class="text-right" t-esc="e[1]" />
+                            <td class="text-right" t-esc="e[2]" />
+                            <td class="text-right" t-esc="e[3]" />
+                            <td class="text-right" t-esc="e[4]" />
+                            <td class="text-right" t-esc="e[5]" />
+                            <td class="text-right" t-esc="e[6]" />
+                            <td class="text-right" t-esc="e[7]" />
+                            <td class="text-right" t-esc="e[8]" />
+                            <td class="text-right" t-esc="e[9]" />
+                            <td class="text-right" t-esc="e[10]" />
+                            <td class="text-right" t-esc="e[11]" />
+                            <td class="text-right" t-esc="e[12]" />
+                            <th class="text-right" t-esc="formatLang(e[13],currency_obj= company.currency_id)" />
+                        </tr>
+                    </t>
+                    <tr>
+                        <t t-foreach="get_months_tol()" t-as="t">
+                            <th t-esc="t[0]" />
+                            <th class="text-right" t-esc="formatLang(t[1], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[2], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[3], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[4], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[5], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[6], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[7], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[8], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[9], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[10], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[11], currency_obj=company.currency_id)" />
+                            <th class="text-right" t-esc="formatLang(t[12], currency_obj=company.currency_id)" />
+                            
+                        </t>
+                            <th class="text-right" t-esc="formatLang(get_total(), currency_obj=company.currency_id)" />
+                    </tr>
+                </table>
+            </div>
+        </t>
+        </t>
+    </template>
+</data>
+</openerp>
