@@ -26,6 +26,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.graph_view = options.graph_view || null;
         this.pivot_options = options;
         this.title = options.title || 'Data';
+
+        this.scroll = 0;
     },
 
     start: function() {
@@ -305,11 +307,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         if (header.expanded) {
             this.fold(header);
             return;
-        } 
+        }
         if (header.path.length < header.root.groupby.length) {
             this.expand(id);
             return;
-        } 
+        }
         if (!this.important_fields.length) {
             return;
         }
@@ -354,6 +356,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         groupby = groupby || header.root.groupby[header.path.length];
 
         this.pivot.expand(header_id, groupby).then(function () {
+            self.scroll = $(window).scrollTop();
             if (update_groupby && self.graph_view) {
                 self.graph_view.register_groupby(self.pivot.rows.groupby, self.pivot.cols.groupby);
             }
@@ -512,6 +515,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         } else {
             if (this.mode === 'pivot') {
                 this.draw_table();
+                $(window).scrollTop(this.scroll);
             } else {
                 this.$('.graph_main_content').append($('<div><svg>'));
                 this.svg = this.$('.graph_main_content svg')[0];
