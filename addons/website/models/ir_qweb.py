@@ -59,6 +59,10 @@ class QWeb(orm.AbstractModel):
             val = qwebcontext.get('url_for')(val)
         return att, val
 
+    def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
+        qwebcontext['assets_query'] = dict(lang=qwebcontext['lang'])
+        return super(QWeb, self).render_tag_call_assets(element, template_attributes, generated_attributes, qwebcontext)
+
     def get_converter_for(self, field_type):
         return self.pool.get(
             'website.qweb.field.' + field_type,
