@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_hr_yearly_salary">
+    <t t-call="report.html_container">
+        <t t-foreach="get_employee(data['form'])" t-as="employee">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center><span t-field="employee.company_id"/></center>
+                    <center>From 
+                        <u><span t-esc="data['form']['date_from']"/></u> 
+                    To  <u><span t-esc="data['form']['date_to']"/></u>
+                    </center>
+                    <br/>
+                    <table class="table table-condensed table-bordered ">
+                        <tr>
+                            <th><strong>Employee Code</strong></th>
+                            <td>
+                                <t t-if="employee.identification_id">
+                                    <span t-field="employee.identification_id"/>
+                                </t>
+                            </td>
+                            
+                            <th><strong>Department</strong></th>
+                            <td>
+                                <t t-if="employee.department_id">
+                                    <span t-field="employee.department_id.name"/>
+                                </t>
+                            </td>
+                            <th><strong>Bank</strong></th>
+                            <td>
+                            <t t-if="employee.bank_account_id">
+                                    <span t-field="employee.bank_account_id.bank.name"/>
+                            </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Employee Name</strong></td>
+                            <td><t t-if="employee.name"><span t-field="employee.name"/></t></td>
+                            <td><strong>Other No.</strong></td>
+                            <td><t t-if="employee.otherid"><span t-field="employee.otherid"/></t></td>
+                            <td><strong>Address</strong></td>
+                            <td><t t-if="employee.address_home_id"><span t-field="employee.address_home_id.name"/></t></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Designation</strong></td>
+                            <td><t t-if="employee.job_id"><span t-field="employee.job_id.name"/></t></td>
+                            <td><strong>Phone No.</strong></td>
+                            <td><t t-if="employee.work_phone"><span t-field="employee.work_phone"/></t></td>
+                            <td><strong>E-mail Address</strong></td>
+                            <td><t t-if="employee.work_email"><span t-field="employee.work_email"/></t></td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                    <t t-foreach="get_periods(data['form'])[0]" t-as="months">
+                                        <th>
+                                            <t t-if="months">
+                                                <span t-esc="months"/>
+                                            </t>
+                                         </th>
+                                    </t>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <t t-if="get_employee_detail(data['form'], employee)"></t>
+                        <tr>
+                            <td><strong> Allowances with Basic:</strong></td>
+                            <t t-foreach="get_allow()" t-as="allowanc">
+                                <tr>
+                                    <t t-if="allowanc[0] == 'Basic' or allowanc[0] == 'Gross'">
+                                        <strong><span t-esc="allowanc[0]"/></strong>
+                                    </t>
+                                    <t t-if="allowanc[0] != 'Basic' and allowanc[0] == 'Gross'">
+                                        <span t-esc="allowanc[0]"/>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tr>
+                        <tr>
+                            <td><strong>Deductions:</strong></td>
+                            <t t-foreach="get_deduct()" t-as="deduct">
+                                <tr>
+                                    <t t-if="deduct[0] == 'Net'">
+                                        <strong><span t-esc="deduct[0]"/></strong>
+                                    </t>
+                                    <t t-if="deduct[0] != 'Net'">
+                                        <span t-esc="deduct[0]"/>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
