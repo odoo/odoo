@@ -1087,11 +1087,11 @@ class Many2many(_RelationalMulti):
 
 class Id(Field):
     """ Special case for field 'id'. """
-    store = False
+    store = True
     readonly = True
 
     def to_column(self):
-        raise NotImplementedError()
+        return fields.integer('ID')
 
     def __get__(self, instance, owner):
         if instance is None:
