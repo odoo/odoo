@@ -457,7 +457,7 @@
                     <filter name="unpaid" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
-                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson"/>
                     <field name="period_id" string="Period"/>
                     <group expand="0" string="Group By...">
