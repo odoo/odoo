@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-12 07:13+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-04-22 06:37+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -673,7 +673,7 @@ msgstr "主となる順序は現在と異なる必要があります。"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "現在通貨が正しく設定されていません。"
 
 #. module: account
 #: field:account.journal,profit_account_id:0
@@ -709,6 +709,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -1638,7 +1640,7 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:0
 msgid "eInvoicing & Payments"
-msgstr "請求と支払い"
+msgstr "請求と支払"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -2870,7 +2872,7 @@ msgstr "分析勘定"
 #: field:account.config.settings,default_purchase_tax:0
 #: field:account.config.settings,purchase_tax:0
 msgid "Default purchase tax"
-msgstr "デフォルト消費税（購入）"
+msgstr "デフォルト購買税"
 
 #. module: account
 #: view:account.account:0
@@ -2883,7 +2885,7 @@ msgstr "デフォルト消費税（購入）"
 #: model:ir.ui.menu,name:account.menu_action_account_form
 #: model:ir.ui.menu,name:account.menu_analytic
 msgid "Accounts"
-msgstr "アカウント"
+msgstr "勘定科目"
 
 #. module: account
 #: code:addons/account/account.py:3541
@@ -2955,7 +2957,7 @@ msgstr "参照"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Purchase Tax"
-msgstr ""
+msgstr "購買税"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -3244,7 +3246,7 @@ msgstr "基本コードの金額"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr "デフォルト消費税（売上）"
+msgstr "デフォルト販売税"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -3330,7 +3332,7 @@ msgstr "会計年度の選択"
 #: view:account.config.settings:0
 #: view:account.installer:0
 msgid "Date Range"
-msgstr ""
+msgstr "日付範囲"
 
 #. module: account
 #: view:account.period:0
@@ -3416,7 +3418,7 @@ msgstr "合計数量"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,writeoff_acc_id:0
 msgid "Write-Off account"
-msgstr "償却アカウント"
+msgstr "償却勘定"
 
 #. module: account
 #: field:account.model.line,model_id:0
@@ -3992,7 +3994,7 @@ msgstr "詳細"
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
 msgid "This purchase tax will be assigned by default on new products."
-msgstr "購入税はデフォルトで新製品に割り当てられます。"
+msgstr "購買税はデフォルトで新製品に割り当てられます。"
 
 #. module: account
 #: report:account.invoice:0
@@ -5002,7 +5004,7 @@ msgstr "会社の通貨と異なる場合はレポートに通貨欄を追加し
 #: code:addons/account/account.py:3394
 #, python-format
 msgid "Purchase Tax %.2f%%"
-msgstr "消費税（仕入） %.2f%%"
+msgstr "購買税 %.2f%%"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -5046,7 +5048,7 @@ msgstr "新規"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
+msgstr "販売税"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -6303,7 +6305,7 @@ msgstr "日数"
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"."
-msgstr ""
+msgstr "勘定科目「%s」は勘定科目表「%s」に含まれないため、この仕訳を確定できません。"
 
 #. module: account
 #: view:account.financial.report:0
@@ -7593,7 +7595,7 @@ msgstr "請求年によるグループ"
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
 msgid "Purchase tax (%)"
-msgstr ""
+msgstr "購買税(%)"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -7647,7 +7649,7 @@ msgstr "銀行取引明細書行"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
 msgid "Default Purchase Tax"
-msgstr "デフォルト消費税（仕入）"
+msgstr "デフォルト購買税"
 
 #. module: account
 #: field:account.chart.template,property_account_income_opening:0
@@ -9326,7 +9328,7 @@ msgstr "会計データ設定"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
 msgid "Purchase Tax(%)"
-msgstr "消費税（仕入）（%）"
+msgstr "購買税(%)"
 
 #. module: account
 #: code:addons/account/account_invoice.py:901
@@ -9706,7 +9708,7 @@ msgstr "一般的なレポート"
 #: field:account.config.settings,default_sale_tax:0
 #: field:account.config.settings,sale_tax:0
 msgid "Default sale tax"
-msgstr "デフォルト消費税（販売）"
+msgstr "デフォルト販売税"
 
 #. module: account
 #: report:account.overdue:0
@@ -9943,7 +9945,7 @@ msgstr "分析勘定より"
 #. module: account
 #: view:account.installer:0
 msgid "Configure your Fiscal Year"
-msgstr ""
+msgstr "会計年度設定"
 
 #. module: account
 #: field:account.period,name:0

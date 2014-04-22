@@ -88,7 +88,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var qdict = {
             current_layout : this.$el.find('.oe_dashboard').attr('data-layout')
         };
-        var $dialog = instance.web.Dialog(this, {
+        var $dialog = new instance.web.Dialog(this, {
                             title: _t("Edit Layout"),
                         }, QWeb.render('DashBoard.layouts', qdict)).open();
         $dialog.find('li').click(function() {

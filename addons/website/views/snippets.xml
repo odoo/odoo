@@ -26,16 +26,18 @@
             <div class="carousel-inner">
                 <div class="item image_text active" style="background-image: url('/website/static/src/img/banner/color_splash.jpg')">
                     <div class="container">
-                        <div class="carousel-caption content">
-                            <div>
-                                <h2>Your Banner Title</h2>
-                                <h3>Click to customize this text</h3>
-                                <p>
-                                    <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
-                                </p>
+                        <div class="row content">
+                            <div class="carousel-content col-md-6 col-sm-12">
+                                    <h2>Your Banner Title</h2>
+                                    <h3>Click to customize this text</h3>
+                                    <p>
+                                        <a href="/page/website.contactus" class="btn btn-success btn-large">Contact us</a>
+                                    </p>
                             </div>
+                            <span class="carousel-img col-md-6 hidden-sm hidden-xs">
+                                <img class="carousel-image img-responsive" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
+                            </span> 
                         </div>
-                        <img class="carousel-image hidden-xs" src="/website/static/src/img/banner/banner_picture.png" alt="Banner OpenERP Image"/>
                     </div>
                 </div>
             </div>
@@ -896,18 +898,6 @@
                 <li data-value=""><a>None</a></li>
                 <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
                 <li class="oe_custom_bg" data-value="oe_img_bg"><a><b>Choose an image...</b></a></li>
-            </ul>
-        </li>
-    </div>
-
-    <div data-snippet-option-id='carousel-style'
-        data-selector=".carousel:not(.quotecarousel)">
-        <li class="dropdown-submenu" data-required="true">
-            <a tabindex="-1" href="#">Layout</a>
-            <ul class="dropdown-menu">
-                <li data-value="text_only"><a>Text Only</a></li>
-                <li data-value="image_text"><a>Image - Text</a></li>
-                <li data-value="text_image"><a>Text - Image</a></li>
             </ul>
         </li>
     </div>

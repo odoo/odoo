@@ -32,6 +32,16 @@ class Users(osv.Model):
     }
 
     def add_karma(self, cr, uid, ids, karma, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for user in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [user.id], {'karma': user.karma + karma}, context=context)
         return True
+
+    def get_serialised_gamification_summary(self, cr, uid, excluded_categories=None, context=None):
+        if isinstance(excluded_categories, list):
+            if 'forum' not in excluded_categories:
+                excluded_categories.append('forum')
+        else:
+            excluded_categories = ['forum']
+        return super(Users, self).get_serialised_gamification_summary(cr, uid, excluded_categories=excluded_categories, context=context)

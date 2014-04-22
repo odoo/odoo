@@ -1558,11 +1558,11 @@
             <field name="model">stock.incoterms</field>
             <field name="arch" type="xml">
                 <form string="Incoterms" version="7.0">
-                    <group>
+                    <sheet>
                         <field name="name"/>
                         <field name="code"/>
                         <field name="active"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -1691,10 +1691,10 @@
             <field name="model">stock.journal</field>
             <field name="arch" type="xml">
                 <form string="Stock Journal" version="7.0">
-                    <group>
+                    <sheet>
                         <field name="name"/>
                         <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'stock.group_stock_manager']}"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>

@@ -435,7 +435,6 @@
                     // snippet_selectors => to get selector-siblings, selector-children, selector-vertical-children
                     $snippet = $(this);
                     $toInsert = $snippet.find('.oe_snippet_body').clone();
-                    $toInsert.removeClass('oe_snippet_body');
 
                     var selector = [];
                     var selector_siblings = [];
@@ -498,6 +497,8 @@
                     });
                 },
                 stop: function(ev, ui){
+                    $toInsert.removeClass('oe_snippet_body');
+                    
                     if (action === 'insert' && ! dropped && $('.oe_drop_zone') && ui.position.top > 3) {
                         var el = $('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
                         if (el.length) {
@@ -905,6 +906,7 @@
             var self = this;
             var bg = self.$target.css("background-image");
             this.$el.find('li').removeClass("active");
+            this.$el.find('li').removeClass("btn-primary");
             var $active = this.$el.find('li[data-value]')
                 .filter(function () {
                     var $li = $(this);
@@ -917,8 +919,13 @@
                     this.$el.find('li[data-value].oe_custom_bg') :
                     this.$el.find('li[data-value=""]');
             }
-            $active.addClass("active");
-            this.$el.find('li:has(li[data-value].active)').addClass("active");
+
+            //don't set active on an OpenDialog link, else it not possible to click on it again after.
+            // TODO in Saas-4 - Once bootstrap is in less
+            //      - add a class active-style to get the same display but without the active behaviour used by bootstrap in JS.
+            var classStr = _.string.contains($active[0].className, "oe_custom_bg") ? "btn-primary" : "active";
+            $active.addClass(classStr);
+            this.$el.find('li:has(li[data-value].active)').addClass(classStr);
         }
     });
 
@@ -934,7 +941,7 @@
         drop_and_build_snippet: function() {
             this.id = this.unique_id();
             this.$target.attr("id", this.id);
-            this.$target.find("[data-slide]").attr("data-target", "#" + this.id);
+            this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
             this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
 
             this.rebind_event();

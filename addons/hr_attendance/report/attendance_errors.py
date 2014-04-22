@@ -21,8 +21,9 @@
 
 import datetime
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class attendance_print(report_sxw.rml_parse):
 
@@ -38,7 +39,6 @@ class attendance_print(report_sxw.rml_parse):
     def _get_employees(self, emp_ids):
         emp_obj_list = self.pool.get('hr.employee').browse(self.cr, self.uid, emp_ids)
         return emp_obj_list
-
 
     def _lst(self, employee_id, dt_from, dt_to, max, *args):
         self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action IN (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
@@ -75,7 +75,11 @@ class attendance_print(report_sxw.rml_parse):
                 }
         return [result_dict]
 
-report_sxw.report_sxw('report.hr.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml', parser=attendance_print, header='internal')
+
+class report_hr_attendanceerrors(osv.AbstractModel):
+    _name = 'report.hr_attendance.report_attendanceerrors'
+    _inherit = 'report.abstract_report'
+    _template = 'hr_attendance.report_attendanceerrors'
+    _wrapped_report_class = attendance_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
