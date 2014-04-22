@@ -161,6 +161,7 @@
             return this._super.apply(this, arguments);
         },
         save: function () {
+            website.snippet.clean_for_save = true;
             this.snippets.clean_for_save();
             this._super();
         },
@@ -1518,6 +1519,9 @@
             });
         },
         onFocus : function () {
+            // don't open media editor before clean for save
+            if (website.snippet.clean_for_save) return;
+
             var self = this;
             if (this.$target.parent().data("oe-field") === "image") {
                 this.$overlay.addClass("hidden");

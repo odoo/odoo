@@ -333,7 +333,7 @@
             them.
         </p>
         <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(post)}/close" method="post" role="form" class="form-horizontal mt32 mb64">
-            <input name="post_id" t-att-value="post.id" type="hidden"/>
+            <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="form-group">
                 <label class="col-md-3 control-label" for="reason">Question:</label>
                 <div class="col-md-8 mt8">
@@ -345,7 +345,7 @@
                 <div class="col-md-8">
                     <select class="form-control" name="reason_id">
                         <t t-foreach="reasons or []" t-as="reason">
-                            <option t-att-value="reason.id" t-att-selected="reason.id == post.closed_reason_id.id"><t t-esc="reason.name"/></option>
+                            <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
                         </t>
                     </select>
                 </div>
@@ -447,16 +447,17 @@
                                     Comment
                                 </a>
                             </li>
-                            <li t-if="question.state != 'close' and (user.id == question.create_uid.id or user.karma&gt;=100)">
+                            <li t-if="question.state != 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
                             </li>
-                            <li t-if="user.id == question.create_uid.id or user.karma&gt;=300">
+                            <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
+                            <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
                             </li>
-                            <li t-if="question.active and user.id == question.create_uid.id or user.karma&gt;=1000">
+                            <li t-if="question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete"> Delete</a>
                             </li>
-                            <li t-if="uid == question.create_uid.id and not question.active">
+                            <li t-if="not question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete"> Undelete</a>
                             </li>
                         </ul>
@@ -500,10 +501,10 @@
                                       t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                                 </a>
                             </li>
-                            <li t-if="user.id == answer.create_uid.id or user.karma&gt;=300">
+                            <li t-if="(user.id == answer.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit"> Edit</a>
                             </li>
-                            <li t-if="user.id == answer.create_uid.id or user.karma&gt;=1000">
+                            <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
                                 <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"> Delete</a>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
@@ -546,7 +547,7 @@
                         t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
                         class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
-                    <a t-attf-href="/forum/#{slug(forum)}/user/#{message.id}"
+                    <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
                         t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
                     on <span t-field="message.date" t-field-options='{"format":"short"}'/>

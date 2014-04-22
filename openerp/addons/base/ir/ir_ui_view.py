@@ -965,4 +965,18 @@ class view(osv.osv):
         ids = map(itemgetter(0), cr.fetchall())
         return self._check_xml(cr, uid, ids)
 
+    def _validate_module_views(self, cr, uid, module):
+        """Validate architecture of all the views of a given module"""
+        assert not self.pool._init or module in self.pool._init_modules
+        cr.execute("""SELECT max(v.id)
+                        FROM ir_ui_view v
+                   LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                       WHERE md.module = %s
+                    GROUP BY coalesce(v.inherit_id, v.id)
+                   """, (module,))
+
+        for vid, in cr.fetchall():
+            if not self._check_xml(cr, uid, [vid]):
+                self.raise_view_error(cr, uid, "Can't validate view", vid)
+
 # vim:et:

@@ -280,7 +280,7 @@ class ThreadedServer(CommonServer):
         t.start()
         _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
 
-    def start(self):
+    def start(self, stop=False):
         _logger.debug("Setting signal handlers")
         if os.name == 'posix':
             signal.signal(signal.SIGINT, self.signal_handler)
@@ -291,8 +291,15 @@ class ThreadedServer(CommonServer):
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
-        self.cron_spawn()
-        self.http_spawn()
+
+        test_mode = config['test_enable'] or config['test_file']
+        if not stop or test_mode:
+            # some tests need the http deamon to be available...
+            self.http_spawn()
+
+        if not stop:
+            # only relevant if we are not in "--stop-after-init" mode
+            self.cron_spawn()
 
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
@@ -329,7 +336,7 @@ class ThreadedServer(CommonServer):
         The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
         a second one if any will force an immediate exit.
         """
-        self.start()
+        self.start(stop=stop)
 
         rc = preload_registries(preload)
 
@@ -552,8 +559,6 @@ class PreforkServer(CommonServer):
                 raise
 
     def start(self):
-        # Empty the cursor pool, we dont want them to be shared among forked workers.
-        openerp.sql_db.close_all()
         # wakeup pipe, python doesnt throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
@@ -601,6 +606,9 @@ class PreforkServer(CommonServer):
         if stop:
             self.stop()
             return rc
+
+        # Empty the cursor pool, we dont want them to be shared among forked workers.
+        openerp.sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
         while 1:
