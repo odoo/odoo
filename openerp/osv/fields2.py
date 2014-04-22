@@ -92,6 +92,7 @@ class Field(object):
     inverse_field = None        # inverse field (object), if it exists
 
     store = True                # whether the field is stored in database
+    index = False               # whether the field is indexed in database
     depends = ()                # collection of field dependencies
     recursive = False           # whether self depends on itself
     compute = None              # compute(recs) computes field on recs
@@ -346,6 +347,7 @@ class Field(object):
         return getattr(fields, self.type)(**args)
 
     # properties used by to_column() to create a column instance
+    _column_select = property(attrgetter('index'))
     _column_string = property(attrgetter('string'))
     _column_help = property(attrgetter('help'))
     _column_readonly = property(attrgetter('readonly'))

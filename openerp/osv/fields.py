@@ -133,6 +133,7 @@ class _column(object):
         """ return a dictionary with all the arguments to pass to the field """
         items = [
             ('interface_for', self),            # field interfaces self
+            ('index', self.select),
             ('string', self.string),
             ('help', self.help),
             ('readonly', self.readonly),
