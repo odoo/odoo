@@ -26,7 +26,7 @@
     'summary': 'Sales Team',
     'description': """ """,
     'website': 'http://www.openerp.com',
-    'depends' : ['base','mail'],
+    'depends' : ['base','mail','web_kanban_sparkline',],
     'data': ['security/sale_team_security.xml',
              'res_config_view.xml',
              'ir.model.access.csv',
