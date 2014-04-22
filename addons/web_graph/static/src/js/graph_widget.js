@@ -44,7 +44,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         }
 
         openerp.session.rpc('/web_graph/check_xlwt').then(function (result) {
-            self.$('.graph_options_selection label').toggle(result);
+            self.$('.graph_options_selection label').last().toggle(result);
         });
 
         return this.model.call('fields_get', []).then(function (f) {
