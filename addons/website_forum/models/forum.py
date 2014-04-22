@@ -111,7 +111,7 @@ class Post(osv.Model):
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
         'active': fields.boolean('Active'),
-        'is_correct': fields.boolean('Valid Answer', help='Correct Answer/ Answer on this question accepted.'),
+        'is_correct': fields.boolean('Valid Answer', help='Correct Answer or Answer on this question accepted.'),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
@@ -230,8 +230,9 @@ class Post(osv.Model):
 class PostReason(osv.Model):
     _name = "forum.post.reason"
     _description = "Post Closing Reason"
+    _order = 'name'
     _columns = {
-        'name': fields.char('Post Reason', required=True),
+        'name': fields.char('Post Reason', required=True, translate=True),
     }
 
 

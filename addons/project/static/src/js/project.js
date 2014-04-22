@@ -19,9 +19,7 @@ openerp.project = function(openerp) {
             dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM
-                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
-                        offset: 10
-                    });
+                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tooltip();
                 });
             });
         },

@@ -106,6 +106,15 @@
   content: "Press The Top-Left Edit Button" !important;
 }
 
+[data-oe-type=html].oe_no_empty:empty:before {
+  content: "" !important;
+}
+
+[data-oe-type=html].oe_no_empty:empty {
+  background-image: none !important;
+  height: 16px !important;
+}
+
 /* ---- EDITOR BAR ---- {{{ */
 table.editorbar-panel {
   cursor: pointer;
