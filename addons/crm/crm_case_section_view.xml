@@ -86,39 +86,38 @@
             <field name="model">crm.case.section</field>
             <field name="inherit_id" ref="sale_team.crm_case_section_salesteams_view_kanban"/>
             <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name='name']" position="after">
-                    <field name="use_leads"/>
-                    <field name="monthly_open_leads"/>
-                    <field name="monthly_planned_revenue"/>
-                </xpath>
-                <xpath expr="//div[@name='avtar']" position="after">
-                    <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
-                        <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
-                    </div>
-                    <div class="oe_items_list">
-                        <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
-                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                            <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link">
-                                <field name="monthly_open_leads" widget="sparkline_bar"
-                                    options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
-                            </a>
+                <data>
+                    <xpath expr="//field[@name='name']" position="after">
+                        <field name="use_leads"/>
+                        <field name="monthly_open_leads"/>
+                        <field name="monthly_planned_revenue"/>
+                    </xpath>
+                    <xpath expr="//div[@name='avtar']" position="after">
+                        <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
+                            <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                         </div>
-                        <div class="oe_salesteams_opportunities">
-                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                            <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
-                                <field name="monthly_planned_revenue" widget="sparkline_bar"
-                                    options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': ' (Planned Revenue)'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
-                            </a>
+                        <div class="oe_items_list">
+                            <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
+                                <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
+                                <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                    <field name="monthly_open_leads" widget="sparkline_bar"
+                                        options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
+                                </a>
+                            </div>
+                            <div class="oe_salesteams_opportunities">
+                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
+                                <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
+                                    <field name="monthly_planned_revenue" widget="sparkline_bar"
+                                        options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': ' (Planned Revenue)'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                </xpath>
-          </data>
-         </field>
+                    </xpath>
+                </data>
+            </field>
         </record>
 
         <!-- Case Sections Action -->
-
         <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>

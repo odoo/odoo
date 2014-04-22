@@ -24,7 +24,7 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
-            <data>
+                <data>
                     <xpath expr="//field[@name='company_id']" position="before">
                         <field name="default_section_id" readonly="0"/>
                     </xpath>
@@ -75,10 +75,7 @@
             </field>
         </record>
 
-
-        
         <!-- Case Sections Search view -->
-
         <record id="crm_case_section_salesteams_search" model="ir.ui.view">
             <field name="name">Case Sections - Search</field>
             <field name="model">crm.case.section</field>
@@ -99,7 +96,6 @@
         </record>
 
         <!-- Case Sections Action -->
-
         <record id="crm_case_section_salesteams_act" model="ir.actions.act_window">
             <field name="name">Sales Teams</field>
             <field name="res_model">crm.case.section</field>
@@ -175,7 +171,6 @@
         </record>
 
         <!-- Case Sections Tree View -->
-
         <record id="crm_case_section_view_tree" model="ir.ui.view">
             <field name="name">crm.case.section.tree</field>
             <field name="model">crm.case.section</field>
@@ -188,15 +183,6 @@
                 </tree>
             </field>
         </record>
-
-        <!-- Case Sections Action -->
-
-        <!--<record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
-            <field name="sequence" eval="0"/>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="crm_case_kanban_view_leads"/>
-            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
-        </record>-->
 
         <record id="crm_case_section_act" model="ir.actions.act_window">
             <field name="name">Sales Teams</field>
@@ -213,7 +199,6 @@
                 </p>
             </field>
         </record>
-        
     <menuitem id="sale_team.menu_sale_team_act" action="crm_case_section_salesteams_act" sequence="1" parent="base.menu_sales"/>
-  </data>
+    </data>
 </openerp>

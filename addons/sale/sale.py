@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import calendar
 from openerp import tools
 from datetime import date, datetime, timedelta
@@ -389,7 +390,6 @@ class sale_order(osv.osv):
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
         invoice_vals.update(self._inv_get(cr, uid, order, context=context))
         return invoice_vals
-        
 
     def _make_invoice(self, cr, uid, order, lines, context=None):
         inv_obj = self.pool.get('account.invoice')
@@ -1012,10 +1012,10 @@ class mail_compose_message(osv.Model):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
-        
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
+    
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }

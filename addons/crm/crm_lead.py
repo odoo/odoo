@@ -195,7 +195,6 @@ class crm_lead(format_address, osv.osv):
                             resource_id = resource_ids[0]
 
                     duration = float(ans.days)
-                    
                     if lead.section_id and lead.section_id.resource_calendar_id:
                         duration =  float(ans.days) * 24
                         new_dates = cal_obj.interval_get(cr,
@@ -351,7 +350,7 @@ class crm_lead(format_address, osv.osv):
             if user.default_section_id and user.default_section_id.id:
                 return {'value': {'section_id': user.default_section_id.id}}
         return {'value': {'section_id': section_id}}
-        
+    
     def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:

@@ -120,17 +120,16 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
+        'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
-                
         'monthly_open_leads': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Open Leads per Month'),
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
-        'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
     }
 
     def _get_stage_common(self, cr, uid, context):

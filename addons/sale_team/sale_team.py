@@ -19,16 +19,12 @@
 #
 ##############################################################################
 
-
 import calendar
 from datetime import date, datetime
 from dateutil import relativedelta
-
 from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
-
-
 
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
@@ -145,7 +141,4 @@ class res_users(osv.Model):
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
         self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
-        return init_res
-
-    
-      
+        return init_res      
