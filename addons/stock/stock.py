@@ -3344,11 +3344,6 @@ class stock_location_path(osv.osv):
         'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
-        'invoice_state': fields.selection([
-            ("invoiced", "Invoiced"),
-            ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")], "Invoice Status",
-            required=True,), 
         'picking_type_id': fields.many2one('stock.picking.type', 'Type of the new Operation', required=True, help="This is the picking type associated with the different pickings"), 
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
@@ -3375,7 +3370,6 @@ class stock_location_path(osv.osv):
     _defaults = {
         'auto': 'auto',
         'delay': 0,
-        'invoice_state': 'none',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c),
         'propagate': True,
         'active': True,

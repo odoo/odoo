@@ -21,6 +21,19 @@
 
 from openerp.osv import fields, osv
 
+class stock_location_path(osv.osv):
+    _inherit = "stock.location.path"
+    _columns = {
+        'invoice_state': fields.selection([
+            ("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not Applicable")], "Invoice Status",
+            required=True,),
+    }
+    _defaults = {
+        'invoice_state': 'none',
+    }
+
 #----------------------------------------------------------
 # Procurement Rule
 #----------------------------------------------------------
@@ -31,8 +44,11 @@ class procurement_rule(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
-            required=False),
+            required=True),
         }
+    _defaults = {
+        'invoice_state': 'none',
+    }
 
 #----------------------------------------------------------
 # Procurement Order
