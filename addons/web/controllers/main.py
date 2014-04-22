@@ -31,7 +31,7 @@ except ImportError:
 
 import openerp
 import openerp.modules.registry
-from openerp.addons.base.ir.ir_qweb import AssetsBundle
+from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.tools.translate import _
 from openerp import http
 
@@ -591,7 +591,10 @@ class Home(http.Controller):
     def js_bundle(self, xmlid, **kw):
         # manifest backward compatible mode, to be removed
         values = {'manifest_list': manifest_list}
-        assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        try:
+            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        except QWebTemplateNotFound:
+            return request.not_found()
         bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
         response = request.make_response(
@@ -604,7 +607,10 @@ class Home(http.Controller):
     @http.route('/web/css/<xmlid>', type='http', auth='public')
     def css_bundle(self, xmlid, **kw):
         values = {'manifest_list': manifest_list} # manifest backward compatible mode, to be removed
-        assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        try:
+            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        except QWebTemplateNotFound:
+            return request.not_found()
         bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
 
         response = request.make_response(
