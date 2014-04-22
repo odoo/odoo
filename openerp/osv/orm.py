@@ -506,7 +506,7 @@ class BaseModel(object):
                 'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
-                'select_level': tools.ustr(f.select or 0),
+                'select_level': tools.ustr(int(f.select)),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
