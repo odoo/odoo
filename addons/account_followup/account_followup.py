@@ -478,19 +478,21 @@ class res_partner(osv.osv):
                                                     multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
         }
-class account_config_settings(osv.osv_memory):
+
+
+class account_config_settings(osv.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'account.config.settings'
     
     def open_followup_level_form(self, cr, uid, ids, context=None):
-        ir_model_obj = self.pool.get('ir.model.data')
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        res_ids = self.pool.get('account_followup.followup').search(cr, uid, [('company_id','=', user.company_id.id)])
+        res_ids = self.pool.get('account_followup.followup').search(cr, uid,[])
         
-        model, action_id = ir_model_obj.get_object_reference(cr, uid, 'account_followup', 'action_account_followup_definition_form')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        if res_ids:
-            action['res_id'] = res_ids[0]
-            action['views'] = [(False, u'form'), (False, u'tree')]
-        return action
+        return {
+                 'type': 'ir.actions.act_window',
+                 'name': 'Payment Follow-ups',
+                 'res_model': 'account_followup.followup',
+                 'res_id': res_ids and res_ids[0] or False,
+                 'view_mode': 'form,tree',
+         }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
