@@ -559,8 +559,6 @@ class PreforkServer(CommonServer):
                 raise
 
     def start(self):
-        # Empty the cursor pool, we dont want them to be shared among forked workers.
-        openerp.sql_db.close_all()
         # wakeup pipe, python doesnt throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
@@ -608,6 +606,9 @@ class PreforkServer(CommonServer):
         if stop:
             self.stop()
             return rc
+
+        # Empty the cursor pool, we dont want them to be shared among forked workers.
+        openerp.sql_db.close_all()
 
         _logger.debug("Multiprocess starting")
         while 1:
