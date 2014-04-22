@@ -800,7 +800,7 @@ class mrp_production(osv.osv):
 
                 q = min(move.product_qty, qty)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, q, domain=[('qty', '>', 0.0)],
-                                                     prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
+                                                     prefered_domain_list=[[('reservation_id', '=', move.id)], [('reservation_id', '=', False)]], context=context)
                 for quant, quant_qty in quants:
                     if quant:
                         lot_id = quant.lot_id.id
