@@ -297,13 +297,31 @@ website.Tour = openerp.Class.extend({
         $(".popover.tour button")
             .off()
             .on("click", function () {
-                $(".popover.tour").remove();
+                var help = $("#help-menu-button");
+                var offset = help.offset();
+                var left = (offset.left > 0) ? (offset.left + help.width()) : offset.left;
+                var top = (help.height() > 0) ? (offset.top + help.height()) : offset.top;
+
+                if ($(this).is("[data-role='next']") && step.element) {
+                    $(".popover.tour").remove();
+                }
                 if (step.busy) return;
-                if (!$(this).is("[data-role='next']")) {
-                    clearTimeout(self.timer);
-                    step.busy = true;
-                    self.tour.end();
-                    self.endTour(callback);
+                if (!$(this).is("[data-role='next']") || !step.element) {
+                    $('.popover.tour')
+                        .animate({
+                            left: left,
+                            top: top,
+                            width: '1px',
+                            height: '1px',
+                            opacity: 0
+                        }, 800,
+                        function(){
+                            $(".popover.tour").remove();
+                            clearTimeout(self.timer);
+                            step.busy = true;
+                            self.tour.end();
+                            self.endTour(callback);
+                        });
                 }
             });
 
@@ -422,7 +440,22 @@ website.Tour = openerp.Class.extend({
             
                 self.autoDragAndDropSnippet($element);
             
-            } else if (step.sampleText) {
+            } else if ($element.is(":visible")) {
+
+                $element.trigger($.Event("mouseenter", { srcElement: $element[0] }));
+                $element.trigger($.Event("mousedown", { srcElement: $element[0] }));
+        
+                var evt = document.createEvent("MouseEvents");
+                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                $element[0].dispatchEvent(evt);
+
+                // trigger after for step like: mouseenter, next step click on button display with mouseenter
+                setTimeout(function () {
+                    $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
+                    $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
+                }, 1000);
+            }
+            if (step.sampleText) {
             
                 $element.trigger($.Event("keydown", { srcElement: $element }));
                 if ($element.is("input") ) {
@@ -438,20 +471,6 @@ website.Tour = openerp.Class.extend({
                     $element.trigger($.Event("change", { srcElement: $element }));
                 }, self.defaultDelay<<1);
             
-            } else if ($element.is(":visible")) {
-
-                $element.trigger($.Event("mouseenter", { srcElement: $element[0] }));
-                $element.trigger($.Event("mousedown", { srcElement: $element[0] }));
-        
-                var evt = document.createEvent("MouseEvents");
-                evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                $element[0].dispatchEvent(evt);
-
-                // trigger after for step like: mouseenter, next step click on button display with mouseenter
-                setTimeout(function () {
-                    $element.trigger($.Event("mouseup", { srcElement: $element[0] }));
-                    $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
-                }, 1000);
             }
         }
         self.testtimer = setTimeout(autoStep, 100);

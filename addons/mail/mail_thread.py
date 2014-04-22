@@ -31,6 +31,7 @@ except ImportError:
 from lxml import etree
 import logging
 import pytz
+import socket
 import time
 import xmlrpclib
 from email.message import Message
@@ -95,6 +96,9 @@ class mail_thread(osv.AbstractModel):
     #   :param obj: is a browse_record
     #   :param function lambda: returns whether the tracking should record using this subtype
     _track = {}
+
+    # Mass mailing feature
+    _mail_mass_mailing = False
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         """ Override of BaseModel.get_empty_list_help() to generate an help message
@@ -584,23 +588,6 @@ class mail_thread(osv.AbstractModel):
         model_obj.check_access_rights(cr, uid, check_operation)
         model_obj.check_access_rule(cr, uid, mids, check_operation, context=context)
 
-    def _get_formview_action(self, cr, uid, id, model=None, context=None):
-        """ Return an action to open the document. This method is meant to be
-            overridden in addons that want to give specific view ids for example.
-
-            :param int id: id of the document to open
-            :param string model: specific model that overrides self._name
-        """
-        return {
-                'type': 'ir.actions.act_window',
-                'res_model': model or self._name,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'views': [(False, 'form')],
-                'target': 'current',
-                'res_id': id,
-            }
-
     def _get_inbox_action_xml_id(self, cr, uid, context=None):
         """ When redirecting towards the Inbox, choose which action xml_id has
             to be fetched. This method is meant to be inherited, at least in portal
@@ -643,10 +630,7 @@ class mail_thread(osv.AbstractModel):
             if model_obj.check_access_rights(cr, uid, 'read', raise_exception=False):
                 try:
                     model_obj.check_access_rule(cr, uid, [res_id], 'read', context=context)
-                    if not hasattr(model_obj, '_get_formview_action'):
-                        action = self.pool.get('mail.thread')._get_formview_action(cr, uid, res_id, model=model, context=context)
-                    else:
-                        action = model_obj._get_formview_action(cr, uid, res_id, context=context)
+                    action = model_obj.get_formview_action(cr, uid, res_id, context=context)
                 except (osv.except_osv, orm.except_orm):
                     pass
             action.update({
@@ -661,15 +645,31 @@ class mail_thread(osv.AbstractModel):
     # Email specific
     #------------------------------------------------------
 
+    def message_get_default_recipients(self, cr, uid, ids, context=None):
+        if context and context.get('thread_model') and context['thread_model'] in self.pool and context['thread_model'] != self._name:
+            sub_ctx = dict(context)
+            sub_ctx.pop('thread_model')
+            return self.pool[context['thread_model']].message_get_default_recipients(cr, uid, ids, context=sub_ctx)
+        res = {}
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            recipient_ids, email_to, email_cc = set(), False, False
+            if 'partner_id' in self._all_columns and record.partner_id:
+                recipient_ids.add(record.partner_id.id)
+            elif 'email_from' in self._all_columns and record.email_from:
+                email_to = record.email_from
+            elif 'email' in self._all_columns:
+                email_to = record.email
+            res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
+        return res
+
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Returns the preferred reply-to email address that is basically
             the alias of the document, if it exists. """
         if not self._inherits.get('mail.alias'):
             return [False for id in ids]
-        return ["%s@%s" % (record['alias_name'], record['alias_domain'])
-                    if record.get('alias_domain') and record.get('alias_name')
-                    else False
-                    for record in self.read(cr, SUPERUSER_ID, ids, ['alias_name', 'alias_domain'], context=context)]
+        return ["%s@%s" % (record.alias_name, record.alias_domain)
+                if record.alias_domain and record.alias_name else False
+                for record in self.browse(cr, SUPERUSER_ID, ids, context=context)]
 
     #------------------------------------------------------
     # Mail gateway
@@ -880,25 +880,30 @@ class mail_thread(osv.AbstractModel):
         # 2. message is a reply to an existign thread (6.1 compatibility)
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
-            thread_id = int(ref_match.group(1))
-            model = ref_match.group(2) or fallback_model
-            if thread_id and model in self.pool:
-                model_obj = self.pool[model]
-                compat_mail_msg_ids = mail_msg_obj.search(
-                    cr, uid, [
-                        ('message_id', '=', False),
-                        ('model', '=', model),
-                        ('res_id', '=', thread_id),
-                    ], context=context)
-                if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
-                    _logger.info(
-                        'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                        email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    route = self.message_route_verify(
-                        cr, uid, message, message_dict,
-                        (model, thread_id, custom_values, uid, None),
-                        update_author=True, assert_model=True, create_fallback=True, context=context)
-                    return route and [route] or []
+            reply_thread_id = int(ref_match.group(1))
+            reply_model = ref_match.group(2) or fallback_model
+            reply_hostname = ref_match.group(3)
+            local_hostname = socket.gethostname()
+            # do not match forwarded emails from another OpenERP system (thread_id collision!)
+            if local_hostname == reply_hostname:
+                thread_id, model = reply_thread_id, reply_model
+                if thread_id and model in self.pool:
+                    model_obj = self.pool[model]
+                    compat_mail_msg_ids = mail_msg_obj.search(
+                        cr, uid, [
+                            ('message_id', '=', False),
+                            ('model', '=', model),
+                            ('res_id', '=', thread_id),
+                        ], context=context)
+                    if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
+                        _logger.info(
+                            'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                            email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                        route = self.message_route_verify(
+                            cr, uid, message, message_dict,
+                            (model, thread_id, custom_values, uid, None),
+                            update_author=True, assert_model=True, create_fallback=True, context=context)
+                        return route and [route] or []
 
         # 2. Reply to a private message
         if in_reply_to:

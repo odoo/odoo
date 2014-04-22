@@ -1,5 +1,4 @@
 #-*- coding:utf-8 -*-
-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -21,8 +20,9 @@
 #
 ##############################################################################
 
+from openerp.osv import osv
 from openerp.report import report_sxw
-from openerp.tools import amount_to_text_en
+
 
 class payslip_details_report(report_sxw.rml_parse):
 
@@ -113,6 +113,11 @@ class payslip_details_report(report_sxw.rml_parse):
                 })
         return res
 
-report_sxw.report_sxw('report.paylip.details', 'hr.payslip', 'hr_payroll/report/report_payslip_details.rml', parser=payslip_details_report)
+
+class wrapped_report_payslipdetails(osv.AbstractModel):
+    _name = 'report.hr_payroll.report_payslipdetails'
+    _inherit = 'report.abstract_report'
+    _template = 'hr_payroll.report_payslipdetails'
+    _wrapped_report_class = payslip_details_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

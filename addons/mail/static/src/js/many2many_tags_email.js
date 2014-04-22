@@ -44,7 +44,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
         new instance.web.Model('res.partner').call("search", [[
                 ["id", "in", ids], 
                 ["email", "=", false], 
-                ["notification_email_send", "in", ['all', 'comment']] ]], 
+                ["notify_email", "=", 'always'] ]], 
                 {context: this.build_context()})
             .then(function (record_ids) {
                 // valid partner
