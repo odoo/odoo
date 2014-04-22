@@ -611,7 +611,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         if ((dim_x === 0) && (dim_y === 0)) {
             data = [{key: _t('Total'), values:[{
                 x: _t('Total'),
-                y: this.pivot.get_total(),
+                y: this.pivot.get_total()[0],
             }]}];
         // Only column groupbys 
         } else if ((dim_x === 0) && (dim_y >= 1)){
@@ -624,7 +624,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         // Just 1 row groupby 
         } else if ((dim_x === 1) && (dim_y === 0))  {
             data = _.map(this.pivot.main_row().children, function (pt) {
-                var value = self.pivot.get_total(pt),
+                var value = self.pivot.get_total(pt)[0],
                     title = (pt.title !== undefined) ? pt.title : _t('Undefined');
                 return {x: title, y: value};
             });
@@ -661,8 +661,6 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         nv.addGraph(function () {
           var chart = nv.models.multiBarChart()
-                .width(self.width)
-                .height(self.height)
                 .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
                 .showControls(show_controls);
@@ -705,10 +703,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
         nv.addGraph(function () {
             var chart = nv.models.lineChart()
-                .x(function (d,u) { return u; })
-                .width(self.width)
-                .height(self.height)
-                .margin({top: 30, right: 20, bottom: 20, left: 60});
+                .x(function (d,u) { return u; });
 
             d3.select(self.svg)
                 .attr('width', self.width)
@@ -730,14 +725,14 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             if (dim_x === 0) {
                 title = self.measure_label;
             }
-            return {x: title, y: self.pivot.get_total(row)};
+            return {x: title, y: self.pivot.get_total(row)[0]};
         });
 
         nv.addGraph(function () {
             var chart = nv.models.pieChart()
-                .color(d3.scale.category10().range())
                 .width(self.width)
-                .height(self.height);
+                .height(self.height)
+                .color(d3.scale.category10().range());
 
             d3.select(self.svg)
                 .datum(data)
