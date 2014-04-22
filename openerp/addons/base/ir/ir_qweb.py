@@ -16,7 +16,7 @@ from urlparse import urlparse
 
 import babel
 import babel.dates
-import werkzeug.utils
+import werkzeug
 from PIL import Image
 
 import openerp.http
@@ -407,7 +407,7 @@ class QWeb(orm.AbstractModel):
         if qwebcontext.get('debug'):
             return content
         bundle = AssetsBundle(name, html=content)
-        return bundle.to_html()
+        return bundle.to_html(query=qwebcontext.get('assets_query'))
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -983,12 +983,16 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, sep='\n'):
+    def to_html(self, query=None, sep='\n'):
         response = []
+        if query:
+            query = '?' + werkzeug.url_encode(query)
+        else:
+            query = ''
         if self.stylesheets:
-            response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+            response.append('<link href="/web/css/%s%s" rel="stylesheet"/>' % (self.xmlid, query))
         if self.javascripts:
-            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+            response.append('<script type="text/javascript" src="/web/js/%s%s"></script>' % (self.xmlid, query))
         response.extend(self.remains)
 
         return sep.join(response)
