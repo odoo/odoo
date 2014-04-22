@@ -28,8 +28,8 @@ class stock_location_product(osv.osv_memory):
     _columns = {
         'from_date': fields.datetime('From'), 
         'to_date': fields.datetime('To'),
-        'type': fields.selection([('inventory','Analyse Current Inventory'),
-            ('period','Analyse a Period')], 'Analyse Type', required=True), 
+        'type': fields.selection([('inventory','Analyze current inventory'),
+            ('period','Analyze period')], 'Analysis Type', required=True), 
     }
 
     def action_open_window(self, cr, uid, ids, context=None):
