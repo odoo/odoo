@@ -302,10 +302,10 @@ class purchase_order(osv.osv):
             order_line_ids = [order_line.id for order_line in order.order_line]
             lines += order_line_ids
             line.write(cr, uid, order_line_ids, {'state': status}, context=context)
-        if lines:
+        if lines and status == 'cancel':
             procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', lines)], context=context)
             if procs:
-                proc_obj.write(cr, uid, procs, {'state': 'cancel'}, context=context)
+                proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -620,10 +620,6 @@ class purchase_order(osv.osv):
                     return True
         return False
 
-    def wkf_action_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'cancel'})
-        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
-        
 
     def action_cancel(self, cr, uid, ids, context=None):
         for purchase in self.browse(cr, uid, ids, context=context):
@@ -638,11 +634,12 @@ class purchase_order(osv.osv):
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
-                        _('You must first cancel all receptions related to this purchase order.'))
+                        _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
+        
         self.signal_purchase_cancel(cr, uid, ids)
         return True
 
