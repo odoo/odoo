@@ -399,12 +399,13 @@ class TestCursor(Cursor):
     def release(self):
         self._lock.release()
 
-    def close(self, force=False):
-        if force:
-            super(TestCursor, self).close()
-        elif not self._closed:
+    def force_close(self):
+        super(TestCursor, self).close()
+
+    def close(self):
+        if not self._closed:
             self.rollback()             # for stuff that has not been committed
-            self.release()
+        self.release()
 
     def autocommit(self, on):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)

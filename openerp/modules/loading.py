@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2014 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -153,7 +153,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
-        registry._init_modules.add(package.name)
         status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
@@ -182,6 +181,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
+            registry._init_modules.add(package.name)
+            # validate all the views at a whole
+            registry['ir.ui.view']._validate_module_views(cr, SUPERUSER_ID, module_name)
+
             if has_demo:
                 # launch tests only in demo mode, allowing tests to use demo data.
                 if tools.config.options['test_enable']:
@@ -207,6 +210,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if hasattr(package, kind):
                     delattr(package, kind)
 
+        registry._init_modules.add(package.name)
         cr.commit()
 
     # The query won't be valid for models created later (i.e. custom model

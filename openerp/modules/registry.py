@@ -199,7 +199,7 @@ class Registry(Mapping):
     def leave_test_mode(self):
         """ Leave the test mode. """
         assert self.test_cr is not None
-        self.test_cr.close(force=True)          # close the cursor for real
+        self.test_cr.force_close()
         self.test_cr = None
         RegistryManager.leave_test_mode()
 
@@ -207,13 +207,14 @@ class Registry(Mapping):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
-        if self.test_cr is not None:
+        cr = self.test_cr
+        if cr is not None:
             # While in test mode, we use one special cursor across requests. The
             # test cursor uses a reentrant lock to serialize accesses. The lock
             # is granted here by cursor(), and automatically released by the
             # cursor itself in its method close().
-            self.test_cr.acquire()
-            return self.test_cr
+            cr.acquire()
+            return cr
         return self._db.cursor()
 
 class DummyRLock(object):
