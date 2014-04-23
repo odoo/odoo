@@ -925,15 +925,22 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     bind_events: function() {
         var self = this;
         this.setup_color_picker();
-        this.$el.find('[title]').tooltip({
-            delay: { show: 500, hide: 0},
-            title: function() {
-                var template = $(this).attr('tooltip');
-                if (!self.view.qweb.has_template(template)) {
-                    return false;
-                }
-                return self.view.qweb.render(template, self.qweb_context);
-            },
+        this.$el.find('[title]').each(function(){
+            //in case of kanban, attach tooltip to the element itself
+            //otherwise it might stay on screen when kanban view reload
+            //since default container is body.
+            //(when clicking on ready for next stage for example)
+            $(this).tooltip({
+                delay: { show: 500, hide: 0},
+                container: $(this),
+                title: function() {
+                    var template = $(this).attr('tooltip');
+                    if (!self.view.qweb.has_template(template)) {
+                        return false;
+                    }
+                    return self.view.qweb.render(template, self.qweb_context);
+                },
+            });
         });
 
         // If no draghandle is found, make the whole card as draghandle (provided one can edit)
