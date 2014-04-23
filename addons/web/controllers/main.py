@@ -682,9 +682,11 @@ class Home(http.Controller):
             redirect = '/web?' + request.httprequest.query_string
         values['redirect'] = redirect
         if request.httprequest.method == 'POST':
+            old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
                 return http.redirect_with_hash(redirect)
+            request.uid = old_uid
             values['error'] = "Wrong login/password"
         return render_bootstrap_template('web.login', values)
 
