@@ -128,7 +128,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
               self.total += item[count]
         return self.total
 
-class employee_salary_bymonth(osv.AbstractModel):
+class wrapped_report_employee_salary_bymonth(osv.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_hrsalarybymonth'
     _inherit = 'report.abstract_report'
     _template = 'l10n_in_hr_payroll.report_hrsalarybymonth'
