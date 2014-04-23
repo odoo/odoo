@@ -81,7 +81,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         sal = self.cr.fetchall()
         salary = dict(sal)
         total = 0.0
-        cnt = 1
+        cnt = 0
 
         for month in self.mnths:
             if month <> '':
@@ -102,7 +102,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
     def get_employee(self, form):
         emp_salary = []
         salary_list = []
-        total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        total_mnths=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
         employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
