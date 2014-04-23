@@ -958,12 +958,23 @@ class view(osv.osv):
     def _validate_module_views(self, cr, uid, module):
         """Validate architecture of all the views of a given module"""
         assert not self.pool._init or module in self.pool._init_modules
+        xmlid_filter = ''
+        params = (module,)
+        if self.pool._init:
+            # only validate the views that are still existing...
+            xmlid_filter = "AND md.name IN %s"
+            names = tuple(name for (xmod, name), (model, res_id) in self.pool.model_data_reference_ids.items() if xmod == module and model == self._name)
+            if not names:
+                # no views for this module, nothing to validate
+                return
+            params += (names,)
         cr.execute("""SELECT max(v.id)
                         FROM ir_ui_view v
                    LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE md.module = %s
+                         {0}
                     GROUP BY coalesce(v.inherit_id, v.id)
-                   """, (module,))
+                   """.format(xmlid_filter), params)
 
         for vid, in cr.fetchall():
             if not self._check_xml(cr, uid, [vid]):
