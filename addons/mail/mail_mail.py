@@ -126,7 +126,7 @@ class mail_mail(osv.Model):
             _logger.exception("Failed processing mail queue")
         return res
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
@@ -145,9 +145,10 @@ class mail_mail(osv.Model):
     #------------------------------------------------------
 
     def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
-        """ Generate URLs for links in mails:
-            - partner is an user and has read access to the document: direct link to document with model, res_id
-        """
+        """Generate URLs for links in mails: partner has access (is user):
+        link to action_mail_redirect action that will redirect to doc or Inbox """
+        if context is None:
+            context = {}
         if partner and partner.user_ids:
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
             # the parameters to encode for the query and fragment part of url
@@ -162,16 +163,15 @@ class mail_mail(osv.Model):
                 fragment.update(model=mail.model, res_id=mail.res_id)
 
             url = urljoin(base_url, "/web?%s#%s" % (urlencode(query), urlencode(fragment)))
-            return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small></span>""") % url
+            return _("""<span class='oe_mail_footer_access'><small>about <a style='color:inherit' href="%s">%s %s</a></small></span>""") % (url, context.get('model_name', ''), mail.record_name)
         else:
             return None
 
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
-        """ If subject is void and record_name defined: '<Author> posted on <Resource>'
+        """If subject is void, set the subject as 'Re: <Resource>' or
+        'Re: <mail.parent_id.subject>'
 
             :param boolean force: force the subject replacement
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
         """
         if (force or not mail.subject) and mail.record_name:
             return 'Re: %s' % (mail.record_name)
@@ -180,12 +180,8 @@ class mail_mail(osv.Model):
         return mail.subject
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited to add custom content depending on some module.
-
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
-        """
+        """Return a specific ir_email body. The main purpose of this method
+        is to be inherited to add custom content depending on some module."""
         body = mail.body_html
 
         # generate footer
@@ -194,34 +190,34 @@ class mail_mail(osv.Model):
             body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
-    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
-        """ Return a dictionary for specific email values, depending on a
-            partner, or generic to the whole recipients given by mail.email_to.
-
-            :param browse_record mail: mail.mail browse_record
-            :param browse_record partner: specific recipient partner
-        """
-        body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
-        subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
-        body_alternative = tools.html2plaintext(body)
-
-        # generate email_to, heuristic:
-        # 1. if 'partner' is specified and there is a related document: Followers of 'Doc' <email>
-        # 2. if 'partner' is specified, but no related document: Partner Name <email>
-        # 3; fallback on mail.email_to that we split to have an email addresses list
-        if partner and mail.record_name:
+    def send_get_mail_to(self, cr, uid, mail, partner=None, context=None):
+        """Forge the email_to with the following heuristic:
+          - if 'partner' and mail is a notification on a document: followers (Followers of 'Doc' <email>)
+          - elif 'partner', no notificatoin or no doc: recipient specific (Partner Name <email>)
+          - else fallback on mail.email_to splitting """
+        if partner and mail.notification and mail.record_name:
             sanitized_record_name = re.sub(r'[^\w+.]+', '-', mail.record_name)
             email_to = [_('"Followers of %s" <%s>') % (sanitized_record_name, partner.email)]
         elif partner:
             email_to = ['%s <%s>' % (partner.name, partner.email)]
         else:
             email_to = tools.email_split(mail.email_to)
+        return email_to
 
+    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
+        """Return a dictionary for specific email values, depending on a
+        partner, or generic to the whole recipients given by mail.email_to.
+
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
+        """
+        body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        body_alternative = tools.html2plaintext(body)
         return {
             'body': body,
             'body_alternative': body_alternative,
-            'subject': subject,
-            'email_to': email_to,
+            'subject': self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context),
+            'email_to': self.send_get_mail_to(cr, uid, mail, partner=partner, context=context),
         }
 
     def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
@@ -239,10 +235,19 @@ class mail_mail(osv.Model):
                 email sending process has failed
             :return: True
         """
+        if context is None:
+            context = {}
         ir_mail_server = self.pool.get('ir.mail_server')
-                
         for mail in self.browse(cr, SUPERUSER_ID, ids, context=context):
             try:
+                # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
+                if mail.model:
+                    model_id = self.pool['ir.model'].search(cr, SUPERUSER_ID, [('model', '=', mail.model)], context=context)[0]
+                    model = self.pool['ir.model'].browse(cr, SUPERUSER_ID, model_id, context=context)
+                else:
+                    model = None
+                if model:
+                    context['model_name'] = model.name
                 # handle attachments
                 attachments = []
                 for attach in mail.attachment_ids:
@@ -284,7 +289,7 @@ class mail_mail(osv.Model):
                     res = ir_mail_server.send_email(cr, uid, msg,
                                                     mail_server_id=mail.mail_server_id.id,
                                                     context=context)
-                    
+
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                     mail_sent = True
@@ -294,11 +299,11 @@ class mail_mail(osv.Model):
 
                 # /!\ can't use mail.state here, as mail.refresh() will cause an error
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
-                if mail_sent:
-                    self._postprocess_sent_message(cr, uid, mail, context=context)
+                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
             except Exception as e:
                 _logger.exception('failed sending mail.mail %s', mail.id)
                 mail.write({'state': 'exception'})
+                self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=False)
                 if raise_exception:
                     if isinstance(e, AssertionError):
                         # get the args of the original error, wrap into a value and throw a MailDeliveryException
@@ -307,6 +312,6 @@ class mail_mail(osv.Model):
                         raise MailDeliveryException(_("Mail Delivery Failed"), value)
                     raise
 
-            if auto_commit == True:
+            if auto_commit is True:
                 cr.commit()
         return True

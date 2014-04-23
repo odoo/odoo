@@ -54,10 +54,10 @@ class res_users(osv.Model):
         init_res = super(res_users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['notification_email_send', 'display_groups_suggestions'])
+        self.SELF_WRITEABLE_FIELDS.extend(['notify_email', 'display_groups_suggestions'])
         # duplicate list to avoid modifying the original reference
         self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name', 'display_groups_suggestions'])
+        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name', 'display_groups_suggestions'])
         return init_res
 
     def _auto_init(self, cr, context=None):

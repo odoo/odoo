@@ -80,6 +80,7 @@ class hr_applicant(osv.Model):
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+
     _track = {
         'stage_id': {
             # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
@@ -87,6 +88,7 @@ class hr_applicant(osv.Model):
             'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence > 1,
         },
     }
+    _mail_mass_mailing = _('Applicants')
 
     def _get_default_department_id(self, cr, uid, context=None):
         """ Gives default department by checking if present in the context """

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
         <!-- Biography: complet your profile -->
         <record id="badge_p_1" model="gamification.badge">
             <field name="name">Autobiographer</field>
             <field name="description">Completed own biography</field>
             <field name="level">bronze</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_configure_profile">
             <field name="name">Completed own biography</field>
@@ -31,7 +32,7 @@
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_p_1')"/>
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')"/>
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -46,6 +47,7 @@
             <field name="name">Commentator</field>
             <field name="description">Posted 10 comments</field>
             <field name="level">bronze</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_commentator">
             <field name="name">Commentator</field>
@@ -66,7 +68,7 @@
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_p_2')"/>
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')"/>
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -81,6 +83,7 @@
             <field name="name">Pundit</field>
             <field name="description">Left comments with score of 10 or more</field>
             <field name="level">silver</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_pundit">
             <field name="name">Pundit</field>
@@ -100,7 +103,7 @@
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_25')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -115,15 +118,16 @@
             <field name="name">Chief Commentator</field>
             <field name="description">Posted 100 comments</field>
             <field name="level">silver</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.challenge" id="challenge_chief_commentator">
-            <field name="name">Commentator</field>
+            <field name="name">Chief Commentator</field>
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_p_4')"/>
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')"/>
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -177,6 +181,7 @@ result = get_counter(cr, uid, context=context)
             <field name="name">Taxonomist</field>
             <field name="description">Created a tag used by 15 questions</field>
             <field name="level">silver</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_taxonomist">
             <field name="name">Taxonomist</field>
@@ -197,7 +202,7 @@ result = get_counter(cr, uid, context=context)
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_32')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>

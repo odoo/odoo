@@ -21,8 +21,9 @@
 #
 ##############################################################################
 
+from openerp.osv import osv
 from openerp.report import report_sxw
-from openerp.tools import amount_to_text_en
+
 
 class payslip_report(report_sxw.rml_parse):
 
@@ -37,12 +38,17 @@ class payslip_report(report_sxw.rml_parse):
         res = []
         ids = []
         for id in range(len(obj)):
-            if obj[id].appears_on_payslip == True:
+            if obj[id].appears_on_payslip is True:
                 ids.append(obj[id].id)
         if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
-report_sxw.report_sxw('report.payslip', 'hr.payslip', 'hr_payroll/report/report_payslip.rml', parser=payslip_report)
+
+class wrapped_report_payslip(osv.AbstractModel):
+    _name = 'report.hr_payroll.report_payslip'
+    _inherit = 'report.abstract_report'
+    _template = 'hr_payroll.report_payslip'
+    _wrapped_report_class = payslip_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

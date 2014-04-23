@@ -1,9 +1,0 @@
--
-   Set opt-out to True on all demo partners
-- 
-  !python {model: res.partner}: |
-    partner_ids = self.search(cr, uid, [])
-    # assume partners with an external ID come from demo data
-    ext_ids = self._get_external_ids(cr, uid, partner_ids)
-    ids_to_update = [k for (k,v) in ext_ids.iteritems() if v] 
-    self.write(cr, uid, ids_to_update, {'opt_out': True})
