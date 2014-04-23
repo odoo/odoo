@@ -21,7 +21,6 @@
 
 import time
 from datetime import datetime
-import math
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -45,12 +44,6 @@ def _employee_get(obj, cr, uid, context=None):
 class hr_attendance(osv.osv):
     _name = "hr.attendance"
     _description = "Attendance"
-
-    def _day_compute(self, cr, uid, ids, fieldnames, args, context=None):
-        res = dict.fromkeys(ids, '')
-        for obj in self.browse(cr, uid, ids, context=context):
-            res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
-        return res
 
     def _worked_hours_compute(self, cr, uid, ids, fieldnames, args, context=None):
         """For each hr.attendance record of action sign-in: assign 0.
@@ -80,7 +73,6 @@ class hr_attendance(osv.osv):
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
         'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, select=True),
-        'day': fields.function(_day_compute, type='char', string='Day', store=True, select=1, size=32),
         'worked_hours': fields.function(_worked_hours_compute, type='float', string='Worked Hours', store=True),
     }
     _defaults = {
