@@ -260,9 +260,10 @@ class account_config_settings(osv.osv_memory):
         return {'value': {'purchase_tax_rate': rate or False}}
 
     def onchange_multi_currency(self, cr, uid, ids, group_multi_currency, context=None):
+        res = {}
         if not group_multi_currency:
-            return {'value': {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}}
-        return {}
+            res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
+        return res
     
     def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
