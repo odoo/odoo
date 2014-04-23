@@ -106,8 +106,8 @@
                 <separator/>
                 <filter string="No Timebox" domain="[('timebox_id', '=', False)]" help="Tasks having no timebox assigned yet"/>
                 <group expand="0" string="Display">
-                    <filter string="Show Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>
-                    <filter string="Show Deadlines" context="{'deadline_visible': False}" domain="[]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                    <filter string="Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>
+                    <filter string="Deadlines" context="{'deadline_visible': False}" domain="[]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                 </group>
                 <group expand="0" string="Group By...">
                     <filter string="Stage" name="group_stage_id" context="{'group_by':'stage_id'}"/>
