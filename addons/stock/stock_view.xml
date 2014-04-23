@@ -360,6 +360,13 @@
             <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
         </record>
 
+        <record model="ir.actions.act_window" id="location_open_quants">
+            <field name="context">{'search_default_productgroup': 1}</field>
+            <field name="domain">[('location_id', 'child_of', active_ids)]</field>
+            <field name="name">Quants</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
             <field name="model">stock.location</field>
@@ -1777,12 +1784,7 @@
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
         </record>
-        <record model="ir.actions.act_window" id="location_open_quants">
-            <field name="context">{'search_default_productgroup': 1}</field>
-            <field name="domain">[('location_id', 'child_of', active_ids)]</field>
-            <field name="name">Quants</field>
-            <field name="res_model">stock.quant</field>
-        </record>
+
 <!-->
         <record model="ir.ui.view" id="product_template_form_view_procurement">
             <field name="name">product.template.procurement</field>
