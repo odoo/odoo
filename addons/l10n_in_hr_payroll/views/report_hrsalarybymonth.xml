@@ -6,8 +6,10 @@
         <t t-call="report.internal_layout">
             <div class="page">
                 <div class="text-center">
-                    <h4 class="text-center"><strong>Yearly Salary Details</strong></h4>
-                    <h5>From <u><span t-esc="formatLang(data['form']['start_date'], date=True)"/></u> To <u><span t-esc="formatLang(data['form']['end_date'], date=True)"/></u> of <u><span t-esc="data['form']['category_id'][1]"/></u> Category</h5>
+	                <h3 class="text-center"><strong>Yearly Salary Details</strong></h3>
+	                <p class="text-center">
+	                    From <u><span t-esc="formatLang(data['form']['start_date'], date=True)"/></u> To <u><span t-esc="formatLang(data['form']['end_date'], date=True)"/></u> of <u><span t-esc="data['form']['category_id'][1]"/></u> Category
+	                </p>
                 </div>
                 <table class="table table-condensed">
                     <thead>
@@ -15,7 +17,9 @@
                             <th>Name</th>
                             <t t-foreach="get_periods(data['form'])" t-as="m">
                                 <t t-foreach="m" t-as="month">
-                                    <th class="text-right" t-esc="month" />
+                                    <th class="text-right">
+                                        <span t-esc="month"/>
+                                    </th>
                                 </t>
                             </t>
                             <th class="text-right">Total</th>
@@ -24,22 +28,26 @@
                     <tbody>
                         <t t-foreach="get_employee(data['form'])" t-as="e">
                             <tr>
-                                <td t-esc="e[0]" />
+                                <td><span t-esc="e[0]"/></td>
                                 <t t-foreach="e[1:13]" t-as="month_sal">
-                                    <td class="text-right" t-esc="month_sal" />
+                                    <td class="text-right">
+                                        <span t-esc="month_sal"/>
+                                    </td>
                                 </t>
-                                <td class="text-right" t-esc="formatLang(e[13],currency_obj= company.currency_id)" />
+                                <td class="text-right">
+                                    <span t-esc="formatLang(e[13],currency_obj= company.currency_id)"/>
+                                </td>
                             </tr>
                         </t>
                     </tbody>
                     <tfoot>
                         <tr class="border-black">
                             <t t-foreach="get_months_tol()" t-as="t">
-                                <td><strong><span>Total</span></strong></td>
+                                <td><strong>Total</strong></td>
                                 <t t-foreach="t" t-as="tdata">
                                     <td class="text-right"><strong><span t-esc="formatLang(tdata, currency_obj=company.currency_id)"/></strong></td>
                                 </t>
-                                <td class="text-right"><strong><span t-esc="formatLang(get_total(), currency_obj=company.currency_id)" /></strong></td>
+                                <td class="text-right"><strong><span t-esc="formatLang(get_total(), currency_obj=company.currency_id)"/></strong></td>
                             </t>
                         </tr>
                     </tfoot>
