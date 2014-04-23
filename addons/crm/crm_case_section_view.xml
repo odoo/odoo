@@ -80,7 +80,6 @@
         </record>
 
         <!-- Case Sections Salesteams kanban view -->
-
         <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section.inherit</field>
@@ -88,15 +87,28 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='name']" position="after">
-                        <field name="use_leads"/>
-                        <field name="monthly_open_leads"/>
-                        <field name="monthly_planned_revenue"/>
                         <field name="alias_id"/>
                     </xpath>
-                    <xpath expr="//div[@name='avtar']" position="after">
+                    <xpath expr="//h4[@class='oe_center']" position="after">
                         <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
                             <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                         </div>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
+            <field name="name">crm.case.section.kanban</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sale_team.crm_case_section_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='name']" position="after">
+                        <field name="use_leads"/>
+                        <field name="monthly_open_leads"/>
+                        <field name="monthly_planned_revenue"/>
+                    </xpath>
+                    <xpath expr="//h4[@class='oe_center']" position="after">
                         <div class="oe_items_list">
                             <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
                                 <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
