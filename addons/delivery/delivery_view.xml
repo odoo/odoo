@@ -43,9 +43,8 @@
                                 <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                                 <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
                             </div>
+                            <field name="use_detailed_pricelist"/>
                         </group>
-                        <newline/>
-                        <field name="use_detailed_pricelist"/>
                     </group>
                     <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
                         <tree string="Delivery grids">
@@ -142,7 +141,7 @@
                         </page>
                         <page string="Destination">
                             <group string="Countries">
-                                <field name="country_ids"/>
+                                <field name="country_ids" nolabel="1"/>
                             </group>
                             <group string="States">
                                 <field colspan="2" name="state_ids" nolabel="1"/>
