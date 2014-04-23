@@ -88,13 +88,9 @@ class crm_case_stage(osv.osv):
     }
 
 
-class crm_case_section(osv.osv):
-    """ Model for sales teams. """
-    _name = "crm.case.section"
+class crm_case_section(osv.Model):
     _inherit = 'crm.case.section'
-    _description = "Sales Teams"
-    _alias_model_name = 'crm.lead'
-
+    _name = 'crm.case.section'
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
         """ Get opportunities-related data for salesteam kanban view
             monthly_open_leads: number of open lead during the last months
@@ -118,10 +114,7 @@ class crm_case_section(osv.osv):
             res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
             res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'date_deadline'], 'planned_revenue', 'date_deadline', context=context)
         return res
-    def create(self, cr, uid, vals, context=None):
-        self._alias_model_name = 'crm.lead'
-        return super(crm_case_section, self).create(cr, uid, vals, context={'alias_model_name': self._alias_model_name})
-
+    
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
@@ -143,7 +136,32 @@ class crm_case_section(osv.osv):
         'stage_ids': _get_stage_common,
         'use_leads': True,
     }
- 
+
+class crm_case_section_inherit(osv.Model):
+    """ Model for sales teams. """
+    _inherit = 'crm.case.section'
+    _name = 'crm.case.section.inherit'
+    _description = "Sales Teams"
+    _inherits = {'mail.alias': 'alias_id'}
+    _columns = {
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically ""create new leads assigned to the team."),
+    }
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
+        section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
+        section = self.browse(cr, uid, section_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_parent_thread_id': section_id, 'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
+        return section_id
+    
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the sales team.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
+        res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
 class crm_case_categ(osv.osv):
     """ Category of Case """
     _name = "crm.case.categ"
