@@ -364,8 +364,8 @@ class procurement_order(osv.osv):
 
                     if qty <= 0:
                         continue
-                    if op.product_id.type not in ('consu'):
-                        qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
+
+                    qty -= orderpoint_obj.subtract_procurements(cr, uid, op, context=context)
 
                     if qty > 0:
                         proc_id = procurement_obj.create(cr, uid,
