@@ -788,6 +788,22 @@ instance.web.unblockUI = function() {
     return $.unblockUI.apply($, arguments);
 };
 
+
+/* Bootstrap defaults overwrite */
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'auto top';
+$.fn.tooltip.Constructor.DEFAULTS.html = true;
+$.fn.tooltip.Constructor.DEFAULTS.container = 'body';
+//overwrite bootstrap tooltip method to fix bug when using placement
+//auto and the parent element does not exist anymore resulting in
+//an error. This should be remove once bootstrap fix the bug
+var bootstrap_show_function = $.fn.tooltip.Constructor.prototype.show;
+$.fn.tooltip.Constructor.prototype.show = function (e) {
+    if (this.$element.parent().length === 0){
+        return;
+    }
+    return bootstrap_show_function.call(this, e);
+};
+
 /**
  * Registry for all the client actions key: tag value: widget
  */

@@ -851,9 +851,8 @@ openerp.web_calendar = function(instance) {
                     button_delete = _.str.sprintf("<button class='oe_button oe_bold delme'><span> %s </span></button>",_t("Delete"));
                     button_edit = _.str.sprintf("<button class='oe_button oe_bold editme oe_highlight'><span> %s </span></button>",_t("Edit Event"));
                     
-                    
-                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_delete);
-                    pop.$el.closest(".ui-dialog").find(".ui-dialog-buttonpane").prepend(button_edit);
+                    pop.$el.closest(".modal").find(".modal-footer").prepend(button_delete);
+                    pop.$el.closest(".modal").find(".modal-footer").prepend(button_edit);
                     
                     $('.delme').click(
                         function() {
