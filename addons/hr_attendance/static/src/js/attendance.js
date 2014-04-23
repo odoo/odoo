@@ -25,7 +25,7 @@ openerp.hr_attendance = function (instance) {
             this.$(".oe_attendance_signout").click(function() {
                 self.do_update_attendance();
             });
-            this.$el.tipsy({
+            this.$el.tooltip({
                 title: function() {
                     var last_text = instance.web.format_value(self.last_sign, {type: "datetime"});
                     var current_text = instance.web.format_value(new Date(), {type: "datetime"});
@@ -36,7 +36,6 @@ openerp.hr_attendance = function (instance) {
                         return _.str.sprintf(_t("Click to Sign In at %s."), current_text);
                     }
                 },
-                html: true,
             });
             return this.check_attendance();
         },

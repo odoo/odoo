@@ -1,0 +1,53 @@
+.only_right_radius {
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.only_left_radius {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+}
+
+.no_radius {
+    border-radius: 0;
+}
+
+.clear_survey_filter, .filter-all, .filter-finished{
+    cursor: pointer;
+}
+
+.nvtooltip h5 {
+    margin: 0;
+    line-height: 18px;
+    font-weight: bold;
+    background-color: rgba(247,247,247,0.75);
+    text-align: center;
+    border-bottom: 1px solid #ebebeb;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+
+
+.survey_answer i {
+    padding:3px;
+    cursor:pointer;
+}
+
+.survey_answer i.invisible {
+    visibility: hidden!important;
+}
+
+@media print {
+    .tab-content > .tab-pane {
+        display: block;
+    }
+
+    .tab-content > .survey_graph > svg {
+        width: 1150px;
+    }
+}

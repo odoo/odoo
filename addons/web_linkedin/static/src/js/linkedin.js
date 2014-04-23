@@ -56,12 +56,12 @@ openerp.web_linkedin = function(instance) {
             this.linkedin_def.reject();
             this.auth_def.reject();
             IN = false;
-            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning", {'error': error})), {
+            var dialog = new instance.web.Dialog(this, {
                 title: _t("LinkedIn is not enabled"),
                 buttons: [
-                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-                ]
-            });
+                    {text: _t("Ok"), click: function() { this.parents('.modal').modal('hide'); }}
+                ],
+            }, QWeb.render('LinkedIn.DisabledWarning', {error: error})).open();
         },
         test_linkedin: function() {
             var self = this;
@@ -369,11 +369,11 @@ openerp.web_linkedin = function(instance) {
         },
         bind_event: function() {
             var self = this;
-            this.$el.parent().on("click", ".oe_linkedin_logout", function () {
+            this.$el.parents('.modal').on("click", ".oe_linkedin_logout", function () {
                 IN.User.logout();
                 self.destroy();
             });
-            this.$search = this.$el.parent().find(".oe_linkedin_advanced_search" );
+            this.$search = this.$el.parents('.modal').find(".oe_linkedin_advanced_search" );
             this.$url = this.$search.find("input[name='search']" );
             this.$button = this.$search.find("button");
 
@@ -396,7 +396,7 @@ openerp.web_linkedin = function(instance) {
             IN.API.Profile("me")
                 .fields(["firstName", "lastName"])
                 .result(function (result) {
-                    $(QWeb.render('LinkedIn.loginInformation', result.values[0])).appendTo(self.$el.parent().find(".ui-dialog-buttonpane"));   
+                    $(QWeb.render('LinkedIn.loginInformation', result.values[0])).appendTo(self.$el.parents('.modal').find(".oe_dialog_custom_buttons"));   
             })
         },
         do_search: function(url) {

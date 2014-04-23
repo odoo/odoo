@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp.report import report_sxw
+from openerp.osv import osv
+
 
 class account_analytic_profit(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -30,6 +32,7 @@ class account_analytic_profit(report_sxw.rml_parse):
             'journal_ids': self._journal_ids,
             'line': self._line,
         })
+
     def _user_ids(self, lines):
         user_obj = self.pool['res.users']
         ids=list(set([b.user_id.id for b in lines]))
@@ -116,6 +119,11 @@ class account_analytic_profit(report_sxw.rml_parse):
             ])
         return line_obj.browse(self.cr, self.uid, ids)
 
-report_sxw.report_sxw('report.account.analytic.profit', 'account.analytic.line', 'addons/hr_timesheet_invoice/report/account_analytic_profit.rml', parser=account_analytic_profit)
+
+class report_account_analytic_profit(osv.AbstractModel):
+    _name = 'report.hr_timesheet_invoice.report_analyticprofit'
+    _inherit = 'report.abstract_report'
+    _template = 'hr_timesheet_invoice.report_analyticprofit'
+    _wrapped_report_class = account_analytic_profit
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -38,6 +38,7 @@ class goal_manual_wizard(osv.TransientModel):
             towrite = {
                 'current': wiz.current,
                 'goal_id': wiz.goal_id.id,
+                'to_update': False,
             }
             goal_obj.write(cr, uid, [wiz.goal_id.id], towrite, context=context)
             goal_obj.update(cr, uid, [wiz.goal_id.id], context=context)

@@ -19,7 +19,9 @@
 #
 ##############################################################################
 import logging
+
 import openerp
+import openerp.tests
 
 
 _logger = logging.getLogger(__name__)

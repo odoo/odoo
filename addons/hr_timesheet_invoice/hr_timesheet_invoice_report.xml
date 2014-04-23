@@ -2,13 +2,12 @@
 <openerp>
     <data>
         <report
-            auto="False"
-            id="report_analytical_profit"
-            menu="False"
+            id="action_report_analytic_profit"
             model="account.analytic.line"
-            name="account.analytic.profit"
-            rml="hr_timesheet_invoice/report/account_analytic_profit.rml"
-            string="Timesheet Profit"/>
-
+            name="hr_timesheet_invoice.report_analyticprofit"
+            file="hr_timesheet_invoice.report_analyticprofit"
+            report_type="qweb-pdf"
+            string="Timesheet Profit"
+        />
     </data>
 </openerp>

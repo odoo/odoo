@@ -17,6 +17,7 @@
     <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
     <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
     <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
     <script type="text/javascript">
         // Bootstrap and jQuery UI conflicts
         $.fn.bstooltip = $.fn.tooltip;
@@ -65,6 +66,7 @@
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None">
         <head>
+            <script type="text/javascript" src="/web/static/js/watch.js"></script>
             <t t-if="main_object and 'website_meta_title' in main_object">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>

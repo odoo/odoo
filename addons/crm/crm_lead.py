@@ -79,6 +79,7 @@ class crm_lead(format_address, osv.osv):
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.fold and obj.stage_id.sequence > 1,
         },
     }
+    _mail_mass_mailing = _('Leads / Opportunities')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         if context.get('default_type') == 'lead':
@@ -231,8 +232,8 @@ class crm_lead(format_address, osv.osv):
         'email_cc': fields.text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Categories', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
+        'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
+            domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
@@ -897,21 +898,22 @@ class crm_lead(format_address, osv.osv):
             'type': 'ir.actions.act_window',
         }
 
-    def action_makeMeeting(self, cr, uid, ids, context=None):
+    def action_schedule_meeting(self, cr, uid, ids, context=None):
         """
         Open meeting's calendar view to schedule meeting on current opportunity.
         :return dict: dictionary value for created Meeting view
         """
-        opportunity = self.browse(cr, uid, ids[0], context)
+        lead = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+        partner_ids = [self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id]
+        if lead.partner_id:
+            partner_ids.append(lead.partner_id.id)
         res['context'] = {
-            'default_opportunity_id': opportunity.id,
-            'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
-            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
-            'default_user_id': uid,
-            'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
-            'default_email_from': opportunity.email_from,
-            'default_name': opportunity.name,
+            'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
+            'default_partner_id': lead.partner_id and lead.partner_id.id or False,
+            'default_partner_ids': partner_ids,
+            'default_section_id': lead.section_id and lead.section_id.id or False,
+            'default_name': lead.name,
         }
         return res
 
@@ -971,15 +973,13 @@ class crm_lead(format_address, osv.osv):
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
 
-    def _get_formview_action(self, cr, uid, id, context=None):
-        action = super(crm_lead, self)._get_formview_action(cr, uid, id, context=context)
+    def get_formview_id(self, cr, uid, id, context=None):
         obj = self.browse(cr, uid, id, context=context)
         if obj.type == 'opportunity':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
-        return action
+        else:
+            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, model=model, context=context)
+        return view_id
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)

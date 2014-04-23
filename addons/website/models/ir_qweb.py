@@ -387,6 +387,10 @@ class Contact(orm.AbstractModel):
     _name = 'website.qweb.field.contact'
     _inherit = ['ir.qweb.field.contact', 'website.qweb.field.many2one']
 
+class QwebView(orm.AbstractModel):
+    _name = 'website.qweb.field.qweb'
+    _inherit = ['ir.qweb.field.qweb']
+
 
 def html_to_text(element):
     """ Converts HTML content with HTML-specified line breaks (br, p, div, ...)
