@@ -2776,13 +2776,15 @@
   padding: 3px 6px;
   white-space: pre-line;
 }
-.openerp .oe_list_content > tbody > tr > td > button.btn_img, .openerp .oe_list_content > tbody > tr > th > button.btn_img {
+.openerp .oe_list_content > tbody > tr > td > button, .openerp .oe_list_content > tbody > tr > th > button {
   border: none;
   background: transparent;
   padding: 0;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+}
+.openerp .oe_list_content > tbody > tr > td > button.btn_txt, .openerp .oe_list_content > tbody > tr > th > button.btn_txt {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background: #e3e3e3;
+  padding: 3px 12px;
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_checkbox:first-child, .openerp .oe_list_content > tbody > tr th.oe_list_checkbox:first-child {
   width: 17px;

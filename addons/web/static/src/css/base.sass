@@ -2248,11 +2248,14 @@ $sheet-padding: 16px
                     padding: 3px 6px
                     white-space: pre-line
                 > td, > th
-                    > button.btn_img
+                    > button
                         border: none
                         background: transparent
                         padding: 0
-                        @include box-shadow(none)
+                    > button.btn_txt
+                        border: 1px solid rgba(0,0,0,0.4)
+                        background: #e3e3e3
+                        padding: 3px 12px
                 > td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
                     width: 17px
                     &:after
