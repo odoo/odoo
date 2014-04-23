@@ -51,10 +51,10 @@
                         <filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]" name="my"/>
                     </group>
                 </search>
-                <xpath expr="//group[@string='Group By...']/filter[@string='Country']" position="after">
+                <group string="Group By..." position="inside">
                     <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
                     <filter string="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
-                </xpath>
+                </group>
             </field>
         </record>
 

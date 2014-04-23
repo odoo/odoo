@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
         <!-- Cleanup: answer or question edition -->
         <!-- Not rollback feature in forum -->
@@ -15,6 +15,7 @@
             <field name="name">Critic</field>
             <field name="description">First downvote</field>
             <field name="level">bronze</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_critic">
             <field name="name">Critic</field>
@@ -50,6 +51,7 @@
             <field name="name">Disciplined</field>
             <field name="description">Deleted own post with 3 or more upvotes</field>
             <field name="level">bronze</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_disciplined">
             <field name="name">Disciplined</field>
@@ -85,6 +87,7 @@
             <field name="name">Editor</field>
             <field name="description">First edit</field>
             <field name="level">gold</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_editor">
             <field name="name">Editor</field>
@@ -223,6 +226,7 @@ result = int(len(data) >= 15)</field>
             <field name="name">Supporter</field>
             <field name="description">First upvote</field>
             <field name="level">gold</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_supporter">
             <field name="name">Supporter</field>
@@ -258,6 +262,7 @@ result = int(len(data) >= 15)</field>
             <field name="name">Peer Pressure</field>
             <field name="description">Deleted own post with 3 or more downvotes</field>
             <field name="level">gold</field>
+            <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_peer_pressure">
             <field name="name">Peer Pressure</field>
