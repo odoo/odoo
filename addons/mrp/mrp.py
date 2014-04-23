@@ -679,6 +679,11 @@ class mrp_production(osv.osv):
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
+        # Put related procurements in exception
+        proc_obj = self.pool.get("procurement.order")
+        procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
+        if procs:
+            proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
     def action_ready(self, cr, uid, ids, context=None):
@@ -704,6 +709,10 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
         write_res = self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        # Check related procurements
+        proc_obj = self.pool.get("procurement.order")
+        procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
+        proc_obj.check(cr, uid, procs, context=context)
         return write_res
 
     def test_production_done(self, cr, uid, ids):

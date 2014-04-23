@@ -2144,6 +2144,14 @@ class stock_move(osv.osv):
                 #cancel chained moves
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
+                    # If we have a long chain of moves to be cancelled, it is easier for the user to handle 
+                    # only the last procurement which will go into exception, instead of all procurements
+                    # along the chain going into exception
+                    if move.procurement_id:
+                        proc = move.procurement_id
+                        if all([x.state == 'cancel' for x in proc.move_orig_ids]):
+                            procurement_obj.write(cr, uid, [proc.id], {'state': 'cancel'})
+                        
                 elif move.move_dest_id.state == 'waiting':
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
@@ -2360,6 +2368,7 @@ class stock_move(osv.osv):
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
             'split_from': move.id,
+            'move_dest_id': move.move_dest_id.id,
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']

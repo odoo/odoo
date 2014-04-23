@@ -116,7 +116,7 @@ class stock_warehouse(osv.osv):
             'route_id': buy_route_id,
             'action': 'buy',
             'picking_type_id': warehouse.in_type_id.id,
-            'procure_method': 'make_to_order',
+            'propagate': False, 
             'warehouse_id': warehouse.id,
         }
 
