@@ -95,7 +95,6 @@ class mail_compose_message(osv.TransientModel):
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']
             template = self.pool['email.template'].browse(cr, uid, template_id, context=context)
             values = dict((field, getattr(template, field)) for field in fields if getattr(template, field))
-            print values, template.user_signature
             if template.attachment_ids:
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
             if template.mail_server_id:
