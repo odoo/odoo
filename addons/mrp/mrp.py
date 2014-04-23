@@ -493,7 +493,7 @@ class mrp_production(osv.osv):
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation',
             readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection(
-            [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Awaiting Raw Materials'),
+            [('draft', 'New'), ('cancel', 'Cancelled'), ('confirmed', 'Awaiting Raw Materials'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
             track_visibility='onchange',
@@ -614,12 +614,6 @@ class mrp_production(osv.osv):
         }
         return {'value': result}
 
-    def action_picking_except(self, cr, uid, ids):
-        """ Changes the state to Exception.
-        @return: True
-        """
-        self.write(cr, uid, ids, {'state': 'picking_except'})
-        return True
 
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure
