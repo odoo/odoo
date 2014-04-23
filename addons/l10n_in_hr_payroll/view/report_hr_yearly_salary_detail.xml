@@ -36,19 +36,43 @@
                         </tr>
                         <tr>
                             <td><strong>Employee Name</strong></td>
-                            <td><t t-if="employee.name"><span t-field="employee.name"/></t></td>
+                            <td>
+                                <t t-if="employee.name">
+                                    <span t-field="employee.name"/>
+                                </t>
+                            </td>
                             <td><strong>Other No.</strong></td>
-                            <td><t t-if="employee.otherid"><span t-field="employee.otherid"/></t></td>
+                            <td>
+                                <t t-if="employee.otherid">
+                                    <span t-field="employee.otherid"/>
+                                </t>
+                            </td>
                             <td><strong>Address</strong></td>
-                            <td><t t-if="employee.address_home_id"><span t-field="employee.address_home_id.name"/></t></td>
+                            <td>
+                                <t t-if="employee.address_home_id">
+                                    <span t-field="employee.address_home_id.name"/>
+                                </t>
+                            </td>
                         </tr>
                         <tr>
                             <td><strong>Designation</strong></td>
-                            <td><t t-if="employee.job_id"><span t-field="employee.job_id.name"/></t></td>
+                            <td>
+                                <t t-if="employee.job_id">
+                                    <span t-field="employee.job_id.name"/>
+                                </t>
+                            </td>
                             <td><strong>Phone No.</strong></td>
-                            <td><t t-if="employee.work_phone"><span t-field="employee.work_phone"/></t></td>
+                            <td>
+                                <t t-if="employee.work_phone">
+                                    <span t-field="employee.work_phone"/>
+                                </t>
+                            </td>
                             <td><strong>E-mail Address</strong></td>
-                            <td><t t-if="employee.work_email"><span t-field="employee.work_email"/></t></td>
+                            <td>
+                                <t t-if="employee.work_email">
+                                    <span t-field="employee.work_email"/>
+                                </t>
+                            </td>
                         </tr>
                     </table>
 
