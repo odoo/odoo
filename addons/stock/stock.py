@@ -2146,10 +2146,10 @@ class stock_move(osv.osv):
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                     # If we have a long chain of moves to be cancelled, it is easier for the user to handle 
                     # only the last procurement which will go into exception, instead of all procurements
-                    # along the chain going into exception
+                    # along the chain going into exception.  We need to check if there are no split moves not cancelled however
                     if move.procurement_id:
                         proc = move.procurement_id
-                        if all([x.state == 'cancel' for x in proc.move_orig_ids]):
+                        if all([x.state == 'cancel' for x in proc.move_ids if x.id != move.id]):
                             procurement_obj.write(cr, uid, [proc.id], {'state': 'cancel'})
                         
                 elif move.move_dest_id.state == 'waiting':
