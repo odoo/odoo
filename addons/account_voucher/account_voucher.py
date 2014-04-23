@@ -792,6 +792,7 @@ class account_voucher(osv.osv):
                 total_credit += line.credit and line.amount_currency or 0.0
                 total_debit += line.debit and line.amount_currency or 0.0
 
+        remaining_amount = price
         #voucher line creation
         for line in account_move_lines:
 
@@ -812,13 +813,13 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': (line.id in move_lines_found) and min(abs(price), amount_unreconciled) or 0.0,
+                'amount': (line.id in move_lines_found) and min(abs(remaining_amount), amount_unreconciled) or 0.0,
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
                 'currency_id': line_currency_id,
             }
-            price -= rs['amount']
+            remaining_amount -= rs['amount']
             #in case a corresponding move_line hasn't been found, we now try to assign the voucher amount
             #on existing invoices: we split voucher amount by most old first, but only for lines in the same currency
             if not move_lines_found:

@@ -40,6 +40,8 @@
     import netsvc
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
+    voucher = self.recompute_voucher_lines(cr, uid, [], ref("base.res_partner_19"), journal_id, 450.0, ref('base.EUR'), 'receipt', False)
+    assert (voucher['value'].get('writeoff_amount') == 0.0), "Writeoff amount calculated by recompute_voucher_lines() is not 0.0"
     res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_19"), journal_id, 0.0, 1, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
@@ -60,6 +62,7 @@
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
+    assert (voucher_id.writeoff_amount == 0.0), "Writeoff amount is not 0.0"
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher_id.id, 'proforma_voucher', cr)
