@@ -57,6 +57,7 @@ class test_challenge(common.TransactionCase):
             'groups_id': [(6, 0, [self.group_user_id])]
         }, {'no_reset_password': True})
 
+        self.challenge_obj._update_all(cr, uid, [self.challenge_base_id], context=context)
         challenge = self.challenge_obj.browse(cr, uid, self.challenge_base_id, context=context)
         self.assertGreaterEqual(len(challenge.user_ids), len(user_ids)+1, "These are not droids you are looking for")
 

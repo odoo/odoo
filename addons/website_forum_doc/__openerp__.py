@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2014-Today OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,31 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import stock_invoice
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+{
+    'name': 'Documentation',
+    'category': 'Website',
+    'summary': 'Forum, Documentation',
+    'version': '1.0',
+    'description': """
+Documentation based on question and pertinent answers of Forum
+        """,
+    'author': 'OpenERP SA',
+    'depends': [
+        'website_forum'
+    ],
+    'data': [
+        'data/doc_data.xml',
+        'security/ir.model.access.csv',
+        'views/doc.xml',
+        'views/website_doc.xml',
+    ],
+    'demo': [
+        'data/doc_demo.xml',
+    ],
+    'installable': True,
+    'application': True,
+}
