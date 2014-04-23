@@ -92,9 +92,17 @@ class mail_compose_message(osv.TransientModel):
         """ - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values """
         if template_id and composition_mode == 'mass_mail':
-            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
-            template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
-            values = dict((field, template_values[field]) for field in fields if template_values.get(field))
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to']
+            template = self.pool['email.template'].browse(cr, uid, template_id, context=context)
+            values = dict((field, getattr(template, field)) for field in fields if getattr(template, field))
+            print values, template.user_signature
+            if template.attachment_ids:
+                values['attachment_ids'] = [att.id for att in template.attachment_ids]
+            if template.mail_server_id:
+                values['mail_server_id'] = template.mail_server_id.id
+            if template.user_signature and 'body_html' in values:
+                signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
+                values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
         elif template_id:
             values = self.generate_email_for_composer_batch(cr, uid, template_id, [res_id], context=context)[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
