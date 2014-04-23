@@ -951,7 +951,32 @@ class mrp_production(osv.osv):
             if production.ready_production:
                 res = True
         return res
-
+    
+    
+    def _make_production_produce_line(self, cr, uid, production, context=None):
+        stock_move = self.pool.get('stock.move')
+        source_location_id = production.product_id.property_stock_production.id
+        destination_location_id = production.location_dest_id.id
+        data = {
+            'name': production.name,
+            'date': production.date_planned,
+            'product_id': production.product_id.id,
+            'product_qty': production.product_qty,
+            'product_uom': production.product_uom.id,
+            'product_uom_qty': production.product_qty,
+            'product_uos_qty': production.product_uos and production.product_uos_qty or False,
+            'product_uos': production.product_uos and production.product_uos.id or False,
+            'location_id': source_location_id,
+            'location_dest_id': destination_location_id,
+            'move_dest_id': production.move_prod_id.id,
+            'company_id': production.company_id.id,
+            'production_id': production.id,
+            'origin': production.name,
+        }
+        move_id = stock_move.create(cr, uid, data, context=context)
+        #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
+        #is 1 element long, so we can take the first.
+        return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
     def _get_raw_material_procure_method(self, cr, uid, product, context=None):
         '''This method returns the procure_method to use when creating the stock move for the production raw materials'''
