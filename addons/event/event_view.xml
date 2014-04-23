@@ -434,6 +434,8 @@
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>
+                        <filter string="Registration Month" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
                 </search>
             </field>

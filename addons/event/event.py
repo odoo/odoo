@@ -317,6 +317,7 @@ class event_registration(osv.osv):
     def confirm_registration(self, cr, uid, ids, context=None):
         for reg in self.browse(cr, uid, ids, context=context or {}):
             self.pool.get('event.event').message_post(cr, uid, [reg.event_id.id], body=_('New registration confirmed: %s.') % (reg.name or '', ),subtype="event.mt_event_registration", context=context)
+            self.message_post(cr, uid, reg.id, body=_('Event Registration confirmed.'), context=context)
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def registration_open(self, cr, uid, ids, context=None):
