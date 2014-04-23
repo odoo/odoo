@@ -20,15 +20,18 @@
 ##############################################################################
 import collections
 import copy
+import datetime
+import dateutil
 import fnmatch
 import logging
-from lxml import etree
-from operator import itemgetter
 import os
+import time
+from operator import itemgetter
+
 import simplejson
 import werkzeug
-
 import HTMLParser
+from lxml import etree
 
 import openerp
 from openerp import tools
@@ -861,6 +864,9 @@ class view(osv.osv):
             request=request,
             json=simplejson,
             quote_plus=werkzeug.url_quote_plus,
+            time=time,
+            datetime=datetime,
+            dateutil=dateutil,
         )
         qcontext.update(values)
 
