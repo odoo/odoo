@@ -1295,6 +1295,11 @@ class CommonController(Controller):
         """ Method used by client APIs to contact OpenERP. """
         return dispatch_rpc(service, method, args)
 
+    @route('/gen_session_id', type='json', auth="none")
+    def gen_session_id(self):
+        nsession = root.session_store.new()
+        return nsession.sid
+
 # register main wsgi handler
 root = Root()
 openerp.service.wsgi_server.register_wsgi_handler(root)
