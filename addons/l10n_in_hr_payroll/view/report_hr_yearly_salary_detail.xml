@@ -14,20 +14,20 @@
                     <br/>
                     <table class="table table-condensed table-bordered ">
                         <tr>
-                            <th><strong>Employee Code</strong></th>
+                            <td><strong>Employee Code</strong></td>
                             <td>
                                 <t t-if="employee.identification_id">
                                     <span t-field="employee.identification_id"/>
                                 </t>
                             </td>
                             
-                            <th><strong>Department</strong></th>
+                            <td><strong>Department</strong></td>
                             <td>
                                 <t t-if="employee.department_id">
                                     <span t-field="employee.department_id.name"/>
                                 </t>
                             </td>
-                            <th><strong>Bank</strong></th>
+                            <td><strong>Bank</strong></td>
                             <td>
                             <t t-if="employee.bank_account_id">
                                     <span t-field="employee.bank_account_id.bank.name"/>
