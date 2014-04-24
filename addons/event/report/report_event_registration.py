@@ -19,34 +19,32 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp import Model, Integer, Char, Datetime, Selection, Many2one
 from openerp import tools
 
-class report_event_registration(osv.osv):
+
+class report_event_registration(Model):
+    """Events Analysis"""
     _name = "report.event.registration"
-    _description = "Events Analysis"
-    _auto = False
-    _columns = {
-        'event_date': fields.datetime('Event Date', readonly=True),
-        'event_id': fields.many2one('event.event', 'Event', required=True),
-        'draft_state': fields.integer(' # No of Draft Registrations', size=20),
-        'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
-        'seats_max': fields.integer('Max Seats'),
-        'nbevent': fields.integer('Number Of Events'),
-        'event_type': fields.many2one('event.type', 'Event Type'),
-        'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True),
-        'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True),
-        'user_id': fields.many2one('res.users', 'Event Responsible', readonly=True),
-        'user_id_registration': fields.many2one('res.users', 'Register', readonly=True),
-        'name_registration': fields.char('Participant / Contact Name',size=45, readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-    }
     _order = 'event_date desc'
+    _auto = False
+
+    event_date = Datetime('Event Date', readonly=True)
+    event_id = Many2one('event.event', 'Event', required=True)
+    draft_state = Integer(' # No of Draft Registrations')
+    confirm_state = Integer(' # No of Confirmed Registrations')
+    seats_max = Integer('Max Seats')
+    nbevent = Integer('Number Of Events')
+    event_type = Many2one('event.type', 'Event Type')
+    registration_state = Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True)
+    event_state = Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True)
+    user_id = Many2one('res.users', 'Event Responsible', readonly=True)
+    user_id_registration = Many2one('res.users', 'Register', readonly=True)
+    name_registration = Char('Participant / Contact Name', readonly=True)
+    company_id = Many2one('res.company', 'Company', readonly=True)
 
     def init(self, cr):
-        """
-        Initialize the sql view for the event registration
-        """
+        """Initialize the sql view for the event registration """
         tools.drop_view_if_exists(cr, 'report_event_registration')
 
         # TOFIX this request won't select events that have no registration
@@ -86,6 +84,5 @@ class report_event_registration(osv.osv):
                 name_registration
         )
         """)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
