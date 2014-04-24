@@ -86,13 +86,13 @@
                                         </group>
                                     </form>
                                     <tree string="Valuation Adjustments" editable="bottom">
-                                        <field name="product_id"/>
-                                        <field name="quantity"/>
-                                        <field name="weight"/>
-                                        <field name="volume"/>
-                                        <field name="cost_line_id"/>
-                                        <field name="former_cost"/>
-                                        <field name="former_cost_per_unit"/>
+                                        <field name="cost_line_id" readonly="1"/>
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="weight" readonly="1"/>
+                                        <field name="volume" readonly="1"/>
+                                        <field name="quantity" readonly="1"/>
+                                        <field name="former_cost_per_unit" readonly="1"/>
+                                        <field name="former_cost" readonly="1"/>
                                         <field name="additional_landed_cost"/>
                                     </tree>
                                 </field>
