@@ -393,7 +393,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # record provides a pre-resized version of the base field, use that
         # directly
         if record.get(presized):
-            response.set_data(data)
+            response.data = data
             return response
 
         fit = int(max_width), int(max_height)
@@ -401,7 +401,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         max_w, max_h = fit
 
         if w < max_w and h < max_h:
-            response.set_data(data)
+            response.data = data
         else:
             image.thumbnail(fit, Image.ANTIALIAS)
             image.save(response.stream, image.format)

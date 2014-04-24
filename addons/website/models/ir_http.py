@@ -121,7 +121,7 @@ class ir_http(orm.AbstractModel):
                 return response
 
             response.mimetype = attach[0]['mimetype']
-            response.set_data(datas.decode('base64'))
+            response.data = datas.decode('base64')
             return response
 
     def _handle_exception(self, exception=None, code=500):
