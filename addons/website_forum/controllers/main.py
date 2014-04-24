@@ -105,6 +105,7 @@ class WebsiteForum(http.Controller):
 
         values = self._prepare_forum_values(forum=forum, searches=post)
         values.update({
+            'main_object': tag or forum,
             'question_ids': question_ids,
             'pager': pager,
             'tag': tag,
@@ -134,6 +135,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
         values.update({
             'tags': tags,
+            'main_object': forum,
         })
         return request.website.render("website_forum.tag", values)
 
@@ -179,6 +181,7 @@ class WebsiteForum(http.Controller):
         filters = 'question'
         values = self._prepare_forum_values(forum=forum, searches=post)
         values.update({
+            'main_object': question,
             'question': question,
             'header': {'question_data': True},
             'filters': filters,
@@ -209,6 +212,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(**post)
         values.update({
             'post': question,
+            'question': question,
             'forum': forum,
             'reasons': reasons,
         })
@@ -228,7 +232,7 @@ class WebsiteForum(http.Controller):
             'state': 'close',
             'closed_uid': request.uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-            'closed_reason_id': post.get('reason_id', False),
+            'closed_reason_id': int(post.get('reason_id', False)),
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
@@ -381,6 +385,7 @@ class WebsiteForum(http.Controller):
         values = self._prepare_forum_values(forum=forum, searches=searches)
         values .update({
             'users': users,
+            'main_object': forum,
             'notifications': self._get_notifications(),
             'pager': pager,
         })
@@ -515,7 +520,6 @@ class WebsiteForum(http.Controller):
     def badge_users(self, forum, badge, **kwargs):
         user_ids = [badge_user.user_id.id for badge_user in badge.owner_ids]
         users = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, user_ids, context=request.context)
-
         values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
             'badge': badge,
