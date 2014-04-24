@@ -181,6 +181,10 @@ class stock_landed_cost(osv.osv):
             self.write(cr, uid, cost.id, {'state': 'done', 'account_move_id': move_id}, context=context)
         return True
 
+    def button_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+        return True
+
     def compute_landed_cost(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
         for cost in self.browse(cr, uid, ids, context=None):
