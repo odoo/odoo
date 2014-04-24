@@ -5,10 +5,93 @@
     <data>
         <template id="web.assets_common">
             <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
+            <script type="text/javascript" src="/web/static/lib/spinjs/spin.js"></script>
+
+            <!-- jQuery stuff -->
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.timeago/jquery.timeago.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+            <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+
+            <!-- Obsolete ??? -->
+            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+        </template>
+
+        <template id="web.assets_backend">
+            <t t-call="web.assets_common"/>
+            <!-- Datejs -->
+            <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
+
+            <!-- jQuery addons -->
+            <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.autosize/jquery.autosize.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo-min.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/cleditor/jquery.cleditor.css"/>
+            <script type="text/javascript" src="/web/static/lib/cleditor/jquery.cleditor.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
+
+            <!-- jQuery ui -->
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
+
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+
+            <!-- Backbone -->
+            <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
+
+            <!-- Internals -->
+            <link rel="stylesheet" href="/web/static/src/css/base.css"/>
+            <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
+            <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
+
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/testing.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/pyeval.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/formats.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/chrome.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/data.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/data_export.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/search.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_list.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_form.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_list_editable.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_tree.js"></script>
+            <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
+
         </template>
 
         <template id="web.assets_webclient_manifest">
+            <!-- This bundle can be used for module manifest asset declaration backward compatibility -->
             <t t-foreach="manifest_list('css')" t-as="css_file">
                 <link rel="stylesheet" t-att-href="css_file"/>
             </t>
@@ -36,7 +119,7 @@
         <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
             <t t-call="web.layout">
                 <t t-set="head">
-                    <t t-call-assets="web.assets_webclient_manifest"/>
+                    <t t-call-assets="web.assets_backend"/>
                     <script type="text/javascript">
                         $(function() {
                             var s = new openerp.init(<t t-raw="modules"/>);
