@@ -233,6 +233,7 @@ class HttpCase(TransactionCase):
             _logger.info("phantom_run execution finished")
 
     def _wait_remaining_requests(self):
+        t0 = int(time.time())
         for thread in threading.enumerate():
             if thread.name.startswith('openerp.service.http.request.'):
                 while thread.isAlive():
@@ -240,6 +241,11 @@ class HttpCase(TransactionCase):
                     # and would prevent the forced shutdown.
                     thread.join(0.05)
                     time.sleep(0.05)
+                    t1 = int(time.time())
+                    if t0 != t1:
+                        _logger.info('remaining requests')
+                        openerp.tools.misc.dumpstacks()
+                        t0 = t1
 
     def phantom_jsfile(self, jsfile, timeout=60, **kw):
         options = {

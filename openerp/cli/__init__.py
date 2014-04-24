@@ -38,7 +38,8 @@ def main():
     # The only shared option is '--addons-path=' needed to discover additional
     # commands from modules
     if len(args) > 1 and args[0].startswith('--addons-path=') and not args[1].startswith("-"):
-        tools.config.parse_config([args[0]])
+        # parse only the addons-path, do not setup the logger...
+        tools.config._parse_config([args[0]])
         args = args[1:]
 
     # Default legacy command

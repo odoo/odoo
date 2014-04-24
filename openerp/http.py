@@ -600,8 +600,8 @@ class ControllerType(type):
 
         # flag old-style methods with req as first argument
         for k, v in attrs.items():
-            if inspect.isfunction(v):
-                spec = inspect.getargspec(v)
+            if inspect.isfunction(v) and hasattr(v, 'original_func'):
+                spec = inspect.getargspec(v.original_func)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
                     v._first_arg_is_req = True
