@@ -46,7 +46,6 @@ to an appropriate local partner, based on the distance and the weight that was a
         'portal_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
-        'views/crm_partner_assign.xml',
     ],
     'demo': [
         'res_partner_demo.xml',
