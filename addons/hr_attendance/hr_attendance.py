@@ -25,6 +25,7 @@ from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
     _description = "Action Reason"
@@ -40,6 +41,7 @@ class hr_action_reason(osv.osv):
 def _employee_get(obj, cr, uid, context=None):
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
     return ids and ids[0] or False
+
 
 class hr_attendance(osv.osv):
     _name = "hr.attendance"
@@ -128,7 +130,7 @@ class hr_employee(osv.osv):
         for res in cr.fetchall():
             result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
         return result
-    
+
     def _last_sign(self, cr, uid, ids, name, args, context=None):
         result = {}
         if not ids:
