@@ -22,6 +22,7 @@ import collections
 import copy
 import datetime
 import dateutil
+from dateutil.relativedelta import relativedelta
 import fnmatch
 import logging
 import os
@@ -866,7 +867,7 @@ class view(osv.osv):
             quote_plus=werkzeug.url_quote_plus,
             time=time,
             datetime=datetime,
-            dateutil=dateutil,
+            relativedelta=relativedelta,
         )
         qcontext.update(values)
 
