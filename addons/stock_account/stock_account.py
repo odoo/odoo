@@ -180,11 +180,12 @@ class stock_quant(osv.osv):
 
         if not all([acc_src, acc_dest, acc_valuation, journal_id]):
             raise osv.except_osv(_('Error!'), _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
+    Product: %s
     Stock Input Account: %s
     Stock Output Account: %s
     Stock Valuation Account: %s
     Stock Journal: %s
-    ''') % (acc_src, acc_dest, acc_valuation, journal_id))
+    ''') % (move.product_id.name, acc_src, acc_dest, acc_valuation, journal_id))
         return journal_id, acc_src, acc_dest, acc_valuation
 
     def _prepare_account_move_line(self, cr, uid, move, qty, cost, credit_account_id, debit_account_id, context=None):
