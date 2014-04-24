@@ -153,6 +153,9 @@ class stock_landed_cost(osv.osv):
     def button_validate(self, cr ,uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for cost in self.browse(cr, uid, ids, context=context):
+            if not cost.valuation_adjustment_lines:
+                raise osv.except_osv(_('Error!'),_('You cannot validate a landed cost which has no valuation line.'))
+
             quant_dict = {}
             for line in cost.valuation_adjustment_lines:
                 per_unit = line.final_cost / line.quantity
