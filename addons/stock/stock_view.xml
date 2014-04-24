@@ -360,15 +360,26 @@
             <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
         </record>
 
+        <record model="ir.actions.act_window" id="location_open_quants">
+            <field name="context">{'search_default_productgroup': 1}</field>
+            <field name="domain">[('location_id', 'child_of', active_ids)]</field>
+            <field name="name">Quants</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
             <field name="model">stock.location</field>
             <field name="arch" type="xml">
                 <form string="Stock Location" version="7.0">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button string="Current Stock" name="%(location_open_quants)d" type="action"/>
+                    </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="location_id" class="oe_edit_only"/>
                     <h2><field name="location_id"/></h2>
+
                     <group>
                         <group string="Additional Information">
                             <field name="usage"/>
@@ -1773,6 +1784,7 @@
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
         </record>
+
 <!-->
         <record model="ir.ui.view" id="product_template_form_view_procurement">
             <field name="name">product.template.procurement</field>
@@ -1812,7 +1824,7 @@
                 </xpath>
                 
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Inventory" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
+                   <button string="Current Stock" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
