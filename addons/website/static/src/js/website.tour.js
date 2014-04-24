@@ -87,6 +87,7 @@ var localStorage = window.localStorage;
 var T = website.Tour = {
     tours: {},
     defaultDelay: 50,
+    retryRunningDelay: 1000,
     errorDelay: 5000,
     state: null,
     $element: null,
@@ -129,6 +130,7 @@ var T = website.Tour = {
                 step.waitFor = '.oe_overlay_options .oe_options:visible';
             }
 
+
             var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
             if (snippet) {
                 step.snippet = snippet[1];
@@ -145,6 +147,7 @@ var T = website.Tour = {
         if (tour.steps[index-1] &&
             tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
             var step = {
+                _title: "",
                 id: index,
                 waitNot: '.popover.tour.fade.in:visible'
             };
@@ -310,11 +313,11 @@ var T = website.Tour = {
             console.log("Tour Begin from url hash");
             T.saveState(state.id, state.mode, state.step_id);
         }
-        if (!state.id || !T.tours[state.id]) {
+        if (!state.id) {
             return;
         }
         state.tour = T.tours[state.id];
-        state.step = state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
+        state.step = state.tour && state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
         return state;
     },
     error: function (step, message) {
@@ -353,14 +356,17 @@ var T = website.Tour = {
         clearTimeout(T.testtimer);
         T.closePopover();
     },
-    testRunning: 0,
     running: function () {
         function run () {
             var state = T.getState();
-            if (state) {
+            if (!state) return;
+            if (state.tour) {
                 console.log("Tour '"+state.id+"' is running");
                 T.registerSteps(state.tour);
                 T.nextStep();
+            } else {
+                console.log("Tour '"+state.id+"' wait for running (tour undefined)");
+                setTimeout(T.running, state.mode === "test" ? T.defaultDelay : T.retryRunningDelay);
             }
         }
         setTimeout(function () {
