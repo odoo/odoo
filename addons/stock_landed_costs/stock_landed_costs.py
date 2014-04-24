@@ -50,17 +50,18 @@ class stock_landed_cost(osv.osv):
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
         picking_obj = self.pool.get('stock.picking')
         lines = []
- 
         for cost in self.browse(cr, uid, ids):
             line_ids = [line.id for line in cost.valuation_adjustment_lines]
             line_obj.unlink(cr, uid, line_ids)
-
         picking_ids = picking_ids and picking_ids[0][2] or False
         if not picking_ids:
             return {'value': result}
 
         for picking in picking_obj.browse(cr, uid, picking_ids):
             for move in picking.move_lines:
+                #it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
+                if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'real':
+                    continue
                 total_cost = 0.0
                 total_qty = 0.0
                 weight = move.product_id and move.product_id.weight
@@ -68,7 +69,7 @@ class stock_landed_cost(osv.osv):
                 for quant in move.quant_ids:
                     total_cost += quant.cost
                     total_qty += quant.qty
-                vals = dict(product_id = move.product_id.id, move_id = move.id, quantity = move.product_uom_qty, former_cost = total_cost * total_qty, weight = weight, volume = volume, flag = 'original')
+                vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost * total_qty, weight=weight, volume=volume, flag='original')
                 lines.append(vals)
         result['valuation_adjustment_lines'] = lines
         return {'value': result}
