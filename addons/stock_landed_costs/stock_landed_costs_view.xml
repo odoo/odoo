@@ -24,7 +24,7 @@
                             <group>
                                 <field name="date"/>
                                 <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done')]"
-                                    on_change="onchange_pickings(picking_ids)"/>
+                                    on_change="onchange_pickings(picking_ids, context)"/>
                             </group>
                             <group>
                                 <field name="account_journal_id"/>

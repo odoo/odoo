@@ -26,6 +26,7 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import product
 
+
 class stock_landed_cost(osv.osv):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
@@ -47,19 +48,19 @@ class stock_landed_cost(osv.osv):
         return result
 
     def _get_cost_line(self, cr, uid, ids, context=None):
-        result = {}
+        cost_to_recompute = []
         for line in self.pool.get('stock.landed.cost.lines').browse(cr, uid, ids, context=context):
-            result[line.cost_id.id] = True
-        return result.keys()
+            cost_to_recompute.append(line.cost_id.id)
+        return cost_to_recompute
 
-    def onchange_pickings(self, cr, uid, ids, picking_ids=None):
+    def onchange_pickings(self, cr, uid, ids, picking_ids=None, context=None):
         result = {'valuation_adjustment_lines': []}
         line_obj = self.pool.get('stock.valuation.adjustment.lines')
         picking_obj = self.pool.get('stock.picking')
         lines = []
-        for cost in self.browse(cr, uid, ids):
+        for cost in self.browse(cr, uid, ids, context=context):
             line_ids = [line.id for line in cost.valuation_adjustment_lines]
-            line_obj.unlink(cr, uid, line_ids)
+            line_obj.unlink(cr, uid, line_ids, context=context)
         picking_ids = picking_ids and picking_ids[0][2] or False
         if not picking_ids:
             return {'value': result}
@@ -70,12 +71,11 @@ class stock_landed_cost(osv.osv):
                 if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'real':
                     continue
                 total_cost = 0.0
-                total_qty = 0.0
+                total_qty = move.product_qty
                 weight = move.product_id and move.product_id.weight * move.product_qty
                 volume = move.product_id and move.product_id.volume * move.product_qty
                 for quant in move.quant_ids:
                     total_cost += quant.cost
-                    total_qty += quant.qty
                 vals = dict(product_id=move.product_id.id, move_id=move.id, quantity=move.product_uom_qty, former_cost=total_cost * total_qty, weight=weight, volume=volume, flag='original')
                 lines.append(vals)
         result['valuation_adjustment_lines'] = lines
@@ -101,7 +101,7 @@ class stock_landed_cost(osv.osv):
 
     _defaults = {
         'state': 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -243,8 +243,8 @@ class stock_landed_cost(osv.osv):
 
         for key, value in dict.items():
             line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
-
         return True
+
 
 class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
@@ -259,7 +259,7 @@ class stock_landed_cost_lines(osv.osv):
         result['name'] = product.name
         result['split_method'] = product.split_method
         result['price_unit'] = product.standard_price
-        result['account_id'] = product.property_account_expense and product.property_account_expense.id or False
+        result['account_id'] = product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
         return {'value': result}
 
     _columns = {
