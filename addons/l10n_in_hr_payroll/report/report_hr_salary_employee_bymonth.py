@@ -21,7 +21,7 @@
 
 import datetime
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
 
 class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
@@ -64,8 +64,8 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
                 current_year = last_year
             current_month = current_month + 1
         for c in range(0, (12-no_months)):
-            mnth_name.append('None')
-            self.mnths.append('None')
+            mnth_name.append('')
+            self.mnths.append('')
         return [mnth_name]
 
     def get_salary(self, form, emp_id, emp_salary, total_mnths):
@@ -81,10 +81,10 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
         sal = self.cr.fetchall()
         salary = dict(sal)
         total = 0.0
-        cnt = 1
+        cnt = 0
 
         for month in self.mnths:
-            if month <> 'None':
+            if month <> '':
                 if len(month) != 7:
                     month = '0' + str(month)
                 if month in salary and salary[month]:
@@ -102,7 +102,7 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
     def get_employee(self, form):
         emp_salary = []
         salary_list = []
-        total_mnths=['Total', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        total_mnths=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         emp_obj = self.pool.get('hr.employee')
         emp_ids = form.get('employee_ids', [])
         employees  = emp_obj.browse(self.cr, self.uid, emp_ids, context=self.context)
@@ -128,6 +128,10 @@ class report_hr_salary_employee_bymonth(report_sxw.rml_parse):
               self.total += item[count]
         return self.total
 
-report_sxw.report_sxw('report.salary.employee.bymonth', 'hr.salary.employee.month', 'l10n_in_hr_payroll/report/report_hr_salary_employee_bymonth.rml', parser=report_hr_salary_employee_bymonth, header='internal')
+class wrapped_report_employee_salary_bymonth(osv.AbstractModel):
+    _name = 'report.l10n_in_hr_payroll.report_hrsalarybymonth'
+    _inherit = 'report.abstract_report'
+    _template = 'l10n_in_hr_payroll.report_hrsalarybymonth'
+    _wrapped_report_class = report_hr_salary_employee_bymonth
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
