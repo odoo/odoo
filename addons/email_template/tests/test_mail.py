@@ -62,7 +62,7 @@ class test_message_compose(TestMail):
             'name': 'Pigs Template',
             'subject': '${object.name}',
             'body_html': '${object.description}',
-            'user_signature': True,
+            'user_signature': False,
             'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
             'email_to': 'b@b.b, c@c.c',
             'email_cc': 'd@d.d'
@@ -157,7 +157,7 @@ class test_message_compose(TestMail):
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = [p_a_id]
         self.assertEqual(compose.subject, '${object.name}', 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, '<p>${object.description}</p>', 'mail.compose.message body incorrect')
+        self.assertEqual(compose.body, '<p>${object.description}</p>', 'mail.compose.message body incorrect')  # todo: check signature
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 2. Post the comment, get created message
