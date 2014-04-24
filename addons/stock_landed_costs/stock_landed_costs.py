@@ -29,6 +29,13 @@ import product
 class stock_landed_cost(osv.osv):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
+    _inherit = 'mail.thread'
+
+    _track = {
+        'state': {
+            'stock_landed_costs.mt_stock_landed_cost_open': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+        },
+    }
 
     def _total_amount(self, cr, uid, ids, name, args, context=None):
         result = {}
@@ -75,8 +82,8 @@ class stock_landed_cost(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True, states={'open': [('readonly', True)]}),
-        'date': fields.date('Date', required=True, states={'open': [('readonly', True)]}),
+        'name': fields.char('Name', size=256, required=True, states={'open': [('readonly', True)]}, track_visibility='always'),
+        'date': fields.date('Date', required=True, states={'open': [('readonly', True)]}, track_visibility='onchange'),
         'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'open': [('readonly', True)]}),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'open': [('readonly', True)]}),
         'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments', states={'open': [('readonly', True)]}),
@@ -85,9 +92,9 @@ class stock_landed_cost(osv.osv):
             store={
                 'stock.landed.cost': (lambda self, cr, uid, ids, c={}: ids, ['cost_lines'], 20),
                 'stock.landed.cost.lines': (_get_cost_line, ['price_unit', 'quantity', 'cost_id'], 20),
-            }
+            }, track_visibility='always'
         ),
-        'state':fields.selection([('draft', 'Draft'), ('open', 'Open'), ('cancel', 'Cancelled')], 'State', readonly=True),
+        'state':fields.selection([('draft', 'Draft'), ('open', 'Open'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange'),
     }
 
     _defaults = {

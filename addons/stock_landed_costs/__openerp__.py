@@ -39,6 +39,7 @@
     'data': [
         'product_view.xml',
         'stock_landed_costs_view.xml',
+        'stock_landed_costs_data.xml',
     ],
     'test': [
     ],
