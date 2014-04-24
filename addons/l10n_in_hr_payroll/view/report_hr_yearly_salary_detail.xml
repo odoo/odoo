@@ -10,7 +10,7 @@
                     <p> From 
                         <u><span t-esc="data['form']['date_from']"/></u> 
                     To  <u><span t-esc="data['form']['date_to']"/></u> </p>
-                    <table class="table table-condensed table-bordered ">
+                    <table class="table table-condensed table-bordered">
                         <tr>
                             <td><strong>Employee Code</strong></td>
                             <td>
@@ -18,7 +18,6 @@
                                     <span t-field="employee.identification_id"/>
                                 </t>
                             </td>
-                            
                             <td><strong>Department</strong></td>
                             <td>
                                 <t t-if="employee.department_id">
@@ -73,7 +72,7 @@
                             </td>
                         </tr>
                     </table>
-    
+                   <span t-esc="get_employee_detail(data['form'], employee)"/>
                     <table class="table table-condensed">
                         <thead>
                             <tr>
@@ -88,7 +87,6 @@
                                 <th>Total</th>
                             </tr>
                         </thead>
-                        <t t-if="get_employee_detail(data['form'], employee)"></t>
                         <tr>
                             <td><strong> Allowances with Basic:</strong></td>
                             <t t-foreach="get_allow()" t-as="allowanc">
