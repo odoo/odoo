@@ -1,10 +1,10 @@
 -
   Copy of event.
 -
-  !python {model: event.event}: |
-    self.copy(cr, uid, ref("event_2"))
+  !python {model: event.event, id: event_2}: |
+    self.copy()
 -
-  Copy of event registarion.
+  Copy of event registration.
 -
-  !python {model: event.registration}: |
-    self.copy(cr, uid, ref("reg_1_1"))
+  !python {model: event.registration, id: reg_1_1}: |
+    self.copy()
