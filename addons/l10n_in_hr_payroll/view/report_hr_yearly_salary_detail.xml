@@ -6,12 +6,10 @@
         <t t-call="report.external_layout">
             <div class="page">
                 <t t-foreach="get_employee(data['form'])" t-as="employee">
-                    <div class="text-center"><span t-field="employee.company_id"/></div>
-                    <div class="text-center">From 
+                    <h2><span t-field="employee.company_id"/></h2>
+                    <p> From 
                         <u><span t-esc="data['form']['date_from']"/></u> 
-                    To  <u><span t-esc="data['form']['date_to']"/></u>
-                    </div>
-                    <br/>
+                    To  <u><span t-esc="data['form']['date_to']"/></u> </p>
                     <table class="table table-condensed table-bordered ">
                         <tr>
                             <td><strong>Employee Code</strong></td>
