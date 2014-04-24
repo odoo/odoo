@@ -70,7 +70,11 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     image_stream = StringIO.StringIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
     # store filetype here, as Image.new below will lose image.format
-    filetype = filetype or image.format
+    filetype = (filetype or image.format).upper()
+
+    filetype = {
+        'BMP': 'PNG',
+    }.get(filetype, filetype)
 
     asked_width, asked_height = size
     if asked_width is None:

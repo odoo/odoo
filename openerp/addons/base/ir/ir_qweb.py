@@ -144,7 +144,7 @@ class QWeb(orm.AbstractModel):
         """Add a parsed template in the context. Used to preprocess templates."""
         qwebcontext.templates[name] = node
 
-    def load_document(self, document, qwebcontext):
+    def load_document(self, document, res_id, qwebcontext):
         """
         Loads an XML document and installs any contained template in the engine
         """
@@ -156,9 +156,13 @@ class QWeb(orm.AbstractModel):
             dom = xml.dom.minidom.parse(document)
 
         for node in dom.documentElement.childNodes:
-            if node.nodeType == self.node.ELEMENT_NODE and node.getAttribute('t-name'):
-                name = str(node.getAttribute("t-name"))
-                self.add_template(qwebcontext, name, node)
+            if node.nodeType == self.node.ELEMENT_NODE:
+                if node.getAttribute('t-name'):
+                    name = str(node.getAttribute("t-name"))
+                    self.add_template(qwebcontext, name, node)
+                if res_id and node.tagName == "t":
+                    self.add_template(qwebcontext, res_id, node)
+                    res_id = None
 
     def get_template(self, name, qwebcontext):
         origin_template = qwebcontext.get('__caller__') or qwebcontext['__stack__'][0]
@@ -167,7 +171,7 @@ class QWeb(orm.AbstractModel):
                 xml_doc = qwebcontext.loader(name)
             except ValueError:
                 raise_qweb_exception(QWebTemplateNotFound, message="Loader could not find template %r" % name, template=origin_template)
-            self.load_document(xml_doc, qwebcontext=qwebcontext)
+            self.load_document(xml_doc, isinstance(name, (int, long)) and name or None, qwebcontext=qwebcontext)
 
         if name in qwebcontext.templates:
             return qwebcontext.templates[name]
@@ -241,7 +245,7 @@ class QWeb(orm.AbstractModel):
                 if attribute_name == "groups":
                     cr = qwebcontext.get('request') and qwebcontext['request'].cr or None
                     uid = qwebcontext.get('request') and qwebcontext['request'].uid or None
-                    can_see = self.user_has_groups(cr, uid, groups=attribute_value)
+                    can_see = self.user_has_groups(cr, uid, groups=attribute_value) if cr and uid else False
                     if not can_see:
                         return ''
                     continue
@@ -332,7 +336,9 @@ class QWeb(orm.AbstractModel):
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
     def render_tag_esc(self, element, template_attributes, generated_attributes, qwebcontext):
-        inner = werkzeug.utils.escape(self.eval_str(template_attributes["esc"], qwebcontext))
+        options = json.loads(template_attributes.get('esc-options') or '{}')
+        widget = self.get_widget_for(options.get('widget', ''))
+        inner = widget.format(template_attributes['esc'], options, qwebcontext)
         return self.render_element(element, template_attributes, generated_attributes, qwebcontext, inner)
 
     def render_tag_foreach(self, element, template_attributes, generated_attributes, qwebcontext):
@@ -383,7 +389,12 @@ class QWeb(orm.AbstractModel):
         cr = d.get('request') and d['request'].cr or None
         uid = d.get('request') and d['request'].uid or None
 
-        return self.render(cr, uid, self.eval_format(template_attributes["call"], d), d)
+        template = self.eval_format(template_attributes["call"], d)
+        try:
+            template = int(template)
+        except ValueError:
+            pass
+        return self.render(cr, uid, template, d)
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -416,8 +427,10 @@ class QWeb(orm.AbstractModel):
                                  element, template_attributes, generated_attributes, qwebcontext, context=qwebcontext.context)
 
     def get_converter_for(self, field_type):
-        return self.pool.get('ir.qweb.field.' + field_type,
-                             self.pool['ir.qweb.field'])
+        return self.pool.get('ir.qweb.field.' + field_type, self.pool['ir.qweb.field'])
+
+    def get_widget_for(self, widget):
+        return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -603,7 +616,7 @@ class DateTimeConverter(osv.AbstractModel):
         if isinstance(value, basestring):
             value = datetime.datetime.strptime(
                 value, openerp.tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        value = column.context_timestamp(
+        value = fields.datetime.context_timestamp(
             cr, uid, timestamp=value, context=context)
 
         if options and 'format' in options:
@@ -814,6 +827,8 @@ class Contact(orm.AbstractModel):
     _inherit = 'ir.qweb.field.many2one'
 
     def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if options is None:
+            options = {}
         opf = options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
 
         if not getattr(record, field_name):
@@ -833,12 +848,65 @@ class Contact(orm.AbstractModel):
             'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
             'email': field_browse.email,
             'fields': opf,
+            'object': field_browse,
             'options': options
         }
 
         html = self.pool["ir.ui.view"].render(cr, uid, "base.contact", val, engine='ir.qweb', context=context).decode('utf8')
 
         return HTMLSafe(html)
+
+class QwebView(orm.AbstractModel):
+    _name = 'ir.qweb.field.qweb'
+    _inherit = 'ir.qweb.field.many2one'
+
+    def record_to_html(self, cr, uid, field_name, record, column, options=None, context=None):
+        if not getattr(record, field_name):
+            return None
+
+        view = getattr(record, field_name)
+
+        if view._model._name != "ir.ui.view":
+            _logger.warning("%s.%s must be a 'ir.ui.view' model." % (record, field_name))
+            return None
+
+        ctx = (context or {}).copy()
+        ctx['object'] = record
+        html = view.render(ctx, engine='ir.qweb', context=ctx).decode('utf8')
+
+        return HTMLSafe(html)
+
+class QwebWidget(osv.AbstractModel):
+    _name = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        return self.pool['ir.qweb'].eval_str(inner, qwebcontext)
+
+    def format(self, inner, options, qwebcontext):
+        return werkzeug.utils.escape(self._format(inner, options, qwebcontext))
+
+class QwebWidgetMonetary(osv.AbstractModel):
+    _name = 'ir.qweb.widget.monetary'
+    _inherit = 'ir.qweb.widget'
+
+    def _format(self, inner, options, qwebcontext):
+        inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
+        display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
+        precision = int(round(math.log10(display.rounding)))
+        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        lang_code = qwebcontext.context.get('lang') or 'en_US'
+        formatted_amount = self.pool['res.lang'].format(
+            qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
+        )
+        pre = post = u''
+        if display.position == 'before':
+            pre = u'{symbol} '
+        else:
+            post = u' {symbol}'
+
+        return u'{pre}{0}{post}'.format(
+            formatted_amount, pre=pre, post=post
+        ).format(symbol=display.symbol,)
 
 class HTMLSafe(object):
     """ HTMLSafe string wrapper, Werkzeug's escape() has special handling for

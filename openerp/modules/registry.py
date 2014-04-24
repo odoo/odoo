@@ -58,7 +58,10 @@ class Registry(Mapping):
         self._init_modules = set()
 
         self.db_name = db_name
-        self.db = openerp.sql_db.db_connect(db_name)
+        self._db = openerp.sql_db.db_connect(db_name)
+
+        # special cursor for test mode; None means "normal" mode
+        self.test_cr = None
 
         # Indicates that the registry is 
         self.ready = False
@@ -75,7 +78,7 @@ class Registry(Mapping):
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
 
-        cr = self.db.cursor()
+        cr = self.cursor()
         has_unaccent = openerp.modules.db.has_unaccent(cr)
         if openerp.tools.config['unaccent'] and not has_unaccent:
             _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
@@ -100,6 +103,10 @@ class Registry(Mapping):
 
     def __getitem__(self, model_name):
         """ Return the model with the given name or raise KeyError if it doesn't exist."""
+        return self.models[model_name]
+
+    def __call__(self, model_name):
+        """ Same as ``self[model_name]``. """
         return self.models[model_name]
 
     def do_parent_store(self, cr):
@@ -183,27 +190,39 @@ class Registry(Mapping):
                     r, c)
         return r, c
 
-    @contextmanager
-    def cursor(self, auto_commit=True):
-        cr = self.db.cursor()
-        try:
-            yield cr
-            if auto_commit:
-                cr.commit()
-        finally:
-            cr.close()
+    def enter_test_mode(self):
+        """ Enter the 'test' mode, where one cursor serves several requests. """
+        assert self.test_cr is None
+        self.test_cr = self._db.test_cursor()
+        RegistryManager.enter_test_mode()
 
-class TestRLock(object):
-    def __init__(self):
-        self._lock = threading.RLock()
+    def leave_test_mode(self):
+        """ Leave the test mode. """
+        assert self.test_cr is not None
+        self.test_cr.force_close()
+        self.test_cr = None
+        RegistryManager.leave_test_mode()
+
+    def cursor(self):
+        """ Return a new cursor for the database. The cursor itself may be used
+            as a context manager to commit/rollback and close automatically.
+        """
+        cr = self.test_cr
+        if cr is not None:
+            # While in test mode, we use one special cursor across requests. The
+            # test cursor uses a reentrant lock to serialize accesses. The lock
+            # is granted here by cursor(), and automatically released by the
+            # cursor itself in its method close().
+            cr.acquire()
+            return cr
+        return self._db.cursor()
+
+class DummyRLock(object):
+    """ Dummy reentrant lock, to be used while running rpc and js tests """
     def acquire(self):
-        if openerp.tools.config['test_enable']:
-            return
-        return self._lock.acquire()
+        pass
     def release(self):
-        if openerp.tools.config['test_enable']:
-            return
-        return self._lock.release()
+        pass
     def __enter__(self):
         self.acquire()
     def __exit__(self, type, value, traceback):
@@ -219,12 +238,30 @@ class RegistryManager(object):
     # Mapping between db name and model registry.
     # Accessed through the methods below.
     registries = {}
-    registries_lock = TestRLock()
+    _lock = threading.RLock()
+    _saved_lock = None
+
+    @classmethod
+    def lock(cls):
+        """ Return the current registry lock. """
+        return cls._lock
+
+    @classmethod
+    def enter_test_mode(cls):
+        """ Enter the 'test' mode, where the registry is no longer locked. """
+        assert cls._saved_lock is None
+        cls._lock, cls._saved_lock = DummyRLock(), cls._lock
+
+    @classmethod
+    def leave_test_mode(cls):
+        """ Leave the 'test' mode. """
+        assert cls._saved_lock is not None
+        cls._lock, cls._saved_lock = cls._saved_lock, None
 
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Return a registry for a given database name."""
-        with cls.registries_lock:
+        with cls.lock():
             try:
                 return cls.registries[db_name]
             except KeyError:
@@ -244,7 +281,7 @@ class RegistryManager(object):
 
         """
         import openerp.modules
-        with cls.registries_lock:
+        with cls.lock():
             registry = Registry(db_name)
 
             # Initializing a registry will call general code which will in turn
@@ -259,7 +296,7 @@ class RegistryManager(object):
                     registry.base_registry_signaling_sequence = seq_registry
                     registry.base_cache_signaling_sequence = seq_cache
                 # This should be a method on Registry
-                openerp.modules.load_modules(registry.db, force_demo, status, update_module)
+                openerp.modules.load_modules(registry._db, force_demo, status, update_module)
             except Exception:
                 del cls.registries[db_name]
                 raise
@@ -269,7 +306,7 @@ class RegistryManager(object):
             # Yeah, crazy.
             registry = cls.registries[db_name]
 
-            cr = registry.db.cursor()
+            cr = registry.cursor()
             try:
                 registry.do_parent_store(cr)
                 cr.commit()
@@ -286,7 +323,7 @@ class RegistryManager(object):
     @classmethod
     def delete(cls, db_name):
         """Delete the registry linked to a given database.  """
-        with cls.registries_lock:
+        with cls.lock():
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
@@ -294,7 +331,7 @@ class RegistryManager(object):
     @classmethod
     def delete_all(cls):
         """Delete all the registries. """
-        with cls.registries_lock:
+        with cls.lock():
             for db_name in cls.registries.keys():
                 cls.delete(db_name)
 
@@ -309,7 +346,7 @@ class RegistryManager(object):
         This method is given to spare you a ``RegistryManager.get(db_name)``
         that would loads the given database if it was not already loaded.
         """
-        with cls.registries_lock:
+        with cls.lock():
             if db_name in cls.registries:
                 cls.registries[db_name].clear_caches()
 
@@ -325,7 +362,7 @@ class RegistryManager(object):
         changed = False
         if openerp.multi_process and db_name in cls.registries:
             registry = cls.get(db_name)
-            cr = registry.db.cursor()
+            cr = registry.cursor()
             try:
                 cr.execute("""
                     SELECT base_registry_signaling.last_value,
@@ -371,7 +408,7 @@ class RegistryManager(object):
             registry = cls.get(db_name)
             if registry.any_cache_cleared():
                 _logger.info("At least one model cache has been cleared, signaling through the database.")
-                cr = registry.db.cursor()
+                cr = registry.cursor()
                 r = 1
                 try:
                     cr.execute("select nextval('base_cache_signaling')")
@@ -386,7 +423,7 @@ class RegistryManager(object):
         if openerp.multi_process and db_name in cls.registries:
             _logger.info("Registry changed, signaling through the database")
             registry = cls.get(db_name)
-            cr = registry.db.cursor()
+            cr = registry.cursor()
             r = 1
             try:
                 cr.execute("select nextval('base_registry_signaling')")

@@ -43,15 +43,12 @@ def run(args):
         args.database, update_module=False)
 
     ir_module_module = registry.get('ir.module.module')
-    cr = registry.db.cursor() # TODO context manager
-    try:
+    with registry.cursor() as cr:
         ids = ir_module_module.search(cr, openerp.SUPERUSER_ID, [('name', 'in', args.module), ('state', '=', 'installed')], {})
         if len(ids) == len(args.module):
             ir_module_module.button_immediate_uninstall(cr, openerp.SUPERUSER_ID, ids, {})
         else:
             print "At least one module not found (database `%s`)." % (args.database,)
-    finally:
-        cr.close()
 
 def add_parser(subparsers):
     parser = subparsers.add_parser('uninstall',

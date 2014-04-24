@@ -28,6 +28,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields
+from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
 
 class format_address(object):
@@ -228,12 +229,12 @@ class res_partner(osv.osv, format_address):
     _order = "display_name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers),
+        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Related Company'),
+        'parent_id': fields.many2one('res.partner', 'Related Company', select=True),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts', domain=[('active','=',True)]), # force "active_test" domain to bypass _search() override
-        'ref': fields.char('Reference', size=64, select=1),
+        'ref': fields.char('Contact Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
@@ -359,6 +360,7 @@ class res_partner(osv.osv, format_address):
         value = {}
         value['title'] = False
         if is_company:
+            value['use_parent_address'] = False
             domain = {'title': [('domain', '=', 'partner')]}
         else:
             domain = {'title': [('domain', '=', 'contact')]}
@@ -378,9 +380,10 @@ class res_partner(osv.osv, format_address):
                                                       'was never correctly set. If an existing contact starts working for a new '
                                                       'company then a new contact should be created under that new '
                                                       'company. You can use the "Discard" button to abandon this change.')}
-            parent = self.browse(cr, uid, parent_id, context=context)
-            address_fields = self._address_fields(cr, uid, context=context)
-            result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
+            if use_parent_address:
+                parent = self.browse(cr, uid, parent_id, context=context)
+                address_fields = self._address_fields(cr, uid, context=context)
+                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
         else:
             result['value'] = {'use_parent_address': False}
         return result
@@ -629,10 +632,17 @@ class res_partner(osv.osv, format_address):
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
 
-            query = ('SELECT id FROM res_partner ' +
-                     where_str +  '(email ' + operator + ''' %s
-                          OR display_name ''' + operator + ''' %s)
-                    ORDER BY display_name''')
+            unaccent = get_unaccent_wrapper(cr)
+
+            query = """SELECT id
+                         FROM res_partner
+                      {where} ({email} {operator} {percent}
+                           OR {display_name} {operator} {percent})
+                     ORDER BY {display_name}
+                    """.format(where=where_str, operator=operator,
+                               email=unaccent('email'),
+                               display_name=unaccent('display_name'),
+                               percent=unaccent('%s'))
 
             where_clause_params += [search_name, search_name]
             if limit:

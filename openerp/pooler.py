@@ -36,7 +36,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
     assert openerp.conf.deprecation.openerp_pooler
     _logger.warning('openerp.pooler.get_db_and_pool() is deprecated.')
     registry = RegistryManager.get(db_name, force_demo, status, update_module)
-    return registry.db, registry
+    return registry._db, registry
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
@@ -44,7 +44,7 @@ def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     _logger.warning('openerp.pooler.restart_pool() is deprecated.')
     assert openerp.conf.deprecation.openerp_pooler
     registry = RegistryManager.new(db_name, force_demo, status, update_module)
-    return registry.db, registry
+    return registry._db, registry
 
 def get_db(db_name):
     """Return a database connection. The corresponding registry is initialized."""

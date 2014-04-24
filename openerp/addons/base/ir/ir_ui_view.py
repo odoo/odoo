@@ -78,11 +78,17 @@ class view_custom(osv.osv):
 class view(osv.osv):
     _name = 'ir.ui.view'
 
-    def _get_model_data(self, cr, uid, ids, *args, **kwargs):
-        ir_model_data = self.pool.get('ir.model.data')
-        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
-        result = dict(zip(ids, data_ids))
+    def _get_model_data(self, cr, uid, ids, fname, args, context=None):
+        result = dict.fromkeys(ids, False)
+        IMD = self.pool['ir.model.data']
+        data_ids = IMD.search_read(cr, uid, [('res_id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
+        result.update(map(itemgetter('res_id', 'id'), data_ids))
         return result
+
+    def _views_from_model_data(self, cr, uid, ids, context=None):
+        IMD = self.pool['ir.model.data']
+        data_ids = IMD.search_read(cr, uid, [('id', 'in', ids), ('model', '=', 'ir.ui.view')], ['res_id'], context=context)
+        return map(itemgetter('res_id'), data_ids)
 
     _columns = {
         'name': fields.char('View Name', required=True),
@@ -102,7 +108,11 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
         'field_parent': fields.char('Child Field'),
-        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data", store=True),
+        'model_data_id': fields.function(_get_model_data, type='many2one', relation='ir.model.data', string="Model Data",
+                                         store={
+                                             _name: (lambda s, c, u, i, ctx=None: i, None, 10),
+                                             'ir.model.data': (_views_from_model_data, ['model', 'res_id'], 10),
+                                         }),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -693,6 +703,16 @@ class view(osv.osv):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if not node.get(action) and not Model.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
+        if node.tag in ('kanban'):
+            group_by_field = node.get('default_group_by')
+            if group_by_field and Model._all_columns.get(group_by_field):
+                group_by_column = Model._all_columns[group_by_field].column
+                if group_by_column._type == 'many2one':
+                    group_by_model = Model.pool.get(group_by_column._obj)
+                    for action, operation in (('group_create', 'create'), ('group_delete', 'unlink'), ('group_edit', 'write')):
+                        if not node.get(action) and not group_by_model.check_access_rights(cr, user, operation, raise_exception=False):
+                            node.set(action, 'false')
+
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
             if k not in fields_def:
@@ -714,10 +734,13 @@ class view(osv.osv):
     #------------------------------------------------------
     @tools.ormcache_context(accepted_keys=('lang','inherit_branding', 'editable', 'translatable'))
     def read_template(self, cr, uid, xml_id, context=None):
-        if '.' not in xml_id:
-            raise ValueError('Invalid template id: %r' % (xml_id,))
+        if isinstance(xml_id, (int, long)):
+            view_id = xml_id
+        else:
+            if '.' not in xml_id:
+                raise ValueError('Invalid template id: %r' % (xml_id,))
+            view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
 
-        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
 
@@ -842,9 +865,6 @@ class view(osv.osv):
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if isinstance(id_or_xml_id, list):
             id_or_xml_id = id_or_xml_id[0]
-        tname = id_or_xml_id
-        if isinstance(tname, (int, long)):
-            tname = self.get_view_xmlid(cr, uid, tname)
 
         if not context:
             context = {}
@@ -862,7 +882,7 @@ class view(osv.osv):
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
-        return self.pool[engine].render(cr, uid, tname, qcontext, loader=loader, context=context)
+        return self.pool[engine].render(cr, uid, id_or_xml_id, qcontext, loader=loader, context=context)
 
     #------------------------------------------------------
     # Misc
@@ -949,5 +969,19 @@ class view(osv.osv):
 
         ids = map(itemgetter(0), cr.fetchall())
         return self._check_xml(cr, uid, ids)
+
+    def _validate_module_views(self, cr, uid, module):
+        """Validate architecture of all the views of a given module"""
+        assert not self.pool._init or module in self.pool._init_modules
+        cr.execute("""SELECT max(v.id)
+                        FROM ir_ui_view v
+                   LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+                       WHERE md.module = %s
+                    GROUP BY coalesce(v.inherit_id, v.id)
+                   """, (module,))
+
+        for vid, in cr.fetchall():
+            if not self._check_xml(cr, uid, [vid]):
+                self.raise_view_error(cr, uid, "Can't validate view", vid)
 
 # vim:et:

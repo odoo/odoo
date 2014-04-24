@@ -37,6 +37,23 @@ and Ubuntu distros, we have to override the search path, too.
 """
 _logger = logging.getLogger(__name__)
 
+# Alternatives for the [broken] builtin PDF fonts. Default order chosen to match
+# the pre-v8 mapping from openerp.report.render.rml2pdf.customfonts.CustomTTFonts.
+# Format: [ (BuiltinFontFamily, mode, [AlternativeFontName, ...]), ...]
+BUILTIN_ALTERNATIVES = [
+    ('Helvetica', "normal", ["DejaVuSans", "LiberationSans"]),
+    ('Helvetica', "bold", ["DejaVuSans-Bold", "LiberationSans-Bold"]),
+    ('Helvetica', 'italic', ["DejaVuSans-Oblique", "LiberationSans-Italic"]),
+    ('Helvetica', 'bolditalic', ["DejaVuSans-BoldOblique", "LiberationSans-BoldItalic"]),
+    ('Times', 'normal', ["LiberationSerif", "DejaVuSerif"]),
+    ('Times', 'bold', ["LiberationSerif-Bold", "DejaVuSerif-Bold"]),
+    ('Times', 'italic', ["LiberationSerif-Italic", "DejaVuSerif-Italic"]),
+    ('Times', 'bolditalic', ["LiberationSerif-BoldItalic", "DejaVuSerif-BoldItalic"]),
+    ('Courier', 'normal', ["FreeMono", "DejaVuSansMono"]),
+    ('Courier', 'bold', ["FreeMonoBold", "DejaVuSansMono-Bold"]),
+    ('Courier', 'italic', ["FreeMonoOblique", "DejaVuSansMono-Oblique"]),
+    ('Courier', 'bolditalic', ["FreeMonoBoldOblique", "DejaVuSansMono-BoldOblique"]),
+]
 
 class res_font(osv.Model):
     _name = "res.font"
@@ -113,9 +130,32 @@ class res_font(osv.Model):
     def _sync(self, cr, uid, context=None):
         """Set the customfonts.CustomTTFonts list to the content of the database"""
         customfonts.CustomTTFonts = []
+        local_family_modes = set()
+        local_font_paths = {}
         found_fonts_ids = self.search(cr, uid, [('path', '!=', '/dev/null')], context=context)
         for font in self.browse(cr, uid, found_fonts_ids, context=None):
+            local_family_modes.add((font.family, font.mode))
+            local_font_paths[font.name] = font.path
             customfonts.CustomTTFonts.append((font.family, font.name, font.path, font.mode))
+
+        # Attempt to remap the builtin fonts (Helvetica, Times, Courier) to better alternatives
+        # if available, because they only support a very small subset of unicode
+        # (missing 'č' for example)
+        for builtin_font_family, mode, alts in BUILTIN_ALTERNATIVES:
+            if (builtin_font_family, mode) not in local_family_modes:
+                # No local font exists with that name, try alternatives
+                for altern_font in alts:
+                    if local_font_paths.get(altern_font):
+                        altern_def = (builtin_font_family, altern_font,
+                                      local_font_paths[altern_font], mode)
+                        customfonts.CustomTTFonts.append(altern_def)
+                        _logger.debug("Builtin remapping %r", altern_def)
+                        break
+                else:
+                    _logger.warning("No local alternative found for builtin font `%s` (%s mode)." 
+                                    "Consider installing the DejaVu fonts if you have problems "
+                                    "with unicode characters in RML reports",
+                                    builtin_font_family, mode)
         return True
 
     def clear_caches(self):

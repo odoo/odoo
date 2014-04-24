@@ -344,6 +344,30 @@ class date(_column):
                               exc_info=True)
         return (context_today or today).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
 
+    @staticmethod
+    def date_to_datetime(model, cr, uid, userdate, context=None):
+        """ Convert date values expressed in user's timezone to
+        server-side UTC timestamp, assuming a default arbitrary
+        time of 12:00 AM - because a time is needed.
+
+        :param str userdate: date string in in user time zone
+        :return: UTC datetime string for server-side use
+        """
+        user_date = DT.datetime.strptime(userdate, tools.DEFAULT_SERVER_DATE_FORMAT)
+        if context and context.get('tz'):
+            tz_name = context['tz']
+        else:
+            tz_name = model.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + DT.timedelta(hours=12.0)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        return user_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+
+
 class datetime(_column):
     _type = 'datetime'
 
@@ -648,7 +672,10 @@ class one2many(_column):
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
-                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(_table, self._fields_id), (act[1], id))
+                # table of the field (parent_model in case of inherit)
+                field_model = self._fields_id in obj.pool[self._obj]._columns and self._obj or obj.pool[self._obj]._all_columns[self._fields_id].parent_model
+                field_table = obj.pool[field_model]._table
+                cr.execute("select 1 from {0} where id=%s and {1}=%s".format(field_table, self._fields_id), (act[1], id))
                 if not cr.fetchone():
                     # Must use write() to recompute parent_store structure if needed and check access rules
                     obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
@@ -1188,42 +1215,69 @@ class function(_column):
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
     def postprocess(self, cr, uid, obj, field, value=None, context=None):
+        return self._postprocess_batch(cr, uid, obj, field, {0: value}, context=context)[0]
+
+    def _postprocess_batch(self, cr, uid, obj, field, values, context=None):
+        if not values:
+            return values
+
         if context is None:
             context = {}
-        result = value
+
         field_type = obj._columns[field]._type
-        if field_type == "many2one":
-            # make the result a tuple if it is not already one
-            if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
-                obj_model = obj.pool[obj._columns[field].relation]
-                dict_names = dict(obj_model.name_get(cr, SUPERUSER_ID, [value], context))
-                result = (value, dict_names[value])
+        new_values = dict(values)
 
-        if field_type == 'binary':
-            if context.get('bin_size'):
-                # client requests only the size of binary fields
-                result = get_nice_size(value)
-            elif not context.get('bin_raw'):
-                result = sanitize_binary_value(value)
-
-        if field_type == "integer" and value > xmlrpclib.MAXINT:
+        if field_type == "integer":
             # integer/long values greater than 2^31-1 are not supported
             # in pure XMLRPC, so we have to pass them as floats :-(
             # This is not needed for stored fields and non-functional integer
             # fields, as their values are constrained by the database backend
             # to the same 32bits signed int limit.
-            result = __builtin__.float(value)
-        return result
+            for rid, value in values.iteritems():
+                if value and value > xmlrpclib.MAXINT:
+                    new_values[rid] = __builtin__.float(value)
+
+        elif field_type == 'binary':
+            if context.get('bin_size'):
+                # client requests only the size of binary fields
+                for rid, value in values.iteritems():
+                    if value:
+                        new_values[rid] = get_nice_size(value)
+            elif not context.get('bin_raw'):
+                for rid, value in values.iteritems():
+                    if value:
+                        new_values[rid] = sanitize_binary_value(value)
+
+        elif field_type == "many2one" and hasattr(obj._columns[field], 'relation'):
+            # make the result a tuple if it is not already one
+            if all(isinstance(value, (int, long)) for value in values.values() if value):
+                obj_model = obj.pool[obj._columns[field].relation]
+                ids = [i for i in values.values() if i]
+                dict_names = dict(obj_model.name_get(cr, SUPERUSER_ID, ids, context))
+                for rid, value in values.iteritems():
+                    if value:
+                        new_values[rid] = (value, dict_names[value])
+
+        return new_values
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
         result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
-        for id in ids:
-            if self._multi and id in result:
-                for field, value in result[id].iteritems():
-                    if value:
-                        result[id][field] = self.postprocess(cr, uid, obj, field, value, context)
-            elif result.get(id):
-                result[id] = self.postprocess(cr, uid, obj, name, result[id], context)
+        if self._multi:
+            swap = {}
+            for rid, values in result.iteritems():
+                for f, v in values.iteritems():
+                    if f not in name:
+                        continue
+                    swap.setdefault(f, {})[rid] = v
+
+            for field, values in swap.iteritems():
+                new_values = self._postprocess_batch(cr, uid, obj, field, values, context)
+                for rid, value in new_values.iteritems():
+                    result[rid][field] = value
+
+        else:
+            result = self._postprocess_batch(cr, uid, obj, name, result, context)
+
         return result
 
     def set(self, cr, obj, id, name, value, user=None, context=None):

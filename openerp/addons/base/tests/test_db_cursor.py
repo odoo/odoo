@@ -21,7 +21,7 @@ class test_cr_execute(unittest2.TestCase):
         """
         Try to use iterable but non-list or int params in query parameters.
         """
-        with registry().cursor(auto_commit=False) as cr:
+        with registry().cursor() as cr:
             with self.assertRaises(ValueError):
                 cr.execute("SELECT id FROM res_users WHERE login=%s", 'admin')
             with self.assertRaises(ValueError):

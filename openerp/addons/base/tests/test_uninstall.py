@@ -13,7 +13,7 @@ def registry(model):
     return openerp.modules.registry.RegistryManager.get(DB)[model]
 
 def cursor():
-    return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+    return openerp.modules.registry.RegistryManager.get(DB).cursor()
 
 def get_module(module_name):
     registry = openerp.modules.registry.RegistryManager.get(DB)

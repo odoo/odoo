@@ -86,7 +86,7 @@ class PostgreSQLHandler(logging.Handler):
                 if traceback:
                     msg = "%s\n%s" % (msg, traceback)
                 level = logging.getLevelName(record.levelno)
-                val = (ct_uid, ct_uid, 'server', dbname, record.name, level, msg, record.pathname, record.lineno, record.funcName)
+                val = (ct_uid, ct_uid, 'server', ct_db, record.name, level, msg, record.pathname, record.lineno, record.funcName)
                 cr.execute("""
                     INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
                     VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
