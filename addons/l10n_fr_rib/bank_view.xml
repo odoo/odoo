@@ -21,12 +21,12 @@
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form" />
             <field name="arch" type="xml">
-                <field name="acc_number" position="before">
-                    <field name="bank_code" />
-                    <field name="office" />
+                <field name="acc_number" position="after">
+                    <field name="bank_code" attrs="{'invisible':[('state','!=','rib')]}"/>
+                    <field name="office" attrs="{'invisible':[('state','!=','rib')]}"/>
                     <newline />
-                    <field name="rib_acc_number" />
-                    <field name="key" />
+                    <field name="rib_acc_number" attrs="{'invisible':[('state','!=','rib')]}"/>
+                    <field name="key" attrs="{'invisible':[('state','!=','rib')]}"/>
                     <newline />
                 </field>
             </field>
