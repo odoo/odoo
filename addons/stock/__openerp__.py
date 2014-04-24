@@ -90,7 +90,6 @@ Dashboard / Reports for Warehouse Management will include:
         'views/report_stockinventory.xml',
     ],
     'test': [
-        'test/wiseoperator.yml',
         'test/inventory.yml',
         'test/move.yml',
         'test/procrule.yml',
@@ -99,6 +98,7 @@ Dashboard / Reports for Warehouse Management will include:
         'test/shipment.yml',
         'test/packing.yml',
         'test/packingneg.yml',
+        'test/wiseoperator.yml',
     ],
     'installable': True,
     'application': True,

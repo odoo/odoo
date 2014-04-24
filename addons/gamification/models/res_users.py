@@ -31,36 +31,6 @@ class res_users_gamification_group(osv.Model):
     _name = 'res.users'
     _inherit = ['res.users']
 
-    def write(self, cr, uid, ids, vals, context=None):
-        """Overwrite to autosubscribe users if added to a group marked as autojoin, user will be added to challenge"""
-        write_res = super(res_users_gamification_group, self).write(cr, uid, ids, vals, context=context)
-        if vals.get('groups_id'):
-            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
-            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
-
-            challenge_obj = self.pool.get('gamification.challenge')
-            challenge_ids = challenge_obj.search(cr, SUPERUSER_ID, [('autojoin_group_id', 'in', user_group_ids)], context=context)
-            if challenge_ids:
-                challenge_obj.write(cr, SUPERUSER_ID, challenge_ids, {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
-                challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
-        return write_res
-
-    def create(self, cr, uid, vals, context=None):
-        """Overwrite to autosubscribe users if added to a group marked as autojoin, user will be added to challenge"""
-        write_res = super(res_users_gamification_group, self).create(cr, uid, vals, context=context)
-        if vals.get('groups_id'):
-            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
-            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
-
-            challenge_obj = self.pool.get('gamification.challenge')
-            challenge_ids = challenge_obj.search(cr, SUPERUSER_ID, [('autojoin_group_id', 'in', user_group_ids)], context=context)
-            if challenge_ids:
-                challenge_obj.write(cr, SUPERUSER_ID, challenge_ids, {'user_ids': [(4, write_res)]}, context=context)
-                challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
-        return write_res
-
     def get_serialised_gamification_summary(self, cr, uid, excluded_categories=None, context=None):
         return self._serialised_goals_summary(cr, uid, user_id=uid, excluded_categories=excluded_categories, context=context)
 
@@ -112,28 +82,3 @@ class res_users_gamification_group(osv.Model):
             }
             challenge_info.append(values)
         return challenge_info
-
-
-class res_groups_gamification_group(osv.Model):
-    """ Update of res.groups class
-        - if adding users from a group, check gamification.challenge linked to
-        this group, and the user. This is done by overriding the write method.
-    """
-    _name = 'res.groups'
-    _inherit = 'res.groups'
-
-    # No need to overwrite create as very unlikely to be the value in the autojoin_group_id field
-    def write(self, cr, uid, ids, vals, context=None):
-        """Overwrite to autosubscribe users if add users to a group marked as autojoin, these will be added to the challenge"""
-        write_res = super(res_groups_gamification_group, self).write(cr, uid, ids, vals, context=context)
-        if vals.get('users'):
-            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_ids = [command[1] for command in vals['users'] if command[0] == 4]
-            user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
-
-            challenge_obj = self.pool.get('gamification.challenge')
-            challenge_ids = challenge_obj.search(cr, SUPERUSER_ID, [('autojoin_group_id', 'in', ids)], context=context)
-            if challenge_ids:
-                challenge_obj.write(cr, SUPERUSER_ID, challenge_ids, {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
-                challenge_obj.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
-        return write_res

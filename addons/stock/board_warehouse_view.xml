@@ -1,21 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="view_stock_graph_board" model="ir.ui.view">
+            <field name="name">report.stock.move.graph</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <graph string="Moves Analysis" type="bar">
+                    <field name="date"/>
+                    <field name="product_qty" operator="+"/>
+                    <field name="product_id" group="True"/>
+                </graph>
+            </field>
+        </record>
 
+        <record id="view_stock_quant_graph_board" model="ir.ui.view">
+            <field name="name">report.stock.quant.graph</field>
+            <field name="model">stock.quant</field>
+            <field name="arch" type="xml">
+                <graph string="Actual Stock Analysis" type="bar">
+                    <field name="location_id" type="row"/>
+                    <field name="qty" type="measure"/>
+                    <field name="product_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_stock_incoming_product_delay">
+            <field name="name">Incoming Products</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('location_id.usage','!=','internal'), ('location_dest_id.usage','=','internal'), ('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(context_today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
+            <field name="view_id" ref="view_stock_graph_board"></field>
+            <field name="context">{}</field>
+         </record>
+        <record model="ir.actions.act_window" id="action_stock_outgoing_product_delay">
+            <field name="name">Outgoing Products</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal'), ('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(context_today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]</field>
+            <field name="view_id" ref="view_stock_graph_board"></field>
+            <field name="context">{}</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_stock_quants">
+           <field name="name">Actual Stock</field>
+           <field name="res_model">stock.quant</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">graph,tree</field>
+           <field name="domain">[('location_id.usage','=','internal')]</field>
+           <field name="view_id" ref="view_stock_quant_graph_board"></field>
+           <field name="context">{}</field>
+        </record>
         <record id="board_warehouse_form" model="ir.ui.view">
             <field name="name">board.warehouse.form</field>
             <field name="model">board.board</field>
             <field name="arch" type="xml">
                 <form string="Warehouse board" version="7.0">
                     <board style="1-1">
-                        <column name="left">
+                        <column>
+                            <action name="%(action_stock_incoming_product_delay)d" string="Incoming Products"/>
+                            <action name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products"/>
                         </column>
-                        <column name="right">
+                        <column>
+                            <action name="%(action_stock_quants)d" string="Actual Stock"/>
+                            <action name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>
                         </column>
                     </board>
                 </form>
             </field>
         </record>
+
+
+
+
+
 
         <record id="open_board_warehouse" model="ir.actions.act_window">
             <field name="name">Warehouse</field>

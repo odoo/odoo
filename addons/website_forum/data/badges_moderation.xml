@@ -35,7 +35,7 @@
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_5')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')"/>
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -70,7 +70,7 @@
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_6')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -105,7 +105,7 @@
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_7')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -243,7 +243,7 @@ result = int(len(data) >= 15)</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_31')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>
@@ -278,7 +278,7 @@ result = int(len(data) >= 15)</field>
             <field name="report_message_frequency">never</field>
             <field name="reward_id" eval="ref('badge_23')" />
             <field name="reward_realtime">True</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain">[('karma', '>', 0)]</field>
             <field name="state">inprogress</field>
             <field name="category">forum</field>
         </record>

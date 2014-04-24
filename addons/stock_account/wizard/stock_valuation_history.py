@@ -29,7 +29,7 @@ class wizard_valuation_history(osv.osv_memory):
             'domain': "[('date', '<=', '" + data['date'] + "')]",
             'name': _('Stock Value At Date'),
             'view_type': 'form',
-            'view_mode': 'tree, graph',
+            'view_mode': 'tree,graph',
             'res_model': 'stock.history',
             'type': 'ir.actions.act_window',
             'context': ctx,
@@ -41,9 +41,9 @@ class stock_history(osv.osv):
     _auto = False
     _order = 'date asc'
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-        prod_dict= {}
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
+        prod_dict = {}
         if 'inventory_value' in fields:
             for line in res:
                 if '__domain' in line:
@@ -57,14 +57,14 @@ class stock_history(osv.osv):
                                 prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
                             else:
                                 prod_dict[line_rec.product_id.id] = product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, context=context)
-                        inv_value += prod_dict[line_rec.product_id.id]
+                        inv_value += prod_dict[line_rec.product_id.id] * line_rec.quantity
                     line['inventory_value'] = inv_value
         return res
 
     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
         product_obj = self.pool.get("product.product")
         res = {}
-        #Browse takes an immense amount of time because it seems to reload the report
+        # Browse takes an immense amount of time because it seems to reload the report
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
@@ -74,66 +74,84 @@ class stock_history(osv.osv):
 
     _columns = {
         'move_id': fields.many2one('stock.move', 'Stock Move', required=True),
-        #'quant_id': fields.many2one('stock.quant'),
-        'company_id': fields.related('move_id', 'company_id', type='many2one', relation='res.company', string='Company', required=True, select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_categ_id': fields.many2one('product.category', 'Product Category', required=True),
         'quantity': fields.integer('Product Quantity'),
         'date': fields.datetime('Operation Date'),
         'price_unit_on_quant': fields.float('Value'),
-        'cost_method': fields.char('Cost Method'),
         'inventory_value': fields.function(_get_inventory_value, string="Inventory Value", type='float', readonly=True),
+        'source': fields.char('Source')
     }
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'stock_history')
         cr.execute("""
             CREATE OR REPLACE VIEW stock_history AS (
-                (SELECT
+              SELECT MIN(id) as id,
+                move_id,
+                location_id,
+                company_id,
+                product_id,
+                product_categ_id,
+                SUM(quantity) as quantity,
+                date,
+                price_unit_on_quant,
+                source
+                FROM
+                ((SELECT
                     stock_move.id::text || '-' || quant.id::text AS id,
+                    quant.id AS quant_id,
                     stock_move.id AS move_id,
-                    stock_move.location_dest_id AS location_id,
+                    dest_location.id AS location_id,
+                    dest_location.company_id AS company_id,
                     stock_move.product_id AS product_id,
                     product_template.categ_id AS product_categ_id,
                     quant.qty AS quantity,
                     stock_move.date AS date,
-                    ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant
+                    quant.cost as price_unit_on_quant,
+                    stock_move.origin AS source
                 FROM
                     stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
-                   stock_location location ON stock_move.location_dest_id = location.id
+                   stock_location dest_location ON stock_move.location_dest_id = dest_location.id
+                LEFT JOIN
+                    stock_location source_location ON stock_move.location_id = source_location.id
                 LEFT JOIN
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                LEFT JOIN
-                    ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
-                AND stock_quant_move_rel.move_id = stock_move.id
+                WHERE stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
+                AND stock_quant_move_rel.move_id = stock_move.id AND ((source_location.company_id is null and dest_location.company_id is not null) or
+                (source_location.company_id is not null and dest_location.company_id is null) or source_location.company_id != dest_location.company_id)
                 ) UNION
                 (SELECT
                     '-' || stock_move.id::text || '-' || quant.id::text AS id,
+                    quant.id AS quant_id,
                     stock_move.id AS move_id,
-                    stock_move.location_id AS location_id,
+                    source_location.id AS location_id,
+                    source_location.company_id AS company_id,
                     stock_move.product_id AS product_id,
                     product_template.categ_id AS product_categ_id,
                     - quant.qty AS quantity,
                     stock_move.date AS date,
-                    ir_property.value_text AS cost_method,
-                    quant.cost as price_unit_on_quant
+                    quant.cost as price_unit_on_quant,
+                    stock_move.origin AS source
                 FROM
                     stock_quant as quant, stock_quant_move_rel, stock_move
                 LEFT JOIN
-                   stock_location location ON stock_move.location_id = location.id
+                    stock_location source_location ON stock_move.location_id = source_location.id
+                LEFT JOIN
+                    stock_location dest_location ON stock_move.location_dest_id = dest_location.id
                 LEFT JOIN
                     product_product ON product_product.id = stock_move.product_id
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
-                LEFT JOIN
-                    ir_property ON (ir_property.name = 'cost_method' and ir_property.res_id = 'product.template,' || product_template.id::text)
-                WHERE stock_move.state = 'done' AND location.usage = 'internal' AND stock_quant_move_rel.quant_id = quant.id 
-                AND stock_quant_move_rel.move_id = stock_move.id
-                )
+                WHERE stock_move.state = 'done' AND source_location.usage in ('internal', 'transit') AND stock_quant_move_rel.quant_id = quant.id
+                AND stock_quant_move_rel.move_id = stock_move.id AND ((dest_location.company_id is null and source_location.company_id is not null) or
+                (dest_location.company_id is not null and source_location.company_id is null) or dest_location.company_id != source_location.company_id)
+                ))
+                AS foo
+                GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source
             )""")

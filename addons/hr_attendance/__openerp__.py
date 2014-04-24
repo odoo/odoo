@@ -33,7 +33,7 @@ actions(Sign in/Sign out) performed by them.
        """,
     'author': 'OpenERP SA',
     'images': ['images/hr_attendances.jpeg'],
-    'depends': ['hr'],
+    'depends': ['hr', 'report'],
     'data': [
         'security/ir_rule.xml',
         'security/ir.model.access.csv',

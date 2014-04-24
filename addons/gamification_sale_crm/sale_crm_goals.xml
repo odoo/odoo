@@ -130,7 +130,7 @@
             <field name="name">Monthly Sales Targets</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
+            <field name="user_domain">[('groups_id', 'in', ref('base.group_sale_salesman'))]</field>
             <field name="report_message_frequency">weekly</field>
         </record>
 
@@ -138,7 +138,7 @@
             <field name="name">Lead Acquisition</field>
             <field name="period">monthly</field>
             <field name="visibility_mode">ranking</field>
-            <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
+            <field name="user_domain">[('groups_id', 'in', ref('base.group_sale_salesman'))]</field>
             <field name="report_message_frequency">weekly</field>
         </record>
 

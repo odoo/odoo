@@ -800,7 +800,7 @@ class mrp_production(osv.osv):
 
                 q = min(move.product_qty, qty)
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, scheduled.product_id, q, domain=[('qty', '>', 0.0)],
-                                                     prefered_domain=[('reservation_id', '=', move.id)], fallback_domain=[('reservation_id', '=', False)], context=context)
+                                                     prefered_domain_list=[[('reservation_id', '=', move.id)], [('reservation_id', '=', False)]], context=context)
                 for quant, quant_qty in quants:
                     if quant:
                         lot_id = quant.lot_id.id
@@ -869,6 +869,7 @@ class mrp_production(osv.osv):
                     if wiz:
                         lot_id = wiz.lot_id.id
                     new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
+                    stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
                     if produce_product.product_id.id == production.product_id.id and new_moves:
                         main_production_move = new_moves[0]
 
@@ -889,6 +890,11 @@ class mrp_production(osv.osv):
                     consumed_qty = min(remaining_qty, raw_material_line.product_qty)
                     stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id, restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
                     remaining_qty -= consumed_qty
+                if remaining_qty:
+                    #consumed more in wizard than previously planned
+                    product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
+                    extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
         self.signal_button_produce_done(cr, uid, [production_id])
@@ -1000,6 +1006,7 @@ class mrp_production(osv.osv):
             'move_dest_id': production.move_prod_id.id,
             'company_id': production.company_id.id,
             'production_id': production.id,
+            'origin': production.name,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
         #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
@@ -1017,32 +1024,40 @@ class mrp_production(osv.osv):
             return "make_to_order"
         return "make_to_stock"
 
-    def _make_production_consume_line(self, cr, uid, production_line, parent_move_id, source_location_id=False, context=None):
+    def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, context=None):
         stock_move = self.pool.get('stock.move')
-        production = production_line.production_id
         # Internal shipment is created for Stockable and Consumer Products
-        if production_line.product_id.type not in ('product', 'consu'):
+        if product.type not in ('product', 'consu'):
             return False
+        # Take routing location as a Source Location.
+        source_location_id = production.location_src_id.id
+        if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
+            source_location_id = production.bom_id.routing_id.location_id.id
+
         destination_location_id = production.product_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
         move_id = stock_move.create(cr, uid, {
             'name': production.name,
             'date': production.date_planned,
-            'product_id': production_line.product_id.id,
-            'product_uom_qty': production_line.product_qty,
-            'product_uom': production_line.product_uom.id,
-            'product_uos_qty': production_line.product_uos and production_line.product_uos_qty or False,
-            'product_uos': production_line.product_uos and production_line.product_uos.id or False,
+            'product_id': product.id,
+            'product_uom_qty': qty,
+            'product_uom': uom_id,
+            'product_uos_qty': uos_id and uos_qty or False,
+            'product_uos': uos_id or False,
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
-            'procure_method': self._get_raw_material_procure_method(cr, uid, production_line.product_id, context=context),
+            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
             'raw_material_production_id': production.id,
             #this saves us a browse in create()
-            'price_unit': production_line.product_id.standard_price,
+            'price_unit': product.standard_price,
+            'origin': production.name,
         })
         return move_id
+
+    def _make_production_consume_line(self, cr, uid, line, context=None):
+        return self._make_consume_line_from_data(cr, uid, line.production_id, line.product_id, line.product_uom.id, line.product_qty, line.product_uos.id, line.product_uos_qty, context=context)
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order.
@@ -1051,19 +1066,15 @@ class mrp_production(osv.osv):
         uncompute_ids = filter(lambda x: x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
-            produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
-
-            # Take routing location as a Source Location.
-            source_location_id = production.location_src_id.id
-            if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-                source_location_id = production.bom_id.routing_id.location_id.id
+            self._make_production_produce_line(cr, uid, production, context=context)
 
             stock_moves = []
             for line in production.product_lines:
-                stock_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
+                stock_move_id = self._make_production_consume_line(cr, uid, line, context=context)
                 if stock_move_id:
                     stock_moves.append(stock_move_id)
-            self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
+            if stock_moves:
+                self.pool.get('stock.move').action_confirm(cr, uid, stock_moves, context=context)
             production.write({'state': 'confirmed'}, context=context)
         return 0
 

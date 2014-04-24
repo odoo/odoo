@@ -79,6 +79,7 @@ class procurement_rule(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True,
             help="This field will fill the packing origin and the name of its moves"),
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the rule without removing it."),
         'group_propagation_option': fields.selection([('none', 'Leave Empty'), ('propagate', 'Propagate'), ('fixed', 'Fixed')], string="Propagation of Procurement Group"),
         'group_id': fields.many2one('procurement.group', 'Fixed Procurement Group'),
         'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
@@ -90,6 +91,7 @@ class procurement_rule(osv.osv):
     _defaults = {
         'group_propagation_option': 'propagate',
         'sequence': 20,
+        'active': True,
     }
 
 

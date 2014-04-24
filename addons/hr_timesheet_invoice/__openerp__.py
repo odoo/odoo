@@ -35,7 +35,7 @@ reports.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_bill_task_work.jpeg','images/hr_type_of_invoicing.jpeg'],
-    'depends': ['account', 'hr_timesheet'],
+    'depends': ['account', 'hr_timesheet', 'report'],
     'data': [
         'security/ir.model.access.csv',
         'hr_timesheet_invoice_data.xml',

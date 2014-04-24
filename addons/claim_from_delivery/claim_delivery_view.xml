@@ -17,8 +17,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/h1" position="before">
                     <div class="oe_right oe_button_box">
-                        <!-- TODO: Show only when picking type out (or add boolean to picking type)-->
-                        <button name="%(action_claim_from_delivery)d" string="Claims" type="action"/>
+                        <button name="%(action_claim_from_delivery)d" string="Claims" type="action" attrs="{'invisible': [('picking_type_id.code', '=', 'outgoing')]}"/>
                     </div>
                 </xpath>
             </field>

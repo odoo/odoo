@@ -803,7 +803,7 @@ class survey_label(osv.Model):
         'sequence': fields.integer('Label Sequence order'),
         'value': fields.char("Suggested value", translate=True,
             required=True),
-        'quizz_mark': fields.float('Score for this answer'),
+        'quizz_mark': fields.float('Score for this answer', help="A positive score indicates a correct answer; a negative or null score indicates a wrong answer"),
     }
     defaults = {
         'sequence': 100,
