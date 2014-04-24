@@ -1255,7 +1255,7 @@
                             <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                         </group>
                         <group string="Traceability"
-                            groups="stock.group_tracking_lot">
+                            groups="stock.group_tracking_lot,stock.group_production_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>
