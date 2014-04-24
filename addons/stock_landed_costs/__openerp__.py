@@ -37,6 +37,7 @@
     'demo': [
     ],
     'data': [
+        'security/ir.model.access.csv',
         'product_view.xml',
         'stock_landed_costs_view.xml',
         'stock_landed_costs_data.xml',
