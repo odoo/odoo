@@ -71,8 +71,8 @@ class stock_landed_cost(osv.osv):
                     continue
                 total_cost = 0.0
                 total_qty = 0.0
-                weight = move.product_id and move.product_id.weight
-                volume = move.product_id and move.product_id.volume
+                weight = move.product_id and move.product_id.weight * move.product_qty
+                volume = move.product_id and move.product_id.volume * move.product_qty
                 for quant in move.quant_ids:
                     total_cost += quant.cost
                     total_qty += quant.qty
