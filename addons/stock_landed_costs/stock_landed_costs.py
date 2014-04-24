@@ -33,7 +33,7 @@ class stock_landed_cost(osv.osv):
 
     _track = {
         'state': {
-            'stock_landed_costs.mt_stock_landed_cost_open': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'stock_landed_costs.mt_stock_landed_cost_open': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
     }
 
@@ -103,11 +103,6 @@ class stock_landed_cost(osv.osv):
         'state': 'draft',
         'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
-
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(stock_landed_cost, self).write(cr, uid, ids, vals, context=context)
-        self.compute_landed_cost(cr, uid, ids, context=context)
-        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = {} if default is None else default.copy()
