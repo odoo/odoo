@@ -28,7 +28,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 import openerp.exceptions
-from openerp.osv import fields,osv
+from openerp.osv import fields,osv, expression
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 
@@ -56,13 +56,33 @@ class res_groups(osv.osv):
     def _search_group(self, cr, uid, obj, name, args, context=None):
         operand = args[0][2]
         operator = args[0][1]
-        values = operand.split('/')
-        group_name = values[0]
-        where = [('name', operator, group_name)]
-        if len(values) > 1:
-            application_name = values[0]
-            group_name = values[1]
-            where = ['|',('category_id.name', operator, application_name)] + where
+        lst = True
+        if isinstance(operand, bool):
+            domains = [[('name', operator, operand)], [('category_id.name', operator, operand)]]
+            if operator in expression.NEGATIVE_TERM_OPERATORS == (not operand):
+                return expression.AND(domains)
+            else:
+                return expression.OR(domains)
+        if isinstance(operand, basestring):
+            lst = False
+            operand = [operand]
+        where = []
+        for group in operand:
+            values = filter(bool, group.split('/'))
+            group_name = values.pop().strip()
+            category_name = values and '/'.join(values).strip() or group_name
+            group_domain = [('name', operator, lst and [group_name] or group_name)]
+            category_domain = [('category_id.name', operator, lst and [category_name] or category_name)]
+            if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
+                category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
+            if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
+                sub_where = expression.AND([group_domain, category_domain])
+            else:
+                sub_where = expression.OR([group_domain, category_domain])
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                where = expression.AND([where, sub_where])
+            else:
+                where = expression.OR([where, sub_where])
         return where
 
     _columns = {
