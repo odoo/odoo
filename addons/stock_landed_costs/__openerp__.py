@@ -32,7 +32,7 @@
     'website': 'http://www.openerp.com',
     'images': [],
     'depends': ['stock_account'],
-    'category': 'Hidden',
+    'category': 'Warehouse Management',
     'sequence': 16,
     'demo': [
     ],
