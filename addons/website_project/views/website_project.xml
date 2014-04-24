@@ -2,15 +2,6 @@
 <openerp>
 <data>
 
-<!-- Layout add nav and footer -->
-<template id="footer_custom" inherit_id="website.layout" name="Footer Project's Links">
-    <xpath expr="//footer//ul[@name='products']" position="inside">
-        <li t-foreach="website_project_ids" t-as="project">
-            <a t-attf-href="/project/#{ project.id }"><span t-field="project.name"/></a>
-        </li>
-    </xpath>
-</template>
-
 <!-- Project --> 
 <template id="task_kanban_card" name="TaskKanban">
     <div class="thumbnail">
