@@ -57,6 +57,9 @@
                                 </field>
                             </group>
                         </group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="amount_total"/>
+                        </group>
                         <group>
                             <group>
                                 <separator string="Valuation Adjustments"/>
@@ -95,13 +98,6 @@
                                 </field>
                             </group>
                         </group>
-                        <group class="oe_subtotal_footer oe_right">
-                            <field name="amount_total"/>
-                        </group>
-                        <div class="oe_clear">
-                            <label for="description"/>
-                        </div>
-                        <field name="description" class="oe_inline" placeholder="Additional note..."/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
