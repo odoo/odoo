@@ -31,8 +31,8 @@ The module adds the possibility to synchronize Google Calendar with OpenERP
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['google_account','calendar'],
-    'css': ['static/src/css/*.css'],
-    'js': ['static/src/js/*.js'],
+    'css': ['static/src/css/google_calendar.css'],
+    'js': ['static/src/js/calendar_sync.js'],
     'qweb': ['static/src/xml/*.xml'],
     'data': [
              'res_config_view.xml',

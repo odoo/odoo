@@ -22,7 +22,10 @@ chat in real time. It support several chats in parallel.
         'static/src/js/im_common.js',
         'static/src/js/im.js',
     ],
-    'css': ['static/src/css/*.css'],
+    'css': [
+        'static/src/css/im.css',
+        'static/src/css/im_common.css',
+    ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,

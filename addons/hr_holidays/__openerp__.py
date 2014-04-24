@@ -60,7 +60,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'board_hr_holidays_view.xml',        
         ],
     'demo': ['hr_holidays_demo.xml',],
-    'js': ['static/src/js/*.js'],
     'qweb': [
         'static/src/xml/*.xml',
     ],
