@@ -62,28 +62,56 @@ class hr_timesheet_sheet(osv.osv):
     def copy(self, cr, uid, ids, *args, **argv):
         raise osv.except_osv(_('Error!'), _('You cannot duplicate a timesheet.'))
 
-    def create(self, cr, uid, vals, *args, **argv):
+    def create(self, cr, uid, vals, context=None):
         if 'employee_id' in vals:
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
                 raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
-        return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
+        if vals.get('attendances_ids'):
+            # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
+            vals['attendances_ids'] = self.sort_attendances(cr, uid, vals['attendances_ids'], context=context)
+        return super(hr_timesheet_sheet, self).create(cr, uid, vals, context=context)
 
-    def write(self, cr, uid, ids, vals, *args, **argv):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'employee_id' in vals:
-            new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
+            new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id.id or False
             if not new_user_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
-            if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
+            if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id, context=context):
                 raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
                 raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
-        return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
+        if vals.get('attendances_ids'):
+            # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
+            # In addition to the date order, deleting attendances are done before inserting attendances
+            vals['attendances_ids'] = self.sort_attendances(cr, uid, vals['attendances_ids'], context=context)
+        res = super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('attendances_ids'):
+            for timesheet in self.browse(cr, uid, ids):
+                if not self.pool['hr.attendance']._altern_si_so(cr, uid, [att.id for att in timesheet.attendances_ids]):
+                    raise osv.except_osv(_('Warning !'), _('Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)'))
+        return res
+
+    def sort_attendances(self, cr, uid, attendance_tuples, context=None):
+        date_attendances = []
+        for att_tuple in attendance_tuples:
+            if att_tuple[0] in [0,1,4]:
+                if att_tuple[0] in [0,1]:
+                    name = att_tuple[2]['name']
+                else:
+                    name = self.pool['hr.attendance'].browse(cr, uid, att_tuple[1]).name
+                date_attendances.append((1, name, att_tuple))
+            elif att_tuple[0] in [2,3]:
+                date_attendances.append((0, self.pool['hr.attendance'].browse(cr, uid, att_tuple[1]).name, att_tuple))
+            else: 
+                date_attendances.append((0, False, att_tuple))
+        date_attendances.sort()
+        return [att[2] for att in date_attendances]
 
     def button_confirm(self, cr, uid, ids, context=None):
         for sheet in self.browse(cr, uid, ids, context=context):
