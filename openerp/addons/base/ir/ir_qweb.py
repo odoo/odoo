@@ -836,7 +836,7 @@ class Contact(orm.AbstractModel):
 
         id = getattr(record, field_name).id
         field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
-        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
+        value = field_browse.name_get()[0][1]
 
         val = {
             'name': value.split("\n")[0],
