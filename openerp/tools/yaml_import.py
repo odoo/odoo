@@ -121,6 +121,7 @@ class YamlInterpreter(object):
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
+        self.env = openerp.Environment(self.cr, self.uid, self.context)
 
     def _log(self, *args, **kwargs):
         _logger.log(self.loglevel, *args, **kwargs)
@@ -169,6 +170,11 @@ class YamlInterpreter(object):
     tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
 
         return id
+
+    def get_record(self, xml_id):
+        if '.' not in xml_id:
+            xml_id = "%s.%s" % (self.module, xml_id)
+        return self.env.ref(xml_id)
 
     def get_context(self, node, eval_dict):
         context = self.context.copy()
@@ -551,20 +557,29 @@ class YamlInterpreter(object):
             self.uid = self.get_id(node.uid)
         if node.noupdate:
             self.noupdate = node.noupdate
+        self.env = openerp.Environment(self.cr, self.uid, self.context)
 
     def process_python(self, node):
         python, statements = node.items()[0]
-        model = self.get_model(python.model)
+        assert python.model or python.id, "!python node must have attribute `model` or `id`"
+        if python.id is None:
+            record = self.pool[python.model]
+        elif isinstance(python.id, basestring):
+            record = self.get_record(python.id)
+        else:
+            record = self.env[python.model].browse(python.id)
+        if python.model:
+            assert record._name == python.model, "`id` is not consistent with `model`"
         statements = "\n" * python.first_line + statements.replace("\r\n", "\n")
         code_context = {
-            'model': model,
+            'self': record,
+            'model': record._model,
             'cr': self.cr,
             'uid': self.uid,
             'log': self._log,
             'context': self.context,
             'openerp': openerp,
         }
-        code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
             unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
