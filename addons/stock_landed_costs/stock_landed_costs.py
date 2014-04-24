@@ -153,16 +153,20 @@ class stock_landed_cost(osv.osv):
     def button_validate(self, cr ,uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for cost in self.browse(cr, uid, ids, context=context):
+            quant_dict = {}
             for line in cost.valuation_adjustment_lines:
                 per_unit = line.final_cost / line.quantity
                 diff = per_unit - line.former_cost_per_unit
                 quants = [quant for quant in line.move_id.quant_ids if line.move_id]
                 for quant in quants:
-                    if quant.cost < 0:
-                        new_cost = quant.cost - diff
+                    if quant.id not in quant_dict:
+                        quant_dict[quant.id] = quant.cost + diff
                     else:
-                        new_cost = quant.cost + diff
-                    quant_obj.write(cr, uid, quant.id, {'cost': new_cost}, context=context)
+                        quant_dict[quant.id] += diff
+
+            for key, value in quant_dict.items():
+                quant_obj.write(cr, uid, quant.id, {'cost': value}, context=context)
+
             self._create_accounting_entries(cr, uid, cost, cost.valuation_adjustment_lines, context=context)
             self.write(cr, uid, cost.id, {'state': 'open'}, context=context)
         return True
