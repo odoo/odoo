@@ -34,6 +34,8 @@ class stock_config_settings(osv.osv_memory):
             help='This allows to automatically launch the invoicing wizard if the delivery is '
                  'to be invoiced when you send or deliver goods.\n'
                  '-This installs the module stock_invoice_directly.'),
+        'module_stock_landed_costs': fields.boolean("Calculate landed costs on products",
+            help="""Install the module that allows to affect landed costs on pickings, and split them onto the different products."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
