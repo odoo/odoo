@@ -40,10 +40,18 @@ In addition to a full meal and supplier management, this module offers the possi
 
 If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.
     """,
-    'data': ['security/lunch_security.xml','lunch_view.xml','wizard/lunch_order_view.xml','wizard/lunch_validation_view.xml','wizard/lunch_cancel_view.xml','lunch_report.xml',
+    'data': [
+        'security/lunch_security.xml',
+        'lunch_view.xml',
+        'wizard/lunch_order_view.xml',
+        'wizard/lunch_validation_view.xml',
+        'wizard/lunch_cancel_view.xml',
+        'lunch_report.xml',
         'report/report_lunch_order_view.xml',
-        'security/ir.model.access.csv','views/report_lunchorder.xml'],
-    'css':['static/src/css/lunch.css'],
+        'security/ir.model.access.csv',
+        'views/report_lunchorder.xml',
+        'views/lunch.xml',
+    ],
     'images': ['images/new_order.jpeg','images/lunch_account.jpeg','images/order_by_supplier_analysis.jpeg','images/alert.jpeg'],
     'demo': ['lunch_demo.xml',],
     'installable': True,

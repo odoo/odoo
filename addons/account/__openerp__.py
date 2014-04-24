@@ -144,19 +144,11 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/views/report_analyticcostledgerquantity.xml',
         'project/views/report_analyticcostledger.xml',
         'project/views/report_invertedanalyticbalance.xml',
-    ],
-    'js': [
-        'static/src/js/account_move_reconciliation.js',
-        'static/src/js/account_move_line_quickadd.js',
+        'views/account.xml',
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
-    ],
-    'css':[
-        'static/src/css/account_move_reconciliation.css',
-        'static/src/css/account_move_line_quickadd.css',
-        'static/src/css/account_bank_and_cash.css',
     ],
     'demo': [
         'demo/account_demo.xml',

@@ -35,10 +35,10 @@ This module adds issue menu and features to your portal if project_issue and por
         'security/portal_security.xml',
         'security/ir.model.access.csv',
         'portal_project_issue_view.xml',
+        'views/portal_project_issue.xml',
     ],
     'installable': True,
     'auto_install': True,
     'category': 'Hidden',
-    'css': ['static/src/css/portal_project_issue.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

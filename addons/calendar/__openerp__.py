@@ -43,15 +43,10 @@ If you need to manage your meetings, you should install the CRM module.
         'security/ir.model.access.csv',
         'calendar_view.xml',
         'contacts_view.xml',
-        'calendar_data.xml',        
-    ],
-    'js': [
-        'static/src/js/base_calendar.js'
+        'calendar_data.xml',
+        'views/calendar.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'css': [
-        'static/src/css/calendar.css'
-    ],
     'test' : [
               'test/calendar_test.yml',
               'test/test_calendar_recurrent_event_case2.yml'

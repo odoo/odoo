@@ -96,6 +96,7 @@ Dashboard for CRM will include:
         'base_partner_merge_view.xml',
 
         'crm_case_section_view.xml',
+        'views/crm.xml',
     ],
     'demo': [
         'crm_demo.xml',
@@ -116,12 +117,6 @@ Dashboard for CRM will include:
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
         'test/crm_lead_find_stage.yml',
-    ],
-    'css': [
-        'static/src/css/crm.css'
-    ],
-    'js': [
-        'static/src/js/crm_case_section.js',
     ],
     'installable': True,
     'application': True,

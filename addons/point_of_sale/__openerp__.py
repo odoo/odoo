@@ -75,6 +75,7 @@ Main Features
         'account_statement_report.xml',
         'res_users_view.xml',
         'res_partner_view.xml',
+        'views/point_of_sale.xml',
     ],
     'demo': [
         'point_of_sale_demo.xml',
@@ -88,18 +89,6 @@ Main Features
     ],
     'installable': True,
     'application': True,
-    'js': [
-        'static/lib/fastclick.js',
-        'static/src/js/db.js',
-        'static/src/js/models.js',
-        'static/src/js/widget_base.js',
-        'static/src/js/widget_keyboard.js',
-        'static/src/js/widgets.js',
-        'static/src/js/devices.js',
-        'static/src/js/screens.js',
-        'static/src/js/tests.js',
-        'static/src/js/main.js',
-    ],
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }

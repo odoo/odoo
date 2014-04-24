@@ -38,18 +38,13 @@ This module shows the basic processes involved in the selected modules and in th
     'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',
-        'process_view.xml'
+        'process_view.xml',
+        'views/process.xml',
     ],
     'demo': [],
     'installable': True,
     'auto_install': False,
     'images': ['images/process_nodes.jpeg','images/process_transitions.jpeg', 'images/processes.jpeg'],
-    'js': [
-        'static/src/js/process.js'
-    ],
-    'css': [
-        'static/src/css/process.css'
-    ],
     'qweb': [
         'static/src/xml/*.xml'
     ],
