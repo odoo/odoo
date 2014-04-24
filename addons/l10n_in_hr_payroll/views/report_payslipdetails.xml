@@ -6,8 +6,8 @@
             <t t-call="report.external_layout">
             <t t-foreach="docs" t-as="o">
                 <div class="page">
-                    <h3 class="text-center"><strong>Pay Slip Details</strong></h3>
-                    <div class="text-center"><span>(</span><span t-field="o.name" /><span>)</span></div>
+                    <h2>Pay Slip Details</h2>
+                    <p t-field="o.name"/>
 
                     <table class="table table-condensed table-bordered">
                         <tr>
@@ -43,7 +43,7 @@
                         </tr>
                     </table>
 
-                    <h5><strong>Details by Salary Rule Category:</strong></h5>
+                    <h3>Details by Salary Rule Category</h3>
                     <table class="table table-condensed mb32">
                         <thead>
                             <tr>
@@ -54,7 +54,6 @@
                         </thead>
                         <tbody>
                             <t t-foreach="get_details_by_rule_category(o.details_by_salary_rule_category)" t-as="h">
-                                
                                 <t t-if="h['level']==0">
                                     <tr>
                                         <td>
@@ -84,6 +83,8 @@
                             </t>
                         </tbody>
                     </table>
+
+                    <p class="text-right"><strong>Authorized signature</strong></p>
                 </div>
             </t>
             </t>
