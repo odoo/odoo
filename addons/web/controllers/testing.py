@@ -62,6 +62,7 @@ TESTING = Template(u"""<!DOCTYPE html>
     <div id="qunit-fixture"></div>
 </body>
 <!-- TODO xmo please use the regular template even for testing -->
+<script src="/web/js/web.assets_backend"></script>
 % for module, jss, tests, templates in files:
     % for js in jss:
         % if not js.endswith('/apps.js'):
