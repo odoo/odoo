@@ -74,7 +74,7 @@
                                             <span t-esc="h['code']"/>
                                         </td>
                                         <td>
-                                            <span t-esc="h['rule_category']"/>
+                                            <span t-esc="'..'*h['level']"/><span t-esc="h['rule_category']"/>
                                         </td>
                                         <td>
                                             <span t-esc="formatLang(h['total'], currency_obj=o.company_id.currency_id)"/>
