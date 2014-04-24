@@ -21,7 +21,7 @@
 - 
   I set an explicit invoicing partner that is different from the main SO Customer
 -
-  !python {model: sale.order, id: sale.sale_order_6}: |
+  !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("sale.sale_order_6"))
     order.write({'partner_invoice_id': ref('base.res_partner_address_29')})
 -
