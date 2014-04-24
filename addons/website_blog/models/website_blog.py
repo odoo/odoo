@@ -52,7 +52,7 @@ class BlogPost(osv.Model):
         'name': fields.char('Title', required=True, translate=True),
         'subtitle': fields.char('Sub Title', translate=True),
         'author_id': fields.many2one('res.partner', 'Author'),
-        'background_image': fields.binary('Background Image'),
+        'background_image': fields.binary('Background Image', oldname='content_image'),
         'blog_id': fields.many2one(
             'blog.blog', 'Blog',
             required=True, ondelete='cascade',

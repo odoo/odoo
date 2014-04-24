@@ -226,7 +226,7 @@ class account_invoice(osv.osv):
         },
     }
     _columns = {
-        'name': fields.char('Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Reference/Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
         'supplier_invoice_number': fields.char('Supplier Invoice Number', size=64, help="The reference of this invoice as provided by the supplier.", readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([
@@ -672,25 +672,14 @@ class account_invoice(osv.osv):
         self.create_workflow(cr, uid, ids)
         return True
 
-    # ----------------------------------------
-    # Mail related methods
-    # ----------------------------------------
-
-    def _get_formview_action(self, cr, uid, id, context=None):
+    def get_formview_id(self, cr, uid, id, context=None):
         """ Update form view id of action to open the invoice """
-        action = super(account_invoice, self)._get_formview_action(cr, uid, id, context=context)
         obj = self.browse(cr, uid, id, context=context)
         if obj.type == 'in_invoice':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
         else:
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
-        return action
+        return view_id
 
     # Workflow stuff
     #################

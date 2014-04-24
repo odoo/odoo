@@ -69,9 +69,9 @@ class PaymentAcquirer(osv.Model):
             string='Process Method',
             help='Static payments are payments like transfer, that require manual steps.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
-        'env': fields.selection(
+        'environment': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
-            string='Environment'),
+            string='Environment', oldname='env'),
         'website_published': fields.boolean(
             'Visible in Portal / Website',
             help="Make this payment acquirer available (Customer invoices, etc.)"),
@@ -85,7 +85,7 @@ class PaymentAcquirer(osv.Model):
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
-        'env': 'test',
+        'environment': 'test',
         'validation': 'automatic',
         'website_published': True,
     }

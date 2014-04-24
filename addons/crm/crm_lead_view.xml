@@ -103,9 +103,9 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button string="Schedule/Log Call" 
-                                name="%(opportunity2phonecall_act)d"
-                                type="action"/>
+                        <button class="oe_inline" type="action" string="Calls" 
+                            name="%(crm.crm_case_categ_phone_incoming0)d" 
+                            context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -278,8 +278,8 @@
                                         <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><a name="%(mail.action_email_compose_message_wizard)d" type="action">Send Email</a></li>
-                                        <li><a name="%(opportunity2phonecall_act)d" type="action">Schedule/Log Call</a></li>
-                                        <li><a name="action_makeMeeting" type="object">Schedule Meeting</a></li>
+                                        <li><a type="action" name="%(crm.crm_case_categ_phone_incoming0)d" >Calls</a></li>
+                                        <li><a name="action_schedule_meeting" type="object">Schedule Meeting</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -324,7 +324,7 @@
             <field name="arch" type="xml">
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
-                    <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
+                    <field name="categ_ids" string="Tag" filter_domain="[('categ_ids', 'ilike', self)]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
@@ -361,8 +361,8 @@
                         <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
-                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>
+                        <filter string="Countries" context="{'invisible_country': False}" help="Countries"/>
+                        <filter string="Sales Team" context="{'invisible_section': False}" domain="[]" help="Sales Team" groups="base.group_multi_salesteams"/>
                     </group>
                 </search>
             </field>
@@ -389,11 +389,11 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button string="Schedule/Log Call" type="action"
-                                name="%(opportunity2phonecall_act)d"/>
-                            <button string="Meeting" type="object"
-                                name="action_makeMeeting"
-                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
+                            <button class="oe_inline" type="action" string="Calls" 
+                                name="%(crm.crm_case_categ_phone_incoming0)d" 
+                                context="{'default_opportunity_id': active_id, 'search_default_opportunity_id': active_id, 'default_partner_id': partner_id, 'default_duration': 1.0}"/>
+                            <button class="oe_inline" string="Schedule a Meeting" type="object"
+                                name="action_schedule_meeting" context="{'partner_id': partner_id}"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -437,7 +437,7 @@
                             </group>
                             <group>
                                 <field name="categ_ids"
-                                    string="Categories" widget="many2many_tags"
+                                    widget="many2many_tags"
                                     context="{'object_name': 'crm.lead'}"
                                     domain="[('object_id.model', '=', 'crm.lead')]"/>
 
@@ -544,7 +544,7 @@
             <field name="arch" type="xml">
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
-                    <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
+                    <field name="categ_ids" string="Tag" filter_domain="[('categ_ids', 'ilike', self)]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
@@ -581,8 +581,8 @@
                         <filter string="Last Post (weekly)" name="group_message_last_post" domain="[]" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>
-                        <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
+                        <filter string="Sales Team" context="{'invisible_section': False}" domain="[]" help="Sales Team" groups="base.group_multi_salesteams"/>
+                        <filter string="Countries" context="{'invisible_country': False}" help="Countries"/>
                     </group>
                 </search>
             </field>

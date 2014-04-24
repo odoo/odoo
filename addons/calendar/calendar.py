@@ -197,6 +197,10 @@ class calendar_attendee(osv.Model):
         @param email_from: email address for user sending the mail
         """
         res = False
+
+        if self.pool['ir.config_parameter'].get_param(cr, uid, 'calendar.block_mail', default=False):
+            return res
+
         mail_ids = []
         data_pool = self.pool['ir.model.data']
         mailmess_pool = self.pool['mail.message']
@@ -431,7 +435,7 @@ class calendar_alarm_manager(osv.AbstractModel):
         if cron and len(cron) == 1:
             cron = self.pool.get('ir.cron').browse(cr, uid, cron[0], context=context)
         else:
-            raise ("Cron for " + self._name + " not identified :( !")
+            _logger.exception("Cron for " + self._name + " can not be identified !")
 
         if cron.interval_type == "weeks":
             cron_interval = cron.interval_number * 7 * 24 * 60 * 60
@@ -445,7 +449,7 @@ class calendar_alarm_manager(osv.AbstractModel):
             cron_interval = cron.interval_number
 
         if not cron_interval:
-            raise ("Cron delay for " + self._name + " can not be calculated :( !")
+            _logger.exception("Cron delay can not be computed !")
 
         all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, notif=False, context=context)
 
@@ -649,7 +653,7 @@ class calendar_event(osv.Model):
     _inherit = ["mail.thread", "ir.needaction_mixin"]
 
     def do_run_scheduler(self, cr, uid, id, context=None):
-        self.pool['calendar.alarm_manager'].do_run_scheduler(cr, uid, context=context)
+        self.pool['calendar.alarm_manager'].get_next_mail(cr, uid, context=context)
 
     def get_recurrent_date_by_event(self, cr, uid, event, context=None):
         """Get recurrent dates based on Rule string and all event where recurrent_id is child

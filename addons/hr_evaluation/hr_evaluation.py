@@ -19,15 +19,17 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DF
 
-class hr_evaluation_plan(osv.osv):
+
+class hr_evaluation_plan(osv.Model):
     _name = "hr_evaluation.plan"
     _description = "Appraisal Plan"
     _columns = {
@@ -42,11 +44,11 @@ class hr_evaluation_plan(osv.osv):
         'active': True,
         'month_first': 6,
         'month_next': 12,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
 
-class hr_evaluation_plan_phase(osv.osv):
+class hr_evaluation_plan_phase(osv.Model):
     _name = "hr_evaluation.plan.phase"
     _description = "Appraisal Plan Phase"
     _order = "sequence"
@@ -54,13 +56,13 @@ class hr_evaluation_plan_phase(osv.osv):
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
         'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'plan_id': fields.many2one('hr_evaluation.plan','Appraisal Plan', ondelete='cascade'),
+        'plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan', ondelete='cascade'),
         'action': fields.selection([
-            ('top-down','Top-Down Appraisal Requests'),
-            ('bottom-up','Bottom-Up Appraisal Requests'),
-            ('self','Self Appraisal Requests'),
-            ('final','Final Interview')], 'Action', required=True),
-        'survey_id': fields.many2one('survey','Appraisal Form',required=True),
+            ('top-down', 'Top-Down Appraisal Requests'),
+            ('bottom-up', 'Bottom-Up Appraisal Requests'),
+            ('self', 'Self Appraisal Requests'),
+            ('final', 'Final Interview')], 'Action', required=True),
+        'survey_id': fields.many2one('survey.survey', 'Appraisal Form', required=True),
         'send_answer_manager': fields.boolean('All Answers',
             help="Send all answers to the manager"),
         'send_answer_employee': fields.boolean('All Answers',
@@ -72,15 +74,14 @@ class hr_evaluation_plan_phase(osv.osv):
         'wait': fields.boolean('Wait Previous Phases',
             help="Check this box if you want to wait that all preceding phases " +
               "are finished before launching this phase."),
-        'mail_feature': fields.boolean('Send mail for this phase', help="Check this box if you want to send mail to employees"+
-                                       " coming under this phase"),
+        'mail_feature': fields.boolean('Send mail for this phase', help="Check this box if you want to send mail to employees coming under this phase"),
         'mail_body': fields.text('Email'),
-        'email_subject':fields.text('char')
+        'email_subject': fields.text('Subject')
     }
     _defaults = {
         'sequence': 1,
         'email_subject': _('''Regarding '''),
-        'mail_body': lambda *a:_('''
+        'mail_body': lambda *a: _('''
 Date: %(date)s
 
 Dear %(employee_name)s,
@@ -98,26 +99,24 @@ Thanks,
     }
 
 
-class hr_employee(osv.osv):
+class hr_employee(osv.Model):
     _name = "hr.employee"
-    _inherit="hr.employee"
-    
+    _inherit = "hr.employee"
 
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
     }
-    def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+
+    def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):  # cronjob
         now = parser.parse(datetime.now().strftime('%Y-%m-%d'))
         obj_evaluation = self.pool.get('hr_evaluation.evaluation')
-        emp_ids =self.search(cr, uid, [ ('evaluation_plan_id','<>',False), ('evaluation_date','=', False)], context=context)
+        emp_ids = self.search(cr, uid, [('evaluation_plan_id', '<>', False), ('evaluation_date', '=', False)], context=context)
         for emp in self.browse(cr, uid, emp_ids, context=context):
-            first_date = (now+ relativedelta(months=emp.evaluation_plan_id.month_first)).strftime('%Y-%m-%d')
+            first_date = (now + relativedelta(months=emp.evaluation_plan_id.month_first)).strftime('%Y-%m-%d')
             self.write(cr, uid, [emp.id], {'evaluation_date': first_date}, context=context)
 
-        emp_ids =self.search(cr, uid, [
-            ('evaluation_plan_id','<>',False), ('evaluation_date','<=', time.strftime("%Y-%m-%d")),
-            ], context=context) 
+        emp_ids = self.search(cr, uid, [('evaluation_plan_id', '<>', False), ('evaluation_date', '<=', time.strftime("%Y-%m-%d"))], context=context)
         for emp in self.browse(cr, uid, emp_ids, context=context):
             next_date = (now + relativedelta(months=emp.evaluation_plan_id.month_next)).strftime('%Y-%m-%d')
             self.write(cr, uid, [emp.id], {'evaluation_date': next_date}, context=context)
@@ -126,39 +125,35 @@ class hr_employee(osv.osv):
         return True
 
 
-
-class hr_evaluation(osv.osv):
+class hr_evaluation(osv.Model):
     _name = "hr_evaluation.evaluation"
     _inherit = "mail.thread"
     _description = "Employee Appraisal"
-    _rec_name = 'employee_id'
     _columns = {
         'date': fields.date("Appraisal Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'note_summary': fields.text('Appraisal Summary'),
-        'note_action': fields.text('Action Plan',
-            help="If the evaluation does not meet the expectations, you can propose"+
-              "an action plan"),
+        'note_action': fields.text('Action Plan', help="If the evaluation does not meet the expectations, you can propose an action plan"),
         'rating': fields.selection([
-            ('0','Significantly bellow expectations'),
-            ('1','Did not meet expectations'),
-            ('2','Meet expectations'),
-            ('3','Exceeds expectations'),
-            ('4','Significantly exceeds expectations'),
+            ('0', 'Significantly below expectations'),
+            ('1', 'Do not meet expectations'),
+            ('2', 'Meet expectations'),
+            ('3', 'Exceeds expectations'),
+            ('4', 'Significantly exceeds expectations'),
         ], "Appreciation", help="This is the appreciation on which the evaluation is summarized."),
-        'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
+        'survey_request_ids': fields.one2many('hr.evaluation.interview', 'evaluation_id', 'Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
-            ('draft','New'),
-            ('cancel','Cancelled'),
-            ('wait','Plan In Progress'),
-            ('progress','Waiting Appreciation'),
-            ('done','Done'),
+            ('draft', 'New'),
+            ('cancel', 'Cancelled'),
+            ('wait', 'Plan In Progress'),
+            ('progress', 'Waiting Appreciation'),
+            ('done', 'Done'),
         ], 'Status', required=True, readonly=True),
         'date_close': fields.date('Ending Date', select=True),
     }
     _defaults = {
-        'date': lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+        'date': lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months=+1)).strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
     }
 
@@ -169,7 +164,8 @@ class hr_evaluation(osv.osv):
         res = []
         for record in reads:
             name = record.plan_id.name
-            res.append((record['id'], name))
+            employee = record.employee_id.name_related
+            res.append((record['id'], name + ' / ' + employee))
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
@@ -183,7 +179,6 @@ class hr_evaluation(osv.osv):
         return {'value': vals}
 
     def button_plan_in_progress(self, cr, uid, ids, context=None):
-        mail_message = self.pool.get('mail.message')
         hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
         if context is None:
             context = {}
@@ -202,10 +197,9 @@ class hr_evaluation(osv.osv):
 
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
-                        'survey_id': phase.survey_id.id,
-                        'date_deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
+                        'phase_id': phase.id,
+                        'deadline': (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months=+1)).strftime('%Y-%m-%d'),
                         'user_id': child.user_id.id,
-                        'user_to_review_id': evaluation.employee_id.id
                     }, context=context)
                     if phase.wait:
                         wait = True
@@ -214,7 +208,7 @@ class hr_evaluation(osv.osv):
 
                     if (not wait) and phase.mail_feature:
                         body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
-                            'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
+                            'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time}
                         sub = phase.email_subject
                         if child.work_email:
                             vals = {'state': 'outgoing',
@@ -224,32 +218,32 @@ class hr_evaluation(osv.osv):
                                     'email_from': evaluation.employee_id.work_email}
                             self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
-        self.write(cr, uid, ids, {'state':'wait'}, context=context)
+        self.write(cr, uid, ids, {'state': 'wait'}, context=context)
         return True
 
     def button_final_validation(self, cr, uid, ids, context=None):
         request_obj = self.pool.get('hr.evaluation.interview')
-        self.write(cr, uid, ids, {'state':'progress'}, context=context)
+        self.write(cr, uid, ids, {'state': 'progress'}, context=context)
         for evaluation in self.browse(cr, uid, ids, context=context):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
-            if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
-                raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
+            if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id), ('state', 'in', ['done', 'cancel'])], context=context)):
+                raise osv.except_osv(_('Warning!'), _("You cannot change state, because some appraisal forms have not been completed."))
         return True
 
     def button_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
+        self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
-        interview_obj=self.pool.get('hr.evaluation.interview')
+        interview_obj = self.pool.get('hr.evaluation.interview')
         evaluation = self.browse(cr, uid, ids[0], context)
         interview_obj.survey_req_cancel(cr, uid, [r.id for r in evaluation.survey_request_ids])
-        self.write(cr, uid, ids,{'state':'cancel'}, context=context)
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
     def button_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids,{'state': 'draft'}, context=context)
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -260,42 +254,65 @@ class hr_evaluation(osv.osv):
         default = default.copy()
         default['survey_request_ids'] = []
         return super(hr_evaluation, self).copy(cr, uid, id, default, context=context)
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('employee_id'):
             employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
             if employee_id.parent_id and employee_id.parent_id.user_id:
                 vals['message_follower_ids'] = [(4, employee_id.parent_id.user_id.partner_id.id)]
         if 'date' in vals:
-            new_vals = {'date_deadline': vals.get('date')}
+            new_vals = {'deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
-            for evalutation in self.browse(cr, uid, ids, context=context):
-                for survey_req in evalutation.survey_request_ids:
+            for evaluation in self.browse(cr, uid, ids, context=context):
+                for survey_req in evaluation.survey_request_ids:
                     obj_hr_eval_iterview.write(cr, uid, [survey_req.id], new_vals, context=context)
         return super(hr_evaluation, self).write(cr, uid, ids, vals, context=context)
 
 
-class survey_request(osv.osv):
-    _inherit = "survey.request"
-    _columns = {
-        'is_evaluation': fields.boolean('Is Appraisal?'),
-    }
-
-
-class hr_evaluation_interview(osv.osv):
+class hr_evaluation_interview(osv.Model):
     _name = 'hr.evaluation.interview'
-    _inherits = {'survey.request': 'request_id'}
-    _inherit =  'mail.thread'
-    _rec_name = 'request_id'
+    _inherit = 'mail.thread'
+    _rec_name = 'user_to_review_id'
     _description = 'Appraisal Interview'
     _columns = {
-        'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
-        'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Form'),
+        'request_id': fields.many2one('survey.user_input', 'Survey Request', ondelete='cascade', readonly=True),
+        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Plan', required=True),
+        'phase_id': fields.many2one('hr_evaluation.plan.phase', 'Appraisal Phase', required=True),
+        'user_to_review_id': fields.related('evaluation_id', 'employee_id', type="many2one", relation="hr.employee", string="Employee to evaluate"),
+        'user_id': fields.many2one('res.users', 'Interviewer'),
+        'state': fields.selection([('draft', "Draft"),
+                                   ('waiting_answer', "In progress"),
+                                   ('done', "Done"),
+                                   ('cancel', "Cancelled")],
+                                  string="State", required=True),
+        'survey_id': fields.related('phase_id', 'survey_id', string="Appraisal Form", type="many2one", relation="survey.survey"),
+        'deadline': fields.related('request_id', 'deadline', type="datetime", string="Deadline"),
     }
     _defaults = {
-        'is_evaluation': True,
+        'state': 'draft'
     }
+
+    def create(self, cr, uid, vals, context=None):
+        phase_obj = self.pool.get('hr_evaluation.plan.phase')
+        survey_id = phase_obj.read(cr, uid, vals.get('phase_id'), fields=['survey_id'], context=context)['survey_id'][0]
+
+        if vals.get('user_id'):
+            user_obj = self.pool.get('res.users')
+            partner_id = user_obj.read(cr, uid, vals.get('user_id'), fields=['partner_id'], context=context)['partner_id'][0]
+        else:
+            partner_id = None
+
+        user_input_obj = self.pool.get('survey.user_input')
+
+        if not vals.get('deadline'):
+            vals['deadline'] = (datetime.now() + timedelta(days=28)).strftime(DF)
+
+        ret = user_input_obj.create(cr, uid, {'survey_id': survey_id,
+                                              'deadline': vals.get('deadline'),
+                                              'type': 'link',
+                                              'partner_id': partner_id}, context=context)
+        vals['request_id'] = ret
+        return super(hr_evaluation_interview, self).create(cr, uid, vals, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -303,22 +320,24 @@ class hr_evaluation_interview(osv.osv):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            name = record.request_id.survey_id.title
+            name = record.survey_id.title
             res.append((record['id'], name))
         return res
 
     def survey_req_waiting_answer(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'waiting_answer'}, context=context)
+        request_obj = self.pool.get('survey.user_input')
+        for interview in self.browse(cr, uid, ids, context=context):
+            request_obj.action_survey_resent(cr, uid, [interview.id], context=context)
+            self.write(cr, uid, interview.id, {'state': 'waiting_answer'}, context=context)
         return True
 
     def survey_req_done(self, cr, uid, ids, context=None):
-        hr_eval_obj = self.pool.get('hr_evaluation.evaluation')
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
             if not id.evaluation_id.id:
-                raise osv.except_osv(_('Warning!'),_("You cannot start evaluation without Appraisal."))
-            records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
+                raise osv.except_osv(_('Warning!'), _("You cannot start evaluation without Appraisal."))
+            records = id.evaluation_id.survey_request_ids
             for child in records:
                 if child.state == "draft":
                     wating_id = child.id
@@ -327,35 +346,29 @@ class hr_evaluation_interview(osv.osv):
                     flag = True
             if not flag and wating_id:
                 self.survey_req_waiting_answer(cr, uid, [wating_id], context=context)
-        self.write(cr, uid, ids, { 'state': 'done'}, context=context)
-        return True
-
-    def survey_req_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'draft'}, context=context)
+        self.write(cr, uid, ids, {'state': 'done'}, context=context)
         return True
 
     def survey_req_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'state': 'cancel'}, context=context)
+        self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
         return True
 
     def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
+        """ If response is available then print this response otherwise print survey form (print template of the survey) """
+        context = context if context else {}
+        interview = self.browse(cr, uid, ids, context=context)[0]
+        survey_obj = self.pool.get('survey.survey')
+        response_obj = self.pool.get('survey.user_input')
+        response = response_obj.browse(cr, uid, interview.request_id.id, context=context)
+        context.update({'survey_token': response.token})
+        return survey_obj.action_print_survey(cr, uid, [interview.survey_id.id], context=context)
 
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value for print survey form.
-        """
-        if context is None:
-            context = {}
-        record = self.browse(cr, uid, ids, context=context)
-        record = record and record[0]
-        context.update({'survey_id': record.survey_id.id, 'response_id': [record.response.id], 'response_no':0,})
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
-        return value
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1
+    def action_start_survey(self, cr, uid, ids, context=None):
+        context = context if context else {}
+        interview = self.browse(cr, uid, ids, context=context)[0]
+        survey_obj = self.pool.get('survey.survey')
+        response_obj = self.pool.get('survey.user_input')
+        # grab the token of the response and start surveying
+        response = response_obj.browse(cr, uid, interview.request_id.id, context=context)
+        context.update({'survey_token': response.token})
+        return survey_obj.action_start_survey(cr, uid, [interview.survey_id.id], context=context)

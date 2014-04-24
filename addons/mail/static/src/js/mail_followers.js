@@ -94,19 +94,17 @@ openerp_mail_followers = function(session, mail) {
             var $currentTarget = $(event.currentTarget);
             var user_pid = $currentTarget.data('id');
             $('div.oe_edit_actions').remove();
-            self.$dialog = new session.web.dialog($('<div class="oe_edit_actions">'), {
-                            modal: true,
-                            width: 'auto',
-                            height: 'auto',
+            self.$dialog = new session.web.Dialog(this, {
+                            size: 'small',
                             title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
                                         self.do_update_subscription(event, user_pid);
-                                        $(this).dialog("close");
+                                        this.parents('.modal').modal('hide');
                                     }},
-                                    { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
+                                    { text: _t("Cancel"), click: function() { this.parents('.modal').modal('hide'); }}
                                 ],
-                    });
+                    }, "<div class='oe_edit_actions'>").open();
             return self.fetch_subtypes(user_pid);
         },
 
@@ -272,7 +270,7 @@ openerp_mail_followers = function(session, mail) {
         display_subtypes:function (data, id, dialog) {
             var self = this;
             if (dialog) {
-                var $list = self.$dialog;
+                var $list = self.$dialog.$el;
             }
             else {
                 var $list = this.$('.oe_subtype_list ul');

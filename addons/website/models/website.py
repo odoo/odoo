@@ -216,10 +216,13 @@ class website(osv.osv):
         )
 
     def get_template(self, cr, uid, ids, template, context=None):
-        if '.' not in template:
-            template = 'website.%s' % template
-        module, xmlid = template.split('.', 1)
-        model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+        if isinstance(template, (int, long)):
+            view_id = template
+        else:
+            if '.' not in template:
+                template = 'website.%s' % template
+            module, xmlid = template.split('.', 1)
+            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
