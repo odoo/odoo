@@ -51,12 +51,17 @@
   Confirm sales order
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_manu}
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 - 
   Check the propagation when we cancel the main procurement 
     * Retrieve related procurements and check that there are all running
     * Check that the purchase order has been well created
     * Cancel the main procurement
-    * Check that all procurements related and the purchase order has been well cancelled   
+    * Check that all procurements related and the purchase order has been well cancelled
 -
   !python {model: procurement.order}: |
     # Retrieve related procu
@@ -65,7 +70,7 @@
     assert len(procu_ids)>0, 'No procurements are found for sale order "%s" (with id : %d)' %(so.name, so.id)
 
     # Check that all procurements are running 
-    for procu in self.browse(cr, uid, procu_ids, context=context):        
+    for procu in self.browse(cr, uid, procu_ids, context=context):
         assert procu.state == u'running', 'Procurement with id %d should be "running" but is with a state : %s!' %(procu.id, procu.state)
 
     # Check that one production order exist

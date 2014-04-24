@@ -100,7 +100,7 @@
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    proc_ids = self.search(cr, uid, [('origin','like',so.name)])
     self.run(cr, uid, proc_ids)
 -
   I verify that a procurement state is "running"
@@ -108,8 +108,8 @@
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','like',so.name), ('state','=','running')])
-    # Check that all procurement are running 
+    proc_ids = self.search(cr, uid, [('origin','like',so.name)])
+    # Check that all procurement are running
     for procu in self.browse(cr,uid,proc_ids,context=context):        
         assert procu.state == u'running', 'Procurement with id %d should be with a state "running" but is with a state : %s!' %(procu.id,procu.state)
 -
