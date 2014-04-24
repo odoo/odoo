@@ -40,6 +40,11 @@
   Confirm the sale order
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto}
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
 - 
   Check the propagation when we cancel the main procurement 
     * Retrieve related procurements and check that there are all running
@@ -64,7 +69,7 @@
     # Cancel the main procurement
     main_procu_id = self.search(cr, uid, [('origin', '=', so.name)])
     assert len(main_procu_id) == 1, 'Main procurement not identified !'
-    self.cancel(cr, uid, main_procu_id, context=context)    
+    self.cancel(cr, uid, main_procu_id, context=context)
     assert self.browse(cr, uid, main_procu_id[0]).state == u'cancel', 'Main procurement should be cancelled !'
     
     # Check that all procurements related are cancelled    
