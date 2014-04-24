@@ -3471,7 +3471,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.display_value_backup = {};
                     self.render_value();
                     self.focus();
-                    self.view.do_onchange(self);
+                    self.trigger('changed_value');
                 });
             });
         });

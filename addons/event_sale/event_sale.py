@@ -167,12 +167,23 @@ class event_ticket(osv.osv):
                 if ticket.seats_max > 0 else None
         return res
 
+    def _is_expired(self, cr, uid, ids, field_name, args, context=None):
+        # FIXME: A ticket is considered expired when the deadline is passed. The deadline should
+        #        be considered in the timezone of the event, not the timezone of the user!
+        #        Until we add a TZ on the event we'll use the context's current date, more accurate
+        #        than using UTC all the time.
+        current_date = fields.date.context_today(self, cr, uid, context=context)
+        return {ticket.id: ticket.deadline and ticket.deadline < current_date
+                      for ticket in self.browse(cr, uid, ids, context=context)}
+        
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'event_id': fields.many2one('event.event', "Event", required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[("event_type_id", "!=", False)]),
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
         'deadline': fields.date("Sales End"),
+        'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),
         'price': fields.float('Price'),
         'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
         'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),
