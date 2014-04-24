@@ -23,6 +23,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_attendance_error(osv.osv_memory):
 
     _name = 'hr.attendance.error'
@@ -58,11 +59,8 @@ class hr_attendance_error(osv.osv_memory):
              'model': 'hr.employee',
              'form': data_error
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'hr.attendance.error',
-            'datas': datas,
-        }
-
+        return self.pool['report'].get_action(
+            cr, uid, [], 'hr_attendance.report_attendanceerrors', data=datas, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

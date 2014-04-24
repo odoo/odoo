@@ -107,8 +107,29 @@
     date_from: '2011-09-30'
     date_to: '2011-09-01'
 -
-  I print the report.
+  I print the payslip report
 -
-  !python {model: payslip.lines.contribution.register}: |
-    self.print_report(cr, uid, [ref('payslip_lines_contribution_register0')], context={'active_ids': [ref('hr_houserent_register')]})
-
+  !python {model: hr.payslip}: |
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('hr_payslip_0')], 'hr_payroll.report_payslip', {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslip.'+format), 'wb+').write(data)
+-
+  I print the payslip details report
+-
+  !python {model: hr.payslip}: |
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('hr_payslip_0')], 'hr_payroll.report_payslipdetails', {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslipdetails.'+format), 'wb+').write(data)
+-
+  I print the contribution register report
+-
+  !python {model: hr.contribution.register}: |
+    ctx={'model': 'hr.contribution.register', 'active_ids': [ref('hr_houserent_register')]}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_payslip_lines_contribution_register', context=ctx, our_module='hr_payroll')

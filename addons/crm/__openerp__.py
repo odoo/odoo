@@ -72,19 +72,17 @@ Dashboard for CRM will include:
 
         'wizard/crm_phonecall_to_phonecall_view.xml',
 
-        'wizard/crm_opportunity_to_phonecall_view.xml',
-
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
+        
+        'crm_phonecall_view.xml',
+        'crm_phonecall_menu.xml',
 
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
         'calendar_event_menu.xml',
-
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
 
         'report/crm_lead_report_view.xml',
         'report/crm_phonecall_report_view.xml',

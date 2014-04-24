@@ -21,9 +21,9 @@ _logger = logging.getLogger(__name__)
 class AcquirerPaypal(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_paypal_urls(self, cr, uid, env, context=None):
+    def _get_paypal_urls(self, cr, uid, environment, context=None):
         """ Paypal URLS """
-        if env == 'prod':
+        if environment == 'prod':
             return {
                 'paypal_form_url': 'https://www.paypal.com/cgi-bin/webscr',
                 'paypal_rest_url': 'https://api.paypal.com/v1/oauth2/token',
@@ -131,7 +131,7 @@ class AcquirerPaypal(osv.Model):
 
     def paypal_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_paypal_urls(cr, uid, acquirer.env, context=context)['paypal_form_url']
+        return self._get_paypal_urls(cr, uid, acquirer.environment, context=context)['paypal_form_url']
 
     def _paypal_s2s_get_access_token(self, cr, uid, ids, context=None):
         """
@@ -143,7 +143,7 @@ class AcquirerPaypal(osv.Model):
         parameters = werkzeug.url_encode({'grant_type': 'client_credentials'})
 
         for acquirer in self.browse(cr, uid, ids, context=context):
-            tx_url = self._get_paypal_urls(cr, uid, acquirer.env)['paypal_rest_url']
+            tx_url = self._get_paypal_urls(cr, uid, acquirer.environment)['paypal_rest_url']
             request = urllib2.Request(tx_url, parameters)
 
             # add other headers (https://developer.paypal.com/webapps/developer/docs/integration/direct/make-your-first-call/)

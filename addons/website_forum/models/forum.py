@@ -9,9 +9,38 @@ from openerp.tools.translate import _
 
 
 class Forum(osv.Model):
+    """TDE TODO: set karma values for actions dynamic for a given forum"""
     _name = 'forum.forum'
     _description = 'Forums'
     _inherit = ['website.seo.metadata']
+    # karma values
+    _karma_upvote = 5  # done
+    _karma_downvote = 50  # done
+    _karma_answer_accept_own = 20  # done
+    _karma_answer_accept_own_now = 50
+    _karma_answer_accept_all = 500
+    _karma_editor_link_files = 30  # done
+    _karma_editor_clickable_link = 50
+    _karma_comment = 1
+    _karma_modo_retag = 75
+    _karma_modo_flag = 100
+    _karma_modo_flag_see_all = 300
+    _karma_modo_unlink_comment = 750
+    _karma_modo_edit_own = 1  # done
+    _karma_modo_edit_all = 300  # done
+    _karma_modo_close_own = 100  # done
+    _karma_modo_close_all = 900  # done
+    _karma_modo_unlink_own = 500  # done
+    _karma_modo_unlink_all = 1000  # done
+    # karma generation
+    _karma_gen_quest_new = 2  # done
+    _karma_gen_upvote_quest = 5  # done
+    _karma_gen_downvote_quest = -2  # done
+    _karma_gen_upvote_ans = 10  # done
+    _karma_gen_downvote_ans = -2  # done
+    _karma_gen_ans_accept = 2  # done
+    _karma_gen_ans_accepted = 15  # done
+    _karma_gen_ans_flagged = -100
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
@@ -97,6 +126,19 @@ class Post(osv.Model):
             res[post.id] = any(answer.create_uid.id == uid for answer in post.child_ids)
         return res
 
+    def _get_has_validated_answer(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        ans_ids = self.search(cr, uid, [('parent_id', 'in', ids), ('is_correct', '=', True)], context=context)
+        for answer in self.browse(cr, uid, ans_ids, context=context):
+            res[answer.parent_id.id] = True
+        return res
+
+    def _is_self_reply(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for post in self.browse(cr, uid, ids, context=context):
+            res[post.id] = post.parent_id and post.parent_id.create_uid == post.create_uid or False
+        return res
+
     _columns = {
         'name': fields.char('Title', size=128),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
@@ -105,7 +147,7 @@ class Post(osv.Model):
         'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
         'views': fields.integer('Number of Views'),
         'active': fields.boolean('Active'),
-        'is_correct': fields.boolean('Valid Answer', help='Correct Answer/ Answer on this question accepted.'),
+        'is_correct': fields.boolean('Valid Answer', help='Correct Answer or Answer on this question accepted.'),
         'website_message_ids': fields.one2many(
             'mail.message', 'res_id',
             domain=lambda self: [
@@ -137,6 +179,11 @@ class Post(osv.Model):
             }),
         # hierarchy
         'parent_id': fields.many2one('forum.post', 'Question', ondelete='cascade'),
+        'self_reply': fields.function(
+            _is_self_reply, 'Reply to own question', type='boolean',
+            store={
+                'forum.post': (lambda self, cr, uid, ids, c={}: ids, ['parent_id', 'create_uid'], 10),
+            }),
         'child_ids': fields.one2many('forum.post', 'parent_id', 'Answers'),
         'child_count': fields.function(
             _get_child_count, string="Answers", type='integer',
@@ -145,6 +192,12 @@ class Post(osv.Model):
             }),
         'uid_has_answered': fields.function(
             _get_uid_answered, string='Has Answered', type='boolean',
+        ),
+        'has_validated_answer': fields.function(
+            _get_has_validated_answer, string='Has a Validated Answered', type='boolean',
+            store={
+                'forum.post': (_get_post_from_hierarchy, ['parent_id', 'child_ids', 'is_correct'], 10),
+            }
         ),
         # closing
         'closed_reason_id': fields.many2one('forum.post.reason', 'Reason'),
@@ -166,18 +219,25 @@ class Post(osv.Model):
             context = {}
         create_context = dict(context, mail_create_nolog=True)
         post_id = super(Post, self).create(cr, uid, vals, context=create_context)
-        post = self.browse(cr, uid, post_id, context=context)
         # post message + subtype depending on parent_id
         if vals.get("parent_id"):
             parent = self.browse(cr, SUPERUSER_ID, vals['parent_id'], context=context)
             body = _('<p><a href="forum/%s/question/%s">New Answer Posted</a></p>' % (slug(parent.forum_id), slug(parent)))
             self.message_post(cr, uid, parent.id, subject=_('Re: %s') % parent.name, body=body, subtype='website_forum.mt_answer_new', context=context)
         else:
-            self.message_post(cr, uid, post.id, subject=post.name, body=_('New Question Created'), subtype='website_forum.mt_question_new', context=context)
-            self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': 2}, context=context)
+            self.message_post(cr, uid, post_id, subject=vals.get('name', ''), body=_('New Question Created'), subtype='website_forum.mt_question_new', context=context)
+            self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], self.pool['forum.forum']._karma_gen_quest_new, context=context)
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        Forum = self.pool['forum.forum']
+        # update karma when accepting/rejecting answers
+        if 'is_correct' in vals:
+            mult = 1 if vals['is_correct'] else -1
+            for post in self.browse(cr, uid, ids, context=context):
+                if vals['is_correct'] != post.is_correct:
+                    self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id], Forum._karma_gen_ans_accepted * mult, context=context)
+                    self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [uid], Forum._karma_gen_ans_accept * mult, context=context)
         res = super(Post, self).write(cr, uid, ids, vals, context=context)
         # if post content modify, notify followers
         if 'content' in vals or 'name' in vals:
@@ -189,11 +249,6 @@ class Post(osv.Model):
                     body, subtype = _('Question Edited'), 'website_forum.mt_question_edit'
                     obj_id = post.id
                 self.message_post(cr, uid, obj_id, body=_(body), subtype=subtype, context=context)
-        # update karma of related user when any answer accepted
-        if 'correct' in vals:
-            for post in self.browse(cr, uid, ids, context=context):
-                karma_value = 15 if vals.get('correct') else -15
-                self.pool['res.users'].write(cr, SUPERUSER_ID, [post.create_uid.id], {'karma': karma_value}, context=context)
         return res
 
     def vote(self, cr, uid, ids, upvote=True, context=None):
@@ -221,8 +276,9 @@ class Post(osv.Model):
 class PostReason(osv.Model):
     _name = "forum.post.reason"
     _description = "Post Closing Reason"
+    _order = 'name'
     _columns = {
-        'name': fields.char('Post Reason', required=True),
+        'name': fields.char('Post Reason', required=True, translate=True),
     }
 
 
@@ -231,7 +287,7 @@ class Vote(osv.Model):
     _description = 'Vote'
     _columns = {
         'post_id': fields.many2one('forum.post', 'Post', ondelete='cascade', required=True),
-        'user_id': fields.many2one('res.users', 'User'),
+        'user_id': fields.many2one('res.users', 'User', required=True),
         'vote': fields.selection([('1', '1'), ('-1', '-1'), ('0', '0')], 'Vote', required=True),
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
     }
@@ -240,23 +296,33 @@ class Vote(osv.Model):
         'vote': lambda *args: '1',
     }
 
-    def update_karma(self, cr, uid, ids, new_vote='0', old_vote='0', context=None):
-        karma_value = (int(new_vote) - int(old_vote)) * 10
-        if karma_value:
-            for vote in self.browse(cr, uid, ids, context=context):
-                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.post_id.create_uid.id], karma_value, context=context)
-        return True
-
     def create(self, cr, uid, vals, context=None):
         vote_id = super(Vote, self).create(cr, uid, vals, context=context)
-        self.update_karma(cr, uid, [vote_id], new_vote=vals.get('vote', '1'), context=context)
+        if vals.get('vote', '1') == '1':
+            karma = self.pool['forum.forum']._karma_upvote
+        elif vals.get('vote', '1') == '-1':
+            karma = self.pool['forum.forum']._karma_downvote
+        post = self.pool['forum.post'].browse(cr, uid, vals['post_id'], context=context)
+        self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [post.create_uid.id], karma, context=context)
         return vote_id
 
     def write(self, cr, uid, ids, values, context=None):
-        res = super(Vote, self).write(cr, uid, ids, values, context=context)
+        def _get_karma_value(old_vote, new_vote, up_karma, down_karma):
+            _karma_upd = {
+                '-1': {'-1': 0, '0': -1 * down_karma, '1': -1 * down_karma + up_karma},
+                '0': {'-1': 1 * down_karma, '0': 0, '1': up_karma},
+                '1': {'-1': -1 * up_karma + down_karma, '0': -1 * up_karma, '1': 0}
+            }
+            return _karma_upd[old_vote][new_vote]
         if 'vote' in values:
+            Forum = self.pool['forum.forum']
             for vote in self.browse(cr, uid, ids, context=context):
-                self.update_karma(cr, uid, ids, new_vote=values['vote'], old_vote=vote.vote, context=context)
+                if vote.post_id.parent_id:
+                    karma_value = _get_karma_value(vote.vote, values['vote'], Forum._karma_gen_upvote_ans, Forum._karma_gen_downvote_ans)
+                else:
+                    karma_value = _get_karma_value(vote.vote, values['vote'], Forum._karma_gen_upvote_quest, Forum._karma_gen_downvote_quest)
+                self.pool['res.users'].add_karma(cr, SUPERUSER_ID, [vote.post_id.create_uid.id], karma_value, context=context)
+        res = super(Vote, self).write(cr, uid, ids, values, context=context)
         return res
 
 
@@ -283,4 +349,5 @@ class Tags(osv.Model):
                 'forum.post': (_get_tag_from_post, ['tag_ids'], 10),
             }
         ),
+        'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
     }
