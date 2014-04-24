@@ -3,12 +3,12 @@
     <data>
 
         <report
-            auto="False"
             id="payslip_details_report"
             model="hr.payslip"
-            name="paylip.details.in"
-            rml="l10n_in_hr_payroll/report/report_payslip_details.rml"
-            string="PaySlip Details" />
+            string="PaySlip Details"
+            report_type="qweb-pdf"
+            name="l10n_in_hr_payroll.report_payslipdetails" 
+            file="l10n_in_hr_payroll.report_payslipdetails" />
 
         <report
             auto="False" 
