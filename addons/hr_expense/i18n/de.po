@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-01-06 21:00+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2014-04-10 13:40+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:11+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-04-11 05:59+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -31,6 +30,8 @@ msgid ""
 "No purchase account found for the product %s (or for his category), please "
 "configure one."
 msgstr ""
+"Kein Einkaufskonto zum Produkt %s (oder dessen Warengruppe) gefunden, bitte "
+"eines festlegen."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -101,7 +102,7 @@ msgstr "Ungelesene Mitteilungen"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting Payment"
-msgstr ""
+msgstr "Zahlung erwartet"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -202,7 +203,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Open Accounting Entries"
-msgstr ""
+msgstr "Offene Buchungen"
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
@@ -290,6 +291,13 @@ msgid ""
 " If the accounting entries are made for the expense request, the status is "
 "'Waiting Payment'."
 msgstr ""
+"Wenn der Spesenantrag im Status \"Entwurf\" ist\n"
+"   wird er vom Benutzer bestätigt und zum Vorgesetzten mit Status \"Erwartet "
+"Bestätigung\" weitergeleitet.\n"
+"Wenn der Vorgesetzte diesen bestätigt gelangt er in den Status "
+"\"Akzeptiert\".\n"
+"Wenn dann die Buchungen für die Spesenantrag erfolgt sind, geht der Status "
+"auf \"Erwarte Zahlung\" über."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -448,13 +456,15 @@ msgstr "Genehmigungsdatum"
 #: code:addons/hr_expense/hr_expense.py:378
 #, python-format
 msgid "Expense Account Move"
-msgstr ""
+msgstr "Spesenbuchung"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:240
 #, python-format
 msgid "The employee must have a payable account set on his home address."
 msgstr ""
+"Der Mitarbeiter muss über ein Kreditorenkonto mit seiner Heimadresse "
+"verfügen."
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -559,7 +569,7 @@ msgstr "Entwurf"
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Bezahlt"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:353
@@ -695,7 +705,7 @@ msgstr "Zusammenfassung"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Journalbuchungen"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template

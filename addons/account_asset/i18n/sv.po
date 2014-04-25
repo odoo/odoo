@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-04-09 08:52+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:57+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-04-10 06:46+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -148,7 +148,7 @@ msgstr "Belopp som enligt plan inte kan avskrivas"
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Tiden mellan två avskivningar, i månader"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
@@ -160,7 +160,7 @@ msgstr "Avskrivningsdatutm"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Fel ! Rekursiva tillgångar kan inte skapas."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -200,7 +200,7 @@ msgstr "Avskrivningsverifikat"
 #: code:addons/account_asset/account_asset.py:82
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fel!"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -211,7 +211,7 @@ msgstr "# avskrivningsrader"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Antal månader i en period"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -271,12 +271,12 @@ msgstr "Ändra varaktighet"
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Antal avskrivningar för att anse tillgången helt avskriven"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic Information"
-msgstr ""
+msgstr "Objektinformation"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -300,7 +300,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Nästa avskrivningsperiod"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -351,7 +351,7 @@ msgstr "Sök tillgångskategori"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "months"
-msgstr ""
+msgstr "månader"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
@@ -379,7 +379,7 @@ msgstr "Tidmetoden"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "eller"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -440,12 +440,17 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"När en inventarie har skapats, är statusen \"Utkast\".\n"
+"Om inventarien är bekräftad, går status i \"Aktiv\" och avskrivningslraderna "
+"kan postas i redovisningen.\n"
+"Du kan stänga manuellt en inventarie när avskrivningen är över. Om den sista "
+"raden i avskrivning postas, går tillgången automatiskt i denna status."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -492,7 +497,7 @@ msgstr "Beräkna"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Inventariehistorik"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -571,7 +576,7 @@ msgstr "Transaktioner"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Asset Durations to Modify"
-msgstr ""
+msgstr "Inventariers livslängd att ändra"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -605,6 +610,7 @@ msgstr "Aktuellt"
 #, python-format
 msgid "You cannot delete an asset that contains posted depreciation lines."
 msgstr ""
+"Du kan inte ta bort en inventarie som innehåller bokförda avskrivningsrader."
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -614,12 +620,12 @@ msgstr "Avskrivningsmetod"
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Aktuell avskrivningsgrad"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Inventarienamn"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -659,6 +665,9 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
+"Välj vilken metod som ska användas för att beräkna det avskrivningsrader.\n"
+"   * Linjär: Beräknat på grundval av: Bruttovärde / Antal avskrivningar\n"
+"   * Degressiv: Beräknat på grundval av: restvärde * avkrivningsfaktor"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -679,11 +688,19 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"             Ur denna rapport kan du få en överblick på alla avskrivningar. "
+"Den\n"
+"             verktygsökning kan också användas för att anpassa dina "
+"inventarierapporter och\n"
+"             så, matcha denna analys till dina behov;\n"
+"           </ p>\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Bruttovärde"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -731,12 +748,12 @@ msgstr "Skapade tillgångsändringar"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Add an internal note here..."
-msgstr ""
+msgstr "Lägg till en intern notering här..."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Nummerserie"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0

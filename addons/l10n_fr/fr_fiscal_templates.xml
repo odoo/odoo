@@ -40,11 +40,6 @@
             <field name="tax_src_id" ref="tva_normale" />
             <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-        <record id="fp_tax_template_intraeub2b_vt_normale_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_normale_temp" />
-            <field name="tax_dest_id" ref="tva_intra_0" />
-        </record>        
 <!-- Taux DOM-TOM -->
         <record id="fp_tax_template_intraeub2b_vt_specifique" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
@@ -57,22 +52,12 @@
             <field name="tax_src_id" ref="tva_intermediaire" />
             <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-        <record id="fp_tax_template_intraeub2b_vt_intermediaire_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_intermediaire_temp" />
-            <field name="tax_dest_id" ref="tva_intra_0" />
-        </record>        
 <!-- Taux réduit -->
         <record id="fp_tax_template_intraeub2b_vt_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
             <field name="tax_src_id" ref="tva_reduite" />
             <field name="tax_dest_id" ref="tva_intra_0" />
         </record>
-        <record id="fp_tax_template_intraeub2b_vt_reduite_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_reduite_temp" />
-            <field name="tax_dest_id" ref="tva_intra_0" />
-        </record>        
 <!-- Taux super réduit -->
         <record id="fp_tax_template_intraeub2b_vt_super_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
@@ -91,17 +76,6 @@
             <field name="tax_src_id" ref="tva_acq_normale" />
             <field name="tax_dest_id" ref="tva_acq_intra_normale" />
         </record>
-        <record id="fp_tax_template_intraeub2b_ha_normale_deduc_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_acq_normale_temp" />
-            <field name="tax_dest_id" ref="tva_intra_normale_temp" />
-        </record>
-        <record id="fp_tax_template_intraeub2b_ha_normale_acq_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_acq_normale_temp" />
-            <field name="tax_dest_id" ref="tva_acq_intra_normale_temp" />
-        </record>        
-        
 <!-- Taux DOM-TOM -->
         <record id="fp_tax_template_intraeub2b_ha_specifique_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
@@ -124,17 +98,6 @@
             <field name="tax_src_id" ref="tva_acq_intermediaire" />
             <field name="tax_dest_id" ref="tva_acq_intra_intermediaire" />
         </record>
-        <record id="fp_tax_template_intraeub2b_ha_intermediaire_deduc_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_acq_intermediaire_temp" />
-            <field name="tax_dest_id" ref="tva_intra_intermediaire_temp" />
-        </record>
-        <record id="fp_tax_template_intraeub2b_ha_intermediaire_acq_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_acq_intermediaire_temp" />
-            <field name="tax_dest_id" ref="tva_acq_intra_intermediaire_temp" />
-        </record>        
-        
 <!-- Taux réduit -->
         <record id="fp_tax_template_intraeub2b_ha_reduite_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
@@ -146,17 +109,6 @@
             <field name="tax_src_id" ref="tva_acq_reduite" />
             <field name="tax_dest_id" ref="tva_acq_intra_reduite" />
         </record>
-        <record id="fp_tax_template_intraeub2b_ha_reduite_deduc_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_acq_reduite_temp" />
-            <field name="tax_dest_id" ref="tva_intra_reduite_temp" />
-        </record>
-        <record id="fp_tax_template_intraeub2b_ha_reduite_acq_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_intraeub2b" />
-            <field name="tax_src_id" ref="tva_acq_reduite_temp" />
-            <field name="tax_dest_id" ref="tva_acq_intra_reduite_temp" />
-        </record>        
-        
 <!-- Taux super réduit -->
         <record id="fp_tax_template_intraeub2b_ha_super_reduite_deduc" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_intraeub2b" />
@@ -177,11 +129,6 @@
             <field name="tax_src_id" ref="tva_normale" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
-        <record id="fp_tax_template_impexp_vt_normale_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_normale_temp" />
-            <field name="tax_dest_id" ref="tva_export_0" />
-        </record>        
 <!-- Taux DOM-TOM -->
         <record id="fp_tax_template_impexp_vt_specifique" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
@@ -194,22 +141,12 @@
             <field name="tax_src_id" ref="tva_intermediaire" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
-        <record id="fp_tax_template_impexp_vt_intermediaire_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_intermediaire_temp" />
-            <field name="tax_dest_id" ref="tva_export_0" />
-        </record>        
 <!-- Taux Réduit -->
         <record id="fp_tax_template_impexp_vt_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
             <field name="tax_src_id" ref="tva_reduite" />
             <field name="tax_dest_id" ref="tva_export_0" />
         </record>
-        <record id="fp_tax_template_impexp_vt_reduite_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_reduite_temp" />
-            <field name="tax_dest_id" ref="tva_export_0" />
-        </record>        
 <!-- Taux super réduit -->
         <record id="fp_tax_template_impexp_vt_super_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
@@ -224,11 +161,6 @@
             <field name="tax_src_id" ref="tva_acq_normale" />
             <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-        <record id="fp_tax_template_impexp_ha_normale_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_normale_temp" />
-            <field name="tax_dest_id" ref="tva_import_0" />
-        </record>        
 <!-- Taux DOM-TOM -->
         <record id="fp_tax_template_impexp_ha_specifique" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
@@ -241,23 +173,12 @@
             <field name="tax_src_id" ref="tva_acq_intermediaire" />
             <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-        <record id="fp_tax_template_impexp_ha_intermediaire_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_intermediaire_temp" />
-            <field name="tax_dest_id" ref="tva_import_0" />
-        </record>        
 <!-- Taux Réduit -->
         <record id="fp_tax_template_impexp_ha_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />
             <field name="tax_src_id" ref="tva_acq_reduite" />
             <field name="tax_dest_id" ref="tva_import_0" />
         </record>
-        <record id="fp_tax_template_impexp_ha_reduite_temp" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_import_export" />
-            <field name="tax_src_id" ref="tva_acq_reduite_temp" />
-            <field name="tax_dest_id" ref="tva_import_0" />
-        </record>        
-        
 <!-- Taux super réduit -->
         <record id="fp_tax_template_impexp_ha_super_reduite" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_import_export" />

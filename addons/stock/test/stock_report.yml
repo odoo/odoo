@@ -1,9 +1,14 @@
 -
+  Stock user can print all reports related to stock, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_stock_user'
+-
   I print a stock overview report of location.
 -
   !python {model: stock.location}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.lot.stock.overview').create(cr, uid, [ref('location_refrigerator')], {}, {})
+    (data, format) = netsvc.LocalService('report.lot.stock.overview').create(cr, uid, [ref('location_monitor')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overview'+format), 'wb+').write(data)
 -
@@ -11,7 +16,7 @@
 -
   !python {model: stock.location}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.lot.stock.overview_all').create(cr, uid, [ref('location_refrigerator')], {}, {})
+    (data, format) = netsvc.LocalService('report.lot.stock.overview_all').create(cr, uid, [ref('location_monitor')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-overviewall'+format), 'wb+').write(data)
 -
@@ -19,7 +24,7 @@
 -
   !python {model: stock.inventory}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.stock.inventory.move').create(cr, uid, [ref('stock_inventory_icecream')], {}, {})
+    (data, format) = netsvc.LocalService('report.stock.inventory.move').create(cr, uid, [ref('stock_inventory_0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-stock_inventory_move.'+format), 'wb+').write(data)
 -
@@ -35,7 +40,7 @@
 -
   !python {model: product.product}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.stock.product.history').create(cr, uid, [ref('product_icecream')], {}, {})
+    (data, format) = netsvc.LocalService('report.stock.product.history').create(cr, uid, [ref('product_product_6')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'stock-product_stock_report.'+format), 'wb+').write(data)
 

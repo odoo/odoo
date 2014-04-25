@@ -93,6 +93,8 @@ class DAVHandler(DAVRequestHandler, HttpOptions, FixSendError):
         self.client_address = client_address
         self.server = server
         self.setup()
+        if hasattr(self, '_init_buffer'):
+            self._init_buffer()
 
     def get_userinfo(self, user, pw):
         return False

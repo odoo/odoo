@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-11-04 11:13+0000\n"
-"Last-Translator: Anders Eriksson, Mobila System <ae@mobilasystem.se>\n"
+"PO-Revision-Date: 2014-03-27 13:22+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:53+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-03-28 06:44+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -27,6 +27,7 @@ msgstr "Systembetalning"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
+"Ett kontos skatteregion kan endast definieras en gång för varje konto."
 
 #. module: account
 #: help:account.tax.code,sequence:0
@@ -100,6 +101,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Fel!\n"
+"Du kan inte skapa rekursiva kontomallar."
 
 #. module: account
 #. openerp-web
@@ -187,6 +190,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att lägga till en räkenskapsperiod.\n"
+"               </ p>\n"
+"                 En redovisningsperiod är vanligtvis en månad eller ett "
+"kvartal. Oftast\n"
+"                 motsvarar den skattedeklarationens perioder. \n"
+"               </ p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -201,7 +212,7 @@ msgstr "Kolumnetikett"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Antal siffror i kontokoderna"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -251,7 +262,7 @@ msgstr "Validerad"
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "Intäktsvy"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -307,6 +318,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att skapa en kund återbetalning.\n"
+"               </ p>\n"
+"                 En återbetalning är ett dokument som krediterar en faktura "
+"helt eller\n"
+"                 delvis.\n"
+"               </ p>\n"
+"                 Istället för att manuellt skapa en kundåterbetalning, kan "
+"du generera den direkt från den relaterade kundfakturan.\n"
+"               </ p>\n"
+"            "
 
 #. module: account
 #: help:account.installer,charts:0
@@ -371,7 +393,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr "Tillåter dig att använda analys konteringen"
+msgstr "Aktiverar objektredovisningen"
 
 #. module: account
 #: view:account.invoice:0
@@ -439,6 +461,14 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"Detta gör det möjligt att hantera de tillgångar som ägs av ett företag eller "
+"en individ.\n"
+"                 Det håller reda på de avskrivningar inträffade på dessa "
+"tillgångar, och skapar konto flytta för dessa avskrivningar linjer.\n"
+"                 Detta installerar modulen account_asset. Om du inte "
+"markerar den här rutan, kommer du att kunna göra fakturering och "
+"betalningar,\n"
+"                 men inte redovisning (Journal objekt, Kontoplan, ...)"
 
 #. module: account
 #: help:account.bank.statement.line,name:0
@@ -477,6 +507,12 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Om du väljer 'avrunda per rad \": beräknas momsbeloppet först på varje rad "
+"för att avrundas  PO / SO / fakturarad och sedan summeras  de avrundade "
+"beloppen. Om du väljer 'avrunda globalt \": summeras alla skatter och sedan "
+"avrundas totalen. Om du säljer med priser med ingående moms, ska du välja "
+"\"avrunda per rad\" för att försäkra dig om att ingående skatt matchar "
+"utgående."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -622,7 +658,7 @@ msgstr "Alla"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Decimalprecition på journaltransaktioner"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -1180,6 +1216,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att lägga till ett konto.\n"
+"               </ p>\n"
+"                 När du gör affärer med flera valutor, kan du förlora eller "
+"vinna\n"
+"                 vissa belopp på grund av förändringar i växelkursen. Den "
+"här menyn ger\n"
+"                 du en prognos för vinst eller förlust du skulle realiseras "
+"om de\n"
+"                 transaktioner avslutades idag. Endast för konton som har "
+"en\n"
+"                 sekundär valuta angiven.\n"
+"               </ p>\n"
+"            "
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1851,7 +1901,7 @@ msgstr "Bokslutsårsordning"
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr "Analyskonto"
+msgstr "Objektsredovisning"
 
 #. module: account
 #: report:account.overdue:0
@@ -2301,7 +2351,7 @@ msgstr "Bra jobbat!"
 #. module: account
 #: field:account.config.settings,module_account_asset:0
 msgid "Assets management"
-msgstr "Tillgångshantering"
+msgstr "Inventarier och kapitalförvaltning"
 
 #. module: account
 #: view:account.account:0
@@ -3879,7 +3929,7 @@ msgstr "Överföringar"
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr ""
+msgstr "Bolaget har en egen kontoplan"
 
 #. module: account
 #: view:account.chart:0
@@ -6436,7 +6486,7 @@ msgstr "Företag relaterat till denna journal"
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
 msgid "Allows you multi currency environment"
-msgstr ""
+msgstr "Aktiverar en flervalutamiljö"
 
 #. module: account
 #: view:account.subscription:0
@@ -7826,7 +7876,7 @@ msgstr "Dagbok"
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Momsavrundningsmetod"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -8355,7 +8405,7 @@ msgstr ""
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Momsavrundningsmetod"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
@@ -8604,6 +8654,9 @@ msgid ""
 "recalls.\n"
 "                This installs the module account_followup."
 msgstr ""
+"Detta gör det möjligt att automatisera påminnelsebrev för obetalda fakturor, "
+"i flera eskalerande nivåer.\n"
+"                 Detta installerar modulen account_followup."
 
 #. module: account
 #: field:account.automatic.reconcile,period_id:0
@@ -10847,7 +10900,7 @@ msgstr "Tillämplighet alternativ"
 #. module: account
 #: help:account.move.line,currency_id:0
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "The optional other currency if it is a multi-currency entry."
+msgstr "Den valfria extra valutan om det är ett fler-valuta verifikat."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-03-07 05:43+0000\n"
-"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
+"PO-Revision-Date: 2014-03-31 07:55+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-08 06:54+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-04-01 06:52+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -29,6 +29,14 @@ msgid ""
 "                    * Notes for the technician and for the final customer.\n"
 "                This installs the module mrp_repair."
 msgstr ""
+"すべての製品の修理を管理できます。\n"
+"* 修復する製品の追加/削除\n"
+"* 在庫への影響\n"
+"* 請求(製品とサービス)\n"
+"* 保証コンセプト\n"
+"* 修理見積報告\n"
+"* 技術者および最終的な顧客のための注記\n"
+"mrp_repairモジュールがインスツールされます。"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -78,7 +86,7 @@ msgstr "スクラップ製品"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "MRPワークセンター"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -182,7 +190,7 @@ msgstr "製品数量"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "単位"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -197,7 +205,7 @@ msgstr "生産計画"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "作業指示の詳細な計画を許可"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:633
@@ -282,7 +290,7 @@ msgstr "1製造オーダにて複数製品を生産（連産品/副産品）"
 msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
-msgstr ""
+msgstr "適切な部品表の選択は受注や部品表で指定された属性に依存します。"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -290,7 +298,7 @@ msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of "
 "the finished product."
-msgstr ""
+msgstr "この製品の受注を処理した場合、配送には完成品ではなく原材料が含まれます。"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -310,7 +318,7 @@ msgstr "予定済製品"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Sets / Phantom"
-msgstr "設定 / 模型"
+msgstr "セット / 仮想部品"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -620,6 +628,10 @@ msgid ""
 "assembly operation.\n"
 "                This installs the module stock_no_autopicking."
 msgstr ""
+"このモジュールは製造オーダーに原材料を供給する中間のピッキングプロセスを可能にします。\n"
+"例えば、調達先(下請け)の生産を管理します。\n"
+"これを達成するため、「自動ピッキングなし」で委託した組立品の配置や組立作業の工程における調達先の場所を指定します。\n"
+"stock_no_autopickingモジュールがインストールされます。"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -745,6 +757,12 @@ msgid ""
 "                    * Product Attributes.\n"
 "                This installs the module product_manufacturer."
 msgstr ""
+"製品には以下の定義ができます。\n"
+"* メーカー\n"
+"* 製品名\n"
+"* 製品コード\n"
+"* 製品の属性\n"
+"product_manufacturerモジュールがインストールされます。"
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -1136,6 +1154,9 @@ msgid ""
 "                cases entail a small performance impact.\n"
 "                This installs the module mrp_jit."
 msgstr ""
+"調達オーダーでジャストインタイムの計算を可能にします。\n"
+"すべての調達はすぐに処理され、いくつかのケースでは生産力に小さな影響を及ぼすかもしれません。\n"
+"mrp_jitモジュールがインストールされます。"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1334,7 +1355,7 @@ msgstr "集荷リスト"
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "部品表には完成品の製造に必要な原材料のリストを定義することができます。"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:375
@@ -1461,6 +1482,8 @@ msgid ""
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
 msgstr ""
+"ルーティングは製品のオーダーから生産においてワークセンター内で従うべき製造作業の作成と管理を可能にします。\n"
+"これらは必要な原材料を定義する部品表に添付されます。"
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1532,7 +1555,7 @@ msgstr "完了"
 #. module: mrp
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "この製品を販売する場合、OpenERPは製品に割り当てた部品表を使用して"
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1850,7 +1873,7 @@ msgstr "データ計算"
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "エラー！"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -1894,7 +1917,7 @@ msgstr "製造リードタイム"
 #: code:addons/mrp/mrp.py:285
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
@@ -1904,7 +1927,7 @@ msgstr "製品販売単位数量"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "製品移動"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2057,6 +2080,9 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
+"部品表の中に副製品を構成できます。\n"
+"このモジュールを使用しない場合は A + B + C -> D ですが、使用する場合は A + B + C -> D + E にできます。\n"
+"mrp_byproductモジュールがインストールされます。"
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
@@ -2182,7 +2208,7 @@ msgid ""
 "using the bill of materials assigned to this product.\n"
 "                        The delivery order will be ready once the production "
 "is done."
-msgstr ""
+msgstr "をトリガします。一旦生産されると、配送オーダーは準備完了となります。"
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0
@@ -2286,6 +2312,8 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
+"副製品がいくつかの製品で使用される場合、それ自身のBOMを作成するためにも有用です。この副製品の製造オーダーを望まない場合、BOMタイプとしてセット/仮想"
+"部品を選択します。仮想BOMがルート製品で使用される場合、生産の代わりに構成要素のセットとして販売と出荷を行います。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -2303,7 +2331,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
-msgstr ""
+msgstr "属性を使用して製品ごとにいくつかの部品表を許可"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action

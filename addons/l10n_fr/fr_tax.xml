@@ -29,28 +29,6 @@
       <field name="sequence" eval="1"/>
       <field name="type_tax_use">sale</field>
     </record>
-    
-    <record model="account.tax.template" id="tva_normale_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA collectée (vente) 19,6%</field>
-      <field name="description">19.6</field>
-      <field name="amount" eval="0.196"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_col_196_ht"/>
-      <field name="base_sign" eval="1"/>
-      <field name="tax_code_id" ref="tax_col_196"/>
-      <field name="tax_sign" eval="1"/>
-
-      <field name="account_collected_id" ref="pcg_445711"/>
-      <field name="account_paid_id" ref="pcg_445711"/>
-
-      <field name="ref_base_code_id" ref="tax_col_196_ht"/>
-      <field name="ref_base_sign" eval="-1"/>
-      <field name="ref_tax_code_id" ref="tax_col_196"/>
-      <field name="ref_tax_sign" eval="-1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">sale</field>
-    </record>
 
     <record model="account.tax.template" id="tva_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
@@ -96,51 +74,7 @@
       <field name="type_tax_use">sale</field>
     </record>
 
-    <record model="account.tax.template" id="tva_intermediaire_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA collectée (vente) 7,0%</field>
-      <field name="description">7.0</field>
-      <field name="amount" eval="0.07"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_col_70_ht"/>
-      <field name="base_sign" eval="1"/>
-      <field name="tax_code_id" ref="tax_col_70"/>
-      <field name="tax_sign" eval="1"/>
-
-      <field name="account_collected_id" ref="pcg_445712"/>
-      <field name="account_paid_id" ref="pcg_445712"/>
-
-      <field name="ref_base_code_id" ref="tax_col_70_ht"/>
-      <field name="ref_base_sign" eval="-1"/>
-      <field name="ref_tax_code_id" ref="tax_col_70"/>
-      <field name="ref_tax_sign" eval="-1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">sale</field>
-    </record>
-
     <record model="account.tax.template" id="tva_reduite">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA collectée (vente) 5,0%</field>
-      <field name="description">5.0</field>
-      <field name="amount" eval="0.050"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_col_50_ht"/>
-      <field name="base_sign" eval="1"/>
-      <field name="tax_code_id" ref="tax_col_50"/>
-      <field name="tax_sign" eval="1"/>
-
-      <field name="account_collected_id" ref="pcg_445713"/>
-      <field name="account_paid_id" ref="pcg_445713"/>
-
-      <field name="ref_base_code_id" ref="tax_col_50_ht"/>
-      <field name="ref_base_sign" eval="-1"/>
-      <field name="ref_tax_code_id" ref="tax_col_50"/>
-      <field name="ref_tax_sign" eval="-1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">sale</field>
-    </record>
-
-    <record model="account.tax.template" id="tva_reduite_temp">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA collectée (vente) 5,5%</field>
       <field name="description">5.5</field>
@@ -208,28 +142,6 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_acq_normale_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déductible (achat) 19,6%</field>
-      <field name="description">ACH-19.6</field>
-      <field name="amount" eval="0.196"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_acq_196_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_acq_196"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44566"/>
-      <field name="account_paid_id" ref="pcg_44566"/>
-
-      <field name="ref_base_code_id" ref="tax_acq_196_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_acq_196"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_acq_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 8,5%</field>
@@ -274,51 +186,7 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_acq_intermediaire_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déductible (achat) 7,0%</field>
-      <field name="description">ACH-7.0</field>
-      <field name="amount" eval="0.07"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_acq_70_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_acq_70"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44566"/>
-      <field name="account_paid_id" ref="pcg_44566"/>
-
-      <field name="ref_base_code_id" ref="tax_acq_70_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_acq_70"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_acq_reduite">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déductible (achat) 5,0%</field>
-      <field name="description">ACH-5.0</field>
-      <field name="amount" eval="0.050"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_acq_50_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_acq_50"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44566"/>
-      <field name="account_paid_id" ref="pcg_44566"/>
-
-      <field name="ref_base_code_id" ref="tax_acq_50_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_acq_50"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
-    <record model="account.tax.template" id="tva_acq_reduite_temp">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 5,5%</field>
       <field name="description">ACH-5.5</field>
@@ -387,29 +255,6 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_acq_normale_TTC_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déductible (achat) 19,6% TTC</field>
-      <field name="description">ACH-19.6-TTC</field>
-      <field name="price_include" eval="1"/>
-      <field name="amount" eval="0.196"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_acq_196_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_acq_196"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44566"/>
-      <field name="account_paid_id" ref="pcg_44566"/>
-
-      <field name="ref_base_code_id" ref="tax_acq_196_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_acq_196"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_acq_specifique_TTC">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 8,5% TTC</field>
@@ -456,53 +301,7 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_acq_intermediaire_TTC_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déductible (achat) 7,0% TTC</field>
-      <field name="description">ACH-7.0-TTC</field>
-      <field name="price_include" eval="1"/>
-      <field name="amount" eval="0.07"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_acq_70_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_acq_70"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44566"/>
-      <field name="account_paid_id" ref="pcg_44566"/>
-
-      <field name="ref_base_code_id" ref="tax_acq_70_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_acq_70"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_acq_reduite_TTC">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déductible (achat) 5,0% TTC</field>
-      <field name="description">ACH-5.0-TTC</field>
-      <field name="price_include" eval="1"/>
-      <field name="amount" eval="0.050"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_acq_50_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_acq_50"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44566"/>
-      <field name="account_paid_id" ref="pcg_44566"/>
-
-      <field name="ref_base_code_id" ref="tax_acq_50_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_acq_50"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
-    <record model="account.tax.template" id="tva_acq_reduite_TTC_temp">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déductible (achat) 5,5% TTC</field>
       <field name="description">ACH-5.5-TTC</field>
@@ -573,28 +372,6 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_imm_normale_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déd./immobilisation (achat) 19,6%</field>
-      <field name="description">IMMO-19.6</field>
-      <field name="amount" eval="0.196"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_imm_196_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_imm_196"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44562"/>
-      <field name="account_paid_id" ref="pcg_44562"/>
-
-      <field name="ref_base_code_id" ref="tax_imm_196_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_imm_196"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_imm_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 8,5%</field>
@@ -639,51 +416,7 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_imm_intermediaire_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déd./immobilisation (achat) 7,0%</field>
-      <field name="description">IMMO-7.0</field>
-      <field name="amount" eval="0.07"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_imm_70_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_imm_70"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44562"/>
-      <field name="account_paid_id" ref="pcg_44562"/>
-
-      <field name="ref_base_code_id" ref="tax_imm_70_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_imm_70"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_imm_reduite">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déd./immobilisation (achat) 5,0%</field>
-      <field name="description">IMMO-5.0</field>
-      <field name="amount" eval="0.050"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_imm_50_ht"/>
-      <field name="base_sign" eval="-1"/>
-      <field name="tax_code_id" ref="tax_imm_50"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_44562"/>
-      <field name="account_paid_id" ref="pcg_44562"/>
-
-      <field name="ref_base_code_id" ref="tax_imm_50_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_imm_50"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
-    <record model="account.tax.template" id="tva_imm_reduite_temp">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd./immobilisation (achat) 5,5%</field>
       <field name="description">IMMO-5.5</field>
@@ -751,28 +484,6 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_intra_normale_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA due s/ acq. intracommunautaire (achat) 19,6%</field>   <!-- ventes -->
-      <field name="description">ACH_UE_due-19.6</field>
-      <field name="amount" eval="-0.196"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_intra_196_ht"/>
-      <field name="base_sign" eval="-1" />
-      <field name="tax_code_id" ref="tax_intra_196"/>
-      <field name="tax_sign" eval="-1" />
-
-      <field name="account_collected_id" ref="pcg_445201"/>
-      <field name="account_paid_id" ref="pcg_445201"/>
-
-      <field name="ref_base_code_id" ref="tax_intra_196_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_intra_196"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_intra_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 8,5%</field>
@@ -817,51 +528,7 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_intra_intermediaire_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA due s/ acq. intracommunautaire (achat) 7,0%</field>
-      <field name="description">ACH_UE_due-7.0</field>
-      <field name="amount" eval="-0.07"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_intra_70_ht"/>
-      <field name="base_sign" eval="-1" />
-      <field name="tax_code_id" ref="tax_intra_70"/>
-      <field name="tax_sign" eval="-1" />
-
-      <field name="account_collected_id" ref="pcg_445202"/>
-      <field name="account_paid_id" ref="pcg_445202"/>
-
-      <field name="ref_base_code_id" ref="tax_intra_70_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_intra_70"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_intra_reduite">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA due s/ acq. intracommunautaire (achat) 5,0%</field>
-      <field name="description">ACH_UE_due-5.0</field>
-      <field name="amount" eval="-0.050"/>
-      <field name="type">percent</field>
-      <field name="base_code_id" ref="tax_intra_50_ht"/>
-      <field name="base_sign" eval="-1" />
-      <field name="tax_code_id" ref="tax_intra_50"/>
-      <field name="tax_sign" eval="-1" />
-
-      <field name="account_collected_id" ref="pcg_445203"/>
-      <field name="account_paid_id" ref="pcg_445203"/>
-
-      <field name="ref_base_code_id" ref="tax_intra_50_ht"/>
-      <field name="ref_base_sign" eval="1"/>
-      <field name="ref_tax_code_id" ref="tax_intra_50"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
-    <record model="account.tax.template" id="tva_intra_reduite_temp">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA due s/ acq. intracommunautaire (achat) 5,5%</field>
       <field name="description">ACH_UE_due-5.5</field>
@@ -925,24 +592,6 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_acq_intra_normale_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 19,6%</field>
-      <field name="description">ACH_UE_ded.-19.6</field>
-      <field name="amount" eval="0.196"/>
-      <field name="type">percent</field>
-      <field name="tax_code_id" ref="tax_intra_acq_196"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_445662"/>
-      <field name="account_paid_id" ref="pcg_445662"/>
-
-      <field name="ref_tax_code_id" ref="tax_intra_acq_196"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_acq_intra_specifique">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 8,5%</field>
@@ -979,43 +628,7 @@
       <field name="type_tax_use">purchase</field>
     </record>
 
-    <record model="account.tax.template" id="tva_acq_intra_intermediaire_temp">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 7,0%</field>
-      <field name="description">ACH_UE_ded.-7.0</field>
-      <field name="amount" eval="0.07"/>
-      <field name="type">percent</field>
-      <field name="tax_code_id" ref="tax_intra_acq_70"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_445662"/>
-      <field name="account_paid_id" ref="pcg_445662"/>
-
-      <field name="ref_tax_code_id" ref="tax_intra_acq_70"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
     <record model="account.tax.template" id="tva_acq_intra_reduite">
-      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
-      <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 5,0%</field>
-      <field name="description">ACH_UE_ded.-5.0</field>
-      <field name="amount" eval="0.050"/>
-      <field name="type">percent</field>
-      <field name="tax_code_id" ref="tax_intra_acq_50"/>
-      <field name="tax_sign" eval="-1"/>
-
-      <field name="account_collected_id" ref="pcg_445662"/>
-      <field name="account_paid_id" ref="pcg_445662"/>
-
-      <field name="ref_tax_code_id" ref="tax_intra_acq_50"/>
-      <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
-      <field name="type_tax_use">purchase</field>
-    </record>
-
-    <record model="account.tax.template" id="tva_acq_intra_reduite_temp">
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
       <field name="name">TVA déd. s/ acq. intracommunautaire (achat) 5,5%</field>
       <field name="description">ACH_UE_ded.-5.5</field>

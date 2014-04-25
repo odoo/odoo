@@ -466,15 +466,10 @@ class account_bank_statement(osv.osv):
     _inherit = "account.bank.statement"
     _name = "account.bank.statement"
 
-    def create_move_from_st_line(self, cr, uid, st_line_id, company_currency_id, st_line_number, context=None):
-        account_move_line_pool = self.pool.get('account.move.line')
-        account_bank_statement_line_pool = self.pool.get('account.bank.statement.line')
-        st_line = account_bank_statement_line_pool.browse(cr, uid, st_line_id, context=context)
-        result = super(account_bank_statement,self).create_move_from_st_line(cr, uid, st_line_id, company_currency_id, st_line_number, context=context)
-        move = st_line.move_ids and st_line.move_ids[0] or False
-        if move:
-            for line in move.line_id:
-                account_move_line_pool.write(cr, uid, [line.id], {'analytics_id':st_line.analytics_id.id}, context=context)
+    def _prepare_bank_move_line(self, cr, uid, st_line, move_id, amount, company_currency_id, context=None):
+        result = super(account_bank_statement,self)._prepare_bank_move_line(cr, uid, st_line, 
+            move_id, amount, company_currency_id, context=context)
+        result['analytics_id'] = st_line.analytics_id.id
         return result
 
     def button_confirm_bank(self, cr, uid, ids, context=None):

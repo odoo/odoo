@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-11-17 08:42+0000\n"
-"Last-Translator: Mirosław Bojanowicz <miroslaw.bojanowicz@gmail.com>\n"
+"PO-Revision-Date: 2014-04-18 13:02+0000\n"
+"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 05:52+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-04-19 06:35+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -190,6 +190,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Kliknij aby utworzyć okres rozliczeniowy.\n"
+"</p><p>\n"
+"Typowo, rozliczeniowym okresem księgowym jest miesiąc lub kwartał.\n"
+"On odpowiada okresom rozliczeń podatkowych.\n"
+"</p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -745,6 +752,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -999,7 +1008,7 @@ msgstr "Wrzesień"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Latest Manual Reconciliation Processed:"
-msgstr ""
+msgstr "Ostatnio ręcznie uzgodniono:"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -1035,6 +1044,8 @@ msgid ""
 "                                                  opening/closing fiscal "
 "year process."
 msgstr ""
+"Nie możesz anulować uzgodnień pozycji dziennika jeśli zostały one "
+"wygenerowane procesem zamykania/otwierania roku."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -1800,7 +1811,7 @@ msgstr "Powtarzanie"
 #. module: account
 #: report:account.invoice:0
 msgid "TIN :"
-msgstr ""
+msgstr "NIP:"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -1842,7 +1853,7 @@ msgstr "Konto podatku dla korekt"
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2400,7 +2411,7 @@ msgstr "Dobra robota!"
 #. module: account
 #: field:account.config.settings,module_account_asset:0
 msgid "Assets management"
-msgstr "Środku trwałe"
+msgstr "Środki trwałe"
 
 #. module: account
 #: view:account.account:0
@@ -4935,7 +4946,7 @@ msgstr "Nie ma firmy bez planu kont. Kreator nie zostanie uruchomiony."
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Add an internal note..."
-msgstr "Dodaj notatke wewnetrzną ..."
+msgstr "Dodaj notatkę wewnetrzną ..."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -5229,7 +5240,7 @@ msgstr "Podatek sprzedaży"
 #. module: account
 #: view:account.move:0
 msgid "Cancel Entry"
-msgstr "Anulowanie wpisu"
+msgstr "Anulowanie zapisu"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -7373,7 +7384,7 @@ msgstr "Utwórz zapis"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Cancel Fiscal Year Closing Entries"
-msgstr "Anulowanie wpisów zamknięcia roku finansowego"
+msgstr "Anulowanie zapisów zamknięcia roku finansowego"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -7634,7 +7645,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal Url"
 
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
@@ -7669,7 +7680,7 @@ msgstr "Podatki stosowane w sprzedaży"
 #. module: account
 #: view:account.period:0
 msgid "Re-Open Period"
-msgstr ""
+msgstr "Otwórz okres ponownie"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -8421,7 +8432,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -8431,7 +8442,7 @@ msgstr "Połącz z automatycznie generowanymi pozycjami zapisów"
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -8491,6 +8502,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
+"Nie możńa usunąć faktury, która nie jest w stanie projektu lub anulownia. "
+"Możesz tylko utowrzyć jej korektę."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -8754,7 +8767,7 @@ msgstr "Brak roku podatkowego dla firmy"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -9022,7 +9035,7 @@ msgstr "Typy kont"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktura (Odn. ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1210
@@ -10239,7 +10252,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:780
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr ""
+msgstr "Pozycja dziennika '%s' (id: %s), Zapis '%s' jest już uzgodniony!"
 
 #. module: account
 #: view:account.invoice:0
@@ -10253,7 +10266,7 @@ msgstr "Projekty faktur"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing more to reconcile"
-msgstr ""
+msgstr "Nie ma nic więcej do uzgadniania"
 
 #. module: account
 #: view:cash.box.in:0
@@ -10513,7 +10526,7 @@ msgstr "Kurs waluty"
 #. module: account
 #: view:account.config.settings:0
 msgid "e.g. sales@openerp.com"
-msgstr ""
+msgstr "np. sales@openerp.com"
 
 #. module: account
 #: field:account.account,tax_ids:0

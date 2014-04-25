@@ -351,7 +351,6 @@ class sale_order(osv.osv):
         }
 
     def ship_recreate(self, cr, uid, order, line, move_id, proc_id):
-        # FIXME: deals with potentially cancelled shipments, seems broken (specially if shipment has production lot)
         """
         Define ship_recreate for process after shipping exception
         param order: sales order to which the order lines belong
@@ -360,16 +359,25 @@ class sale_order(osv.osv):
         param proc_id: the ID of procurement
         """
         move_obj = self.pool.get('stock.move')
-        if order.state == 'shipping_except':
-            for pick in order.picking_ids:
-                for move in pick.move_lines:
-                    if move.state == 'cancel':
-                        mov_ids = move_obj.search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
-                        if mov_ids:
-                            for mov in move_obj.browse(cr, uid, mov_ids):
-                                # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
-                                move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-                                self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+        proc_obj = self.pool.get('procurement.order')
+        if move_id and order.state == 'shipping_except':
+            current_move = move_obj.browse(cr, uid, move_id)
+            moves = []
+            for picking in order.picking_ids:
+                if picking.id != current_move.picking_id.id and picking.state != 'cancel':
+                    moves.extend(move for move in picking.move_lines if move.state != 'cancel' and move.sale_line_id.id == line.id)
+            if moves:
+                product_qty = current_move.product_qty
+                product_uos_qty = current_move.product_uos_qty
+                for move in moves:
+                    product_qty -= move.product_qty
+                    product_uos_qty -= move.product_uos_qty
+                if product_qty > 0 or product_uos_qty > 0:
+                    move_obj.write(cr, uid, [move_id], {'product_qty': product_qty, 'product_uos_qty': product_uos_qty})
+                    proc_obj.write(cr, uid, [proc_id], {'product_qty': product_qty, 'product_uos_qty': product_uos_qty})
+                else:
+                    current_move.unlink()
+                    proc_obj.unlink(cr, uid, [proc_id])
         return True
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):

@@ -26,6 +26,7 @@ import email
 import logging
 import pytz
 import re
+import socket
 import time
 import xmlrpclib
 from email.message import Message
@@ -111,6 +112,7 @@ class mail_thread(osv.AbstractModel):
             if res[id]['message_unread_count']:
                 title = res[id]['message_unread_count'] > 1 and _("You have %d unread messages") % res[id]['message_unread_count'] or _("You have one unread message")
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
+            res[id].pop('message_unread_count', None)
         return res
 
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
@@ -536,14 +538,19 @@ class mail_thread(osv.AbstractModel):
         thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
-            thread_id = int(ref_match.group(1))
-            model = ref_match.group(2) or model
-            model_pool = self.pool.get(model)
-            if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
-                and hasattr(model_pool, 'message_update'):
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                return [(model, thread_id, custom_values, uid)]
+            reply_thread_id = int(ref_match.group(1))
+            reply_model = ref_match.group(2) or model
+            reply_hostname = ref_match.group(3)
+            local_hostname = socket.gethostname()
+            # do not match forwarded emails from another OpenERP system (thread_id collision!)
+            if local_hostname == reply_hostname:
+                thread_id, model = reply_thread_id, reply_model
+                model_pool = self.pool.get(model)
+                if thread_id and model and model_pool and model_pool.exists(cr, uid, thread_id) \
+                    and hasattr(model_pool, 'message_update'):
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                    return [(model, thread_id, custom_values, uid)]
 
         # Verify whether this is a reply to a private message
         if in_reply_to:

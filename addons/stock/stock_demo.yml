@@ -1,99 +1,107 @@
 -
- !record {model: stock.location, id: location_refrigerator}:
-    name: Refrigerator
+  Only stock manager can create location,warehouse and product, so let's check data with giving the access rights of manager
+-
+  !context
+    uid: 'res_users_stock_manager'
+-
+ !record {model: stock.location, id: location_monitor}:
+    name: chicago shop
     usage: internal
 -
- !record {model: stock.location, id: location_delivery_counter}:
-    name: Delivery Counter
+ !record {model: stock.location, id: stock_location_output}:
+    name: Output
     usage: internal
 -
- !record {model: stock.location, id: location_refrigerator_small}:
-    name: Small Refrigerator
+ !record {model: stock.location, id: location_monitor_small}:
+    name: Small chicago shop
     usage: internal
-    location_id: location_refrigerator
+    location_id: location_monitor
 -
  !record {model: stock.location, id: location_opening}:
     name: opening
     usage: inventory
 -
- !record {model: stock.location, id: location_convenience_shop}:
-    name: Convenient Store
+ !record {model: stock.location, id: stock_location_3}:
+    name: IT Suppliers
     usage: supplier
 -
- !record {model: stock.warehouse, id: warehouse_icecream}:
-    name: Ice Cream Shop
-    lot_input_id: location_refrigerator
-    lot_stock_id: location_refrigerator
-    lot_output_id: location_delivery_counter
+ !record {model: stock.warehouse, id: stock_warehouse_shop0}:
+    name: Chicago Warehouse
+    lot_input_id: location_monitor
+    lot_stock_id: location_monitor
+    lot_output_id: stock_location_output
 -
- !record {model: product.product, id: product_icecream}:
-    default_code: 001
-    name: Ice Cream
-    type: product
-    categ_id: product.product_category_1
-    list_price: 100.0
-    standard_price: 70.0
-    uom_id: product.product_uom_kgm
-    uom_po_id: product.product_uom_kgm
-    procure_method: make_to_stock
+ !record {model: product.product, id: product_product_6}:
+    default_code: LCD15
+    name: 15” LCD Monitor
+    type: consu
+    categ_id: product.product_category_8
+    list_price: 1200.0
+    standard_price: 800.0
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
     property_stock_inventory: location_opening
     valuation: real_time
     cost_method: average
-    property_stock_account_input: account.o_expense
-    property_stock_account_output: account.o_income
-    description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
-
+    property_stock_account_input: account.conf_o_income
+    property_stock_account_output: account.a_expense
 -
- !record {model: stock.production.lot, id: lot_icecream_0}:
-    name: Lot0 for Ice cream
-    product_id: product_icecream
+  Stock user can handled production lot,inventory and picking, so let's check data with giving the access rights of user
 -
- !record {model: stock.production.lot, id: lot_icecream_1}:
-    name: Lot1 for Ice cream
-    product_id: product_icecream
+  !context
+    uid: 'res_users_stock_user'
 -
- !record {model: stock.inventory, id: stock_inventory_icecream}:
-    name: Inventory for icecream
+ !record {model: stock.production.lot, id: lot_monitor_0}:
+    name: Lot0 for LCD Monitor
+    product_id: product_product_6
 -
- !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot0}:
-    product_id: product_icecream
-    product_uom: product.product_uom_kgm
-    inventory_id: stock_inventory_icecream
+ !record {model: stock.production.lot, id: lot_monitor_1}:
+    name: Lot1 for LCD Monitor
+    product_id: product_product_6
+-
+ !record {model: stock.inventory, id: stock_inventory_0}:
+    name: Starting Inventory
+    state: draft
+-
+ !record {model: stock.inventory.line, id: stock_inventory_line_3}:
+    product_id: product_product_6
+    product_uom: product.product_uom_unit
+    inventory_id: stock_inventory_0
     product_qty: 50.0
-    prod_lot_id: lot_icecream_0
-    location_id: location_refrigerator
+    prod_lot_id: lot_monitor_0
+    location_id: location_monitor
 -
- !record {model: stock.inventory.line, id: stock_inventory_line_icecream_lot1}:
-    product_id: product_icecream
-    product_uom: product.product_uom_kgm
-    inventory_id: stock_inventory_icecream
+ !record {model: stock.inventory.line, id: stock_inventory_line_monitor}:
+    product_id: product_product_6
+    product_uom: product.product_uom_unit
+    inventory_id: stock_inventory_0
     product_qty: 40.0
-    prod_lot_id: lot_icecream_1
-    location_id: location_refrigerator
+    prod_lot_id: lot_monitor_1
+    location_id: location_monitor
 
 -
  !record {model: stock.picking, id: outgoing_shipment}:
     type: out
-    location_dest_id: location_delivery_counter
+    location_dest_id: stock_location_output
 -
- !record {model: stock.move, id: outgoing_shipment_icecream}:
+ !record {model: stock.move, id: outgoing_shipment_monitor}:
     picking_id: outgoing_shipment
-    product_id: product_icecream
-    product_uom: product.product_uom_kgm
+    product_id: product_product_6
+    product_uom: product.product_uom_unit
     product_qty: 130.0
-    location_id: location_refrigerator
-    location_dest_id: location_delivery_counter
+    location_id: location_monitor
+    location_dest_id: stock_location_output
 -
  !record {model: stock.picking, id: incomming_shipment}:
     type: in
     invoice_state: 2binvoiced
     partner_id: base.res_partner_address_9
-    location_dest_id: location_refrigerator
+    location_dest_id: location_monitor
 -
- !record {model: stock.move, id: incomming_shipment_icecream}:
+ !record {model: stock.move, id: incomming_shipment_monitor}:
     picking_id: incomming_shipment
-    product_id: product_icecream
-    product_uom: product.product_uom_kgm
+    product_id: product_product_6
+    product_uom: product.product_uom_unit
     product_qty: 50.0
-    location_id: location_convenience_shop
-    location_dest_id: location_refrigerator
+    location_id: stock_location_3
+    location_dest_id: location_monitor

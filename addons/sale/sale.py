@@ -515,7 +515,7 @@ class sale_order(osv.osv):
                     lines.append(line.id)
             created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
-                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
+                invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
         if not invoices:
             for o in self.browse(cr, uid, ids, context=context):
                 for i in o.invoice_ids:

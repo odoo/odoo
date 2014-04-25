@@ -38,6 +38,10 @@
              <field name="type">make_to_order</field>
         </record>
 
+        <record id="sale.advance_product_0" model="product.product">
+            <field name="supply_method">produce</field>
+        </record>
+
         <!-- Run all schedulers -->
         <function model="procurement.order" name="run_scheduler"/>
         

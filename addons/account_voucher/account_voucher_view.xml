@@ -213,10 +213,10 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" string="" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False}"/>
+                    <field name="voucher_id" string="" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False, 'account_id': account_id}"/>
                 </xpath>
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
-                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False}"/>
+                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False, 'account_id': account_id}"/>
                 </xpath>
                 <field name="amount" position="attributes">
                     <attribute name="on_change">onchange_amount(amount)</attribute>
@@ -230,7 +230,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
+                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'account_id': account_id}"/>
                 </xpath>
             </field>
         </record>
@@ -241,7 +241,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
+                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'account_id': account_id}"/>
                 </xpath>
             </field>
         </record>

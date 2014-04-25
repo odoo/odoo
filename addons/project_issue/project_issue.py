@@ -259,7 +259,7 @@ class project_issue(base_stage, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_TASK_STATE, string="Status", readonly=True,
+                selection=_TASK_STATE, string="Status", readonly=True, select=True,
                 help='The status is set to \'Draft\', when a case is created.\
                       If the case is in progress the status is set to \'Open\'.\
                       When the case is over, the status is set to \'Done\'.\
@@ -283,9 +283,9 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        track_visibility='onchange',
+                        track_visibility='onchange', select=True,
                         domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
-        'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
+        'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \

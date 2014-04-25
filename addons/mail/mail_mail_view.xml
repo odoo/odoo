@@ -86,7 +86,7 @@
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <field name="email_from" filter_domain="['|' '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
+                    <field name="email_from" filter_domain="['|', '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
                     <field name="date"/>
                     <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>

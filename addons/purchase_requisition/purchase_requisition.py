@@ -109,7 +109,7 @@ class purchase_requisition(osv.osv):
                 seller_delay = product_supplier.delay
                 seller_qty = product_supplier.qty
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
-        seller_price = pricelist.price_get(cr, uid, [supplier_pricelist.id], product.id, qty, False, {'uom': default_uom_po_id})[supplier_pricelist.id]
+        seller_price = pricelist.price_get(cr, uid, [supplier_pricelist.id], product.id, qty, supplier.id, {'uom': default_uom_po_id})[supplier_pricelist.id]
         if seller_qty:
             qty = max(qty,seller_qty)
         date_planned = self._planned_date(requisition_line.requisition_id, seller_delay)

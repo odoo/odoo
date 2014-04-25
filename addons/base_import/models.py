@@ -11,6 +11,7 @@ except ImportError:
 import psycopg2
 
 from openerp.osv import orm, fields
+from openerp.osv.orm import BaseModel
 from openerp.tools.translate import _
 
 FIELDS_RECURSION_LIMIT = 2
@@ -316,8 +317,12 @@ class ir_import(orm.TransientModel):
             }]
 
         _logger.info('importing %d rows...', len(data))
-        import_result = self.pool[record.res_model].load(
-            cr, uid, import_fields, data, context=context)
+        # DO NOT FORWARD PORT, already fixed in trunk
+        # hack to avoid to call the load method from ir_translation (name clash)
+        if record.res_model == 'ir.translation':
+            import_result = BaseModel.load(self.pool['ir.translation'], cr, uid, import_fields, data, context=context)
+        else:
+            import_result = self.pool[record.res_model].load(cr, uid, import_fields, data, context=context)
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise

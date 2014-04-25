@@ -167,7 +167,7 @@ class account_invoice_refund(osv.osv_memory):
                     to_reconcile_ids = {}
                     for line in movelines:
                         if line.account_id.id == inv.account_id.id:
-                            to_reconcile_ids[line.account_id.id] = [line.id]
+                            to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
                         if line.reconcile_id:
                             line.reconcile_id.unlink()
                     wf_service.trg_validate(uid, 'account.invoice', \

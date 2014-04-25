@@ -40,7 +40,7 @@ class res_partner(osv.Model):
 
     _columns = {
         # extra field to allow ORDER BY to match visible names
-        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers),
+        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=1),
     }
 
 class account_invoice(osv.Model):
