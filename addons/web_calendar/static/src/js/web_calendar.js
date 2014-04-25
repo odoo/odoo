@@ -508,8 +508,8 @@ openerp.web_calendar = function(instance) {
                 date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop]) : null;
             }
             else {
-                date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'date');
-                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'date').addMinutes(-1) : null;
+                date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'zstart');
+                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'zstart') : null; //.addSeconds(-1) : null;
             }
 
             if (this.info_fields) {
@@ -643,9 +643,9 @@ openerp.web_calendar = function(instance) {
                     event_end = new Date(event.start);
                 }
                 if (this.all_day) {
-                    event_end = (new Date(event_end.getTime())).addDays(1);
-                    date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),12);
-                    date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),12);
+                    //event_end = (new Date(event_end.getTime())).addDays(1);
+                    date_start_day = new Date(Date.UTC(event.start.getFullYear(),event.start.getMonth(),event.start.getDate()));
+                    date_stop_day = new Date(Date.UTC(event_end.getFullYear(),event_end.getMonth(),event_end.getDate()));                    
                 }
                 else {
                     date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
