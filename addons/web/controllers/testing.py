@@ -61,8 +61,8 @@ TESTING = Template(u"""<!DOCTYPE html>
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
 </body>
-<!-- TODO xmo please use the regular template even for testing -->
-<script src="/web/js/web.assets_backend"></script>
+<!-- TODO fme: Remove manifest usage for js and css -->
+${bundle('web.assets_backend') | n}
 % for module, jss, tests, templates in files:
     % for js in jss:
         % if not js.endswith('/apps.js'):
@@ -134,10 +134,16 @@ class TestRunnerController(http.Controller):
             for mod, tests in itertools.izip(sorted_mods, tests)
         ]
 
-        return TESTING.render(files=files, dependencies=json.dumps(
+        def bundle(xmlid):
+            return request.render(xmlid, lazy=False)
+
+        return TESTING.render(bundle=bundle, files=files, dependencies=json.dumps(
             [name for name in sorted_mods
              if module.get_module_resource(name, 'static')
-             if manifests[name]['js']]))
+             # TODO fme: find a way to detect modules with js bundles
+             # if manifests[name]['js']
+            ]))
+
 
     def load_manifest(self, name):
         manifest = module.load_information_from_description_file(name)
