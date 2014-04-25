@@ -117,11 +117,11 @@ class stock_landed_cost(osv.osv):
         if not cost_product:
             return False
         accounts = product_obj.get_product_accounts(cr, uid, line.product_id.id, context=context)
-        credit_account_id = accounts['stock_account_input']
-        debit_account_id = cost_product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
-        if not credit_account_id:
-            raise osv.except_osv(_('Error!'), _('Please configure Stock Input Account for product: %s.') % (line.product_id.name))
+        debit_account_id = accounts['property_stock_valuation_account_id']
+        credit_account_id = cost_product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
         if not debit_account_id:
+            raise osv.except_osv(_('Error!'), _('Please configure Stock Input Account for product: %s.') % (line.product_id.name))
+        if not credit_account_id:
             raise osv.except_osv(_('Error!'), _('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
         return self._create_account_move_line(cr, uid, line, move_id, credit_account_id, debit_account_id, context=context)
 
@@ -259,7 +259,7 @@ class stock_landed_cost_lines(osv.osv):
         result['name'] = product.name
         result['split_method'] = product.split_method
         result['price_unit'] = product.standard_price
-        result['account_id'] = product.property_account_expense and cost_product.property_account_expense.id or cost_product.categ_id.property_account_expense_categ.id
+        result['account_id'] = product.property_account_expense and product.property_account_expense.id or product.categ_id.property_account_expense_categ.id
         return {'value': result}
 
     _columns = {
