@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import datetime
+import re
 
 from sys import maxint
 
@@ -101,7 +102,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'url': "/page/" + xml_id,
                     'parent_id': id,
                 }, context=request.context)
-        url = "/page/" + xml_id
+        # Reverse action in order to allow shortcut for /page/<website_xml_id>
+        url = "/page/" + re.sub(r"^website\.", '', xml_id)
+
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
