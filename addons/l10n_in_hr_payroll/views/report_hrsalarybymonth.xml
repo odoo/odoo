@@ -6,8 +6,8 @@
         <t t-call="report.internal_layout">
             <div class="page">
                 <div class="text-center">
-	                <h3 class="text-center"><strong>Yearly Salary Details</strong></h3>
-	                <p class="text-center">
+	                <h2>Yearly Salary Details</h2>
+	                <p>
 	                    From <u><span t-esc="formatLang(data['form']['start_date'], date=True)"/></u> To <u><span t-esc="formatLang(data['form']['end_date'], date=True)"/></u> of <u><span t-esc="data['form']['category_id'][1]"/></u> Category
 	                </p>
                 </div>

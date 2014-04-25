@@ -8,8 +8,8 @@
                 <t t-foreach="get_employee(data['form'])" t-as="employee">
                     <h2><span t-field="employee.company_id"/></h2>
                     <p> From 
-                        <u><span t-esc="data['form']['date_from']"/></u> 
-                    To  <u><span t-esc="data['form']['date_to']"/></u> </p>
+                        <u><span t-esc="formatLang(data['form']['date_from'], date=True)"/></u> 
+                    To  <u><span t-esc="formatLang(data['form']['date_to'], date=True)"/></u> </p>
                     <table class="table table-condensed table-bordered">
                         <tr>
                             <td><strong>Employee Code</strong></td>
@@ -102,8 +102,7 @@
                         </tr>
                         <tr>
                             <td><strong>Deductions:</strong></td>
-                            <t t-foreach="get_deduct()" t-as="deduct">
-                                <tr>
+                                <tr t-foreach="get_deduct()" t-as="deduct">
                                     <t t-if="deduct[0] == 'Net'">
                                         <strong><span t-esc="deduct[0]"/></strong>
                                     </t>
@@ -111,7 +110,6 @@
                                         <span t-esc="deduct[0]"/>
                                     </t>
                                 </tr>
-                            </t>
                         </tr>
                     </table>
                 </t>
