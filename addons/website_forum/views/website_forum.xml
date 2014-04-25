@@ -515,7 +515,7 @@
                         </ul>
                         <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                         <div>
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }"
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                                 t-field="answer.create_uid"
                                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                                 style="display: inline-block;"/>
