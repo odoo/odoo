@@ -99,8 +99,7 @@ class procurement_order(osv.osv):
         #set the context for the propagation of the procurement cancelation
         ctx['cancel_procurement'] = True
         for procurement in self.browse(cr, uid, to_cancel_ids, context=ctx):
-            if procurement.rule_id and procurement.rule_id.propagate:
-                self.propagate_cancel(cr, uid, procurement, context=ctx)
+            self.propagate_cancel(cr, uid, procurement, context=ctx)
         return super(procurement_order, self).cancel(cr, uid, to_cancel_ids, context=ctx)
 
     def _find_parent_locations(self, cr, uid, procurement, context=None):

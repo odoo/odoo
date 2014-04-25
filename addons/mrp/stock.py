@@ -228,7 +228,7 @@ class stock_warehouse(osv.osv):
             'route_id': manufacture_route_id,
             'action': 'manufacture',
             'picking_type_id': warehouse.int_type_id.id,
-            'procure_method': 'make_to_order',
+            'propagate': False, 
             'warehouse_id': warehouse.id,
         }
 

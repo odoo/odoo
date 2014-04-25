@@ -2120,7 +2120,7 @@ class stock_move(osv.osv):
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
-        #force assignation of consumable products and incoming from supplier/inventory/production 
+        #force assignation of consumable products and incoming from supplier/inventory/production
         if to_assign_moves:
             self.force_assign(cr, uid, to_assign_moves, context=context)
 
@@ -2144,6 +2144,14 @@ class stock_move(osv.osv):
                 #cancel chained moves
                 if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
+                    # If we have a long chain of moves to be cancelled, it is easier for the user to handle
+                    # only the last procurement which will go into exception, instead of all procurements
+                    # along the chain going into exception.  We need to check if there are no split moves not cancelled however
+                    if move.procurement_id:
+                        proc = move.procurement_id
+                        if all([x.state == 'cancel' for x in proc.move_ids if x.id != move.id]):
+                            procurement_obj.write(cr, uid, [proc.id], {'state': 'cancel'})
+
                 elif move.move_dest_id.state == 'waiting':
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'}, context=context)
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
@@ -2360,6 +2368,7 @@ class stock_move(osv.osv):
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
             'split_from': move.id,
+            'move_dest_id': move.move_dest_id.id,
         }
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']

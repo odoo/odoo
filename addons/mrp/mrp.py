@@ -493,7 +493,7 @@ class mrp_production(osv.osv):
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation',
             readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection(
-            [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Awaiting Raw Materials'),
+            [('draft', 'New'), ('cancel', 'Cancelled'), ('confirmed', 'Awaiting Raw Materials'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
             track_visibility='onchange',
@@ -614,12 +614,6 @@ class mrp_production(osv.osv):
         }
         return {'value': result}
 
-    def action_picking_except(self, cr, uid, ids):
-        """ Changes the state to Exception.
-        @return: True
-        """
-        self.write(cr, uid, ids, {'state': 'picking_except'})
-        return True
 
     def _action_compute_lines(self, cr, uid, ids, properties=None, context=None):
         """ Compute product_lines and workcenter_lines from BoM structure
@@ -685,6 +679,11 @@ class mrp_production(osv.osv):
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state': 'cancel'})
+        # Put related procurements in exception
+        proc_obj = self.pool.get("procurement.order")
+        procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
+        if procs:
+            proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
     def action_ready(self, cr, uid, ids, context=None):
@@ -697,8 +696,6 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             if not production.move_created_ids:
                 self._make_production_produce_line(cr, uid, production, context=context)
-                for scheduled in production.product_lines:
-                    self._make_production_line_procurement(cr, uid, scheduled, False, context=context)
 
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
@@ -712,6 +709,10 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
         write_res = self.write(cr, uid, ids, {'state': 'done', 'date_finished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        # Check related procurements
+        proc_obj = self.pool.get("procurement.order")
+        procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
+        proc_obj.check(cr, uid, procs, context=context)
         return write_res
 
     def test_production_done(self, cr, uid, ids):
@@ -965,29 +966,8 @@ class mrp_production(osv.osv):
             if production.ready_production:
                 res = True
         return res
-
-    def _make_production_line_procurement(self, cr, uid, production_line, shipment_move_id, context=None):
-        procurement_order = self.pool.get('procurement.order')
-        production = production_line.production_id
-        location_id = production.location_src_id.id
-        date_planned = production.date_planned
-        procurement_name = (production.origin or '').split(':')[0] + ':' + production.name
-        procurement_id = procurement_order.create(cr, uid, {
-                    'name': procurement_name,
-                    'origin': procurement_name,
-                    'date_planned': date_planned,
-                    'product_id': production_line.product_id.id,
-                    'product_qty': production_line.product_qty,
-                    'product_uom': production_line.product_uom.id,
-                    'product_uos_qty': production_line.product_uos and production_line.product_qty or False,
-                    'product_uos': production_line.product_uos and production_line.product_uos.id or False,
-                    'location_id': location_id,
-                    'move_id': shipment_move_id,
-                    'company_id': production.company_id.id,
-        })
-        procurement_order.signal_button_confirm(cr, uid, [procurement_id])
-        return procurement_id
-
+    
+    
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.property_stock_production.id
