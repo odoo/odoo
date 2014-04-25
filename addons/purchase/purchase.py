@@ -416,7 +416,6 @@ class purchase_order(osv.osv):
         action = self.pool.get('ir.actions.act_window').read(cr, uid, action_id, context=context)
 
         pick_ids = []
-        #TODO: might need to change this function in order to return the whole set of operations and not only the reception(s) to input
         for po in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in po.picking_ids]
 
@@ -484,7 +483,6 @@ class purchase_order(osv.osv):
         self.signal_send_rfq(cr, uid, ids)
         return self.pool['report'].get_action(cr, uid, ids, 'purchase.report_purchasequotation', context=context)
 
-    #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):

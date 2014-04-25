@@ -84,11 +84,6 @@ class stock_picking(osv.osv):
     }
 
 
-    # TODO: Invoice based on receptions
-    # Here is how it should work:
-    #   On a draft invoice, allows to select purchase_orders (many2many_tags)
-    # This fills in automatically PO lines or from related receptions if any
-
 class stock_warehouse(osv.osv):
     _inherit = 'stock.warehouse'
     _columns = {
