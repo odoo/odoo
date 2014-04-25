@@ -12,8 +12,7 @@
                     <label for="landed_cost_ok"/>
                 </div>
                 <xpath expr="//group[@name='properties']" position="before">
-                    <group>
-                        <separator string="Split Method" colspan="4"/>
+                    <group attrs="{'invisible':[('landed_cost_ok','=',False)]}">
                         <group colspan="2" col="2">
                             <field name="split_method"/>
                         </group>

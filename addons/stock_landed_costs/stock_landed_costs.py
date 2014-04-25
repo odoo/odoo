@@ -82,7 +82,7 @@ class stock_landed_cost(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Name', size=256, required=True, states={'done': [('readonly', True)]}, track_visibility='always'),
+        'name': fields.char('Name', size=256, track_visibility='always', readonly=True),
         'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange'),
         'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}),
@@ -100,6 +100,7 @@ class stock_landed_cost(osv.osv):
     }
 
     _defaults = {
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost'),
         'state': 'draft',
         'date': fields.date.context_today,
     }
