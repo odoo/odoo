@@ -161,9 +161,9 @@ class employees_yearly_salary_report(report_sxw.rml_parse):
         return self.total
 
 class wrapped_report_payslip(osv.AbstractModel):
-    _name = 'report.l10n_in_hr_payroll.report_hr_yearly_salary'
+    _name = 'report.l10n_in_hr_payroll.report_hryearlysalary'
     _inherit = 'report.abstract_report'
-    _template = 'l10n_in_hr_payroll.report_hr_yearly_salary'
+    _template = 'l10n_in_hr_payroll.report_hryearlysalary'
     _wrapped_report_class = employees_yearly_salary_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
