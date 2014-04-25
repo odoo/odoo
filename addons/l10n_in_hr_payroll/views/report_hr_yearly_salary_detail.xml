@@ -87,30 +87,35 @@
                                 <th>Total</th>
                             </tr>
                         </thead>
-                        <tr>
-                            <td><strong> Allowances with Basic:</strong></td>
+                        <tbody>
                             <t t-foreach="get_allow()" t-as="allowanc">
                                 <tr>
-                                    <t t-if="allowanc[0] == 'Basic' or allowanc[0] == 'Gross'">
-                                        <strong><span t-esc="allowanc[0]"/></strong>
+                                    <t t-if="allowanc[0] =='Basic' or allowanc[0] == 'Gross'">
+                                        <th><span t-esc="allowanc[0]"/></th>
                                     </t>
-                                    <t t-if="allowanc[0] != 'Basic' and allowanc[0] == 'Gross'">
-                                        <span t-esc="allowanc[0]"/>
+                                    <t t-if="allowanc[0] !='Basic' and allowanc[0] != 'Gross'">
+                                        <td><span t-esc="allowanc[0]"/></td>
+                                    </t>
+                                    
+                                    <t t-foreach="allowanc[1:(len(allowanc)-1)]" t-as="allow">
+                                        <td><span t-esc="allow"/></td>
                                     </t>
                                 </tr>
                             </t>
-                        </tr>
-                        <tr>
-                            <td><strong>Deductions:</strong></td>
-                                <tr t-foreach="get_deduct()" t-as="deduct">
+                            <t t-foreach="get_deduct()" t-as="deduct">
+                                <tr>
                                     <t t-if="deduct[0] == 'Net'">
-                                        <strong><span t-esc="deduct[0]"/></strong>
+                                        <th><span t-esc="deduct[0]"/></th>
                                     </t>
                                     <t t-if="deduct[0] != 'Net'">
-                                        <span t-esc="deduct[0]"/>
+                                        <td><span t-esc="deduct[0]"/></td>
+                                    </t>
+                                    <t t-foreach="deduct[1:(len(deduct)-1)]" t-as="d">
+                                        <td><span t-esc="d"/></td>
                                     </t>
                                 </tr>
-                        </tr>
+                            </t>
+                        </tbody>
                     </table>
             </div>
         </t>
