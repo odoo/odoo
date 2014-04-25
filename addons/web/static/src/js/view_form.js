@@ -3365,7 +3365,7 @@ instance.web.form.M2ODialog = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
-        $( "p" ).text( text );
+        this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
