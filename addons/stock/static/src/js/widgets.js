@@ -452,8 +452,14 @@ function openerp_picking_widgets(instance){
             $(window).trigger('hashchange');
         },
         search_picking: function(barcode){
-            //TODO don't crash if a not supported char is given
-            var re = RegExp("([0-9]+):.*?"+barcode.toUpperCase(),"gi");
+            try {
+                var re = RegExp("([0-9]+):.*?"+barcode.toUpperCase(),"gi");
+            }
+            catch(e) {
+                //avoid crash if a not supported char is given (like '\' or ')')
+	        return [];
+            }
+            
             var results = [];
             for(var i = 0; i < 100; i++){
                 r = re.exec(this.picking_search_string);

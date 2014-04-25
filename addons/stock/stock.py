@@ -1585,6 +1585,11 @@ class stock_move(osv.osv):
             res += [x.id for x in picking.move_lines]
         return res
 
+    def _get_moves_from_prod(self, cr, uid, ids, context=None):
+        if ids:
+            return self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', ids)], context=context)
+        return []
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1592,8 +1597,10 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
-        # TODO: improve store to add dependency on product UoM
-        'product_qty': fields.function(_quantity_normalize, type='float', store={'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_uom_qty', 'product_uom'], 20)}, string='Quantity',
+        'product_qty': fields.function(_quantity_normalize, type='float', store={
+                'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
+                'product.product': (_get_moves_from_prod, ['uom_id'], 20),
+            }, string='Quantity',
             digits_compute=dp.get_precision('Product Unit of Measure'),
             help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
@@ -3321,10 +3328,6 @@ class stock_warehouse(osv.osv):
 
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
-    def unlink(self, cr, uid, ids, context=None):
-        #TODO try to delete location and route and if not possible, put them in inactive
-        return super(stock_warehouse, self).unlink(cr, uid, ids, context=context)
-
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
         route_obj = self.pool.get("stock.location.route")
         all_routes = [route.id for route in warehouse.route_ids]
@@ -3480,11 +3483,9 @@ class stock_package(osv.osv):
                 res.add(pack.parent_id.id)
         return list(res)
 
-    # TODO: Problem when package is empty!
-    #
     def _get_package_info(self, cr, uid, ids, name, args, context=None):
         default_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id})
+        res = {}.fromkeys(ids, {'location_id': False, 'company_id': default_company_id, 'owner_id': False})
         for pack in self.browse(cr, uid, ids, context=context):
             if pack.quant_ids:
                 res[pack.id]['location_id'] = pack.quant_ids[0].location_id.id
@@ -3754,7 +3755,6 @@ class stock_pack_operation(osv.osv):
             new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, {'product_id': product_id}, context=context)
             self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
-    #TODO: this function can be refactored
     def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False ,visible_op_ids=False, increment=True, context=None):
         '''Search for an operation with given 'domain' in a picking, if it exists increment the qty (+1) otherwise create it
 
@@ -4033,7 +4033,6 @@ class stock_picking_type(osv.osv):
                 result[tid]['rate_picking_backorders'] = 0
         return result
 
-    #TODO: not returning valus in required format to show in sparkline library,just added latest_picking_waiting need to add proper logic.
     def _get_picking_history(self, cr, uid, ids, field_names, arg, context=None):
         obj = self.pool.get('stock.picking')
         result = {}
