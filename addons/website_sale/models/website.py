@@ -106,7 +106,7 @@ class Website(orm.Model):
 
         # change and record value
         if quantity:
-            vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, context=context)
+            vals = order_line_obj._recalculate_product_values(cr, uid, order_line_ids, product_id, fiscal_position=order.fiscal_position.id, context=context)
             values.update(vals)
             values['product_uom_qty'] = quantity
             values['product_id'] = product_id
