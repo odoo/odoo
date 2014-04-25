@@ -129,14 +129,11 @@ def db_monodb(req):
     return db_redirect(req, True)[0]
 
 def redirect_with_hash(req, url, code=303):
-    if req.httprequest.user_agent.browser == 'msie':
-        try:
-            version = float(req.httprequest.user_agent.version)
-            if version < 10:
-                return "<html><head><script>window.location = '%s#' + location.hash;</script></head></html>" % url
-        except Exception:
-            pass
-    return werkzeug.utils.redirect(url, code)
+    # Most IE and Safari versions decided not to preserve location.hash upon
+    # redirect. And even if IE10 pretends to support it, it still fails
+    # inexplicably in case of multiple redirects (and we do have some).
+    # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
+    return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -1087,7 +1084,10 @@ class DataSet(openerpweb.Controller):
             }
 
         records = Model.read(ids, fields or False, req.context)
-        records.sort(key=lambda obj: ids.index(obj['id']))
+
+        index = dict((r['id'], r) for r in records)
+        records = [index[x] for x in ids if x in index]
+
         return {
             'length': length,
             'records': records
@@ -1570,7 +1570,7 @@ class Export(openerpweb.Controller):
                     req, fields[base]['relation'], base, fields[base]['string'],
                     subfields
                 ))
-            else:
+            elif base in fields:
                 info[base] = fields[base]['string']
 
         return info

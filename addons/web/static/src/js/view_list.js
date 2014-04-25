@@ -403,6 +403,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (total) {
             var range_start = this.page * limit + 1;
             var range_stop = range_start - 1 + limit;
+            if (this.records.length) {
+                range_stop = range_start - 1 + this.records.length;
+            }
             if (range_stop > total) {
                 range_stop = total;
             }
@@ -597,7 +600,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
-            self.configure_pager(self.dataset);
+            if (self.records.length === 0 && self.dataset.size() > 0) {
+                //Trigger previous manually to navigate to previous page, 
+                //If all records are deleted on current page.
+                self.$pager.find('ul li:first a').trigger('click');
+            } else if (self.dataset.size() == self.limit()) {
+                //Reload listview to update current page with next page records 
+                //because pager going to be hidden if dataset.size == limit
+                self.reload();
+            } else {
+                self.configure_pager(self.dataset);
+            }
             self.compute_aggregates();
         });
     },
@@ -1022,7 +1035,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     id = parseInt(ref_match[2], 10);
                 new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
-                    record.set(column.id, names[0][1]);
+                    record.set(column.id + '__display', names[0][1]);
                 });
             }
         } else if (column.type === 'many2one') {
@@ -1623,9 +1636,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 function synchronized(fn) {
     var fn_mutex = new $.Mutex();
     return function () {
+        var obj = this;
         var args = _.toArray(arguments);
-        args.unshift(this);
-        return fn_mutex.exec(fn.bind.apply(fn, args));
+        return fn_mutex.exec(function () {
+            if (obj.isDestroyed()) { return $.when(); }
+            return fn.apply(obj, args)
+        });
     };
 }
 var DataGroup =  instance.web.Class.extend({
@@ -2095,6 +2111,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.reference': 'instance.web.list.Reference',
     'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
@@ -2303,6 +2320,19 @@ instance.web.list.Many2Many = instance.web.list.Column.extend({
         if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
             row_data[this.id] = row_data[this.id + '__display'];
+        }
+        return this._super(row_data, options);
+    }
+});
+instance.web.list.Reference = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (!_.isEmpty(row_data[this.id].value)) {
+            // If value, use __display version for printing
+            if (!!row_data[this.id + '__display']) {
+                row_data[this.id] = row_data[this.id + '__display'];
+            } else {
+                row_data[this.id] = {'value': ''};
+            }
         }
         return this._super(row_data, options);
     }

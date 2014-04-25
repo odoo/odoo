@@ -819,7 +819,7 @@ instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
  */
 instance.web.Home = function(parent, action) {
     var url = '/' + (window.location.search || '');
-    instance.web.redirect(url, action.params && action.params.wait);
+    instance.web.redirect(url, action && action.params && action.params.wait);
 };
 instance.web.client_actions.add("home", "instance.web.Home");
 
@@ -1409,10 +1409,16 @@ instance.web.WebClient = instance.web.Client.extend({
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action == "login") {
             self.menu.has_been_loaded.done(function() {
-                var first_menu_id = self.menu.$el.find("a:first").data("menu");
-                if(first_menu_id) {
-                    self.menu.menu_click(first_menu_id);
-                }
+                new instance.web.Model("res.users").call("read", [self.session.uid, ["action_id"]]).done(function(data) {
+                    if(data.action_id) {
+                        self.action_manager.do_action(data.action_id[0]);
+                        self.menu.open_action(data.action_id[0]);
+                    } else {
+                        var first_menu_id = self.menu.$el.find("a:first").data("menu");
+                        if(first_menu_id)
+                            self.menu.menu_click(first_menu_id);
+                    }
+                });
             });
         } else {
             $(window).trigger('hashchange');

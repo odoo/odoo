@@ -620,6 +620,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         });
                     }
                     return $.when();
+                }).fail(function() {
+                    self.save_list.pop();
+                    return $.when();
                 });
             };
             return iterate();
@@ -716,8 +719,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         }
     },
-    on_button_save: function() {
+    on_button_save: function(e) {
         var self = this;
+        $(e.target).attr("disabled", true);
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.reload().then(function() {
@@ -727,6 +731,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     parent.menu.do_reload_needaction();
                 }
             });
+        }).always(function(){
+            $(e.target).attr("disabled", false);
         });
     },
     on_button_cancel: function(event) {
@@ -2612,6 +2618,11 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
                 e.stopPropagation();
             }
         },
+        'keypress': function (e) {
+            if (e.which === $.ui.keyCode.ENTER) {
+                e.stopPropagation();
+            }
+        },
         'change textarea': 'store_dom_value',
     },
     initialize_content: function() {
@@ -2972,7 +2983,8 @@ instance.web.form.CompletionFieldMixin = {
         if (self.options.quick_create === undefined || self.options.quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
                 .name_create(name).done(function(data) {
-                    self.add_id(data[0]);
+                    if (!self.get('effective_readonly'))
+                        self.add_id(data[0]);
                 }).fail(function(error, event) {
                     event.preventDefault();
                     slow_create();
@@ -3142,7 +3154,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.display_value = {};
                 self.render_value();
                 self.focus();
-                self.view.do_onchange(self);
+                self.trigger('changed_value');
             });
         });
 
@@ -3272,7 +3284,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             // disabled to solve a bug, but may cause others
             //close: anyoneLoosesFocus,
             minLength: 0,
-            delay: 0
+            delay: 250
         });
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
@@ -3299,6 +3311,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (! no_recurse) {
             var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
             this.alive(dataset.name_get([self.get("value")])).done(function(data) {
+                if (!data[0]) {
+                    self.do_warn(_t("Render"), _t("No value found for the field "+self.field.string+" for value "+self.get("value")));
+                    return;
+                }
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
             });
@@ -4786,7 +4802,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
-                    contexts, groupbys);
+                    contexts.concat(self.context), groupbys);
                 self.initial_ids = undefined;
             } else {
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
@@ -4911,7 +4927,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('blurred', null, function () {self.trigger('blurred')});
 
         this.m2o = new instance.web.form.FieldMany2One(fm, { attrs: {
-            name: 'm2o',
+            name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.m2o.on("change:value", this, this.data_changed);
@@ -5379,9 +5395,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.get_selection();
         if (this.options.clickable) {
             this.$el.on('click','li',this.on_click_stage);
-        }
-        if (this.$el.parent().is('header')) {
-            this.$el.after('<div class="oe_clear"/>');
         }
         this._super();
     },
