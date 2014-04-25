@@ -73,7 +73,6 @@ class product_template(osv.Model):
         return res
 
     _columns = {
-        'company_name': fields.char('Company Name'),
         'attribute_lines': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product attributes'),
         # TODO FIXME tde: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(

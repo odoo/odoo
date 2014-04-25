@@ -388,21 +388,13 @@ class website_sale(http.Controller):
         else:
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
-        # set shipping_id
+        # create a new shipping partner
         shipping_id = None
         if checkout.get('shipping_different'):
             shipping_info = self.checkout_parse('shipping', checkout, True)
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
-
-            domain = [(key, '_id' in key and '=' or 'ilike', value) for key, value in shipping_info.items()]
-            shipping_ids = orm_partner.search(cr, SUPERUSER_ID, domain, context=context)
-            
-            # save shipping informations
-            if shipping_ids:
-                shipping_id = shipping_ids[0]
-            else:
-                shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
+            shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
 
         order_info = {
             'partner_id': partner_id,
