@@ -119,9 +119,6 @@ class sale_order(osv.osv):
                 val['company_id'] = warehouse.company_id.id
         return {'value': val}
 
-    # FP Note: to change, take the picking related to the moves related to the
-    # procurements related to SO lines
-
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing delivery orders
@@ -150,10 +147,6 @@ class sale_order(osv.osv):
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
-
-    # TODO: FP Note: I guess it's better to do:
-    # if order_policy<>picking: super()
-    # else: call invoice_on_picking_method()
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_invoice = False, context=None):
         move_obj = self.pool.get("stock.move")
         res = super(sale_order,self).action_invoice_create(cr, uid, ids, grouped=grouped, states=states, date_invoice = date_invoice, context=context)

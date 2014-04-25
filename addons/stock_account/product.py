@@ -44,6 +44,15 @@ class product_product(osv.osv):
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
         account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
+
+        if not all([stock_input_acc, stock_output_acc, account_valuation, journal_id]):
+            raise osv.except_osv(_('Error!'), _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
+    Product: %s
+    Stock Input Account: %s
+    Stock Output Account: %s
+    Stock Valuation Account: %s
+    Stock Journal: %s
+    ''') % (product_obj.name, stock_input_acc, stock_output_acc, account_valuation, journal_id))
         return {
             'stock_account_input': stock_input_acc,
             'stock_account_output': stock_output_acc,
@@ -51,119 +60,59 @@ class product_product(osv.osv):
             'property_stock_valuation_account_id': account_valuation
         }
 
-    # FP Note:;too complex, not good, should be implemented at quant level TODO
-    def do_change_standard_price(self, cr, uid, ids, datas, context=None):
-        """ Changes the Standard Price of Product and creates an account move accordingly.
-        @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-        @param context: A standard dictionary
-        @return:
-
-        """
+    def do_change_standard_price(self, cr, uid, ids, new_price, context=None):
+        """ Changes the Standard Price of Product and creates an account move accordingly."""
         location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
-
-        new_price = datas.get('new_price', 0.0)
-        stock_output_acc = datas.get('stock_output_account', False)
-        stock_input_acc = datas.get('stock_input_account', False)
-        journal_id = datas.get('stock_journal', False)
-        product_obj=self.browse(cr, uid, ids, context=context)[0]
-        account_valuation = product_obj.categ_id.property_stock_valuation_account_id
-        account_valuation_id = account_valuation and account_valuation.id or False
-        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Specify valuation Account for Product Category: %s.') % (product_obj.categ_id.name))
-        move_ids = []
-        loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
+        user_company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        loc_ids = location_obj.search(cr, uid, [('usage', '=', 'internal'), ('company_id', '=', user_company_id)])
         for rec_id in ids:
+            datas = self.get_product_accounts(cr, uid, rec_id, context=context)
             for location in location_obj.browse(cr, uid, loc_ids, context=context):
                 c = context.copy()
-                c.update({
-                    'location': location.id,
-                    'compute_child': False
-                })
-
+                c.update({'location': location.id, 'compute_child': False})
                 product = self.browse(cr, uid, rec_id, context=c)
-                qty = product.qty_available
+
                 diff = product.standard_price - new_price
-                if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
+                if not diff:
+                    raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
+                qty = product.qty_available
                 if qty:
-                    company_id = location.company_id and location.company_id.id or False
-                    if not company_id: raise osv.except_osv(_('Error!'), _('Please specify company in Location.'))
-                    #
                     # Accounting Entries
-                    #
-                    if not journal_id:
-                        journal_id = product.categ_id.property_stock_journal and product.categ_id.property_stock_journal.id or False
-                    if not journal_id:
-                        raise osv.except_osv(_('Error!'),
-                            _('Please define journal '\
-                              'on the product category: "%s" (id: %d).') % \
-                                (product.categ_id.name,
-                                    product.categ_id.id,))
-                    move_id = move_obj.create(cr, uid, {
-                                'journal_id': journal_id,
-                                'company_id': company_id
-                                })
-
-                    move_ids.append(move_id)
-
+                    move_vals = {
+                        'journal_id': datas['stock_journal'],
+                        'company_id': location.company_id.id,
+                    }
+                    move_id = move_obj.create(cr, uid, move_vals, context=context)
 
                     if diff > 0:
-                        if not stock_input_acc:
-                            stock_input_acc = product.\
-                                property_stock_account_input.id
-                        if not stock_input_acc:
-                            stock_input_acc = product.categ_id.\
-                                    property_stock_account_input_categ.id
-                        if not stock_input_acc:
-                            raise osv.except_osv(_('Error!'),
-                                    _('Please define stock input account for this product: "%s" (id: %d).') % \
-                                            (product.name,
-                                                product.id,))
                         amount_diff = qty * diff
-                        move_line_obj.create(cr, uid, {
-                                    'name': product.name,
-                                    'account_id': stock_input_acc,
+                        debit_account_id = datas['stock_account_input']
+                        credit_account_id = datas['property_stock_valuation_account_id']
+                    else:
+                        amount_diff = qty * -diff
+                        debit_account_id = datas['property_stock_valuation_account_id']
+                        credit_account_id = datas['stock_account_output']
+
+                    move_line_obj.create(cr, uid, {
+                                    'name': _('Standard Price changed'),
+                                    'account_id': debit_account_id,
                                     'debit': amount_diff,
+                                    'credit': 0,
                                     'move_id': move_id,
-                                    })
-                        move_line_obj.create(cr, uid, {
-                                    'name': product.categ_id.name,
-                                    'account_id': account_valuation_id,
+                                    }, context=context)
+                    move_line_obj.create(cr, uid, {
+                                    'name': _('Standard Price changed'),
+                                    'account_id': credit_account_id,
+                                    'debit': 0,
                                     'credit': amount_diff,
                                     'move_id': move_id
-                                    })
-                    elif diff < 0:
-                        if not stock_output_acc:
-                            stock_output_acc = product.\
-                                property_stock_account_output.id
-                        if not stock_output_acc:
-                            stock_output_acc = product.categ_id.\
-                                    property_stock_account_output_categ.id
-                        if not stock_output_acc:
-                            raise osv.except_osv(_('Error!'),
-                                    _('Please define stock output account ' \
-                                            'for this product: "%s" (id: %d).') % \
-                                            (product.name,
-                                                product.id,))
-                        amount_diff = qty * -diff
-                        move_line_obj.create(cr, uid, {
-                                        'name': product.name,
-                                        'account_id': stock_output_acc,
-                                        'credit': amount_diff,
-                                        'move_id': move_id
-                                    })
-                        move_line_obj.create(cr, uid, {
-                                        'name': product.categ_id.name,
-                                        'account_id': account_valuation_id,
-                                        'debit': amount_diff,
-                                        'move_id': move_id
-                                    })
-
+                                    }, context=context)
             self.write(cr, uid, rec_id, {'standard_price': new_price})
-
-        return move_ids
+        return True
 
     _columns = {
         'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),

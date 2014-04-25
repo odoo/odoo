@@ -28,13 +28,9 @@ class change_standard_price(osv.osv_memory):
     _description = "Change Standard Price"
     _columns = {
         'new_price': fields.float('Price', required=True, digits_compute=dp.get_precision('Product Price'),
-                                  help="If cost price is increased, stock variation account will be debited "
-                                        "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-                                        "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),
-        'stock_account_input':fields.many2one('account.account', 'Stock Input Account'),
-        'stock_account_output':fields.many2one('account.account', 'Stock Output Account'),
-        'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),
-        'enable_stock_in_out_acc':fields.boolean('Enable Related Account',),
+            help="If cost price is increased, stock variation account will be debited "
+            "and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+            "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -52,44 +48,11 @@ class change_standard_price(osv.osv_memory):
         product_obj = product_pool.browse(cr, uid, context.get('active_id', False))
         res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)
 
-        accounts = product_pool.get_product_accounts(cr, uid, context.get('active_id', False), context={})
-
         price = product_obj.standard_price
 
         if 'new_price' in fields:
             res.update({'new_price': price})
-        if 'stock_account_input' in fields:
-            res.update({'stock_account_input': accounts['stock_account_input']})
-        if 'stock_account_output' in fields:
-            res.update({'stock_account_output': accounts['stock_account_output']})
-        if 'stock_journal' in fields:
-            res.update({'stock_journal': accounts['stock_journal']})
-        if 'enable_stock_in_out_acc' in fields:
-            res.update({'enable_stock_in_out_acc': True})
-
         return res
-
-    # onchange_price function is not used anywhere 
-    def onchange_price(self, cr, uid, ids, new_price, context=None):
-        """ Sets stock input and output account according to the difference
-            of old price and new price.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param new_price: Changed price
-        @param context: A standard dictionary
-        @return: Dictionary of values
-        """
-        if context is None:
-            context = {}
-        product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False), context=context)
-        price = product_obj.standard_price
-        diff = price - new_price
-        if diff > 0 :
-            return {'value' : {'enable_stock_in_out_acc':True}}
-        else :
-            return {'value' : {'enable_stock_in_out_acc':False}}
 
     def change_price(self, cr, uid, ids, context=None):
         """ Changes the Standard Price of Product.
@@ -107,14 +70,7 @@ class change_standard_price(osv.osv_memory):
         assert rec_id, _('Active ID is not set in Context.')
         prod_obj = self.pool.get('product.product')
         res = self.browse(cr, uid, ids, context=context)
-        datas = {
-            'new_price' : res[0].new_price,
-            'stock_output_account' : res[0].stock_account_output.id,
-            'stock_input_account' : res[0].stock_account_input.id,
-            'stock_journal' : res[0].stock_journal.id
-        }
-        prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
+        prod_obj.do_change_standard_price(cr, uid, [rec_id], res[0].new_price, context)
         return {'type': 'ir.actions.act_window_close'}
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
