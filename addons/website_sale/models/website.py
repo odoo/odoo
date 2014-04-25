@@ -102,7 +102,12 @@ class Website(orm.Model):
         else:
             fields = [k for k, v in order_line_obj._columns.items()]
             values = order_line_obj.default_get(cr, SUPERUSER_ID, fields, context=context)
-            quantity = 1
+            if set_number >= 0:
+                quantity = set_number
+            elif number >= 0:
+                quantity = number
+            else:
+                quantity = 1
 
         # change and record value
         if quantity:
