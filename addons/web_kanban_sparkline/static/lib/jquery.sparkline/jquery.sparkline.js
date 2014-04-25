@@ -582,7 +582,11 @@
         var tag;
         //if ('\v' == 'v') /* ie only */ {
         if (document.createStyleSheet) {
-            document.createStyleSheet().cssText = css;
+            try {
+                document.createStyleSheet().cssText = css;
+            } catch(err) {
+                console.log('Failed - IE9 limit 31 sheets CSS');
+            }
         } else {
             tag = document.createElement('style');
             tag.type = 'text/css';

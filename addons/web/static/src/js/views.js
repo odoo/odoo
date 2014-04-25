@@ -25,9 +25,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this._super.apply(this, arguments);
         this.$el.on('click', 'a.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
-    dialog_stop: function () {
+    dialog_stop: function (reason) {
         if (this.dialog) {
-            this.dialog.destroy();
+            this.dialog.destroy(reason);
         }
         this.dialog = null;
     },
@@ -331,6 +331,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_menu_id: null,
             additional_context: {},
         });
+
         if (action === false) {
             action = { type: 'ir.actions.act_window_close' };
         } else if (_.isString(action) && instance.web.client_actions.contains(action)) {
@@ -407,12 +408,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
             }
-            this.dialog_stop();
+            this.dialog_stop(executor.action);
             this.dialog = new instance.web.Dialog(this, {
+                title: executor.action.name,
                 dialogClass: executor.klass,
             });
             this.dialog.on("closing", null, options.on_close);
-            this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
                     $buttons: this.dialog.$buttons,
@@ -425,7 +426,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.open();
             return initialized;
         } else  {
-            this.dialog_stop();
+            this.dialog_stop(executor.action);
             this.inner_action = executor.action;
             this.inner_widget = widget;
             executor.post_process(widget);
@@ -495,44 +496,39 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_report_xml: function(action, options) {
         var self = this;
         instance.web.blockUI();
-        return instance.web.pyeval.eval_domains_and_contexts({
-            contexts: [action.context],
-            domains: []
-        }).then(function(res) {
-            action = _.clone(action);
-            action.context = res.context;
+        action = _.clone(action);
+        var eval_contexts = ([instance.session.user_context] || []).concat([action.context]);
+        action.context = instance.web.pyeval.eval('contexts',eval_contexts);
 
-            // iOS devices doesn't allow iframe use the way we do it,
-            // opening a new window seems the best way to workaround
-            if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
-                var params = {
-                    action: JSON.stringify(action),
-                    token: new Date().getTime()
-                };
-                var url = self.session.url('/web/report', params);
-                instance.web.unblockUI();
-                $('<a href="'+url+'" target="_blank"></a>')[0].click();
-                return;
-            }
-
-            var c = instance.webclient.crashmanager;
-            return $.Deferred(function (d) {
-                self.session.get_file({
-                    url: '/web/report',
-                    data: {action: JSON.stringify(action)},
-                    complete: instance.web.unblockUI,
-                    success: function(){
-                        if (!self.dialog) {
-                            options.on_close();
-                        }
-                        self.dialog_stop();
-                        d.resolve();
-                    },
-                    error: function () {
-                        c.rpc_error.apply(c, arguments);
-                        d.reject();
+        // iOS devices doesn't allow iframe use the way we do it,
+        // opening a new window seems the best way to workaround
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+            var params = {
+                action: JSON.stringify(action),
+                token: new Date().getTime()
+            };
+            var url = self.session.url('/web/report', params);
+            instance.web.unblockUI();
+            $('<a href="'+url+'" target="_blank"></a>')[0].click();
+            return;
+        }
+        var c = instance.webclient.crashmanager;
+        return $.Deferred(function (d) {
+            self.session.get_file({
+                url: '/web/report',
+                data: {action: JSON.stringify(action)},
+                complete: instance.web.unblockUI,
+                success: function(){
+                    if (!self.dialog) {
+                        options.on_close();
                     }
-                });
+                    self.dialog_stop();
+                    d.resolve();
+                },
+                error: function () {
+                    c.rpc_error.apply(c, arguments);
+                    d.reject();
+                }
             });
         });
     },
@@ -585,7 +581,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         this.$el.find('.oe_view_manager_switch a').click(function() {
             self.switch_mode($(this).data('view-type'));
-        }).tipsy();
+        }).tooltip();
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
@@ -599,6 +595,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
             });
+            
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
@@ -606,7 +603,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-        return this.switch_mode(default_view);
+  
+
+        return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
+      
+        
     },
     switch_mode: function(view_type, no_store, view_options) {
         var self = this;
@@ -638,7 +639,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$el
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
-
+        this.$el.attr("data-view-type", view_type);
         return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
@@ -814,6 +815,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
         }).done(function (results) {
+            if (results.error) {
+                throw new Error(
+                        _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
+                                      JSON.stringify(results.error)));
+            }
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -920,7 +926,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             current_view = this.views[this.active_view].controller;
         switch (val) {
             case 'fvg':
-                var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
+                var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get") }).open();
                 $('<pre>').text(instance.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$el);
                 break;
             case 'tests':
@@ -937,7 +943,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     this.dataset.call('perm_read', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
                             title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
-                            width: 400
+                            size: 'medium',
                         }, QWeb.render('ViewManagerDebugViewLog', {
                             perm : result[0],
                             format : instance.web.format_value
@@ -980,7 +986,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     new instance.web.Dialog(self, {
                         title: _.str.sprintf(_t("Model %s fields"),
                                              self.dataset.model),
-                        width: '95%'}, $root).open();
+                        }, $root).open();
                 });
                 break;
             case 'edit_workflow':
@@ -1151,10 +1157,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.$('.oe_form_dropdown_section').each(function() {
             $(this).toggle(!!$(this).find('li').length);
         });
-
-        self.$("[title]").tipsy({
-            'html': true,
-            'delayIn': 500,
+        self.$("[title]").tooltip({
+            delay: { show: 500, hide: 0}
         });
     },
     /**
@@ -1217,7 +1221,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 domain = $.Deferred().resolve(undefined);
             }
             if (ids.length === 0) {
-                instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
+                new instance.web.Dialog(this, { title: _t("Warning"), size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
             var active_ids_context = {
@@ -1258,7 +1262,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.dataset = dataset;
         this.model_id = model_id;
         if (args && args[0].error) {
-            this.do_warn( instance.web.qweb.render('message_error_uploading'), args[0].error);
+            this.do_warn(_t('Uploading Error'), args[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);
@@ -1342,7 +1346,7 @@ instance.web.View = instance.web.Widget.extend({
                 "context": this.dataset.get_context(),
             });
         }
-        return view_loaded_def.then(function(r) {
+        return this.alive(view_loaded_def).then(function(r) {
             self.fields_view = r;
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
@@ -1386,25 +1390,25 @@ instance.web.View = instance.web.Widget.extend({
                 return self.getParent().on_action_executed.apply(null, arguments);
             }
         };
-        var context = dataset.get_context();
-        if (action_data.model !== dataset.model) {
-            // filter out context keys that are specific to the action model.
-            // Wrong default_ and search_default values will no give the expected views
-            // Wrong group_by values will simply fail and forbid rendering of the destination view
-            context = _.object(_.reject(_.pairs(context.eval()), function(pair) {
-                return pair[0].match('^(?:(?:default_|search_default_).+|group_by|group_by_no_leaf)$') !== null;
-            }));
-        }
+        var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
-        context = new instance.web.CompoundContext(context, action_data.context || {});
+        // response handler
         var handler = function (action) {
             if (action && action.constructor == Object) {
-                var ncontext = new instance.web.CompoundContext(context);
+                // filter out context keys that are specific to the current action.
+                // Wrong default_* and search_default_* values will no give the expected result
+                // Wrong group_by values will simply fail and forbid rendering of the destination view
+                var ncontext = new instance.web.CompoundContext(
+                    _.object(_.reject(_.pairs(dataset.get_context().eval()), function(pair) {
+                      return pair[0].match('^(?:(?:default_|search_default_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
+                    }))
+                );
+                ncontext.add(action_data.context || {});
+                ncontext.add({active_model: dataset.model});
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
                         active_ids: [record_id],
-                        active_model: dataset.model
                     });
                 }
                 ncontext.add(action.context || {});

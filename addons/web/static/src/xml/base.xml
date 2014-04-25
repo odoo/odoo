@@ -32,7 +32,20 @@
         <t t-esc="message"/>
     </div>
 </t>
-
+<t t-name="Dialog">
+    <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title"><t t-raw="title"/></h3>
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
 <t t-name="CrashManager.warning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_dialog_warning">
     <tr>
@@ -56,46 +69,6 @@
         <hr/>
         <pre><t t-esc="error.data.debug"/></pre>
     </div>
-</t>
-
-<t t-name="Login">
-    <div class="oe_login">
-        <div class="oe_login_bottom"> </div>
-        <div class="oe_login_error_message"/>
-        <div class="oe_login_pane">
-            <div class="oe_login_logo"><img src='/web/static/src/img/logo2.png'/></div>
-            <form action="" method="post">
-                <div class="oe_login_dbpane" >
-                    Database:
-                    <input name="db" t-att-value="widget.selected_db || ''"/>
-                </div>
-                <ul>
-                    <li>Username</li>
-                    <li><input name="login" type="text" value="" autofocus="autofocus"/></li>
-                    <li>Password</li>
-                    <li><input name="password" type="password" value=""/></li>
-                    <li><button name="submit">Log in</button></li>
-                </ul>
-            </form>
-            <div class="oe_login_footer">
-                <a href="#" class="oe_login_manage_db">Manage Databases</a> |
-                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
-            </div>
-        </div>
-    </div>
-</t>
-<t t-name="Login.dblist">
-    <select name="db">
-        <t t-foreach="db_list" t-as="db">
-            <t t-if="selected_db === db">
-                <option t-att-value="db" selected="true">
-                    <t t-esc="db"/></option>
-            </t>
-            <t t-if="selected_db !== db">
-                <option t-att-value="db"><t t-esc="db"/></option>
-            </t>
-        </t>
-    </select>
 </t>
 
 <t t-name="DatabaseManager">
@@ -271,16 +244,23 @@
                 </div>
                 <table align="center" class="db_option_table">
                     <tr>
-                        <td><label for="restore_db">File:</label></td>
-                        <td><input type="file" name="db_file" class="required" autofocus="autofocus"/></td>
+                        <td><label for="restore_pwd">Master Password:</label></td>
+                        <td><input type="password" name="restore_pwd" class="required" autofocus="autofocus"/></td>
                     </tr>
                     <tr>
-                        <td><label for="restore_pwd">Master Password:</label></td>
-                        <td><input type="password" name="restore_pwd" class="required"/></td>
+                        <td><label for="restore_db">File:</label></td>
+                        <td><input type="file" name="db_file" class="required"/></td>
                     </tr>
                     <tr>
                         <td><label for="new_db">New database name:</label></td>
                         <td><input type="text" name="new_db" class="required"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="mode">Mode:</label></td>
+                        <td><select name="mode" class="required">
+                            <option value="restore">Backup Restore</option>
+                            <option value="copy">Copy of an existing database</option>
+                        </select></td>
                     </tr>
                 </table>
             </form>
@@ -452,7 +432,7 @@
     <div class="openerp openerp_webclient_container">
     <table class="oe_webclient">
         <tr>
-            <td colspan="2" class="navbar navbar-default navbar-static-top" role="navigation">
+            <td colspan="2" class="navbar navbar-default navbar-static-top oe_navbar" role="navigation">
                 <div class="oe_menu_placeholder"/>
                 <div class="oe_user_menu_placeholder"/>
                 <div class="oe_systray"/>
@@ -576,23 +556,32 @@
 </t>
 <t t-name="ViewManagerDebugViewLog">
     <div class="oe_debug_view_log">
-        <label>ID:</label>
-        <span><t t-esc="perm.id"/></span>
-
-        <label>XML ID:</label>
-        <span><t t-esc="perm.xmlid"/></span>
-
-        <label>Creation User:</label>
-        <span><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></span>
-
-        <label>Creation Date:</label>
-        <span><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></span>
-
-        <label>Latest Modification by:</label>
-        <span><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></span>
-
-        <label>Latest Modification Date:</label>
-        <span><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></span>
+        <table class="table table-condensed table-striped">
+            <tr>
+                <th>ID:</th>
+                <td><t t-esc="perm.id"/></td>
+            </tr>
+            <tr>
+                <th>XML ID:</th>
+                <td><t t-esc="perm.xmlid or '/'"/></td>
+            </tr>
+            <tr>
+                <th>Creation User:</th>
+                <td><t t-esc="format(perm.create_uid, { 'type' : 'many2one' }, '/')"/></td>
+            </tr>
+            <tr>
+                <th>Creation Date:</th>
+                <td><t t-esc="format(perm.create_date, { 'type' : 'datetime' }, '/')"/></td>
+            </tr>
+            <tr>
+                <th>Latest Modification by:</th>
+                <td><t t-esc="format(perm.write_uid, { 'type' : 'many2one' }, '/')"/></td>
+            </tr>
+            <tr>
+                <th>Latest Modification Date:</th>
+                <td><t t-esc="format(perm.write_date, { 'type' : 'datetime' }, '/')"/></td>
+            </tr>
+        </table>
     </div>
 </t>
 <t t-name="ViewPager">
@@ -623,10 +612,16 @@
     <div class="oe_sidebar">
         <t t-foreach="widget.sections" t-as="section">
             <div class="oe_form_dropdown_section">
-                <button class="oe_dropdown_toggle oe_dropdown_arrow">
+                <button class="oe_dropdown_toggle oe_dropdown_arrow" t-if="section.name != 'buttons'">
                     <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                     <t t-esc="section.label"/>
                 </button>
+                <t t-if="section.name == 'buttons'" t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
+                    <button t-att-title="item.title or ''" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url"
+                        target="_blank" class="oe_sidebar_button oe_highlight">
+                        <t t-raw="item.label"/>
+                    </button>
+                </t>
                 <ul class="oe_dropdown_menu">
                     <li t-foreach="widget.items[section.name]" t-as="item" t-att-class="item.classname">
                         <t t-if="section.name == 'files'">
@@ -803,11 +798,16 @@
         </span>
     </t>
 </t>
+<button t-name="ListView.row.text_button" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="disabled ? 'oe_list_button_disabled btn' : 'btn'">
+    <t t-esc="widget.string"/>
+</button>
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled' : undefined"
-    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
-         t-att-alt="widget.string"/></button>
+        t-att-class="disabled ? 'oe_list_button_disabled btn_img' : 'btn_img'"
+        ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+        t-att-alt="widget.string"/></button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is
@@ -943,7 +943,6 @@
 </t>
 <t t-name="FormRenderingLabel">
     <label  t-att-for="_for"
-            t-att-title="help"
             t-attf-class="#{classnames} oe_form_label#{help ? '_help' : ''} oe_align_#{align}">
         <t t-esc="string"/>
     </label>
@@ -1005,7 +1004,7 @@
         </li>
         <li t-if="widget.field and widget.field.selection" data-item="selection">
             <span class="oe_tooltip_technical_title">Selection:</span>
-            <ul>
+            <ul class="oe_tooltip_technical">
                 <li t-foreach="widget.field.selection" t-as="option">
                     [<t t-esc="option[0]"/>]
                     <t t-if="option[1]"> - </t>
@@ -1078,6 +1077,16 @@
         <t t-if="! widget.get('effective_readonly')">
             <textarea/>
         </t>
+    </div>
+</t>
+<t t-name="FieldCharDomain">
+    <div class="oe_form_field">
+        <span class="oe_domain_count"/>
+        <button class="oe_button oe_link select_records" type="button"
+            t-att-style="widget.node.attrs.style"
+            t-att-accesskey="widget.node.attrs.accesskey">
+            <span class="fa fa-arrow-right"/>
+        </button>
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -1219,6 +1228,18 @@
         <span></span>
     </span>
 </t>
+<t t-name="FieldPercentPie">
+    <div class="oe_form_field oe_form_field_percent_pie" t-att-style="widget.node.attrs.style">
+        <svg></svg>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </div>
+</t>
+<t t-name="FieldBarChart">
+    <div class="oe_form_field oe_form_field_bar_chart" t-att-style="widget.node.attrs.style">
+        <svg></svg>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+    </div>
+</t>
 <t t-name="FieldStatus">
     <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
@@ -1283,7 +1304,7 @@
                     <td>
                         <t t-call="HiddenInputFile">
                             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                            <t t-set="fileupload_style" t-translation="off">width: 83px;</t>
+                            <t t-set="fileupload_style" t-translation="off">overflow-x: hidden</t>
                             <button class="oe_button oe_field_button" type="button">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
@@ -1336,7 +1357,7 @@
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
         <t t-if="!widget.get('effective_readonly')">
-            <t t-foreach="widget.get('value')" t-as="id">
+            <t t-foreach="values" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div class="oe_attachment">
                     <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
@@ -1382,13 +1403,15 @@
     </div>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" class="oe_button oe_form_button"
+    <button type="button" t-att-class="widget.is_stat_button ? 'oe_stat_button btn btn-default' : 'oe_button oe_form_button'"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-accesskey="widget.node.attrs.accesskey">
-        <img t-if="widget.node.attrs.icon" t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <span t-if="widget.string"><t t-esc="widget.string"/></span>
+        <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
+        <div t-if="widget.is_stat_button and widget.icon" class="stat_button_icon"><t t-raw="widget.icon"/></div>
+        <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
+        <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
 </t>
 <t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
@@ -1450,7 +1473,7 @@
         <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
-    or <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+    or <a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! readonly">
@@ -1463,7 +1486,7 @@
         </t>
         or
     </t>
-    <a class="oe_button oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
+    <a class="oe_abstractformpopup-form-close oe_bold oe_form_button_cancel" href="javascript:void(0)">
         <t t-if="! readonly">
             Discard
         </t>
@@ -1962,4 +1985,7 @@
 <t t-name="X2ManyCounter">
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
+<t t-name="StatInfo">
+    <strong><t t-esc="value"/></strong>
+    <t t-esc="text"/></t>
 </templates>

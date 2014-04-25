@@ -27,6 +27,7 @@ instance.web.Query = instance.web.Class.extend({
         this._fields = fields;
         this._filter = [];
         this._context = {};
+        this._lazy = true;
         this._limit = false;
         this._offset = 0;
         this._order_by = [];
@@ -36,6 +37,7 @@ instance.web.Query = instance.web.Class.extend({
         var q = new instance.web.Query(this._model, this._fields);
         q._context = this._context;
         q._filter = this._filter;
+        q._lazy = this._lazy;
         q._limit = this._limit;
         q._offset = this._offset;
         q._order_by = this._order_by;
@@ -51,6 +53,7 @@ instance.web.Query = instance.web.Class.extend({
                 q._context = new instance.web.CompoundContext(
                         q._context, to_set.context);
                 break;
+            case 'lazy':
             case 'limit':
             case 'offset':
             case 'order_by':
@@ -129,14 +132,18 @@ instance.web.Query = instance.web.Class.extend({
         if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
             return null;
         }
+        var raw_fields = _.map(grouping.concat(this._fields || []), function (field) {
+            return field.split(':')[0];
+        });
 
         var self = this;
         return this._model.call('read_group', {
             groupby: grouping,
-            fields: _.uniq(grouping.concat(this._fields || [])),
+            fields: _.uniq(raw_fields),
             domain: this._model.domain(this._filter),
             context: ctx,
             offset: this._offset,
+            lazy: this._lazy,
             limit: this._limit,
             orderby: instance.web.serialize_sort(this._order_by) || false
         }).then(function (results) {
@@ -145,8 +152,9 @@ instance.web.Query = instance.web.Class.extend({
                 result.__context = result.__context || {};
                 result.__context.group_by = result.__context.group_by || [];
                 _.defaults(result.__context, ctx);
+                var grouping_fields = self._lazy ? [grouping[0]] : grouping;
                 return new instance.web.QueryGroup(
-                    self._model.name, grouping[0], result);
+                    self._model.name, grouping_fields, result);
             });
         });
     },
@@ -171,6 +179,18 @@ instance.web.Query = instance.web.Class.extend({
     filter: function (domain) {
         if (!domain) { return this; }
         return this.clone({filter: domain});
+    },
+    /**
+     * Creates a new query with the provided parameter lazy replacing the current
+     * query's own.
+     *
+     * @param {Boolean} lazy indicates if the read_group should return only the 
+     * first level of groupby records, or should return the records grouped by
+     * all levels at once (so, it makes only 1 db request).
+     * @returns {openerp.web.Query}
+     */
+    lazy: function (lazy) {
+        return this.clone({lazy: lazy});
     },
     /**
      * Creates a new query with the provided limit replacing the current
@@ -210,7 +230,7 @@ instance.web.Query = instance.web.Class.extend({
 });
 
 instance.web.QueryGroup = instance.web.Class.extend({
-    init: function (model, grouping_field, read_group_group) {
+    init: function (model, grouping_fields, read_group_group) {
         // In cases where group_by_no_leaf and no group_by, the result of
         // read_group has aggregate fields but no __context or __domain.
         // Create default (empty) values for those so that things don't break
@@ -218,11 +238,12 @@ instance.web.QueryGroup = instance.web.Class.extend({
             {__context: {group_by: []}, __domain: []},
             read_group_group);
 
+        var count_key = (grouping_fields[0] && grouping_fields[0].split(':')[0]) + '_count';
         var aggregates = {};
         _(fixed_group).each(function (value, key) {
             if (key.indexOf('__') === 0
-                    || key === grouping_field
-                    || key === grouping_field + '_count') {
+                    || _.contains(grouping_fields, key)
+                    || (key === count_key)) {
                 return;
             }
             aggregates[key] = value || 0;
@@ -231,14 +252,21 @@ instance.web.QueryGroup = instance.web.Class.extend({
         this.model = new instance.web.Model(
             model, fixed_group.__context, fixed_group.__domain);
 
-        var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
+        var group_size = fixed_group[count_key] || fixed_group.__count || 0;
         var leaf_group = fixed_group.__context.group_by.length === 0;
+
+        var value = (grouping_fields.length === 1) 
+                ? fixed_group[grouping_fields[0]]
+                : _.map(grouping_fields, function (field) { return fixed_group[field]; });
+        var grouped_on = (grouping_fields.length === 1) 
+                ? grouping_fields[0] 
+                : grouping_fields;
         this.attributes = {
             folded: !!(fixed_group.__fold),
-            grouped_on: grouping_field,
+            grouped_on: grouped_on,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
             length: group_size,
-            value: fixed_group[grouping_field],
+            value: value,
             // A group is open-able if it's not a leaf in group_by_no_leaf mode
             has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
 
@@ -443,15 +471,37 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * Read records.
      *
      * @param {Array} ids identifiers of the records to read
-     * @param {Array} fields fields to read and return, by default all fields are returned
+     * @param {Array} [fields] fields to read and return, by default all fields are returned
+     * @param {Object} [options]
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, options) {
+        if (_.isEmpty(ids))
+            return $.Deferred().resolve([]);
+            
         options = options || {};
-        // TODO: reorder results to match ids list
-        return this._model.call('read',
-            [ids, fields || false],
-            {context: this.get_context(options.context)});
+        var method = 'read';
+        var ids_arg = ids;
+        var context = this.get_context(options.context);
+        if (options.check_access_rule === true){
+            method = 'search_read';
+            ids_arg = [['id', 'in', ids]];
+            context = new instance.web.CompoundContext(context, {active_test: false});
+        }
+        return this._model.call(method,
+                [ids_arg, fields || false],
+                {context: context})
+            .then(function (records) {
+                if (records.length <= 1) { return records; }
+                var indexes = {};
+                for (var i = 0; i < ids.length; i++) {
+                    indexes[ids[i]] = i;
+                }
+                records.sort(function (a, b) {
+                    return indexes[a.id] - indexes[b.id];
+                });
+                return records;
+        });
     },
     /**
      * Read a slice of the records represented by this DataSet, based on its
@@ -867,7 +917,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         });
         var return_records = function() {
             var records = _.map(ids, function(id) {
-                return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
+                var c = _.find(self.cache, function(c) {return c.id === id;});
+                return _.isUndefined(c) ? c : _.extend({}, c.values, {"id": id});
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
@@ -894,6 +945,10 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                         if (field[0] === '-') {
                             sign = -1;
                             field = field.slice(1);
+                        }
+                        //m2o should be searched based on value[1] not based whole value(i.e. [id, value])
+                        if(_.isArray(a[field]) && a[field].length == 2 && _.isString(a[field][1])){
+                            return sign * compare(a[field][1], b[field][1]);
                         }
                         return sign * compare(a[field], b[field]);
                     }, 0);
@@ -939,6 +994,15 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
      * @param {Object} id record to remove from the BDS's cache
      */
     evict_record: function (id) {
+        // Don't evict records which haven't yet been saved: there is no more
+        // recent data on the server (and there potentially isn't any data),
+        // and this breaks the assumptions of other methods (that the data
+        // for new and altered records is both in the cache and in the to_write
+        // or to_create collection)
+        if (_(this.to_create.concat(this.to_write)).find(function (record) {
+                return record.id === id; })) {
+            return;
+        }
         for(var i=0, len=this.cache.length; i<len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache

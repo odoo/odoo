@@ -252,7 +252,7 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         return !!this.uid;
     },
     /**
-     * The session is validated either by login or by restoration of a previous session
+     * The session is validated by restoration of a previous session
      */
     session_authenticate: function() {
         var self = this;
@@ -271,7 +271,12 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
             if(cookie.indexOf(nameEQ) === 0) {
-                return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+                try {
+                    return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+                } catch(err) {
+                    // wrong cookie, delete it
+                    this.set_cookie(name, '', -1);
+                }
             }
         }
         return null;
@@ -781,6 +786,22 @@ instance.web.unblockUI = function() {
         el.destroy();
     });
     return $.unblockUI.apply($, arguments);
+};
+
+
+/* Bootstrap defaults overwrite */
+$.fn.tooltip.Constructor.DEFAULTS.placement = 'auto top';
+$.fn.tooltip.Constructor.DEFAULTS.html = true;
+$.fn.tooltip.Constructor.DEFAULTS.container = 'body';
+//overwrite bootstrap tooltip method to fix bug when using placement
+//auto and the parent element does not exist anymore resulting in
+//an error. This should be remove once bootstrap fix the bug
+var bootstrap_show_function = $.fn.tooltip.Constructor.prototype.show;
+$.fn.tooltip.Constructor.prototype.show = function (e) {
+    if (this.$element.parent().length === 0){
+        return;
+    }
+    return bootstrap_show_function.call(this, e);
 };
 
 /**

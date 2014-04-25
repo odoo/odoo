@@ -46,7 +46,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        self.$el.removeClass('ui-dialog-content ui-widget-content');
 
         var got_fields = new $.Deferred();
         this.$el.find('#import_compat').change(function() {
@@ -119,6 +118,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 if (select_exp.val()) {
                     self.exports.unlink([parseInt(select_exp.val(), 10)]);
                     select_exp.remove();
+                    self.$el.find("#fields_list option").remove();
                     if (self.$el.find('#saved_export_list option').length <= 1) {
                         self.$el.find('#ExistsExportList').hide();
                     }
@@ -166,18 +166,16 @@ instance.web.DataExport = instance.web.Dialog.extend({
             export_fields: _(fields).map(function (field) {
                 return [0, 0, {name: field}];
             })
-        }, function (export_list_id) {
-            if (!export_list_id.result) {
+        }).then(function (export_list_id) {
+            if (!export_list_id) {
                 return;
             }
-            self.$el.find("#saved_export_list").append(
-                    new Option(value, export_list_id.result));
-            if (self.$el.find("#saved_export_list").is(":hidden")) {
+            if (!self.$el.find("#saved_export_list").length || self.$el.find("#saved_export_list").is(":hidden")) {
                 self.show_exports_list();
             }
+            self.$el.find("#saved_export_list").append( new Option(value, export_list_id) );
         });
         this.on_show_save_list();
-        this.$el.find("#fields_list option").remove();
     },
     on_click: function(id, record) {
         var self = this;
@@ -414,7 +412,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
         });
     },
     close: function() {
-        this.$el.remove();
         this._super();
     }
 });

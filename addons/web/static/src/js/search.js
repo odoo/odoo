@@ -85,7 +85,7 @@ my.SearchQuery = B.Collection.extend({
                     && facet.get('field') === model.get('field');
             });
             if (previous) {
-                previous.values.add(model.get('values'));
+                previous.values.add(model.get('values'), _.omit(options, 'at', 'merge'));
                 return;
             }
             B.Collection.prototype.add.call(this, model, options);
@@ -355,7 +355,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
         },
         'autocompleteopen': function () {
-            this.$el.autocomplete('widget').css('z-index', 1004);
+            this.$el.autocomplete('widget').css('z-index', 9999);
         },
     },
     /**
@@ -414,7 +414,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context(),
             });
 
-            $.when(load_view).then(function (r) {
+            this.alive($.when(load_view)).then(function (r) {
                 return self.search_view_loaded(r);
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
@@ -473,18 +473,19 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * Sets up search view's view-wide auto-completion widget
      */
     setup_global_completion: function () {
-        var self = this;
-
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
-            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0,
+            delay: 250,
         }).data('autocomplete');
+
+        this.$el.on('input', function () {
+            this.$el.autocomplete('close');
+        }.bind(this));
 
         // MonkeyPatch autocomplete instance
         _.extend(autocomplete, {
@@ -535,7 +536,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 resp(_(arguments).chain()
                     .compact()
                     .map(function (completion) {
-                        console.log(completion);
                         if (completion.length && completion[0].facet !== undefined) {
                             completion[0].first = true;
                         }
@@ -677,6 +677,11 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @returns instance.web.search.Field
      */
     make_field: function (item, field, parent) {
+        // M2O combined with selection widget is pointless and broken in search views,
+        // but has been used in the past for unsupported hacks -> ignore it
+        if (field.type === "many2one" && item.attrs.widget === "selection"){
+            item.attrs.widget = undefined;
+        }
         var obj = instance.web.search.fields.get_any( [item.attrs.widget, field.type]);
         if(obj) {
             return new (obj) (item, field, parent || this);
@@ -1555,9 +1560,6 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         this.model = new instance.web.Model(this.attrs.relation);
     },
     complete: function (needle) {
-        if (this.attrs.operator || this.attrs.filter_domain) {
-            return this._super(needle);
-        }
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
         var context = instance.web.pyeval.eval(
@@ -1871,9 +1873,14 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             new instance.web.Model(this.view.model).call('fields_get', {
                     context: this.view.dataset.context
                 }).done(function(data) {
-                    self.fields = _.extend({
+                    self.fields = {
                         id: { string: 'ID', type: 'id' }
-                    }, data);
+                    };
+                    _.each(data, function(field_def, field_name) {
+                        if (field_def.selectable !== false && field_name != 'id') {
+                            self.fields[field_name] = field_def;
+                        }
+                    });
         })).done(function () {
             self.append_proposition();
         });

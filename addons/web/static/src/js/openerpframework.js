@@ -809,7 +809,8 @@ var genericJsonRpc = function(fct_name, params, fct) {
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
-    return fct(data).pipe(function(result) {
+    var xhr = fct(data);
+    var result = xhr.pipe(function(result) {
         if (result.error !== undefined) {
             console.error("Server application error", result.error);
             return $.Deferred().reject("server", result.error);
@@ -821,7 +822,30 @@ var genericJsonRpc = function(fct_name, params, fct) {
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
+    // FIXME: jsonp?
+    result.abort = function () { xhr.abort && xhr.abort(); };
+    return result;
 };
+
+/**
+ * Replacer function for JSON.stringify, serializes Date objects to UTC
+ * datetime in the OpenERP Server format.
+ *
+ * However, if a serialized value has a toJSON method that method is called
+ * *before* the replacer is invoked. Date#toJSON exists, and thus the value
+ * passed to the replacer is a string, the original Date has to be fetched
+ * on the parent object (which is provided as the replacer's context).
+ *
+ * @param {String} k
+ * @param {Object} v
+ * @returns {Object}
+ */
+function date_to_utc(k, v) {
+    var value = this[k];
+    if (!(value instanceof Date)) { return v; }
+
+    return openerp.datetime_to_str(value);
+}
 
 openerp.jsonRpc = function(url, fct_name, params, settings) {
     return genericJsonRpc(fct_name, params, function(data) {
@@ -829,7 +853,7 @@ openerp.jsonRpc = function(url, fct_name, params, settings) {
             url: url,
             dataType: 'json',
             type: 'POST',
-            data: JSON.stringify(data),
+            data: JSON.stringify(data, date_to_utc),
             contentType: 'application/json'
         }));
     });
@@ -838,7 +862,7 @@ openerp.jsonRpc = function(url, fct_name, params, settings) {
 openerp.jsonpRpc = function(url, fct_name, params, settings) {
     settings = settings || {};
     return genericJsonRpc(fct_name, params, function(data) {
-        var payload_str = JSON.stringify(data);
+        var payload_str = JSON.stringify(data, date_to_utc);
         var payload_url = $.param({r:payload_str});
         var force2step = settings.force2step || false;
         delete settings.force2step;
@@ -950,6 +974,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
         this.session_id = options.session_id || null;
         this.override_session = options.override_session || !!options.session_id || false;
         this.avoid_recursion = false;
+        this.use_cors = options.use_cors || false;
         this.setup(origin);
     },
     setup: function(origin) {
@@ -993,7 +1018,7 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
     },
     check_session_id: function() {
         var self = this;
-        if (this.avoid_recursion)
+        if (this.avoid_recursion || self.use_cors)
             return $.when();
         if (this.session_id)
             return $.when(); // we already have the session id
@@ -1045,6 +1070,15 @@ openerp.Session = openerp.Class.extend(openerp.PropertiesMixin, {
             var fct;
             if (self.origin_server) {
                 fct = openerp.jsonRpc;
+                if (self.override_session) {
+                    options.headers = _.extend({}, options.headers, {
+                        "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
+                    });
+                }
+            } else if (self.use_cors) {
+                fct = openerp.jsonRpc;
+                url = self.url(url, null);
+                options.session_id = self.session_id || '';
                 if (self.override_session) {
                     options.headers = _.extend({}, options.headers, {
                         "X-Openerp-Session-Id": self.override_session ? self.session_id || '' : ''
@@ -1155,7 +1189,7 @@ openerp.Model = openerp.Class.extend({
             kwargs = args;
             args = [];
         }
-        var call_kw = _.str.sprintf('/web/dataset/call_kw/%s/%s', this.name, method);
+        var call_kw = '/web/dataset/call_kw/' + this.name + '/' + method;
         return this.session().rpc(call_kw, {
             model: this.name,
             method: method,
