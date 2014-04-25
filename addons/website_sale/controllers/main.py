@@ -180,7 +180,7 @@ class Ecommerce(http.Controller):
         url = "/shop"
         if category:
             category_obj = request.registry.get('product.public.category')
-            url = "%scategory/%s" % (url, slug(category_obj.browse(request.cr, request.uid, int(category), context=request.context)))
+            url = "%s/category/%s" % (url, slug(category_obj.browse(request.cr, request.uid, int(category), context=request.context)))
         if filters:
             url = "%s?filters=%s" % (url, simplejson.dumps(filters))
         if post.get("search"):
