@@ -10,6 +10,7 @@ import os
 from mako.template import Template
 from openerp.modules import module
 from openerp import http
+from openerp.addons.web.controllers.main import ensure_db
 from openerp.http import request
 
 from .main import module_topological_sort
@@ -90,6 +91,7 @@ class TestRunnerController(http.Controller):
 
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
+        ensure_db()
         ms = module.get_modules()
         manifests = dict(
             (name, desc)
