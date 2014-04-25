@@ -130,6 +130,7 @@
 
 */
 
+    var dummy = function () {};
 
     var website = openerp.website;
     website.add_template_file('/website/static/src/xml/website.snippets.xml');
@@ -361,15 +362,21 @@
         },
         clean_for_save: function () {
             var self = this;
-            $(website.snippet.globalSelector).each(function () {
-                var $snippet = $(this);
-                self.make_active($snippet);
-                self.make_active(false);
-                var editor = $snippet.data("snippet-editor");
-                if (editor) {
-                    editor.clean_for_save();
+
+            $("*[contentEditable], *[attributeEditable]")
+                .removeAttr('contentEditable')
+                .removeAttr('attributeEditable');
+
+            var options = website.snippet.options;
+            var template = website.snippet.templateOptions;
+            for (var k in options) {
+                if (template[k] && options[k].prototype.clean_for_save !== dummy) {
+                    var $snippet = this.dom_filter(template[k].selector);
+                    $snippet.each(function () {
+                        new options[k](self, null, $(this), k).clean_for_save();
+                    });
                 }
-            });
+            }
         },
         make_active: function ($snippet) {
             if ($snippet && this.$active_snipped_id && this.$active_snipped_id.get(0) === $snippet.get(0)) {
@@ -853,8 +860,7 @@
             }
         },
 
-        clean_for_save: function () {
-        }
+        clean_for_save: dummy
     });
 
     website.snippet.options.background = website.snippet.Option.extend({
@@ -942,8 +948,7 @@
             this.id = this.unique_id();
             this.$target.attr("id", this.id);
             this.$target.find("[data-slide]").attr("data-cke-saved-href", "#" + this.id);
-            this.$target.find("[data-slide-to]").attr("data-target", "#" + this.id);
-
+            this.$target.find("[data-target]").attr("data-target", "#" + this.id);
             this.rebind_event();
         },
         on_clone: function ($clone) {
@@ -963,7 +968,7 @@
         },
         clean_for_save: function () {
             this._super();
-            this.$target.find(".item").removeClass("next prev left right");
+            $(".carousel").find(".item").removeClass("next prev left right active");
             if(!this.$target.find(".item.active").length) {
                 this.$target.find(".item:first").addClass("active");
             }
@@ -1756,19 +1761,6 @@
                 this.styles[i].onBlur();
             }
             this.$overlay.removeClass('oe_active');
-        },
-
-        /* clean_for_save
-        *  function called just before save vue
-        */
-        clean_for_save: function () {
-            for (var i in this.styles){
-                this.styles[i].clean_for_save();
-            }
-            this.$target.removeAttr('contentEditable')
-                .find('*').removeAttr('contentEditable');
-            this.$target.removeAttr('attributeEditable')
-                .find('*').removeAttr('attributeEditable');
         },
     });
 

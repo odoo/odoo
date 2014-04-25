@@ -500,11 +500,15 @@
             <field name="name">hr.contribution.register.form</field>
             <field name="model">hr.contribution.register</field>
             <field name="arch" type="xml">
-                <form string="Contribution">
-                    <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <separator string="Description"/>
-                    <field name="note" nolabel="1"/>
+                <form string="Contribution" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" class="oe_inline"/>
+                    </group>
+                    <newline/>
+                    <group>
+                    <separator string="Description"/><newline/>
+                    <field name="note" nolabel="1"/></group>
                 </form>
             </field>
         </record>
