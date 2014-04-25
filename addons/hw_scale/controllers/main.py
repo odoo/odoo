@@ -7,7 +7,6 @@ from os.path import join
 from threading import Thread, Lock
 from select import select
 from Queue import Queue, Empty
-from bitstring import BitArray
 
 import openerp
 import openerp.addons.hw_proxy.controllers.main as hw_proxy
