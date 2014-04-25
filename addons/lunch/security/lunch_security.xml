@@ -33,7 +33,7 @@
             <field name="name">lunch.order.line: do not see and create other people's order line</field>
             <field name="model_id" ref="model_lunch_order_line"/>
             <field name="groups" eval="[(4, ref('group_lunch_user'))]"/>
-            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="domain_force">[('order_id.user_id', '=', user.id)]</field>
         </record>
         <record id="lunch_mind_other_food_line" model="ir.rule">
             <field name="name">lunch.order.line: do not see and create other people's order line</field>
