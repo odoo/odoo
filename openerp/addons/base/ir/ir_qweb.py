@@ -1084,7 +1084,10 @@ class WebAsset(object):
     def filename(self):
         if self._filename is None and self.url:
             module = filter(None, self.url.split('/'))[0]
-            mpath = openerp.http.addons_manifest[module]['addons_path']
+            try:
+                mpath = openerp.http.addons_manifest[module]['addons_path']
+            except Exception:
+                raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
             self._filename = mpath + self.url.replace('/', os.path.sep)
         return self._filename
 
