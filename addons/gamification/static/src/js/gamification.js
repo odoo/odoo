@@ -126,7 +126,7 @@ openerp.gamification = function(instance) {
         }
     });
 
-    instance.mail.Widget.include({
+    instance.mail.Wall.include({
         start: function() {
             this._super();
             var sidebar = new instance.gamification.Sidebar(this);
