@@ -98,6 +98,21 @@ class stock_move(osv.osv):
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         return self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
 
+    def _get_price_unit_invoice(self, cr, uid, move_line, type, context=None):
+        """ Gets price unit for invoice
+        @param move_line: Stock move lines
+        @param type: Type of invoice
+        @return: The price unit for the move line
+        """
+        if context is None:
+            context = {}
+        if type in ('in_invoice', 'in_refund'):
+            # Take the user company and pricetype
+            context['currency_id'] = move_line.company_id.currency_id.id
+            amount_unit = move_line.product_id.price_get('standard_price', context=context)[move_line.product_id.id]
+            return amount_unit
+        return move_line.product_id.list_price
+
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         fp_obj = self.pool.get('account.fiscal.position')
         # Get account_id
@@ -124,7 +139,7 @@ class stock_move(osv.osv):
             'product_id': move.product_id.id,
             'uos_id': uos_id,
             'quantity': quantity,
-            'price_unit': move.product_id.list_price,  # TODO: use price_get
+            'price_unit': self._get_price_unit_invoice(cr, uid, move, inv_type),
             'discount': 0.0,
             'account_analytic_id': False,
         }

@@ -25,18 +25,18 @@
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Valuation, Accounting',
     'description': """
-#TODO
+WMS Accounting module
 ======================
-#TODO
+This module makes the link between the 'stock' and 'account' modules and allows you to create accounting entries to value your stock movements
 
 Key Features
 ------------
 * Stock Valuation (periodical or automatic)
 * Invoice from Picking
 
-Dashboard / Reports for Warehouse Management will include:
-----------------------------------------------------------
-* TODO
+Dashboard / Reports for Warehouse Management includes:
+------------------------------------------------------
+* Stock Inventory Value at given date (support dates in the past)
     """,
     'website': 'http://www.openerp.com',
     'images': [],
