@@ -28,7 +28,7 @@
             <script type="text/javascript" src="/website_twitter/static/src/js/website.twitter.animation.js"/>
         </xpath>
     </template>
-    <template id="twitter_editor" inherit_id="website.editor_assets" name="Twitter options">
+    <template id="twitter_editor" inherit_id="website.assets_editor" name="Twitter options">
         <xpath expr="/t" position="inside">
             <script t-if="not translatable" type="text/javascript" src="/website_twitter/static/src/js/website.twitter.editor.js" groups="base.group_website_publisher"/>
         </xpath>

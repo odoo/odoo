@@ -10,19 +10,10 @@
     <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css' t-ignore="true"/>
     <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
 </template>
-<template id="assets" name="Website assets">
-    <t t-call="website.theme"/>
 
-    <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
-    <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
-    <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
-    <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
-    <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
-    <script type="text/javascript">
-        // Bootstrap and jQuery UI conflicts
-        $.fn.bstooltip = $.fn.tooltip;
-        $.fn.bsbutton = $.fn.button;
-    </script>
+<template id="assets" name="Website assets">
+    <t t-call="web.assets_common"/>
+    <t t-call="website.theme"/>
 
     <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
     <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
@@ -257,10 +248,10 @@
         </div>
     </xpath>
     <xpath expr='//t[@t-call-assets="website.assets"]' position="after">
-        <t t-call-assets="website.editor_assets"/>
+        <t t-call-assets="website.assets_editor"/>
     </xpath>
 </template>
-<template id="editor_assets" name="Editor assets">
+<template id="assets_editor" name="Editor assets">
     <script type="text/javascript">
         var CKEDITOR_BASEPATH = '/web/static/lib/ckeditor/';
     </script>
