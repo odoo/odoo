@@ -394,7 +394,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     console.log(weight)
                     ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
                 }, function(){ //failed to read weight
-                    ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, info:'ok'});
+                    ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, unit:'Kg', info:'ok'});
                 });
             return ret;
         },

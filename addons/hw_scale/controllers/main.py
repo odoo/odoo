@@ -59,12 +59,11 @@ class Scale(Thread):
 
     def get_device(self):
         try:
-            devices   = [ device for device in listdir(self.input_dir)]
-            scales    = [ device for device in devices if ('mettler' in device.lower()) or ('toledo' in device.lower()) ]
+            devices = [ device for device in listdir(self.input_dir)]
+            scales  = [ device for device in devices if ('mettler' in device.lower()) or ('toledo' in device.lower()) ]
             if len(scales) > 0:
                 print join(self.input_dir,scales[0])
                 self.set_status('connected','Connected to '+scales[0])
-# s = serial.Serial("/dev/serial/by-id/usb-METTLER_TOLEDO_15_kg_DI_Firmware_CKOR_F_Ser_CDC-if00",baudrate=9600,bytesize=serial.SEVENBITS,parity=serial.PARITY_EVEN)
                 return serial.Serial(join(self.input_dir,scales[0]), 
                         baudrate = 9600, 
                         bytesize = serial.SEVENBITS, 
@@ -97,7 +96,7 @@ class Scale(Thread):
             if self.device:
                 try:
                     self.device.write('W')
-                    time.sleep(0.2)
+                    time.sleep(0.1)
                     answer = []
 
                     while True:
@@ -119,6 +118,7 @@ class Scale(Thread):
                                 self.weight_info.append('over_capacity')
                             if stat & 1 << 2:
                                 self.weight_info.append('negative')
+                                self.weight = 0.0
                             if stat & 1 << 3:
                                 self.weight_info.append('outside_zero_capture_range')
                             if stat & 1 << 4:
