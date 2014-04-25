@@ -3,9 +3,9 @@
 <data>
 <template id="report_hr_yearly_salary">
     <t t-call="report.html_container">
-        <t t-call="report.external_layout">
+      <t t-foreach="get_employee(data['form'])" t-as="employee">
+        <t t-call="report.internal_layout">
             <div class="page">
-                <t t-foreach="get_employee(data['form'])" t-as="employee">
                     <h2><span t-field="employee.company_id"/></h2>
                     <p> From 
                         <u><span t-esc="formatLang(data['form']['date_from'], date=True)"/></u> 
@@ -72,12 +72,12 @@
                             </td>
                         </tr>
                     </table>
-                   <span t-esc="get_employee_detail(data['form'], employee)"/>
                     <table class="table table-condensed">
                         <thead>
                             <tr>
                                 <th>Title</th>
                                     <t t-foreach="get_periods(data['form'])[0]" t-as="months">
+                                      <span t-esc="get_employee_detail(data['form'], employee)"/>
                                         <th>
                                             <t t-if="months">
                                                 <span t-esc="months"/>
@@ -112,8 +112,8 @@
                                 </tr>
                         </tr>
                     </table>
-                </t>
             </div>
+        </t>
         </t>
     </t>
 </template>
