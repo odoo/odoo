@@ -50,15 +50,15 @@ class sale_order(osv.Model):
 
     def _cart_update(self, cr, uid, ids, product_id=None, add_qty=0, set_qty=0, context=None):
         """ Add or set product quantity, add_qty can be negative """
-        for so in self.browse(cr, uid, ids, context=context):
-            sol = self.pool.get('sale.order.line')
+        sol = self.pool.get('sale.order.line')
 
+        for so in self.browse(cr, uid, ids, context=context):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             line_id = so._cart_find_product_line(product_id)
 
             # Create line if no line with product_id can be located
             if not line_id:
-                values = self.pool['sale.order.line'].product_id_change(cr, SUPERUSER_ID, [],
+                values = sol.product_id_change(cr, SUPERUSER_ID, [],
                     pricelist=so.pricelist_id.id,
                     product=product_id,
                     partner_id=so.partner_id.id,
@@ -67,6 +67,8 @@ class sale_order(osv.Model):
                 values['name'] = "%s: %s" % (product.name, product.variants) if product.variants else product.name
                 values['product_id'] = product_id
                 values['order_id'] = so.id
+                if values.get('tax_id'):
+                    values['tax_id'] = [(6, 0, values['tax_id'])]
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
 
             # compute new quantity
@@ -80,7 +82,7 @@ class sale_order(osv.Model):
                 sol.unlink(cr, SUPERUSER_ID, line_id, context=context)
             else:
                 # update line
-                values = self.pool['sale.order.line'].product_id_change(cr, SUPERUSER_ID, [],
+                values = sol.product_id_change(cr, SUPERUSER_ID, [],
                     pricelist=so.pricelist_id.id,
                     product=product_id,
                     partner_id=so.partner_id.id,
@@ -88,6 +90,8 @@ class sale_order(osv.Model):
                 )['value']
                 values['name'] = "%s: %s" % (product.name, product.variants) if product.variants else product.name
                 values['product_uom_qty'] = quantity
+                if values.get('tax_id'):
+                    values['tax_id'] = [(6, 0, values['tax_id'])]
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
             return quantity
