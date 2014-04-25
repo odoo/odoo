@@ -36,7 +36,7 @@ class purchase_requisition_partner(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id, context=context)
         if not tender.line_ids:
-            raise osv.except_osv(_('Error!'), _('No product in call for bids.'))
+            raise osv.except_osv(_('Error!'), _('Define product(s) you want to include in the call for bids.'))
         return res
 
     def create_order(self, cr, uid, ids, context=None):
