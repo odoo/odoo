@@ -26,8 +26,9 @@ from _common import ceiling
 
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.osv import osv, orm, fields
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import openerp.addons.decimal_precision as dp
 
@@ -289,12 +290,12 @@ class product_category(osv.osv):
     ]
 
 
-class prices_history(osv.osv):
+class produce_price_history(osv.osv):
     """
     Keep track of the ``product.template`` standard prices as they are changed.
     """
 
-    _name = 'prices.history'
+    _name = 'product.price.history'
     _rec_name = 'datetime'
     _order = 'datetime desc'
 
@@ -490,7 +491,7 @@ class product_template(osv.osv):
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
-        price_history_obj = self.pool['prices.history']
+        price_history_obj = self.pool['product.price.history']
         price_history_obj.create(cr, uid, {
             'product_template_id': product_template_id,
             'cost': vals.get('standard_price', 0.0),
@@ -507,7 +508,7 @@ class product_template(osv.osv):
                 if old_uom.category_id.id != new_uom.category_id.id:
                     raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         if 'standard_price' in vals:
-            price_history_obj = self.pool['prices.history']
+            price_history_obj = self.pool['product.price.history']
             for prod_template_id in ids:
                 price_history_obj.create(cr, uid, {
                     'product_template_id': prod_template_id,
@@ -577,15 +578,16 @@ class product_product(osv.osv):
             return _('Products: ') + self.pool.get('product.category').browse(cr, uid, context['categ_id'], context=context).name
         return res
 
-    def get_history_price(self, cr, uid, product_id, company_id, context=None):
+    def get_history_price(self, cr, uid, product_id, company_id, date=None, context=None):
         if context is None:
             context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         product = self.browse(cr, uid, product_id, context=context)
-        date = context.get('history_date', time.strftime('%Y-%m-%d %H:%M:%S'))
-        prices_history_obj = self.pool.get('prices.history')
-        history_ids = prices_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product.product_tmpl_id.id), ('datetime', '<=', date)], limit=1)
+        price_history_obj = self.pool.get('product.price.history')
+        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product.product_tmpl_id.id), ('datetime', '<=', date)], limit=1)
         if history_ids:
-            return prices_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
+            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
         raise osv.except_osv(_('Error!'), _("No standard price associated for product %s for the given date" % (product.name)))
 
     def _product_price(self, cr, uid, ids, name, arg, context=None):

@@ -43,6 +43,9 @@ class stock_history(osv.osv):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         res = super(stock_history, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
+        if context is None:
+            context = {}
+        date = context.get('history_date')
         prod_dict = {}
         if 'inventory_value' in fields:
             for line in res:
@@ -56,20 +59,22 @@ class stock_history(osv.osv):
                             if line_rec.product_id.cost_method == 'real':
                                 prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
                             else:
-                                prod_dict[line_rec.product_id.id] = product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, context=context)
+                                prod_dict[line_rec.product_id.id] = product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, date=date, context=context)
                         inv_value += prod_dict[line_rec.product_id.id] * line_rec.quantity
                     line['inventory_value'] = inv_value
         return res
 
     def _get_inventory_value(self, cr, uid, ids, name, attr, context=None):
+        if context is None:
+            context = {}
+        date = context.get('history_date')
         product_obj = self.pool.get("product.product")
         res = {}
-        # Browse takes an immense amount of time because it seems to reload the report
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
             else:
-                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, context=context)
+                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, date=date, context=context)
         return res
 
     _columns = {

@@ -146,7 +146,7 @@ class procurement_order(osv.osv):
         procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in procurements:
-            if s['state'] in ['draft', 'cancel']:
+            if s['state'] == 'cancel':
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid Action!'),
