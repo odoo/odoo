@@ -515,7 +515,7 @@ Negative stocks
 
 It is still possible that upon transferring for an internal shipment or delivery, the necessary quants or stock can not be found.  In that case, it will create negative stock (negative quants).    
 
-When later on, a move brings in some goods that correspond to this negative stock, the quant can be reconciled with it.  This will however not happen if this incoming quant has a chained move to another location.  
+When later on, a move brings in some goods that correspond to this negative stock, the quant can be reconciled with it.
 
 Normally, chained moves have to take from their original moves.  Only when you do force assign a move with original moves it can also take from the regular stock that is not chained.  It will however not assign this stock before actually doing the transfer.  
 

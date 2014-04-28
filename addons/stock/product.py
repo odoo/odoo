@@ -90,9 +90,8 @@ class product_product(osv.osv):
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 location_ids.append(w.view_location_id.id)
 
-        operator = context.get('compute_child',True) and 'child_of' or 'in'
+        operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
-        domain += [('product_id', 'in', ids)]
         return (
             domain + [('location_id', operator, location_ids)],
             domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
