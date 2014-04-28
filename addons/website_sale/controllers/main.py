@@ -308,7 +308,7 @@ class website_sale(http.Controller):
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-    optional_billing_fields = ["company_name", "state_id"]
+    optional_billing_fields = ["street2", "state_id"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
     optional_shipping_fields = ["state_id"]
 
@@ -330,9 +330,9 @@ class website_sale(http.Controller):
                 for field_name in all_fields if data.get(prefix + field_name))
         else:
             query = dict((prefix + field_name, getattr(data, field_name))
-                for field_name in all_fields if field_name != "company_name" and getattr(data, field_name))
+                for field_name in all_fields if field_name != "street2" and getattr(data, field_name))
             if data.parent_id:
-                query[prefix + 'company_name'] = data.parent_id.name
+                query[prefix + 'street2'] = data.parent_id.name
 
         if query.get(prefix + 'state_id'):
             query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
