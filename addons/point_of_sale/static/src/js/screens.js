@@ -526,12 +526,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
             
             queue.schedule(function(){
-                return self.pos.proxy.weighting_start()
-            },{ important: true });
-            
-            queue.schedule(function(){
-                return self.pos.proxy.weighting_read_kg().then(function(weight){
-                    self.set_weight(weight);
+                return self.pos.proxy.scale_read().then(function(weight){
+                    self.set_weight(weight.weight);
                 });
             },{duration:50, repeat: true});
 
@@ -584,9 +580,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             $('body').off('keyup',this.hotkey_handler);
 
             this.pos.proxy_queue.clear();
-            this.pos.proxy_queue.schedule(function(){
-                self.pos.proxy.weighting_end();
-            },{ important: true });
         },
     });
 

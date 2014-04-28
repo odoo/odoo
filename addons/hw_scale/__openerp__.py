@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-Today OpenERP S.A. (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,22 +21,25 @@
 
 
 {
-    'name': 'Portal Project Long Term',
+    'name': 'Weighting Scale Hardware Driver',
     'version': '1.0',
-    'category': 'Tools',
-    'complexity': 'easy',
+    'category': 'Hardware Drivers',
+    'sequence': 6,
+    'summary': 'Hardware Driver for Weighting Scales',
     'description': """
-This module adds necessary security rules and access rights for project long term and portal.
-=============================================================================================
-    """,
+Barcode Scanner Hardware Driver
+================================
+
+This module allows the point of sale to connect to a scale using a USB HSM Serial Scale Interface,
+such as the Mettler Toledo Ariva.
+
+""",
     'author': 'OpenERP SA',
-    'depends': ['project_long_term', 'portal'],
-    'data': [
-        'security/portal_security.xml',
-        'security/ir.model.access.csv',
+    'depends': ['hw_proxy'],
+    'test': [
     ],
     'installable': True,
-    'auto_install': True,
-    'category': 'Hidden',
+    'auto_install': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
