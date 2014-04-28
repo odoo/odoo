@@ -187,11 +187,7 @@ class product_uom(osv.osv):
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
         if not from_uom_id or not price or not to_uom_id:
             return price
-        uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
-        if uoms[0].id == from_uom_id:
-            from_unit, to_unit = uoms[0], uoms[-1]
-        else:
-            from_unit, to_unit = uoms[-1], uoms[0]
+        from_unit, to_unit = self.browse(cr, uid, [from_uom_id, to_uom_id])
         if from_unit.category_id.id != to_unit.category_id.id:
             return price
         amount = price * from_unit.factor
