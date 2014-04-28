@@ -91,6 +91,7 @@ class TestRunnerController(http.Controller):
 
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
+        request.params['db'] = request.params.get('source')
         ensure_db()
         ms = module.get_modules()
         manifests = dict(
