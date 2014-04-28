@@ -11,7 +11,7 @@
     <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
 </template>
 
-<template id="assets" name="Website assets">
+<template id="website.assets" name="Website assets">
     <t t-call="web.assets_common"/>
     <t t-call="website.theme"/>
 
@@ -74,9 +74,6 @@
             <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
-
-            <!-- Load stylesheets before scripts to avoid blocking -->
-            <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
 
             <t t-call-assets="website.assets"/>
 

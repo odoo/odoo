@@ -48,16 +48,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route(website=True)
-    def js_bundle(self, xmlid, **kw):
-        request.context['lang'] = kw.get('lang', request.context.get('lang'))
-        return super(Website, self).js_bundle(xmlid, **kw)
-
-    @http.route(website=True)
-    def css_bundle(self, xmlid, **kw):
-        request.context['lang'] = kw.get('lang', request.context.get('lang'))
-        return super(Website, self).css_bundle(xmlid, **kw)
-
     @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
     def page(self, page, **opt):
         values = {
