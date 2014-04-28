@@ -27,6 +27,25 @@
             </div>
         </div>
 
+        <div class="modal fade" id="js_LotChooseModal" tabindex="-1" role="dialog" aria-labelledby="LotChooseModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="myModalLabel">Create Lot</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Scan a lot or type it below (leave empty to generate one automatically)</p>
+                        <input class='col-xs-6 js_lot_scan' type='text'/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary js_validate_lot">Create Lot</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
         <div class="row">
                 <div>
                     <div class="col-sm-4 col-xs-6">

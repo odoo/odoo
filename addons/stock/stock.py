@@ -3746,13 +3746,16 @@ class stock_pack_operation(osv.osv):
             processed_ids.append(op)      
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 
-    def create_and_assign_lot(self, cr, uid, id, context=None):
+    def create_and_assign_lot(self, cr, uid, id, name, context=None):
         ''' Used by barcode interface to create a new lot and assign it to the operation
         '''
         obj = self.browse(cr,uid,id,context)
         product_id = obj.product_id.id
+        val = {'product_id': product_id}
+        if name:
+            val.update({'name': name})
         if not obj.lot_id:
-            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, {'product_id': product_id}, context=context)
+            new_lot_id = self.pool.get('stock.production.lot').create(cr, uid, val, context=context)
             self.write(cr, uid, id, {'lot_id': new_lot_id}, context=context)
 
     def _search_and_increment(self, cr, uid, picking_id, domain, filter_visible=False ,visible_op_ids=False, increment=True, context=None):
