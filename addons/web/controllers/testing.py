@@ -7,6 +7,7 @@ import json
 import operator
 import os
 
+import openerp
 from mako.template import Template
 from openerp.modules import module
 from openerp import http
@@ -91,8 +92,6 @@ class TestRunnerController(http.Controller):
 
     @http.route('/web/tests', type='http', auth="none")
     def index(self, mod=None, **kwargs):
-        request.params['db'] = request.params.get('source')
-        ensure_db()
         ms = module.get_modules()
         manifests = dict(
             (name, desc)
@@ -138,7 +137,11 @@ class TestRunnerController(http.Controller):
         ]
 
         def bundle(xmlid):
-            return request.render(xmlid, lazy=False)
+            dbname = request.params['source']
+            registry = openerp.registry(dbname)
+            view_obj = registry["ir.ui.view"]
+            uid = openerp.SUPERUSER_ID
+            return view_obj.render(registry.cursor(), uid, xmlid, context=request.context)
 
         return TESTING.render(bundle=bundle, files=files, dependencies=json.dumps(
             [name for name in sorted_mods

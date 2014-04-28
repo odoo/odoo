@@ -11,7 +11,6 @@ _.str.toBoolElse = function (str, elseValues, trueValues, falseValues) {
 };
 
 openerp.web_calendar = function(instance) {
-
     var _t = instance.web._t,
         _lt = instance.web._lt,
         QWeb = instance.web.qweb;
