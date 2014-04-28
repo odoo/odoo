@@ -377,8 +377,8 @@ class website_sale(http.Controller):
         if request.uid != request.website.user_id.id:
             partner_id = orm_user.browse(cr, SUPERUSER_ID, uid, context=context).partner_id.id
         elif order.partner_id:
-            domain = [("active", "=", False), ("partner_id", "=", order.partner_id.id)]
-            user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID, domain, context=context)
+            user_ids = request.registry['res.users'].search(cr, SUPERUSER_ID,
+                [("partner_id", "=", order.partner_id.id)], context=dict(context or {}, active_test=False))
             if not user_ids or request.website.user_id.id not in user_ids:
                 partner_id = order.partner_id.id
 

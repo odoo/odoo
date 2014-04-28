@@ -862,15 +862,15 @@ class sale_order_line(osv.osv):
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         context = context or {}
         lang = lang or context.get('lang',False)
-        if not  partner_id:
+        if not partner_id:
             raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         context = {'lang': lang, 'partner_id': partner_id}
-        if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
+        partner = partner_obj.browse(cr, uid, partner_id)
+        lang = partner.lang
         context_partner = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
@@ -896,7 +896,12 @@ class sale_order_line(osv.osv):
                     uos = False
             else:
                 uos = False
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
+
+        fpos = False
+        if not fiscal_position:
+            fpos = partner.property_account_position or False
+        else:
+            fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
         if update_tax: #The quantity only have changed
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
 
