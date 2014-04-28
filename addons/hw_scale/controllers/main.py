@@ -128,7 +128,11 @@ class Scale(Thread):
                         answer = answer[1:-1]
                         if 'N' in answer:
                             answer = answer[0:-1]
-                        self.weight = float(''.join(answer))
+                        try:
+                            self.weight = float(''.join(answer))
+                        except ValueError as v:
+                            self.set_status('error','No data Received, please power-cycle the scale');
+                            self.device = None
                         
                 except Exception as e:
                     self.set_status('error',str(e))
