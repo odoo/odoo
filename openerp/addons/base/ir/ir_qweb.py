@@ -416,7 +416,7 @@ class QWeb(orm.AbstractModel):
         if qwebcontext.get('debug'):
             return content
         bundle = AssetsBundle(name, html=content)
-        return bundle.to_html(query=qwebcontext.get('assets_query'))
+        return bundle.to_html()
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -1014,16 +1014,12 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, query=None, sep='\n'):
+    def to_html(self, sep='\n'):
         response = []
-        if query:
-            query = '?' + werkzeug.url_encode(query)
-        else:
-            query = ''
         if self.stylesheets:
-            response.append('<link href="/web/css/%s%s" rel="stylesheet"/>' % (self.xmlid, query))
+            response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
         if self.javascripts:
-            response.append('<script type="text/javascript" src="/web/js/%s%s"></script>' % (self.xmlid, query))
+            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
         response.extend(self.remains)
 
         return sep.join(response)
