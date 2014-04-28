@@ -749,9 +749,11 @@ class stock_picking(osv.osv):
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'note': fields.text('Notes', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="It specifies goods to be deliver partially or all at once"),
-        'state': fields.function(_state_get, type="selection", store={
-            'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type'], 20),
-            'stock.move': (_get_pickings, ['state', 'picking_id', 'partially_available'], 20)}, selection=[
+        'state': fields.function(_state_get, type="selection",
+            store={
+                'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type'], 20),
+                'stock.move': (_get_pickings, ['state', 'picking_id', 'partially_available'], 20)},
+            selection=[
                 ('draft', 'Draft'),
                 ('cancel', 'Cancelled'),
                 ('waiting', 'Waiting Another Operation'),
@@ -759,7 +761,8 @@ class stock_picking(osv.osv):
                 ('partially_available', 'Partially Available'),
                 ('assigned', 'Ready to Transfer'),
                 ('done', 'Transferred'),
-                ], string='Status', readonly=True, select=True, track_visibility='onchange', help="""
+                ], string='Status', readonly=True, select=True, track_visibility='onchange',
+            help="""
                 * Draft: not confirmed yet and will not be scheduled until confirmed\n
                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                 * Waiting Availability: still waiting for the availability of products\n
