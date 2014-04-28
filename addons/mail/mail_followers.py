@@ -109,8 +109,7 @@ class mail_notification(osv.Model):
                     Administrator
                 </p>
                 <div>
-                    <small>Sent by <a ...>Your Company</a> using <a ...>OpenERP</a>.</small> OR
-                    <small>Sent by Administrator using <a ...>OpenERP</a>.</small>
+                    <small>Sent from <a ...>Your Company</a> using <a ...>OpenERP</a>.</small>
                 </div>
         """
         footer = ""
@@ -132,7 +131,7 @@ class mail_notification(osv.Model):
             company = "<a style='color:inherit' href='%s'>%s</a>" % (website_url, user.company_id.name)
         else:
             company = user.company_id.name
-        sent_by = _('Sent by %(company)s using %(openerp)s.')
+        sent_by = _('Sent from %(company)s using %(openerp)s')
         signature_company = '<small>%s</small>' % (sent_by % {
             'company': company,
             'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"

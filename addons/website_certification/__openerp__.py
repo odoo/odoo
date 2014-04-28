@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,29 +19,20 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Audit Trail',
+    'name': 'Certified People',
+    'category': 'Website',
+    'summary': 'Display your network of certified people on your website',
     'version': '1.0',
-    'category': 'Tools',
+    'author': 'OpenERP S.A.',
+    'depends': ['marketing', 'website'],
     'description': """
-This module lets administrator track every user operation on all the objects of the system.
-===========================================================================================
-
-The administrator can subscribe to rules for read, write and delete on objects 
-and can check logs.
+    Display your network of certified people on your website
     """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
     'data': [
-        'wizard/audittrail_view_log_view.xml',
-        'audittrail_view.xml',
         'security/ir.model.access.csv',
+        'views/website_certification_views.xml',
+        'views/website_certification_templates.xml',
     ],
-    'demo': ['audittrail_demo.xml'],
     'installable': True,
-    'auto_install': False,
-    'images': ['images/audittrail1.jpeg','images/audittrail2.jpeg','images/audittrail3.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -25,16 +25,14 @@ class TestMassMailing(osv.TransientModel):
             test_emails = tools.email_split(wizard.email_to)
             mail_ids = []
             for test_mail in test_emails:
-                body = mailing.body_html
-                unsubscribe_url = self.pool['mail.mass_mailing'].get_unsubscribe_url(cr, uid, mailing.id, 0, email=test_mail, context=context)
-                body = tools.append_content_to_html(body, unsubscribe_url, plaintext=False, container_tag='p')
                 mail_values = {
                     'email_from': mailing.email_from,
                     'reply_to': mailing.reply_to,
                     'email_to': test_mail,
                     'subject': mailing.name,
-                    'body_html': body,
+                    'body_html': mailing.body_html,
                     'auto_delete': True,
+                    'mailing_id': wizard.mass_mailing_id.id,
                 }
                 mail_ids.append(Mail.create(cr, uid, mail_values, context=context))
             Mail.send(cr, uid, mail_ids, context=context)
