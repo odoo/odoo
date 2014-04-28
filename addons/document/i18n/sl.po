@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-01-27 11:45+0000\n"
-"Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
+"PO-Revision-Date: 2013-12-27 12:38+0000\n"
+"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:57+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-12-28 05:37+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -39,6 +39,7 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
+"Polje, namenjeno imenu izvorne mape. Če je prazno, bo uporabljeno \"ime\"."
 
 #. module: document
 #: view:document.directory:0
@@ -111,7 +112,7 @@ msgstr ""
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr ""
+msgstr "Ime polja."
 
 #. module: document
 #: code:addons/document/document.py:340
@@ -137,6 +138,8 @@ msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
 msgstr ""
+"Če je označeno, bodo poiskane vse priponke, ki ustrezajo temu viru. V "
+"nasprotnem primeru samo tiste, kateri je ta vir nadrejen."
 
 #. module: document
 #: view:document.directory:0
@@ -153,7 +156,7 @@ msgstr "Podrobnosti datotek po uporabnikih"
 #. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
-msgstr ""
+msgstr "Najdi vse vire"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -173,7 +176,7 @@ msgstr "Datum spremembe"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Nastaviteve"
 
 #. module: document
 #: view:ir.attachment:0
@@ -185,7 +188,7 @@ msgstr "Partner"
 #: model:ir.actions.act_window,name:document.act_res_partner_document
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
-msgstr ""
+msgstr "Povezani dokumenti"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -199,6 +202,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Kliknite za kreiranje novega dokumenta. \n"
+"          </p><p>\n"
+"            Nabor dokumentov vam omogoča dostop do vseh priponk, kot so\n"
+"            elektronska pošta, projektni dokumenti, računi itd.\n"
+"          </p>\n"
+"        "
 
 #. module: document
 #: code:addons/document/document.py:340
@@ -223,7 +233,7 @@ msgstr "Dokumenti"
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr ""
+msgstr "Model virov"
 
 #. module: document
 #: field:report.document.file,file_size:0
@@ -246,7 +256,7 @@ msgstr "Tip"
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr ""
+msgstr "Ime v mapi mora biti enolično!"
 
 #. module: document
 #: code:addons/document/document.py:110
@@ -267,16 +277,17 @@ msgstr ""
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
+"Uporabite domeno, če želite aktivirati avtomatično filtriranje vidnih virov."
 
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "Napaka! Ne morete kreirati rekurzivnih map."
 
 #. module: document
 #: field:document.directory,resource_field:0
 msgid "Name field"
-msgstr ""
+msgstr "Polje imena"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
@@ -313,12 +324,12 @@ msgstr "Navidezne datoteke"
 #: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
-msgstr ""
+msgstr "Napaka pri pisanju dokumenta."
 
 #. module: document
 #: view:document.directory:0
 msgid "Generated Files"
-msgstr ""
+msgstr "Generirana polja"
 
 #. module: document
 #: view:document.configuration:0
@@ -326,6 +337,8 @@ msgid ""
 "When executing this wizard, it will configure your directories automatically "
 "according to modules installed."
 msgstr ""
+"Z izvedbo tega čarovnika bodo vaše mape ustvarjene avtomatično glede na "
+"instalirane module."
 
 #. module: document
 #: field:document.directory.content,directory_id:0
@@ -353,12 +366,12 @@ msgstr "Uporabnik, ki je zadnji spreminjal"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "Datoteke po uporabniku"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "vklopljeno"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -379,7 +392,7 @@ msgstr "Podrobnosti datotek po imenikih"
 #. module: document
 #: view:report.document.user:0
 msgid "All users files"
-msgstr ""
+msgstr "Vse uporabnikove datoteke"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_size_month
@@ -406,7 +419,7 @@ msgstr "Mesec"
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
+msgstr "Določite besede v kontekstu, za vse podrejene mape in datoteke."
 
 #. module: document
 #: view:document.directory:0
@@ -455,7 +468,7 @@ msgstr ""
 #: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "Konfiguriraj mape"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -473,6 +486,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"Označite, če želite uporabiti isto drevesno strukturo kot objekt, izbran "
+"sistemsko."
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -480,13 +495,15 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"Skladno z nadrejenim modelom ta ID pripne to mapo k ustreznemu zapisu "
+"nadrejenega modela."
 
 #. module: document
 #. openerp-web
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Priponke"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -496,12 +513,12 @@ msgstr "Avgust"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "Dinamična vsebina"
 
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "Mapa ne more biti sama sebi nadrejena!"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -565,7 +582,7 @@ msgstr ""
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "Ime mape mora biti enolično!"
 
 #. module: document
 #: view:ir.attachment:0
@@ -652,12 +669,12 @@ msgstr "ir.attachment"
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Uporabniška datoteka"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "Konfiguracija mape"
 
 #. module: document
 #: help:document.directory,type:0
@@ -706,6 +723,7 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
+"Samo člani te skupine bodo imeli dostop do te mape in njenih datotek."
 
 #. module: document
 #. openerp-web
@@ -743,17 +761,17 @@ msgstr "res_config_contents"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr ""
+msgstr "Struktura map"
 
 #. module: document
 #: field:report.document.user,name:0
 msgid "Year"
-msgstr ""
+msgstr "Leto"
 
 #. module: document
 #: model:ir.model,name:document.model_document_storage
 msgid "Storage Media"
-msgstr ""
+msgstr "Nosilci za hrambo"
 
 #. module: document
 #: field:document.directory.content,extension:0

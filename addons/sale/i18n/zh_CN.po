@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-07-06 08:30+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2014-02-08 13:56+0000\n"
+"Last-Translator: youring <youring@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:21+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-09 06:52+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
 msgid "account.config.settings"
-msgstr "account.config.settings"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -36,7 +36,7 @@ msgstr "销售单位"
 #: view:sale.report:0
 #: field:sale.report,user_id:0
 msgid "Salesperson"
-msgstr "销售员"
+msgstr "业务员"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
@@ -59,7 +59,7 @@ msgstr "取消订单"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:101
 #, python-format
 msgid "Incorrect Data"
-msgstr "错误的数据"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:102
@@ -199,6 +199,9 @@ msgid ""
 "user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
 msgstr ""
+"用来改变帐号分析视图来给服务公司的经理显示重要数据。\n"
+"                您也可以按照用户或月度浏览帐号分析汇总报告。\n"
+"                这将安装模块 account_analytic_analysis。"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -265,7 +268,7 @@ msgstr "折扣(%)"
 #. module: sale
 #: view:sale.order.line.make.invoice:0
 msgid "Create & View Invoice"
-msgstr "创建和查看发票"
+msgstr "生成并查看发票"
 
 #. module: sale
 #: view:board.board:0
@@ -394,7 +397,7 @@ msgid ""
 "percentage of the sales order\n"
 "                    or a fixed price (for advances) directly from the sales "
 "order form if you prefer."
-msgstr ""
+msgstr "这些订单行的所有项目将被开票。你也能按订单的比例开票，如果你喜欢，也能直接从订单表单的以固定价格（预付款）开票。"
 
 #. module: sale
 #: field:sale.order,message_summary:0
@@ -774,7 +777,7 @@ msgstr "已送货"
 #. module: sale
 #: view:sale.advance.payment.inv:0
 msgid "Create and View Invoice"
-msgstr "创建和查看发票"
+msgstr "生成并查看发票"
 
 #. module: sale
 #: report:sale.order:0
@@ -873,6 +876,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击以创建一个新的销售商店。\n"
+"              </p><p>\n"
+"                每个报价单或者销售订单必须管理到一个商店。\n"
+"                每个商店定义了仓库，每一次销售都从这个仓库发货。\n"
+"                \n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -916,6 +927,9 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"允许配置产品的通知消息，当要销售给定产品或者给定的客户时 会被触发。\n"
+"例如：产品：该产品被弃用，不要采购多余5个。\n"
+"           供应商：别忘记要求快递。"
 
 #. module: sale
 #: code:addons/sale/sale.py:955
@@ -1037,6 +1051,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击以创建一个报价单，这是每次销售的第一步。\n"
+"              </p><p>\n"
+"                OpenERP 将帮你完成一个完整的销售流程:\n"
+"                从报价到销售订单，发运，开票和支付信息的归集。\n"
+"              </p><p>\n"
+"                社交特性将帮你组织每个销售订单的讨论，并且允许你的客户跟踪销售订单的进度\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1061,7 +1084,7 @@ msgstr "消息和通信历史"
 #. module: sale
 #: view:sale.order:0
 msgid "New Copy of Quotation"
-msgstr "新的报价单副本"
+msgstr "复制此报价单"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
@@ -1181,6 +1204,10 @@ msgid ""
 "available.\n"
 "                This installs the module analytic_user_function."
 msgstr ""
+"允许定义特定用户针对给定帐户的默认功能。\n"
+"                该功能主要用于用户编辑时间计划。值被重赋并且域被自动填充。\n"
+"                但是仍有可能改变这些值。\n"
+"                这将安装模块 analytic_user_function。"
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1535,6 +1562,90 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>此为您的 ${object.state in ('draft', 'sent') 和 'quotation' or 'order "
+"confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>还能直接由Paypal直接支付:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>如有任何疑问，请直接接洽我们。</p>\n"
+"    <p>感谢选择 ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1697,7 +1808,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr "销售订单的日期已确认。"
+msgstr "销售订单的确认日期"
 
 #. module: sale
 #: code:addons/sale/sale.py:565

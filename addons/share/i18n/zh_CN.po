@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-07-11 06:53+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2014-03-06 08:55+0000\n"
+"Last-Translator: jack lee <liyupu@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-12 06:34+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-03-07 07:24+0000\n"
+"X-Generator: Launchpad (build 16948)\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:842
@@ -76,6 +76,8 @@ msgid ""
 "    %s\n"
 "\n"
 msgstr ""
+"附件没弄好，你可以在OpenERP服务器上查看: %s\n"
+"\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -128,7 +130,7 @@ msgstr "必须是销售/用户组才能使用 分享向导"
 #: code:addons/share/static/src/js/share.js:63
 #, python-format
 msgid "Embed"
-msgstr ""
+msgstr "嵌入"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:599
@@ -147,7 +149,7 @@ msgstr "共享URL"
 #: code:addons/share/wizard/share_wizard.py:881
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
-msgstr ""
+msgstr "这是你访问这个保护区域的凭证：\n"
 
 #. module: share
 #: view:share.wizard:0
@@ -173,7 +175,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Please indicate the emails of the persons to share with, one per line."
-msgstr ""
+msgstr "请标明分享的用户电子邮箱，每行一个。"
 
 #. module: share
 #: help:share.wizard,domain:0
@@ -189,7 +191,7 @@ msgstr "下一个"
 #: code:addons/share/wizard/share_wizard.py:662
 #, python-format
 msgid "Action and Access Mode are required to create a shared access."
-msgstr ""
+msgstr "操作和访问模式都需要要创建一个共享入口。"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:850
@@ -262,7 +264,7 @@ msgstr ""
 #: code:addons/share/wizard/share_wizard.py:77
 #, python-format
 msgid "Direct link or embed code"
-msgstr ""
+msgstr "直接链接或者切入代码"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:856
@@ -282,7 +284,7 @@ msgstr "共享操作"
 #. module: share
 #: help:share.wizard,record_name:0
 msgid "Name of the shared record, if sharing a precise record"
-msgstr ""
+msgstr "如果共享一个精确记录，记录下分享名"
 
 #. module: share
 #: field:res.users,share:0
@@ -299,7 +301,7 @@ msgstr "未知"
 #: code:addons/share/wizard/share_wizard.py:657
 #, python-format
 msgid "Sharing access cannot be created."
-msgstr ""
+msgstr "共享访问不能被创建。"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:780
@@ -375,7 +377,7 @@ msgstr "对不起，你当前的视图和过滤器试图访问当前不支持到
 #. module: share
 #: view:share.wizard:0
 msgid "Use this link"
-msgstr ""
+msgstr "使用这个链接"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:852
@@ -397,7 +399,7 @@ msgstr "过滤条件"
 #. module: share
 #: view:res.groups:0
 msgid "{'search_default_no_share':1}"
-msgstr ""
+msgstr "{'search_default_no_share':1}"
 
 #. module: share
 #: view:share.wizard:0
@@ -426,7 +428,7 @@ msgstr "邀请"
 #. module: share
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
 msgid "Share your documents"
-msgstr ""
+msgstr "共享你的单据"
 
 #. module: share
 #: view:share.wizard:0
@@ -449,7 +451,7 @@ msgstr "share.wizard.result.line"
 #. module: share
 #: field:share.wizard,embed_code:0
 msgid "Code"
-msgstr ""
+msgstr "代码"
 
 #. module: share
 #: help:share.wizard,user_type:0
@@ -463,21 +465,23 @@ msgid ""
 "I have shared %s (%s) with you!\n"
 "\n"
 msgstr ""
+"我共享了 %s (%s)  给你。\n"
+"\n"
 
 #. module: share
 #: field:share.wizard,view_type:0
 msgid "Current View Type"
-msgstr ""
+msgstr "当前视图类型"
 
 #. module: share
 #: selection:share.wizard,access_mode:0
 msgid "Can view"
-msgstr ""
+msgstr "能查看"
 
 #. module: share
 #: selection:share.wizard,access_mode:0
 msgid "Can edit"
-msgstr ""
+msgstr "能编辑"
 
 #. module: share
 #: view:share.wizard:0
@@ -523,7 +527,7 @@ msgstr ""
 #. module: share
 #: model:ir.model,name:share.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "用户"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:876
@@ -566,7 +570,7 @@ msgstr ""
 #. module: share
 #: field:share.wizard,message:0
 msgid "Personal Message"
-msgstr ""
+msgstr "个人消息"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:835
@@ -601,7 +605,7 @@ msgstr "访问方式"
 #. module: share
 #: view:share.wizard:0
 msgid "Sharing: preparation"
-msgstr ""
+msgstr "共享：准备"
 
 #. module: share
 #: model:ir.model,name:share.model_ir_model_access
@@ -616,4 +620,4 @@ msgstr ""
 #. module: share
 #: help:share.wizard,access_mode:0
 msgid "Access rights to be granted on the shared documents."
-msgstr ""
+msgstr "已获得共享文档的访问权限"

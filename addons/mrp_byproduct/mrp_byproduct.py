@@ -82,11 +82,11 @@ class mrp_production(osv.osv):
     _inherit= 'mrp.production'
 
 
-    def action_confirm(self, cr, uid, ids):
+    def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms production order and calculates quantity based on subproduct_type.
         @return: Newly generated picking Id.
         """
-        picking_id = super(mrp_production,self).action_confirm(cr, uid, ids)
+        picking_id = super(mrp_production,self).action_confirm(cr, uid, ids, context=context)
         product_uom_obj = self.pool.get('product.uom')
         for production in self.browse(cr, uid, ids):
             source = production.product_id.property_stock_production.id

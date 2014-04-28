@@ -158,6 +158,7 @@
         <record id="view_res_partner_member_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
+            <field name="priority">50</field>
             <field name="arch" type="xml">
                 <search string="Membership Partners">
                     <field name="membership_start" invisible="1"/>

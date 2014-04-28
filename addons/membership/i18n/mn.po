@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-02-23 12:12+0000\n"
-"Last-Translator: Dulguun <baigal_dulguun@yahoo.com>\n"
+"PO-Revision-Date: 2014-02-08 12:27+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:09+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-09 06:51+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -111,7 +111,7 @@ msgstr "Гишүүнчлэл дуусах огноо"
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Борлуулалтын ажилтан"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -138,7 +138,7 @@ msgstr "Гишүүн бус"
 #. module: membership
 #: view:product.product:0
 msgid "Taxes"
-msgstr ""
+msgstr "Татварууд"
 
 #. module: membership
 #: view:res.partner:0
@@ -148,7 +148,7 @@ msgstr "Бүх гишүүд"
 #. module: membership
 #: view:product.product:0
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Энэ тэмдэглэл нь үнийн санал дээр дэлгэцэнд харуулна..."
 
 #. module: membership
 #: code:addons/membership/membership.py:410
@@ -253,7 +253,7 @@ msgstr "Гишүүнчлэл эхлэх огноо"
 #. module: membership
 #: field:res.partner,membership_cancel:0
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Гишүүнчлэлийг Цуцласан Огноо"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
@@ -333,12 +333,12 @@ msgstr "Гишүүнчлэлийн бараа"
 #. module: membership
 #: field:res.partner,membership_state:0
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Гишүүнчлэлийн Идэвхтэй Төлөв"
 
 #. module: membership
 #: view:product.product:0
 msgid "Add a description..."
-msgstr ""
+msgstr "Тайлбар нэмэх..."
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -400,7 +400,7 @@ msgstr "Харилцагч нь төлбөргүй гишүүн."
 #. module: membership
 #: view:res.partner:0
 msgid "Buy Membership"
-msgstr ""
+msgstr "Гишүүнчлэл Худалдан авах"
 
 #. module: membership
 #: field:report.membership,associate_member_id:0
@@ -439,7 +439,7 @@ msgstr "Ангилал"
 #. module: membership
 #: view:res.partner:0
 msgid "Contacts"
-msgstr ""
+msgstr "Холбогчид"
 
 #. module: membership
 #: view:report.membership:0
@@ -469,7 +469,7 @@ msgstr "Гишүүнийн гишүүнчлэлээр холбогдсон ог�
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "Membership Status"
-msgstr ""
+msgstr "Гишүүнчлэлийн төлөв"
 
 #. module: membership
 #: view:res.partner:0
@@ -479,7 +479,7 @@ msgstr "Захиалагчид"
 #. module: membership
 #: view:membership.invoice:0
 msgid "or"
-msgstr ""
+msgstr "эсвэл"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -496,7 +496,7 @@ msgstr "Гишүүнчлэлийн бараанууд"
 #. module: membership
 #: sql_constraint:product.product:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Алдаа ! Дуусах огноо нь эхлэх огнооноос өмнө байж болохгүй."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -506,7 +506,7 @@ msgstr "6-р сар"
 #. module: membership
 #: help:product.product,membership:0
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Хэрэв бараа нь гишүүнчлэлд тохирох бол сонгоно уу"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -570,6 +570,15 @@ msgid ""
 "created.\n"
 "                    -Paying member: A member who has paid the membership fee."
 msgstr ""
+"Энэ нь гишүүнчлэлийн төлөвийг илэрхийлнэ.\n"
+"                    -Гишүүн бус: Гишүүн болох хүсэлт гаргаагүй гишүүд.\n"
+"                    -Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцлсан гишүүн.\n"
+"                    -Хуучин харилцагч: Гишүүнлэлийн хугацаа нь дууссан "
+"гишүүн.\n"
+"                    -Хүлээж байгаа гишүүн: Гишүүн болох хүсэлт гаргасан "
+"бөгөөд нэхэмжлэл үүсэхийг хүлээж байгаа гишүүн.\n"
+"                    -Нэхэмжлэгдсэн Гишүүн: Нэхэмжлэл нь үүссэн гишүүд\n"
+"                    -Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүд."
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -637,6 +646,15 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Энэ нь гишүүнчлэлийн төлөвийг илэрхийлнэ.\n"
+"                    -Гишүүн бус: Гишүүн болох хүсэлт гаргаагүй гишүүд.\n"
+"                    -Цуцлагдсан гишүүн: Гишүүнчлэлээ цуцлсан гишүүн.\n"
+"                    -Хуучин харилцагч: Гишүүнлэлийн хугацаа нь дууссан "
+"гишүүн.\n"
+"                    -Хүлээж байгаа гишүүн: Гишүүн болох хүсэлт гаргасан "
+"бөгөөд нэхэмжлэл үүсэхийг хүлээж байгаа гишүүн.\n"
+"                    -Нэхэмжлэгдсэн Гишүүн: Нэхэмжлэл нь үүссэн гишүүд\n"
+"                    -Төлсөн гишүүн: Гишүүнчлэлийн төлбөрөө төлсөн гишүүд."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -662,7 +680,7 @@ msgstr "Цуцлах"
 #. module: membership
 #: view:res.partner:0
 msgid "All non Members"
-msgstr "Бүх гишүүн бишүүд"
+msgstr "Бүх гишүүн бусууд"
 
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
@@ -682,7 +700,7 @@ msgstr "Гишүүний үнэ"
 #. module: membership
 #: view:product.product:0
 msgid "Membership Duration"
-msgstr ""
+msgstr "Гишүүнчлэлийн үргэлжлэх хугацаа"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
@@ -698,17 +716,17 @@ msgstr "5-р сар"
 #: field:product.product,membership_date_from:0
 #: field:res.partner,membership_start:0
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Гишүүнчлэлийн эхлэх огноо"
 
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Хэрэв үнэгүй гишүүнчлэл өгөхөөр бол сонгоно"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership Amount"
-msgstr ""
+msgstr "Гишүүнчлэлийн Дүн"
 
 #. module: membership
 #: field:report.membership,date_to:0
@@ -788,7 +806,7 @@ msgstr "Жил"
 #. module: membership
 #: view:product.product:0
 msgid "Accounting"
-msgstr ""
+msgstr "Санхүү"
 
 #. module: membership
 #: view:report.membership:0

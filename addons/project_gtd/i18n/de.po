@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-01-26 09:47+0000\n"
+"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:18+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-01-27 05:45+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -25,7 +25,7 @@ msgstr "In Bearbeitung"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr "Zeige nur Aufgaben mit Frist"
+msgstr "Nur Aufgaben mit Frist anzeigen"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -55,7 +55,7 @@ msgstr "Bereinigung des Zeitfensters war erfolgreich"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
-msgstr "unerledigt Aufgaben"
+msgstr "Unerledigt Aufgaben"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
@@ -70,9 +70,9 @@ msgid ""
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
 msgstr ""
-"Bei der  \"Getting Things Done\" Methodik werden Zeitfenster definiert. "
-"Repräsentiert wird hierdurch eine definierte Zeitvorgabe, in die Sie Ihre "
-"Aufgaben zu Organisationszwecken einsortieren können."
+"Bei der  \"Getting Things Done\" Methodik werden Zeitfenster definiert. Ein "
+"Zeitfenster kann 'heute', 'diese Woche', 'dieser Monat', 'Langzeit' sein, um "
+"Aufgaben direkt zuzuordnen."
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
@@ -109,7 +109,7 @@ msgstr "Zeitfenster"
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
-msgstr "Zuweisen zu Zeitfenster"
+msgstr "Zu Zeitfenster zuweisen"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
@@ -132,7 +132,7 @@ msgstr "Leeres Zeitfenster"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Tasks having no timebox assigned yet"
-msgstr "Aufgaben ohne Zeitrahmen"
+msgstr "Aufgaben ohne Zeitfenster"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
@@ -157,7 +157,7 @@ msgstr "Aufgabe"
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "Add to Timebox"
-msgstr "Hinzufügen zu Zeitfenster"
+msgstr "Zu Zeitfenster hinzufügen"
 
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
@@ -173,18 +173,18 @@ msgstr "Kontext"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr "Bei Anreise"
+msgstr "Während Reisezeit"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
-msgstr "Zeige Kontext"
+msgstr "Kontext anzeigen"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
 #: view:project.timebox.fill.plan:0
 msgid "Plannify Timebox"
-msgstr "Plane Zeitfenster"
+msgstr "Zeitfenster planen"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -241,7 +241,7 @@ msgstr "Sequenz"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show the context field"
-msgstr "Zeige Kontext Feld"
+msgstr "Kontextfeld anzeigen"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
@@ -252,17 +252,17 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ungelesene Nachrichten"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Deadlines"
-msgstr "Zeige Fristen"
+msgstr "Fristen anzeigen"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 msgid "Timebox Definition"
-msgstr "Zeitfenster Definition"
+msgstr "Zeitfensterdefinition"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -272,7 +272,7 @@ msgstr "Eingang"
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
 msgid "Get from Timebox"
-msgstr "Empfange aus Zeitfenster"
+msgstr "Aus Zeitfenster entnehmen"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -291,10 +291,10 @@ msgid ""
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
 msgstr ""
-"Kontexte werden im Rahmen der  \"Getting Things Done\" Methode verwendet. "
+"Kontexte werden im Rahmen der  \"Getting Things Done\"-Methode verwendet. "
 "Hierdurch können Sie Ihre Aufgaben nach den Orten klassifizieren, an denen "
-"die jeweilige Aufgabe erledigt werden soll, z.B. Zu Hause, Im Büro oder "
-"während Anreise."
+"die jeweilige Aufgabe erledigt werden soll, z.B. 'zu Hause', 'im Büro' oder "
+"'während Anreise'."
 
 #. module: project_gtd
 #: view:project.task:0

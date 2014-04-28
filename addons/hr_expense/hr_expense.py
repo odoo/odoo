@@ -37,13 +37,6 @@ def _employee_get(obj, cr, uid, context=None):
 
 class hr_expense_expense(osv.osv):
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if not default: default = {}
-        default.update({'voucher_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
-        return super(hr_expense_expense, self).copy(cr, uid, id, default, context=context)
-
     def _amount(self, cr, uid, ids, field_name, arg, context=None):
         res= {}
         for expense in self.browse(cr, uid, ids, context=context):
@@ -112,7 +105,12 @@ class hr_expense_expense(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default.update(account_move_id=False)
+        default.update(
+            account_move_id=False,
+            voucher_id=False,
+            date_confirm=False,
+            date_valid=False,
+            user_valid=False)
         return super(hr_expense_expense, self).copy(cr, uid, id, default=default, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -263,6 +261,10 @@ class hr_expense_expense(osv.osv):
 
             #convert eml into an osv-valid format
             lines = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, exp.employee_id.address_home_id, exp.date_confirm, context=context)), eml)
+            journal_id = move_obj.browse(cr, uid, move_id, context).journal_id
+            # post the journal entry if 'Skip 'Draft' State for Manual Entries' is checked
+            if journal_id.entry_posted:
+                move_obj.button_validate(cr, uid, [move_id], context)
             move_obj.write(cr, uid, [move_id], {'line_id': lines}, context=context)
             self.write(cr, uid, ids, {'account_move_id': move_id, 'state': 'done'}, context=context)
         return True

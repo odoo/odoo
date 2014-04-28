@@ -515,7 +515,13 @@
             <field name="property_account_expense_categ" ref="a540"/>
             <field name="property_account_income_categ" ref="a311"/>
         </record>
-        
+        <record id="indian_chart_template_private_value" model="ir.values">
+            <field name="name">India - Chart of Accounts for Private Ltd/Partnership</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="indian_chart_template_private"/>
+            <field name="value" ref="base.INR"/>
+        </record>
         
     </data>
 </openerp>

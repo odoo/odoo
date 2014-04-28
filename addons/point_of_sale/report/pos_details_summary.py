@@ -99,13 +99,10 @@ class pos_details_summary(report_sxw.rml_parse):
 
     def _get_tax_amount(self, objects):
         res = {}
-        list_ids = []
         for order in objects:
             for line in order.lines:
-                if len(line.product_id.taxes_id):
-                    tax = line.product_id.taxes_id[0]
-                    res[tax.name] = (line.price_unit * line.qty * (1-(line.discount or 0.0) / 100.0)) + (tax.id in list_ids and res[tax.name] or 0)
-                    list_ids.append(tax.id)
+                for tax in line.product_id.taxes_id:
+                    res[tax.name] = res.setdefault(tax.name, 0.0) + (line.price_subtotal_incl - line.price_subtotal)
         return res
 
     def _get_sales_total(self, objects):

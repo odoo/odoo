@@ -153,12 +153,11 @@ for a particular financial year and for preparation of vouchers there is a modul
         'test/account_period_close.yml',
         'test/account_use_model.yml',
         'test/account_validate_account_move.yml',
-        'test/account_fiscalyear_close.yml',
         #'test/account_bank_statement.yml',
         #'test/account_cash_statement.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
-        'test/account_fiscalyear_close_state.yml', #last test, as it will definitively close the demo fiscalyear
+        'test/account_fiscalyear_close.yml', #last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,
     'auto_install': False,

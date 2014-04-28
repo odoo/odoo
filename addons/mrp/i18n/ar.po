@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-02-16 09:08+0000\n"
-"Last-Translator: Ahmad Khayyat <Unknown>\n"
+"PO-Revision-Date: 2014-02-04 02:13+0000\n"
+"Last-Translator: Mohamed M. Hagag <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:09+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-06 06:24+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -80,7 +80,7 @@ msgstr "المنتجات المتبقية"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "مراكز العمل"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -127,12 +127,12 @@ msgstr "مرجع"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr "منتجات منتهية"
+msgstr "منتجات نهائية"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are currently in production."
-msgstr "تصنيع الطلبيات التي هي حاليا في الإنتاج."
+msgstr "أوامر تصنيع جاري تنفيذها"
 
 #. module: mrp
 #: help:mrp.bom,message_summary:0
@@ -162,7 +162,7 @@ msgstr "منتجات للانتهاء منها"
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "Set / Pack"
-msgstr "ضع / حشد"
+msgstr "مجموعة / باقة"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -174,7 +174,8 @@ msgstr "التكلفة لكل ساعة"
 msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
-msgstr "اذا كان اسلوب التوريد للمنتج في حالة انتاج, ينشأ النظام امر انتاج."
+msgstr ""
+"يقوم النظام بإنشاء أمر تصنيع / إنتاج إذا كان اسلوب التوريد هو انتاج المنتج"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -184,7 +185,7 @@ msgstr "كمية المنتج"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "وحدة القياس"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -194,23 +195,23 @@ msgstr "للمواد المشتراه"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "تخطيط  الأمر"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "السماح بتخطيط تفصيلي لامر الانتاج"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:633
 #, python-format
 msgid "Cannot cancel manufacturing order!"
-msgstr ""
+msgstr "لا يمكن إلغاء أمر التصنيع"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr "دورة الحساب"
+msgstr "حساب الدورة"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -221,7 +222,7 @@ msgstr "تكلفة العمل"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
-msgstr "المشترى من الخدمات"
+msgstr "توريد الخدمات"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -252,12 +253,12 @@ msgstr ""
 #: view:mrp.production:0
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr "إنتاج المنتجات"
+msgstr "الأصناف التي تم انتاجها"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Destination Location"
-msgstr "الموقع المخصص"
+msgstr "مكان التوصيل"
 
 #. module: mrp
 #: view:mrp.config.settings:0
@@ -267,7 +268,7 @@ msgstr "بيانات الاستاذ"
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
-msgstr ""
+msgstr "إنتاج أصناف مختلفة من أمر تصنيع واحد"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_properties:0
@@ -308,7 +309,7 @@ msgstr "مجموعات / وهمي"
 #: view:mrp.production:0
 #: field:mrp.production,state:0
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 #. module: mrp
 #: help:mrp.bom,position:0
@@ -318,7 +319,7 @@ msgstr "تشير الى الوضع في الخطة الخارجية."
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr ""
+msgstr "إدارة المسارات"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -328,12 +329,12 @@ msgstr "إنتاج المنتج"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
+msgstr "خطأ! لايمكن إنشاء فواتير مواد متداخلة"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "استخدام عمل المركز"
+msgstr "استخدام مركو العمل"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -389,7 +390,7 @@ msgstr "منتج مركز العمل"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr "أكد المنتج"
+msgstr "تأكيد الإنتاج"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduct0
@@ -397,8 +398,7 @@ msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
 msgstr ""
-"وينشأ النظام الامر (انتاج او مشترى) بناءَا على كمية المنتج المباع المعلمات "
-"المتغيرة للمنتجات."
+"وينشئ النظام أمر (انتاج او الشراء) بناءَا على كمية المنتج المباع وخواصه."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -414,7 +414,7 @@ msgstr ""
 #: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "كمية المنتج"
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -480,7 +480,7 @@ msgstr "تاريخ مجدول"
 #: code:addons/mrp/procurement.py:129
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "تم إنشاء أمرالتصنيع %s ."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -512,17 +512,17 @@ msgstr "فاتورة تركيب المواد"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
-msgstr "علامة المنتج هي خدمة"
+msgstr "نوع الصنف خدمة"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr "حدد تكلفة العمل المركزية دورة"
+msgstr "حدد تكلفة الدورة لمركز العمل"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
-msgstr "تعطب التصنيع"
+msgstr "عملية تفكك التصنيع"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1

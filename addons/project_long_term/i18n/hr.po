@@ -8,25 +8,25 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-02-13 15:22+0000\n"
+"Last-Translator: Mihael Murkovic <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:18+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-14 07:44+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr "prisili završetak faze prije ovog datuma"
+msgstr "Prisilno završi fazu prije ovog datuma"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
-msgstr "U tijeku"
+msgstr "U Tijeku"
 
 #. module: project_long_term
 #: field:account.analytic.account,use_phases:0
@@ -41,12 +41,12 @@ msgstr "Faze"
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Team Planning"
-msgstr ""
+msgstr "Planiranje tim-a"
 
 #. module: project_long_term
 #: field:project.phase,user_ids:0
 msgid "Assigned Users"
-msgstr ""
+msgstr "Dodjeljeni korisnici"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -57,7 +57,7 @@ msgstr "Sljedeće faze"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_user_allocation
 msgid "Phase User Allocation"
-msgstr ""
+msgstr "Alokacija korisnika po fazi"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -71,6 +71,8 @@ msgid ""
 "view.\n"
 "               "
 msgstr ""
+"Raspored faza svih ili specificiranog projekta. Otvara gantogram.\n"
+"               "
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
@@ -82,7 +84,7 @@ msgstr "Zadaci projekta"
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 #: view:project.compute.phases:0
 msgid "Schedule Phases"
-msgstr ""
+msgstr "Isplaniraj faze"
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
@@ -92,7 +94,7 @@ msgstr "Sekvenca"
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Action"
-msgstr ""
+msgstr "Akcija"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -119,12 +121,12 @@ msgstr "I_zračunaj"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "Novi"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration Unit of Measure"
-msgstr ""
+msgstr "Jedinica mjere - trajanje"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
@@ -140,24 +142,24 @@ msgstr "Na čekanju"
 #. module: project_long_term
 #: help:project.phase,progress:0
 msgid "Computed based on related tasks"
-msgstr ""
+msgstr "Izračunato, temeljeno na sličnim zadaćama"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "In Progress Phases"
-msgstr ""
+msgstr "Faze u tijeku"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:140
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopija)"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
-msgstr ""
+msgstr "Odredite projekt za raspored"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -180,22 +182,27 @@ msgstr "Minimalni početni datum"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
 msgstr ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Duration\r\n"
+"Mjerna jedinica (Jedinica Mjere) je jedinica mjere trajanja nekog vremenskog "
+"perioda"
 
 #. module: project_long_term
 #: help:project.phase,user_ids:0
 msgid ""
 "The resources on the project can be computed automatically by the scheduler."
 msgstr ""
+"Resursi projekta se mogu automatski izračunavati preko \r\n"
+"Planer omogućava automatsko izračunavanje resursa po projektu"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Cancel Phase"
-msgstr ""
+msgstr "Poništi fazu"
 
 #. module: project_long_term
 #: help:account.analytic.account,use_phases:0
 msgid "Check this field if you plan to use phase-based scheduling"
-msgstr ""
+msgstr "Označite polje u slučaju planiranja po fazama"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -206,11 +213,15 @@ msgid ""
 "           \n"
 " If the phase is over, the status is set to 'Done'."
 msgstr ""
+"Prilikom kreiranja faze status je 'Nacrt'.\n"
+" Ako je faza pokrenuta, status postaje 'U tijeku'.\n"
+" Ako je potreban pregled, status postaje 'Na čekanju'\n"
+" Ako je faza gotova, status postaje 'Zatvoren'"
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Napredak"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
@@ -221,7 +232,7 @@ msgstr "Resursi"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "My Projects"
-msgstr ""
+msgstr "Moji Projekti"
 
 #. module: project_long_term
 #: view:project.project:0
@@ -242,7 +253,7 @@ msgstr "Radno vrijeme"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Pending Phases"
-msgstr ""
+msgstr "Faze na čekanju"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
@@ -257,7 +268,7 @@ msgstr "Vezani zadaci"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "Početni mjesec"
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
@@ -280,6 +291,10 @@ msgid ""
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
 msgstr ""
+"Projekt se može podijeliti na više faza. Svakoj fazi dodijelimo korisnike, "
+"opis potrebnih zadataka, prethodnu i slijedeću fazu te ograničenja datuma za "
+"automatska planiranje. Koristite dugoročno planiranje prilikom dodjeljivanja "
+"korisnika te razlomite faze u niz manjih zadataka."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -295,7 +310,7 @@ msgstr "Prijašnje faze"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "New Phases"
-msgstr ""
+msgstr "Nova faza"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -305,7 +320,7 @@ msgstr "Pojedinosti zadatka"
 #. module: project_long_term
 #: field:project.project,phase_count:0
 msgid "Open Phases"
-msgstr ""
+msgstr "Otvorene faze"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
@@ -345,7 +360,7 @@ msgstr "Odustani"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project Users"
-msgstr ""
+msgstr "Korisnici projekta"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -369,12 +384,12 @@ msgstr "Početni datum faze mora biti manje od završnog datuma faze."
 #. module: project_long_term
 #: selection:project.phase,state:0
 msgid "Cancelled"
-msgstr "Poništeno"
+msgstr "Otkazano"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Total Hours"
-msgstr "Ukupni sati"
+msgstr "Ukupno Sati"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -396,7 +411,7 @@ msgstr "Ograničenja"
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
@@ -406,7 +421,7 @@ msgstr "Daje redoslijed sekvence prilikom prikaza popisa faza."
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Tasks"
-msgstr ""
+msgstr "Zadatak"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
@@ -450,7 +465,7 @@ msgstr "Mjesec"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitički konto"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
@@ -460,7 +475,7 @@ msgstr "Krajnji rok"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
-msgstr ""
+msgstr "Alokacija korisnika po projektu"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
@@ -473,17 +488,17 @@ msgstr "Zakaži zadatke"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Done"
-msgstr "Izvršeno"
+msgstr "Završeno"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All My Projects"
-msgstr ""
+msgstr "Izračunaj sve moje projekte"
 
 #. module: project_long_term
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
-msgstr ""
+msgstr "Forsiraj dodijeljene korisnike"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -494,7 +509,7 @@ msgstr "Trajanje"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "Korisnici"
 
 #. module: project_long_term
 #: field:project.phase,name:0
@@ -505,4 +520,4 @@ msgstr "Naziv"
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "or"
-msgstr ""
+msgstr "ili"

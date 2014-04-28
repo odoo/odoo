@@ -1,0 +1,343 @@
+# Chinese (Traditional) translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-12-29 17:12+0000\n"
+"Last-Translator: Andy Cheng <andy@dobtor.com>\n"
+"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-12-30 05:06+0000\n"
+"X-Generator: Launchpad (build 16877)\n"
+
+#. module: auth_signup
+#: view:res.users:0
+msgid ""
+"A password reset has been requested for this user. An email containing the "
+"following link has been sent:"
+msgstr "已請求密碼重設。一封含有以下連結的e-mail 已經送出："
+
+#. module: auth_signup
+#: field:res.partner,signup_type:0
+msgid "Signup Token Type"
+msgstr ""
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_uninvited:0
+msgid "Allow external users to sign up"
+msgstr "允許外部使用者註冊"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
+#, python-format
+msgid "Confirm Password"
+msgstr "確認密碼"
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_uninvited:0
+msgid "If unchecked, only invited users may sign up."
+msgstr "如果未勾選，只有被邀請的使用者可以註冊"
+
+#. module: auth_signup
+#: view:res.users:0
+msgid "Send an invitation email"
+msgstr "發送邀請函"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr "已啟用"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_base_config_settings
+msgid "base.config.settings"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:266
+#, python-format
+msgid "Cannot send email: user has no email address."
+msgstr "無法送出email：使用者沒有email 地址"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
+#, python-format
+msgid "Reset password"
+msgstr "重設密碼"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_template_user_id:0
+msgid "Template user for new users created through signup"
+msgstr ""
+
+#. module: auth_signup
+#: model:email.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
+msgstr "密碼重設"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#, python-format
+msgid "Please enter a password and confirm it."
+msgstr "請輸入密碼並確認"
+
+#. module: auth_signup
+#: view:res.users:0
+msgid "Send reset password link by email"
+msgstr "以電子郵件寄出密碼重設連結"
+
+#. module: auth_signup
+#: model:email.template,body_html:auth_signup.reset_password_email
+msgid ""
+"\n"
+"<p>A password reset was requested for the OpenERP account linked to this "
+"email.</p>\n"
+"\n"
+"<p>You may change your password by following <a "
+"href=\"${object.signup_url}\">this link</a>.</p>\n"
+"\n"
+"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+msgstr ""
+
+#. module: auth_signup
+#: view:res.users:0
+msgid ""
+"An invitation email containing the following subscription link has been sent:"
+msgstr ""
+
+#. module: auth_signup
+#: field:res.users,state:0
+msgid "Status"
+msgstr "狀態"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr "從未連接"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#, python-format
+msgid "Please enter a name."
+msgstr "請輸入名字"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_users
+msgid "Users"
+msgstr "使用者"
+
+#. module: auth_signup
+#: field:res.partner,signup_url:0
+msgid "Signup URL"
+msgstr "註冊網址"
+
+#. module: auth_signup
+#: model:email.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to "
+"\"${object.company_id.name}\" in order to get access to your documents in "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#, python-format
+msgid "Please enter a username."
+msgstr "請輸入使用者名稱。"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:270
+#, python-format
+msgid ""
+"Cannot send email: no outgoing email server configured.\n"
+"You can configure it under Settings/General Settings."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:177
+#, python-format
+msgid "An email has been sent with credentials to reset your password"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:12
+#, python-format
+msgid "Username"
+msgstr "使用者名稱"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:8
+#, python-format
+msgid "Name"
+msgstr "名稱"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
+#, python-format
+msgid "Please enter a username or email address."
+msgstr "請輸入使用者名稱或電子郵件地址"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:13
+#, python-format
+msgid "Username (Email)"
+msgstr ""
+
+#. module: auth_signup
+#: field:res.partner,signup_expiration:0
+msgid "Signup Expiration"
+msgstr ""
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_reset_password:0
+msgid "This allows users to trigger a password reset from the Login page."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#, python-format
+msgid "Log in"
+msgstr "登入"
+
+#. module: auth_signup
+#: field:res.partner,signup_valid:0
+msgid "Signup Token is Valid"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
+#, python-format
+msgid "Login"
+msgstr "登入"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:97
+#, python-format
+msgid "Invalid signup token"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#, python-format
+msgid "No database selected !"
+msgstr "未選定資料庫！"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_reset_password:0
+msgid "Enable password reset from Login page"
+msgstr "於登入頁面啟用密碼重設"
+
+#. module: auth_signup
+#: model:email.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on OpenERP"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
+#, python-format
+msgid "Back to Login"
+msgstr "返回登入畫面"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Partner"
+msgstr "業務夥伴"
+
+#. module: auth_signup
+#: field:res.partner,signup_token:0
+msgid "Signup Token"
+msgstr ""
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:29
+#, python-format
+msgid "Sign Up"
+msgstr "註冊"
+
+#~ msgid "New"
+#~ msgstr "新增"
+
+#, python-format
+#~ msgid "Mail sent to:"
+#~ msgstr "信件已寄給："
+
+#~ msgid "Send an email to the user to (re)set their password."
+#~ msgstr "寄出密碼重設電子郵件給該使用者"
+
+#~ msgid "Active"
+#~ msgstr "啟用"
+
+#~ msgid "Resetting Password"
+#~ msgstr "重設密碼中"
+
+#, python-format
+#~ msgid "Sign up"
+#~ msgstr "註冊"
+
+#~ msgid "Reset Password"
+#~ msgstr "重設密碼"

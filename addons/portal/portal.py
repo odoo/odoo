@@ -31,3 +31,9 @@ class portal(osv.osv):
         'is_portal': fields.boolean('Portal', help="If checked, this group is usable as a portal."),
     }
 
+class res_users(osv.Model):
+    _inherit = 'res.users'
+    def _signup_create_user(self, cr, uid, values, context=None):
+    	values['share'] = True
+    	return super(res_users, self)._signup_create_user(cr, uid, values, context=context)
+

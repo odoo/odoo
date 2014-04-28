@@ -9,12 +9,14 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         init: function() {
             this._super.apply(this, arguments);
+            var self = this;
             this.set({
                 sheets: [],
                 date_to: false,
                 date_from: false,
             });
             this.updating = false;
+            this.defs = [];
             this.field_manager.on("field_changed:timesheet_ids", this, this.query_sheets);
             this.field_manager.on("field_changed:date_from", this, function() {
                 this.set({"date_from": instance.web.str_to_date(this.field_manager.get_field_value("date_from"))});
@@ -29,6 +31,14 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
+            // Original save function is overwritten in order to wait all running deferreds to be done before actually applying the save.
+            this.view.original_save = _.bind(this.view.save, this.view);
+            this.view.save = function(prepend_on_create){
+                self.prepend_on_create = prepend_on_create;
+                return $.when.apply($, self.defs).then(function(){
+                    return self.view.original_save(self.prepend_on_create);
+                });
+            };
         },
         go_to: function(event) {
             var id = JSON.parse($(event.target).data("id"));
@@ -192,11 +202,11 @@ openerp.hr_timesheet_sheet = function(instance) {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                                 var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id
                                 var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id
-                                new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
+                                self.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
                                     account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
                                     self.display_totals();
                                     self.sync();
-                                });
+                                }));
                                 if(!isNaN($(this).val())){
                                     $(this).val(self.sum_box(account, day_count, true));
                                 }

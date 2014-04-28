@@ -277,7 +277,7 @@ class TestPortalProject(common.TransactionCase):
 
         # Data: subscribe Alfred, Chell and Donovan as follower
         self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_alfred_id, self.user_chell_id, self.user_donovan_id])
-        self.project_task.message_subscribe_users(cr, self.user_alfred_id, [self.task_1_id, self.task_3_id], [self.user_chell_id, self.user_alfred_id])
+        self.project_task.message_subscribe_users(cr, self.user_ernest_id, [self.task_1_id, self.task_3_id], [self.user_chell_id, self.user_alfred_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
         self.project_project.read(cr, self.user_alfred_id, pigs_id, ['name'])

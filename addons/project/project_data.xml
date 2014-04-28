@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!-- This will set the unit of measure used in projects and tasks.-->
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
@@ -78,7 +78,9 @@
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
+    </data>
 
+    <data>
         <!-- Task-related subtypes for messaging / Chatter -->
         <record id="mt_task_new" model="mail.message.subtype">
             <field name="name">Task Created</field>

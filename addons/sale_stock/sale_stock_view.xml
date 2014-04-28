@@ -45,8 +45,8 @@
                     <xpath expr="//button[@name='action_cancel']" position="after">
                         <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
                     </xpath>
-                    <field name="state" position="replace">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                    <field name="state" position="attributes">
+                        <attribute name="statusbar_colors">{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}</attribute>
                     </field>
                    <field name="shop_id" position="replace">
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
@@ -55,7 +55,7 @@
                        <field name="product_id"
                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                        groups="base.group_user" 
-                       on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
+                       on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
                    </field>
                    <field name="product_uom_qty" position="replace">
                        <field context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"

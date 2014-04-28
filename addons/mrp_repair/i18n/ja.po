@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-02-18 07:22+0000\n"
+"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:11+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-19 05:40+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -42,7 +42,7 @@ msgstr "修理フォームではパートなの請求書住所を選択する必
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr "修理オーダーのキャンセル"
+msgstr "修理オーダ取消"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -53,7 +53,7 @@ msgstr "請求対象"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "単位"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -63,12 +63,12 @@ msgstr "印刷日"
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr "パートナの請求書住所によるグループ"
+msgstr "取引先請求先によるグループ化"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未読メッセージ"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:435
@@ -95,12 +95,12 @@ msgstr "請求書の例外"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Serial Number"
-msgstr ""
+msgstr "シリアル番号"
 
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
 msgid "Delivery Address"
-msgstr "配達住所"
+msgstr "配送先"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -121,7 +121,7 @@ msgstr "請求書住所："
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "請求先・配送先となる取引先を選んでください。"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -221,7 +221,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr "修理オーダー"
+msgstr "修理オーダ"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
@@ -291,7 +291,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr "修理オーダー"
+msgstr "修理オーダ"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:336
@@ -302,7 +302,7 @@ msgstr ""
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
-msgstr "修理オーダー番号："
+msgstr "修理オーダ番号："
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
@@ -373,7 +373,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr "修理オーダー検索"
+msgstr "修理オーダ検索"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -477,7 +477,7 @@ msgstr "修理参照"
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 #: view:mrp.repair:0
 msgid "Repair Order"
-msgstr "修理オーダー"
+msgstr "修理オーダ"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -760,13 +760,13 @@ msgstr "税抜金額"
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr "修理オーダー参照"
+msgstr "修理オーダ参照"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr "修理オーダーは請求されていません。"
+msgstr "修理オーダは未請求です。"
 
 #. module: mrp_repair
 #: view:mrp.repair:0

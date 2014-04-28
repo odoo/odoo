@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-07-13 11:59+0000\n"
-"Last-Translator: Jan Grmela <Unknown>\n"
+"PO-Revision-Date: 2014-02-02 15:27+0000\n"
+"Last-Translator: Jakub Drozd <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-14 05:58+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-03 05:55+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -90,7 +90,7 @@ msgstr ""
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Total Debit"
-msgstr "Celkový dluh"
+msgstr "Debet celkem"
 
 #. module: account
 #: constraint:account.account.template:0
@@ -200,7 +200,7 @@ msgstr "Označení sloupce"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Počet číslic použitých v čísle účtu"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -263,7 +263,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Další číslo dobropisu"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -454,7 +454,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr ""
+msgstr "Období :"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -674,12 +674,12 @@ msgstr "Hlavní číselná řada musí být odlišná od současné!"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "Stávající měna není správně nakonfigurována."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Účet zisků"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1156
@@ -794,6 +794,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Datum vašeho záznamu deníku není v určeném období! Měli byste změnit datum "
+"nebo odstranit omezení z deníku."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -814,7 +816,7 @@ msgstr "Opravdu chcete vytvořit záznamy?"
 #: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "Faktura částečně uhrazena: %s%s z %s%s (%s%s zbývá)."
 
 #. module: account
 #: view:account.invoice:0
@@ -928,7 +930,7 @@ msgstr "Analytický účet knihy"
 #. module: account
 #: view:account.invoice:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Odeslat e-mailem"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -1037,7 +1039,7 @@ msgstr ""
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "Faktura uhrazena"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1140,7 +1142,7 @@ msgstr "Kód"
 #. module: account
 #: view:account.config.settings:0
 msgid "Features"
-msgstr ""
+msgstr "Vlastnosti"
 
 #. module: account
 #: code:addons/account/account.py:2346
@@ -1207,7 +1209,7 @@ msgstr "Režim na šířku"
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr "Vyberte finanční rok k uzavření"
+msgstr "Vyberte fiskální rok k uzavření"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -1328,7 +1330,7 @@ msgstr "Kód bude zobrazen na výkazech."
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Purchases"
-msgstr "Daně použité při nákuu"
+msgstr "Daně použité při nákupu"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1342,13 +1344,13 @@ msgstr "Kód daně"
 #. module: account
 #: field:account.account,currency_mode:0
 msgid "Outgoing Currencies Rate"
-msgstr "Odchozí měnový poměr"
+msgstr "Odchozí měnový kurz"
 
 #. module: account
 #: view:account.analytic.account:0
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Šablona"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -1421,7 +1423,7 @@ msgstr "Účet"
 #. module: account
 #: field:account.tax,include_base_amount:0
 msgid "Included in base amount"
-msgstr "Včetně základu"
+msgstr "Zahrnuto v základní částce"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1454,7 +1456,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_tax_report
 #: model:ir.ui.menu,name:account.next_id_27
 msgid "Taxes"
-msgstr "DPH"
+msgstr "Daně"
 
 #. module: account
 #: code:addons/account/wizard/account_financial_report.py:70
@@ -1489,7 +1491,7 @@ msgstr "Položky vyrovnání"
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr "Zpožděné platby"
+msgstr "Platby po splatnosti"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -1568,7 +1570,7 @@ msgstr "Účet pohledávek"
 #: code:addons/account/account.py:768
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: account
 #: report:account.account.balance:0
@@ -1611,7 +1613,7 @@ msgstr "# z položek"
 #. module: account
 #: field:account.automatic.reconcile,max_amount:0
 msgid "Maximum write-off amount"
-msgstr "Max.množství odpisu"
+msgstr "Maximální hodnota odpisu"
 
 #. module: account
 #. openerp-web
@@ -1644,7 +1646,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Credit Note"
-msgstr ""
+msgstr "Dobropis"
 
 #. module: account
 #: view:account.config.settings:0
@@ -1654,7 +1656,7 @@ msgstr "Elektronická fakturace a platby"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for Period"
-msgstr "Kniha nákladových účtu za období"
+msgstr "Kniha nákladových účtú za období"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1685,7 +1687,7 @@ msgstr "Dobropisy přijaté"
 #: field:account.invoice,date_invoice:0
 #: field:report.invoice.created,date_invoice:0
 msgid "Invoice Date"
-msgstr "Datum vystavení"
+msgstr "Datum vystavení faktury"
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -1737,12 +1739,12 @@ msgstr "Skupiny"
 #. module: account
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
-msgstr "Bez DPH"
+msgstr "Bez daně"
 
 #. module: account
 #: view:account.journal:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Rozšířená nastavení"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1848,7 +1850,7 @@ msgstr "Analytické účtenictví"
 #. module: account
 #: report:account.overdue:0
 msgid "Sub-Total :"
-msgstr "Mezisoučet"
+msgstr "Mezisoučet :"
 
 #. module: account
 #: help:res.company,tax_calculation_rounding_method:0
@@ -1878,7 +1880,7 @@ msgstr "15 dnů"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr "Fakturování"
+msgstr "Fakturace"
 
 #. module: account
 #: code:addons/account/report/account_partner_balance.py:115
@@ -1998,7 +2000,7 @@ msgstr ""
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr "Tyto období se mohou překrývat."
+msgstr "Tato období se mohou překrývat."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
@@ -2024,7 +2026,7 @@ msgstr "Částka Dal"
 #: field:account.bank.statement,message_ids:0
 #: field:account.invoice,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Zprávy"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -2122,7 +2124,7 @@ msgstr "Analýza faktur"
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Průvodce vytvořením emailu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -2323,7 +2325,7 @@ msgstr ""
 #: view:account.invoice:0
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
-msgstr "Částka bez DPH"
+msgstr "Částka bez daně"
 
 #. module: account
 #: help:account.tax,active:0
@@ -2829,7 +2831,7 @@ msgstr ""
 #: view:account.tax:0
 #: model:ir.model,name:account.model_account_tax
 msgid "Tax"
-msgstr "DPH"
+msgstr "Daň"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2847,7 +2849,7 @@ msgstr "Analytický účet"
 #: field:account.config.settings,default_purchase_tax:0
 #: field:account.config.settings,purchase_tax:0
 msgid "Default purchase tax"
-msgstr "Výchozí DPH na vstupu"
+msgstr "Výchozí daň na vstupu"
 
 #. module: account
 #: view:account.account:0
@@ -2907,7 +2909,7 @@ msgstr "Účetní informace"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Special Computation"
-msgstr "Speciální výpočetní"
+msgstr "Zvláštní výpočet"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -3227,7 +3229,7 @@ msgstr "Částka základního kódu"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr "Výchozí DPH"
+msgstr "Výchozí daň na výstupu"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -3846,7 +3848,7 @@ msgstr ""
 #. module: account
 #: report:account.vat.declaration:0
 msgid "Tax Amount"
-msgstr "DPH"
+msgstr "Částka daně"
 
 #. module: account
 #: view:account.move:0
@@ -5170,7 +5172,7 @@ msgstr "Přidat"
 #: report:account.overdue:0
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr "Placeno"
+msgstr "Uhrazeno"
 
 #. module: account
 #: field:account.invoice,tax_line:0
@@ -5615,7 +5617,7 @@ msgstr ""
 #: field:account.tax,child_depend:0
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr "Daň z dětí"
+msgstr "Podřízená daň"
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -6453,7 +6455,7 @@ msgstr "Toto je model pro opakující se účetní položky"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
 msgid "Sales Tax(%)"
-msgstr "DPH (%)"
+msgstr "Daň (%)"
 
 #. module: account
 #: view:account.tax.code:0
@@ -7031,7 +7033,7 @@ msgstr "Stav je koncept"
 #. module: account
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Celkový dluh"
+msgstr "Debet celkem"
 
 #. module: account
 #: view:account.move.line:0
@@ -7472,7 +7474,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Taxes:"
-msgstr "DPH:"
+msgstr "Daně:"
 
 #. module: account
 #: help:account.tax,amount:0
@@ -7631,7 +7633,7 @@ msgstr "Řádek bankovního výpisu"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
 msgid "Default Purchase Tax"
-msgstr "Výchozí DPH na vstupu"
+msgstr "Výchozí daň na vstupu"
 
 #. module: account
 #: field:account.chart.template,property_account_income_opening:0
@@ -7709,7 +7711,7 @@ msgstr "Účetní deník"
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr "Způsob zaokrouhlování při výpočtu DPH"
+msgstr "Způsob zaokrouhlování při výpočtu daní"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -7881,7 +7883,7 @@ msgstr "Deník tržeb"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
 msgid "Invoice Tax"
-msgstr "DPH faktury"
+msgstr "Daň faktury"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1185
@@ -8231,7 +8233,9 @@ msgstr ""
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr "Způsob zaokrouhlování při výpočtu DPH"
+msgstr ""
+"/usr/bin/google-chrome: error while loading shared libraries: libudev.so.0: "
+"cannot open shared object file: No such file or directory"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
@@ -8903,7 +8907,7 @@ msgstr "Nezaplacené faktury"
 #. module: account
 #: field:account.move.line.reconcile,debit:0
 msgid "Debit amount"
-msgstr "Částka dluhu"
+msgstr "Částka debetu"
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -9306,7 +9310,7 @@ msgstr ""
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
 msgid "Purchase Tax(%)"
-msgstr "DPH na vstupu (%)"
+msgstr "Daň na vstupu (%)"
 
 #. module: account
 #: code:addons/account/account_invoice.py:901
@@ -9683,7 +9687,7 @@ msgstr "Běžný výkaz"
 #: field:account.config.settings,default_sale_tax:0
 #: field:account.config.settings,sale_tax:0
 msgid "Default sale tax"
-msgstr "Výchozí DPH"
+msgstr "Výchozí daň na výstupu"
 
 #. module: account
 #: report:account.overdue:0
@@ -10040,7 +10044,7 @@ msgstr "Ověřit pohyb účtu"
 #: report:account.vat.declaration:0
 #: field:report.account.receivable,credit:0
 msgid "Credit"
-msgstr "Úvěr"
+msgstr "Dal"
 
 #. module: account
 #: view:account.invoice:0
@@ -10082,7 +10086,7 @@ msgstr "Obecný"
 #: field:account.invoice.report,price_total:0
 #: field:account.invoice.report,user_currency_price_total:0
 msgid "Total Without Tax"
-msgstr "Celkem bez DPH"
+msgstr "Celkem bez daně"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -10566,7 +10570,7 @@ msgstr "Faktura dodavatele"
 #: report:account.vat.declaration:0
 #: field:report.account.receivable,debit:0
 msgid "Debit"
-msgstr "Dluh"
+msgstr "Má dáti"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0

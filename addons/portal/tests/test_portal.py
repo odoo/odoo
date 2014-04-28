@@ -73,6 +73,9 @@ class test_portal(TestMailBase):
         for message in chell_pigs.message_ids:
             trigger_read = message.subject
         for partner in chell_pigs.message_follower_ids:
+            if partner.id == self.partner_chell_id:
+                # Chell can read her own partner record
+                continue
             with self.assertRaises(except_orm):
                 trigger_read = partner.name
 

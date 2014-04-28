@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-07-06 03:43+0000\n"
-"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2014-03-05 09:15+0000\n"
+"Last-Translator: mrshelly <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:20+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-03-06 06:15+0000\n"
+"X-Generator: Launchpad (build 16948)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -140,7 +140,7 @@ msgid ""
 "Margin of error for supplier lead times. When the systemgenerates Purchase "
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
-msgstr ""
+msgstr "供应商交期的误差范围。当 系统为取得产品而生成了采购单，将安排提前几日以应对意外供应商延误。"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -525,7 +525,7 @@ msgstr "询价单批准"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Apply"
-msgstr "接受"
+msgstr "应用"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -1214,7 +1214,7 @@ msgstr "如果这采购订单的发票控制是“来自装箱单”发票将自
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr "尊敬的"
+msgstr "顺祝商祺！"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1291,7 +1291,7 @@ msgstr "3月"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Invoice"
-msgstr "收到的发票"
+msgstr "接收发票"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1599,7 +1599,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr "收到的发票"
+msgstr "已收发票"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -2176,6 +2176,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>敬启 ${object.partner_id.name} ：</p>\n"
+"    \n"
+"    <p>您有一张  ${object.company_id.name} 公司的采购单 ${object.state in ('draft', "
+"'sent') and '需询价' or '需确认'} : </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>相关单据数据</strong><br />\n"
+"       &nbsp;&nbsp;采购单号: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;总金额: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;采购日期: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;单据参考: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;贵司参考: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;贵司相关人员: <a href=\"mailto:${object.validator.email or "
+"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>如还有其他疑问，请及时联系我们。</p>\n"
+"    <p>谢谢</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                TEL:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: selection:purchase.report,month:0

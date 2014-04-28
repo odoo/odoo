@@ -56,7 +56,9 @@
                     <separator/>
                     <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" />
                     <separator/>
-                    <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
+                    <!-- A 'My Company' filter makes no sense regarding record rules, and is not possible to do (uid is not a company): remove me in 8.0 -->
+                    <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[]" help="My company"
+                        invisible="1"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <field name="company_id" groups="base.group_multi_company"/>

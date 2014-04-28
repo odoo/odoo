@@ -1,6 +1,16 @@
 -
   In order to test process of the Sale Order,
 -
+  Add SO line with service type product in SO to check flow which contain service type product in SO(BUG#1167330).
+-
+  !record {model: sale.order.line, id: sale_order_1}:
+    name: 'On Site Assistance'
+    product_id: product.product_product_2
+    product_uom_qty: 1.0
+    product_uom: 1
+    price_unit: 150.0
+    order_id: sale.sale_order_6
+-
   First I check the total amount of the Quotation before Approved.
 -
   !assert {model: sale.order, id: sale.sale_order_6, string: The amount of the Quotation is not correctly computed}:
@@ -62,7 +72,7 @@
       assert picking.partner_id.id == sale_order.partner_shipping_id.id,"Shipping Address is not correspond with sale order."
       assert picking.note == sale_order.note,"Note is not correspond with sale order."
       assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
-      assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
+      assert len(picking.move_lines) == len(sale_order.order_line) - 1, "Total move of delivery order are not corresposning with total sale order lines."
       location_id = sale_order.shop_id.warehouse_id.lot_stock_id.id
       output_id = sale_order.shop_id.warehouse_id.lot_output_id.id
       for move in picking.move_lines:

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-04-01 16:00+0000\n"
-"Last-Translator: Felix Schubert <Unknown>\n"
+"PO-Revision-Date: 2014-01-25 18:02+0000\n"
+"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:13+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-01-26 05:15+0000\n"
+"X-Generator: Launchpad (build 16914)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -52,7 +52,7 @@ msgstr "Offene Stellen"
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_orders
 msgid "Billing"
-msgstr ""
+msgstr "Abrechnung"
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -63,7 +63,7 @@ msgstr "Kontakte"
 #: view:portal.wizard:0
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Dieser Text wird an die E-Mail angefügt, die dem neuen Portal Usern "
+"Dieser Text wird an die E-Mail angefügt, die dem neuen Portal-Usern "
 "geschickt wird."
 
 #. module: portal
@@ -93,7 +93,7 @@ msgstr "Einladungsnachricht"
 #: model:ir.model,name:portal.model_portal_wizard
 #: view:portal.wizard:0
 msgid "Portal Access Management"
-msgstr "Portal Zugriffsverwaltung"
+msgstr "Portal-Zugriffsverwaltung"
 
 #. module: portal
 #: view:res.groups:0
@@ -122,7 +122,7 @@ msgstr "Rechnungsnummer: Die Rechnungsnummer der zu zahlenden Rechnung"
 msgid ""
 "Make this payment acquirer available in portal forms (Customer invoices, "
 "etc.)"
-msgstr "Zeige diesen Zahlungsanbieter in Portal Ansichten an."
+msgstr "Diesen Zahlungsanbieter in Portal-Ansichten bereitstellen"
 
 #. module: portal
 #: model:ir.model,name:portal.model_share_wizard
@@ -173,7 +173,7 @@ msgstr "To-Do"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Sie müssen Ihre  E-Mail Adresse in den Benuztereinstellungen erfassen, um E-"
+"Sie müssen Ihre  E-Mail Adresse in den Benutzereinstellungen erfassen, um E-"
 "Mails senden zu können."
 
 #. module: portal
@@ -197,7 +197,7 @@ msgstr "Bezahlen Sie sicher online"
 #: code:addons/portal/acquirer.py:77
 #, python-format
 msgid "No online payment acquirers configured"
-msgstr "Kein Online Zahlungsanbieter vorkonfiguriert"
+msgstr "Kein Online-Zahlungsanbieter vorkonfiguriert"
 
 #. module: portal
 #: code:addons/portal/mail_message.py:54
@@ -208,6 +208,10 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
+"Der gewünschte Vorgang kann aufgrund von Sicherheitsbeschränkungen nicht "
+"ausgeführt werden. Bitte kontaktieren Sie den Systemadministrator.\n"
+"\n"
+"(Dokumenten Typ: %s, Vorgang: %s)"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -229,7 +233,7 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    Sie haben keine ungelesen Stellenangebote.\n"
+"                    Sie haben keine ungelesenen Stellenangebote.\n"
 "                </p>\n"
 "            "
 
@@ -298,7 +302,7 @@ msgid ""
 "restricted menus).\n"
 "                They usually do not belong to the usual OpenERP groups."
 msgstr ""
-"Portal Benutzer haben gesonderte Zugriffsrechte (wie z.B. Datensatz Regeln "
+"Portalbenutzer haben gesonderte Zugriffsrechte (wie z.B. Datensatz Regeln "
 "und eingeschränkte Menuzugriffe).\n"
 "                Gewöhnlicherweise sind sie nicht Mitglieder in internen "
 "OpenERP Gruppen."
@@ -377,7 +381,7 @@ msgid ""
 "Customer Portal</a></p>"
 msgstr ""
 "<p>Öffnen Sie Ihre Nachrichten und unternehmensbezogenen Dokumente <a "
-"href=\"%s\">direkt in unserem Kunden Portal</a></p>"
+"href=\"%s\">direkt in unserem Kundenportal</a></p>"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -420,18 +424,18 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
-msgstr "Online Zahlungsanbieter"
+msgstr "Online-Zahlungsanbieter"
 
 #. module: portal
 #: code:addons/portal/mail_message.py:53
 #, python-format
 msgid "Access Denied"
-msgstr ""
+msgstr "Zugriff verweigert"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
 msgid "Company News"
-msgstr "Unternehmens Nachrichten"
+msgstr "Unternehmensnachrichten"
 
 #. module: portal
 #: code:addons/portal/acquirer.py:76
@@ -544,7 +548,7 @@ msgid ""
 "currency: the currency record in which the document is issued (e.g. "
 "currency.name could be EUR)"
 msgstr ""
-"currency: Der Währungsdatensatz, in dem die Währung des Dokumentes definiert "
+"currency: Der Währungsdatensatz, in dem die Währung des Dokuments definiert "
 "ist (z.B.: currency.name ist EUR)"
 
 #. module: portal
@@ -609,7 +613,7 @@ msgstr "Sichtbar"
 #: code:addons/portal/wizard/share_wizard.py:39
 #, python-format
 msgid "Existing Groups (e.g Portal Groups)"
-msgstr "Bestehende Gruppen (z.B. Portal Gruppen)"
+msgstr "Bestehende Gruppen (z.B. Portalgruppen)"
 
 #. module: portal
 #: view:portal.wizard:0
@@ -624,7 +628,7 @@ msgstr "Anwenden"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -654,19 +658,19 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    <b>Keine To-Do's.</b>\n"
+"                    <b>Keine zu erledigenden Nachrichten</b>\n"
 "                </p><p>\n"
 "                    Wenn Sie die Nachrichten in Ihrem Posteingang "
 "bearbeiten, können Sie diese als\n"
-"                    <i>To-Do</i> markieren. Mit diesem Menu können sie alle "
-"To-Do's bearbeiten.\n"
+"                    <i>zu erledigen</i> markieren. Mit diesem Menu können "
+"Sie alle zu erledigenden Nachrichten bearbeiten.\n"
 "                </p>\n"
 "            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Form Template"
-msgstr "Formular Vorlage"
+msgstr "Formularvorlage"
 
 #. module: portal
 #: view:share.wizard:0

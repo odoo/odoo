@@ -24,7 +24,7 @@ import random
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import email_re
+from openerp.tools import email_split
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
@@ -53,8 +53,8 @@ http://www.openerp.com
 
 def extract_email(email):
     """ extract the email address from a user-friendly email address """
-    m = email_re.search(email or "")
-    return m and m.group(0) or ""
+    addresses = email_split(email)
+    return addresses[0] if addresses else ''
 
 
 

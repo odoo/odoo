@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -127,16 +128,15 @@ class note_note(osv.osv):
             current_stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
 
             if current_stage_ids: #if the user have some stages
-
-                #dict of stages: map les ids sur les noms
-                stage_name = dict(self.pool.get('note.stage').name_get(cr, uid, current_stage_ids, context=context))
+                stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
 
                 result = [{ #notes by stage for stages user
                         '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', current_stage_id)],
-                        'stage_id': (current_stage_id, stage_name[current_stage_id]),
-                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', current_stage_id)], context=context, count=True)
-                    } for current_stage_id in current_stage_ids]
+                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                        'stage_id': (stage.id, stage.name),
+                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage.id)], context=context, count=True),
+                        '__fold': stage.fold,
+                    } for stage in stages]
 
                 #note without user's stage
                 nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
@@ -146,13 +146,15 @@ class note_note(osv.osv):
                     if result and result[0]['stage_id'][0] == current_stage_ids[0]:
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
+                        result[0]['stage_id_count'] += nb_notes_ws
                     else:
                         # add the first stage column
                         result = [{
                             '__context': {'group_by': groupby[1:]},
                             '__domain': domain + [dom_not_in],
-                            'stage_id': (current_stage_ids[0], stage_name[current_stage_ids[0]]),
-                            'stage_id_count':nb_notes_ws
+                            'stage_id': (stages[0].id, stages[0].name),
+                            'stage_id_count':nb_notes_ws,
+                            '__fold': stages[0].name,
                         }] + result
 
             else: # if stage_ids is empty
@@ -188,18 +190,15 @@ class res_users(osv.Model):
     _inherit = ['res.users']
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        user = self.browse(cr, uid, uid, context=context)
-        note_obj = self.pool.get('note.stage')
-        data_obj = self.pool.get('ir.model.data')
-        model_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user') #Employee Group
-        group_id = model_id and model_id[1] or False
-        if group_id in [x.id for x in user.groups_id]:
-            for note_xml_id in ['note_stage_00','note_stage_01','note_stage_02','note_stage_03','note_stage_04']:
+        note_obj = self.pool['note.stage']
+        data_obj = self.pool['ir.model.data']
+        is_employee = self.has_group(cr, user_id, 'base.group_user')
+        if is_employee:
+            for n in range(5):
+                xmlid = 'note_stage_%02d' % (n,)
                 try:
-                    data_id = data_obj._get_id(cr, uid, 'note', note_xml_id)
+                    _model, stage_id = data_obj.get_object_reference(cr, SUPERUSER_ID, 'note', xmlid)
                 except ValueError:
                     continue
-                stage_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-                note_obj.copy(cr, uid, stage_id, default = { 
-                                        'user_id': user_id}, context=context)
+                note_obj.copy(cr, SUPERUSER_ID, stage_id, default={'user_id': user_id}, context=context)
         return user_id

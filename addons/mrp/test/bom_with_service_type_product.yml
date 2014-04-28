@@ -1,0 +1,134 @@
+-
+  I create Bill of Materials with one service type product and one consumable product.
+-
+  !record {model: mrp.bom, id: mrp_bom_test1}:
+    company_id: base.main_company
+    name: PC Assemble SC234
+    product_id: product.product_product_3
+    product_qty: 1.0
+    type: normal
+    bom_lines:
+      - company_id: base.main_company
+        name: On Site Assistance
+        product_id: product.product_product_2
+        product_qty: 1.0
+      - company_id: base.main_company
+        name: GrapWorks Software
+        product_id: product.product_product_44
+        product_qty: 1.0
+-
+  I make the production order using BoM having one service type product and one consumable product.
+-
+  !record {model: mrp.production, id: mrp_production_servicetype_mo1}:
+    product_id: product.product_product_5
+    product_qty: 1.0
+    bom_id: mrp_bom_test1
+    date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+-
+  I compute the data of production order.
+-
+  !python {model: mrp.production}: |
+    self.action_compute(cr, uid, [ref("mrp_production_servicetype_mo1")], {"lang": "en_US", "tz": False, "search_default_Current": 1,
+      "active_model": "ir.ui.menu", "active_ids": [ref("mrp.menu_mrp_production_action")],
+      "active_id": ref("mrp.menu_mrp_production_action"), })
+-
+  I confirm the production order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_servicetype_mo1}
+-
+  I confirm the Consume Products.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
+    assert order.state == 'confirmed', "Production order should be confirmed."
+    for move_line in order.move_lines:
+        move_line.action_consume(move_line.product_qty)
+-
+  I processed the Product Entirely.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
+    assert order.state == 'in_production', 'Production order should be in production State.'
+    for move_created in order.move_created_ids:
+        move_created.action_done()
+-
+  I produce product.
+-
+  !python {model: mrp.product.produce}: |
+    context.update({'active_id': ref('mrp_production_servicetype_mo1')})
+-
+  !record {model: mrp.product.produce, id: mrp_product_produce_1}:
+    mode: 'consume_produce'
+-
+  !python {model: mrp.product.produce}: |
+    self.do_produce(cr, uid, [ref('mrp_product_produce_1')], context=context)
+-
+  I check production order after produced.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_servicetype_mo1"))
+    assert order.state == 'done', "Production order should be closed."
+-
+  I create Bill of Materials with two service type products.
+-
+  !record {model: mrp.bom, id: mrp_bom_test_2}:
+    company_id: base.main_company
+    name: PC Assemble SC234
+    product_id: product.product_product_3
+    product_qty: 1.0
+    type: normal
+    bom_lines:
+      - company_id: base.main_company
+        name: On Site Monitoring
+        product_id: product.product_product_1
+        product_qty: 1.0
+      - company_id: base.main_company
+        name: On Site Assistance
+        product_id: product.product_product_2
+        product_qty: 1.0
+-
+  I make the production order using BoM having two service type products.
+-
+  !record {model: mrp.production, id: mrp_production_servicetype_2}:
+    product_id: product.product_product_5
+    product_qty: 1.0
+    bom_id: mrp_bom_test_2
+    date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+-
+  I compute the data of production order.
+-
+  !python {model: mrp.production}: |
+    self.action_compute(cr, uid, [ref("mrp_production_servicetype_2")], {"lang": "en_US", "tz": False, "search_default_Current": 1,
+      "active_model": "ir.ui.menu", "active_ids": [ref("mrp.menu_mrp_production_action")],
+      "active_id": ref("mrp.menu_mrp_production_action"), })
+-
+  I confirm the production order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_servicetype_2}
+-
+  Now I start production.
+-
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_servicetype_2}
+-
+  I check that production order in production state after start production.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_servicetype_2"))
+    assert order.state == 'in_production', 'Production order should be in production State.'
+-
+  I produce product.
+-
+  !python {model: mrp.product.produce}: |
+    context.update({'active_id': ref('mrp_production_servicetype_2')})
+-
+  !record {model: mrp.product.produce, id: mrp_product_produce_2}:
+    mode: 'consume_produce'
+-
+  !python {model: mrp.product.produce}: |
+    self.do_produce(cr, uid, [ref('mrp_product_produce_2')], context=context)
+-
+  I check production order after produced.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_servicetype_2"))
+    assert order.state == 'done', "Production order should be closed."

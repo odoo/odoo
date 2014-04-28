@@ -1440,7 +1440,7 @@
         <act_window
             id="act_account_move_to_account_move_line_open"
             name="Journal Items"
-            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
+            context="{'search_default_move_id': active_id, 'default_move_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
 
@@ -1588,7 +1588,6 @@
 	                        <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
 	                        <div attrs="{'invisible':[('value','=','balance')]}">
 	                            <field name="value_amount" class="oe_inline"/>
-	                            <label string="%%" class="oe_inline" attrs="{'invisible':['!',('value','=','procent')]}" />
 	                        </div>
                         </group>
                         <group string="Due Date Computation">
@@ -2125,7 +2124,7 @@
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
                         </group>
                         <group>
-                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
+                            <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                             <field name="currency_id" class="oe_inline"/>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>

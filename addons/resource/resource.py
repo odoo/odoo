@@ -177,8 +177,8 @@ class resource_calendar(osv.osv):
                         if leave_flag:
                             break
                         else:
-                            d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
-                            d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
+                            d1 = datetime(dt_from.year, dt_from.month, dt_from.day) + timedelta(hours=int(math.floor(m)), minutes=int((m%1) * 60))
+                            d2 = datetime(dt_from.year, dt_from.month, dt_from.day) + timedelta(hours=int(math.floor(hour_to)), minutes=int((hour_to%1) * 60))
                             result.append((d1, d2))
                             current_hour = hour_to
                             todo -= (hour_to - m)

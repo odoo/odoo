@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-07 12:30+0000\n"
+"PO-Revision-Date: 2014-02-02 15:39+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:02+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-03 05:55+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -53,8 +53,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
-"Тухайн үе шатанд харуулах бичлэг байхгүй үед уг үе шатыг төлвийн мөр юмуу "
-"канбан харагдац дээр харуулахгүй."
+"Тухайн үенд харуулах бичлэг байхгүй үед уг үе шатыг төлвийн мөр юмуу канбан "
+"харагдац дээр харуулахгүй."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
@@ -97,7 +97,7 @@ msgstr "Ажлын байрууд"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Extra advantages..."
-msgstr ""
+msgstr "Нэмэлт давуу талууд..."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -125,7 +125,7 @@ msgid "Sources of Applicants"
 msgstr "Горилогчдын Сурвалж"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:445
+#: code:addons/hr_recruitment/hr_recruitment.py:435
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Энэ горилогчид Өргөдөл гаргасан Ажлыг нь тодорхойлох ёстой."
@@ -260,8 +260,8 @@ msgid ""
 "Stages of the recruitment process may be different per department. If this "
 "stage is common to all departments, keep this field empty."
 msgstr ""
-"Ажилд авах процесс нь хэлтсээсээ хамааран ялгаатай байж болно. Хэрэв энэ үе "
-"шат бүх хэлтсийн хувьд ерөнхий бол энэ талбарыг хоосон орхино уу."
+"Ажилд авах процесс нь хэлтсээсээ хамааран ялгаатай байж болно. Хэрэв энэ "
+"үеэнд бүх хэлтсийн хувьд ерөнхий бол энэ талбарыг хоосон орхино уу."
 
 #. module: hr_recruitment
 #: help:hr.applicant,message_unread:0
@@ -319,7 +319,7 @@ msgstr ""
 "html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:445
+#: code:addons/hr_recruitment/hr_recruitment.py:435
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -429,9 +429,9 @@ msgid ""
 "        "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"            Ажилд авах процесст шинэ үе шат нэмэх бол дарна уу.\n"
+"            Ажилд авах процесст шинэ үе нэмэх бол дарна уу.\n"
 "          </p><p>\n"
-"            Энд ажилд авах процессийн үе шатуудаа тодорхойлно уу. Жишээ нь:\n"
+"            Энд ажилд авах процессийн үеүүдээ тодорхойлно уу. Жишээ нь:\n"
 "            магадлах утасны дуудлага, эхний ярилцлага, 2 дахь ярилцлага, "
 "татгалзсан,\n"
 "            ажилд авсан.\n"
@@ -505,7 +505,7 @@ msgstr "Ярилцлагыг хэвлэх"
 #: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
-msgstr "Үе шат"
+msgstr "Шат"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -515,7 +515,7 @@ msgstr "2 дахь ярилцлага"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr "Ажилд авах / Горилогчийн үе шатууд"
+msgstr "Ажилтан авах / Өргөдөл Гаргагчийн Үеүүд"
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected:0
@@ -539,7 +539,7 @@ msgid "Applicants"
 msgstr "Горилогчид"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:360
+#: code:addons/hr_recruitment/hr_recruitment.py:351
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
@@ -557,12 +557,10 @@ msgstr "Горилогч"
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,sequence:0
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Үе шатуудын жагсаалтыг харуулахдаа дарааллыг өгнө."
+msgstr "Үеүүдийн жагсаалтыг харуулахдаа дарааллыг өгнө."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:347
 #: field:hr.applicant,partner_id:0
-#, python-format
 msgid "Contact"
 msgstr "Харилцах хаяг"
 
@@ -595,7 +593,7 @@ msgstr "3-р сар"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 msgid "Stages"
-msgstr "Үе шатууд"
+msgstr "Үеүүд"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -666,7 +664,7 @@ msgstr "Горилогчийн ангилал"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "e.g. Call for interview"
-msgstr ""
+msgstr "ж. Ярилцлагад дуудах"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -781,7 +779,7 @@ msgstr "Хаагдсан"
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
 msgid "Stage Definition"
-msgstr "Үе шатын тодорхойлолт"
+msgstr "Үеийн тодорхойлолт"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
@@ -815,7 +813,7 @@ msgid "Schedule interview with this applicant"
 msgstr "Энэ горилогчтой ярилцлага товлох"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:407
+#: code:addons/hr_recruitment/hr_recruitment.py:397
 #, python-format
 msgid "Applicant <b>created</b>"
 msgstr "Горилогч <b>үүсэв</b>"
@@ -885,7 +883,7 @@ msgid ""
 "        "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"            Ажилд авах процесст шинэ үе шат нэмэх бол дарна уу.\n"
+"            Ажилд авах процесст шинэ үе нэмэх бол дарна уу.\n"
 "          </p><p>\n"
 "            Хэрэв таны ажилд авах процесс ажлын байрнаас хамааран ялгаатай "
 "бол хэлтсээ сонгож өгөхөө мартав аа.\n"
@@ -999,7 +997,7 @@ msgstr "Цол үл давхцах байх ёстой!"
 #: code:addons/hr_recruitment/hr_recruitment.py:349
 #, python-format
 msgid "Contact Email"
-msgstr ""
+msgstr "Холбогдох эмэйл"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -1045,7 +1043,7 @@ msgstr "Боловсролын түвшинг харах үедээ тэдгээ
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_stage_changed
 msgid "Stage changed"
-msgstr "Үе шат өөрчлөгдсөн"
+msgstr "Үе өөрчлөгдсөн"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1079,12 +1077,12 @@ msgstr "Шинэ горилогч"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
 msgid "Stage of Recruitment"
-msgstr "Хүний нөөцийн бүрдүүлэлтийн үе шат"
+msgstr "Хүний нөөцийн бүрдүүлэлтийн үеүүд"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Cases By Stage and Estimates"
-msgstr "Үе шат ба тооцооллоор ангилсан тохиолдлууд"
+msgstr "Хэрэгүүд үе ба баримжааллаар"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1096,7 +1094,7 @@ msgid "New"
 msgstr "Шинэ"
 
 #. module: hr_recruitment
-#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
 #: view:hr.job:0
 msgid "Interview"
 msgstr "Ярилцлага"
@@ -1119,7 +1117,7 @@ msgstr "Тайлбар"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_stage_changed
 msgid "Stage Changed"
-msgstr "Үе шат өөрчлөгдсөн"
+msgstr "Үе өөрчлөгдсөн"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1252,7 +1250,7 @@ msgstr "Өөр нэр"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Feedback of interviews..."
-msgstr ""
+msgstr "Ярилцлагын сэтгэгдэл"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1318,10 +1316,9 @@ msgid ""
 "related to the status 'Close', when your document reach this stage, it will "
 "be automatically closed."
 msgstr ""
-"Уг үе шатад харгалзах төлөв. Сонгогдсон үе шатаас хамааран таны баримтын "
-"төлөв автоматаар өөрчлөгдөх болно. Жишээ нь таны үе шат \"Хаах\" төлөвт "
-"харгалзаж байг. Ингэхэд таны баримт энэ үе шатанд ирмэгц баримт автоматаар "
-"хаагдах болно."
+"Уг үеэнд харгалзах төлөв. Сонгогдсон үеээс хамааран таны баримтын төлөв "
+"автоматаар өөрчлөгдөх болно. Жишээ нь таны үе \"Хаах\" төлөвт харгалзаж "
+"байг. Ингэхэд таны баримт энэ үеэнд ирмэгц баримт автоматаар хаагдах болно."
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0

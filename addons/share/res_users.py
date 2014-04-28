@@ -19,6 +19,15 @@
 #
 ##############################################################################
 from openerp.osv import fields, osv
+from openerp import SUPERUSER_ID
+
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+    _columns = {
+        'share': fields.boolean('Share User', readonly=True,
+                    help="External user with limited access, created only for the purpose of sharing data.")
+     }
 
 class res_groups(osv.osv):
     _name = "res.groups"
@@ -28,21 +37,18 @@ class res_groups(osv.osv):
                     help="Group created to set access rights for sharing data with some users.")
     }
 
+    def init(self, cr):
+        # force re-generation of the user groups view without the shared groups
+        self.update_user_groups_view(cr, SUPERUSER_ID)
+        parent_class = super(res_groups, self)
+        if hasattr(parent_class, 'init'):
+            parent_class.init(cr)
+
     def get_application_groups(self, cr, uid, domain=None, context=None):
         if domain is None:
             domain = []
         domain.append(('share', '=', False))
         return super(res_groups, self).get_application_groups(cr, uid, domain=domain, context=context)
 
-res_groups()
-
-class res_users(osv.osv):
-    _name = 'res.users'
-    _inherit = 'res.users'
-    _columns = {
-        'share': fields.boolean('Share User', readonly=True,
-                    help="External user with limited access, created only for the purpose of sharing data.")
-     }
-res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

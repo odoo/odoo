@@ -63,7 +63,7 @@ Example: Product: this product is deprecated, do not purchase more than 5.
     }
 
     _defaults = {
-        'default_invoice_method': 'manual',
+        'default_invoice_method': 'order',
     }
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):

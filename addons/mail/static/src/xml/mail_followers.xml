@@ -43,13 +43,13 @@
         <table class='oe_subtype'>
             <tr>
                 <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+record.id" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></td>
-                <td><label t-att-for="'input_mail_followers_subtype_'+record.id"><t t-raw="record.name"/></label></td>
+                <td><label t-att-for="'input_mail_followers_subtype_'+record.id"><t t-esc="record.name"/></label></td>
             </tr>
         </table>
     </t>
 
     <t t-name="mail.followers.show_more">
-        <div class="oe_partner oe_show_more">And <t t-raw="number"/> more.</div>
+        <div class="oe_partner oe_show_more">And <t t-esc="number"/> more.</div>
     </t>
 
 </template>

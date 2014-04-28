@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-04-01 14:08+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:12+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-04-02 06:44+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -52,7 +52,7 @@ msgstr "販売レシートの印刷"
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Computed Balance"
-msgstr ""
+msgstr "計算残高"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -63,7 +63,7 @@ msgstr "本日"
 #. module: point_of_sale
 #: field:pos.config,iface_electronic_scale:0
 msgid "Electronic Scale Interface"
-msgstr ""
+msgstr "電子はかりインターフェイス"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
@@ -86,7 +86,7 @@ msgstr ""
 #: field:pos.config,journal_id:0
 #: field:pos.order,sale_journal:0
 msgid "Sale Journal"
-msgstr ""
+msgstr "販売仕訳帳"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
@@ -112,7 +112,7 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "営業担当者"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -135,7 +135,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:1373
 #, python-format
 msgid "Assign a Custom EAN"
-msgstr ""
+msgstr "カスタムEANを割り当て"
 
 #. module: point_of_sale
 #: view:pos.session.opening:0
@@ -143,7 +143,7 @@ msgid ""
 "You may have to control your cash amount in your cash register, before\n"
 "                          being able to start selling through the "
 "touchscreen interface."
-msgstr ""
+msgstr "タッチスクリーン・インターフェースを介して販売を開始する前に、キャッシュレジスタ内の現金を管理する必要があります。"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -165,12 +165,12 @@ msgstr "現金取出"
 #: code:addons/point_of_sale/point_of_sale.py:105
 #, python-format
 msgid "not used"
-msgstr ""
+msgstr "未使用"
 
 #. module: point_of_sale
 #: field:pos.config,iface_vkeyboard:0
 msgid "Virtual KeyBoard Interface"
-msgstr ""
+msgstr "バーチャルキーボードインターフェース"
 
 #. module: point_of_sale
 #. openerp-web
@@ -345,6 +345,7 @@ msgid ""
 "Check this if this point of sale should open by default in a self checkout "
 "mode. If unchecked, OpenERP uses the normal cashier mode by default."
 msgstr ""
+"販売時点をセルフチェックアウト・モードでオープンする場合にチェックします。チェックしない場合、OpenERPは通常のレジモードを使用します。"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
@@ -361,7 +362,7 @@ msgstr "飲物"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session_opening
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_opening
 msgid "Your Session"
-msgstr ""
+msgstr "自分のセッション"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
@@ -425,7 +426,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:product.product,to_weight:0
 msgid "To Weight"
-msgstr ""
+msgstr "重量"
 
 #. module: point_of_sale
 #. openerp-web
@@ -510,7 +511,7 @@ msgstr ""
 #: selection:pos.session.opening,pos_state:0
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "進行中"
 
 #. module: point_of_sale
 #: view:pos.session:0
@@ -569,7 +570,7 @@ msgstr "現金取引明細書の検索"
 #: field:pos.session.opening,pos_state_str:0
 #: field:report.pos.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "状態"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -645,7 +646,7 @@ msgstr "顧客請求書"
 msgid ""
 "You can continue sales from the touchscreen interface by clicking on \"Start "
 "Selling\" or close the cash register session."
-msgstr ""
+msgstr "「販売開始」をクリックしてタッチスクリーンのインターフェースから販売を続けるか、キャッシュレジスタのセッションを閉じることができます。"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -748,7 +749,7 @@ msgstr ""
 msgid ""
 "Check if, this is a product you can use to take cash from a statement for "
 "the point of sale backend, example: money lost, transfer to bank, etc."
-msgstr ""
+msgstr "チェックした場合、この製品は販売時点バックエンドの計算書から現金を取り出すために使用できます。例：金銭紛失、銀行振込など。"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -769,7 +770,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Click to start a session."
-msgstr ""
+msgstr "クリックしてセッションを開始してください。"
 
 #. module: point_of_sale
 #: view:pos.details:0
@@ -804,7 +805,7 @@ msgstr "商品追加"
 #. module: point_of_sale
 #: field:pos.config,name:0
 msgid "Point of Sale Name"
-msgstr ""
+msgstr "販売時点名"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
@@ -956,7 +957,7 @@ msgstr "売上合計"
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a "
 "Session"
-msgstr ""
+msgstr "セッションのクローズ中に製品単位で仕訳項目をグループ化する場合はチェックします。"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -998,7 +999,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session.opening,pos_session_id:0
 msgid "PoS Session"
-msgstr ""
+msgstr "POSセッション"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -1080,7 +1081,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Set a Custom EAN"
-msgstr ""
+msgstr "カスタムEANを設定"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1319,7 +1320,7 @@ msgstr "私の売上"
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Deprecated"
-msgstr ""
+msgstr "廃止"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.limon_product_template
@@ -1341,7 +1342,7 @@ msgstr "請求合計"
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: field:product.product,pos_categ_id:0
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "販売時点カテゴリ"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -1354,7 +1355,7 @@ msgstr "数量の数"
 msgid ""
 "This sequence is automatically created by OpenERP but you can change it to "
 "customize the reference numbers of your orders."
-msgstr ""
+msgstr "このシーケンスはOpenERPが自動で作成しますが、注文の参照番号をカスタマイズするために変更もできます。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1442,7 +1443,7 @@ msgstr "開始日"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_session
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 msgid "All Sessions"
-msgstr ""
+msgstr "全セッション"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1477,12 +1478,12 @@ msgstr "Dr. Oetker レストラン フンギ"
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category
 msgid "Product Categories"
-msgstr ""
+msgstr "製品カテゴリ"
 
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
 msgid "Accounting journal used to post sales entries."
-msgstr ""
+msgstr "売上高の記帳に使われる会計仕訳"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -1540,7 +1541,7 @@ msgstr "不明"
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "Point of Sale Cash In"
-msgstr ""
+msgstr "販売時点の現金入"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1594,12 +1595,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:product.product,available_in_pos:0
 msgid "Available in the Point of Sale"
-msgstr ""
+msgstr "販売時点で利用可能"
 
 #. module: point_of_sale
 #: selection:pos.config,state:0
 msgid "Deprecated"
-msgstr ""
+msgstr "廃止済"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_decaf_33cl_product_template
@@ -1649,7 +1650,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Point of Sale Cash Out"
-msgstr ""
+msgstr "販売時点の現金出"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -1684,7 +1685,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Validate Closing & Post Entries"
-msgstr ""
+msgstr "終了確認・記帳"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
@@ -1703,7 +1704,7 @@ msgstr ""
 #: view:pos.config:0
 #: selection:pos.config,state:0
 msgid "Inactive"
-msgstr ""
+msgstr "無効"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1754,7 +1755,7 @@ msgstr "Timmermans Kriek 375ml"
 #. module: point_of_sale
 #: field:pos.config,sequence_id:0
 msgid "Order IDs Sequence"
-msgstr ""
+msgstr "注文IDシーケンス"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1874,7 +1875,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session,cash_register_difference:0
 msgid "Difference"
-msgstr ""
+msgstr "差異"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:549
@@ -1939,7 +1940,7 @@ msgstr ""
 msgid ""
 "Check if, this is a product you can use to put cash into a statement for the "
 "point of sale backend."
-msgstr ""
+msgstr "チェックした場合、この製品は販売時点バックエンドの計算書に現金を引き当てるために使用できます。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_moka_2,5l_product_template
@@ -1955,7 +1956,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 msgid "Orders Analysis"
-msgstr ""
+msgstr "オーダ分析"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2022,7 +2023,7 @@ msgstr "店："
 #. module: point_of_sale
 #: field:account.journal,self_checkout_payment_method:0
 msgid "Self Checkout Payment Method"
-msgstr ""
+msgstr "セルフチェックアウト支払方法"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2211,7 +2212,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "POSオーダー"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
@@ -2223,7 +2224,7 @@ msgstr ""
 #: field:pos.config,journal_ids:0
 #: field:pos.session,journal_ids:0
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "利用可能な支払方法"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_normal_action
@@ -2257,7 +2258,7 @@ msgstr "FAX："
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "POSセッション"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -2347,7 +2348,7 @@ msgstr "7月"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_config_pos
 #: view:pos.session:0
 msgid "Point of Sales"
-msgstr ""
+msgstr "販売時点"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -2473,7 +2474,7 @@ msgstr "日付順"
 msgid ""
 "Check if the product should be weighted (mainly used with self check-out "
 "interface)."
-msgstr ""
+msgstr "製品の重量を測定する場合にチェックします(主にセルフチェックアウト・インターフェースで使用)。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
@@ -2528,7 +2529,7 @@ msgstr "閉じた"
 #. module: point_of_sale
 #: field:pos.config,iface_cashdrawer:0
 msgid "Cashdrawer Interface"
-msgstr ""
+msgstr "現金引出インターフェイス"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -2568,18 +2569,18 @@ msgstr "ビール"
 #. module: point_of_sale
 #: help:pos.config,name:0
 msgid "An internal identification of the point of sale"
-msgstr ""
+msgstr "販売時点の内部識別"
 
 #. module: point_of_sale
 #: view:pos.config:0
 #: selection:pos.config,state:0
 msgid "Active"
-msgstr ""
+msgstr "有効"
 
 #. module: point_of_sale
 #: field:pos.session,name:0
 msgid "Session ID"
-msgstr ""
+msgstr "セッションID"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
@@ -2589,7 +2590,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Summary by Payment Methods"
-msgstr ""
+msgstr "支払方法別サマリ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2646,7 +2647,7 @@ msgstr "再印刷"
 #. module: point_of_sale
 #: field:pos.config,iface_payment_terminal:0
 msgid "Payment Terminal Interface"
-msgstr ""
+msgstr "支払ターミナルインターフェイス"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2741,20 +2742,20 @@ msgstr "Timmermans Geuze 375ml"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Continue Selling"
-msgstr ""
+msgstr "セッションに戻る"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:444
 #, python-format
 msgid "Payment Terminal"
-msgstr ""
+msgstr "支払ターミナル"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 #: field:pos.session,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "担当"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
@@ -2766,7 +2767,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:460
 #, python-format
 msgid "Custom Ean13"
-msgstr ""
+msgstr "カスタムEAN13"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2871,7 +2872,7 @@ msgstr ""
 #: field:pos.order,session_id:0
 #, python-format
 msgid "Session"
-msgstr ""
+msgstr "セッション"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_33cl_product_template
@@ -3011,7 +3012,7 @@ msgstr "キャッシュレジスタを開く"
 #. module: point_of_sale
 #: field:account.journal,amount_authorized_diff:0
 msgid "Amount Authorized Difference"
-msgstr ""
+msgstr "公差額"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3028,7 +3029,7 @@ msgstr ""
 #. module: point_of_sale
 #: help:pos.session,config_id:0
 msgid "The physical point of sale you will use."
-msgstr ""
+msgstr "使用する物理的なPOS"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -3038,7 +3039,7 @@ msgstr "受注オーダーの検索"
 #. module: point_of_sale
 #: field:pos.config,iface_self_checkout:0
 msgid "Self Checkout Mode"
-msgstr ""
+msgstr "セルフチェックアウトモード"
 
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
@@ -3055,7 +3056,7 @@ msgstr "ペプシ 330ml"
 msgid ""
 "Person who uses the the cash register. It can be a reliever, a student or an "
 "interim employee."
-msgstr ""
+msgstr "キャッシュレジスタの使用者。交代員や学生、臨時の従業員など。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
@@ -3113,7 +3114,7 @@ msgstr "オランジーナ 330ml"
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Inactive"
-msgstr ""
+msgstr "無効化"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
@@ -3217,7 +3218,7 @@ msgstr "終了日"
 msgid ""
 "The Point of Sale Category this products belongs to. Those categories are "
 "used to group similar products and are specific to the Point of Sale."
-msgstr ""
+msgstr "販売時点カテゴリは、この製品に属します。これらのカテゴリは類似する製品のグループに使用され、販売時点に固有のものです。"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
@@ -3389,7 +3390,7 @@ msgstr "ファンタ ゼロ オレンジ 330ml"
 #. module: point_of_sale
 #: help:product.product,available_in_pos:0
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
+msgstr "この製品を販売時点で表示する場合はチェックします。"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -3439,7 +3440,7 @@ msgstr "集荷をキャンセルできません。"
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Material Interfaces"
-msgstr ""
+msgstr "機器インターフェイス"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits
@@ -3493,7 +3494,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,pos_reference:0
 msgid "Receipt Ref"
-msgstr ""
+msgstr "レシート参照"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
@@ -3548,12 +3549,12 @@ msgstr "請求済"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "New Session"
-msgstr ""
+msgstr "新規セッション"
 
 #. module: point_of_sale
 #: field:pos.config,group_by:0
 msgid "Group Journal Items"
-msgstr ""
+msgstr "仕訳項目グルーピング"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -3569,13 +3570,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                クリックして新しい注文を作成します。\n"
+"              </p><p>\n"
+"                "
+"進行中の注文は、このメニューで閲覧できます。新しい注文の記録には、タッチスクリーン・インターフェース向けの<i>自分のセッション</i>メニューを使用すべ"
+"きです。\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:450
 #, python-format
 msgid "Electronic Scale"
-msgstr ""
+msgstr "電子はかり"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
@@ -3717,7 +3726,7 @@ msgstr "ペプシマックス 2L"
 #. module: point_of_sale
 #: field:pos.session,details_ids:0
 msgid "Cash Control"
-msgstr ""
+msgstr "現金制御"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
@@ -3766,7 +3775,7 @@ msgstr "割引（%）"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "The session"
-msgstr ""
+msgstr "セッション"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -3781,7 +3790,7 @@ msgstr "小計の合計"
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Close Session"
-msgstr ""
+msgstr "セッション終了"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3847,12 +3856,12 @@ msgstr "現金仕訳帳"
 #. module: point_of_sale
 #: view:pos.session:0
 msgid "Session:"
-msgstr ""
+msgstr "セッション："
 
 #. module: point_of_sale
 #: field:pos.config,iface_print_via_proxy:0
 msgid "Print via Proxy"
-msgstr ""
+msgstr "プロキシ経由で印刷"
 
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
@@ -3867,6 +3876,8 @@ msgid ""
 "maximum is reached, the user will have an error message at the closing of "
 "his session saying that he needs to contact his manager."
 msgstr ""
+"このフィールドは、セッションを閉じる際の論理的な現金と終了残高の最大許容差を表します。最大値に達した場合は、管理者と連絡が必要なことをエラーメッセージで伝"
+"えます。"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -3883,7 +3894,7 @@ msgstr "説明"
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
 #: field:pos.config,session_ids:0
 msgid "Sessions"
-msgstr ""
+msgstr "セッション"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -3916,7 +3927,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session.opening,pos_state:0
 msgid "Session Status"
-msgstr ""
+msgstr "セッション状況"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
@@ -3960,12 +3971,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Click to continue the session."
-msgstr ""
+msgstr "クリックしてセッションを続けてください。"
 
 #. module: point_of_sale
 #: view:pos.config:0
 msgid "Set to Active"
-msgstr ""
+msgstr "有効化"
 
 #. module: point_of_sale
 #: view:pos.category:0
@@ -3975,7 +3986,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session.opening:0
 msgid "Start Selling"
-msgstr ""
+msgstr "セッション開始"
 
 #. module: point_of_sale
 #: selection:report.pos.order,month:0
@@ -4095,7 +4106,7 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: field:pos.session,order_ids:0
 msgid "Orders"
-msgstr ""
+msgstr "オーダー"
 
 #~ msgid "VAT :"
 #~ msgstr "消費税："

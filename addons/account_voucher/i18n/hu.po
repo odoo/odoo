@@ -8,14 +8,25 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-04 11:31+0000\n"
+"PO-Revision-Date: 2013-12-16 10:30+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:49+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2013-12-17 06:13+0000\n"
+"X-Generator: Launchpad (build 16869)\n"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1074
+#, python-format
+msgid "Please define a sequence on the journal."
+msgstr "Kérem egy sorozat meghatározását a naplón."
+
+#. module: account_voucher
+#: view:sale.receipt.report:0
+msgid "Group by Invoice Date"
+msgstr "Számla dátuma szerinti csoportosítása"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -126,6 +137,8 @@ msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
 msgstr ""
+"Ez a mondat segítséget nyújt a beváltási árfolyam meghatározásában mivel "
+"megmutatja a közvetlen hatást az eredményre"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -487,6 +500,8 @@ msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
 msgstr ""
+"A művelet végzésekkor, ennyi volt az árfolyam\n"
+"%s = %s"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -940,12 +955,6 @@ msgid "Active"
 msgstr "Aktív"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1074
-#, python-format
-msgid "Please define a sequence on the journal."
-msgstr "Kérem egy sorozat meghatározását a naplón."
-
-#. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
@@ -960,11 +969,6 @@ msgid "Sales Receipts Analysis"
 msgstr "Értékesítési bevételi bizonylatok elemzései"
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-msgid "Group by Invoice Date"
-msgstr "Számla dátuma szerinti csoportosítása"
-
-#. module: account_voucher
 #: view:account.voucher:0
 msgid "Post"
 msgstr "Elküld"
@@ -977,7 +981,7 @@ msgstr "Számlák és kifizetetlen tételek"
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
 msgid "Helping Sentence"
-msgstr ""
+msgstr "Kisegítő mondat"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0

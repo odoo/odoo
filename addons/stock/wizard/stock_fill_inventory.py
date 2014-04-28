@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
+from openerp.tools import mute_logger
 
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
@@ -28,8 +29,11 @@ class stock_fill_inventory(osv.osv_memory):
 
     def _default_location(self, cr, uid, ids, context=None):
         try:
-            loc_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
-        except ValueError, e:
+            location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
+            with mute_logger('openerp.osv.orm'):
+                location.check_access_rule('read', context=context)
+            location_id = location.id
+        except (ValueError, orm.except_orm), e:
             return False
         return location_id or False
 
@@ -100,15 +104,16 @@ class stock_fill_inventory(osv.osv_memory):
             datas = {}
             res[location] = {}
             move_ids = move_obj.search(cr, uid, ['|',('location_dest_id','=',location),('location_id','=',location),('state','=','done')], context=context)
-
+            local_context = dict(context)
+            local_context['raise-exception'] = False
             for move in move_obj.browse(cr, uid, move_ids, context=context):
                 lot_id = move.prodlot_id.id
                 prod_id = move.product_id.id
                 if move.location_dest_id.id != move.location_id.id:
                     if move.location_dest_id.id == location:
-                        qty = uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
+                        qty = uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
                     else:
-                        qty = -uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
+                        qty = -uom_obj._compute_qty_obj(cr, uid, move.product_uom,move.product_qty, move.product_id.uom_id, context=local_context)
 
 
                     if datas.get((prod_id, lot_id)):

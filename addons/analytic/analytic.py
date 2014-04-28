@@ -194,7 +194,7 @@ class account_analytic_account(osv.osv):
         'user_id': fields.many2one('res.users', 'Project Manager', track_visibility='onchange'),
         'manager_id': fields.many2one('res.users', 'Account Manager', track_visibility='onchange'),
         'date_start': fields.date('Start Date'),
-        'date': fields.date('End Date', select=True, track_visibility='onchange'),
+        'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
@@ -295,10 +295,6 @@ class account_analytic_account(osv.osv):
             args=[]
         if context is None:
             context={}
-        if context.get('current_model') == 'project.project':
-            project_obj = self.pool.get("account.analytic.account")
-            project_ids = project_obj.search(cr, uid, args)
-            return self.name_get(cr, uid, project_ids, context=context)
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:

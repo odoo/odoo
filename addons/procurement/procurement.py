@@ -128,6 +128,22 @@ class procurement_order(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
+    def message_track(self, cr, uid, ids, tracked_fields, initial_values, context=None):
+        """ Overwrite message_track to avoid tracking more than once the confirm-exception loop
+        Add '_first_pass_done_' to the note field only the first time stuck in exception state
+        Will avoid getting furthur confirmed and exception change of state messages
+
+        TODO: this hack is necessary for a stable version but should be avoided for the next release.
+        Instead find a more elegant way to prevent redundant messages or entirely stop tracking states on procurement orders
+        """
+        for proc in self.browse(cr, uid, ids, context=context):
+            if not proc.note or '_first_pass_done_' not in proc.note or proc.state not in ('confirmed', 'exception'):
+                super(procurement_order, self).message_track(cr, uid, [proc.id], tracked_fields, initial_values, context=context)
+                if proc.state == 'exception':
+                    cr.execute("""UPDATE procurement_order set note = TRIM(both E'\n' FROM COALESCE(note, '') || %s) WHERE id = %s""", ('\n\n_first_pass_done_',proc.id))
+
+        return True
+
     def unlink(self, cr, uid, ids, context=None):
         procurements = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
@@ -165,10 +181,6 @@ class procurement_order(osv.osv):
         @return: True or False.
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
-
-    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined'
-    def check_move(self, cr, uid, ids, context=None):
-        pass
 
     def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
@@ -282,6 +294,12 @@ class procurement_order(osv.osv):
         """
         return False
 
+    def check_move(self, cr, uid, ids, context=None):
+        """ Check whether the given procurement can be satisfied by an internal move,
+            typically a pulled flow. By default, it's False. Overwritten by the `stock_location` module.
+        """
+        return False
+
     def check_conditions_confirm2wait(self, cr, uid, ids):
         """ condition on the transition to go from 'confirm' activity to 'confirm_wait' activity """
         return not self.test_cancel(cr, uid, ids)
@@ -372,7 +390,6 @@ class procurement_order(osv.osv):
                     ctx_wkf = dict(context or {})
                     ctx_wkf['workflow.trg_write.%s' % self._name] = False
                     self.write(cr, uid, [procurement.id], {'message': message},context=ctx_wkf)
-                    self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
@@ -424,7 +441,8 @@ class procurement_order(osv.osv):
         if len(to_cancel):
             move_obj.action_cancel(cr, uid, to_cancel)
         if len(to_assign):
-            move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
+            move_obj.write(cr, uid, to_assign, {'state': 'confirmed'})
+            move_obj.action_assign(cr, uid, to_assign)
         self.write(cr, uid, ids, {'state': 'cancel'})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -547,14 +565,14 @@ class stock_warehouse_orderpoint(osv.osv):
     ]
 
     def default_get(self, cr, uid, fields, context=None):
+        warehouse_obj = self.pool.get('stock.warehouse')
         res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
         # default 'warehouse_id' and 'location_id'
         if 'warehouse_id' not in res:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0', context)
-            res['warehouse_id'] = warehouse.id
+            warehouse_ids = res.get('company_id') and warehouse_obj.search(cr, uid, [('company_id', '=', res['company_id'])], limit=1, context=context) or []
+            res['warehouse_id'] = warehouse_ids and warehouse_ids[0] or False
         if 'location_id' not in res:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context)
-            res['location_id'] = warehouse.lot_stock_id.id
+            res['location_id'] = res.get('warehouse_id') and warehouse_obj.browse(cr, uid, res['warehouse_id'], context).lot_stock_id.id or False
         return res
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):

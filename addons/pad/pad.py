@@ -14,6 +14,10 @@ _logger = logging.getLogger(__name__)
 class pad_common(osv.osv_memory):
     _name = 'pad.common'
 
+    def pad_is_configured(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return bool(user.company_id.pad_server)
+
     def pad_generate_url(self, cr, uid, context=None):
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id;
 
@@ -39,7 +43,11 @@ class pad_common(osv.osv_memory):
         #if create with content
         if "field_name" in context and "model" in context and "object_id" in context:
             myPad = EtherpadLiteClient( pad["key"], pad["server"]+'/api')
-            myPad.createPad(path)
+            try:
+                myPad.createPad(path)
+            except urllib2.URLError:
+                raise osv.except_osv(_("Error"), _("Pad creation fail, \
+                either there is a problem with your pad server URL or with your connection."))
 
             #get attr on the field model
             model = self.pool.get(context["model"])

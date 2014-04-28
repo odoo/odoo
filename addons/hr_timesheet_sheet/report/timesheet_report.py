@@ -95,7 +95,7 @@ class timesheet_report(osv.osv):
                         htss.state
                     from account_analytic_line as aal
                     left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
-                    left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
+                    left join hr_timesheet_sheet_sheet as htss ON (hat.sheet_id=htss.id)
                     group by
                         aal.account_id,
                         aal.date,

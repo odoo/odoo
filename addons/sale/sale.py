@@ -70,9 +70,11 @@ class sale_order(osv.osv):
         if not default:
             default = {}
         default.update({
+            'date_order': fields.date.context_today(self, cr, uid, context=context),
             'state': 'draft',
             'invoice_ids': [],
             'date_confirm': False,
+            'client_order_ref': '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
@@ -264,7 +266,7 @@ class sale_order(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
-    _order = 'name desc'
+    _order = 'date_order desc, id desc'
 
     # Form filling
     def unlink(self, cr, uid, ids, context=None):
@@ -513,7 +515,7 @@ class sale_order(osv.osv):
                     lines.append(line.id)
             created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
             if created_lines:
-                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
+                invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
         if not invoices:
             for o in self.browse(cr, uid, ids, context=context):
                 for i in o.invoice_ids:

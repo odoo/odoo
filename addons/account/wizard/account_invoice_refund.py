@@ -53,10 +53,19 @@ class account_invoice_refund(osv.osv_memory):
         journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','=',company_id)], limit=1, context=context)
         return journal and journal[0] or False
 
+    def _get_reason(self, cr, uid, context=None):
+        active_id = context and context.get('active_id', False)
+        if active_id:
+            inv = self.pool.get('account.invoice').browse(cr, uid, active_id, context=context)
+            return inv.name
+        else:
+            return ''
+
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
         'filter_refund': 'refund',
+        'description': _get_reason,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -158,9 +167,9 @@ class account_invoice_refund(osv.osv_memory):
                     to_reconcile_ids = {}
                     for line in movelines:
                         if line.account_id.id == inv.account_id.id:
-                            to_reconcile_ids[line.account_id.id] = [line.id]
-                        if type(line.reconcile_id) != osv.orm.browse_null:
-                            reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
+                            to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
+                        if line.reconcile_id:
+                            line.reconcile_id.unlink()
                     wf_service.trg_validate(uid, 'account.invoice', \
                                         refund.id, 'invoice_open', cr)
                     refund = inv_obj.browse(cr, uid, refund_id[0], context=context)

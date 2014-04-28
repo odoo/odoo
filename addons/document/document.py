@@ -34,6 +34,7 @@ import openerp
 from openerp import netsvc
 from openerp import pooler
 from openerp import tools
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
 from openerp.tools.misc import ustr
@@ -70,7 +71,11 @@ class document_file(osv.osv):
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Overwrite check to verify access on directory to validate specifications of doc/access_permissions.rst"""
+        if not isinstance(ids, list):
+            ids = [ids]
+
         super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
+        
         if ids:
             self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
 
@@ -319,7 +324,7 @@ class document_directory(osv.osv):
         ressource_parent_type_id=vals.get('ressource_parent_type_id',False)
         ressource_id=vals.get('ressource_id',0)
         if op=='write':
-            for directory in self.browse(cr, uid, ids):
+            for directory in self.browse(cr, SUPERUSER_ID, ids):
                 if not name:
                     name=directory.name
                 if not parent_id:
@@ -333,7 +338,7 @@ class document_directory(osv.osv):
                 if len(res):
                     return False
         if op=='create':
-            res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
+            res = self.search(cr, SUPERUSER_ID, [('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
             if len(res):
                 return False
         return True

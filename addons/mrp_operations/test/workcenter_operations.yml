@@ -1,6 +1,24 @@
 -
+   Create a user as 'MRP User'
+-
+  !record {model: res.users, id: res_mrp_operation_user}:
+    company_id: base.main_company
+    name: MRP User
+    login: maou
+    password: maou
+    email: mrp_operation_user@yourcompany.com
+-
+  I added groups for MRP User.
+-
+  !record {model: res.users, id: res_mrp_operation_user}:
+    groups_id:
+      - mrp.group_mrp_user
+-
   In order to test mrp_operations with OpenERP, I refer created production order of PC Assemble SC349
-  with routing - Manual Component's Assembly to test complete production process with respect of workcenter.
+  with routing - Manual Component's Assembly to test complete production process with respect of workcenter with giving access rights of MRP User.
+-
+  !context
+    uid: 'res_mrp_operation_user'
 -
   I compute the production order.
 -
@@ -106,7 +124,7 @@
   I print a Barcode Report of Operation line.
 -
   !python {model: mrp_operations.operation.code}: |
-    import netsvc, tools, os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.mrp.code.barcode').create(cr, uid, [ref('mrp_operations.mrp_op_1'),ref('mrp_operations.mrp_op_2'),ref('mrp_operations.mrp_op_3'),ref('mrp_operations.mrp_op_4'),ref('mrp_operations.mrp_op_5')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-barcode_report.'+format), 'wb+').write(data)
@@ -115,7 +133,7 @@
   I print Workcenter's Barcode Report.
 -
   !python {model: mrp.workcenter}: |
-    import netsvc, tools, os
+    from openerp import netsvc, tools
     (data, format) = netsvc.LocalService('report.mrp.wc.barcode').create(cr, uid, [ref('mrp.mrp_workcenter_0'),ref('mrp.mrp_workcenter_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp_operations-workcenter_barcode_report.'+format), 'wb+').write(data)

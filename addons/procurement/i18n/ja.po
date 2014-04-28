@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-03-31 06:07+0000\n"
+"Last-Translator: hiro TAKADA <tkhiro0712@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:14+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-04-01 06:52+0000\n"
+"X-Generator: Launchpad (build 16967)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -66,7 +66,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "External note..."
-msgstr ""
+msgstr "外部メモ…"
 
 #. module: procurement
 #: view:product.product:0
@@ -75,7 +75,7 @@ msgid ""
 "                           will wait for new products. To fulfill the "
 "inventory, you should\n"
 "                           create others rules like orderpoints."
-msgstr ""
+msgstr "利用できる十分な量がない場合、新しい製品が用意できるまで配送は待たされます。在庫切れを防ぐには発注点のような他のルールを作成すべきです。"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -86,7 +86,7 @@ msgstr "調達方法"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "製造"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -141,12 +141,12 @@ msgstr "調達計算"
 #. module: procurement
 #: field:procurement.order,message:0
 msgid "Latest error"
-msgstr "最新のエラー"
+msgstr "直近のエラー"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "最小数量"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -156,7 +156,7 @@ msgstr "情報目的のみであるため、計算には使用されません。
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr "最新の調達"
+msgstr "直近の調達"
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
@@ -166,7 +166,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "調達取消"
 
 #. module: procurement
 #: view:product.product:0
@@ -176,7 +176,7 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "取消済"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -268,7 +268,7 @@ msgstr "確認"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "倍乗基準数量"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -282,7 +282,7 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr "調達オーダーの処理"
+msgstr "未処理調達オーダ"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -303,7 +303,7 @@ msgstr "優先度"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "再発注規則検索"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -380,7 +380,7 @@ msgstr "数量"
 #: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr "十分な在庫がなく、かつ最小発注点ルールが定義されていません。"
+msgstr "在庫不足かつ最小発注点規則の定義がありません。"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -392,7 +392,7 @@ msgstr "単位"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "在庫"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -420,7 +420,7 @@ msgstr ""
 msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
-msgstr "調達を手動で作成する場合、あなたは恐らくオーダー方法のための型を使うことを望むでしょう。"
+msgstr "調達をマニュアル作成する場合、特別な理由がなければ「オーダ」を選択してください。"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -510,6 +510,12 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"調達が作成されると、ステータスは「ドラフト」に設定されます。\n"
+"調達が確認された場合、ステータスは「確認済」に設定されます。\n"
+"確認後のステータスは「実行中」に設定されます。\n"
+"注文で例外が発生すると、ステータスは「例外」に設定されます。\n"
+"例外が除去されると、ステータスは「準備完了」になります。\n"
+"調達が別の状態の終了を待つ場合、「待ち」状態になります。"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -532,7 +538,7 @@ msgstr "製品の在庫が0未満の時は、それは発注点のように動�
 #: field:procurement.order,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "製品単位"
 
 #. module: procurement
 #: constraint:stock.warehouse.orderpoint:0
@@ -551,7 +557,7 @@ msgstr "調達行"
 msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
-msgstr ""
+msgstr "ことを考慮します(その結果、手元数量がマイナスになる場合もあります)。"
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -564,7 +570,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field, "
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "このフィールドで指定された最小数量を仮想的な在庫が下回った場合、OpenERPは予測数量を最大数量にするための調達を生成します。"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -576,7 +582,7 @@ msgstr "ドラフト"
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Run Schedulers"
-msgstr ""
+msgstr "スケジューラ実行"
 
 #. module: procurement
 #: view:procurement.order.compute:0
@@ -587,12 +593,12 @@ msgstr "ウィザードは調達をスケジュールします。"
 #: view:procurement.order:0
 #: field:procurement.order,state:0
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "購入"
 
 #. module: procurement
 #: view:product.product:0
@@ -611,11 +617,13 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"製造：製品を調達する場合、製品の種類に応じて製造オーダーまたはタスクが生成されます。\n"
+"購入：製品を調達する場合、発注書が生成されます。"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "最大数量"
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
@@ -626,12 +634,12 @@ msgstr ""
 #: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
-msgstr "十分な在庫ではありません。"
+msgstr "在庫不足です。"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_procureproducts0
@@ -661,7 +669,7 @@ msgstr "例外"
 msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
-msgstr ""
+msgstr "この製品を販売する場合、配送オーダーも作成されます。OpenERPは消耗品として"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
@@ -735,6 +743,8 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"見込み生産：製品は必要に応じて在庫から取り出すか補充を待ちます。\n"
+"受注生産：製品は必要に応じて購入するか生産します。"
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -780,7 +790,7 @@ msgstr "完了"
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -790,7 +800,7 @@ msgstr "再オーダーのモード"
 #. module: procurement
 #: field:procurement.order,origin:0
 msgid "Source Document"
-msgstr "基となるドキュメント"
+msgstr "参照元"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -804,7 +814,7 @@ msgstr "緊急外"
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
 #: view:procurement.order:0
 msgid "Procurement Exceptions"
-msgstr "調達の例外"
+msgstr "調達例外"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -812,7 +822,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, OpenERP generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
+msgstr "仮想的な在庫が最小数量を下回った場合、OpenERPは予測数量が最大数量に指定されたとして調達を生成します。"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -833,7 +843,7 @@ msgstr "調達の例外"
 #: model:ir.actions.act_window,name:procurement.product_open_orderpoint
 #: view:product.product:0
 msgid "Orderpoints"
-msgstr ""
+msgstr "発注点"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -849,7 +859,7 @@ msgid ""
 "                        trigger a draft purchase order, a manufacturing "
 "order or\n"
 "                        a new task."
-msgstr ""
+msgstr "この製品の調達要求を生成するためのアシスタントです。製品の構成によってドラフト発注、製造オーダーまたは新しいタスクを起動します。"
 
 #. module: procurement
 #: field:procurement.order,close_move:0
@@ -897,12 +907,12 @@ msgstr "実行中"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "オーダーの作成"
+msgstr "オーダー"
 
 #. module: procurement
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "供給方法"
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -917,7 +927,7 @@ msgstr "調達方法は製品タイプに依存します。"
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr ""
+msgstr "この製品を販売する場合、OpenERPは"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -928,7 +938,7 @@ msgstr "一時的な調達例外"
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
-msgstr "名前"
+msgstr "名称"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -942,13 +952,13 @@ msgstr "最大"
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr ""
+msgstr "再発注規則"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "%s ステータスの調達オーダは削除できません。"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -1007,7 +1017,7 @@ msgstr "最小"
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "or"
-msgstr ""
+msgstr "または"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:134
@@ -1018,7 +1028,7 @@ msgstr "スケジューラ"
 #. module: procurement
 #: view:product.product:0
 msgid "Request Procurement"
-msgstr ""
+msgstr "調達申請"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:87
@@ -1030,7 +1040,7 @@ msgstr "調達 %d：オーダー中 - %3.2f %-5s - %s"
 #: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "製品在庫が確保されました。"
 
 #~ msgid ""
 #~ "You can define your minimum stock rules, so that OpenERP will automatically "

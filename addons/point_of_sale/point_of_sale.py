@@ -109,7 +109,8 @@ class pos_config(osv.osv):
         return result
 
     def _default_sale_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', company_id)], limit=1, context=context)
         return res and res[0] or False
 
     def _default_shop(self, cr, uid, context=None):
@@ -270,7 +271,7 @@ class pos_session(osv.osv):
             # open if there is no session in 'opening_control', 'opened', 'closing_control' for one user
             domain = [
                 ('state', 'not in', ('closed','closing_control')),
-                ('user_id', '=', uid)
+                ('user_id', '=', session.user_id.id)
             ]
             count = self.search_count(cr, uid, domain, context=context)
             if count>1:
@@ -447,11 +448,12 @@ class pos_session(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         for session in self.browse(cr, uid, ids, context=context):
+            local_context = dict(context or {}, force_company=session.config_id.journal_id.company_id.id)
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
-            move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=context)
+            move_id = self.pool.get('account.move').create(cr, uid, {'ref' : session.name, 'journal_id' : session.config_id.journal_id.id, }, context=local_context)
 
-            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
+            self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
 
             for order in session.order_ids:
                 if order.state not in ('paid', 'invoiced'):
@@ -468,6 +470,11 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
+        for session in self.browse(cr, uid, ids, context=context):
+            if session.user_id.id != uid:
+                raise osv.except_osv(
+                        _('Error!'),
+                        _("You cannot use the session of another users. This session is owned by %s. Please first close this one to use this point of sale." % session.user_id.name))
         context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
@@ -481,19 +488,24 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
-    def create_from_ui(self, cr, uid, orders, context=None):
-        #_logger.info("orders: %r", orders)
+    def create_from_ui(self, cr, uid, orders, context=None):      
+        # Keep only new orders
+        submitted_references = [o['data']['name'] for o in orders]
+        existing_order_ids = self.search(cr, uid, [('pos_reference', 'in', submitted_references)], context=context)
+        existing_orders = self.read(cr, uid, existing_order_ids, ['pos_reference'], context=context)
+        existing_references = set([o['pos_reference'] for o in existing_orders])
+        orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
         order_ids = []
-        for tmp_order in orders:
+        for tmp_order in orders_to_save:
             order = tmp_order['data']
             order_id = self.create(cr, uid, {
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
                 'lines': order['lines'],
-                'pos_reference':order['name']
+                'pos_reference':order['name'],
+                'partner_id': order.get('partner_id', False)
             }, context)
-
             for payments in order['statement_ids']:
                 payment = payments[2]
                 self.add_payment(cr, uid, order_id, {
@@ -522,7 +534,10 @@ class pos_order(osv.osv):
                 }, context=context)
             order_ids.append(order_id)
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+            try:
+                wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
+            except Exception:
+                _logger.error('ERROR: Could not mark POS Order as Paid.', exc_info=True)
         return order_ids
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -672,7 +687,7 @@ class pos_order(osv.osv):
 
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
-        picking_obj = self.pool.get('stock.picking')
+        picking_obj = self.pool.get('stock.picking.out')
         partner_obj = self.pool.get('res.partner')
         move_obj = self.pool.get('stock.move')
 
@@ -692,13 +707,14 @@ class pos_order(osv.osv):
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
             location_id = order.shop_id.warehouse_id.lot_stock_id.id
-            output_id = order.shop_id.warehouse_id.lot_output_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':
                     continue
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
                 move_obj.create(cr, uid, {
                     'name': line.name,
@@ -710,11 +726,9 @@ class pos_order(osv.osv):
                     'product_qty': abs(line.qty),
                     'tracking_id': False,
                     'state': 'draft',
-                    'location_id': location_id,
-                    'location_dest_id': output_id,
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
                 }, context=context)
-                if line.qty < 0:
-                    location_id, output_id = output_id, location_id
 
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
@@ -792,9 +806,18 @@ class pos_order(osv.osv):
         """Create a copy of order  for refund order"""
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
+        
         for order in self.browse(cr, uid, ids, context=context):
+            current_session_ids = self.pool.get('pos.session').search(cr, uid, [
+                ('state', '!=', 'closed'),
+                ('user_id', '=', uid)], context=context)
+            if not current_session_ids:
+                raise osv.except_osv(_('Error!'), _('To return product(s), you need to open a session that will be used to register the refund.'))
+
             clone_id = self.copy(cr, uid, order.id, {
-                'name': order.name + ' REFUND',
+                'name': order.name + ' REFUND', # not used, name forced by create
+                'session_id': current_session_ids[0],
+                'date_order': time.strftime('%Y-%m-%d %H:%M:%S'),
             }, context=context)
             clone_list.append(clone_id)
 
@@ -904,22 +927,15 @@ class pos_order(osv.osv):
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         account_move_obj = self.pool.get('account.move')
-        account_move_line_obj = self.pool.get('account.move.line')
         account_period_obj = self.pool.get('account.period')
         account_tax_obj = self.pool.get('account.tax')
-        user_proxy = self.pool.get('res.users')
         property_obj = self.pool.get('ir.property')
         cur_obj = self.pool.get('res.currency')
-
-        ctx = dict(context or {}, account_period_prefer_normal=True)
-        period = account_period_obj.find(cr, uid, context=ctx)[0]
 
         #session_ids = set(order.session_id for order in self.browse(cr, uid, ids, context=context))
 
         if session and not all(session.id == order.session_id.id for order in self.browse(cr, uid, ids, context=context)):
             raise osv.except_osv(_('Error!'), _('Selected orders do not have the same session!'))
-
-        current_company = user_proxy.browse(cr, uid, uid, context=context).company_id
 
         grouped_data = {}
         have_to_group_by = session and session.config_id.group_by or False
@@ -940,14 +956,15 @@ class pos_order(osv.osv):
             if order.state != 'paid':
                 continue
 
-            user_company = user_proxy.browse(cr, order.user_id.id, order.user_id.id).company_id
+            current_company = order.sale_journal.company_id
 
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
 
             order_account = order.partner_id and \
                             order.partner_id.property_account_receivable and \
-                            order.partner_id.property_account_receivable.id or account_def or current_company.account_receivable.id
+                            order.partner_id.property_account_receivable.id or \
+                            account_def and account_def.id or current_company.account_receivable.id
 
             if move_id is None:
                 # Create an entry for the sale
@@ -960,6 +977,7 @@ class pos_order(osv.osv):
                 # if have_to_group_by:
 
                 sale_journal_id = order.sale_journal.id
+                period = account_period_obj.find(cr, uid, context=dict(context or {}, company_id=current_company.id, account_period_prefer_normal=True))[0]
 
                 # 'quantity': line.qty,
                 # 'product_id': line.product_id.id,
@@ -969,7 +987,7 @@ class pos_order(osv.osv):
                     'journal_id' : sale_journal_id,
                     'period_id' : period,
                     'move_id' : move_id,
-                    'company_id': user_company and user_company.id or False,
+                    'company_id': current_company.id,
                 })
 
                 if data_type == 'product':
@@ -1010,7 +1028,10 @@ class pos_order(osv.osv):
             cur = order.pricelist_id.currency_id
             for line in order.lines:
                 tax_amount = 0
-                taxes = [t for t in line.product_id.taxes_id]
+                taxes = []
+                for t in line.product_id.taxes_id:
+                    if t.company_id.id == current_company.id:
+                        taxes.append(t)
                 computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:

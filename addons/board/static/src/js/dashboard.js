@@ -381,6 +381,10 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
 
+        context.add({
+            group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
+        });
+
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {
             if (c.hasOwnProperty(k) && /^search_default_/.test(k)) {

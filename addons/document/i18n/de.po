@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-01-06 10:47+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2014-02-02 18:51+0000\n"
+"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:56+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-02-03 05:55+0000\n"
+"X-Generator: Launchpad (build 16916)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -62,7 +61,7 @@ msgstr "Ressourcen"
 #: field:document.directory,file_ids:0
 #: view:report.document.user:0
 msgid "Files"
-msgstr "Dokument"
+msgstr "Dateien"
 
 #. module: document
 #: field:document.directory.content.type,mimetype:0
@@ -93,12 +92,12 @@ msgstr "Inhaltsverzeichnis"
 #. module: document
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr "Meine Dokumente"
+msgstr "Mein(e) Dokument(e)"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr "Dokumente"
+msgstr "Dokumentenmanagement"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -107,7 +106,7 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
-"Ein Python Ausdruck zur Evaluierung dieses Feldes.\n"
+"Ein Pythonausdruck zur Evaluierung dieses Feldes.\n"
 "Sie können z.B. 'dir_id', 'res_id', 'res_model' für das aktuelle Verzeichnis "
 "oder als Referenz zum aktuellen Datensatz, in dynamischen Ordnern genutzt "
 "werden."
@@ -164,7 +163,7 @@ msgstr "Finde alle Ressourcen"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr "Felder Pro Ressource"
+msgstr "Felder pro Ressource"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -179,7 +178,7 @@ msgstr "Änderungsdatum"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr "Konfiguration Knowledge"
+msgstr "Knowledge-Anwendung konfigurieren"
 
 #. module: document
 #: view:ir.attachment:0
@@ -208,7 +207,7 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Klicken Sie zur Erstellung eines neuen Dokuments. \n"
 "          </p><p>\n"
-"            Das Dokumenten Repository ermöglicht Zugriff auf alle Anhänge, "
+"            Das Dokumentenrepository ermöglicht Zugriff auf alle Anhänge, "
 "EMails, \n"
 "            Projektbelege, Rechnungen etc.          </p>\n"
 "        "
@@ -219,7 +218,7 @@ msgstr ""
 #: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
-msgstr "ValidierungsFehler"
+msgstr "Validierungsfehler"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -242,7 +241,7 @@ msgstr "Ressourcenmodell"
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
 msgid "File Size"
-msgstr "Datei Grösse"
+msgstr "Dateigröße"
 
 #. module: document
 #: field:document.directory.content.type,name:0
@@ -274,16 +273,16 @@ msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
 msgstr ""
-"Wähle ein Objekt für die Stelle, damit es dann einen Ordner pro Daten für "
-"diese Ressource hat."
+"Wählen Sie hier ein Objekt, damit ein Ordner pro Datensatz der Ressource "
+"erstellt wird"
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
-"Verwede eine Domain um einen automatischen Filter für die anzuzeigenden "
-"Datensätze zu setzen"
+"Verwenden Sie eine Domain, um einen automatischen Filter für die "
+"anzuzeigenden Datensätze zu setzen"
 
 #. module: document
 #: constraint:document.directory:0
@@ -298,7 +297,7 @@ msgstr "Namensfeld"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr "Kontext Felder"
+msgstr "Kontextfelder"
 
 #. module: document
 #: view:document.directory:0
@@ -330,7 +329,7 @@ msgstr "Virtuelle Dokumente"
 #: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
-msgstr "Schreibe eine Dokumentation"
+msgstr "Fehler bei Dokumentenerstellung!"
 
 #. module: document
 #: view:document.directory:0
@@ -398,13 +397,13 @@ msgstr "Dokumenteninhalte nach Verzeichnis"
 #. module: document
 #: view:report.document.user:0
 msgid "All users files"
-msgstr "Alle Benutzer Dokumente"
+msgstr "Alle Benutzerdokumente"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
-msgstr "Dateigroesse nach Monat"
+msgstr "Dateigroße nach Monaten"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -426,8 +425,7 @@ msgstr "Monat"
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
 msgstr ""
-"Definiere Wörter im Kontext, sowie für Kinder all Ordner und Dateien "
-"berücksichtigt werden"
+"Definieren Sie Wörter im Kontext, für alle Unterverzeichnisse und Dateien"
 
 #. module: document
 #: view:document.directory:0
@@ -471,9 +469,9 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
-"Aktivieren Sie dieses Feld, wenn der Name der Datei den Daten Namen "
+"Aktivieren Sie dieses Feld, wenn der Name der Datei den Datensatznamen "
 "beinhalten soll.\n"
-"Falls aktiviert, muss das Verzeichnis vom Typ"
+"Falls aktiviert, einhält ein Verzeichnis einen Ressource"
 
 #. module: document
 #: view:document.configuration:0
@@ -582,7 +580,7 @@ msgstr "Seq."
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
-msgstr "Alle Benutzer Dokumente"
+msgstr "Alle Benutzerdokumente"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -617,7 +615,7 @@ msgid ""
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
 msgstr ""
-"Das OpenERP Dokument Management System verbindet virtuelle Ordner mit "
+"Das OpenERP Dokument enmanagementsystem verbindet virtuelle Ordner mit "
 "Dokumenten. Der virtuelle Ordner kann verwendet werden, um Anhänge eines "
 "Dokumentes zu verwalten, herunterzuladen und zu drucken.\r\n"
 "Die Verzeichnisse werden automatisch entsprechend der installierten Module "
@@ -657,7 +655,7 @@ msgstr "Feld"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr "Dynamischer Kontext Speicher"
+msgstr "Dynamischer Kontextspeicher"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -670,7 +668,7 @@ msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
 msgstr ""
-"Diese Gruppen können jedoch nicht bei Unterverzeichnisse angewendt werden, "
+"Diese Gruppen können jedoch nicht bei Unterverzeichnissen angewendt werden, "
 "die über die eigenen Gruppen zu definieren ist."
 
 #. module: document
@@ -692,12 +690,12 @@ msgstr "ir.attachment"
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr "Benutzer Datei"
+msgstr "Benutzerdatei"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr "Verzeichnis Konfiguration"
+msgstr "Verzeichniskonfiguration"
 
 #. module: document
 #: help:document.directory,type:0
@@ -713,7 +711,7 @@ msgstr ""
 "bei Betriebssystemen, ein klassisches Verzeichnis, welches diverse "
 "verschiedene Dateien beinhalten kann. Die Verzeichnisse, die verlinkt sind "
 "zu den Ressourcen des Systems, erhalten automatisch Unterverzeichnisse für "
-"alle verschiednen Ressourcentypen, die im Hauptverzeichnis definiert wurden."
+"alle verschiedenen Ressourcentypen, die im Hauptverzeichnis definiert wurden."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -739,7 +737,7 @@ msgstr "April"
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
 msgid "# of Files"
-msgstr "# Dokumente"
+msgstr "Dokumente"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -801,7 +799,7 @@ msgstr "Jahr"
 #. module: document
 #: model:ir.model,name:document.model_document_storage
 msgid "Storage Media"
-msgstr "Speicher Medien"
+msgstr "Speichermedien"
 
 #. module: document
 #: field:document.directory.content,extension:0

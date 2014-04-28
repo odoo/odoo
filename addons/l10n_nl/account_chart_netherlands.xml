@@ -4103,6 +4103,13 @@
             <field name="property_account_expense_categ" ref="a_expense"/><!-- aankoop grondstoffen -->
             <field name="property_account_income_categ" ref="a_sale"/>    <!-- verkoop rekening -->
         </record>
+        <record id="l10nnl_chart_template_value" model="ir.values">
+            <field name="name">Nederlands Grootboekschema</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10nnl_chart_template"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
 
 <!-- BTW  Template
 De volgende 2 velden worden gebruikt om een koppeling met het grootboek te maken. In de code wordt berekend

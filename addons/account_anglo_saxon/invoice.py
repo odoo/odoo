@@ -118,6 +118,8 @@ class account_invoice_line(osv.osv):
                             if a == line['account_id'] and i_line.product_id.id == line['product_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 standard_price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
+                                if inv.currency_id.id != company_currency:
+                                    standard_price = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, standard_price, context={'date': inv.date_invoice})
                                 if standard_price != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                                     price_diff = i_line.price_unit - standard_price
                                     line.update({'price':standard_price * line['quantity']})

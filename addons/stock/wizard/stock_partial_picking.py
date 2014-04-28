@@ -51,7 +51,7 @@ class stock_partial_picking_line(osv.TransientModel):
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
         'wizard_id' : fields.many2one('stock.partial.picking', string="Wizard", ondelete='CASCADE'),
         'update_cost': fields.boolean('Need cost update'),
-        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
+        'cost' : fields.float("Cost", help="Unit Cost for this product line", digits_compute=dp.get_precision('Product Price')),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'tracking': fields.function(_tracking, string='Tracking', type='boolean'),
     }
@@ -144,7 +144,7 @@ class stock_partial_picking(osv.osv_memory):
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id' : move.product_id.id,
-            'quantity' : move.product_qty if move.state == 'assigned' else 0,
+            'quantity' : move.product_qty if move.state == 'assigned' or move.picking_id.type == 'in' else 0,
             'product_uom' : move.product_uom.id,
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,

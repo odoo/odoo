@@ -120,7 +120,7 @@ class res_users(osv.osv):
     def set_pw(self, cr, uid, id, name, value, args, context):
         if value:
             encrypted = md5crypt(value, gen_salt())
-            cr.execute('update res_users set password_crypt=%s where id=%s', (encrypted, int(id)))
+            cr.execute("update res_users set password='', password_crypt=%s where id=%s", (encrypted, id))
         del value
 
     def get_pw( self, cr, uid, ids, name, args, context ):
@@ -143,7 +143,7 @@ class res_users(osv.osv):
         cr.execute('SELECT password, password_crypt FROM res_users WHERE id=%s AND active', (uid,))
         if cr.rowcount:
             stored_password, stored_password_crypt = cr.fetchone()
-            if password and not stored_password_crypt:
+            if stored_password and not stored_password_crypt:
                 salt = gen_salt()
                 stored_password_crypt = md5crypt(stored_password, salt)
                 cr.execute("UPDATE res_users SET password='', password_crypt=%s WHERE id=%s", (stored_password_crypt, uid))
@@ -151,14 +151,15 @@ class res_users(osv.osv):
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:
             # check md5crypt
-            if stored_password_crypt[:len(magic_md5)] == magic_md5:
-                salt = stored_password_crypt[len(magic_md5):11]
-                if stored_password_crypt == md5crypt(password, salt):
-                    return
-            elif stored_password_crypt[:len(magic_md5)] == magic_sha256:
-                salt = stored_password_crypt[len(magic_md5):11]
-                if stored_password_crypt == md5crypt(password, salt):
-                    return
+            if stored_password_crypt:
+                if stored_password_crypt[:len(magic_md5)] == magic_md5:
+                    salt = stored_password_crypt[len(magic_md5):11]
+                    if stored_password_crypt == md5crypt(password, salt):
+                        return
+                elif stored_password_crypt[:len(magic_md5)] == magic_sha256:
+                    salt = stored_password_crypt[len(magic_md5):11]
+                    if stored_password_crypt == md5crypt(password, salt):
+                        return
             # Reraise password incorrect
             raise
 

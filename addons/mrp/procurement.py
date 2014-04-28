@@ -34,11 +34,6 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
-    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
-        result = super(procurement_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
-        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
-        return result
-
     def check_produce_product(self, cr, uid, procurement, context=None):
         ''' Depict the capacity of the procurement workflow to produce products (not services)'''
         return True
@@ -118,9 +113,6 @@ class procurement_order(osv.osv):
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
-            if res_id:
-                move_obj.write(cr, uid, [res_id],
-                        {'location_id': procurement.location_id.id})
         self.production_order_create_note(cr, uid, ids, context=context)
         return res
 
@@ -128,7 +120,3 @@ class procurement_order(osv.osv):
         for procurement in self.browse(cr, uid, ids, context=context):
             body = _("Manufacturing Order <em>%s</em> created.") % ( procurement.production_id.name,)
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
-    
-procurement_order()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

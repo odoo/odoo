@@ -26,6 +26,8 @@ class res_partner(osv.Model):
     _order = 'display_name'
 
     def _display_name_compute(self, cr, uid, ids, name, args, context=None):
+        context = dict(context or {})
+        context.pop('show_address', None)
         return dict(self.name_get(cr, uid, ids, context=context))
 
     _display_name_store_triggers = {
@@ -38,7 +40,7 @@ class res_partner(osv.Model):
 
     _columns = {
         # extra field to allow ORDER BY to match visible names
-        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers),
+        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers, select=1),
     }
 
 class account_invoice(osv.Model):

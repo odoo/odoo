@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-01-05 15:33+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2014-04-11 12:57+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:51+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-04-12 09:42+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -40,6 +39,9 @@ msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Unter welcher Bedingung soll die Regel ausgelöst werden? Wenn eine Bedingung "
+"vorhanden, wird die Regel vom Scheduler ausgelöst, anderenfalls nur bei "
+"Anlage und bei Aktualisierung."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -78,15 +80,15 @@ msgid ""
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
-"Zeitliche Verzögerung nach Auslöse-Datum. Sie können hier auch einen "
+"Zeitliche Verzögerung nach Auslösedatum. Sie können hier auch einen "
 "negativen Wert eintragen, insofern Sie eine zeitliche Verzögerung vor dem "
-"Auslöse Datum benötigen, z.B. wenn Sie 15 Minuten vor einem Treffen erinnert "
+"Auslösedatum benötigen, z.B. wenn Sie 15 Minuten vor einem Treffen erinnert "
 "werden möchten."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "base.action.rule.lead.test"
-msgstr ""
+msgstr "base.action.rule.lead.test"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -121,7 +123,7 @@ msgstr "Status"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr "Vorgeschaltete Filter Aktualisierung"
+msgstr "Vorgeschaltete Filteraktualisierung"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -201,19 +203,19 @@ msgid ""
 msgstr ""
 "- Gehen Sie zur Seite des \"verbundenen Datenmodells\" und entwerfen Sie "
 "dort die Filtereinstellungen in der entsprechenden Suche-Ansicht (zum "
-"Beispiel Filter auf Basis Ihrer Interessenten / Chancen: Datum der "
-"Erstellung  \"ist gleich 01/01/2012\"."
+"Beispiel Filter auf Basis Ihrer Interessenten/ Chancen: Datum der Erstellung "
+" \"ist gleich 01/01/2012\")."
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
 msgid "Rule Name"
-msgstr "Bezeichnung Regel"
+msgstr "Regelbezeichnung"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
 #: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
 msgid "Automated Actions"
-msgstr "Automatische Aktion"
+msgstr "Automatische Aktionen"
 
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
@@ -275,7 +277,7 @@ msgstr "Minuten"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr "verbundenes Datenmodell"
+msgstr "Verbundenes Datenmodell"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
@@ -311,23 +313,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"Klicken Sie zur Erstellung einer neuen automatischen Abfolge Regel.\n"
+"Klicken Sie zur Erstellung einer neuen automatischen Abfolgeregel.\n"
 "\n"
-"Benutzen Sie automatische Abfolge Regeln um diverse Voränge verschiedener "
+"Benutzen Sie automatische Abfolgeregeln um diverse Vorgänge verschiedener "
 "Formulare \n"
 "für verschiedene Ansichten auszulösen. Zum Beispiel: Ein Interessent, der "
 "durch einen\n"
 "speziellen Benutzer angelegt wurde, wird einem bestimmten Team zugewiesen, "
 "oder ein Vorgang\n"
 "der nach 14 Tagen immer noch den Status Wiedervorlage ausweist, löst eine "
-"automatisch E-Mail \n"
-"Erinnerung aus.\n"
+"automatisch E-Mail-Erinnerung aus.\n"
 "            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
 msgid "Create Date"
-msgstr "Datum Erstellung"
+msgstr "Erstelldatum"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
@@ -348,7 +349,7 @@ msgstr "Auslösetermin"
 #: view:base.action.rule:0
 #: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
-msgstr "Server-Aktion"
+msgstr "Server-Aktionen"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0

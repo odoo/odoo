@@ -26,6 +26,7 @@ import openerp.addons.decimal_precision as dp
 class analytic_user_funct_grid(osv.osv):
     _name="analytic.user.funct.grid"
     _description= "Price per User"
+    _rec_name="user_id"
     _columns={
         'user_id': fields.many2one("res.users", "User", required=True,),
         'product_id': fields.many2one("product.product", "Service", required=True,),
@@ -42,6 +43,7 @@ class analytic_user_funct_grid(osv.osv):
             return {}
 
         value = {}
+        prod = False
         if product_id:
            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         emp = emp_obj.browse(cr, uid, emp_id[0], context=context)

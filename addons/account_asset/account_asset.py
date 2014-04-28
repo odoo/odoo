@@ -35,9 +35,9 @@ class account_asset_category(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=1),
         'note': fields.text('Note'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
-        'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
-        'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
-        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
+        'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True, domain=[('type','=','other')]),
+        'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True, domain=[('type','=','other')]),
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True, domain=[('type','=','other')]),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
@@ -330,7 +330,7 @@ class account_asset_asset(osv.osv):
             default = {}
         if context is None:
             context = {}
-        default.update({'depreciation_line_ids': [], 'state': 'draft'})
+        default.update({'depreciation_line_ids': [], 'account_move_line_ids': [], 'history_ids': [], 'state': 'draft'})
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
 
     def _compute_entries(self, cr, uid, ids, period_id, context=None):

@@ -2259,7 +2259,13 @@
       <field name="property_account_expense_categ" ref="6011_01"/>
       <field name="property_account_income_categ" ref="70111_01"/>            
     </record>    
-
+    <record id="pe_chart_template_value" model="ir.values">
+        <field name="name">Peru - Plan de Cuentas 2011</field>
+        <field name="model">account.chart.template</field>
+        <field name="key">default</field>
+        <field name="res_id" ref="pe_chart_template"/>
+        <field name="value" ref="base.PEN"/>
+    </record>
 
   </data>
 

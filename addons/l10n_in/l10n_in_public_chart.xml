@@ -669,6 +669,13 @@
             <field name="property_account_expense_categ" ref="p41010"/>
             <field name="property_account_income_categ" ref="p31010"/>
         </record>
+        <record id="indian_chart_template_public_value" model="ir.values">
+            <field name="name">India - Chart of Accounts for Public Ltd</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="indian_chart_template_public"/>
+            <field name="value" ref="base.INR"/>
+        </record>
         
     </data>
 </openerp>

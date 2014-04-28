@@ -12,5 +12,12 @@
             <field name="property_account_expense_categ" ref="4101"/>
             <field name="property_account_income_categ" ref="3101"/>
         </record>
+        <record id="l10n_it_chart_template_generic_value" model="ir.values">
+            <field name="name">Italy - Generic Chart of Accounts</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10n_it_chart_template_generic"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
     </data>
 </openerp>

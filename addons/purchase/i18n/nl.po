@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-07-11 13:03+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"PO-Revision-Date: 2014-04-23 16:15+0000\n"
+"Last-Translator: Stefan Rijnhart (Therp) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-12 06:34+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-04-24 06:32+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -449,7 +449,7 @@ msgstr "Leverdatum"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr "Inkooporderregels"
+msgstr "Inkopen"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -1317,7 +1317,7 @@ msgid ""
 "received the\n"
 "                        products."
 msgstr ""
-"om de benodigde hoeveelheden van de leverancier te kopen.\n"
+"aanmaken om de benodigde hoeveelheden van de leverancier te kopen.\n"
 "                        De uitgaande levering is gereed wanneer de producten "
 "zijn\n"
 "                        ontvangen."
@@ -1328,14 +1328,14 @@ msgid ""
 "a draft\n"
 "                        purchase order"
 msgstr ""
-"een concep\n"
+"een concept\n"
 "                        inkooporder"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:322
 #, python-format
 msgid "Please create Invoices."
-msgstr "Maak à.u.b. Facturen."
+msgstr "Deze order(s) hebben nog geen facturen."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -1739,7 +1739,7 @@ msgstr "Manager"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr "Gebaseerd op inkooporders (bestelde hoeveelheid)"
+msgstr "Gebaseerd op orderregels"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -2153,9 +2153,9 @@ msgid ""
 "Bases on incoming shipments: let you create an invoice when receptions are "
 "validated."
 msgstr ""
-"Gebaseerd op inkooporders (bestelde hoeveelheden): plaats de afzonderlijke "
-"regels in 'Factuurcontrole >Gebaseerd op inkooporders (bestelde "
-"hoeveelheden)' van waar u selectief een factuur kan maken.\n"
+"Gebaseerd op orderregels: plaats de afzonderlijke regels in 'Factuurcontrole "
+">Gebaseerd op inkooporders (bestelde hoeveelheden)' van waar u selectief een "
+"factuur kan maken.\n"
 "Vooraf gegenereerde conceptfacturen op basis van inkooporders: maak een "
 "conceptfactuur welke u later kunt goedkeuren.\n"
 "Gebaseerd op ontvangsten (geleverde hoeveelheden): Maak een factuur aan "
@@ -2309,11 +2309,10 @@ msgstr ""
 "<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
 "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
-"    <p>Hallo ${object.partner_id.name},</p>\n"
+"    <p>Beste ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Hier is een ${object.state in ('draft', 'sent') and 'offerteaanvraag' "
+"or 'orderbevestiging'} van ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
@@ -2478,7 +2477,7 @@ msgstr "Jaar"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr "Gebaseerd op inkooporder regels"
+msgstr "Gebaseerd op inkooporderregels"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

@@ -21,8 +21,7 @@
 
 import time
 
-from _common import rounding
-
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -95,6 +94,7 @@ class product_pricelist(osv.osv):
 
     _name = "product.pricelist"
     _description = "Pricelist"
+    _order = 'name'
     _columns = {
         'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the pricelist without removing it."),
@@ -112,6 +112,27 @@ class product_pricelist(osv.osv):
             name = pl.name + ' ('+ pl.currency_id.name + ')'
             result.append((pl.id,name))
         return result
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if name and operator == '=' and not args:
+            # search on the name of the pricelist and its currency, opposite of name_get(),
+            # Used by the magic context filter in the product search view.
+            query_args = {'name': name, 'limit': limit}
+            query = """SELECT p.id
+                       FROM product_pricelist p JOIN
+                            res_currency c ON (p.currency_id = c.id)
+                       WHERE p.name || ' (' || c.name || ')' = %(name)s
+                       ORDER BY p.name"""
+            if limit:
+                query += " LIMIT %(limit)s"
+            cr.execute(query, query_args)
+            ids = [r[0] for r in cr.fetchall()]
+            # regular search() to apply ACLs - may limit results below limit in some cases
+            ids = self.search(cr, uid, [('id', 'in', ids)], limit=limit, context=context)
+            if ids:
+                return self.name_get(cr, uid, ids, context)
+        return super(product_pricelist, self).name_search(
+            cr, uid, name, args, operator=operator, context=context, limit=limit)
 
 
     def _get_currency(self, cr, uid, ctx):
@@ -151,9 +172,7 @@ class product_pricelist(osv.osv):
         if context is None:
             context = {}
 
-        date = time.strftime('%Y-%m-%d')
-        if 'date' in context:
-            date = context['date']
+        date = context.get('date') or time.strftime('%Y-%m-%d')
 
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
@@ -250,12 +269,13 @@ class product_pricelist(osv.osv):
                             price = 0.0
                             if sinfo:
                                 qty_in_product_uom = qty
-                                product_default_uom = product_obj.read(cr, uid, [product_id], ['uom_id'])[0]['uom_id'][0]
+                                from_uom = context.get('uom') or product_obj.read(cr, uid, [product_id], ['uom_id'])[0]['uom_id'][0]
                                 supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)[0]
                                 seller_uom = supplier.product_uom and supplier.product_uom.id or False
-                                if seller_uom and product_default_uom and product_default_uom != seller_uom:
+                                if seller_uom and from_uom and from_uom != seller_uom:
+                                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
+                                else:
                                     uom_price_already_computed = True
-                                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
                                 cr.execute('SELECT * ' \
                                         'FROM pricelist_partnerinfo ' \
                                         'WHERE suppinfo_id IN %s' \
@@ -275,7 +295,8 @@ class product_pricelist(osv.osv):
                         if price is not False:
                             price_limit = price
                             price = price * (1.0+(res['price_discount'] or 0.0))
-                            price = rounding(price, res['price_round']) #TOFIX: rounding with tools.float_rouding
+                            if res['price_round']:
+                                price = tools.float_round(price, precision_rounding=res['price_round'])
                             price += (res['price_surcharge'] or 0.0)
                             if res['price_min_margin']:
                                 price = max(price, price_limit+res['price_min_margin'])

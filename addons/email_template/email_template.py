@@ -305,7 +305,7 @@ class email_template(osv.osv):
                           is taken from template definition)
            :returns: a dict containing all relevant fields for creating a new
                      mail.mail entry, with one extra key ``attachments``, in the
-                     format expected by :py:meth:`mail_thread.message_post`.
+                     format [(report_name, data)] where data is base64 encoded.
         """
         if context is None:
             context = {}
@@ -340,6 +340,7 @@ class email_template(osv.osv):
                 ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
             service = netsvc.LocalService(report_service)
             (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
+            # TODO in trunk, change return format to binary to match message_post expected format
             result = base64.b64encode(result)
             if not report_name:
                 report_name = report_service
@@ -376,8 +377,18 @@ class email_template(osv.osv):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-        del values['email_recipients']  # TODO Properly use them.
+        if not values.get('email_from'):
+            raise osv.except_osv(_('Warning!'),_("Sender email is missing or empty after template rendering. Specify one to deliver your message"))
+        # process email_recipients field that is a comma separated list of partner_ids -> recipient_ids
+        # NOTE: only usable if force_send is True, because otherwise the value is
+        # not stored on the mail_mail, and therefore lost -> fixed in v8
+        recipient_ids = []
+        email_recipients = values.pop('email_recipients', '')
+        if email_recipients:
+            for partner_id in email_recipients.split(','):
+                if partner_id:  # placeholders could generate '', 3, 2 due to some empty field values
+                    recipient_ids.append(int(partner_id))
+
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
@@ -386,11 +397,11 @@ class email_template(osv.osv):
         # manage attachments
         for attachment in attachments:
             attachment_data = {
-                    'name': attachment[0],
-                    'datas_fname': attachment[0],
-                    'datas': attachment[1],
-                    'res_model': 'mail.message',
-                    'res_id': mail.mail_message_id.id,
+                'name': attachment[0],
+                'datas_fname': attachment[0],
+                'datas': attachment[1],
+                'res_model': 'mail.message',
+                'res_id': mail.mail_message_id.id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
@@ -399,7 +410,7 @@ class email_template(osv.osv):
             mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
 
         if force_send:
-            mail_mail.send(cr, uid, [msg_id], context=context)
+            mail_mail.send(cr, uid, [msg_id], recipient_ids=recipient_ids, context=context)
         return msg_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
