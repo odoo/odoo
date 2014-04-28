@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,33 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
+import controllers
 
-{
-    'name': 'Audit Trail',
-    'version': '1.0',
-    'category': 'Tools',
-    'description': """
-This module lets administrator track every user operation on all the objects of the system.
-===========================================================================================
-
-The administrator can subscribe to rules for read, write and delete on objects 
-and can check logs.
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'data': [
-        'wizard/audittrail_view_log_view.xml',
-        'audittrail_view.xml',
-        'security/ir.model.access.csv',
-    ],
-    'demo': ['audittrail_demo.xml'],
-    'installable': True,
-    'auto_install': False,
-    'images': ['images/audittrail1.jpeg','images/audittrail2.jpeg','images/audittrail3.jpeg'],
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
