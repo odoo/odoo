@@ -384,47 +384,17 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             return this.message('help_canceled');
         },
 
-        //the client is starting to weight
-        weighting_start: function(){
-            var ret = new $.Deferred();
-            if(!this.weighting){
-                this.weighting = true;
-                this.message('weighting_start').always(function(){
-                    ret.resolve();
-                });
-            }else{
-                console.error('Weighting already started!!!');
-                ret.resolve();
-            }
-            return ret;
-        },
-
-        // the client has finished weighting products
-        weighting_end: function(){
-            var ret = new $.Deferred();
-            if(this.weighting){
-                this.weighting = false;
-                this.message('weighting_end').always(function(){
-                    ret.resolve();
-                });
-            }else{
-                console.error('Weighting already ended !!!');
-                ret.resolve();
-            }
-            return ret;
-        },
-
-        //returns the weight on the scale. 
-        // is called at regular interval (up to 10x/sec) between a weighting_start()
-        // and a weighting_end()
-        weighting_read_kg: function(){
+        // returns the weight on the scale. 
+        scale_read: function(){
             var self = this;
             var ret = new $.Deferred();
-            this.message('weighting_read_kg',{})
+            console.log('scale_read');
+            this.message('scale_read',{})
                 .then(function(weight){
+                    console.log(weight)
                     ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
                 }, function(){ //failed to read weight
-                    ret.resolve(self.use_debug_weight ? self.debug_weight : 0.0);
+                    ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, unit:'Kg', info:'ok'});
                 });
             return ret;
         },
