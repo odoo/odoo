@@ -545,7 +545,7 @@
 
             observer.disconnect();
             var editor = this.rte.editor;
-            var root = editor.element.$;
+            var root = editor.element && editor.element.$;
             editor.destroy();
             // FIXME: select editables then filter by dirty?
             var defs = this.rte.fetch_editables(root)
