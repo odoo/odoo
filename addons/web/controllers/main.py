@@ -619,7 +619,6 @@ class Home(http.Controller):
         return make_conditional(
             response, bundle.last_modified, bundle.checksum, max_age=60*5)
 
-
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/csslist', type='json', auth="none")
@@ -706,6 +705,10 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
         return openerp.service.common.exp_version()
+
+    @http.route('/web/tests', type='http', auth="none")
+    def index(self, mod=None, **kwargs):
+        return request.render('web.qunit_suite')
 
 class Proxy(http.Controller):
 

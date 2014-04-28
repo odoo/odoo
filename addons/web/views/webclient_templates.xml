@@ -212,5 +212,55 @@
             </t>
         </template>
 
+        <template id="web.qunit_suite">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title>OpenERP Web Tests</title>
+
+                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                    <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>
+                    <script src="/web/static/lib/qunit/qunit.js"></script>
+
+                    <t t-call="web.assets_backend"/>
+
+                    <script type="text/javascript" id="qunit_config">
+                        QUnit.config.testTimeout = 5 * 60 * 1000;
+                        QUnit.moduleDone(function(result) {
+                            console.log("%s (%s/%s passed tests)", result.name, result.passed, result.total);
+                        });
+                        QUnit.done(function(result) {
+                            if (result.failed === 0) {
+                                console.log('ok');
+                            }
+                        });
+                        openerp.web.qweb.add_template("/web/webclient/qweb");
+                    </script>
+
+                    <script type="text/javascript" src="/web/static/test/testing.js"></script>
+                    <script type="text/javascript" src="/web/static/test/framework.js"></script>
+                    <script type="text/javascript" src="/web/static/test/registry.js"></script>
+                    <script type="text/javascript" src="/web/static/test/form.js"></script>
+                    <script type="text/javascript" src="/web/static/test/data.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
+                    <script type="text/javascript" src="/web/static/test/formats.js"></script>
+                    <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
+                    <script type="text/javascript" src="/web/static/test/evals.js"></script>
+                    <script type="text/javascript" src="/web/static/test/search.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
+                    <script type="text/javascript" src="/web/static/test/mutex.js"></script>
+                </head>
+
+                <body id="oe" class="openerp">
+                    <div id="qunit"></div>
+                    <div id="qunit-fixture"></div>
+                </body>
+            </html>
+
+        </template>
+
     </data>
 </openerp>

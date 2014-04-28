@@ -11,6 +11,5 @@ Test suite example, same code as that used in the testing documentation.
     'data' : [
         'views/web_tests_demo.xml',
     ],
-    'test': ['static/test/demo.js'],
     'qweb': ['static/src/xml/demo.xml'],
 }
