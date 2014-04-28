@@ -66,6 +66,7 @@ class sale_order(osv.Model):
                 values['tax_id'] = [(6, 0, values['tax_id'])]
             return values
 
+        quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             line_id = so._cart_find_product_line(product_id)
@@ -76,7 +77,6 @@ class sale_order(osv.Model):
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
 
             # compute new quantity
-            quantity = 0
             if set_qty:
                 quantity = set_qty
             elif add_qty != None:
@@ -91,7 +91,7 @@ class sale_order(osv.Model):
                 values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 
-            return quantity
+        return quantity
 
     def _cart_accessories(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -111,45 +111,64 @@ class website(orm.Model):
         return [("sale_ok", "=", True)]
 
     def sale_get_order(self, cr, uid, ids, force_create=False, code=None, context=None):
+        sale_order_obj = self.pool['sale.order']
         sale_order_id = request.session.get('sale_order_id')
         sale_order = None
         # create so if needed
         if not sale_order_id and (force_create or code):  
+            # TODO cache partner_id session
+            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+
             for w in self.browse(cr, uid, ids):
-                # TODO cache partner_id session
-                partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
                 values = {
                     'user_id': w.user_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': partner.property_product_pricelist.id,
                 }
-                sale_order_id = self.pool['sale.order'].create(cr, SUPERUSER_ID, values, context=context)
-                values = self.pool['sale.order'].onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
-                self.pool['sale.order'].write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
+                sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
+                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
+                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
                 request.session['sale_order_id'] = sale_order_id
         if sale_order_id:
-            sale_order = self.pool['sale.order'].browse(cr, SUPERUSER_ID, sale_order_id, context=context)
+            # TODO cache partner_id session
+            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+
+            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
             if not sale_order.exists():
                 request.session['sale_order_id'] = None
                 return None
-            # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
+
+            def update_pricelist(pricelist_id):
+                values = {'pricelist_id': pricelist_id}
+                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
+                sale_order.write(values)
+                for line in sale_order.order_line:
+                    sale_order._cart_update(product_id=line.product_id.id, add_qty=0)
+
             # check for change of pricelist with a coupon
-            # TODO cache sale_order.pricelist_id.code in session
             if code and code != sale_order.pricelist_id.code:
                 pricelist_ids = self.pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', code)], context=context)
                 if pricelist_ids:
                     pricelist_id = pricelist_ids[0]
-                    values = {'pricelist_id': pricelist_id}
-                    values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
-                    sale_order.write(values)
-                    for line in sale_order.order_line:
-                        sale_order._cart_update(cr, uid, sale_order.product_id, add_qty=0)
+                    request.session['sale_order_code_pricelist_id'] = pricelist_id
+                    update_pricelist(pricelist_id)
+                request.session['sale_order_code_pricelist_id'] = False
 
             # check for change of partner_id ie after signup
             if sale_order.partner_id.id !=  partner.id:
-                values = self.pool['sale.order'].onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
-                self.pool['sale.order'].write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
+                flag_pricelist = False
+                pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+                if pricelist_id != sale_order.pricelist_id.id:
+                    flag_pricelist = True
+                fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
+
+                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
+                values['partner_id'] = partner.id
+                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
+
+                if flag_pricelist or values.get('fiscal_position') != fiscal_position:
+                    update_pricelist(pricelist_id)
+
         return sale_order
 
     def sale_get_transaction(self, cr, uid, ids, context=None):
@@ -167,6 +186,7 @@ class website(orm.Model):
         request.session.update({
             'sale_order_id': False,
             'sale_transaction_id': False,
+            'sale_order_code_pricelist_id': False,
         })
 
 # vim:et:
