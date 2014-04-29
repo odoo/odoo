@@ -72,7 +72,6 @@ Main Features
         'res_partner_view.xml',
         'views/report_statement.xml',
         'views/report_usersproduct.xml',
-        'views/report_closedcashbox.xml',
         'views/report_receipt.xml',
         'views/report_saleslines.xml',
         'views/report_detailsofsales.xml',

@@ -21,7 +21,6 @@
 
 import pos_users_product
 import account_statement
-import all_closed_cashbox_of_the_day
 import pos_receipt
 import pos_invoice
 import pos_lines
