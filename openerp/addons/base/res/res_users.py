@@ -94,7 +94,7 @@ class groups(osv.osv):
     }
 
     _sql_constraints = [
-        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique !')
+        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
     ]
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
