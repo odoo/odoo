@@ -1890,7 +1890,7 @@
 .openerp .oe_form > :not(.oe_form_nosheet) header {
   padding-left: 2px;
 }
-.openerp .oe_form > :not(.oe_form_nosheet) header ul:not(.oe_tooltip_technical) {
+.openerp .oe_form > :not(.oe_form_nosheet) header ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu) {
   display: inline-block;
   float: right;
 }
@@ -3307,6 +3307,8 @@ body.oe_single_form .oe_single_form_container {
   background: white;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   background-color: transparent;
+  /*We need a greater z-index in order for tooltip to go over bootstrap modal z-index*/
+  z-index: 1500;
 }
 .tooltip .tooltip-inner {
   text-align: left !important;
