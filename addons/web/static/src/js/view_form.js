@@ -1870,11 +1870,19 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         widget = widget || this;
         trigger = trigger || this.$el;
         var container = 'body';
-        //in the case we have a modal currently showing, attach tooltip
-        //to the modal to prevent the tooltip to show in the body in the
-        //case we close the modal too fast
-        if (window.$('.modal.in').length>0){
-            container = window.$('.modal.in:last()');
+        /*TODO: need to be refactor
+        in the case we can find the view form in the parent, 
+        attach the element to it (to prevent tooltip to keep showing
+        when switching view) or if we have a modal currently showing,
+        attach tooltip to the modal to prevent the tooltip to show in the body in the
+        case we close the modal too fast*/
+        if ($(trigger).parents('.oe_view_manager_view_form').length > 0){
+            container = $(trigger).parents('.oe_view_manager_view_form');
+        }
+        else {
+            if (window.$('.modal.in').length>0){
+                container = window.$('.modal.in:last()');
+            }
         }
         options = _.extend({
                 delay: { show: 500, hide: 0 },
@@ -3613,6 +3621,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 250
         });
+        // set position for list of suggestions box
+        this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
