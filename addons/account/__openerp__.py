@@ -123,7 +123,6 @@ for a particular financial year and for preparation of vouchers there is a modul
         'account_bank_view.xml',
         'res_config_view.xml',
         'account_pre_install.yml',
-
         'views/report_vat.xml',
         'views/report_invoice.xml',
         'views/report_trialbalance.xml',
