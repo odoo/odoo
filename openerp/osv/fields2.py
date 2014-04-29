@@ -463,20 +463,8 @@ class Field(object):
     # Computation of field values
     #
 
-    def compute_value(self, records, check_exists=False):
-        """ Invoke the compute method on `records`. If `check` is ``True``, the
-            method filters out non-existing records before computing them.
-        """
-        # if required, keep new and existing records only
-        if check_exists:
-            all_recs = records
-            new_recs = [rec for rec in records if not rec.id]
-            records = sum(new_recs, records.exists())
-
-            # mark non-existing records in cache
-            exc = MissingError("Computing a field on non-existing records.")
-            (all_recs - records)._cache.update(FailedValue(exc))
-
+    def compute_value(self, records):
+        """ Invoke the compute method on `records`. """
         # mark the field failed in cache, so that access before computation
         # raises an exception
         exc = Warning("Field %s is accessed before being computed." % self)
@@ -497,7 +485,7 @@ class Field(object):
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
                 recs_todo._recompute_done(self)
-                self.compute_value(recs_todo, check_exists=True)
+                self.compute_value(recs_todo.exists())
                 if self in record._cache:
                     return
             record._prefetch_field(self)
@@ -509,7 +497,7 @@ class Field(object):
                     self.compute_value(record)
                 else:
                     recs = record._in_cache_without(self)
-                    self.compute_value(recs, check_exists=True)
+                    self.compute_value(recs.exists())
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """

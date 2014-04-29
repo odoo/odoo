@@ -4741,27 +4741,30 @@ class BaseModel(object):
         self.copy_translations(cr, uid, id, new_id, context)
         return new_id
 
+    @api.multi
     @api.returns('self')
-    def exists(self, cr, uid, ids, context=None):
-        """Checks whether the given id or ids exist in this model,
-           and return the list of ids that do. This is simple to use for
-           a truth test on a Record::
+    def exists(self):
+        """ Return the subset of records in `self` that exist, and mark deleted
+            records as such in cache. It can be used as a test on records::
 
-               if record.exists():
-                   pass
+                if record.exists():
+                    ...
 
-           :param ids: id or list of ids to check for existence
-           :type ids: int or [int]
-           :return: the list of ids that currently exist, out of
-                    the given `ids`
+            By convention, new records are returned as existing.
         """
-        if type(ids) in (int, long):
-            ids = [ids]
+        ids = filter(None, self._ids)           # ids to check in database
         if not ids:
-            return []
-        query = 'SELECT id FROM "%s"' % self._table
-        cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
-        return [x[0] for x in cr.fetchall()]
+            return self
+        query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
+        self._cr.execute(query, (ids,))
+        ids = ([r[0] for r in self._cr.fetchall()] +    # ids in database
+               [id for id in self._ids if not id])      # new ids
+        existing = self.browse(ids)
+        if len(existing) < len(self):
+            # mark missing records in cache with a failed value
+            exc = MissingError(_("Record does not exist or has been deleted."))
+            (self - existing)._cache.update(FailedValue(exc))
+        return existing
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
         _logger.warning("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
@@ -5517,7 +5520,7 @@ class BaseModel(object):
         for env in list(self.env.all):
             while env.todo:
                 field, recs = env.todo.popitem()
-                field.compute_value(recs, check_exists=True)
+                field.compute_value(recs.exists())
 
     #
     # Generic onchange method
