@@ -21,6 +21,7 @@
 
 from openerp.addons.mail.tests.common import TestMail
 from openerp.tools import mute_logger
+import socket
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -400,13 +401,15 @@ class TestMailgateway(TestMail):
                           to='noone@example.com', subject='spam',
                           extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>' % frog_group.id,
                           msg_id='<1.1.JavaMail.new@agrolait.com>')
-        # There are 6.1 messages, activate compat mode
+
+        # When 6.1 messages are present, compat mode is available
+        # Create a fake 6.1 message
         tmp_msg_id = self.mail_message.create(cr, uid, {'message_id': False, 'model': 'mail.group', 'res_id': frog_group.id})
         # Do: compat mode accepts partial-matching emails
         frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other5@gmail.com',
                                          msg_id='<1.2.JavaMail.new@agrolait.com>',
                                          to='noone@example.com>', subject='spam',
-                                         extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>' % frog_group.id)
+                                         extra='In-Reply-To: <12321321-openerp-%d-mail.group@%s>' % (frog_group.id, socket.gethostname()))
         self.mail_message.unlink(cr, uid, [tmp_msg_id])
         # Test: no group 'Re: news' created, still only 1 Frogs group
         self.assertEqual(len(frog_groups), 0,
@@ -417,6 +420,17 @@ class TestMailgateway(TestMail):
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: one new message
         self.assertEqual(len(frog_group.message_ids), 4, 'message_process: group should contain 4 messages after reply')
+
+        # 6.1 compat mode should not work if hostname does not match!
+        tmp_msg_id = self.mail_message.create(cr, uid, {'message_id': False, 'model': 'mail.group', 'res_id': frog_group.id})
+        self.assertRaises(ValueError,
+                          format_and_process,
+                          MAIL_TEMPLATE, email_from='other5@gmail.com',
+                          msg_id='<1.3.JavaMail.new@agrolait.com>',
+                          to='noone@example.com>', subject='spam',
+                          extra='In-Reply-To: <12321321-openerp-%d-mail.group@neighbor.com>' % frog_group.id)
+        self.mail_message.unlink(cr, uid, [tmp_msg_id])
+
 
         # Do: due to some issue, same email goes back into the mailgateway
         frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other4@gmail.com',
@@ -445,7 +459,7 @@ class TestMailgateway(TestMail):
 
         # Do: post a new message, with a known partner -> duplicate emails -> partner
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
-                           to='erroneous@example.com>', subject='Re: news (2)',
+                           subject='Re: news (2)',
                            msg_id='<1198923581.41972151344608186760.JavaMail.new1@agrolait.com>',
                            extra='In-Reply-To: <1198923581.41972151344608186799.JavaMail.diff1@agrolait.com>')
         frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
@@ -456,10 +470,9 @@ class TestMailgateway(TestMail):
 
         # Do: post a new message, with a known partner -> duplicate emails -> user
         frog_group.message_unsubscribe([extra_partner_id])
-        raoul_email = self.user_raoul.email
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
-                           to='erroneous@example.com>', subject='Re: news (3)',
+                           to='groups@example.com', subject='Re: news (3)',
                            msg_id='<1198923581.41972151344608186760.JavaMail.new2@agrolait.com>',
                            extra='In-Reply-To: <1198923581.41972151344608186799.JavaMail.diff1@agrolait.com>')
         frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
@@ -474,7 +487,7 @@ class TestMailgateway(TestMail):
         raoul_email = self.user_raoul.email
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
-                           to='erroneous@example.com>', subject='Re: news (3)',
+                           to='groups@example.com', subject='Re: news (3)',
                            msg_id='<1198923581.41972151344608186760.JavaMail.new3@agrolait.com>',
                            extra='In-Reply-To: <1198923581.41972151344608186799.JavaMail.diff1@agrolait.com>')
         frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])

@@ -46,7 +46,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
-    'depends': ['hr', 'account_accountant'],
+    'depends': ['hr', 'account_accountant', 'report'],
     'data': [
         'security/ir.model.access.csv',
         'hr_expense_data.xml',
@@ -58,6 +58,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'security/ir_rule.xml',
         'report/hr_expense_report_view.xml',
         'hr_expense_installer_view.xml',
+        'views/report_expense.xml',
     ],
     'demo': ['hr_expense_demo.xml'],
     'test': [
@@ -68,4 +69,5 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'auto_install': False,
     'application': True,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

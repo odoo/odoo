@@ -6,7 +6,7 @@ if (typeof openerp === "undefined") {
     var error = "openerp is undefined"
                 + "\nhref: " + window.location.href
                 + "\nreferrer: " + document.referrer
-                + "\nlocalStorage: " + JSON.stringify(window.localStorage);
+                + "\nlocalStorage: " + window.localStorage.getItem("tour");
     if (typeof $ !== "undefined") {
         error += '\n\n' + $("body").html();
     }
@@ -15,7 +15,7 @@ if (typeof openerp === "undefined") {
 
 var website = window.openerp.website;
 
-// don't rewrite website.Tour in test mode
+// don't rewrite T in test mode
 if (typeof website.Tour !== "undefined") {
     return;
 }
@@ -23,20 +23,7 @@ if (typeof website.Tour !== "undefined") {
 // don't need template to use bootstrap Tour in automatic mode
 if (typeof QWeb2 !== "undefined") {
     website.add_template_file('/website/static/src/xml/website.tour.xml');
-
 }
-
-// don't need to use bootstrap Tour to launch an automatic tour
-function bootstrap_tour_stub () {
-    if (typeof Tour === "undefined") {
-        window.Tour = function Tour() {};
-        Tour.prototype.addSteps = function () {};
-        Tour.prototype.end = function () {};
-        Tour.prototype.goto = function () {};
-    }
-}
-
-
 
 if (website.EditorBar) {
     website.EditorBar.include({
@@ -44,19 +31,18 @@ if (website.EditorBar) {
         start: function () {
             var self = this;
             var menu = $('#help-menu');
-            _.each(this.tours, function (tour) {
+            _.each(T.tours, function (tour) {
+                if (tour.mode === "test") {
+                    return;
+                }
                 var $menuItem = $($.parseHTML('<li><a href="#">'+tour.name+'</a></li>'));
                 $menuItem.click(function () {
-                    tour.reset();
-                    tour.run();
+                    T.reset();
+                    T.run(tour.id);
                 });
                 menu.append($menuItem);
             });
             return this._super();
-        },
-        registerTour: function (tour) {
-            website.Tour.add(tour);
-            this.tours.push(tour);
         }
     });
 }
@@ -94,349 +80,401 @@ $.ajaxSetup({
     }
 });
 
-website.Tour = openerp.Class.extend({
-    steps: [],
-    defaultDelay: 50, //ms
-    defaultOverLaps: 5000, //ms
-    localStorage: window.localStorage,
-    init: function () {},
+/////////////////////////////////////////////////
 
-    run: function (automatic) {
-        this.reset();
+var localStorage = window.localStorage;
 
-        for (var k in this.localStorage) {
-            if (!k.indexOf("tour-") && k.indexOf("-test") > -1) return;
-        }
-
-        website.Tour.busy = true;
-
-        if (automatic) {
-            this.localStorage.setItem("tour-"+this.id+"-test-automatic", true);
+var T = website.Tour = {
+    tours: {},
+    defaultDelay: 50,
+    retryRunningDelay: 1000,
+    errorDelay: 5000,
+    state: null,
+    $element: null,
+    timer: null,
+    testtimer: null,
+    currentTimer: null,
+    register: function (tour) {
+        if (tour.mode !== "test") tour.mode = "tutorial";
+        T.tours[tour.id] = tour;
+    },
+    run: function (tour_id, mode) {
+        var tour = T.tours[tour_id];
+        this.time = new Date().getTime();
+        if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
+            var href = "/"+T.getLang()+tour.path;
+            console.log("Tour Begin from run method (redirection to "+href+")");
+            T.saveState(tour.id, mode || tour.mode, -1);
+            window.location.href = href;
         } else {
-            this.localStorage.removeItem("tour-"+this.id+"-test-automatic");
+            console.log("Tour Begin from run method");
+            T.saveState(tour.id, mode || tour.mode, 0);
+            T.running();
         }
-        this.automatic = automatic;
-
-        if (this.path) {
-            // redirect to begin of the tour in function of the language
-            if (!this.testUrl(this.path+"(#.*)?$")) {
-                var path = this.path.split('#');
-                window.location.href = "/"+this.getLang()+path[0] + "#tutorial."+this.id+"=true&" + path.slice(1, path.length).join("#");
-                return;
-            }
-        }
-
-        var self = this;
-        this.localStorage.setItem("tour-"+this.id+"-test", 0);
-        website.Tour.waitReady.call(this, function () {self._running();});
     },
-    running: function () {
-        var self = this;
-        if (+this.localStorage.getItem("tour-"+this.id+"-test") >= this.steps.length-1) {
-            this.endTour();
+    registerSteps: function (tour) {
+        if (tour.register) {
             return;
         }
+        tour.register = true;
 
-        if (website.Tour.is_busy()) return;
+        for (var index=0, len=tour.steps.length; index<len; index++) {
+            var step = tour.steps[index];
+            step.id = index;
 
-        // launch tour with url
-        this.checkRunningUrl();
-
-        // mark tour as busy (only one test running)
-        if (this.localStorage.getItem("tour-"+this.id+"-test") != null) {
-            website.Tour.busy = true;
-            this.automatic = !!this.localStorage.getItem("tour-"+this.id+"-test-automatic");
-        }
-
-        if (!this.testPathUrl()) {
-            if (this.automatic) {
-                this.timer = setTimeout(function () {
-                    self.reset();
-                    throw new Error("Wrong url for running " + self.id
-                        + '\ntestPath: ' + self.testPath
-                        + '\nhref: ' + window.location.href
-                        + "\nreferrer: " + document.referrer
-                    );
-                },this.defaultOverLaps);
+            if (!step.waitNot && index > 0 && tour.steps[index-1] &&
+                tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
+                step.waitNot = '.popover.tour.fade.in:visible';
             }
-            return;
-        }
-
-        var self = this;
-        website.Tour.waitReady.call(this, function () {self._running();});
-    },
-    _running: function () {
-        var stepId = this.localStorage.getItem("tour-"+this.id+"-test");
-
-        if (stepId != null) {
-            this.registerTour();
-            this.nextStep(stepId,  this.automatic ? this.autoNextStep : null, this.automatic ? this.defaultOverLaps : null);
-        }
-    },
-
-    reset: function () {
-        website.Tour.busy = false;
-        for (var k in this.steps) {
-            this.steps[k].busy = false;
-        }
-        clearTimeout(self.timer);
-        clearTimeout(self.testtimer);
-
-        for (var k in this.localStorage) {
-            if (!k.indexOf("tour-") || !k.indexOf(this.id)) {
-                this.localStorage.removeItem(k);
-            }
-        }
-
-        $('.popover.tour').remove();
-    },
-
-    getLang: function () {
-        return $("html").attr("lang").replace(/-/, '_');
-    },
-    testUrl: function (url) {
-        return new RegExp("(/"+this.getLang()+")?"+url, "i").test(window.location.href);
-    },
-    testPathUrl: function () {
-        if (!this.testPath || this.testUrl(this.testPath)) return true;
-    },
-    checkRunningUrl: function () {
-        if (window.location.hash.indexOf("tutorial."+this.id+"=true") > -1) {
-            this.localStorage.setItem("tour-"+this.id+"-test", 0);
-            window.location.hash = window.location.hash.replace(/tutorial.+=true&?/, '');
-        }
-    },
-
-    registerTour: function () {
-        if (this.automatic) {
-            bootstrap_tour_stub();
-        }
-        this.tour = new Tour({
-            name: this.id,
-            storage: this.tourStorage,
-            keyboard: false,
-            template: this.popover(),
-            onHide: function () {
-                window.scrollTo(0, 0);
-            }
-        });
-        this.registerSteps();
-    },
-    registerSteps: function () {
-        for (var index=0, len=this.steps.length; index<len; index++) {
-            var step = this.steps[index];
-            step.stepId = step.stepId || ""+index;
-
-            if (!step.waitNot && index > 0 && this.steps[index-1] &&
-                this.steps[index-1].popover && this.steps[index-1].popover.next) {
-                step.waitNot = '.popover.tour:visible';
-            }
-            if (!step.waitFor && index > 0 && this.steps[index-1].snippet) {
+            if (!step.waitFor && index > 0 && tour.steps[index-1].snippet) {
                 step.waitFor = '.oe_overlay_options .oe_options:visible';
             }
 
-            step._title = step._title || step.title;
-            step.title = this.popoverTitle({ title: step._title });
-            step.template = step.template || this.popover( step.popover );
 
-            if (!step.element) step.orphan = true;
-            if (step.snippet) {
+            var snippet = step.element && step.element.match(/#oe_snippets (.*) \.oe_snippet_thumbnail/);
+            if (snippet) {
+                step.snippet = snippet[1];
+            } else if (step.snippet) {
                 step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
             }
 
+            if (!step.element) {
+                step.element = "body";
+                step.orphan = true;
+                step.backdrop = true;
+            }
         }
-
-        if (this.steps[index-1] &&
-            this.steps[index-1].popover && this.steps[index-1].popover.next) {
+        if (tour.steps[index-1] &&
+            tour.steps[index-1].popover && tour.steps[index-1].popover.next) {
             var step = {
-                stepId:    ""+index,
-                waitNot:   '.popover.tour:visible'
+                _title: "",
+                id: index,
+                waitNot: '.popover.tour.fade.in:visible'
             };
-            this.steps.push(step);
+            tour.steps.push(step);
         }
 
-        this.tour.addSteps(this.steps);
+        // rendering bootstrap tour and popover
+        if (tour.mode !== "test") {
+            for (var index=0, len=tour.steps.length; index<len; index++) {
+                var step = tour.steps[index];
+                step._title = step._title || step.title;
+                step.title = T.popoverTitle(tour, { title: step._title });
+                step.template = step.template || T.popover( step.popover );
+            }
+        }
     },
-
-    popoverTitle: function (options) {
-        try {
-            return openerp.qweb.render('website.tour_popover_title', options);
-        } catch (e) {
-            if (!this.automatic) throw e;
-            return options.title;
+    closePopover: function () {
+        if (T.$element) {
+            T.$element.popover('destroy');
+            T.$element.removeData("tour");
+            T.$element.removeData("tour-step");
+            $(".tour-backdrop").remove();
+            $(".popover.tour").remove();
+            T.$element = null;
         }
+    },
+    autoTogglePopover: function () {
+        var state = T.getState();
+        var step = state.step;
+
+        if (T.$element &&
+            T.$element.is(":visible") &&
+            T.$element.data("tour") === state.id &&
+            T.$element.data("tour-step") === step.id) {
+            T.repositionPopover();
+            return;
+        }
+
+        if (step.busy) {
+            return;
+        }
+
+        T.closePopover();
+
+        var $element = $(step.element).first();
+        if (!step.element || !$element.size() || !$element.is(":visible")) {
+            return;
+        }
+
+
+        T.$element = $element;
+        $element.data("tour", state.id);
+        $element.data("tour-step", step.id);
+        $element.popover({
+            placement: step.placement || "auto",
+            animation: true,
+            trigger: "manual",
+            title: step.title,
+            content: step.content,
+            html: true,
+            container: "body",
+            template: step.template,
+            orphan: step.orphan
+        }).popover("show");
+
+
+        var $tip = $element.data("bs.popover").tip();
+
+
+        // add popover style (orphan, static, backdrop)
+        if (step.orphan) {
+            $tip.addClass("orphan");
+        }
+
+        var node = $element[0];
+        var css;
+        do {
+            css = window.getComputedStyle(node);
+            if (!css || css.position == "fixed") {
+                $tip.addClass("fixed");
+                break;
+            }
+        } while ((node = node.parentNode) && node !== document);
+
+        if (step.backdrop) {
+            $("body").append('<div class="tour-backdrop"></div>');
+        }
+
+        if (step.backdrop || $element.parents("#website-top-navbar, .modal").size()) {
+            $tip.css("z-index", 2010);
+        }
+
+        // button click event
+        $tip.find("button")
+            .one("click", function () {
+                step.busy = true;
+                if (!$(this).is("[data-role='next']")) {
+                    clearTimeout(T.timer);
+                    T.endTour();
+                }
+                T.closePopover();
+            });
+
+        T.repositionPopover();
+    },
+    repositionPopover: function() {
+        var popover = T.$element.data("bs.popover");
+        var $tip = T.$element.data("bs.popover").tip();
+
+        if (popover.options.orphan) {
+            return $tip.css("top", $(window).outerHeight() / 2 - $tip.outerHeight() / 2);
+        }
+
+        var offsetBottom, offsetHeight, offsetRight, offsetWidth, originalLeft, originalTop, tipOffset;
+        offsetWidth = $tip[0].offsetWidth;
+        offsetHeight = $tip[0].offsetHeight;
+        tipOffset = $tip.offset();
+        originalLeft = tipOffset.left;
+        originalTop = tipOffset.top;
+        offsetBottom = $(document).outerHeight() - tipOffset.top - $tip.outerHeight();
+        if (offsetBottom < 0) {
+            tipOffset.top = tipOffset.top + offsetBottom;
+        }
+        offsetRight = $("html").outerWidth() - tipOffset.left - $tip.outerWidth();
+        if (offsetRight < 0) {
+            tipOffset.left = tipOffset.left + offsetRight;
+        }
+        if (tipOffset.top < 0) {
+            tipOffset.top = 0;
+        }
+        if (tipOffset.left < 0) {
+            tipOffset.left = 0;
+        }
+        $tip.offset(tipOffset);
+        if (popover.options.placement === "bottom" || popover.options.placement === "top") {
+                var left = T.$element.offset().left + T.$element.outerWidth()/2 - tipOffset.left;
+                $tip.find(".arrow").css("left", left ? left + "px" : "");
+        } else if (popover.options.placement !== "auto") {
+                var top = T.$element.offset().top + T.$element.outerHeight()/2 - tipOffset.top;
+                $tip.find(".arrow").css("top", top ? top + "px" : "");
+        }
+    },
+    popoverTitle: function (tour, options) {
+        return openerp.qweb ? openerp.qweb.render('website.tour_popover_title', options) : options.title;
     },
     popover: function (options) {
-        try {
-            return openerp.qweb.render('website.tour_popover', options);
-        } catch (e) {
-            if (!this.automatic) throw e;
-            return "";
-        }
+        return openerp.qweb ? openerp.qweb.render('website.tour_popover', options) : options.title;
     },
-
-    timer: null,
-    testtimer: null,
+    getLang: function () {
+        return $("html").attr("lang").replace(/-/, '_');
+    },
+    getState: function () {
+        var state = JSON.parse(localStorage.getItem("tour") || 'false') || {};
+        if (state) { this.time = state.time; }
+        var tour_id,mode,step_id;
+        if (!state.id && window.location.href.indexOf("#tutorial.") > -1) {
+            state = {
+                "id": window.location.href.match(/#tutorial\.(.*)=true/)[1],
+                "mode": "tutorial",
+                "step_id": 0
+            };
+            window.location.hash = "";
+            console.log("Tour Begin from url hash");
+            T.saveState(state.id, state.mode, state.step_id);
+        }
+        if (!state.id) {
+            return;
+        }
+        state.tour = T.tours[state.id];
+        state.step = state.tour && state.tour.steps[state.step_id === -1 ? 0 : state.step_id];
+        return state;
+    },
+    error: function (step, message) {
+        var state = T.getState();
+        message += '\n tour: ' + state.id
+            + '\n step: ' + step.id + ": '" + (step._title || step.title) + "'"
+            + '\n href: ' + window.location.href
+            + '\n referrer: ' + document.referrer
+            + '\n element: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
+            + '\n waitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
+            + '\n waitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
+            + "\n localStorage: " + JSON.stringify(localStorage)
+            + '\n\n' + $("body").html();
+        T.reset();
+        throw new Error(message);
+    },
+    lists: function () {
+        var tour_ids = [];
+        for (var k in T.tours) {
+            tour_ids.push(k);
+        }
+        return tour_ids;
+    },
+    saveState: function (tour_id, mode, step_id) {
+        localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0, "time": this.time}));
+    },
+    reset: function () {
+        var state = T.getState();
+        if (state) {
+            for (var k in state.tour.steps) {
+                state.tour.steps[k].busy = false;
+            }
+        }
+        localStorage.removeItem("tour");
+        clearTimeout(T.timer);
+        clearTimeout(T.testtimer);
+        T.closePopover();
+    },
+    running: function () {
+        function run () {
+            var state = T.getState();
+            if (!state) return;
+            if (state.tour) {
+                console.log("Tour '"+state.id+"' is running");
+                T.registerSteps(state.tour);
+                T.nextStep();
+            } else {
+                console.log("Tour '"+state.id+"' wait for running (tour undefined)");
+                setTimeout(T.running, state.mode === "test" ? T.defaultDelay : T.retryRunningDelay);
+            }
+        }
+        setTimeout(function () {
+            if ($.ajaxBusy) {
+                $(document).ajaxStop(run);
+            } else {
+                run();
+            }
+        },0);
+    },
     check: function (step) {
         return (step &&
             (!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden"))) &&
             (!step.waitNot || !$(step.waitNot).size()) &&
             (!step.waitFor || $(step.waitFor).size()));
     },
-    waitNextStep: function (step, callback, overlaps) {
-        var self = this;
+    waitNextStep: function () {
+        var state = T.getState();
         var time = new Date().getTime();
         var timer;
+        var next = state.tour.steps[state.step.id+1];
+        var overlaps = state.mode === "test" ? T.errorDelay : 0;
 
         window.onbeforeunload = function () {
-            clearTimeout(self.timer);
-            clearTimeout(self.testtimer);
+            clearTimeout(T.timer);
+            clearTimeout(T.testtimer);
         };
 
-        // check popover activity
-        $(".popover.tour button")
-            .off()
-            .on("click", function () {
-                $(".popover.tour").remove();
-                if (step.busy) return;
-                if (!$(this).is("[data-role='next']")) {
-                    clearTimeout(self.timer);
-                    step.busy = true;
-                    self.tour.end();
-                    self.endTour(callback);
-                }
-            });
-
         function checkNext () {
-            clearTimeout(self.timer);
-            if (step.busy) return;
-            if (self.check(step)) {
-                step.busy = true;
+            T.autoTogglePopover();
+
+            clearTimeout(T.timer);
+            if (T.check(next)) {
+                clearTimeout(T.currentTimer);
                 // use an other timeout for cke dom loading
                 setTimeout(function () {
-                    self.nextStep(step.stepId, callback, overlaps);
-                }, self.defaultDelay);
+                    T.nextStep(next);
+                }, T.defaultDelay);
             } else if (!overlaps || new Date().getTime() - time < overlaps) {
-                if (self.current.element) {
-                    var $popover = $(".popover.tour");
-                    if(!$(self.current.element).is(":visible")) {
-                        $popover.data("hide", true).fadeOut(300);
-                    } else if($popover.data("hide")) {
-                        $popover.data("hide", false).fadeIn(150);
-                    }
-                }
-                self.timer = setTimeout(checkNext, self.defaultDelay);
+                T.timer = setTimeout(checkNext, T.defaultDelay);
             } else {
-                self.reset();
-                throw new Error("Can't arrive to step " + step.stepId + ": '" + step._title + "'"
-                    + '\nhref: ' + window.location.href
-                    + '\nelement: ' + Boolean(!step.element || ($(step.element).size() && $(step.element).is(":visible") && !$(step.element).is(":hidden")))
-                    + '\nwaitNot: ' + Boolean(!step.waitNot || !$(step.waitNot).size())
-                    + '\nwaitFor: ' + Boolean(!step.waitFor || $(step.waitFor).size())
-                    + '\n\n' + $("body").html()
-                );
+                T.error(next, "Can't reach the next step");
             }
         }
         checkNext();
     },
-    step: function (stepId) {
-        var steps = this.steps.slice(0,this.steps.length),
-            step;
-        while (step = steps.shift()) {
-            if (!stepId || step.stepId === stepId)
-                return step;
+    nextStep: function (step) {
+        var state = T.getState();
+
+        if (!state) {
+            return;
         }
-        return null;
-    },
-    next: function (stepId) {
-        var steps = this.steps.slice(0,this.steps.length),
-            step, next, index=0;
-        while (step = steps.shift()) {
-            if (!stepId || step.stepId === stepId) {
-                // clear popover (fix for boostrap tour if the element is removed before destroy popover)
-                $(".popover.tour").remove();
-                // go to step in bootstrap tour
-                this.tour.goto(index);
-                if (step.onload) step.onload();
-                next = steps.shift();
-                break;
-            }
-            index++;
+
+        step = step || state.step;
+        T.saveState(state.id, state.mode, step.id);
+
+        if (step.id !== state.step_id) {
+            console.log("Tour Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
         }
-        return next;
-    },
-    nextStep: function (stepId, callback, overlaps) {
-        var self = this;
-        if (!this.localStorage.getItem("tour-"+this.id+"-test")) return;
 
-        this.localStorage.setItem("tour-"+this.id+"-test", stepId || 0);
+        T.autoTogglePopover(true);
 
-        this.current = this.step(stepId);
-        var next = this.next(stepId);
+        if (step.onload) {
+            step.onload();
+        }
 
+        var next = state.tour.steps[step.id+1];
         if (next) {
             setTimeout(function () {
-                    self.waitNextStep(next, callback, overlaps);
-                    if (callback) setTimeout(function(){callback.call(self, next);}, self.defaultDelay);
-            }, next && next.wait || 0);
+                    T.waitNextStep();
+                    if (state.mode === "test") {
+                        setTimeout(function(){
+                            T.autoNextStep(state.tour, step);
+                        }, T.defaultDelay);
+                    }
+            }, next.wait || 0);
         } else {
-            this.endTour();
+            T.endTour();
         }
     },
     endTour: function () {
-        var test = parseInt(this.localStorage.getItem("tour-"+this.id+"-test"),10) >= this.steps.length-1;
-        this.reset();
+        var state = T.getState();
+        var test = state.step.id >= state.tour.steps.length-1;
+        T.reset();
         if (test) {
             console.log('ok');
         } else {
             console.log('error');
         }
     },
-    autoNextStep: function () {
-        var self = this;
-        clearTimeout(self.testtimer);
+    autoNextStep: function (tour, step) {
+        clearTimeout(T.testtimer);
 
         function autoStep () {
-            var step = self.current;
             if (!step) return;
 
             if (step.autoComplete) {
                 step.autoComplete(tour);
             }
 
-            var $popover = $(".popover.tour");
-            if ($popover.find("button[data-role='next']:visible").size()) {
-                $popover.find("button[data-role='next']:visible").click();
-                $popover.remove();
-            }
+            $(".popover.tour [data-role='next']").click();
 
             var $element = $(step.element);
             if (!$element.size()) return;
 
             if (step.snippet) {
-            
-                var selector = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
-                self.autoDragAndDropSnippet(selector);
-            
-            } else if (step.element.match(/#oe_snippets .* \.oe_snippet_thumbnail/)) {
-            
-                self.autoDragAndDropSnippet($element);
-            
-            } else if (step.sampleText) {
-            
-                $element.trigger($.Event("keydown", { srcElement: $element }));
-                if ($element.is("input") ) {
-                    $element.val(step.sampleText);
-                } if ($element.is("select")) {
-                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
-                    $element.val(step.sampleText);
-                } else {
-                    $element.html(step.sampleText);
-                }
-                setTimeout(function () {
-                    $element.trigger($.Event("keyup", { srcElement: $element }));
-                    $element.trigger($.Event("change", { srcElement: $element }));
-                }, self.defaultDelay<<1);
+
+                T.autoDragAndDropSnippet($element);
             
             } else if ($element.is(":visible")) {
 
@@ -453,8 +491,25 @@ website.Tour = openerp.Class.extend({
                     $element.trigger($.Event("mouseleave", { srcElement: $element[0] }));
                 }, 1000);
             }
+            if (step.sampleText) {
+            
+                $element.trigger($.Event("keydown", { srcElement: $element }));
+                if ($element.is("input") ) {
+                    $element.val(step.sampleText);
+                } if ($element.is("select")) {
+                    $element.find("[value='"+step.sampleText+"'], option:contains('"+step.sampleText+"')").attr("selected", true);
+                    $element.val(step.sampleText);
+                } else {
+                    $element.html(step.sampleText);
+                }
+                setTimeout(function () {
+                    $element.trigger($.Event("keyup", { srcElement: $element }));
+                    $element.trigger($.Event("change", { srcElement: $element }));
+                }, self.defaultDelay<<1);
+            
+            }
         }
-        self.testtimer = setTimeout(autoStep, 100);
+        T.testtimer = setTimeout(autoStep, 100);
     },
     autoDragAndDropSnippet: function (selector) {
         var $thumbnail = $(selector).first();
@@ -464,64 +519,11 @@ website.Tour = openerp.Class.extend({
         var $dropZone = $(".oe_drop_zone").first();
         var dropPosition = $dropZone.position();
         $dropZone.trigger($.Event("mouseup", { which: 1, pageX: dropPosition.left, pageY: dropPosition.top }));
-    },
-
-});
-
-
-website.Tour.tours = {};
-website.Tour.busy = false;
-website.Tour.add = function (tour) {
-    website.Tour.waitReady(function () {
-        tour = tour.id ? tour : new tour();
-        if (!website.Tour.tours[tour.id]) {
-            website.Tour.tours[tour.id] = tour;
-            tour.running();
-        }
-    });
-};
-website.Tour.get = function (id) {
-    return website.Tour.tours[id];
-};
-website.Tour.each = function (callback) {
-    website.Tour.waitReady(function () {
-        for (var k in website.Tour.tours) {
-            callback.call(website.Tour.tours[k]);
-        }
-    });
-};
-website.Tour.waitReady = function (callback) {
-    var self = this;
-    $(document).ready(function () {
-        if ($.ajaxBusy) {
-            $(document).ajaxStop(function() {
-                setTimeout(function () {
-                    callback.call(self);
-                },0);
-            });
-        }
-        else {
-            setTimeout(function () {
-                callback.call(self);
-            },0);
-        }
-    });
-};
-website.Tour.run_test = function (id) {
-    website.Tour.waitReady(function () {
-        if (!website.Tour.is_busy()) {
-            website.Tour.tours[id].run(true);
-        }
-    });
-};
-website.Tour.is_busy = function () {
-    for (var k in this.localStorage) {
-        if (!k.indexOf("tour-")) {
-            return k;
-        }
     }
-    return website.Tour.busy;
 };
+
+//$(document).ready(T.running);
+website.ready().then(T.running);
 
 
 }());

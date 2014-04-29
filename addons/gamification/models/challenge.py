@@ -21,7 +21,8 @@
 
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT as DF
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
 from datetime import date, datetime, timedelta
@@ -131,9 +132,7 @@ class gamification_challenge(osv.Model):
         'user_ids': fields.many2many('res.users', 'user_ids',
             string='Users',
             help="List of users participating to the challenge"),
-        'autojoin_group_id': fields.many2one('res.groups',
-            string='Auto-subscription Group',
-            help='Group of users whose members will be automatically added to user_ids once the challenge is started'),
+        'user_domain': fields.char('User domain', help="Alternative to a list of users"),
 
         'period': fields.selection([
                 ('once', 'Non recurring'),
@@ -212,13 +211,12 @@ class gamification_challenge(osv.Model):
     def create(self, cr, uid, vals, context=None):
         """Overwrite the create method to add the user of groups"""
 
-        # add users when change the group auto-subscription
-        if vals.get('autojoin_group_id'):
-            new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
+        if vals.get('user_domain'):
+            user_ids = self._get_challenger_users(cr, uid, vals.get('user_domain'), context=context)
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
-            vals['user_ids'] += [(4, user.id) for user in new_group.users]
+            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
 
         create_res = super(gamification_challenge, self).create(cr, uid, vals, context=context)
 
@@ -234,25 +232,18 @@ class gamification_challenge(osv.Model):
         if isinstance(ids, (int,long)):
             ids = [ids]
 
-        # add users when change the group auto-subscription
-        if vals.get('autojoin_group_id'):
-            new_group = self.pool.get('res.groups').browse(cr, uid, vals['autojoin_group_id'], context=context)
+        if vals.get('user_domain'):
+            user_ids = self._get_challenger_users(cr, uid, vals.get('user_domain'), context=context)
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
-            vals['user_ids'] += [(4, user.id) for user in new_group.users]
+            vals['user_ids'] += [(4, user_id) for user_id in user_ids]
+
+        write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
 
         if vals.get('state') == 'inprogress':
-            # starting a challenge
-            if not vals.get('autojoin_group_id'):
-                # starting challenge, add users in autojoin group
-                if not vals.get('user_ids'):
-                    vals['user_ids'] = []
-                for challenge in self.browse(cr, uid, ids, context=context):
-                    if challenge.autojoin_group_id:
-                        vals['user_ids'] += [(4, user.id) for user in challenge.autojoin_group_id.users]
-
-            self.generate_goals_from_challenge(cr, uid, ids, context=context)
+            self._recompute_challenge_users(cr, uid, ids, context=context)
+            self._generate_goals_from_challenge(cr, uid, ids, context=context)
 
         elif vals.get('state') == 'done':
             self.check_challenge_reward(cr, uid, ids, force=True, context=context)
@@ -261,14 +252,6 @@ class gamification_challenge(osv.Model):
             # resetting progress
             if self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context):
                 raise osv.except_osv("Error", "You can not reset a challenge with unfinished goals.")
-        
-        write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
-
-        # subscribe new users to the challenge
-        if vals.get('user_ids'):
-            # done with browse after super if changes in groups
-            for challenge in self.browse(cr, uid, ids, context=context):
-                self.message_subscribe_users(cr, uid, [challenge.id], [user.id for user in challenge.user_ids], context=context)
 
         return write_res
 
@@ -324,11 +307,10 @@ class gamification_challenge(osv.Model):
         # update every running goal already generated linked to selected challenges
         goal_obj.update(cr, uid, goal_ids, context=context)
 
+        self._recompute_challenge_users(cr, uid, ids, context=context)
+        self._generate_goals_from_challenge(cr, uid, ids, context=context)
+
         for challenge in self.browse(cr, uid, ids, context=context):
-            if challenge.autojoin_group_id:
-                # check in case of new users in challenge, this happens if manager removed users in challenge manually
-                self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
-            self.generate_goals_from_challenge(cr, uid, [challenge.id], context=context)
 
             # goals closed but still opened at the last report date
             closed_goals_to_report = goal_obj.search(cr, uid, [
@@ -348,9 +330,35 @@ class gamification_challenge(osv.Model):
         return True
 
     def quick_update(self, cr, uid, challenge_id, context=None):
-        """Update all the goals of a challenge, no generation of new goals"""
+        """Update all the goals of a specific challenge, no generation of new goals"""
         goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
         self.pool.get('gamification.goal').update(cr, uid, goal_ids, context=context)
+        return True
+
+    def _get_challenger_users(self, cr, uid, domain, context=None):
+        user_domain = eval(ustr(domain))
+        return self.pool['res.users'].search(cr, uid, user_domain, context=context)
+
+    def _recompute_challenge_users(self, cr, uid, challenge_ids, context=None):
+        """Recompute the domain to add new users and remove the one no longer matching the domain"""
+        for challenge in self.browse(cr, uid, challenge_ids, context=context):
+            if challenge.user_domain:
+
+                old_user_ids = [user.id for user in challenge.user_ids]
+                new_user_ids = self._get_challenger_users(cr, uid, challenge.user_domain, context=context)
+                to_remove_ids = list(set(old_user_ids) - set(new_user_ids))
+                to_add_ids = list(set(new_user_ids) - set(old_user_ids))
+
+                write_op = [(3, user_id) for user_id in to_remove_ids]
+                write_op += [(4, user_id) for user_id in to_add_ids]
+                if write_op:
+                    self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)
+
+                if to_remove_ids:
+                    self.message_unsubscribe_users(cr, uid, [challenge.id], to_remove_ids, context=None)
+                if to_add_ids:
+                    self.message_subscribe_users(cr, uid, [challenge.id], to_add_ids, context=context)
+
         return True
 
 
@@ -373,12 +381,17 @@ class gamification_challenge(osv.Model):
     ##### Automatic actions #####
 
     def generate_goals_from_challenge(self, cr, uid, ids, context=None):
+        _logger.warning("Deprecated, use private method _generate_goals_from_challenge(...) instead.")
+        return self._generate_goals_from_challenge(cr, uid, ids, context=context)
+
+    def _generate_goals_from_challenge(self, cr, uid, ids, context=None):
         """Generate the goals for each line and user.
 
         If goals already exist for this line and user, the line is skipped. This
         can be called after each change in the list of users or lines.
         :param list(int) ids: the list of challenge concerned"""
 
+        goal_obj = self.pool.get('gamification.goal')
         to_update = []
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period)
@@ -390,45 +403,49 @@ class gamification_challenge(osv.Model):
                 end_date = challenge.end_date
 
             for line in challenge.line_ids:
-                # FIXME: allow to restrict to a subset of users
-                for user in challenge.user_ids:
 
-                    goal_obj = self.pool.get('gamification.goal')
-                    domain = [('line_id', '=', line.id), ('user_id', '=', user.id)]
-                    if start_date:
-                        domain.append(('start_date', '=', start_date))
+                # there is potentially a lot of users
+                # detect the ones with no goal linked to this line
+                date_clause = ""
+                query_params = [line.id]
+                if start_date:
+                    date_clause += "AND g.start_date = %s"
+                    query_params.append(start_date)
+                if end_date:
+                    date_clause += "AND g.end_date = %s"
+                    query_params.append(end_date)
+            
+                query = """SELECT u.id AS user_id
+                             FROM res_users u
+                        LEFT JOIN gamification_goal g
+                               ON (u.id = g.user_id)
+                            WHERE line_id = %s
+                              {date_clause}
+                        """.format(date_clause=date_clause)
 
-                    # goal already existing for this line ?
-                    if len(goal_obj.search(cr, uid, domain, context=context)) > 0:
+                cr.execute(query, query_params)
+                user_with_goal_ids = cr.dictfetchall()
+                user_without_goal_ids = list(set([user.id for user in challenge.user_ids]) - set([user['user_id'] for user in user_with_goal_ids]))
 
-                        # resume canceled goals
-                        domain.append(('state', '=', 'canceled'))
-                        canceled_goal_ids = goal_obj.search(cr, uid, domain, context=context)
-                        if canceled_goal_ids:
-                            goal_obj.write(cr, uid, canceled_goal_ids, {'state': 'inprogress'}, context=context)
-                            to_update.extend(canceled_goal_ids)
+                values = {
+                    'definition_id': line.definition_id.id,
+                    'line_id': line.id,
+                    'target_goal': line.target_goal,
+                    'state': 'inprogress',
+                }
 
-                        # skip to next user
-                        continue
+                if start_date:
+                    values['start_date'] = start_date
+                if end_date:
+                    values['end_date'] = end_date
 
-                    values = {
-                        'definition_id': line.definition_id.id,
-                        'line_id': line.id,
-                        'user_id': user.id,
-                        'target_goal': line.target_goal,
-                        'state': 'inprogress',
-                    }
+                if challenge.remind_update_delay:
+                    values['remind_update_delay'] = challenge.remind_update_delay
 
-                    if start_date:
-                        values['start_date'] = start_date
-                    if end_date:
-                        values['end_date'] = end_date
-
-                    if challenge.remind_update_delay:
-                        values['remind_update_delay'] = challenge.remind_update_delay
-
-                    new_goal_id = goal_obj.create(cr, uid, values, context=context)
-                    to_update.append(new_goal_id)
+                for user_id in user_without_goal_ids:
+                    values.update({'user_id': user_id})
+                    goal_id = goal_obj.create(cr, uid, values, context=context)
+                    to_update.append(goal_id)
 
             goal_obj.update(cr, uid, to_update, context=context)
 
@@ -641,7 +658,7 @@ class gamification_challenge(osv.Model):
         message = "%s has joined the challenge" % user.name
         self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
         self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
-        return self.generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
+        return self._generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
 
     # TODO in trunk, remove unused parameter user_id
     def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):

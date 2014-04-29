@@ -24,7 +24,7 @@ class OgonePayment(PaymentAcquirerCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
         ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.env, 'test', 'test without test env')
+        self.assertEqual(ogone.environment, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering + shasign
@@ -110,7 +110,7 @@ class OgonePayment(PaymentAcquirerCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
         ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.env, 'test', 'test without test env')
+        self.assertEqual(ogone.environment, 'test', 'test without test environment')
 
         # typical data posted by ogone after client has successfully paid
         ogone_post_data = {
@@ -174,7 +174,7 @@ class OgonePayment(PaymentAcquirerCommon):
         cr, uid, context = self.cr, self.uid, {}
         # be sure not to do stupid thing
         ogone = self.payment_acquirer.browse(self.cr, self.uid, self.ogone_id, None)
-        self.assertEqual(ogone.env, 'test', 'test without test env')
+        self.assertEqual(ogone.environment, 'test', 'test without test environment')
 
         # create a new draft tx
         tx_id = self.payment_transaction.create(
