@@ -93,12 +93,13 @@ class ir_http(orm.AbstractModel):
         except Exception:
             return self._handle_exception(werkzeug.exceptions.NotFound())
 
-        generated_path = werkzeug.url_unquote_plus(path)
-        current_path = werkzeug.url_unquote_plus(request.httprequest.path)
-        if generated_path != current_path:
-            if request.lang != request.website.default_lang_code:
-                path = '/' + request.lang + path
-            return werkzeug.utils.redirect(path)
+        if request.httprequest.method in ('GET', 'HEAD'):
+            generated_path = werkzeug.url_unquote_plus(path)
+            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            if generated_path != current_path:
+                if request.lang != request.website.default_lang_code:
+                    path = '/' + request.lang + path
+                return werkzeug.utils.redirect(path)
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
