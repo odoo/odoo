@@ -36,6 +36,7 @@ class pos_payment_report(report_sxw.rml_parse):
         })
 
     def _pos_payment(self, obj):
+        self.total = 0
         data={}
         sql = """ select id from pos_order where id = %d"""%(obj.id)
         self.cr.execute(sql)
