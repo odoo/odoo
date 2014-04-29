@@ -11,7 +11,7 @@
     <link id="website_css" rel='stylesheet' href='/website/static/src/css/website.css' t-ignore="true"/>
 </template>
 
-<template id="website.assets" name="Website assets">
+<template id="website.assets_frontend" name="Website assets">
     <t t-call="web.assets_common"/>
     <t t-call="website.theme"/>
 
@@ -75,7 +75,7 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
 
-            <t t-call-assets="website.assets"/>
+            <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
         </head>
@@ -244,7 +244,7 @@
             </div>
         </div>
     </xpath>
-    <xpath expr='//t[@t-call-assets="website.assets"]' position="after">
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
         <t t-call-assets="website.assets_editor"/>
     </xpath>
 </template>
