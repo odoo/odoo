@@ -605,6 +605,16 @@ class ControllerType(type):
         # flag old-style methods with req as first argument
         for k, v in attrs.items():
             if inspect.isfunction(v) and hasattr(v, 'original_func'):
+                # Set routing type on original functions
+                routing_type = v.routing.get('type')
+                parent = [claz for claz in bases if isinstance(claz, ControllerType) and hasattr(claz, k)]
+                parent_routing_type = getattr(parent[0], k).original_func.routing_type if parent else routing_type or 'http'
+                if routing_type is not None and routing_type is not parent_routing_type:
+                    routing_type = parent_routing_type
+                    _logger.warn("Subclass re-defines <function %s.%s.%s> with different type than original."
+                                    " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
+                v.original_func.routing_type = routing_type or parent_routing_type
+
                 spec = inspect.getargspec(v.original_func)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
@@ -664,15 +674,6 @@ def routing_map(modules, nodb_only, converters=None):
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
-                            fn_type = fn.routing.get('type')
-                            if not routing_type:
-                                routing_type = fn_type
-                            else:
-                                if fn_type and routing_type != fn_type:
-                                    _logger.warn("Subclass re-defines <function %s.%s> with different type than original."
-                                                    " Will use original type: %r", fn.__module__, fn.__name__, routing_type)
-                                fn.routing['type'] = routing_type
-                            fn.original_func.routing_type = routing_type
                             methods_done.append(fn)
                             routing.update(fn.routing)
                     if not nodb_only or nodb_only == (routing['auth'] == "none"):
