@@ -1,60 +1,21 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <openerp>
     <data>
-
         <report
-            id="pos_users_product_re"
+            id="action_report_account_statement" 
+            model="account.bank.statement"
+            string="Statement"
+            name="point_of_sale.report_statement"
+            file="point_of_sale.report_statement"
+            report_type="qweb-pdf"
+        />
+        <report
+            id="action_report_pos_users_product"
             string="User's Product"
             model="account.bank.statement"
-            name="pos.user.product"
-            auto="False"
-            multi="True"
-            rml="point_of_sale/report/pos_users_product.rml"
-             />
-
-        <report
-            id="account_statement"
-            string="Statement"
-            model="account.bank.statement"
-            name="account.statement"
-            auto="False"
-            multi="True"
-            rml="point_of_sale/report/account_statement.rml"
-             />
-
-
-        <report
-            id="all_closed_cashbox_of_the_day"
-            string="All Closed CashBox"
-            model="account.bank.statement"
-            name="all.closed.cashbox.of.the.day"
-            auto="False"
-            multi="True"
-            menu = 'False'
-            rml="point_of_sale/report/all_closed_cashbox_of_the_day.rml"
-             />
-
-        <report
-            id="pos_users_product_re"
-            string="User's Product"
-            model="account.bank.statement"
-            name="pos.user.product"
-            auto="False"
-            multi="True"
-            rml="point_of_sale/report/pos_users_product.rml"
-             />
-
-        <report
-            id="account_statement"
-            string="Statement"
-            model="account.bank.statement"
-            name="account.statement"
-            auto="False"
-            multi="True"
-            rml="point_of_sale/report/account_statement.rml"
-             />
-
-
-
+            name="point_of_sale.report_usersproduct"
+            file="point_of_sale.report_usersproduct"
+            report_type="qweb-pdf"
+        />
     </data>
 </openerp>

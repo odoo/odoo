@@ -53,7 +53,7 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'http://www.openerp.com',
-    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg','images/warehouse_dashboard.jpeg'],
+    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg'],
     'depends': ['product', 'account'],
     'category': 'Warehouse Management',
     'sequence': 16,
@@ -86,7 +86,6 @@ Dashboard / Reports for Warehouse Management will include:
         'partner_view.xml',
         'report/report_stock_move_view.xml',
         'report/report_stock_view.xml',
-        'board_warehouse_view.xml',
         'res_config_view.xml',
     ],
     'test': [

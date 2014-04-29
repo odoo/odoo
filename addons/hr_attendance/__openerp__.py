@@ -39,8 +39,6 @@ actions(Sign in/Sign out) performed by them.
         'security/ir.model.access.csv',
         'hr_attendance_view.xml',
         'hr_attendance_report.xml',
-        'wizard/hr_attendance_bymonth_view.xml',
-        'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
         'res_config_view.xml',
         'views/report_attendanceerrors.xml',

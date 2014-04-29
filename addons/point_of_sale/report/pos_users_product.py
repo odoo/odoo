@@ -20,7 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class pos_user_product(report_sxw.rml_parse):
 
@@ -52,17 +54,27 @@ class pos_user_product(report_sxw.rml_parse):
         return data
 
     def _get_user(self, object):
+        names = []
+        users_obj = self.pool['res.users']
         for o in object:
-            sql = """select ru.name from account_bank_statement as abs,res_users ru
+            sql = """select ru.id from account_bank_statement as abs,res_users ru
                                     where abs.user_id = ru.id
                                     and abs.id = %d"""%(o.id)
             self.cr.execute(sql)
             data = self.cr.fetchone()
-            return data[0]
+            if data:
+                user = users_obj.browse(self.cr, self.uid, data[0])
+                names.append(user.partner_id.name)
+        return list(set(names))
 
     def _get_total(self, o):
         return self.total
 
-report_sxw.report_sxw('report.pos.user.product', 'account.bank.statement', 'addons/statement/report/pos_users_product.rml', parser=pos_user_product,header='internal')
+
+class report_pos_user_product(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_usersproduct'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_usersproduct'
+    _wrapped_report_class = pos_user_product
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,7 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class pos_payment_report(report_sxw.rml_parse):
 
@@ -34,6 +36,7 @@ class pos_payment_report(report_sxw.rml_parse):
         })
 
     def _pos_payment(self, obj):
+        self.total = 0
         data={}
         sql = """ select id from pos_order where id = %d"""%(obj.id)
         self.cr.execute(sql)
@@ -59,6 +62,11 @@ class pos_payment_report(report_sxw.rml_parse):
     def _pos_payment_total(self, o):
         return self.total
 
-report_sxw.report_sxw('report.pos.payment.report', 'pos.order', 'addons/point_of_sale/report/pos_payment_report.rml', parser=pos_payment_report,header='internal')
+
+class report_pos_payment(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_payment'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_payment'
+    _wrapped_report_class = pos_payment_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
