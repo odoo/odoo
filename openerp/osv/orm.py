@@ -5508,9 +5508,11 @@ class BaseModel(object):
     @api.new
     def _recompute_done(self, field):
         """ Mark `field` as being recomputed. """
-        recs = self.env.todo.pop(field) - self
-        if recs:
-            self.env.todo[field] = recs
+        todo = self.env.todo
+        if field in todo:
+            recs = todo.pop(field) - self
+            if recs:
+                todo[field] = recs
 
     @api.model
     def recompute(self):
@@ -5519,8 +5521,16 @@ class BaseModel(object):
         """
         for env in list(self.env.all):
             while env.todo:
-                field, recs = env.todo.popitem()
-                field.compute_value(recs.exists())
+                field, recs = next(env.todo.iteritems())
+                # simply evaluate the fields to recompute
+                for rec in recs:
+                    try:
+                        rec[field.name]
+                    except MissingError:
+                        pass
+                # mark the computed fields as done; this is to avoid an infinite
+                # loop, as it should already be done in field.determine_value()
+                map(recs._recompute_done, field.computed_fields)
 
     #
     # Generic onchange method

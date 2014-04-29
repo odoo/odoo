@@ -168,6 +168,13 @@ class Field(object):
         for path in self.depends:
             self._setup_dependency([], env[self.model_name], path.split('.'))
 
+        # determine all the fields computed by self.compute
+        self.computed_fields = self.compute and [
+            field
+            for field in env[self.model_name]._fields.itervalues()
+            if field.compute in (self.compute, self.compute.__name__)
+        ] or []
+
     def _setup_related(self, env):
         """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
@@ -482,9 +489,10 @@ class Field(object):
             # recompute field on record if required
             recs_todo = record._recompute_check(self)
             if recs_todo:
+                # mark all computed fields as done
+                map(recs_todo._recompute_done, self.computed_fields)
                 # execute the compute method in NON-DRAFT mode, so that assigned
                 # fields are written to the database
-                recs_todo._recompute_done(self)
                 self.compute_value(recs_todo.exists())
                 if self in record._cache:
                     return
