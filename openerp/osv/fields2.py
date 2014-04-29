@@ -491,9 +491,16 @@ class Field(object):
             if recs_todo:
                 # mark all computed fields as done
                 map(recs_todo._recompute_done, self.computed_fields)
-                # execute the compute method in NON-DRAFT mode, so that assigned
-                # fields are written to the database
-                self.compute_value(recs_todo.exists())
+                # execute the compute method in DRAFT mode
+                with env.do_in_draft():
+                    recs = recs_todo.exists()
+                    self.compute_value(recs)
+                # save cached result in database
+                for rec in recs:
+                    rec._write({
+                        f.name: f.convert_to_write(rec[f.name])
+                        for f in self.computed_fields
+                    })
                 if self in record._cache:
                     return
             record._prefetch_field(self)
