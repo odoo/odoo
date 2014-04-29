@@ -154,7 +154,7 @@ class event_event(Model):
         self.display_name = '%s (%s)' % (self.name, ' - '.join(dates))
 
     @one
-    @constrains('seats_max', 'registration_ids')
+    @constrains('seats_max', 'seats_available')
     def _check_seats_limit(self):
         if self.seats_max and self.seats_available < 0:
             raise Warning(_('No more available seats.'))
@@ -286,7 +286,7 @@ class event_registration(Model):
     def _check_seats_limit(self):
         if self.event_id.seats_max and \
             self.event_id.seats_available < (self.nb_register if self.state == 'draft' else 0):
-                raise Warning('No more available seats.')
+                raise Warning(_('No more available seats.'))
 
     @one
     def do_draft(self):
