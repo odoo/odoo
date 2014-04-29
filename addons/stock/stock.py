@@ -1195,7 +1195,7 @@ class stock_picking(osv.osv):
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error!'), _('You cannot cancel the picking as some moves have been done. You should cancel the picking lines.'))
+                    raise osv.except_osv(_('Error!'), _('You cannot cancel the picking as some moves have been done. You should cancel remaining moves of this picking.'))
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -2506,7 +2506,7 @@ class stock_move(osv.osv):
                 source_location = move.location_dest_id
             if source_location.usage != 'internal':
                 #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
-                raise osv.except_osv(_('Error!'), _('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
+                raise osv.except_osv(_('Error!'), _('Operation Forbidden! it is not allowed to scrap products from a virtual location: %s' %(move.location_id.complete_name)))
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {

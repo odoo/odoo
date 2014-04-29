@@ -19,6 +19,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
+    var round_pr = instance.web.round_precision
+
     module.ScreenSelector = instance.web.Class.extend({
         init: function(options){
             this.pos = options.pos;
@@ -526,12 +528,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
             
             queue.schedule(function(){
-                return self.pos.proxy.weighting_start()
-            },{ important: true });
-            
-            queue.schedule(function(){
-                return self.pos.proxy.weighting_read_kg().then(function(weight){
-                    self.set_weight(weight);
+                return self.pos.proxy.scale_read().then(function(weight){
+                    self.set_weight(weight.weight);
                 });
             },{duration:50, repeat: true});
 
@@ -568,7 +566,20 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('.js-weight').text(this.get_product_weight_string());
         },
         get_product_weight_string: function(){
-            return (this.weight || 0).toFixed(3) + ' Kg';
+            var product = this.get_product();
+            var defaultstr = (this.weight || 0).toFixed(3) + ' Kg';
+            if(!product || !this.pos){
+                return defaultstr;
+            }
+            var unit_id = product.uos_id || product.uom_id;
+            if(!unit_id){
+                return defaultstr;
+            }
+            var unit = this.pos.units_by_id[unit_id[0]];
+            var weight = round_pr(this.weight || 0, unit.rounding);
+            var weightstr = weight.toFixed(Math.ceil(Math.log(1.0/unit.rounding) / Math.log(10) ));
+                weightstr += ' Kg';
+            return weightstr;
         },
         get_product_image_url: function(){
             var product = this.get_product();
@@ -584,9 +595,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             $('body').off('keyup',this.hotkey_handler);
 
             this.pos.proxy_queue.clear();
-            this.pos.proxy_queue.schedule(function(){
-                self.pos.proxy.weighting_end();
-            },{ important: true });
         },
     });
 

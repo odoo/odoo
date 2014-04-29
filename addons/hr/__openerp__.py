@@ -52,7 +52,6 @@ You can manage:
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
-        'board_hr_view.xml',
         'hr_view.xml',
         'hr_installer.xml',
         'hr_data.xml',

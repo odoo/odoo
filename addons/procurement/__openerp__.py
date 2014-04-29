@@ -54,7 +54,6 @@ depending on the product's configuration.
         'procurement_view.xml',
         'procurement_workflow.xml',
         'company_view.xml',
-        'board_mrp_procurement_view.xml',
     ],
     'demo': ['stock_orderpoint.xml','procurement_demo.xml'],
     'test': ['test/procurement.yml'],

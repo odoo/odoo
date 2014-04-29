@@ -52,7 +52,6 @@ The validation can be configured in the company:
         'security/hr_timesheet_sheet_security.xml',
         'hr_timesheet_sheet_view.xml',
         'hr_timesheet_workflow.xml',
-        'board_hr_timesheet_view.xml',
         'report/hr_timesheet_report_view.xml',
         'report/timesheet_report_view.xml',
         'wizard/hr_timesheet_current_view.xml',

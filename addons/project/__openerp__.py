@@ -29,7 +29,6 @@
     'summary': 'Projects, Tasks',
     'images': [
         'images/gantt.png',
-        'images/project_dashboard.jpeg',
         'images/project_task_tree.jpeg',
         'images/project_task.jpeg',
         'images/project.jpeg',
@@ -71,7 +70,6 @@ Dashboard / Reports for Project Management will include:
         'res_partner_view.xml',
         'report/project_report_view.xml',
         'report/project_cumulative.xml',
-        'board_project_view.xml',
         'res_config_view.xml',
     ],
     'demo': ['project_demo.xml'],

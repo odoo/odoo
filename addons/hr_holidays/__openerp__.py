@@ -57,7 +57,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'report/available_holidays_view.xml',
         'wizard/hr_holidays_summary_department_view.xml',
         'wizard/hr_holidays_summary_employees_view.xml',
-        'board_hr_holidays_view.xml',        
         ],
     'demo': ['hr_holidays_demo.xml',],
     'js': ['static/src/js/*.js'],

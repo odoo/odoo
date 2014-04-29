@@ -50,11 +50,11 @@
                         <filter string="No Responsible" domain="[('payment_responsible_id', '=', False)]"/>
                         <filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]" name="my"/>
                     </group>
-                    <group expand="1" string="Group By...">
-                        <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
-                        <filter string="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
-                    </group>
                 </search>
+                <group string="Group By..." position="inside">
+                    <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
+                    <filter string="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
+                </group>
             </field>
         </record>
 
