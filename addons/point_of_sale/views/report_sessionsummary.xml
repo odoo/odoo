@@ -27,7 +27,9 @@
                         </div>
                     </div>
 
-                    <table class="table table-condensed">
+                    <h4>Statement Summary</h4>
+
+                    <table class="table table-condensed mb32">
                         <thead>
                             <tr>
                                 <th>
@@ -57,60 +59,65 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="o.statement_ids" t-as="statement">
-                                <tr>
-                                    <td><span t-field="statement.name"/></td>
-                                    <td><span t-field="statement.journal_id"/></td>
-                                    <td class="text-right">
-                                        <span t-field="statement.balance_start"
-                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="statement.total_entry_encoding"
-                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="statement.balance_end_real"
-                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="statement.difference"
-                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
-                                    </td>
-                                    <td class="text-right" groups="base.group_multi_currency">
-                                        <span t-field="statement.currency"
-                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
-                                    </td>
-                                    <td class="text-right"><span t-field="statement.state"/></td>
-                                </tr>
-                                <t t-foreach="statement.line_ids" t-as="line">
-                                    <tr t-if="line_first">
-                                        <th></th>
-                                        <th></th>
-                                        <th></th>
-                                        <th groups="base.group_multi_currency"></th>
-                                        <th>Description</th>
-                                        <th>Partner</th>
-                                        <th>Type</th>
-                                        <th class="text-right">Amount</th>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td groups="base.group_multi_currency"></td>
-                                        <td><span t-field="line.name"/></td>
-                                        <td><span t-field="line.partner_id"/></td>
-                                        <td><span t-field="line.type"/></td>
-                                        <td class="text-right">
-                                            <span t-field="line.amount"
-                                                t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
-                                        </td>
-                                    </tr>
-                                </t>
-                            </t>
+                            <tr t-foreach="o.statement_ids" t-as="statement">
+                                <td><span t-field="statement.name"/></td>
+                                <td><span t-field="statement.journal_id"/></td>
+                                <td class="text-right">
+                                    <span t-field="statement.balance_start"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="statement.total_entry_encoding"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="statement.balance_end_real"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="statement.difference"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right" groups="base.group_multi_currency">
+                                    <span t-field="statement.currency"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right"><span t-field="statement.state"/></td>
+                            </tr>
                         </tbody>
                     </table>
+
+                    <t t-foreach="o.statement_ids" t-as="statement">
+                        <h4 t-if="statement.line_ids">Statement Details: <span t-esc="statement.name"/></h4>
+
+                        <table class="table table-condensed" t-if="statement.line_ids">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Reference</th>
+                                    <th>Partner</th>
+                                    <th>Type</th>
+                                    <th>Account</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="statement.line_ids" t-as="line">
+                                    <td><span t-field="line.date"/></td>
+                                    <td><span t-field="line.name"/></td>
+                                    <td><span t-field="line.ref"/></td>
+                                    <td><span t-field="line.partner_id"/></td>
+                                    <td><span t-field="line.type"/></td>
+                                    <td><span t-field="line.account_id"/></td>
+                                    <td class="text-right">
+                                        <span t-field="line.amount"
+                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
                 </div>
             </t>
         </t>
