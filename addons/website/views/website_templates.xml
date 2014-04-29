@@ -25,6 +25,14 @@
 
 </template>
 
+<template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/website/static/src/css/website.backend.css"/>
+
+        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
+    </xpath>
+</template>
+
 <template id="website.submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
         ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
@@ -57,7 +65,6 @@
           t-att-data-view-xmlid="xmlid if editable else None"
           t-att-data-main-object="repr(main_object) if editable else None">
         <head>
-            <script type="text/javascript" src="/web/static/js/watch.js"></script>
             <t t-if="main_object and 'website_meta_title' in main_object">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>

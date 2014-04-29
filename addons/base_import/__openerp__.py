@@ -32,5 +32,4 @@ Re-implement openerp's file import system:
         'views/base_import.xml',
     ],
     'qweb': ['static/src/xml/import.xml'],
-    'test': ['static/test/states.js'],
 }

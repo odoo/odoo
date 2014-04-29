@@ -384,6 +384,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
                         <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" icon="terp-go-home" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -881,6 +882,7 @@
                     <field name="price_include"/>
                     <field name="description"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="type_tax_use" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -891,6 +893,12 @@
                 <search string="Search Taxes">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Sale" domain="[('type_tax_use','=','sale')]" />
+                    <filter string="Purchase" domain="[('type_tax_use','=','purchase')]" />
+                    <group string="Group By...">
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                    </group>
                 </search>
             </field>
         </record>
