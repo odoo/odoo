@@ -131,7 +131,7 @@ class event_event(osv.osv):
         @return: Dictionary of function field values.
         """
         event_ids=set()
-        for registration in self.browse(cr, uid, ids, context=context):
+        for registration in self.pool['event.registration'].browse(cr, uid, ids, context=context):
             event_ids.add(registration.event_id.id)
         return list(event_ids)
 
