@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-import time
 from openerp import tools
 
 class report_transaction_pos(osv.osv):

@@ -21,10 +21,9 @@
 
 import time
 
-import pos_box_entries
-
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+
 
 class account_journal(osv.osv):
     _inherit = 'account.journal'
@@ -43,6 +42,7 @@ class account_journal(osv.osv):
 
         return super(account_journal, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
+
 class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
     _description = 'Point of Sale Payment'
@@ -53,7 +53,6 @@ class pos_make_payment(osv.osv_memory):
         """
         context = context or {}
         order_obj = self.pool.get('pos.order')
-        obj_partner = self.pool.get('res.partner')
         active_id = context and context.get('active_id', False)
 
         order = order_obj.browse(cr, uid, active_id, context=context)
@@ -127,7 +126,5 @@ class pos_make_payment(osv.osv_memory):
         'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'amount': _default_amount,
     }
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
