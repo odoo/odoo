@@ -1,6 +1,7 @@
 import base64
 import openerp.addons.web.http as oeweb
 from openerp.addons.web.controllers.main import content_disposition
+import mimetypes
 
 #----------------------------------------------------------
 # Controller
@@ -15,8 +16,9 @@ class MailController(oeweb.Controller):
         if res:
             filecontent = base64.b64decode(res.get('base64'))
             filename = res.get('filename')
+            content_type = mimetypes.guess_type(filename)
             if filecontent and filename:
                 return req.make_response(filecontent,
-                    headers=[('Content-Type', 'application/octet-stream'),
+                    headers=[('Content-Type', content_type[0] or 'application/octet-stream'),
                             ('Content-Disposition', content_disposition(filename, req))])
         return req.not_found()
