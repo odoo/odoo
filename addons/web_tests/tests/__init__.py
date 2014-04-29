@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-import tests
+import test_ui
