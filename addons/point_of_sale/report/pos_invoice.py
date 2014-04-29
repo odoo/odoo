@@ -27,28 +27,25 @@ class PosInvoiceReport(osv.AbstractModel):
     _name = 'report.point_of_sale.report_invoice'
 
     def render_html(self, cr, uid, ids, data=None, context=None):
-        if context is None:
-            context = {}
-
         report_obj = self.pool['report']
+        posorder_obj = self.pool['pos.order']
         report = report_obj._get_report_from_name(cr, uid, 'account.report_invoice')
-        selected_posorders = self.pool['pos.order'].browse(cr, uid, ids, context=context)
+        selected_orders = posorder_obj.browse(cr, uid, ids, context=context)
 
-        invoiced_posorders = []
         invoiced_posorders_ids = []
-        for order in selected_posorders:
+        for order in selected_orders:
             if order.invoice_id:
-                invoiced_posorders.append(order)
                 invoiced_posorders_ids.append(order.id)
 
-        if not invoiced_posorders:
-            raise osv.except_osv(_('Error!'), _('Please create an invoice for this sale.'))
+        not_invoiced_orders_ids = list(set(ids) - set(invoiced_posorders_ids))
+        if not_invoiced_orders_ids:
+            not_invoiced_posorders = posorder_obj.browse(cr, uid, not_invoiced_orders_ids, context=context)
+            not_invoiced_orders_names = list(map(lambda a: a.name, not_invoiced_posorders))
+            raise osv.except_osv(_('Error!'), _('No link to an invoice for %s.' % ', '.join(not_invoiced_orders_names)))
 
         docargs = {
-            'doc_ids': invoiced_posorders_ids,
+            'doc_ids': ids,
             'doc_model': report.model,
-            'docs': invoiced_posorders,
+            'docs': selected_orders,
         }
-        return report_obj.render(cr, uid, invoiced_posorders_ids, 'account.report_invoice', docargs, context=context)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        return report_obj.render(cr, uid, ids, 'account.report_invoice', docargs, context=context)
