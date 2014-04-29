@@ -17,7 +17,7 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/h1" position="before">
                     <div class="oe_right oe_button_box">
-                        <button name="%(action_claim_from_delivery)d" string="Claims" type="action" attrs="{'invisible': [('picking_type_id.code', '=', 'outgoing')]}"/>
+                        <button name="%(action_claim_from_delivery)d" string="Claims" type="action"/>
                     </div>
                 </xpath>
             </field>
