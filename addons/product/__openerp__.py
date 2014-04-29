@@ -25,7 +25,7 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'category': 'Sales Management',
-    'depends': ['base', 'process', 'decimal_precision', 'mail'],
+    'depends': ['base', 'decimal_precision', 'mail'],
     'demo': [
         'product_demo.xml',
         'product_image_demo.xml',
@@ -59,7 +59,6 @@ Print product labels with barcode.
         'product_view.xml',
         'pricelist_view.xml',
         'partner_view.xml',
-        'process/product_process.xml'
     ],
     'test': [
         'product_pricelist_demo.yml',

@@ -26,7 +26,7 @@
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com',
     'category' : 'Hidden/Dependency',
-    'depends' : ['base','process', 'product', 'stock'],
+    'depends' : ['base', 'product', 'stock'],
     'description': """
 This is the module for computing Procurements.
 ==============================================
@@ -53,7 +53,6 @@ depending on the product's configuration.
         'wizard/schedulers_all_view.xml',
         'procurement_view.xml',
         'procurement_workflow.xml',
-        'process/procurement_process.xml',
         'company_view.xml',
     ],
     'demo': ['stock_orderpoint.xml','procurement_demo.xml'],
