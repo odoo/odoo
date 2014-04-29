@@ -119,12 +119,10 @@ for a particular financial year and for preparation of vouchers there is a modul
         'process/supplier_invoice_process.xml',
         'ir_sequence_view.xml',
         'company_view.xml',
-        'board_account_view.xml',
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',
         'res_config_view.xml',
         'account_pre_install.yml',
-
         'views/report_vat.xml',
         'views/report_invoice.xml',
         'views/report_trialbalance.xml',
