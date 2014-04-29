@@ -82,10 +82,10 @@ class SaleOrder(orm.Model):
                         carrier_id = delivery_id
                         break
                 order.write({'carrier_id': carrier_id}, context=context)
-                if carrier_id:
-                    order.delivery_set(context=context)
-                else:
-                    order._delivery_unset(context=context)                    
+            if carrier_id:
+                order.delivery_set(context=context)
+            else:
+                order._delivery_unset(context=context)                    
 
         return bool(carrier_id)
 

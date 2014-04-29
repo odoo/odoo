@@ -20,10 +20,11 @@
 ##############################################################################
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 class hr_timesheet_sheet(osv.osv):
@@ -396,18 +397,22 @@ class hr_attendance(osv.osv):
             attendance_ids.extend([row[0] for row in cr.fetchall()])
         return attendance_ids
 
+    def _get_current_sheet(self, cr, uid, employee_id, date=False, context=None):
+        if not date:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        # ending date with no time to avoid timesheet with early date_to
+        date_to = date[0:10]+' 00:00:00'
+        # limit=1 because only one sheet possible for an employee between 2 dates
+        sheet_ids = self.pool.get('hr_timesheet_sheet.sheet').search(cr, uid, [
+            ('date_to', '>=', date_to), ('date_from', '<=', date),
+            ('employee_id', '=', employee_id)
+        ], limit=1, context=context)
+        return sheet_ids and sheet_ids[0] or False
+
     def _sheet(self, cursor, user, ids, name, args, context=None):
-        sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         res = {}.fromkeys(ids, False)
         for attendance in self.browse(cursor, user, ids, context=context):
-            date_to = datetime.strftime(datetime.strptime(attendance.name[0:10], '%Y-%m-%d'), '%Y-%m-%d %H:%M:%S')
-            sheet_ids = sheet_obj.search(cursor, user,
-                [('date_to', '>=', date_to), ('date_from', '<=', attendance.name),
-                 ('employee_id', '=', attendance.employee_id.id)],
-                context=context)
-            if sheet_ids:
-                # [0] because only one sheet possible for an employee between 2 dates
-                res[attendance.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
+            res[attendance.id] = self._get_current_sheet(cursor, user, attendance.employee_id.id, attendance.name, context=context)
         return res
 
     _columns = {
@@ -426,16 +431,15 @@ class hr_attendance(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if 'sheet_id' in context:
-            ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'], context=context)
+
+        sheet_id = context.get('sheet_id') or self._get_current_sheet(cr, uid, vals.get('employee_id'), vals.get('name'), context=context)
+        if sheet_id:
+            ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, sheet_id, context=context)
             if ts.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error!'), _('You cannot modify an entry in a confirmed timesheet.'))
-        res = super(hr_attendance,self).create(cr, uid, vals, context=context)
-        if 'sheet_id' in context:
-            if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
-                raise osv.except_osv(_('User Error!'), _('You cannot enter an attendance ' \
-                        'date outside the current timesheet dates.'))
-        return res
+                raise osv.except_osv(_('Error!'), _('You can not enter an attendance in a submitted timesheet. Ask your manager to reset it before adding attendance.'))
+            elif ts.date_from > vals.get('name') or ts.date_to < vals.get('name'):
+                raise osv.except_osv(_('User Error!'), _('You can not enter an attendance date outside the current timesheet dates.'))
+        return super(hr_attendance,self).create(cr, uid, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         if isinstance(ids, (int, long)):
