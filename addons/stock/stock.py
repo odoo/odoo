@@ -2322,7 +2322,9 @@ class stock_move(osv.osv):
 
         # if product is set to average price and a specific value was entered in the picking wizard,
         # we use it
-        if move.product_id.cost_method == 'average' and move.price_unit:
+        if move.location_dest_id.usage != 'internal' and move.product_id.cost_method == 'average':
+            reference_amount = qty * move.product_id.standard_price
+        elif move.product_id.cost_method == 'average' and move.price_unit:
             reference_amount = qty * move.price_unit
             reference_currency_id = move.price_currency_id.id or reference_currency_id
 
