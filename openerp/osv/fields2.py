@@ -557,7 +557,7 @@ class Field(object):
                 target = env[field.model_name].search([(path, 'in', records._ids)])
                 if target:
                     spec.append((field, target._ids))
-                    target._recompute_todo(field)
+                    target._attach_env(records.env)._recompute_todo(field)
             else:
                 spec.append((field, None))
 
