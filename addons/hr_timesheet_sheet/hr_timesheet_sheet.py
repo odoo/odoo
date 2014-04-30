@@ -407,6 +407,9 @@ class hr_attendance(osv.osv):
             employee = employee_obj.browse(cr, uid, employee_id, context=context)
             tz = employee.user_id.partner_id.tz
 
+        if not date:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
         att_tz = timezone(tz or 'utc')
 
         attendance_dt = datetime.strptime(date, DEFAULT_SERVER_DATETIME_FORMAT)
