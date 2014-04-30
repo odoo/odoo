@@ -5563,15 +5563,6 @@ class BaseModel(object):
             record_values = dict(record._cache)
             field_value = record._cache.pop(field_name)
 
-            # prefetch all surrounding records: this avoids encountering dirty
-            # records later because of the evaluation of related fields, etc.
-            for name, field in record._fields.iteritems():
-                value = record[name]
-                if field.relational:
-                    for name in value._fields:
-                        for rec in value:
-                            rec[name]
-
         # at this point, the cache should be clean
         assert not env.dirty
 
