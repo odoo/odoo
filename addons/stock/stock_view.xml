@@ -792,7 +792,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'picking_type': 'internal'}" options='{"reload_on_button": true}'/>
+                            <field name="move_lines" string="Stock Move" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'picking_type': 'internal'}" options='{"reload_on_button": true}'/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
@@ -926,7 +926,7 @@
                     <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Customer" domain="[('customer','=',True)]" />
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
+                    <field name="move_lines" string="Stock Move" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
                 </xpath>
                 <xpath expr="/form/sheet" position="after">
                     <div class="oe_chatter">
@@ -1053,7 +1053,7 @@
                     <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Supplier" domain="[('supplier','=',True)]" context="{'default_supplier':1,'default_customer':0}"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
+                    <field name="move_lines" string="Stock Move" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
                 </xpath>
                 <xpath expr="/form/sheet" position="after">
                     <div class="oe_chatter">
@@ -1340,7 +1340,7 @@
 
                             <group string="Locations" groups="stock.group_locations">
                                 <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
+                                <field name="location_dest_id" domain="[('usage','in', ['internal', 'supplier', 'customer'])]" groups="stock.group_locations"/>
                             </group>
 
                             <group groups="stock.group_tracking_lot" string="Traceability">

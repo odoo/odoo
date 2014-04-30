@@ -6,6 +6,7 @@ from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.http import request
 from openerp.addons.web.controllers.main import content_disposition
+import mimetypes
 
 
 class MailController(http.Controller):
@@ -19,10 +20,11 @@ class MailController(http.Controller):
         if res:
             filecontent = base64.b64decode(res.get('base64'))
             filename = res.get('filename')
+            content_type = mimetypes.guess_type(filename)
             if filecontent and filename:
                 return request.make_response(
                     filecontent,
-                    headers=[('Content-Type', 'application/octet-stream'),
+                    headers=[('Content-Type', content_type[0] or 'application/octet-stream'),
                              ('Content-Disposition', content_disposition(filename))])
         return request.not_found()
 
