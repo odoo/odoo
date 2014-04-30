@@ -22,7 +22,7 @@
 {
     'name': 'Calendar',
     'version': '1.0',
-    'depends': ['base', 'mail', 'base_action_rule','web_calendar'],
+    'depends': ['base', 'mail', 'base_action_rule', 'web_calendar'],
     'summary': 'Personal & Shared Calendar',
     'description': """
 This is a full-featured calendar system.
@@ -43,7 +43,7 @@ If you need to manage your meetings, you should install the CRM module.
         'security/ir.model.access.csv',
         'calendar_view.xml',
         'contacts_view.xml',
-        'calendar_data.xml',        
+        'calendar_data.xml',
     ],
     'js': [
         'static/src/js/*.js'
@@ -52,14 +52,12 @@ If you need to manage your meetings, you should install the CRM module.
     'css': [
         'static/src/css/calendar.css'
     ],
-    'test' : [
-              'test/calendar_test.yml',
-              'test/test_calendar_recurrent_event_case2.yml'
-              ],
+    'test': [
+        'test/calendar_test.yml',
+        'test/test_calendar_recurrent_event_case2.yml'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
     'images': ['images/calendar1.jpeg','images/calendar2.jpeg','images/calendar3.jpeg','images/calendar4.jpeg'],
 }
-
-
