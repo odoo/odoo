@@ -508,6 +508,10 @@ html_template = """<!DOCTYPE html>
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
         <link rel="stylesheet" href="/web/static/src/css/full.css" />
+
+        <link rel="stylesheet" href="/web/css/web.assets_backend"/>
+        <script type="text/javascript" src="/web/js/web.assets_backend"></script>
+
         %(css)s
         %(js)s
         <script type="text/javascript">
