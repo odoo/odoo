@@ -453,45 +453,55 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     build_rows: function (raw) {
         var self = this,
             pivot = this.pivot,
-            m, i, cell;
+            m, i, j, k, cell, row;
 
-        return _.map(pivot.rows.headers, function (row) {
-            var cells = [];
-            var pivot_cells = [];
-            for (i = 0; i < pivot.cells.length; i++) {
-                if (pivot.cells[i].x == row.id || pivot.cells[i].y == row.id) {
-                    pivot_cells.push(pivot.cells[i]);
-                }
+        var rows = [];
+        var cells, pivot_cells, values;
+
+        var nbr_of_rows = pivot.rows.headers.length;
+        var col_headers = pivot.get_cols_leaves();
+
+        for (i = 0; i < nbr_of_rows; i++) {
+            row = pivot.rows.headers[i];
+            cells = [];
+            pivot_cells = [];
+            for (j = 0; j < pivot.cells.length; j++) {
+                if (pivot.cells[j].x == row.id || pivot.cells[j].y == row.id) {
+                    pivot_cells.push(pivot.cells[j]);
+                }              
             }
-            _.each(pivot.get_cols_leaves(), function (col) {
-                var values;
-                for (i = 0; i < pivot_cells.length; i++) {
-                    if (pivot_cells[i].x == col.id || pivot_cells[i].y == col.id) {
-                        values = pivot_cells[i].values;
+
+            for (j = 0; j < col_headers.length; j++) {
+                values = undefined;
+                for (k = 0; k < pivot_cells.length; k++) {
+                    if (pivot_cells[k].x == col_headers[j].id || pivot_cells[k].y == col_headers[j].id) {
+                        values = pivot_cells[k].values;
                         break;
-                    }
+                    }               
                 }
                 if (!values) { values = new Array(pivot.measures.length);}
                 for (m = 0; m < pivot.measures.length; m++) {
-                    cells.push(self.make_cell(row,col,values[m], m, raw));
+                    cells.push(self.make_cell(row,col_headers[j],values[m], m, raw));
                 }
-            });
-            if (pivot.get_cols_leaves().length > 1) {
+            }
+            if (col_headers.length > 1) {
                 var totals = pivot.get_total(row);
                 for (m = 0; m < pivot.measures.length; m++) {
-                    cell = self.make_cell(row, pivot.main_col(), totals[m], m, raw);
+                    cell = self.make_cell(row, pivot.cols.headers[0], totals[m], m, raw);
                     cell.is_bold = 'true';
                     cells.push(cell);
                 }
             }
-            return {
+            rows.push({
                 id: row.id,
                 indent: row.path.length,
                 title: row.title,
                 expanded: row.expanded,
                 cells: cells,
-            };
-        });
+            });
+        }
+
+        return rows;
     },
 
     // ----------------------------------------------------------------------
@@ -524,9 +534,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // ----------------------------------------------------------------------
     draw_table: function () {
         var table = this.build_table();
-        this.draw_headers(table.headers);
-        this.draw_measure_row(table.measure_row);
-        this.draw_rows(table.rows);
+        var doc_fragment = $(document.createDocumentFragment());
+        this.draw_headers(table.headers, doc_fragment);
+        this.draw_measure_row(table.measure_row, doc_fragment);
+        this.draw_rows(table.rows, doc_fragment);
+        this.table.append(doc_fragment);
     },
 
     make_header_cell: function (header) {
@@ -549,7 +561,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         return cell.append(content);
     },
 
-    draw_headers: function (headers) {
+    draw_headers: function (headers, doc_fragment) {
         var make_cell = this.make_header_cell,
             empty_cell = $('<th>').attr('rowspan', headers.length),
             thead = $('<thead>');
@@ -562,10 +574,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             thead.append(html_row);
         });
         thead.children(':first').prepend(empty_cell);
-        this.table.append(thead);
+        doc_fragment.append(thead);
+        this.thead = thead;
     },
     
-    draw_measure_row: function (measure_row) {
+    draw_measure_row: function (measure_row, doc_fragment) {
         if (this.pivot.measures.length === 1) { return; }
         var html_row = $('<tr>').append('<th>');
         _.each(measure_row, function (cell) {
@@ -573,25 +586,39 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             if (cell.is_bold) {measure_cell.css('font-weight', 'bold');}
             html_row.append(measure_cell);
         });
-        this.$('thead').append(html_row);
+        this.thead.append(html_row);
     },
     
-    draw_rows: function (rows) {
-        var table = this.table,
-            make_cell = this.make_header_cell;
+    draw_rows: function (rows, doc_fragment) {
+        var make_cell = this.make_header_cell,
+            cell,
+            html_row, i, j;
 
-        _.each(rows, function (row) {
-            var html_row = $('<tr>').append(make_cell(row));
-            _.each(row.cells, function (cell) {
-                var html_cell = $('<td>').text(cell.value);
-                if (_.has(cell, 'color')) {
-                    html_cell.css('background-color', $.Color(255, cell.color, cell.color));
+        var cells_list,
+            hcell,
+            rows_length, cells_length;
+        
+        rows_length = rows.length;
+        for (i = 0; i < rows_length; i++) {
+            html_row = $('<tr>').append(make_cell(rows[i]));
+            cells_length = rows[i].cells.length;
+            cells_list = [];
+
+            for (j = 0; j < cells_length; j++) {
+                cell = rows[i].cells[j];
+                hcell = '<td';
+                if (cell.is_bold || cell.color) {
+                    hcell += ' style="';
+                    if (cell.is_bold) hcell += 'font-weight: bold;';
+                    if (cell.color) hcell += 'background-color:' + $.Color(255, cell.color, cell.color) + ';';
+                    hcell += '"';
                 }
-                if (cell.is_bold) { html_cell.css('font-weight', 'bold'); }
-                html_row.append(html_cell);
-            });
-            table.append(html_row);
-        });
+                hcell += '>' + cell.value + '</td>';
+                cells_list[j] = hcell;
+            }
+            html_row.append(cells_list.join(''));
+            doc_fragment.append($('<tbody>').append(html_row));
+        }
     },
 
     // ----------------------------------------------------------------------
