@@ -1443,6 +1443,7 @@ instance.web.View = instance.web.Widget.extend({
                     console.error("Could not JSON.parse arguments", action_data.args);
                 }
             }
+            context.add({'active_model': dataset.model, 'active_ids': [record_id], 'active_id': record_id})
             args.push(context);
             return dataset.call_button(action_data.name, args).then(handler).then(function () {
                 if (instance.webclient) {
