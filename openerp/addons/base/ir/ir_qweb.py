@@ -411,8 +411,10 @@ class QWeb(orm.AbstractModel):
         # Backward compatibility hack for manifest usage
         qwebcontext['manifest_list'] = openerp.addons.web.controllers.main.manifest_list
 
+        d = qwebcontext.copy()
+        d.context['inherit_branding'] = False
         content = self.render_tag_call(
-            element, {'call': name}, generated_attributes, qwebcontext)
+            element, {'call': name}, generated_attributes, d)
         if qwebcontext.get('debug'):
             return content
         bundle = AssetsBundle(name, html=content)
