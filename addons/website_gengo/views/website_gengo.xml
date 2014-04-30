@@ -2,10 +2,10 @@
 <openerp>
 <data>
 
-<template id="gengo_editor_head" inherit_id="website.editor_head" name="Editor Head" groups="base.group_website_publisher">
+<template id="gengo_assets_editor" inherit_id="website.assets_editor" name="Editor Head" groups="base.group_website_publisher">
     <xpath expr='//script[@src="/website/static/src/js/website.translator.js"]' position="after">
         <link rel="stylesheet" href="/website_gengo/static/src/css/website_gengo.css"></link>
-        <script t-if="translatable" type="text/javascript" src="/website_gengo/static/src/js/website_gengo.js"></script>
+        <script type="text/javascript" src="/website_gengo/static/src/js/website_gengo.js"></script>
     </xpath>
 </template>
 

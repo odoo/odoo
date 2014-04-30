@@ -87,6 +87,7 @@ Dashboard / Reports for Warehouse Management will include:
         'report/report_stock_move_view.xml',
         'report/report_stock_view.xml',
         'res_config_view.xml',
+        'views/stock.xml',
     ],
     'test': [
         'test/stock_users.yml',
@@ -98,7 +99,6 @@ Dashboard / Reports for Warehouse Management will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'css': [ 'static/src/css/stock.css' ],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

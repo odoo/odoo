@@ -48,14 +48,12 @@ Notes can be found in the 'Home' menu.
         'security/ir.model.access.csv',
         'note_data.xml',
         'note_view.xml',
+        'views/note.xml',
     ],
     'demo': [
         'note_demo.xml',
     ],
     'test': [
-    ],
-    'css': [
-        'static/src/css/note.css',
     ],
     'images': [
         'images/note_kanban.jpeg',
