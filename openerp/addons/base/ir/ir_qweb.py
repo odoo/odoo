@@ -1070,11 +1070,11 @@ class AssetsBundle(object):
         return self.cache[key]
 
 class WebAsset(object):
-    def __init__(self, source=None, url=None, filename=None):
+    def __init__(self, source=None, url=None):
         self.source = source
-        self._filename = filename
-        self._content = None
         self.url = url
+        self._filename = None
+        self._content = None
 
     @property
     def filename(self):
