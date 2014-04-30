@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: base_calendar
@@ -37,6 +37,7 @@ msgstr "Vyžadován k připojení"
 #. module: base_calendar
 #: help:calendar.event,exdate:0
 #: help:calendar.todo,exdate:0
+#: help:crm.meeting,exdate:0
 msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
@@ -73,36 +74,38 @@ msgstr "Pozvání"
 #. module: base_calendar
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
+#: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
-msgstr "Opakované setkání"
+msgstr "Opakovaná schůzka"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
 #: model:ir.ui.menu,name:base_calendar.menu_crm_meeting_avail_alarm
 msgid "Alarms"
-msgstr "Budíky"
+msgstr "Upozornění"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Sunday"
 msgstr "Neděle"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,role:0
 msgid "Role"
 msgstr "Role"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Invitation details"
 msgstr "Podrobnosti pozvání"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fourth"
 msgstr "Čtvrtý"
 
@@ -117,12 +120,15 @@ msgstr "Ukázat jako"
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
 #: selection:calendar.todo,select1:0
+#: field:crm.meeting,day:0
+#: selection:crm.meeting,select1:0
 msgid "Date of month"
 msgstr "Datum v měsíci"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Public"
 msgstr "Veřejné"
 
@@ -134,6 +140,7 @@ msgstr " "
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "March"
 msgstr "Březen"
 
@@ -147,18 +154,21 @@ msgstr "Varování !"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Friday"
 msgstr "Pátek"
 
 #. module: base_calendar
 #: field:calendar.event,allday:0
 #: field:calendar.todo,allday:0
+#: field:crm.meeting,allday:0
 msgid "All Day"
 msgstr "Celý den"
 
 #. module: base_calendar
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
+#: field:crm.meeting,select1:0
 msgid "Option"
 msgstr "Volba"
 
@@ -166,19 +176,19 @@ msgstr "Volba"
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 msgid "Free"
-msgstr "Volný"
+msgstr "Volno"
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
 msgid "Indicats whether the favor of a reply is requested"
-msgstr ""
+msgstr "Vyznačuje, je-li vyžadováno odsouhlasení."
 
 #. module: base_calendar
 #: field:calendar.alarm,alarm_id:0
 msgid "Basic Alarm"
-msgstr "Základní budík"
+msgstr "Základní upozornění"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -193,6 +203,7 @@ msgstr "Odkaz události"
 #. module: base_calendar
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
+#: field:crm.meeting,we:0
 msgid "Wed"
 msgstr "St"
 
@@ -204,6 +215,7 @@ msgstr "Ukázat čas jako"
 #. module: base_calendar
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
+#: field:crm.meeting,tu:0
 msgid "Tue"
 msgstr "Út"
 
@@ -221,6 +233,7 @@ msgstr "Ročně"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Last"
 msgstr "Minulý"
 
@@ -241,15 +254,12 @@ msgid "Days"
 msgstr "Dnů"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Invitation Detail"
 msgstr "Podrobnosti pozvání"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1194
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "Chyba!"
@@ -257,7 +267,7 @@ msgstr "Chyba!"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Chair Person"
-msgstr ""
+msgstr "Předseda"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -303,7 +313,6 @@ msgid "The event ends"
 msgstr "Událost končí"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
 msgstr "Seskupit podle..."
@@ -326,7 +335,7 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
 msgid "Specify the type of Invitation"
-msgstr "Zadejte typ pozvání"
+msgstr "Zadejte druh pozvání"
 
 #. module: base_calendar
 #: selection:calendar.event,freq:0
@@ -352,9 +361,11 @@ msgid "Deadline"
 msgstr "Končný termín"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:389
-#: code:addons/base_calendar/base_calendar.py:1004
-#: code:addons/base_calendar/base_calendar.py:1006
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "Varování!"
@@ -362,6 +373,7 @@ msgstr "Varování!"
 #. module: base_calendar
 #: help:calendar.event,active:0
 #: help:calendar.todo,active:0
+#: help:crm.meeting,active:0
 msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
@@ -377,20 +389,22 @@ msgstr "Základní funkčnost kalendáře"
 #: field:calendar.event,organizer_id:0
 #: field:calendar.todo,organizer:0
 #: field:calendar.todo,organizer_id:0
+#: field:crm.meeting,organizer:0
+#: field:crm.meeting,organizer_id:0
 msgid "Organizer"
 msgstr "Organizátor"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
+#: field:crm.meeting,user_id:0
 msgid "Responsible"
-msgstr "Odopovědné"
+msgstr "Odpovědný"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: model:res.request.link,name:base_calendar.request_link_meeting
+#: model:res.request.link,name:base_calendar.request_link_event
 msgid "Event"
 msgstr "Událost"
 
@@ -410,6 +424,8 @@ msgstr "Před"
 #: view:calendar.event:0
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
+#: field:crm.meeting,date_open:0
+#: selection:crm.meeting,state:0
 msgid "Confirmed"
 msgstr "Potvrzeno"
 
@@ -421,7 +437,11 @@ msgstr "Upravit všechny události"
 #. module: base_calendar
 #: field:calendar.alarm,attendee_ids:0
 #: field:calendar.event,attendee_ids:0
+#: field:calendar.event,partner_ids:0
 #: field:calendar.todo,attendee_ids:0
+#: field:calendar.todo,partner_ids:0
+#: field:crm.meeting,attendee_ids:0
+#: field:crm.meeting,partner_ids:0
 msgid "Attendees"
 msgstr "Návštěvníci"
 
@@ -438,6 +458,7 @@ msgstr "Úkol kalendáře"
 #. module: base_calendar
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
+#: field:crm.meeting,su:0
 msgid "Sun"
 msgstr "Ne"
 
@@ -464,13 +485,14 @@ msgstr "Pověřen od"
 #. module: base_calendar
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
+#: selection:crm.meeting,select1:0
 msgid "Day of month"
 msgstr "Den v měsíci"
 
 #. module: base_calendar
-#: view:calendar.event:0
 #: field:calendar.event,location:0
 #: field:calendar.todo,location:0
+#: field:crm.meeting,location:0
 msgid "Location"
 msgstr "Umístění"
 
@@ -480,7 +502,6 @@ msgid "Send mail?"
 msgstr "Poslat poštu?"
 
 #. module: base_calendar
-#: field:base_calendar.invite.attendee,email:0
 #: selection:calendar.alarm,action:0
 #: field:calendar.attendee,email:0
 msgid "Email"
@@ -499,6 +520,7 @@ msgstr "Spustit"
 #. module: base_calendar
 #: field:calendar.event,exdate:0
 #: field:calendar.todo,exdate:0
+#: field:crm.meeting,exdate:0
 msgid "Exception Date/Times"
 msgstr "Datum/Počet vyjímky"
 
@@ -511,8 +533,9 @@ msgstr "Důvěryhodné"
 #. module: base_calendar
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
+#: field:crm.meeting,end_date:0
 msgid "Repeat Until"
-msgstr "Opakovat dokud"
+msgstr "Konec opakování"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
@@ -536,6 +559,7 @@ msgstr "Požadována odpověď?"
 #. module: base_calendar
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
+#: field:crm.meeting,base_calendar_url:0
 msgid "Caldav URL"
 msgstr "URL Caldav"
 
@@ -545,19 +569,20 @@ msgid "Select range to Exclude"
 msgstr "Vyberte rozsah pro vyřazení"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
 msgid "Recurrent ID"
 msgstr "ID opakování"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "July"
 msgstr "Červenec"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Accepted"
 msgstr "Přijato"
@@ -565,6 +590,7 @@ msgstr "Přijato"
 #. module: base_calendar
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
+#: field:crm.meeting,th:0
 msgid "Thu"
 msgstr "Čt"
 
@@ -608,6 +634,7 @@ msgstr "Nastavit rozsah vyloučení"
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Private"
 msgstr "Soukromé"
 
@@ -630,16 +657,16 @@ msgid "Mark as"
 msgstr "Označit jako"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: field:calendar.attendee,partner_address_id:0
+#: field:calendar.attendee,partner_id:0
 msgid "Contact"
-msgstr "Kontaktní"
+msgstr "Kontakt"
 
 #. module: base_calendar
 #: help:calendar.event,rrule_type:0
 #: help:calendar.todo,rrule_type:0
+#: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr "Nechat automaticky opakovat události v intervalu"
+msgstr "Nechat automaticky opakovat událost v intervalu"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -668,22 +695,28 @@ msgstr "_Ok"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "First"
 msgstr "První"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,class:0
+#: field:calendar.todo,class:0
+#: field:crm.meeting,class:0
 msgid "Privacy"
 msgstr "Soukromí"
 
 #. module: base_calendar
 #: field:calendar.event,vtimezone:0
 #: field:calendar.todo,vtimezone:0
+#: field:crm.meeting,vtimezone:0
 msgid "Timezone"
-msgstr "Časová zóna"
+msgstr "Časové pásmo"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Subject"
 msgstr "Předmět"
 
@@ -695,12 +728,14 @@ msgstr "Vyžaduje akci"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "September"
 msgstr "Září"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "December"
 msgstr "Prosinec"
 
@@ -727,6 +762,7 @@ msgstr "Jednotlivý"
 #. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
+#: help:crm.meeting,count:0
 msgid "Repeat x times"
 msgstr "Opakovat x-krát"
 
@@ -751,10 +787,9 @@ msgid "Common name"
 msgstr "Běžné jméno"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Declined"
-msgstr "Odmítnuté"
+msgstr "Odmítnuto"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -767,8 +802,8 @@ msgid "My Events"
 msgstr "Moje události"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Decline"
 msgstr "Odmítnout"
 
@@ -797,11 +832,12 @@ msgstr "Kontakty"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
-msgstr "Informace základního budíku"
+msgstr "Informace základního upozornění"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
+#: field:crm.meeting,fr:0
 msgid "Fri"
 msgstr "Pá"
 
@@ -825,12 +861,14 @@ msgstr "Člen"
 #. module: base_calendar
 #: help:calendar.event,location:0
 #: help:calendar.todo,location:0
+#: help:crm.meeting,location:0
 msgid "Location of Event"
 msgstr "Místo události"
 
 #. module: base_calendar
 #: field:calendar.event,rrule:0
 #: field:calendar.todo,rrule:0
+#: field:crm.meeting,rrule:0
 msgid "Recurrent Rule"
 msgstr "Pravidlo opakování"
 
@@ -856,8 +894,11 @@ msgstr "Konec opakování"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,alarm_id:0
+#: field:calendar.todo,alarm_id:0
+#: field:crm.meeting,alarm_id:0
 msgid "Reminder"
-msgstr "Upomínka"
+msgstr "Připomínka"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -881,12 +922,13 @@ msgstr "Pozvat účastníky"
 #. module: base_calendar
 #: help:calendar.attendee,email:0
 msgid "Email of Invited Person"
-msgstr "Email pozvané osoby"
+msgstr "E-mail pozvané osoby"
 
 #. module: base_calendar
 #: field:calendar.alarm,repeat:0
 #: field:calendar.event,count:0
 #: field:calendar.todo,count:0
+#: field:crm.meeting,count:0
 #: field:res.alarm,repeat:0
 msgid "Repeat"
 msgstr "Opakovaný"
@@ -901,24 +943,28 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "August"
 msgstr "Srpen"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Monday"
 msgstr "Pondělí"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Third"
 msgstr "Třetí"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "June"
 msgstr "Červen"
 
@@ -931,14 +977,14 @@ msgstr "Datum události"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "The"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_from:0
 msgid "Delegated From"
-msgstr "Pověřen od"
+msgstr "Pověřil"
 
 #. module: base_calendar
 #: field:calendar.attendee,user_id:0
@@ -948,19 +994,21 @@ msgstr "Uživatel"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,date:0
+#: field:crm.meeting,date:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "November"
 msgstr "Listopad"
 
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr "Označuje skupinu, do které účastník patří"
+msgstr "Označuje skupinu, jejímž je účastník členem"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -970,6 +1018,7 @@ msgstr "Data"
 #. module: base_calendar
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
 msgid "Mon"
 msgstr "Po"
 
@@ -988,12 +1037,16 @@ msgstr "Bez opakování"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "October"
 msgstr "Říjen"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
+#: selection:calendar.attendee,state:0
 #: view:calendar.event:0
+#: selection:calendar.event,state:0
+#: selection:calendar.todo,state:0
+#: view:crm.meeting:0
 msgid "Uncertain"
 msgstr "Nejistý"
 
@@ -1011,6 +1064,7 @@ msgstr "Spouštěče"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "January"
 msgstr "Leden"
 
@@ -1029,6 +1083,7 @@ msgstr "Rozmezí"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Wednesday"
 msgstr "Středa"
 
@@ -1041,6 +1096,7 @@ msgstr "Rozmezí nemůže být negativní"
 #. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
+#: field:crm.meeting,message_summary:0
 msgid "Summary"
 msgstr "Shrnutí"
 
@@ -1048,6 +1104,7 @@ msgstr "Shrnutí"
 #: field:calendar.alarm,active:0
 #: field:calendar.event,active:0
 #: field:calendar.todo,active:0
+#: field:crm.meeting,active:0
 #: field:res.alarm,active:0
 msgid "Active"
 msgstr "Aktivní"
@@ -1055,7 +1112,7 @@ msgstr "Aktivní"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr "Vyberte dny v měsíci, kdy opakovat setkání"
+msgstr "Vyberte dny v měsíci, kdy chcete opakovat setkání"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1074,8 +1131,8 @@ msgid ""
 "Duration' and 'Repeat' are both optional, but if one occurs, so MUST the "
 "other"
 msgstr ""
-"'Trvání' a 'Opakování' jsou oba volitelné, ale když je zvolen jeden, MUSÍ "
-"být i druhý"
+"'Trvání' a 'Opakování' jsou oba volitelné, ale když jeden určíte, MUSÍTE "
+"určit i druhý"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event_edit_all
@@ -1088,7 +1145,6 @@ msgid "Participation role for the calendar user"
 msgstr "Podílnická role pro uživatele kalendáře"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_to:0
 msgid "Delegated To"
 msgstr "Delegováno na"
@@ -1096,11 +1152,12 @@ msgstr "Delegováno na"
 #. module: base_calendar
 #: help:calendar.alarm,action:0
 msgid "Defines the action to be invoked when an alarm is triggered"
-msgstr "Definuje akci k vykonání, když je vyvolán budík"
+msgstr "Definuje akci, která se provede při spuštění upozornění"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
+#: selection:crm.meeting,end_type:0
 msgid "End date"
 msgstr "Konečné datum"
 
@@ -1129,8 +1186,9 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "ID data opakování"
 
@@ -1152,7 +1210,7 @@ msgstr "Stav"
 #. module: base_calendar
 #: view:res.alarm:0
 msgid "Reminder Details"
-msgstr "Podrobnosti upomínky"
+msgstr "Podrobnosti připomínky"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1174,12 +1232,12 @@ msgstr "Dokončeno"
 #. module: base_calendar
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
+#: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Opakovat každých (Dny/Týden/Měsíc/Rok)"
+msgstr "Opakovat každý (den/týden/měsíc/rok)"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: field:base_calendar.invite.attendee,user_ids:0
+#: model:ir.model,name:base_calendar.model_res_users
 msgid "Users"
 msgstr "Uživatelé"
 
@@ -1189,7 +1247,6 @@ msgid "of"
 msgstr "z"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Cancel"
 msgstr "Zrušit"
@@ -1202,6 +1259,7 @@ msgstr "res.users"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Tuesday"
 msgstr "Úterý"
 
@@ -1219,11 +1277,11 @@ msgid "Responsible User"
 msgstr "Zodpovědný uživatel"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1466
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 #, python-format
 msgid "Busy"
 msgstr "Zaneprázdněn"
@@ -1255,12 +1313,14 @@ msgstr "Pevné délka"
 #. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
+#: field:crm.meeting,recurrency:0
 msgid "Recurrent"
 msgstr "Opakovaný"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
+#: field:crm.meeting,rrule_type:0
 msgid "Recurrency"
 msgstr "Opakování"
 
@@ -1273,12 +1333,14 @@ msgstr "Pozvání události"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Thursday"
 msgstr "Čtvrtek"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
 #: field:calendar.todo,exrule:0
+#: field:crm.meeting,exrule:0
 msgid "Exception Rule"
 msgstr "Pravidlo výjimky"
 
@@ -1297,6 +1359,7 @@ msgstr "Podrobnosti"
 #. module: base_calendar
 #: help:calendar.event,exrule:0
 #: help:calendar.todo,exrule:0
+#: help:crm.meeting,exrule:0
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
@@ -1305,6 +1368,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
+#: field:crm.meeting,month_list:0
 msgid "Month"
 msgstr "Měsíc"
 
@@ -1335,12 +1399,14 @@ msgstr "Odkaz URI"
 #: field:calendar.event,name:0
 #: field:calendar.todo,description:0
 #: field:calendar.todo,name:0
+#: field:crm.meeting,description:0
 msgid "Description"
 msgstr "Popis"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "May"
 msgstr "Květen"
 
@@ -1377,14 +1443,14 @@ msgid "Objects"
 msgstr "Objekty"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Delegated"
-msgstr "Pověřený"
+msgstr "delegováno"
 
 #. module: base_calendar
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
+#: field:crm.meeting,sa:0
 msgid "Sat"
 msgstr "So"
 
@@ -1405,12 +1471,16 @@ msgstr "Vyberte uživatele, který jedná v zastoupení uživatele kalendáře"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,date_deadline:0
+#: field:calendar.todo,date_deadline:0
+#: field:crm.meeting,date_deadline:0
 msgid "End Date"
 msgstr "Datum ukončení"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "February"
 msgstr "Únor"
 
@@ -1426,6 +1496,7 @@ msgid "Resource"
 msgstr "Zdroj"
 
 #. module: base_calendar
+#: field:crm.meeting.type,name:0
 #: field:res.alarm,name:0
 msgid "Name"
 msgstr "Jméno"
@@ -1441,14 +1512,14 @@ msgid ""
 "Contains the text to be                      used as the message subject for "
 "email                      or contains the text to be used for display"
 msgstr ""
+"Obsahuje text, který bude použit jako předmět e-mailu nebo pro zobrazení"
 
 #. module: base_calendar
-#: field:calendar.event,alarm_id:0
 #: field:calendar.event,base_calendar_alarm_id:0
-#: field:calendar.todo,alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
+#: field:crm.meeting,base_calendar_alarm_id:0
 msgid "Alarm"
-msgstr "Budík"
+msgstr "Upozornění"
 
 #. module: base_calendar
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
@@ -1459,28 +1530,31 @@ msgstr "Před použitím pravidla vyjímky nejprve prosíme použijte opakován�
 #. module: base_calendar
 #: field:calendar.attendee,sent_by_uid:0
 msgid "Sent By User"
-msgstr "Posláno uživatelem"
+msgstr "Odesláno uživatelem"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "April"
 msgstr "Duben"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr "Perioda opakování"
+msgstr "Interval opakování"
 
 #. module: base_calendar
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
+#: field:crm.meeting,week_list:0
 msgid "Weekday"
 msgstr "Den v týdnu"
 
 #. module: base_calendar
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
+#: field:crm.meeting,byday:0
 msgid "By day"
 msgstr "Podle dne"
 
@@ -1497,13 +1571,14 @@ msgstr "Zvuk"
 #. module: base_calendar
 #: field:calendar.event,id:0
 #: field:calendar.todo,id:0
+#: field:crm.meeting,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "For information Purpose"
-msgstr "Pro informační účely"
+msgstr "Pro informaci"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1534,14 +1609,16 @@ msgstr "Odeslal"
 #. module: base_calendar
 #: field:calendar.event,sequence:0
 #: field:calendar.todo,sequence:0
+#: field:crm.meeting,sequence:0
 msgid "Sequence"
-msgstr "Přadí"
+msgstr "Pořadí"
 
 #. module: base_calendar
 #: help:calendar.event,alarm_id:0
 #: help:calendar.todo,alarm_id:0
+#: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr "Nastavit budík na tento čas před tím, než dojde k události"
+msgstr "Nastavit upozornění, než nastane událost"
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
@@ -1549,14 +1626,15 @@ msgid "Internal User"
 msgstr "Vnitřní uživatel"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Accept"
-msgstr "Přijmout"
+msgstr "Potvrdit"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Saturday"
 msgstr "Sobota"
 
@@ -1568,12 +1646,12 @@ msgstr "Pozvání na"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Second"
 msgstr "Druhý"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr "Volný/Zaneprázdněný"
 
@@ -1589,6 +1667,7 @@ msgstr "Způsob k ukončení opakování"
 #: field:calendar.event,duration:0
 #: field:calendar.todo,date:0
 #: field:calendar.todo,duration:0
+#: field:crm.meeting,duration:0
 #: field:res.alarm,duration:0
 #: field:res.alarm,trigger_duration:0
 msgid "Duration"
@@ -1602,7 +1681,7 @@ msgstr "Vnější Email"
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
 msgid "Trigger Date"
-msgstr "Datum spouštění"
+msgstr "Datum spuštění"
 
 #. module: base_calendar
 #: help:calendar.alarm,attach:0
@@ -1618,5 +1697,6 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Pátý"

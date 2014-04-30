@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:17+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -75,7 +75,9 @@ msgid "Project's Tasks"
 msgstr "مهام المشروع"
 
 #. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
 msgstr "المراحل"
 
@@ -303,7 +305,7 @@ msgid "Starting Date"
 msgstr "تاريخ البدء"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+#: view:project.phase:0
 msgid "Related Tasks"
 msgstr "مهام ذات صلة"
 
@@ -474,7 +476,8 @@ msgid "Done"
 msgstr "تم"
 
 #. module: project_long_term
-#: view:project.phase:0
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
 msgid "Cancel"
 msgstr "إلغاء"
 
@@ -537,6 +540,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr "حساب الجدول الزمني للمهمة للمشروع المحدد."
 
 #. module: project_long_term
+#: view:project.project:0
 #: view:project.user.allocation:0
 msgid "Phase"
 msgstr "طور"
@@ -646,6 +650,7 @@ msgid "By default in days"
 msgstr "بالافتراض في الايام"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "المُدة"

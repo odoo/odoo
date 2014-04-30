@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:26+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:35+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -41,7 +41,7 @@ msgstr "Flujos empujados"
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Automático paso no añadido"
+msgstr "Automático sin añadir paso"
 
 #. module: stock_location
 #: view:product.product:0
@@ -122,10 +122,11 @@ msgid ""
 msgstr ""
 "Se utiliza para definir rutas que el producto debe seguir dentro del árbol "
 "de ubicaciones.\n"
-"La opción 'Movimiento automático' creará un movimiento de stock después del "
-"actual que se validará automáticamente. Con 'Operación manual', el "
-"movimiento de stock debe ser validado por un trabajador. Con 'Automático "
-"paso no añadido', la ubicación se reemplaza en el movimiento original."
+"La opción 'Movimiento automático' creará un movimiento de existencias "
+"después del actual que se validará automáticamente. Con 'Operación manual', "
+"el movimiento de existencias debe ser validado por un trabajador. Con "
+"'Automático sin añadir paso', la ubicación se reemplaza en el movimiento "
+"original."
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
@@ -170,7 +171,7 @@ msgstr "Zona de expedición"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento stock"
+msgstr "Movimiento de existencias"
 
 #. module: stock_location
 #: view:product.product:0
@@ -208,7 +209,7 @@ msgstr "Obtener bajo pedido"
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Obtener para stock"
+msgstr "Obtener desde existencias"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -451,9 +452,10 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Obtener para stock': Cuando sea necesario, coger del stock o esperar hasta "
-"que se vuelva a suministrar. 'Obtener bajo pedido': Cuando sea necesario, "
-"comprar o producir para la solicitud de abastecimiento."
+"'Obtener desde existencias': Cuando sea necesario, se coge de las "
+"existencias o se espera hasta que se vuelva a suministrar. 'Obtener bajo "
+"pedido': Cuando sea necesario, se compra o produce para la solicitud de "
+"abastecimiento."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0

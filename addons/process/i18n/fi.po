@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:23+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
@@ -47,7 +47,7 @@ msgstr "Painikkeet"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr "Ryhmittely.."
+msgstr "Ryhmittele"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -57,7 +57,7 @@ msgstr "Tila"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr "Noodin tyyppi"
+msgstr "Solmutyyppi"
 
 #. module: process
 #: field:process.node,help_url:0
@@ -79,7 +79,6 @@ msgid "Nodes"
 msgstr "Solmut"
 
 #. module: process
-#: view:process.node:0
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
@@ -178,7 +177,7 @@ msgstr "Aloittavat siirtymät"
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
-msgstr "Huomautukset"
+msgstr "Muistiinpanot"
 
 #. module: process
 #: field:process.transition.action,transition_id:0
@@ -194,7 +193,7 @@ msgstr "Hae prosessia"
 #: selection:process.node,kind:0
 #: field:process.node,subflow_id:0
 msgid "Subflow"
-msgstr "Alikulku"
+msgstr "Aliprosessi"
 
 #. module: process
 #: field:process.process,active:0
@@ -219,7 +218,7 @@ msgstr "Toiminto"
 #. module: process
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
-msgstr "Aloittava kulku"
+msgstr "Prosessin alku"
 
 #. module: process
 #: model:ir.module.module,description:process.module_meta_information
@@ -262,16 +261,20 @@ msgid "Ending Transitions"
 msgstr "Lopettavat siirtymät"
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/js/process.js:243
+#: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
 #: field:process.node,process_id:0
 #: view:process.process:0
+#, python-format
 msgid "Process"
-msgstr "Prosessi"
+msgstr "-prosessi"
 
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr "Hae prosessinoodia"
+msgstr "Hae prosessisolmua"
 
 #. module: process
 #: view:process.node:0
@@ -309,7 +312,7 @@ msgstr "Kohdesolmu"
 #. module: process
 #: field:process.node,kind:0
 msgid "Kind of Node"
-msgstr "Solmun tyyppi"
+msgstr "Solmutyyppi"
 
 #. module: process
 #: view:process.node:0

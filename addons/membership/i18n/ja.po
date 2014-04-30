@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:09+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -227,7 +227,6 @@ msgstr "会員行"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "会員開始日"
 
@@ -251,6 +250,7 @@ msgstr "待機数"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "会員"
@@ -285,7 +285,7 @@ msgid ""
 msgstr "あなたが関連付けたい会員。それは会員の関係性の会員状態を考慮します。"
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
@@ -429,6 +429,7 @@ msgstr "会員販売価格表"
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "関連会員"
 
@@ -475,6 +476,7 @@ msgstr "請求書"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "無料会員"
@@ -548,8 +550,8 @@ msgid "June"
 msgstr "6月"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
 #: view:product.product:0
 #: field:product.product,membership:0
 #: view:report.membership:0
@@ -613,6 +615,7 @@ msgid "January"
 msgstr "1月"
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "会員料金"
@@ -652,7 +655,6 @@ msgstr "終了"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
 msgstr "現在の会員状態"
 
@@ -718,9 +720,6 @@ msgstr "会員のためのドラフト請求書"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "会員価格"
 
@@ -819,7 +818,7 @@ msgid "Cancelled Member"
 msgstr "キャンセル済会員"
 
 #. module: membership
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "エラー：無効な商品識別番号です。"
 

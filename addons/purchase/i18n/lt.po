@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:19+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:29+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -35,10 +35,11 @@ msgid "Invoiced & Paid"
 msgstr "Išrašyta S/F ir apmokėta"
 
 #. module: purchase
-#: field:purchase.order,location_id:0 view:purchase.report:0
+#: field:purchase.order,location_id:0
+#: view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr "Paskirties vieta"
+msgstr "Pristatymo vieta"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:772
@@ -51,7 +52,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Šio dokumento sukūrimo data."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -74,7 +75,7 @@ msgstr "Iš važtaraščio"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Neužpajamuota"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -82,7 +83,8 @@ msgid "Destination Address"
 msgstr "Paskirties vietos adresas"
 
 #. module: purchase
-#: report:purchase.order:0 field:purchase.report,validator:0
+#: report:purchase.order:0
+#: field:purchase.report,validator:0
 msgid "Validated By"
 msgstr "Patvirtintas"
 
@@ -92,8 +94,10 @@ msgid "Stock Invoice Onshipping"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0 field:purchase.order,partner_id:0
-#: view:purchase.order.line:0 view:purchase.report:0
+#: view:purchase.order:0
+#: field:purchase.order,partner_id:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
 msgstr "Tiekėjas"
@@ -112,10 +116,13 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:145
+#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/wizard/purchase_line_invoice.py:137
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
+#: view:res.partner:0
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Tiekėjo sąskaitos"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
@@ -135,7 +142,8 @@ msgid "No Pricelist !"
 msgstr "Nėra kainoraščio!"
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0 view:purchase.report:0
+#: field:purchase.order.line,product_qty:0
+#: view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
 msgstr "Kiekis"
@@ -146,31 +154,34 @@ msgid "Select an Open Sale Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
-#: view:purchase.report:0 field:purchase.report,company_id:0
+#: field:purchase.order,company_id:0
+#: field:purchase.order.line,company_id:0
+#: view:purchase.report:0
+#: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Mėnesniniai pirkimai pagal kategoriją"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr "Nustatyti kaip juodraštį"
+msgstr "Atstatyti į juodraštį"
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "Sąskaitos faktūros išimtis"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "Numatytas pardavimų kainoraštis"
+msgstr "Numatytasis pardavimų kainoraštis"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
@@ -193,8 +204,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
-"Šis kainoraštis bus naudojamas vietoje numatytojo pirkimams iš dabartinio "
-"partnerio"
+"Kainoraštis naudojamas užklausiant/perkant produktus iš šio kontakto. Kitu "
+"atveju bus naudojamas numatytasis pirkimų kainoraštis."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -207,6 +218,8 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
+"Kainoraštis nurodo, kokia valiuta įvestos kainos šiame pirkimų užsakyme. Jis "
+"taip pat naudojamas apskaičiuoti perkamų produktų kainas."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
@@ -226,7 +239,7 @@ msgstr "Patvirtinti pirkimą"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
-#: view:purchase.order:0 selection:purchase.order,state:0
+#: view:purchase.order:0
 #: selection:purchase.report,state:0
 msgid "Approved"
 msgstr "Patvirtinta"
@@ -234,7 +247,7 @@ msgstr "Patvirtinta"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Etaloninis matavimo vienetas"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -248,12 +261,15 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+#: model:ir.actions.act_window,name:purchase.open_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+#: view:res.partner:0
 msgid "Purchases"
-msgstr ""
+msgstr "Pirkimai"
 
 #. module: purchase
-#: view:purchase.order:0 field:purchase.order,notes:0
-#: view:purchase.order.line:0 field:purchase.order.line,notes:0
+#: view:purchase.order.line:0
 msgid "Notes"
 msgstr "Pastabos"
 
@@ -268,11 +284,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Rugsėjis"
 
 #. module: purchase
-#: report:purchase.order:0 field:purchase.order,amount_tax:0
-#: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
+#: report:purchase.order:0
+#: field:purchase.order,amount_tax:0
+#: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "Mokesčiai"
 
@@ -280,17 +297,23 @@ msgstr "Mokesčiai"
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
-#: field:procurement.order,purchase_id:0 view:purchase.order:0
+#: field:procurement.order,purchase_id:0
+#: view:purchase.config.settings:0
+#: view:purchase.order:0
+#: selection:purchase.order,state:0
+#: field:res.partner,purchase_order_ids:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
+#: field:stock.picking.in,purchase_id:0
 msgid "Purchase Order"
 msgstr "Pirkimo užsakymas"
 
 #. module: purchase
-#: field:purchase.order,name:0 view:purchase.order.line:0
+#: field:purchase.order,name:0
+#: view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "Užsakymo nuoroda"
+msgstr "Užsakymo numeris"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -307,7 +330,7 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
-msgstr ""
+msgstr "Produktai"
 
 #. module: purchase
 #: field:purchase.installer,progress:0
@@ -322,10 +345,11 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
-msgstr "Nutrauktas"
+msgstr "Atšauktas"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:315
@@ -339,21 +363,24 @@ msgid "Convert to Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0
+#: field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "Kainoraštis"
 
 #. module: purchase
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Pristatymo klaida"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Sąskaitos eilutės"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
@@ -362,7 +389,7 @@ msgstr "Gaunami produktai"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Išsiunčiami produktai"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -377,7 +404,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr "Nuoroda"
+msgstr "Numeris"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:244
@@ -393,12 +420,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Atsargų judėjimas"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,day:0
+#: view:purchase.report:0
+#: field:purchase.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Data"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:326
@@ -412,9 +440,10 @@ msgid "Analytic Account"
 msgstr "Analitinė sąskaita"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,nbr:0
+#: view:purchase.report:0
+#: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# eilučių"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
@@ -437,7 +466,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Juodraštis"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -452,7 +481,7 @@ msgstr "Užsakymo eilutė"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "Tai parodo, kad siunta buvo gauta."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:772
@@ -467,9 +496,10 @@ msgid "Confirmed"
 msgstr "Patvirtinta"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,price_average:0
+#: view:purchase.report:0
+#: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Vidutinė suma"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -484,7 +514,6 @@ msgstr "Patvirtinti"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
-#: view:purchase.order:0
 msgid "Invoice Control"
 msgstr "S/F kontrolė"
 
@@ -496,12 +525,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "Užsakymo numeris"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Bendra mokesčių suma"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -534,17 +563,17 @@ msgstr "Tel.:"
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr "Važtaraštis"
+msgstr "Siunta"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Print"
-msgstr ""
+msgstr "Spausdinti"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "Sulieti pirkimų užsakymus"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -563,9 +592,10 @@ msgid "Fax:"
 msgstr "Faksas:"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,price_total:0
+#: view:purchase.report:0
+#: field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Iš viso"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -576,7 +606,7 @@ msgstr "Neapmokestinama suma"
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Kainoraščiai"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -631,7 +661,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:769
+#: code:addons/purchase/purchase.py:982
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -652,7 +682,7 @@ msgstr "Iš užsakymo"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr "Sukurti sąskaitą faktūrą"
+msgstr "Išrašyti sąskaitą"
 
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
@@ -666,22 +696,21 @@ msgid "Invalid action !"
 msgstr "Netinkamas veiksmas!"
 
 #. module: purchase
-#: view:purchase.order:0 selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0 selection:purchase.report,state:0
-#: view:stock.picking:0
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
 msgid "Done"
 msgstr "Atlikta"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Liepa"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
-#: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Nustatymai"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
@@ -700,7 +729,8 @@ msgid "Receptions"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,validator:0 view:purchase.report:0
+#: field:purchase.order,validator:0
+#: view:purchase.report:0
 msgid "Validated by"
 msgstr "Patikrinta"
 
@@ -745,7 +775,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Laukiama patvirtinimo"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -759,11 +789,13 @@ msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0 view:purchase.order:0
-#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
-#: field:purchase.report,date:0 view:stock.picking:0
+#: report:purchase.order:0
+#: view:purchase.order:0
+#: field:purchase.order,date_order:0
+#: field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Užsakymo data"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
@@ -793,7 +825,7 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
 #: model:process.node,name:purchase.process_node_invoicecontrol0
 msgid "Draft Invoice"
-msgstr "Sąskaitos faktūros juodraštis"
+msgstr "Sąskaitos juodraštis"
 
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
@@ -806,11 +838,12 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
+"Ši reikšmė nurodo minimalų terminą, per kurį bus pristatyti produktai."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Rugpjūtis"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
@@ -823,25 +856,26 @@ msgid "Units of Measure Categories"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,delay_pass:0
+#: view:purchase.report:0
+#: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Dienos pristatymui"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
+#: view:purchase.order:0
 msgid "Receive Products"
-msgstr ""
+msgstr "Gauti produktai"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Planinis užsakymas"
 
 #. module: purchase
-#: view:purchase.order:0 field:purchase.order,invoice_ids:0
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Sąskaitos faktūros"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -859,9 +893,10 @@ msgid "Total Orders Lines by User per month"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,month:0
+#: view:purchase.report:0
+#: field:purchase.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mėnuo"
 
 #. module: purchase
 #: selection:purchase.report,state:0
@@ -871,7 +906,7 @@ msgstr ""
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr "Kainų užklausa:"
+msgstr "Kainos paklausimas:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
@@ -881,12 +916,12 @@ msgstr "Pirkimo užsakymas laukiantis patvirtinimo"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "Iš viso, be mokesčių"
 
 #. module: purchase
-#: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
+#: field:purchase.order,shipped:0
 msgid "Received"
-msgstr "Gauta"
+msgstr "Priimta"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
@@ -923,14 +958,16 @@ msgid "Taxes :"
 msgstr "Mokesčiai:"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0
+#: field:purchase.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "S/F išrašyta"
+msgstr "Sąskaitos faktūros"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,category_id:0
+#: view:purchase.report:0
+#: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
@@ -951,11 +988,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Sukurti sąskaitas faktūras"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
-#: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
+#: view:purchase.order.line:0
+#: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Pirkimo užsakymo eilutė"
 
@@ -1006,7 +1044,7 @@ msgstr "Suma be mokesčių"
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Tai parodo, kad susijusi sąskaita-faktūra buvo apmokėta."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -1032,7 +1070,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Šio dokumento sukūrimo data."
 
 #. module: purchase
 #: view:res.partner:0
@@ -1042,7 +1080,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Birželis"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1064,12 +1102,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Lapkritis"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Išplėstiniai filtrai..."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:359
@@ -1100,12 +1138,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr ""
+msgstr "Neįvykdyta"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Spalis"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1138,12 +1176,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Sausis"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Įmonės"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1166,9 +1204,10 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,price_standard:0
+#: view:purchase.report:0
+#: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "Produktų vertė"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
@@ -1176,9 +1215,12 @@ msgid "Pricelists Types"
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0 view:purchase.report:0
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: view:purchase.order:0
+#: view:purchase.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Komerciniai pasiūlymai"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
@@ -1194,12 +1236,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produktai pagal kategorijas"
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,delay:0
+#: view:purchase.report:0
+#: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "Dienos patvirtinimui"
 
 #. module: purchase
 #: help:purchase.order,origin:0
@@ -1220,7 +1263,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr "Tarpinė suma"
+msgstr "Suma"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1231,7 +1274,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr ""
+msgstr "Data, kuomet buvo patvirtintas šis pirkimų užsakymas"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -1258,34 +1301,36 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Fiskalinė pozicija"
+msgstr "Mokestinė aplinka"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Kainos paklausimas N°"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice"
-msgstr "Sąskaita faktūra"
+msgstr "Sąskaita-faktūra"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Gruodis"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: view:purchase.order:0 view:purchase.order.group:0
+#: view:purchase.config.settings:0
+#: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: purchase
-#: view:purchase.order:0 view:purchase.order.line:0
+#: view:purchase.order:0
+#: view:purchase.order.line:0
 msgid "Purchase Order Lines"
 msgstr "Pirkimo užsakymo eilutės"
 
@@ -1296,10 +1341,11 @@ msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:80
-#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: view:purchase.order:0
 #: view:purchase.report:0
+#: view:res.partner:0
 #, python-format
 msgid "Purchase Orders"
 msgstr "Pirkimų užsakymai"
@@ -1307,12 +1353,12 @@ msgstr "Pirkimų užsakymai"
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Susijęs dokumentas"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
-msgstr "Sujungti užsakymus"
+msgstr "Sulieti užsakymus"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1320,9 +1366,11 @@ msgid "Purchase Order Line Make Invoice"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking_in
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
+#: view:purchase.order:0
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Atvykstančios siuntos"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -1331,9 +1379,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
-#: selection:purchase.order,state:0 selection:purchase.report,state:0
+#: selection:purchase.report,state:0
 msgid "Request for Quotation"
-msgstr "Kainų užklausa"
+msgstr "Kainos paklausimas"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1341,23 +1389,25 @@ msgid "Tél. :"
 msgstr "Tel.:"
 
 #. module: purchase
-#: field:purchase.order,create_uid:0 view:purchase.report:0
+#: field:purchase.order,create_uid:0
+#: view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Atsakingas asmuo"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Our Order Reference"
-msgstr "Mūsų užsakymo nuoroda"
+msgstr "Mūsų užsakymo numeris"
 
 #. module: purchase
-#: view:purchase.order:0 view:purchase.order.line:0
+#: view:purchase.order:0
+#: view:purchase.order.line:0
 msgid "Search Purchase Order"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,warehouse_id:0 view:purchase.report:0
+#: view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Sandėlis"
@@ -1366,7 +1416,7 @@ msgstr "Sandėlis"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr ""
+msgstr "Kainos paklausimai."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1374,7 +1424,8 @@ msgid "Date Req."
 msgstr "Užsakymo data"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0
+#: field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "Patvirtinimo data"
 
@@ -1385,9 +1436,10 @@ msgid "Could not cancel this purchase order !"
 msgstr "Negalima atšaukti šio pirkimo užsakymo!"
 
 #. module: purchase
-#: report:purchase.order:0 field:purchase.order.line,price_unit:0
+#: report:purchase.order:0
+#: field:purchase.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "Vieneto kaina"
+msgstr "Kaina"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1397,11 +1449,13 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Suplanuota data"
 
 #. module: purchase
-#: field:purchase.order,product_id:0 view:purchase.order.line:0
-#: field:purchase.order.line,product_id:0 view:purchase.report:0
+#: field:purchase.order,product_id:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,product_id:0
+#: view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
 msgstr "Produktas"
@@ -1413,7 +1467,8 @@ msgid "Confirmation"
 msgstr ""
 
 #. module: purchase
-#: report:purchase.order:0 field:purchase.order.line,name:0
+#: report:purchase.order:0
+#: field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
 msgstr "Aprašymas"
@@ -1432,12 +1487,12 @@ msgstr "Num. pristatymo adresas:"
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr ""
+msgstr "Siuntų analizė"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "Bendra suma atėmus mokesčius"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1453,9 +1508,10 @@ msgid "Delivery"
 msgstr "Pristatymas"
 
 #. module: purchase
-#: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
+#: view:board.board:0
+#: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Kainos paklausimai"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1463,7 +1519,8 @@ msgid "Product UOM"
 msgstr "Produkto mato vnt."
 
 #. module: purchase
-#: report:purchase.order:0 report:purchase.quotation:0
+#: report:purchase.order:0
+#: report:purchase.quotation:0
 msgid "Qty"
 msgstr "Kiekis"
 
@@ -1499,7 +1556,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Vasaris"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
@@ -1510,19 +1567,20 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "Pirkimų analizė"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Your Order Reference"
-msgstr "Jūsų užsakymo nuoroda"
+msgstr "Jūsų užsakymo numeris"
 
 #. module: purchase
-#: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
-#: report:purchase.quotation:0 field:purchase.report,expected_date:0
-#: view:stock.picking:0
+#: view:purchase.order:0
+#: field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0
+#: field:purchase.report,expected_date:0
 msgid "Expected Date"
-msgstr "Numoma pristymo data"
+msgstr "Numanoma pristatymo data"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
@@ -1554,12 +1612,12 @@ msgstr "Pirkimo kontrolė"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Kovas"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Balandis"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1576,22 +1634,34 @@ msgid ""
 "\n"
 " "
 msgstr ""
+" Atkreipkite dėmesį: \n"
+" \n"
+" Užsakymai bus sulieti tik jeigu: \n"
+" * Pirkimo užsakymai dar nėra patvirtinti\n"
+" * Pirkimo užsakymai yra vieno tiekėjo \n"
+" * Pirkimo užsakymai naudoja tą pačią atsargų vietą bei kainoraštį \n"
+" \n"
+" Užsakymo eilutės bus sulietos tik jeigu: \n"
+" * Užsakymo eilutės yra identiškos, išskyrus produktą, kiekį bei matavimo "
+"vienetą \n"
+" "
 
 #. module: purchase
-#: view:purchase.report:0 field:purchase.report,name:0
+#: view:purchase.report:0
+#: field:purchase.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Metai"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Pirkimo kaina-Savikaina"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr "Pirkimo kainoraštis"
+msgstr "Pirkimų kainoraštis"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -1601,7 +1671,7 @@ msgstr "S/F kontrolė"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr ""
+msgstr "Patvirtinti"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1637,9 +1707,10 @@ msgid "Total"
 msgstr "Iš viso"
 
 #. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+#: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_pricelist_version_action
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Kainoraščio versijos"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1652,10 +1723,11 @@ msgid "Are you sure you want to merge these orders ?"
 msgstr "Ar tikrai norite sujungti šiuos užsakymus?"
 
 #. module: purchase
-#: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
-#: view:stock.picking:0
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupuoti pagal..."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
@@ -1670,17 +1742,17 @@ msgstr "PVM mok. kodas:"
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "Bendra suma su mokesčiais"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Gegužė"
 
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Pirkimo terminas"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -1691,15 +1763,16 @@ msgid ""
 msgstr ""
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model:process.process,name:purchase.process_process_purchaseprocess0
 msgid "Purchase"
-msgstr ""
+msgstr "Pirkimai"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0 view:stock.picking:0
+#: field:purchase.order.line,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partneris"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:737
@@ -1724,18 +1797,18 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Atsargų judėjimas"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Matavimo vienetai"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr ""
+msgstr "Pirkimai"
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -1746,10 +1819,11 @@ msgstr ""
 
 #. module: purchase
 #: view:board.board:0
-#: model:ir.actions.act_window,name:purchase.open_board_purchase
-#: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr ""
 
 #~ msgid "Approved by Supplier"
 #~ msgstr "Patvirtintas tiekėjo"
+
+#~ msgid "Purchase Order Confirmation N°"
+#~ msgstr "Pirkimo užsakymo patvirtinimas N°"

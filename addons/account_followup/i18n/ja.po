@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:43+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
@@ -55,6 +55,7 @@ msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
+#: view:res.partner:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -69,8 +70,7 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "フォローアップ"
 
@@ -84,11 +84,13 @@ msgstr "会社"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:258
+#, python-format
 msgid "Invoice Date"
 msgstr "請求日"
 
 #. module: account_followup
-#: field:account.followup.print.all,email_subject:0
+#: field:account_followup.print,email_subject:0
 msgid "Email Subject"
 msgstr "Eメール件名"
 
@@ -120,7 +122,7 @@ msgid "You can not create move line on closed account."
 msgstr ""
 
 #. module: account_followup
-#: field:account.followup.print,date:0
+#: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "送信日のフォローアップ"
 
@@ -162,7 +164,9 @@ msgid "Follow-up Message"
 msgstr "フォローアップメッセージ"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
+#: view:res.partner:0
 msgid "Follow-up"
 msgstr "フォローアップ"
 
@@ -175,6 +179,7 @@ msgstr "消費税："
 #: view:account_followup.stat:0
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "パートナ"
 
@@ -184,12 +189,12 @@ msgid "Date :"
 msgstr "日付 :"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_ids:0
+#: field:account_followup.print,partner_ids:0
 msgid "Partners"
 msgstr "パートナ"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
 msgstr "請求書の通知"
@@ -247,12 +252,12 @@ msgstr "Eメール本文"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "フォローアップレベル"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "最新フォローアップ"
 
@@ -281,7 +286,7 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_lang:0
+#: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "パートナ言語でEメール送信"
 
@@ -378,7 +383,7 @@ msgid "Blocked"
 msgstr "ブロック"
 
 #. module: account_followup
-#: help:account.followup.print,date:0
+#: help:account_followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr "この項目はフォローアップの計画するために予測日付の選択ができます。"
@@ -503,6 +508,7 @@ msgid "%(company_currency)s: User's Company Currency"
 msgstr "%(company_currency)s：ユーザの会社の通貨"
 
 #. module: account_followup
+#: field:account.move.line,result:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
@@ -537,8 +543,7 @@ msgid "Period"
 msgstr "期間"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
+#: view:account_followup.print:0
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -579,8 +584,10 @@ msgid "Followup Level"
 msgstr "フォローアップレベル"
 
 #. module: account_followup
-#: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Description"
 msgstr "説明"
 
@@ -595,7 +602,7 @@ msgid "Partner entries"
 msgstr "パートナエントリー"
 
 #. module: account_followup
-#: help:account.followup.print.all,partner_lang:0
+#: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
@@ -609,13 +616,11 @@ msgstr "売掛金項目"
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
 msgstr "送信済フォローアップ"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
 msgid "Name"
 msgstr "氏名"
 
@@ -659,8 +664,7 @@ msgid "Document : Customer account statement"
 msgstr "ドキュメント：顧客口座取引明細書"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
+#: field:account_followup.print,summary:0
 msgid "Summary"
 msgstr "要約"
 

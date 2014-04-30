@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:17+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "Language: hr\n"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
 msgid "Time-laps during which task has to be treated"
-msgstr ""
+msgstr "Vrijeme krugova u kojem zadatak mora biti tretiran"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -30,7 +30,7 @@ msgstr "project.gtd.timebox"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Ponovno aktiviraj"
 
 #. module: project_gtd
 #: constraint:project.task:0
@@ -40,12 +40,12 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "Putovanje"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "Timebox Empty Process Completed Successfully."
-msgstr ""
+msgstr "Timebox prazan proces uspješno završen."
 
 #. module: project_gtd
 #: view:project.task:0
@@ -61,21 +61,22 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "Dugoročno"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
 msgid "Project Timebox Empty"
-msgstr ""
+msgstr "Projekt timebox prazan"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
-msgstr ""
+msgstr "Danas"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Timebox"
 
@@ -103,7 +104,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
+msgstr "Ovaj tjedan"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -123,11 +124,14 @@ msgid ""
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
 msgstr ""
+"Timeboxovi su definirati u \"Getting Things Done\" (GTD) metodologiji. "
+"Timebox definira period vremena kako bi kategorizirali vaše zadatke: danas, "
+"ovaj tjedan, ovaj mjesec, dugoročno."
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
 msgid "Gives the sequence order when displaying a list of timebox."
-msgstr ""
+msgstr "Daje redoslijed sekvence kada prikazuje timebox listu."
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_monthly
@@ -137,17 +141,17 @@ msgstr ""
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "Sličica"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
 msgid "Project Timebox Fill"
-msgstr ""
+msgstr "Napuni timebox projekta"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Zadatak"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -157,7 +161,7 @@ msgstr "Dodaj u Timebox"
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
@@ -168,7 +172,7 @@ msgstr "Konteksti"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "Automobil"
 
 #. module: project_gtd
 #: model:ir.module.module,description:project_gtd.module_meta_information
@@ -205,7 +209,8 @@ msgstr "Timeboxovi"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Kontekst"
@@ -214,7 +219,7 @@ msgstr "Kontekst"
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
-msgstr ""
+msgstr "Nema timebox podređenog za ovaj!"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -230,17 +235,18 @@ msgstr "Getting Things Done"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
-msgstr ""
+msgstr "Ured"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Redoslijed"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "Daje redoslijed sekvence kod prikaza liste konteksta."
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -255,7 +261,7 @@ msgstr "Odabir zadataka"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
-msgstr ""
+msgstr "Pristigla pošta"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
@@ -265,12 +271,12 @@ msgstr "Uzmi iz Timeboxa"
 #. module: project_gtd
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
-msgstr ""
+msgstr "Kontekst mjesta gdje korisnik treba tretirati zadatak"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
-msgstr ""
+msgstr "Naslovna"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -279,6 +285,9 @@ msgid ""
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
 msgstr ""
+"Konteksti su definirani u \"Getiing Things Done\" metodologiji. To vam "
+"omogućuje da kategorizirati svoje zadatke u skladu s kontekstom u kojem oni "
+"moraju biti učinjeni: u uredu, kod kuće, kad uzmem moj auto, itd."
 
 #. module: project_gtd
 #: view:project.task:0

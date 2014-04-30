@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:26+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:35+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Pošiljanje blaga"
 
 #. module: stock_location
 #: view:product.product:0
@@ -30,7 +30,7 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Premik"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
@@ -40,7 +40,7 @@ msgstr ""
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
+msgstr "Samodejno - ni nadaljnjih korakov"
 
 #. module: stock_location
 #: view:product.product:0
@@ -78,7 +78,7 @@ msgstr ""
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "Interno"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -91,13 +91,13 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Lokacija"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Status računa"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
@@ -114,6 +114,12 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"Uporablja se za definiranje poti, po katerih mora potovati proizvod v okviru "
+"lokacijske strukture.\n"
+"'Avtomatični premik' bo kreiral premik zaloge po trenutnem premiku in bo "
+"potrjen avtomatično. Z 'Ročno operacijo' mora biti premik zaloge potrjen s "
+"strani zaposlenega. Z 'Avtomatično brez dodanih korakov' se lokacija "
+"nadomesti v originalni transakciji."
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
@@ -123,27 +129,27 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Pogoji"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Pakirna cona"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "Vhod B"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "Vhod A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Nakup"
 
 #. module: stock_location
 #: view:product.product:0
@@ -153,12 +159,12 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Odpremna cona"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Premik zaloge"
 
 #. module: stock_location
 #: view:product.product:0
@@ -169,7 +175,7 @@ msgstr ""
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Podjetje"
 
 #. module: stock_location
 #: view:product.product:0
@@ -180,32 +186,34 @@ msgstr ""
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Če je označeno, velja, da se ob preklicu tega premika prekliče tudi povezani "
+"premik"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "Proizvodnja"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Po naročilu"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Na zalogo"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Partnerjev naslov"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Za fakturiranje"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -303,7 +311,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Tip oskrbe"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -313,7 +321,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -331,18 +339,18 @@ msgstr "Ročno upravljanje"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Izdelek"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Metoda oskrbe"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Vrsta odpreme"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -355,12 +363,12 @@ msgstr ""
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "končna lokacija, ki potrebuje oskrbo"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr "Proizvodi"
+msgstr "Izdelki"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:118
@@ -371,13 +379,13 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Kontrola kakovosti"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Brezpredmetno"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -413,7 +421,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Oskrba"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
@@ -431,12 +439,12 @@ msgstr "Samodejna knjižba"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Pridobitev dobrin"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Vrsta dejanja"
 
 #. module: stock_location
 #: constraint:product.product:0
@@ -454,12 +462,12 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Procesiranje nalogov"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
 msgid "Operation"
-msgstr "Postopek"
+msgstr "Operacija"
 
 #. module: stock_location
 #: view:stock.location.path:0
@@ -470,7 +478,7 @@ msgstr "Poti do lokacije"
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Dnevnik"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -482,4 +490,4 @@ msgstr ""
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Fakturirano"

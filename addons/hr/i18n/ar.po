@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:00+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:10+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,7 +22,7 @@ msgid "Openerp user"
 msgstr "مستخدم OpenERP"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,requirements:0
+#: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "المتطلبات"
 
@@ -42,14 +42,18 @@ msgid "SIN No"
 msgstr "رقم التوقيع"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "الموارد البشرية"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.job:0
+#: view:hr.employee:0
+#: view:hr.job:0
 msgid "Group By..."
 msgstr "تجميع بـ ..."
 
@@ -68,8 +72,12 @@ msgstr ""
 "المتقدمين للحصول على هذه الوظيفة."
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
-#: field:hr.job,department_id:0 view:res.users:0
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "القسم"
 
@@ -99,7 +107,9 @@ msgid "title"
 msgstr "العنوان"
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.department,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "الشركة"
@@ -260,7 +270,7 @@ msgid "Child Categories"
 msgstr "تصنيفات فرعية"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,description:0
+#: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "وصف العمل"
@@ -271,7 +281,8 @@ msgid "Office Location"
 msgstr "مكان المكتب"
 
 #. module: hr
-#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "الموظف"
@@ -288,6 +299,7 @@ msgstr "بريد العمل الإلكتروني"
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "الاسم"
@@ -308,13 +320,14 @@ msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: view:board.board:0
 msgid "Human Resources Dashboard"
 msgstr "لوحة معلومات الموارد البشرية"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
 msgid "Job"
 msgstr "العمل"
 
@@ -366,7 +379,6 @@ msgstr "خطأ ! لايمكنك انشاء فئات عودية."
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "الأقسام"
 
@@ -410,7 +422,7 @@ msgstr "صورة"
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr "جهات اتصال الموظف"
+msgstr "عقود الموظف"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -466,7 +478,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "حساب راتب مصرف الموظف"
+msgstr "الحساب البنكي لراتب الموظف"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -496,6 +508,8 @@ msgstr "لوحة معلومات مدير الموارد البشرية"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
 msgstr "الحالة"
 
@@ -569,7 +583,7 @@ msgstr ""
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr "في مضمون الموظفين, هناك اختلاف في المعلومات مثل معلومات المتصل."
+msgstr "في مضمون الموظفين، هناك اختلاف في المعلومات مثل معلومات المتصل."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -612,7 +626,7 @@ msgid "Employee form and structure"
 msgstr "شكل الموظفين و الهيئة"
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
 msgstr "الصورة"
 
@@ -658,7 +672,7 @@ msgstr "الحالي"
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr "قسم الوالدين"
+msgstr "قسم رئيسي"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -687,14 +701,14 @@ msgid "Extends employee profiles to help manage their contracts."
 msgstr "وتمتد واجهة الموظف للمساعدة في إدارة عقودهم."
 
 #. module: hr
-#: field:hr.installer,hr_payroll:0
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
 msgstr "الراتب"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr "منفرد"
+msgstr "أعزب"
 
 #. module: hr
 #: field:hr.job,name:0
@@ -702,9 +716,9 @@ msgid "Job Name"
 msgstr "إسم الوظيفة"
 
 #. module: hr
-#: view:hr.job:0 selection:hr.job,state:0
+#: view:hr.job:0
 msgid "In Position"
-msgstr "في الوضع"
+msgstr "في المنصب"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -722,7 +736,7 @@ msgid "Nationality"
 msgstr "الجنسية"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,notes:0
+#: field:hr.employee,notes:0
 msgid "Notes"
 msgstr "الملاحظات"
 
@@ -753,14 +767,13 @@ msgid "Gender"
 msgstr "الجنس"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "الموظفون"
 
@@ -782,21 +795,22 @@ msgstr "رقم الضمان الإجتماعي"
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr "انشاء مستخدم a OpenERP"
+msgstr "إنشاء مستخدم للنظام"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr "اقسام الطفل"
+msgstr "الأقسام الفرعية"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr "مواضع الوظيفة"
+msgstr "منصب الوظيفة"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,coach_id:0
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "مدرب"
 
@@ -811,7 +825,8 @@ msgid "Expenses"
 msgstr "المصروفات"
 
 #. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "المدير"

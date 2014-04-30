@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -23,7 +23,7 @@ msgid "Openerp user"
 msgstr "OpenERP-käyttäjä"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,requirements:0
+#: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Vaatimukset"
 
@@ -35,7 +35,7 @@ msgstr "Virhe! Et voi luoda itseään toistavia osastoja."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr "Kytke työntekijä informaatioon"
+msgstr "Yhdistä työntekijä informaatioon"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -43,16 +43,20 @@ msgid "SIN No"
 msgstr "Vakuutustunnus"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
-msgstr "Henkilöstöjohtaminen"
+msgstr "Henkilöstöhallinto"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.job:0
+#: view:hr.employee:0
+#: view:hr.job:0
 msgid "Group By..."
-msgstr "Ryhmittely.."
+msgstr "Ryhmittely..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -65,8 +69,12 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
-#: field:hr.job,department_id:0 view:res.users:0
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Osasto"
 
@@ -83,12 +91,12 @@ msgstr "Merkitse vanhentuneeksi"
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr "Tehtävät"
+msgstr "Työt"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr "Palkattavana"
+msgstr "Käynnissä"
 
 #. module: hr
 #: view:hr.installer:0
@@ -96,7 +104,9 @@ msgid "title"
 msgstr "titteli"
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.department,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Yritys"
@@ -104,7 +114,7 @@ msgstr "Yritys"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr "Odotettu palkaaminen"
+msgstr "Vapaat työpaikat"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -133,7 +143,7 @@ msgstr ""
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr "Kiinnitä käyttäjä työntekijään"
+msgstr "Yhdistä käyttäjä työntekijään"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
@@ -193,8 +203,8 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
-"Liittyvä käyttäjätunnuskenttä työntekijälomakkeella mahdollistaan OpenERP "
-"käyttäjän (ja oikeuksien) liittämisen työntekijään."
+"Työntekijälomakkeella oleva Yhdistä käyttäjään -kenttä sallii OpenERP-"
+"käyttäjän (ja hänen käyttöoikeuksiensa) yhdistämisen mainittuun työntekijään."
 
 #. module: hr
 #: view:hr.job:0 selection:hr.job,state:0
@@ -204,7 +214,7 @@ msgstr "Palkattavana"
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr "Henkilöllisyyystunnus"
+msgstr "Henkilötunnus"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -237,7 +247,7 @@ msgstr "Tuntilistat"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Työntekijöiden rakenne"
+msgstr "Henkilöstön rakenne"
 
 #. module: hr
 #: view:hr.employee:0
@@ -257,13 +267,13 @@ msgstr "Työpuhelin"
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr "Alakategoriat"
+msgstr "Aliryhmät"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,description:0
+#: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr "Työnkuvaus"
+msgstr "Työnkuva"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -271,7 +281,8 @@ msgid "Office Location"
 msgstr "Toimiston sijainti"
 
 #. module: hr
-#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Työntekijä"
@@ -288,6 +299,7 @@ msgstr "Työpaikan sähköposti"
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Nimi"
@@ -305,16 +317,17 @@ msgstr "Raportointi"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr "Henkilöstöhallinnon Työpöytä"
+msgstr "Henkilöstöhallinnon työpöytä"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
 msgid "Job"
 msgstr "Tehtävä"
 
@@ -355,7 +368,7 @@ msgstr "Eronnut"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr "Yläkategoria"
+msgstr "Ylempi ryhmä"
 
 #. module: hr
 #: constraint:hr.employee.category:0
@@ -366,7 +379,6 @@ msgstr "Virhe! Et voi luoda rekursiivisia kategorioita."
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Osastot"
 
@@ -400,7 +412,7 @@ msgstr "Työntekijän kategoriat"
 #: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "Työntekijäkategoria"
+msgstr "Työntekijäryhmä"
 
 #. module: hr
 #: field:hr.installer,config_logo:0
@@ -410,7 +422,7 @@ msgstr "Kuva"
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr "Työtekijän sopimus"
+msgstr "Työsopimus"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -439,7 +451,7 @@ msgstr "Rekrytointiprosessi"
 #. module: hr
 #: field:hr.employee.category,name:0
 msgid "Category"
-msgstr "Kategoria"
+msgstr "Ryhmä"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -459,7 +471,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "Työntekijän pankkitilinumero"
+msgstr "Työntekijän palkanmaksun pankkitilinumero"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -489,8 +501,10 @@ msgstr "Henkilöstöpäällikön Työpöytä"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
-msgstr "Asema"
+msgstr "Tila"
 
 #. module: hr
 #: view:hr.installer:0
@@ -555,7 +569,9 @@ msgstr ""
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr "Työntekijänäytöllä on esimerkiksi yhteystiedot"
+msgstr ""
+"Työntekijälomakkeelle merkitään erilaista informaatiota, esimerkiksi "
+"yhteystiedot."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -598,7 +614,7 @@ msgid "Employee form and structure"
 msgstr "Työntekijälomake ja rakenne"
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
 msgstr "Kuva"
 
@@ -649,7 +665,7 @@ msgstr "Ylempi osasto"
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr "Työntekijöiden kategoriat"
+msgstr "Työntekijäryhmät"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -673,9 +689,9 @@ msgid "Extends employee profiles to help manage their contracts."
 msgstr "Laajentaa työntekijäprofiileja mahdolistaen sopimustenhallinnan"
 
 #. module: hr
-#: field:hr.installer,hr_payroll:0
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
-msgstr "Palkanmaksu"
+msgstr "Palkkahallinto"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -685,12 +701,12 @@ msgstr "Naimaton"
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr "Tehtävän nimi"
+msgstr "Tehtävänimike"
 
 #. module: hr
-#: view:hr.job:0 selection:hr.job,state:0
+#: view:hr.job:0
 msgid "In Position"
-msgstr "Asemassa"
+msgstr "Tehtävässä"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -705,12 +721,12 @@ msgstr "osasto"
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr "Kansallisuus"
+msgstr "Kansalaisuus"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,notes:0
+#: field:hr.employee,notes:0
 msgid "Notes"
-msgstr "Huomautukset"
+msgstr "Muistiinpanot"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
@@ -739,14 +755,13 @@ msgid "Gender"
 msgstr "Sukupuoli"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "Työntekijät"
 
@@ -768,7 +783,7 @@ msgstr "Sosiaaliturvatunnus"
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr "OpenERP käyttäjätunnuksen luonti"
+msgstr "OpenERP-käyttäjän luonti"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -782,7 +797,8 @@ msgid "Job Positions"
 msgstr "Työtehtävät"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,coach_id:0
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Valmentaja"
 
@@ -797,7 +813,8 @@ msgid "Expenses"
 msgstr "Kustannukset"
 
 #. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Esimies"
@@ -805,7 +822,7 @@ msgstr "Esimies"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr "Leski (mies)"
+msgstr "Leski"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0

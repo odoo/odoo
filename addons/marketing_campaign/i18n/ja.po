@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:08+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -28,7 +28,7 @@ msgid "Previous Activity"
 msgstr "前のアクティビティ"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "この項目の現在の手順は、プレビューすべきEメールやレポートを持ちません。"
@@ -145,6 +145,7 @@ msgid "Set to Draft"
 msgstr "ドラフトに設定"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "次のアクティビティ"
@@ -160,7 +161,7 @@ msgid "This Year"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "No preview"
 msgstr "プレビューなし"
@@ -321,7 +322,7 @@ msgstr "月"
 #: model:ir.model,name:marketing_campaign.model_res_partner
 #: field:marketing.campaign.workitem,partner_id:0
 msgid "Partner"
-msgstr "パートナ"
+msgstr "取引先"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -385,6 +386,7 @@ msgid "Run"
 msgstr "実行"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "前のアクティビティ"
@@ -410,6 +412,7 @@ msgstr "エラーメッセージ"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "キャンペーン"
 
@@ -458,8 +461,6 @@ msgid "Campaign Segment"
 msgstr "キャンペーンセグメント"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "キャンセル"
@@ -477,6 +478,7 @@ msgid "Exceptions"
 msgstr "例外"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
 msgstr "作業項目"
@@ -524,7 +526,9 @@ msgid "Next Activity"
 msgstr "次のアクティビティ"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "キャンペーンフォローアップ"
 
@@ -554,7 +558,7 @@ msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "キャンペーン統計値"
 
@@ -566,7 +570,7 @@ msgstr "このアクティビティが有効化された時にアクションを
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
 msgid "Partner Field"
-msgstr "パートナ項目"
+msgstr "取引先項目"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -683,7 +687,6 @@ msgstr "新規に作成"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "日付"
 
@@ -693,7 +696,6 @@ msgid "November"
 msgstr "11月"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "条件"
@@ -763,7 +765,6 @@ msgid "Error"
 msgstr "エラー"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "アクション"
@@ -881,8 +882,10 @@ msgid "Campaign Step"
 msgstr "キャンペーン手順"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "セグメント"
@@ -908,6 +911,7 @@ msgid "Day(s)"
 msgstr "日"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
@@ -934,6 +938,7 @@ msgstr "%(interval_nbr)d %(interval_type)s 後"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
 msgstr "マーケティングキャンペーン"
 
@@ -969,7 +974,7 @@ msgstr ""
 "れます。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
+#: code:addons/marketing_campaign/marketing_campaign.py:793
 #, python-format
 msgid "Email Preview"
 msgstr "Eメールプレビュー"
@@ -1004,7 +1009,6 @@ msgstr "モード"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1033,7 +1037,6 @@ msgid "Next Synchronization"
 msgstr "次の同期"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
 msgstr "フィルタ"
@@ -1061,7 +1064,6 @@ msgstr "手動確認"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
 msgid "Cost"
 msgstr "経費"
 

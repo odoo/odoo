@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2012-01-05 10:30+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:00+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:10+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: event
 #: view:event.event:0
@@ -69,8 +69,7 @@ msgid "Make Invoices"
 msgstr "Creeaza Facturi"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Data inregistrarii"
 
@@ -130,12 +129,8 @@ msgid "Invoice Date"
 msgstr "Data facturii"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:88
 #: view:event.registration:0
-#: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
-#: view:partner.event.registration:0
-#, python-format
 msgid "Event Registration"
 msgstr "Inregistrare eveniment"
 
@@ -183,6 +178,7 @@ msgid "Events Analysis"
 msgstr "Analiza evenimentelor"
 
 #. module: event
+#: field:event.event,message_ids:0
 #: field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Mesaje"
@@ -198,16 +194,15 @@ msgid "Ticket for Opera"
 msgstr "Bilet pentru opera"
 
 #. module: event
-#: code:addons/event/event.py:125
 #: view:event.event:0
-#, python-format
 msgid "Confirm Event"
 msgstr "Confirma evenimentul"
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "Anulat(a)"
 
@@ -270,8 +265,8 @@ msgid "Customer Invoices"
 msgstr "Facturi client"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Draft"
 msgstr "Ciorna"
 
@@ -286,11 +281,9 @@ msgid " Event Type "
 msgstr " Tipul evenimentului "
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
@@ -308,7 +301,8 @@ msgstr "Insigne"
 #: selection:event.event,state:0
 #: view:event.registration:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "Confirmat(a)"
 
@@ -380,7 +374,6 @@ msgstr "Raspundeti"
 
 #. module: event
 #: field:event.event,register_current:0
-#: view:report.event.registration:0
 msgid "Confirmed Registrations"
 msgstr "Inregistrari confirmate"
 
@@ -396,7 +389,7 @@ msgid "Type"
 msgstr "Tip"
 
 #. module: event
-#: field:event.registration,email_from:0
+#: field:event.registration,email:0
 msgid "Email"
 msgstr "E-mail"
 
@@ -479,7 +472,6 @@ msgstr "Date"
 
 #. module: event
 #: view:event.confirm:0
-#: view:event.confirm.registration:0
 msgid "Confirm Anyway"
 msgstr "Confirma oricum"
 
@@ -492,8 +484,6 @@ msgstr "Avertisment: Evenimentul '%s' si-a atins Limita maxima (%s)."
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
 msgid "Registration"
 msgstr "Inregistrare"
 
@@ -531,7 +521,6 @@ msgid "Last 30 Days"
 msgstr "Ultimele 30 de zile"
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
@@ -539,7 +528,6 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: event
-#: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
@@ -561,7 +549,6 @@ msgid "Ticket for Concert"
 msgstr "Bilet pentru Concert"
 
 #. module: event
-#: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
 msgstr "Inregistrari neconfirmate"
@@ -578,11 +565,7 @@ msgstr "Jurnale"
 
 #. module: event
 #: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-#: view:report.event.registration:0
-#: field:report.event.registration,state:0
+#: field:event.event,state_id:0
 msgid "State"
 msgstr "Stare"
 
@@ -724,8 +707,12 @@ msgstr "Inchis"
 #. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_event_event_assiciation
+#: model:ir.ui.menu,name:event.menu_reporting_events
 #: view:res.partner:0
 msgid "Events"
 msgstr "Evenimente"
@@ -842,17 +829,13 @@ msgid "Set To Draft"
 msgstr "Setare ca Ciorna"
 
 #. module: event
-#: code:addons/event/event.py:499
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Confirm Registration"
 msgstr "Confirma Inregistrarea"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
 #: view:res.partner:0
 msgid "Date"
 msgstr "Data"
@@ -912,12 +895,8 @@ msgstr ""
 "Eroare ! Data de inchidere nu poate fi setata inaintea Datei de incepere."
 
 #. module: event
-#: code:addons/event/event.py:446
 #: selection:event.event,state:0
-#: view:event.make.invoice:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
-#, python-format
+#: selection:report.event.registration,event_state:0
 msgid "Done"
 msgstr "Efectuat"
 
@@ -939,8 +918,7 @@ msgid "Year"
 msgstr "An"
 
 #. module: event
-#: code:addons/event/event.py:465
-#, python-format
+#: view:event.confirm:0
 msgid "Cancel"
 msgstr "Anuleaza"
 
@@ -977,9 +955,6 @@ msgstr "Confirmare automata: [%s] %s"
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration,user_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
 msgid "Responsible"
 msgstr "Responsabil"
 
@@ -1045,10 +1020,7 @@ msgid "Product"
 msgstr "Produs"
 
 #. module: event
-#: view:event.event:0
 #: field:event.event,note:0
-#: view:event.registration:0
-#: field:event.registration,description:0
 msgid "Description"
 msgstr "Descriere"
 
@@ -1058,6 +1030,7 @@ msgid " # No of Confirmed Registrations"
 msgstr " # Nr Inregistrarilor confirmate"
 
 #. module: event
+#: view:event.event:0
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "Abonare"
@@ -1111,6 +1084,8 @@ msgid "Beginning Date of Event"
 msgstr "Data de incepere a evenimentului"
 
 #. module: event
+#: view:event.event:0
+#: selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Neconfirmat"
@@ -1122,7 +1097,7 @@ msgid "Auto Registration: [%s] %s"
 msgstr "Inregistrare automata: [%s] %s"
 
 #. module: event
-#: field:event.registration,date_deadline:0
+#: field:event.event,date_end:0
 msgid "End Date"
 msgstr "Data de sfarsit"
 
@@ -1138,7 +1113,8 @@ msgstr "Tablou de bord asociatie"
 
 #. module: event
 #: view:event.event:0
-#: field:event.registration.badge,name:0
+#: field:event.event,name:0
+#: field:event.registration,name:0
 msgid "Name"
 msgstr "Nume"
 
@@ -1152,6 +1128,7 @@ msgstr ""
 "automata sau memento-uri"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Tara"
@@ -1163,11 +1140,7 @@ msgid "Registration is set as Cannot be invoiced"
 msgstr "Inregistrarea este setata pe Nu se poate factura"
 
 #. module: event
-#: code:addons/event/event.py:527
-#: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Close Registration"
 msgstr "Inchide Inregistrarea"
 
@@ -1177,30 +1150,32 @@ msgid "April"
 msgstr "Aprilie"
 
 #. module: event
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
 msgid "Summary"
 msgstr "Rezumat"
 
 #. module: event
 #: view:event.event:0
 #: view:event.type:0
+#: field:event.type,name:0
 #: view:report.event.registration:0
-#: field:report.event.registration,type:0
+#: field:report.event.registration,event_type:0
 msgid "Event Type"
 msgstr "Tipul evenimentului"
 
 #. module: event
 #: view:event.event:0
 #: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration_association
+#: view:res.partner:0
 msgid "Registrations"
 msgstr "Inregistrari"
 
 #. module: event
-#: field:event.registration,date:0
+#: field:event.event,date_begin:0
 msgid "Start Date"
 msgstr "Data de incepere"
 
@@ -1211,7 +1186,8 @@ msgid "Maximum Registrations"
 msgstr "Inregistrari Maxime"
 
 #. module: event
-#: field:report.event.registration,date:0
+#: field:event.registration,event_begin_date:0
+#: field:report.event.registration,event_date:0
 msgid "Event Start Date"
 msgstr "Data de incepere a evenimentului"
 

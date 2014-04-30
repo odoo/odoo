@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:56+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:55+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -130,6 +130,7 @@ msgstr "Фактические претензии"
 #. module: crm_claim
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Cancelled"
 msgstr "Отменено"
 
@@ -269,6 +270,7 @@ msgid "July"
 msgstr "Июль"
 
 #. module: crm_claim
+#: view:crm.claim.stage:0
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
 msgstr "Этапы претензии"
@@ -307,7 +309,7 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_claim_stage_act
+#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
 msgid "Stages"
 msgstr "Этапы"
 
@@ -412,6 +414,7 @@ msgstr "Низкий"
 #: field:crm.claim,date_closed:0
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Closed"
 msgstr "Закрыто"
 
@@ -420,6 +423,7 @@ msgstr "Закрыто"
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Pending"
 msgstr "Отложено"
 
@@ -531,9 +535,9 @@ msgstr "Эти люди получат эл. письма."
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Претензии"
@@ -555,6 +559,7 @@ msgid "History"
 msgstr "История"
 
 #. module: crm_claim
+#: view:crm.claim:0
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
@@ -579,7 +584,6 @@ msgid "State"
 msgstr "Состояние"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Сделано"
@@ -590,7 +594,6 @@ msgid "Claim Reporter"
 msgstr "Предъявивший претензию"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Cancel"
 msgstr "Отменить"
@@ -601,7 +604,6 @@ msgid "Close"
 msgstr "Закрыть"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -610,8 +612,10 @@ msgstr "Открыть"
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+#: selection:crm.claim.stage,state:0
 msgid "In Progress"
-msgstr "Выполняется"
+msgstr "В работе"
 
 #. module: crm_claim
 #: view:crm.claim:0

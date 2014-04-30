@@ -8,17 +8,16 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-12-21 20:05+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:10+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:21+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
@@ -50,7 +49,7 @@ msgstr "Groepeer op..."
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Information from the routing definition."
-msgstr "Informatie van de route definitie"
+msgstr "Informatie van de productieroute"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -59,9 +58,8 @@ msgstr "Maart"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr "Werkplekken"
+msgstr "Productiestappen"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -136,10 +134,10 @@ msgstr "De werkopdracht is gecreëerd op basis van de productieorder"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:134
-#: code:addons/mrp_operations/mrp_operations.py:470
-#: code:addons/mrp_operations/mrp_operations.py:474
-#: code:addons/mrp_operations/mrp_operations.py:486
-#: code:addons/mrp_operations/mrp_operations.py:489
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -205,8 +203,8 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
-"Er is 1 werkopdracht per werkplek. De informatie over het aantal herhalingen "
-"of de herhaaltijd."
+"Er is 1 werkopdracht per productiestap. De informatie over het aantal "
+"herhalingen of de herhaaltijd."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -270,6 +268,10 @@ msgid "Operation Name"
 msgstr "Bewerkingsnaam"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
 msgstr "Status"
@@ -347,7 +349,6 @@ msgstr "Werkopdracht rapprot"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
-#: field:mrp.production.workcenter.line,date_start_date:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
 msgstr "Startdatum"
@@ -564,7 +565,7 @@ msgid "Finish the operation."
 msgstr "De verwerking afronden."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "Bewerking is nog niet gestart!"
@@ -575,10 +576,10 @@ msgid "Information from the production order."
 msgstr "Informatie van de productieorder"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
-#: code:addons/mrp_operations/mrp_operations.py:466
-#: code:addons/mrp_operations/mrp_operations.py:479
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
 msgstr "Sorry!"
@@ -625,7 +626,7 @@ msgstr "Werk uitgevoerd"
 #: view:mrp.workorder:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
@@ -633,7 +634,6 @@ msgid "Start/Stop Barcode"
 msgstr "Start/Stop Barcode"
 
 #. module: mrp_operations
-#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Cancel"
 msgstr "Annuleren"
@@ -666,7 +666,7 @@ msgstr "Informatie"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr "Werkplek Barcode"
+msgstr "Productiestap barcode"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
@@ -703,7 +703,7 @@ msgstr "Zoek werkopdrachten"
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
-msgstr "Werkplek"
+msgstr "Productiestap"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -763,7 +763,7 @@ msgstr "Eenheid"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
-msgstr "Uren per werkplek"
+msgstr "Uren per productiestap"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0

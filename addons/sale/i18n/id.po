@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-05 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:31+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -46,6 +46,7 @@ msgstr "Alamat pengiriman untuk  sales order saat ini."
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
+#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Kuantitas"
 
@@ -99,7 +100,6 @@ msgid "All at Once"
 msgstr "Sekaligus"
 
 #. module: sale
-#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -124,6 +124,7 @@ msgid "Procurement Order"
 msgstr "Order procurement"
 
 #. module: sale
+#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
@@ -294,13 +295,13 @@ msgid "Shop Name"
 msgstr "Nama toko"
 
 #. module: sale
-#: code:addons/sale/sale.py:1017
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Nama konsumen tidak ditemukan"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree2
+#: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
 msgstr "Sales dalam Pengecualian"
 
@@ -402,8 +403,8 @@ msgid "October"
 msgstr "Oktober"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
+#: model:ir.actions.act_window,name:sale.action_quotations
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
@@ -455,7 +456,6 @@ msgid "Number Packages"
 msgstr "Nomor Kemasan"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
 msgstr "Dalam Proses"
@@ -527,7 +527,7 @@ msgstr ""
 "Meningkatkan Aplikasi Penjualan anda dengan fungsionalitas  tambahan."
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0
+#: field:sale.order,invoice_exists:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Terinvoice"
@@ -623,7 +623,6 @@ msgstr "Buka Faktur Penjualan"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
-#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
 msgstr "Daftar order penjualan"
 
@@ -643,6 +642,7 @@ msgid "Order N°"
 msgstr "No. Order"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Baris Order"
@@ -711,7 +711,6 @@ msgstr "Tanggal Order"
 
 #. module: sale
 #: view:sale.order.line:0
-#: field:sale.report,shipped:0
 msgid "Shipped"
 msgstr "Dikirimkan"
 
@@ -731,7 +730,7 @@ msgid "September"
 msgstr "September"
 
 #. module: sale
-#: code:addons/sale/sale.py:1124
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -920,7 +919,6 @@ msgstr ""
 "Anda tidak dapan membatalkan daftar penjualan yang telah difakturkan !"
 
 #. module: sale
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Qty"
@@ -932,11 +930,8 @@ msgstr "Referensiya"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Batal"
@@ -953,9 +948,10 @@ msgstr "Pengecualian"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Buat Faktur"
@@ -998,7 +994,6 @@ msgstr ""
 
 #. module: sale
 #: report:sale.order:0
-#: view:sale.order.line:0
 msgid "Price"
 msgstr "Harga"
 
@@ -1164,7 +1159,6 @@ msgid "Create Procurement Order"
 msgstr "Buat Order Pengadaan"
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1336,7 +1330,7 @@ msgstr "Properti"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0
+#: view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Quotation"
@@ -1362,8 +1356,10 @@ msgstr ""
 "pengiriman."
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+#: model:ir.actions.act_window,name:sale.open_board_sales
+#: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
+#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1376,6 +1372,7 @@ msgid "Unit Price"
 msgstr "Harga Satuan"
 
 #. module: sale
+#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1389,8 +1386,11 @@ msgid "sale.installer"
 msgstr "sale.installer"
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
+#: view:sale.order:0
+#, python-format
 msgid "Invoice"
 msgstr "Invoice"
 
@@ -1508,7 +1508,6 @@ msgid "Product UoS"
 msgstr "Produk UoS"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Proses Manual sedang berlangsung"
@@ -1606,7 +1605,6 @@ msgstr "Tidak dapat menghapus daftar pesanan penjualan  yang% s!"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-#: view:sale.order:0
 msgid "Make Invoices"
 msgstr "Buat Faktur"
 
@@ -1690,7 +1688,6 @@ msgstr "Dibatalkan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
@@ -1736,12 +1733,16 @@ msgstr ""
 "EAN: %s Quantity: %s Type of ul: %s"
 
 #. module: sale
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
+#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#: field:stock.picking,sale_id:0
+#: selection:sale.order,state:0
+#, python-format
 msgid "Sales Order"
 msgstr "Sales order"
 
@@ -1785,12 +1786,12 @@ msgid "Sales by Product's Category in last 90 days"
 msgstr "Penjualan berdasarkan produk kategori dalam 90 hari terakhir"
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Detail Invoice"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1833,7 +1834,7 @@ msgid "August"
 msgstr "Agustus"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1853,8 +1854,6 @@ msgid "Weight"
 msgstr "Berat"
 
 #. module: sale
-#: view:sale.open.invoice:0
-#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Invoices"
@@ -1909,10 +1908,7 @@ msgid "Untaxed Amount"
 msgstr "Jumlah sebelum kena pajak"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
 #, python-format
 msgid "Advance Invoice"
 msgstr "Faktur"
@@ -1979,7 +1975,7 @@ msgid "Ordered Date"
 msgstr "Tanggal pemesanan"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
@@ -2030,7 +2026,7 @@ msgid "Configure Your Sales Management Application"
 msgstr "Konfigurasi Aplikasi Penjualan  Manajemen  Anda"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree4
+#: model:ir.actions.act_window,name:sale.action_orders_in_progress
 msgid "Sales Order in Progress"
 msgstr "Order Penjualan dalam Penyelesaian"
 
@@ -2248,7 +2244,6 @@ msgid "Quotation N°"
 msgstr "Quotation N°"
 
 #. module: sale
-#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "Sudah Diambil"

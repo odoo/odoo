@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-07 05:31+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:57+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -55,7 +55,7 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Името на директориумот содржи специјални карактери!"
@@ -110,12 +110,12 @@ msgstr "Содржина на директориум"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "Динамичен контекст"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr "Менаџмент на документ"
+msgstr "Управување со документи"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -124,6 +124,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"Python израза кој се користи за да се евалуира полето.\n"
+"Можете да употребите 'dir_id' за тековен dir, 'res_id', 'res_model' како "
+"референца за тековен запис, во динамични папки"
 
 #. module: document
 #: view:report.document.user:0
@@ -136,8 +139,8 @@ msgid "Path"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Името на директориумот мора да биде уникатно!"
@@ -146,7 +149,7 @@ msgstr "Името на директориумот мора да биде уни
 #: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
-msgstr ""
+msgstr "Индексирана содржина"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -233,12 +236,12 @@ msgid "Document directory"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ПотврдиГрешка"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -309,7 +312,7 @@ msgstr ""
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Полиња за контекст"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
@@ -364,7 +367,7 @@ msgid "Modified"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:562
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr ""
@@ -447,7 +450,7 @@ msgstr ""
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr ""
+msgstr "Статичен директориум"
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -458,6 +461,7 @@ msgstr "Деца"
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
 msgstr ""
+"Дефинирај зборови во контекстот, за сите директориуми и датотеки дете"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
@@ -518,6 +522,9 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"Означете го ова поле доколку сакате името на датотеката да го содржи името "
+"на записот.\n"
+"Доколку е подесено, директориумот ќе треба да биде ресурс."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
@@ -550,6 +557,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"Означете го ова доколку сакате да употребите иста структура на дрвото како "
+"селектираниот објект во системот."
 
 #. module: document
 #: view:document.directory:0
@@ -612,6 +621,10 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"Доколку го ставите објектот овде, овој урнек на директориум ќе се појавува "
+"по секо од овие објекти, Таквите директориуми се \"прикачени\" на одреден "
+"модел или запис, како прилози. Не ставајте директориум родител доколку "
+"селектирате модел родител."
 
 #. module: document
 #: view:document.directory:0
@@ -754,7 +767,7 @@ msgstr "Поле"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr ""
+msgstr "Динамичен контекст на директориум"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0

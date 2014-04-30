@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:32+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -37,7 +37,7 @@ msgstr ""
 #. module: share
 #: help:res.groups,share:0
 msgid "Group created to set access rights for sharing data with some users."
-msgstr ""
+msgstr "إنشاء مجموعة لتعيين حقوق الوصول لتبادل البيانات مع بعض المستخدمين."
 
 #. module: share
 #: constraint:res.users:0
@@ -91,7 +91,7 @@ msgstr "التالي"
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
-msgstr ""
+msgstr "الإجراء الذي يفتح شاشة تحتوي على البيانات التي ترغب في مشاركتها."
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:68
@@ -105,15 +105,15 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:546
 #, python-format
 msgid "(Copy for sharing)"
-msgstr ""
+msgstr "(نسخة من المشاركة)"
 
 #. module: share
 #: field:share.wizard.result.line,newly_created:0
 msgid "Newly created"
-msgstr ""
+msgstr "منشأة حديثاً"
 
 #. module: share
 #: field:share.wizard,share_root_url:0
@@ -131,7 +131,7 @@ msgstr ""
 #. module: share
 #: view:res.groups:0
 msgid "Regular groups only (no share groups"
-msgstr ""
+msgstr "المجموعات المنتظمة فقط( لا مجموعات مشاركة)"
 
 #. module: share
 #: selection:share.wizard,access_mode:0
@@ -154,7 +154,8 @@ msgid "Share wizard: step 1"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:850
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "Username"
 msgstr "اسم المستخدم"
@@ -162,7 +163,7 @@ msgstr "اسم المستخدم"
 #. module: share
 #: field:res.users,share:0
 msgid "Share User"
-msgstr ""
+msgstr "مشاركة المستخدم"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:452
@@ -211,7 +212,8 @@ msgid "Sharing Tools"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:852
+#: code:addons/share/wizard/share_wizard.py:884
 #, python-format
 msgid "Database"
 msgstr "قاعدة البيانات"
@@ -222,7 +224,7 @@ msgid "Send Email Notification(s)"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:599
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr ""
@@ -240,10 +242,11 @@ msgstr ""
 #. module: share
 #: field:res.groups,share:0
 msgid "Share Group"
-msgstr ""
+msgstr "مشاركة المجموعة"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:883
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -276,6 +279,7 @@ msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
 msgstr ""
+"الرجاء اختيار الإجراء الذي يفتح شاشة تحتوي على البيانات التي تريد مشاركتها."
 
 #. module: share
 #: selection:share.wizard,user_type:0
@@ -283,34 +287,36 @@ msgid "Existing external users"
 msgstr ""
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "ملخّص"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid "Email required"
 msgstr "لا بدّ من ذكر عنوان بريد إلكتروني"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: code:addons/share/wizard/share_wizard.py:513
 #, python-format
 msgid "Copied access for sharing"
-msgstr ""
+msgstr "نسخ الوصول للمشاركة"
 
 #. module: share
 #: view:share.wizard:0
 msgid ""
 "Optionally, you may specify an additional domain restriction that will be "
 "applied to the shared data."
-msgstr ""
+msgstr "اختيارياً، اختيار محدودية مجال لتطبيقها على المعلومات المشاركة."
 
 #. module: share
 #: view:share.wizard:0
@@ -342,7 +348,8 @@ msgid ""
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -355,9 +362,10 @@ msgid "Regular users only (no share user)"
 msgstr ""
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
-msgstr ""
+msgstr "مشاركة URL"
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -365,7 +373,7 @@ msgid "Domain"
 msgstr "نطاق"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:658
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -381,7 +389,7 @@ msgstr ""
 #. module: share
 #: view:share.wizard:0
 msgid "Access info"
-msgstr ""
+msgstr "معلومات الولوج"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:454
@@ -394,10 +402,13 @@ msgstr ""
 #. module: share
 #: field:share.wizard,action_id:0
 msgid "Action to share"
-msgstr ""
+msgstr "إجراء للمشاركة"
 
 #. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
 #: view:share.wizard:0
+#, python-format
 msgid "Share"
 msgstr "حصة"
 
@@ -433,7 +444,7 @@ msgstr "معالج المشاركة"
 #. module: share
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
-msgstr ""
+msgstr "استخدم نوع المستخدم الذي تود مشاركة المعلومات معه"
 
 #. module: share
 #: view:share.wizard:0
@@ -455,7 +466,7 @@ msgstr ""
 #. module: share
 #: help:share.wizard,domain:0
 msgid "Optional domain for further data filtering"
-msgstr ""
+msgstr "المجال اختياري لمزيد من بيانات التصفية"
 
 #. module: share
 #: selection:share.wizard,access_mode:0

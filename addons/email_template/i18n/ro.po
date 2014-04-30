@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2012-01-04 20:32+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:59+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:58+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -87,10 +87,8 @@ msgstr ""
 "modelul)"
 
 #. module: email_template
+#: field:email.template,body_html:0
 #: field:email_template.preview,body_html:0
-#: field:email_template.preview,body_text:0
-#: field:email_template.send.wizard,body_html:0
-#: field:email_template.send.wizard,body_text:0
 msgid "Body"
 msgstr "Conţinut"
 
@@ -300,7 +298,7 @@ msgid "From Email"
 msgstr "Email de la"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Warning"
 msgstr "Atentionare"
@@ -841,6 +839,7 @@ msgstr "TLS"
 
 #. module: email_template
 #: field:email.template,lang:0
+#: field:email_template.preview,lang:0
 msgid "Language"
 msgstr "Limbă"
 
@@ -884,7 +883,7 @@ msgstr ""
 "Numai utilizatorii din aceste grupuri pot trimite mesaje din acest şablon"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:183
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Trimite email (%s)"
@@ -912,7 +911,8 @@ msgid "History"
 msgstr "Istoric"
 
 #. module: email_template
-#: view:email.template:0
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
 msgid "Attachments"
 msgstr "Atasamente"
 
@@ -997,7 +997,7 @@ msgstr "Grupuri de utilizatori acceptate"
 #: field:email.template,model_object_field:0
 #: field:email_template.preview,model_object_field:0
 msgid "Field"
-msgstr "Camp"
+msgstr "Câmp"
 
 #. module: email_template
 #: view:email_template.account:0

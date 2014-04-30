@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,19 +22,19 @@ msgid "Openerp user"
 msgstr "Openerp kullanıcısı"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,requirements:0
+#: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Gereksinimler"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr "Hata! Yinelenen bölümler oluşturamazsınız."
+msgstr "Hata! Özyinelemeli bölümler oluşturamazsınız."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr "Personeli danışmaya bağla"
+msgstr "Çalışanı danışmaya bağla"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -42,16 +42,20 @@ msgid "SIN No"
 msgstr "SIN No"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "İnsan Kaynakları"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.job:0
+#: view:hr.employee:0
+#: view:hr.job:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Gruplandır İle..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -63,16 +67,20 @@ msgid ""
 "job position."
 msgstr ""
 "İş Durumları, işlerin ve gereksinimlerinin tanımlanması için kullanılır. Her "
-"iş durumunda kullanılan personel sayısını ve gelecekte kaç personel "
+"iş durumunda kullanılan çalışan sayısını ve gelecekte kaç çalışan "
 "beklediğinizin kayıtlarını tutabilirsiniz. Bu iş durumu için başvuranların "
 "değerlendirilmesi için seçme işleminde kullanmak üzere bir anket de "
 "ekleyebilirsiniz."
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
-#: field:hr.job,department_id:0 view:res.users:0
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
-msgstr "Bölüm"
+msgstr "Departmen"
 
 #. module: hr
 #: help:hr.installer,hr_attendance:0
@@ -100,15 +108,17 @@ msgid "title"
 msgstr "unvan"
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.department,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr "Seçim için Bekleniyor"
+msgstr "Seçim için Bekleyen"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -131,7 +141,7 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
-"Geçerli personelle ilgili Paydaştır. Muhasebe işlemi personelle ilişkili bu "
+"Geçerli çalışanla ilişkili Paydaştır. Muhasebe işlemi çalışanla ilişkili bu "
 "paydaşa yazılacaktır."
 
 #. module: hr
@@ -152,7 +162,7 @@ msgstr "Genel Bordro Sistemi"
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr "Bölümümdeki Personel"
+msgstr "Bölümlerimdeki Çalışan"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -177,14 +187,14 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
-"Firmanızın Bölüm Yapısı, bölümlere göre personelle ilgili belgelerin "
+"Firmanızın Bölüm Yapısı, bölümlere göre çalışanla ilgili belgelerin "
 "yönetilmesinde kullanılır: giderler, zaman çizelgesi onayları, izin "
 "yönetimi, seçme işlemlemleri, v.b"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr "Durum"
+msgstr "Pozisyonu"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -197,8 +207,8 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
-"Personel formundaki İlişkili Kullanıcı alanı OpenERP kullanıcısının "
-"personele bağlanmasını sağlar."
+"Personel formundaki İlişkili kullanıcı alanı OpenERP kullanıcısının çalışana "
+"bağlanmasını sağlar."
 
 #. module: hr
 #: view:hr.job:0 selection:hr.job,state:0
@@ -241,7 +251,7 @@ msgstr "Zaman Çizelgeleri"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Personel Yapısı"
+msgstr "Çalışan Yapısı"
 
 #. module: hr
 #: view:hr.employee:0
@@ -264,7 +274,7 @@ msgid "Child Categories"
 msgstr "Alt Kategoriler"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,description:0
+#: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "İş Tanımı"
@@ -275,7 +285,8 @@ msgid "Office Location"
 msgstr "Ofis Konumu"
 
 #. module: hr
-#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Personel"
@@ -283,7 +294,7 @@ msgstr "Personel"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr "Diğer Bilgiler"
+msgstr "Diğer Bilgileri"
 
 #. module: hr
 #: field:hr.employee,work_email:0
@@ -292,6 +303,7 @@ msgstr "İş E-postası"
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Adı"
@@ -312,13 +324,14 @@ msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr "İnsan Kaynakları Kontrol Paneli"
+msgstr "İnsan Kaynakları Paneli"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
 msgid "Job"
 msgstr "İş"
 
@@ -349,7 +362,7 @@ msgstr "Kategoriler"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr "Beklenen Personel"
+msgstr "Beklenen Çalışanlar"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -359,20 +372,19 @@ msgstr "Boşanmış"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr "Ana Kategori"
+msgstr "Üst Kategori"
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr "Hata ! Yinelenen Kategoriler oluşturamazsınız."
+msgstr "Hata ! Özyinelemeli Kategoriler oluşturamazsınız."
 
 #. module: hr
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
-msgstr "Bölümler"
+msgstr "Departmenler"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
@@ -398,7 +410,7 @@ msgstr "Yapılandırma İşlemi"
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Categories of Employee"
-msgstr "Personel Kategorileri"
+msgstr "Çalışan Kategorileri"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -462,19 +474,19 @@ msgstr ""
 "Burada, çalışanlar oluşturarak ve onları sistemde belirli niteliklere "
 "atayarak iş gücünüzü yönetebilirsiniz. Çalışanlarınızla ilgili bilgileri "
 "elde edin ve onlarla ilgili kayıt edilmesi gereken her şeyin kaydını tutun. "
-"Personel bilgisi sekmesi, personelin kimlik bilgilerini elde etmenizi "
-"sağlar. Kategori sekmesi, şirket içindeki durumlarına ve etkinliklerine "
-"bağlı olarak personelinizi ilgili çaşıan kategorisine atamanıza fırsat "
-"sağlar. Bir kategori şirket içinde veya bir bölümde bir kıdemlilik "
-"kategorisi olabilir. Zaman Çizelgesi sekmesi onların sistemden zaman "
-"girişlerini yapabilecekleri, belirli bir zaman çizelgesine ve analitik "
-"yevmiyeye atamanızı  sağlar. Not sekmesinde, belirli bir çalışan için kayıt "
-"etmeniz gereken bir metin girmenizi sağlar."
+"Çalışan bilgisi sekmesi, personelin kimlik bilgilerini elde etmenizi sağlar. "
+"Kategori sekmesi, firma içindeki durumlarına ve etkinliklerine bağlı olarak "
+"çalışanınızı ilgili çalışan kategorisine atamanıza fırsat sağlar. Bir "
+"kategori firma içinde veya bir bölümde bir kıdemlilik kategorisi olabilir. "
+"Zaman Çizelgesi sekmesi onların sistemden zaman girişlerini yapabilecekleri, "
+"belirli bir zaman çizelgesine ve analitik günlüğe atamanızı  sağlar. Not "
+"sekmesinde, belirli bir çalışan için kayıt etmeniz gereken bir metin "
+"girmenizi sağlar."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "Personel maaş banka hesabı"
+msgstr "Personel maaşı banka hesabı"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -504,8 +516,10 @@ msgstr "İK Yönetici Kontrol Paneli"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: hr
 #: view:hr.installer:0
@@ -541,7 +555,7 @@ msgstr "Etkin"
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Hata ! Yinelemeli Personel Sıradizini yaratamazsınız."
+msgstr "Hata ! Özyinelemeli Çalışanlar Sıradizini yaratamazsınız."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -551,7 +565,7 @@ msgstr "Banka Hesap No"
 #. module: hr
 #: view:hr.department:0
 msgid "Companies"
-msgstr "Firmalar"
+msgstr "Şirketler"
 
 #. module: hr
 #: model:ir.module.module,description:hr.module_meta_information
@@ -577,7 +591,7 @@ msgstr ""
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr "Personel formunda sözleşme bilgileri gibi farklı bilgiler vardır."
+msgstr "Çalışan formunda sözleşme bilgileri gibi farklı bilgiler vardır."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -617,10 +631,10 @@ msgstr "Eleman seçme işleminizi yönetmenizi ve yürütmenizi sağlar."
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr "Personel formu ve yapısı"
+msgstr "Çalışan formu ve yapısı"
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
 msgstr "Fotoğraf"
 
@@ -637,7 +651,7 @@ msgstr "Bordro Muhasebesi"
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr "Kişisel Bilgiler"
+msgstr "Kişisel Bilgileri"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -666,12 +680,12 @@ msgstr "Geçerli"
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr "Ana Bölüm"
+msgstr "Üst Bölüm"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr "Personel Kategorileri"
+msgstr "Çalışan Kategorileri"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -695,7 +709,7 @@ msgid "Extends employee profiles to help manage their contracts."
 msgstr "Sözleşmelerinin yönetimi için personel profillerini açar."
 
 #. module: hr
-#: field:hr.installer,hr_payroll:0
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
 msgstr "Bordro"
 
@@ -710,9 +724,9 @@ msgid "Job Name"
 msgstr "İş Adı"
 
 #. module: hr
-#: view:hr.job:0 selection:hr.job,state:0
+#: view:hr.job:0
 msgid "In Position"
-msgstr "Durumunda"
+msgstr "Poziyonu"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -722,7 +736,7 @@ msgstr "Cep"
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr "bölüm"
+msgstr "departmen"
 
 #. module: hr
 #: field:hr.employee,country_id:0
@@ -730,7 +744,7 @@ msgid "Nationality"
 msgstr "Uyruğu"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,notes:0
+#: field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Notlar"
 
@@ -761,21 +775,20 @@ msgid "Gender"
 msgstr "Cinsiyeti"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "Personeller"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr "Sosyal Sigorta Numarası"
+msgstr "Sosyal Güvenlik Numarası"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -790,21 +803,22 @@ msgstr "Sosyal Güvenlik Numarası"
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr "OpenERP kullanıcısı Oluşturma"
+msgstr "Bir OpenERP kullanıcısı Oluşturma"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr "Alt Bölümler"
+msgstr "Alt Departmenler"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr "İş Durumları"
+msgstr "İş Pozisyonları"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,coach_id:0
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
 msgid "Coach"
 msgstr "Çalıştırıcı"
 
@@ -819,7 +833,8 @@ msgid "Expenses"
 msgstr "Giderler"
 
 #. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Yönetici"

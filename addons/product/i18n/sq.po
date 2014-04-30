@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -52,12 +52,12 @@ msgid "Mainboard ASUStek A7V8X-X"
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_qty:0
+#: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.uom_day
+#: model:product.uom,name:product.product_uom_day
 msgid "Day"
 msgstr ""
 
@@ -96,7 +96,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_qty:0
+#: field:product.product,seller_qty:0
 msgid "Supplier Quantity"
 msgstr ""
 
@@ -114,14 +114,12 @@ msgstr ""
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Base Prices"
 msgstr ""
@@ -252,7 +250,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:418
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -293,7 +291,7 @@ msgid "EAN13"
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_id:0
+#: field:product.product,seller_id:0
 msgid "Main Supplier"
 msgstr ""
 
@@ -310,6 +308,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 #: field:product.template,categ_id:0
+#: field:product.uom,category_id:0
 msgid "Category"
 msgstr ""
 
@@ -407,7 +406,6 @@ msgid "Products Price Search"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
@@ -451,7 +449,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.product_category_all
 msgid "All products"
 msgstr ""
 
@@ -594,7 +592,6 @@ msgstr ""
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
@@ -643,6 +640,7 @@ msgstr ""
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr ""
 
@@ -676,7 +674,6 @@ msgid "Price List"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
 msgstr ""
@@ -707,7 +704,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_7
 msgid "Accessories"
 msgstr ""
 
@@ -752,6 +749,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 #: field:product.ul,type:0
+#: field:product.uom,uom_type:0
 msgid "Type"
 msgstr ""
 
@@ -791,7 +789,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
 msgstr ""
@@ -802,7 +799,7 @@ msgid "Kitchen Design Project"
 msgstr ""
 
 #. module: product
-#: model:product.uom,name:product.uom_hour
+#: model:product.uom,name:product.product_uom_hour
 msgid "Hour"
 msgstr ""
 
@@ -844,6 +841,7 @@ msgid "Supplier Information"
 msgstr ""
 
 #. module: product
+#: model:ir.model,name:product.model_res_currency
 #: field:product.price.type,currency_id:0
 #: report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
@@ -918,7 +916,6 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_purchase:0
 msgid "Purchase Description"
@@ -1051,11 +1048,8 @@ msgstr ""
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
-#: field:product.uom,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr ""
@@ -1144,6 +1138,9 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr ""
 
@@ -1187,7 +1184,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_delay:0
+#: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
 "and the reception of goods for this product and for the default supplier. It "
@@ -1195,12 +1192,12 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_id:0
+#: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_5
 #: view:product.product:0
 msgid "Services"
 msgstr ""
@@ -1312,6 +1309,7 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: view:product.product:0
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr ""
@@ -1327,7 +1325,6 @@ msgid "The gross weight in Kg."
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
 msgstr ""
@@ -1679,6 +1676,7 @@ msgid "Box 30x40x60"
 msgstr ""
 
 #. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
 #: selection:product.template,type:0
 msgid "Service"
 msgstr ""
@@ -1711,7 +1709,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr ""
@@ -1739,7 +1737,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
+#: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
 msgstr ""
 
@@ -1765,7 +1763,7 @@ msgid "Pricelist Type"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_otherproducts0
+#: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr ""
 
@@ -1775,6 +1773,7 @@ msgid "Characteristics"
 msgstr ""
 
 #. module: product
+#: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr ""
@@ -1795,7 +1794,7 @@ msgid "Based on"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
+#: model:product.category,name:product.product_category_10
 msgid "Raw Materials"
 msgstr ""
 
@@ -1868,7 +1867,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.template,seller_delay:0
+#: field:product.product,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr ""
 
@@ -1954,7 +1953,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Descriptions"
 msgstr ""
@@ -2030,7 +2028,6 @@ msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
 msgid "Cost Price"
 msgstr ""
 
@@ -2093,7 +2090,6 @@ msgid "tonne"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr ""
@@ -2116,7 +2112,6 @@ msgstr ""
 #: field:product.packaging,name:0
 #: report:product.pricelist:0
 #: view:product.product:0
-#: view:product.template:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr ""
@@ -2148,6 +2143,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr ""
 
@@ -2158,7 +2154,6 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr ""
 
@@ -2168,7 +2163,8 @@ msgid "Shelves"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:379
+#: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
 msgstr ""
@@ -2183,6 +2179,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,cost_method:0
+#: model:res.groups,name:product.group_costing_method
 msgid "Costing Method"
 msgstr ""
 

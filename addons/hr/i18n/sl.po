@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,7 +22,7 @@ msgid "Openerp user"
 msgstr "Uporabnik OpenERP"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,requirements:0
+#: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Zahteve"
 
@@ -34,24 +34,28 @@ msgstr "Napaka! Ne morete definirati rekurzivnih oddelkov."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Poveži zaposlenega z informacijami"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "EMŠO"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "Človeški viri"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.job:0
+#: view:hr.employee:0
+#: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Združeno po..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -64,8 +68,12 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
-#: field:hr.job,department_id:0 view:res.users:0
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Oddelek"
 
@@ -82,12 +90,12 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Zaposlitve"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "V zaposlovanju"
 
 #. module: hr
 #: view:hr.installer:0
@@ -95,7 +103,9 @@ msgid "title"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.department,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Podjetje"
@@ -103,7 +113,7 @@ msgstr "Podjetje"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Pričakovano zaposlovanje"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -130,7 +140,7 @@ msgstr ""
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Poveži uporabnika z zaposlenim"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
@@ -150,7 +160,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married"
-msgstr ""
+msgstr "Poročen"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -174,7 +184,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Delovno mesto"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -187,6 +197,8 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Povezano polje uporabnika na formi zaposlenega omogoča povezavo OpenERP "
+"uporabnika (in njegovih pravic) z zaposlenim."
 
 #. module: hr
 #: view:hr.job:0 selection:hr.job,state:0
@@ -196,7 +208,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Identifikacijska št."
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -250,18 +262,19 @@ msgid "Child Categories"
 msgstr "Kategorije otrok"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,description:0
+#: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Opis dela"
 
 #. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
-msgstr ""
+msgstr "Lokacija pisarne"
 
 #. module: hr
-#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Zaposleni"
@@ -269,7 +282,7 @@ msgstr "Zaposleni"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Ostale informacije"
 
 #. module: hr
 #: field:hr.employee,work_email:0
@@ -278,6 +291,7 @@ msgstr ""
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Ime"
@@ -285,7 +299,7 @@ msgstr "Ime"
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Datum rojstva"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -295,18 +309,19 @@ msgstr "Poročanje"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Nadzorna plošča človeških virov"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Zaposlitev"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -354,14 +369,13 @@ msgstr ""
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Oddelki"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr ""
+msgstr "Kontakt zaposlenega"
 
 #. module: hr
 #: view:board.board:0
@@ -398,7 +412,7 @@ msgstr ""
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Pogodba zaposlenega"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -445,7 +459,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Bančni račun zaposlenega"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -475,6 +489,8 @@ msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
 msgstr "Stanje"
 
@@ -502,7 +518,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "EMŠO"
 
 #. module: hr
 #: view:hr.employee:0
@@ -517,7 +533,7 @@ msgstr "Napaka! Ne morete izdelati rekurzivne hierarhije zaposlencev."
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Številka bančnega računa"
 
 #. module: hr
 #: view:hr.department:0
@@ -541,7 +557,7 @@ msgstr ""
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr ""
+msgstr "Na formi zaposlenega so različni podatki, npr. kontaktni podatki."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -581,12 +597,12 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Struktura zaposlenih"
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
-msgstr ""
+msgstr "Slika"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
@@ -606,7 +622,7 @@ msgstr "Osebni podatki"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Št. potnega lista"
 
 #. module: hr
 #: view:res.users:0
@@ -657,24 +673,24 @@ msgid "Extends employee profiles to help manage their contracts."
 msgstr ""
 
 #. module: hr
-#: field:hr.installer,hr_payroll:0
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
-msgstr ""
+msgstr "Plače"
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr ""
+msgstr "Samski"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Ime delovnega mesta"
 
 #. module: hr
-#: view:hr.job:0 selection:hr.job,state:0
+#: view:hr.job:0
 msgid "In Position"
-msgstr ""
+msgstr "v vlogi"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -692,7 +708,7 @@ msgid "Nationality"
 msgstr "Državljanstvo"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,notes:0
+#: field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Opombe"
 
@@ -709,7 +725,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Vir"
 
 #. module: hr
 #: view:hr.installer:0
@@ -723,21 +739,20 @@ msgid "Gender"
 msgstr "Spol"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "Zaposleni"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Številka socialnega zavarovanja"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -747,12 +762,12 @@ msgstr "Ime oddelka"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Številka zdravstvenega zavarovanja"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Kreiranje uporabnika OpenERP"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -763,12 +778,13 @@ msgstr "Podrejeni oddelki"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Delovno mesto"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,coach_id:0
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Mentor"
 
 #. module: hr
 #: view:hr.installer:0
@@ -781,7 +797,8 @@ msgid "Expenses"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "Upravitelj"
@@ -789,7 +806,7 @@ msgstr "Upravitelj"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Vdovec"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0

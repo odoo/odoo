@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:03+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:13+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -86,11 +86,14 @@ msgid "Salary Payment Register"
 msgstr "Rejestr płac"
 
 #. module: hr_payroll
-#: field:hr.employee,slip_ids:0 view:hr.payslip:0 view:hr.payslip.run:0
+#: view:hr.employee:0
+#: field:hr.employee,slip_ids:0
+#: view:hr.payslip:0
+#: view:hr.payslip.run:0
 #: field:hr.payslip.run,slip_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
-msgstr "Pasek wypłaty"
+msgstr "Paski wypłaty"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_salary_report
@@ -110,8 +113,10 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.contribution.register,company_id:0
-#: field:hr.payroll.structure,company_id:0 field:hr.payslip,company_id:0
-#: field:hr.payslip.line,company_id:0 field:hr.salary.rule,company_id:0
+#: field:hr.payroll.structure,company_id:0
+#: field:hr.payslip,company_id:0
+#: field:hr.payslip.line,company_id:0
+#: field:hr.salary.rule,company_id:0
 #: field:hr.salary.rule.category,company_id:0
 msgid "Company"
 msgstr "Firma"
@@ -132,7 +137,8 @@ msgid ","
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:0 view:hr.payslip.run:0
+#: view:hr.payslip:0
+#: view:hr.payslip.run:0
 msgid "Set to Draft"
 msgstr "Ustaw na projekt"
 
@@ -165,9 +171,11 @@ msgid "Others"
 msgstr "Inne"
 
 #. module: hr_payroll
-#: field:hr.payslip.input,payslip_id:0 field:hr.payslip.line,slip_id:0
+#: field:hr.payslip.input,payslip_id:0
+#: field:hr.payslip.line,slip_id:0
 #: field:hr.payslip.worked_days,payslip_id:0
-#: model:ir.model,name:hr_payroll.model_hr_payslip report:payslip:0
+#: model:ir.model,name:hr_payroll.model_hr_payslip
+#: report:payslip:0
 msgid "Pay Slip"
 msgstr "Pasek wypłaty"
 
@@ -245,11 +253,14 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Salary Computation"
-msgstr ""
+msgstr "Obliczanie wynagrodzenia"
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0 field:hr.payslip.input,amount:0
-#: field:hr.payslip.line,amount:0 report:paylip.details:0 report:payslip:0
+#: report:contribution.register.lines:0
+#: field:hr.payslip.input,amount:0
+#: field:hr.payslip.line,amount:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Amount"
 msgstr "Kwota"
 
@@ -296,7 +307,9 @@ msgid "Paid Holiday"
 msgstr "Urlop płatny"
 
 #. module: hr_payroll
-#: view:hr.payslip:0 view:hr.payslip.line:0 view:hr.salary.rule:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+#: view:hr.salary.rule:0
 msgid "Group By..."
 msgstr "Grupuj wg..."
 
@@ -333,13 +346,15 @@ msgid "Payment"
 msgstr "Wypłata"
 
 #. module: hr_payroll
-#: view:hr.payslip:0 view:hr.payslip.line:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr "Pozycja paska wypłaty"
 
 #. module: hr_payroll
-#: report:paylip.details:0 report:payslip:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Identification No"
 msgstr "Numer identyfikacyjny"
 
@@ -361,7 +376,9 @@ msgid "Human Resource Payroll"
 msgstr "Lista płac"
 
 #. module: hr_payroll
-#: view:hr.payslip:0 selection:hr.payslip,state:0 view:hr.payslip.run:0
+#: view:hr.payslip:0
+#: selection:hr.payslip,state:0
+#: view:hr.payslip.run:0
 #: selection:hr.payslip.run,state:0
 msgid "Draft"
 msgstr "Projekt"
@@ -417,10 +434,7 @@ msgid "Visa No"
 msgstr "Nr wizy"
 
 #. module: hr_payroll
-#: field:company.contribution.line,from_val:0
-#: report:employees.salary:0
-#: field:hr.payslip.line.line,from_val:0
-#: report:year.salary:0
+#: view:hr.payslip:0
 msgid "From"
 msgstr "Od"
 
@@ -440,7 +454,7 @@ msgstr "Data końcowa"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_report
 msgid "Employee PaySlip"
-msgstr ""
+msgstr "Pasek pracownika"
 
 #. module: hr_payroll
 #: field:hr.payslip,leaves:0
@@ -499,7 +513,8 @@ msgid "Company Contributions"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,employee_id:0 field:hr.payslip.line,employee_id:0
+#: field:hr.payslip,employee_id:0
+#: field:hr.payslip.line,employee_id:0
 #: model:ir.model,name:hr_payroll.model_hr_employee
 msgid "Employee"
 msgstr "Pracownik"
@@ -524,7 +539,8 @@ msgid "Type"
 msgstr "Typ"
 
 #. module: hr_payroll
-#: report:paylip.details:0 report:payslip:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Email"
 msgstr ""
 
@@ -619,7 +635,8 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount_fix:0
-#: selection:hr.payslip.line,amount_select:0 field:hr.salary.rule,amount_fix:0
+#: selection:hr.payslip.line,amount_select:0
+#: field:hr.salary.rule,amount_fix:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Fixed Amount"
 msgstr "Kwota stała"
@@ -693,7 +710,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Payslip"
-msgstr ""
+msgstr "Pasek wypłaty"
 
 #. module: hr_payroll
 #: constraint:hr.contract:0
@@ -768,7 +785,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Worked Day"
-msgstr ""
+msgstr "Dzień roboczy"
 
 #. module: hr_payroll
 #: field:hr.contibution.register,monthly_total_by_comp:0
@@ -796,13 +813,15 @@ msgid "Basic Salary – Leaves"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip.line:0 field:hr.payslip.line,amount_select:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,amount_select:0
 #: field:hr.salary.rule,amount_select:0
 msgid "Amount Type"
 msgstr "Rodzaj Kwoty"
 
 #. module: hr_payroll
-#: field:hr.payslip.line,category_id:0 view:hr.salary.rule:0
+#: field:hr.payslip.line,category_id:0
+#: view:hr.salary.rule:0
 #: field:hr.salary.rule,category_id:0
 msgid "Category"
 msgstr "Kategoria"
@@ -983,9 +1002,10 @@ msgid "Compute"
 msgstr "Oblicz"
 
 #. module: hr_payroll
-#: report:paylip.details:0 report:payslip:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Designation"
-msgstr ""
+msgstr "Oznaczenie"
 
 #. module: hr_payroll
 #: field:hr.contract,basic:0
@@ -1017,12 +1037,14 @@ msgid "Companies"
 msgstr "Firmy"
 
 #. module: hr_payroll
-#: report:paylip.details:0 report:payslip:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Authorized Signature"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,contract_id:0 field:hr.payslip.input,contract_id:0
+#: field:hr.payslip,contract_id:0
+#: field:hr.payslip.input,contract_id:0
 #: field:hr.payslip.line,contract_id:0
 #: field:hr.payslip.worked_days,contract_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contract
@@ -1040,7 +1062,8 @@ msgid "Next Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.line,active:0 field:hr.salary.rule,active:0
+#: field:hr.payslip.line,active:0
+#: field:hr.salary.rule,active:0
 msgid "Active"
 msgstr "Aktywne"
 
@@ -1082,10 +1105,14 @@ msgid "Other No."
 msgstr ""
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0 field:hr.payslip.input,code:0
-#: field:hr.payslip.line,code:0 field:hr.payslip.worked_days,code:0
-#: field:hr.rule.input,code:0 field:hr.salary.rule,code:0
-#: field:hr.salary.rule.category,code:0 report:paylip.details:0
+#: report:contribution.register.lines:0
+#: field:hr.payslip.input,code:0
+#: field:hr.payslip.line,code:0
+#: field:hr.payslip.worked_days,code:0
+#: field:hr.rule.input,code:0
+#: field:hr.salary.rule,code:0
+#: field:hr.salary.rule.category,code:0
+#: report:paylip.details:0
 #: report:payslip:0
 msgid "Code"
 msgstr "Kod"
@@ -1127,7 +1154,9 @@ msgid "Number"
 msgstr "Numer"
 
 #. module: hr_payroll
-#: field:hr.contract,struct_id:0 view:hr.payroll.structure:0 view:hr.payslip:0
+#: field:hr.contract,struct_id:0
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
 msgid "Salary Structure"
@@ -1139,13 +1168,13 @@ msgid "Register Line"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payslip:0 view:hr.payslip.employees:0
-#: view:payslip.lines.contribution.register:0
+#: view:hr.payslip:0
 msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: hr_payroll
-#: view:hr.payslip.run:0 selection:hr.payslip.run,state:0
+#: view:hr.payslip.run:0
+#: selection:hr.payslip.run,state:0
 msgid "Close"
 msgstr "Zamknij"
 
@@ -1198,7 +1227,8 @@ msgid "Payroll Head"
 msgstr "Nagłówek listy płac"
 
 #. module: hr_payroll
-#: view:hr.payslip.line:0 field:hr.payslip.line,register_id:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,register_id:0
 #: field:hr.salary.rule,register_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
 msgid "Contribution Register"
@@ -1283,12 +1313,17 @@ msgid "Gross Sal."
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.contribution.register:0 field:hr.contribution.register,note:0
-#: field:hr.payroll.structure,note:0 field:hr.payslip,name:0
-#: field:hr.payslip,note:0 field:hr.payslip.input,name:0
-#: view:hr.payslip.line:0 field:hr.payslip.line,note:0
-#: field:hr.payslip.worked_days,name:0 field:hr.rule.input,name:0
-#: view:hr.salary.rule:0 field:hr.salary.rule,note:0
+#: view:hr.contribution.register:0
+#: field:hr.contribution.register,note:0
+#: field:hr.payroll.structure,note:0
+#: field:hr.payslip,name:0
+#: field:hr.payslip,note:0
+#: field:hr.payslip.input,name:0
+#: field:hr.payslip.line,note:0
+#: field:hr.payslip.worked_days,name:0
+#: field:hr.rule.input,name:0
+#: view:hr.salary.rule:0
+#: field:hr.salary.rule,note:0
 #: field:hr.salary.rule.category,note:0
 msgid "Description"
 msgstr "Opis"
@@ -1345,7 +1380,8 @@ msgid "hr.payroll.year.salary"
 msgstr ""
 
 #. module: hr_payroll
-#: report:paylip.details:0 report:payslip:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Address"
 msgstr "Adres"
 
@@ -1384,10 +1420,14 @@ msgid "Special Allowances and Deductions For Employee:"
 msgstr ""
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0 field:hr.contribution.register,name:0
-#: field:hr.payroll.structure,name:0 field:hr.payslip.line,name:0
-#: field:hr.payslip.run,name:0 field:hr.salary.rule,name:0
-#: field:hr.salary.rule.category,name:0 report:paylip.details:0
+#: report:contribution.register.lines:0
+#: field:hr.contribution.register,name:0
+#: field:hr.payroll.structure,name:0
+#: field:hr.payslip.line,name:0
+#: field:hr.payslip.run,name:0
+#: field:hr.salary.rule,name:0
+#: field:hr.salary.rule.category,name:0
+#: report:paylip.details:0
 #: report:payslip:0
 msgid "Name"
 msgstr "Nazwa"
@@ -1403,13 +1443,16 @@ msgid "Country"
 msgstr "Kraj"
 
 #. module: hr_payroll
-#: view:hr.payslip:0 view:hr.payslip.employees:0
-#: field:hr.payslip.employees,employee_ids:0 view:hr.payslip.line:0
+#: view:hr.payslip:0
+#: view:hr.payslip.employees:0
+#: field:hr.payslip.employees,employee_ids:0
+#: view:hr.payslip.line:0
 msgid "Employees"
 msgstr "Pracownicy"
 
 #. module: hr_payroll
-#: report:paylip.details:0 report:payslip:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Bank Account"
 msgstr "Konto Bankowe"
 
@@ -1419,7 +1462,8 @@ msgid "Contribution register based on company"
 msgstr ""
 
 #. module: hr_payroll
-#: help:hr.payslip.line,sequence:0 help:hr.salary.rule,sequence:0
+#: help:hr.payslip.line,sequence:0
+#: help:hr.salary.rule,sequence:0
 msgid "Use to arrange calculation sequence"
 msgstr ""
 
@@ -1490,8 +1534,10 @@ msgid "Slip ID"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip.input,sequence:0 field:hr.payslip.line,sequence:0
-#: field:hr.payslip.worked_days,sequence:0 field:hr.salary.rule,sequence:0
+#: field:hr.payslip.input,sequence:0
+#: field:hr.payslip.line,sequence:0
+#: field:hr.payslip.worked_days,sequence:0
+#: field:hr.salary.rule,sequence:0
 msgid "Sequence"
 msgstr "Numeracja"
 
@@ -1528,8 +1574,10 @@ msgid "Search Payslips"
 msgstr ""
 
 #. module: hr_payroll
-#: report:contribution.register.lines:0 field:hr.payslip.line,total:0
-#: report:paylip.details:0 report:payslip:0
+#: report:contribution.register.lines:0
+#: field:hr.payslip.line,total:0
+#: report:paylip.details:0
+#: report:payslip:0
 msgid "Total"
 msgstr "Suma"
 

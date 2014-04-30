@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:04+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:14+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -26,7 +26,8 @@ msgstr ""
 "removê-lo."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Requisitos"
 
@@ -46,8 +47,10 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Departamento"
 
@@ -62,7 +65,8 @@ msgid "Jobs"
 msgstr "Cargos"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Empresa"
@@ -99,7 +103,8 @@ msgid "Create Partner"
 msgstr "Criar Parceiro"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Dia"
 
@@ -139,7 +144,8 @@ msgid "Junior Developer"
 msgstr "Programador Júnior"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Trabalho aplicado"
 
@@ -164,7 +170,7 @@ msgid "Reference"
 msgstr "Referência"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Situação candidatos"
@@ -190,7 +196,7 @@ msgid "Salary Proposed"
 msgstr "Salário proposto"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Parceiro"
@@ -201,7 +207,9 @@ msgid "Avg Proposed Salary"
 msgstr "Média do Salário Proposto"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Disponibilidade"
 
@@ -248,8 +256,11 @@ msgid "A partner is already defined on this job request."
 msgstr "Um parceiro já está definido para este pedido de emprego."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Novo"
 
@@ -292,7 +303,8 @@ msgstr ""
 "contratados."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Data de criação"
@@ -303,7 +315,8 @@ msgid "Planned Date"
 msgstr "Data planeada"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Apreciação"
@@ -314,8 +327,10 @@ msgid "Job"
 msgstr "Cargo"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Etapa"
@@ -336,7 +351,8 @@ msgid "Recruitment / Applicants Stages"
 msgstr "Recrutamento/Candidatos a Estágios"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "Salário Esperado"
 
@@ -347,13 +363,12 @@ msgstr "Julho"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+#: field:hr.applicant,name:0
 msgid "Subject"
 msgstr "Assunto"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "Candidatos"
 
@@ -388,7 +403,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Dá a sequência ordenada ao exibir a lista de estágios."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,partner_id:0
 msgid "Contact"
 msgstr "Contato"
 
@@ -460,7 +475,8 @@ msgid "Update Date"
 msgstr "Atualizar Data"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "Salário proposto"
 
@@ -506,7 +522,9 @@ msgid "Group By ..."
 msgstr "Agrupar por..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
 msgstr "Em curso"
 
@@ -537,7 +555,8 @@ msgid "Degrees"
 msgstr "Graus"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Fechado"
 
@@ -567,13 +586,18 @@ msgid "Meeting"
 msgstr "Reunião"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Pending"
 msgstr "Pendente"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Estado"
 
@@ -588,8 +612,10 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -690,7 +716,8 @@ msgid "Not Good"
 msgstr "Mau"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Data"
 
@@ -746,7 +773,7 @@ msgid "State"
 msgstr "Estado"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -773,7 +800,8 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "Dá a sequência é ordenada ao exibir uma lista de graus."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Responsável"
@@ -833,12 +861,14 @@ msgid "Reply"
 msgstr "Resposta"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Entrevista"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Mês"
 
@@ -858,8 +888,10 @@ msgid "Contract Signed"
 msgstr "Contrato Assinado"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Recusado"
 
@@ -870,8 +902,10 @@ msgid "Applicant '%s' is being hired."
 msgstr "O candidato '%s' está a ser contratado"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
 msgstr "Contratado"
 
@@ -897,7 +931,8 @@ msgid "February"
 msgstr "Fevereiro"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Nome"
@@ -935,13 +970,13 @@ msgid "The job request '%s' has been set 'in progress'."
 msgstr "O pedido de emprego '%s' foi definido 'em processamento'."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "Ano"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "Número de dias para fechar a questão do projeto"
 

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:04+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:14+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -27,7 +27,8 @@ msgstr ""
 "utan att ta bort det."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Krav"
 
@@ -47,8 +48,10 @@ msgid "Group By..."
 msgstr "Gruppera på..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Avdelning"
 
@@ -63,7 +66,8 @@ msgid "Jobs"
 msgstr "Jobb"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Företag"
@@ -100,7 +104,8 @@ msgid "Create Partner"
 msgstr "Skapa företag"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Dag"
 
@@ -140,7 +145,8 @@ msgid "Junior Developer"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Sökta arbeten"
 
@@ -165,7 +171,7 @@ msgid "Reference"
 msgstr "Referens"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Sökandes status"
@@ -191,7 +197,7 @@ msgid "Salary Proposed"
 msgstr "Föreslagen lön"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Företag"
@@ -202,7 +208,9 @@ msgid "Avg Proposed Salary"
 msgstr "Genomsnittlig föreslagen lön"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Tillgänglighet"
 
@@ -249,8 +257,11 @@ msgid "A partner is already defined on this job request."
 msgstr "Ett företag är redan definierat på denna ansökan."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Ny"
 
@@ -292,7 +303,8 @@ msgstr ""
 "kvalificeringssamtal, första intervju, andra intervjun, avvisad, anställd."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Skapad datum"
@@ -303,7 +315,8 @@ msgid "Planned Date"
 msgstr "Planerat datum"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Uppskattning"
@@ -314,8 +327,10 @@ msgid "Job"
 msgstr "Jobb"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Etapp"
@@ -333,10 +348,11 @@ msgstr "Förväntad lön"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr ""
+msgstr "Rekrytering / Steg Sökande"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "Förväntad lön"
 
@@ -347,13 +363,12 @@ msgstr "Juli"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+#: field:hr.applicant,name:0
 msgid "Subject"
 msgstr "Ämne"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "Sökande"
 
@@ -385,10 +400,10 @@ msgstr "Sökande"
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,sequence:0
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr ""
+msgstr "Visaren lista på stegen i sekvens ordning."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,partner_id:0
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -422,7 +437,7 @@ msgstr "Pågående"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
-msgstr ""
+msgstr "Jobb - Rekryteringsformulär"
 
 #. module: hr_recruitment
 #: field:hr.applicant,probability:0
@@ -460,7 +475,8 @@ msgid "Update Date"
 msgstr "Uppdateringsdatum"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "Föreslagen lön"
 
@@ -506,7 +522,9 @@ msgid "Group By ..."
 msgstr "Gruppera med..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
 msgstr "Pågående"
 
@@ -537,7 +555,8 @@ msgid "Degrees"
 msgstr "Examina"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Stängd"
 
@@ -567,13 +586,18 @@ msgid "Meeting"
 msgstr "Möte"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Pending"
 msgstr "Vilande"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -588,8 +612,10 @@ msgid "August"
 msgstr "augusti"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -690,7 +716,8 @@ msgid "Not Good"
 msgstr "Ej tillräckligt"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Datum"
 
@@ -703,6 +730,8 @@ msgstr "Samtalsbeskrivning"
 #: view:hr.recruitment.partner.create:0
 msgid "Are you sure you want to create a partner based on this job request ?"
 msgstr ""
+"Är du säker på att du vill skapa en partner utifrån den här begäran om "
+"jobbet?"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -744,7 +773,7 @@ msgid "State"
 msgstr "Status"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Avbryt"
@@ -771,7 +800,8 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "Ger sorteringsordningen när listan med examina visas."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Ansvarig"
@@ -820,12 +850,14 @@ msgid "Reply"
 msgstr "Svara"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Intervju"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Månad"
 
@@ -845,8 +877,10 @@ msgid "Contract Signed"
 msgstr "Kontraktskrivning"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Nekad"
 
@@ -857,8 +891,10 @@ msgid "Applicant '%s' is being hired."
 msgstr "Sökande '%s' har fått anställning."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
 msgstr "Anställd"
 
@@ -884,7 +920,8 @@ msgid "February"
 msgstr "februari"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Namn"
@@ -922,13 +959,13 @@ msgid "The job request '%s' has been set 'in progress'."
 msgstr "Arbetssökan '%s' är satt i pågående"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "År"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "Antal dagar för att stänga ärendet"
 

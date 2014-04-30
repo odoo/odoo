@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:07+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:17+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: l10n_be
 #: field:partner.vat.intra,test_xml:0
@@ -28,7 +28,7 @@ msgid "Client Name"
 msgstr "Asiakkaan nimi"
 
 #. module: l10n_be
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "XML File has been Created."
 msgstr "XML tiedosto on luotu."
 
@@ -53,17 +53,14 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr "ALV numeroa ei ole liitetty pääyhtiöön"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:265
 #, python-format
 msgid "Data Insufficient!"
 msgstr "Tieto on puutteellinen!"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "Create XML"
 msgstr "Luo XML"
 
@@ -75,6 +72,7 @@ msgstr "Jakso"
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Save the File with '.xml' extension."
 msgstr "Tallenna tiedosto '.xml' tunnisteella."
 
@@ -84,7 +82,7 @@ msgid "Save XML"
 msgstr "Tallenna XML"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:258
 #, python-format
 msgid "Save"
 msgstr "Tallenna"
@@ -97,12 +95,11 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
 #: field:partner.vat.intra,msg:0
-#: field:partner.vat.list_13,msg:0
 msgid "File created"
 msgstr "Tiedosto luotu"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:201
 #, python-format
 msgid "Save XML For Vat declaration"
 msgstr "Tallenna XML ALV ilmoitusta varten"
@@ -124,7 +121,6 @@ msgid "Vat Declaraion"
 msgstr "ALV ilmoitus"
 
 #. module: l10n_be
-#: view:partner.vat.intra:0
 #: field:partner.vat.intra,no_vat:0
 msgid "Partner With No VAT"
 msgstr "Kumppanit, joilla ei ole VAT numeroa"
@@ -132,6 +128,7 @@ msgstr "Kumppanit, joilla ei ole VAT numeroa"
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: field:partner.vat.intra,tax_code_id:0
 msgid "Company"
 msgstr "Yritys"
 
@@ -179,7 +176,6 @@ msgstr "Huom: "
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,tax_code_id:0
-#: field:partner.vat.intra,tax_code_id:0
 msgid "Tax Code"
 msgstr "Verokoodi"
 
@@ -199,7 +195,7 @@ msgid "Sets the XML output as test file"
 msgstr "Asettaa XML tuloksen testitiedostoksi"
 
 #. module: l10n_be
-#: field:partner.vat_13,limit_amount:0
+#: field:partner.vat,limit_amount:0
 msgid "Limit Amount"
 msgstr "Rajoita määrää"
 
@@ -233,9 +229,7 @@ msgid "Country"
 msgstr "Maa"
 
 #. module: l10n_be
-#: model:account.account.template,name:l10n_be.a2900
-#: model:account.account.template,name:l10n_be.a400
-#: model:account.account.template,name:l10n_be.a_recv
+#: field:partner.vat.list,partner_ids:0
 msgid "Clients"
 msgstr "Asiakkaat"
 
@@ -331,7 +325,7 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
 #: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list_13,file_save:0
+#: field:partner.vat.list,file_save:0
 msgid "Save File"
 msgstr "Tallenna tiedosto"
 
@@ -352,7 +346,7 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
-#: field:partner.vat.list_13,name:0
+#: field:partner.vat.list,name:0
 msgid "File Name"
 msgstr "Tiedoston nimi"
 
@@ -368,6 +362,7 @@ msgid "Fiscal Year"
 msgstr "Tilivuosi"
 
 #. module: l10n_be
+#: model:ir.actions.act_window,name:l10n_be.action_vat_declaration
 #: model:ir.model,name:l10n_be.model_l1on_be_vat_declaration
 msgid "Vat Declaration"
 msgstr "ALV ilmoitus"
@@ -379,8 +374,8 @@ msgid "European Countries"
 msgstr "Euroopan maat"
 
 #. module: l10n_be
-#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
-#: view:partner.vat_13:0
+#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
+#: view:partner.vat:0
 msgid "Partner VAT Listing"
 msgstr "Kumppanin ALV listaus"
 
@@ -423,7 +418,10 @@ msgid "View Client"
 msgstr "Näytä asíakas"
 
 #. module: l10n_be
-#: view:partner.vat_13:0
+#: view:l1on_be.vat.declaration:0
+#: view:partner.vat:0
+#: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -435,7 +433,7 @@ msgid "Close"
 msgstr "Sulje"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:119
 #, python-format
 msgid "Please select at least one Period."
 msgstr "Valitse vähintäin yksi jakso."

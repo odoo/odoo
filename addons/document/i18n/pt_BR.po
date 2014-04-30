@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:58+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -34,7 +34,7 @@ msgstr "Nome do Campo"
 #. module: document
 #: view:board.board:0
 msgid "Document board"
-msgstr "Board de Documento"
+msgstr "Painel de Documentos"
 
 #. module: document
 #: model:ir.model,name:document.model_process_node
@@ -53,17 +53,16 @@ msgid ""
 "will be used."
 msgstr ""
 "Campo para ser usado como o nome dos diretórios dos recursos. Se vazio, o "
-"\"nome\" Será usado."
+"\"nome\" será usado."
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Nome do diretório contém caracteres especias!"
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Agrupar Por..."
 
@@ -90,7 +89,6 @@ msgstr "Arquivos por Mês"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Março"
 
@@ -113,7 +111,7 @@ msgstr "Conteúdo do Diretório"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr "Contexo dinâmico"
+msgstr "Contexto dinâmico"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -142,13 +140,14 @@ msgid "Path"
 msgstr "Caminho"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Nome do diretório deve ser único!"
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Conteúdo Indexado"
@@ -159,12 +158,12 @@ msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
 msgstr ""
-"Se verdadeiro, todos os anexos que correspondem com este recurso serão "
-"localizados. Se falso, somente os únicos que tem isso como pai."
+"Se verdadeiro, todos os anexos que correspondam a este recurso serão "
+"localizados. Se falso, somente os que o tiverem como pai."
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Diretórios"
@@ -185,8 +184,8 @@ msgid "Project"
 msgstr "Projeto"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Erro!"
@@ -224,7 +223,6 @@ msgstr "Configuração da Aplicação de Conhecimento"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -239,11 +237,9 @@ msgid "Document directory"
 msgstr "Diretório de Documento"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
 msgstr "Erro de Validação"
@@ -255,7 +251,6 @@ msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
@@ -278,10 +273,8 @@ msgid "Configure Resource Directory"
 msgstr "Configurar Diretório de Recurso"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Tamanho do Arquivo:"
 
@@ -294,8 +287,6 @@ msgstr "Tipo de Conteúdo"
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -323,17 +314,17 @@ msgstr "Arquivos Por Parceiro"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr "Contexo de Campos"
+msgstr "Campos de Contexto"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
-msgstr "Nome de arquivos armazenados"
+msgstr "Nome do Arquivo Armazenado"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr "Modelo de Recurso"
+msgstr "Modelo de recurso"
 
 #. module: document
 #: view:document.directory:0
@@ -348,7 +339,6 @@ msgstr "Relatório"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Julho"
 
@@ -356,7 +346,7 @@ msgstr "Julho"
 #: model:ir.actions.act_window,name:document.open_board_document_manager
 #: model:ir.ui.menu,name:document.menu_reports_document_manager
 msgid "Document Dashboard"
-msgstr "Dashboard de Documento"
+msgstr "Painel dos Documentos"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -379,10 +369,10 @@ msgid "Modified"
 msgstr "Modificado"
 
 #. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
-msgstr "Erro na gravação documento!"
+msgstr "Erro na gravação do documento!"
 
 #. module: document
 #: view:document.directory:0
@@ -407,16 +397,15 @@ msgstr "Arquivos por Parceiro"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
-msgstr "Última Modificação do Usuário"
+msgstr "Usuário da Última Modificação"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
-msgstr "Documentos relacionados"
+msgstr "Documentos Relacionados"
 
 #. module: document
 #: field:document.configuration,progress:0
@@ -430,7 +419,6 @@ msgstr "Domínio"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Data de Modificação"
@@ -443,10 +431,9 @@ msgstr "Detalhes de Arquivos por Diretório"
 #. module: document
 #: view:report.document.user:0
 msgid "All users files"
-msgstr "Todos arquivos de usuários"
+msgstr "Todos os arquivos de usuários"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -454,7 +441,6 @@ msgstr "Tamanho de Arquivo por Mês"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "Dezembro"
 
@@ -510,11 +496,9 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Proprietário"
 
@@ -526,14 +510,13 @@ msgstr "Relatório PDF"
 #. module: document
 #: view:document.directory:0
 msgid "Contents"
-msgstr "Conteúdos"
+msgstr "Conteúdo"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
-msgstr "Dada de Criação"
+msgstr "Data de Criação"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -544,7 +527,7 @@ msgid ""
 msgstr ""
 "Marque este campo se você quer que o nome do arquivo contenha o nome do "
 "registro\n"
-"Se definido, a pasta terá que ser um único recurso."
+"Se sim, o diretório deverá ser do tipo recurso."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
@@ -591,12 +574,11 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
-"Junto com o Modelo Parente, este ID anexa esta pasta para um registro "
-"específico ou um Modelo Parente"
+"Junto com o Modelo Superior, este ID anexa esta pasta a um registro "
+"específico de um Modelo Superior"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Agosto"
 
@@ -607,7 +589,6 @@ msgstr "Diretório não pode ser pai dele mesmo!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Junho"
 
@@ -619,7 +600,6 @@ msgstr "Usuário"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Grupos"
 
@@ -630,12 +610,10 @@ msgstr "Ativo"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "Novembro"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Dados"
@@ -660,7 +638,6 @@ msgstr "Definição"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Outubro"
 
@@ -682,7 +659,7 @@ msgstr "Configuração automática de diretórios para projetos."
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
-msgstr "Relacionado ao"
+msgstr "Relacionado a"
 
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
@@ -707,7 +684,7 @@ msgstr "Painel"
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_user_graph
 msgid "Files By Users"
-msgstr "Arquivos Por Usuários"
+msgstr "Arquivos por Usuários"
 
 #. module: document
 #: field:document.storage,readonly:0
@@ -726,12 +703,10 @@ msgstr "O nome do diretório deve ser único !"
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Criador"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -739,7 +714,6 @@ msgstr "Arquivos por Mês"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Setembro"
 
@@ -798,7 +772,7 @@ msgstr "Campo"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_dctx
 msgid "Directory Dynamic Context"
-msgstr "Diretório Dinâmico"
+msgstr "Contexto de Diretório Dinâmico"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -813,9 +787,6 @@ msgstr "Arquivos por Usuários"
 #. module: document
 #: field:report.document.file,month:0
 #: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
 msgid "Month"
 msgstr "Mês"
 
@@ -836,14 +807,13 @@ msgstr "Estrutura em Árvore"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Maio"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
-msgstr "Todos Arquivos do Usuário"
+msgstr "Todos os Arquivos do Usuário"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_wall
@@ -867,7 +837,7 @@ msgstr "Para cada entrada aqui, arquivos virtuais irão aparecer nesta pasta"
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr "ir.attachment"
+msgstr "Anexo"
 
 #. module: document
 #: view:board.board:0
@@ -876,7 +846,6 @@ msgstr "Novos Arquivos"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Janeiro"
 
@@ -888,7 +857,7 @@ msgstr "Estático"
 #. module: document
 #: view:report.files.partner:0
 msgid "Files By Partner"
-msgstr "Arquivos Por Parceiro"
+msgstr "Arquivos por Parceiro"
 
 #. module: document
 #: help:document.directory.dctx,field:0
@@ -933,7 +902,6 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Fevereiro"
 
@@ -945,7 +913,6 @@ msgstr "Estatísticas por Usuário"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Nome"
 
@@ -962,20 +929,18 @@ msgstr "Campos"
 #. module: document
 #: help:document.storage,readonly:0
 msgid "If set, media is for reading only"
-msgstr "Ser Marcado, será somente leitura"
+msgstr "Se marcado, será somente leitura"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "Abril"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
-msgstr "# de Arquivos"
+msgstr "Nº de Arquivos"
 
 #. module: document
 #: code:addons/document/document.py:209
@@ -989,7 +954,8 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
-"Somente membros destes grupos terá accesso a este diretório e seus arquivos."
+"Somente os membros destes grupos terão acesso a este diretório e seus "
+"arquivos."
 
 #. module: document
 #: view:document.directory:0
@@ -1003,7 +969,7 @@ msgstr ""
 #. module: document
 #: field:document.directory.content.type,mimetype:0
 msgid "Mime Type"
-msgstr "Mime Type"
+msgstr "Tipo Mime"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -1036,7 +1002,7 @@ msgstr "O diretório precisa ter um pai ou um armazenamento"
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
 #: model:ir.ui.menu,name:document.menu_document_directories_tree
 msgid "Directories' Structure"
-msgstr "Estrutura de Diretórios"
+msgstr "Estrutura do Diretório"
 
 #. module: document
 #: view:report.document.user:0
@@ -1045,15 +1011,11 @@ msgstr "Arquivos por Tipo de Recursos"
 
 #. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Ano"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Mídia de Armazenamento"
 

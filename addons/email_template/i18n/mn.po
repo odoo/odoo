@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:59+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:58+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -86,10 +86,8 @@ msgstr ""
 "(Note:If there are no values make sure you have selected the correct model)"
 
 #. module: email_template
+#: field:email.template,body_html:0
 #: field:email_template.preview,body_html:0
-#: field:email_template.preview,body_text:0
-#: field:email_template.send.wizard,body_html:0
-#: field:email_template.send.wizard,body_text:0
 msgid "Body"
 msgstr "Их бие"
 
@@ -286,7 +284,7 @@ msgid "From Email"
 msgstr "Э-мэйлээс"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Warning"
 msgstr "Анхааруулга"
@@ -342,7 +340,7 @@ msgstr "Хаанаас"
 #. module: email_template
 #: field:mail.compose.message,template_id:0
 msgid "Template"
-msgstr "Загвар"
+msgstr "Үлгэр"
 
 #. module: email_template
 #: code:addons/email_template/email_template_account.py:367
@@ -372,7 +370,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
 msgid "Template Preview"
-msgstr "Загварыг харах"
+msgstr "Үлгэрийг урьдчилан харах"
 
 #. module: email_template
 #: field:email.template,def_body_html:0
@@ -773,7 +771,7 @@ msgstr "Request Re-activation"
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
-msgstr "Email Templates"
+msgstr "Имэйл Үлгэрүүд"
 
 #. module: email_template
 #: field:email_template.account,smtpuname:0
@@ -818,6 +816,7 @@ msgstr "TLS"
 
 #. module: email_template
 #: field:email.template,lang:0
+#: field:email_template.preview,lang:0
 msgid "Language"
 msgstr "Хэл"
 
@@ -861,7 +860,7 @@ msgstr ""
 "Only users from these groups will be allowed to send mails from this Template"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:183
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Мэйл илгээх (%s)"
@@ -889,7 +888,8 @@ msgid "History"
 msgstr "Түүх"
 
 #. module: email_template
-#: view:email.template:0
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
 msgid "Attachments"
 msgstr "Хавсралтууд"
 
@@ -1144,7 +1144,7 @@ msgstr "Э-мэйлүүд"
 #: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
 #: model:ir.ui.menu,name:email_template.menu_email_templates
 msgid "Templates"
-msgstr "Загвар"
+msgstr "Үлгэрүүд"
 
 #. module: email_template
 #: field:email_template.preview,report:0
@@ -1166,7 +1166,7 @@ msgstr "Resource Tracking"
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "Email Template Preview"
+msgstr "Имэйл Үлгэрийн Урьдчилсан Харагдац"
 
 #. module: email_template
 #: view:email_template.preview:0

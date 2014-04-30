@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:33+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -47,7 +47,8 @@ msgstr ""
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
-"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
+"Выбранная компания отсутствует в списке разрешённых компаний для этого "
+"пользователя"
 
 #. module: share
 #: sql_constraint:res.users:0
@@ -115,7 +116,7 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr "Поздравляю, вы успешно установили новый совместный доступ!"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:546
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Копировать для совместного доступа)"
@@ -166,7 +167,8 @@ msgid "Share wizard: step 1"
 msgstr "Мастер совместного доступа: шаг 1"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:850
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "Username"
 msgstr "Пользователь"
@@ -226,7 +228,8 @@ msgid "Sharing Tools"
 msgstr "Инструменты совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:852
+#: code:addons/share/wizard/share_wizard.py:884
 #, python-format
 msgid "Database"
 msgstr "База данных"
@@ -237,7 +240,7 @@ msgid "Send Email Notification(s)"
 msgstr "Отправить уведомление по эл. почте"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:599
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr ""
@@ -259,7 +262,8 @@ msgid "Share Group"
 msgstr "Группа совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:883
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -301,25 +305,27 @@ msgid "Existing external users"
 msgstr "Cуществующие внешние пользователи"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Содержание"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
 "Фильтр косвенного доступа созданный пользователем %s (%s) для группы %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid "Email required"
 msgstr "Требуется эл. почта"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: code:addons/share/wizard/share_wizard.py:513
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Скопированы права совместного доступа"
@@ -382,7 +388,8 @@ msgstr ""
 "    "
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -394,20 +401,21 @@ msgstr ""
 #. module: share
 #: view:res.users:0
 msgid "Regular users only (no share user)"
-msgstr "Только обычные пользователи (не пользователи совместного доступа)"
+msgstr "Обычные пользователи"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "Адрес совместного доступа"
 
 #. module: share
 #: field:share.wizard,domain:0
 msgid "Domain"
-msgstr "Домен"
+msgstr "Ограничение"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:658
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -445,7 +453,10 @@ msgid "Action to share"
 msgstr "Действие совместного доступа"
 
 #. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
 #: view:share.wizard:0
+#, python-format
 msgid "Share"
 msgstr "Совместный доступ"
 
@@ -501,13 +512,13 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
-"Внешний пользователь с ограниченным доступом, созданы только для обмена "
+"Внешний пользователь с ограниченным доступом, создан только для обмена "
 "данными."
 
 #. module: share
 #: help:share.wizard,domain:0
 msgid "Optional domain for further data filtering"
-msgstr "Дополнительный домен для дальнейшей фильтрации данных"
+msgstr "Дополнительное ограничение для дальнейшей фильтрации данных"
 
 #. module: share
 #: selection:share.wizard,access_mode:0

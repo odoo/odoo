@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:25+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:33+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "Language: lt\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "Sekti tiekiamas partijas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_upload
@@ -36,12 +36,13 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
-msgstr "Vietų struktūra, jei fiksuota"
+msgstr "Susietoji vieta"
 
 #. module: stock
-#: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
+#: view:stock.inventory:0
+#: view:stock.move:0
 msgid "Put in a new pack"
-msgstr ""
+msgstr "Dėti į naują paką"
 
 #. module: stock
 #: field:stock.move.split.lines,action:0
@@ -51,29 +52,32 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/wizard/stock_traceability.py:54
 #: view:stock.production.lot:0
+#: view:stock.tracking:0
 #, python-format
 msgid "Upstream Traceability"
-msgstr ""
+msgstr "Atsekti aukštyn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "Paskutinė produkto inventorizacija"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Today"
-msgstr ""
+msgstr "Šiandien"
 
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
 msgid "Revision Number"
-msgstr ""
+msgstr "Revizijos numeris"
 
 #. module: stock
-#: view:stock.partial.move.line:0 view:stock.partial.picking:0
-#: field:stock.partial.picking,move_ids:0 view:stock.partial.picking.line:0
+#: view:stock.partial.move.line:0
+#: view:stock.partial.picking:0
+#: field:stock.partial.picking,move_ids:0
+#: view:stock.partial.picking.line:0
 #: view:stock.return.picking.memory:0
 msgid "Product Moves"
 msgstr ""
@@ -83,7 +87,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Atsargų judėjimo analizė"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -91,6 +95,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
+"Vidinis numeris naudojamas atveju, kai gamintojo serijos numeris skiriasi "
+"nuo įmonės vidinio."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -102,23 +108,31 @@ msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Picking list"
 msgstr ""
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 #: field:report.stock.inventory,product_qty:0
 #: field:report.stock.move,product_qty:0
-#: field:stock.change.product.qty,new_quantity:0
 #: field:stock.inventory.line,product_qty:0
 #: field:stock.inventory.line.split,qty:0
 #: field:stock.inventory.line.split.lines,quantity:0
-#: report:stock.inventory.move:0 field:stock.move,product_qty:0
-#: field:stock.move.consume,product_qty:0 field:stock.move.scrap,product_qty:0
-#: field:stock.move.split,qty:0 field:stock.move.split.lines,quantity:0
+#: report:stock.inventory.move:0
+#: field:stock.move,product_qty:0
+#: field:stock.move.consume,product_qty:0
+#: field:stock.move.scrap,product_qty:0
+#: field:stock.move.split,qty:0
+#: field:stock.move.split.lines,quantity:0
 #: field:stock.partial.move.line,quantity:0
-#: field:stock.partial.picking.line,quantity:0 report:stock.picking.list:0
-#: field:stock.report.prodlots,qty:0 field:stock.report.tracklots,name:0
+#: field:stock.partial.picking.line,quantity:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
+#: field:stock.report.prodlots,qty:0
+#: field:stock.report.tracklots,name:0
 #: field:stock.return.picking.memory,quantity:0
 #: field:stock.split.into,quantity:0
 msgid "Quantity"
@@ -132,9 +146,10 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: view:report.stock.move:0 field:report.stock.move,day:0
+#: view:report.stock.move:0
+#: field:report.stock.move,day:0
 msgid "Day"
-msgstr ""
+msgstr "Data"
 
 #. module: stock
 #: view:stock.inventory:0 field:stock.inventory.line.split,product_uom:0
@@ -147,18 +162,18 @@ msgstr "Mat. vnt."
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr ""
+msgstr "Inventorizacija"
 
 #. module: stock
-#: field:product.category,property_stock_journal:0 view:report.stock.move:0
+#: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
-msgstr "Atsargų žurnalas"
+msgstr "Atsargų registras"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Incoming"
-msgstr ""
+msgstr "Atvykstančios prekės"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -178,11 +193,11 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr ""
+msgstr "Tiekti/priimti produktus"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
-#: code:addons/stock/report/report_stock.py:135
+#: code:addons/stock/report/report_stock.py:134
 #, python-format
 msgid "You cannot delete any record!"
 msgstr "Jūs negalite ištrinti įrašo!"
@@ -198,40 +213,47 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
+#: selection:stock.picking.in,invoice_state:0
+#: selection:stock.picking.out,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Netaikoma"
 
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr ""
+msgstr "Serijos numeris ar kita"
 
 #. module: stock
-#: field:stock.move,origin:0 view:stock.picking:0 field:stock.picking,origin:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "Origin"
-msgstr ""
+msgstr "Susijęs dokumentas"
 
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Non Inv"
-msgstr ""
+msgstr "Dar neinventorizuotas"
 
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Identification"
-msgstr ""
+msgstr "Pako identifikacija"
 
 #. module: stock
-#: view:stock.move:0 field:stock.move,picking_id:0 field:stock.picking,name:0
+#: view:stock.move:0
+#: field:stock.move,picking_id:0
+#: field:stock.picking,name:0
+#: field:stock.picking.in,name:0
+#: field:stock.picking.out,name:0
 #: view:stock.production.lot:0
 msgid "Reference"
-msgstr "Nuoroda"
+msgstr "Numeris"
 
 #. module: stock
-#: code:addons/stock/stock.py:670 code:addons/stock/stock.py:1516
+#: code:addons/stock/stock.py:1565
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "Produktų tiekimas/priėmimas"
 
 #. module: stock
 #: constraint:product.category:0
@@ -244,6 +266,8 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
+"Jeigu pažymėta, visi produktų pradiniai kiekiai bus nustatyti į nulius, taip "
+"padedant užtikrinti, kad būtų atliekama reali inventorizacija"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -257,26 +281,41 @@ msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2337 code:addons/stock/stock.py:2379
-#: code:addons/stock/stock.py:2440
-#: code:addons/stock/wizard/stock_change_product_qty.py:87
-#: code:addons/stock/wizard/stock_fill_inventory.py:53
-#: code:addons/stock/wizard/stock_partial_picking.py:141
+#: code:addons/stock/stock.py:782
+#: code:addons/stock/stock.py:2517
+#: code:addons/stock/stock.py:2568
+#: code:addons/stock/stock.py:2629
+#: code:addons/stock/wizard/stock_change_product_qty.py:95
+#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/wizard/stock_inventory_merge.py:43
+#: code:addons/stock/wizard/stock_inventory_merge.py:63
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:96
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:98
+#: code:addons/stock/wizard/stock_partial_picking.py:174
+#: code:addons/stock/wizard/stock_partial_picking.py:181
+#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:212
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Grupuoti pagal partnerį"
+msgstr "Grupuoti pagal kontaktą"
 
 #. module: stock
-#: model:ir.model,name:stock.model_res_partner view:report.stock.inventory:0
-#: field:report.stock.inventory,partner_id:0 view:report.stock.move:0
-#: field:report.stock.move,partner_id:0 view:stock.move:0
-#: field:stock.move,partner_id:0 view:stock.picking:0
+#: model:ir.model,name:stock.model_res_partner
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,partner_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,partner_id:0
+#: view:stock.move:0
 #: field:stock.picking,partner_id:0
+#: field:stock.picking.in,partner_id:0
+#: field:stock.picking.out,partner_id:0
 msgid "Partner"
 msgstr "Partneris"
 
@@ -284,12 +323,12 @@ msgstr "Partneris"
 #: help:stock.partial.move.line,currency:0
 #: help:stock.partial.picking.line,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "Valiuta, kuria išreikšta savikaina"
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "No invoicing"
-msgstr ""
+msgstr "Neužpajamuoti"
 
 #. module: stock
 #: help:stock.location,valuation_out_account_id:0
@@ -313,7 +352,7 @@ msgstr ""
 #. module: stock
 #: help:stock.incoterms,code:0
 msgid "Code for Incoterms"
-msgstr ""
+msgstr "Incoterm sąlygos kodas"
 
 #. module: stock
 #: field:stock.tracking,move_ids:0
@@ -329,7 +368,7 @@ msgstr "Vidinė vieta"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Confirm Inventory"
-msgstr "Patvirtinti atsargas"
+msgstr "Patvirtinti inventorizaciją"
 
 #. module: stock
 #: view:report.stock.inventory:0 field:report.stock.inventory,state:0
@@ -344,7 +383,7 @@ msgstr "Būsena"
 #. module: stock
 #: view:stock.location:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Apskaitos informacija"
 
 #. module: stock
 #: field:stock.location,stock_real_value:0
@@ -364,7 +403,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,posy:0
 msgid "Shelves (Y)"
-msgstr "Lentynos (Y)"
+msgstr "Lentyna (Y)"
 
 #. module: stock
 #: view:stock.move:0
@@ -373,16 +412,21 @@ msgstr "Matavimo vnt."
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 view:stock.move:0
-#: selection:stock.move,state:0 view:stock.picking:0
-#: view:stock.production.lot:0 field:stock.production.lot,stock_available:0
+#: selection:report.stock.move,state:0
+#: selection:stock.move,state:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
+#: view:stock.production.lot:0
+#: field:stock.production.lot,stock_available:0
 msgid "Available"
 msgstr "Galima rezervuoti"
 
 #. module: stock
-#: view:stock.picking:0 field:stock.picking,min_date:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Expected Date"
-msgstr ""
+msgstr "Numanoma pristatymo data"
 
 #. module: stock
 #: view:board.board:0
@@ -399,7 +443,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
 msgid "In Qty"
-msgstr ""
+msgstr "Atvyksta"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:116
@@ -416,7 +460,7 @@ msgstr "Išvežimo vieta"
 #: model:ir.actions.act_window,name:stock.split_into
 #: model:ir.model,name:stock.model_stock_split_into
 msgid "Split into"
-msgstr ""
+msgstr "Išskaidyti į"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -432,19 +476,23 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: field:report.stock.inventory,location_type:0 field:stock.location,usage:0
+#: field:report.stock.inventory,location_type:0
+#: field:stock.location,usage:0
 msgid "Location Type"
 msgstr "Vietos tipas"
 
 #. module: stock
-#: help:report.stock.move,type:0 help:stock.picking,type:0
+#: help:report.stock.move,type:0
+#: help:stock.picking,type:0
+#: help:stock.picking.in,type:0
+#: help:stock.picking.out,type:0
 msgid "Shipping type specify, goods coming in or going out."
-msgstr ""
+msgstr "Siuntos tipas, prekės gali būti gaunamos arba tiekiamos"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Item Labels"
-msgstr ""
+msgstr "Produktų etiketės"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -454,7 +502,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots Filter"
-msgstr ""
+msgstr "Produkto partijos filtras"
 
 #. module: stock
 #: code:addons/stock/stock.py:2639
@@ -493,13 +541,15 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 #: field:stock.picking,move_lines:0
+#: field:stock.picking.in,move_lines:0
+#: field:stock.picking.out,move_lines:0
 msgid "Internal Moves"
 msgstr "Vidiniai perkėlimai"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "Tikslo vieta"
 
 #. module: stock
 #: code:addons/stock/stock.py:760
@@ -511,17 +561,20 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 #: field:stock.move,product_packaging:0
 msgid "Packaging"
-msgstr "Pakavimas"
+msgstr "Pakuotės tipas"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Order(Origin)"
 msgstr "Užsakymas"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Bendra suma:"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_out_picking_move
@@ -535,28 +588,30 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Atsargų valdymas"
 
 #. module: stock
-#: view:stock.location:0 field:stock.location,comment:0
+#: view:stock.location:0
+#: field:stock.location,comment:0
 msgid "Additional Information"
 msgstr "Papildoma informacija"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Location / Product"
-msgstr ""
+msgstr "Atsargų vieta / Produktas"
 
 #. module: stock
-#: code:addons/stock/stock.py:1333
-#, python-format
+#: view:product.product:0
+#: field:product.product,reception_count:0
 msgid "Reception"
 msgstr ""
 
 #. module: stock
 #: field:stock.tracking,serial:0
 msgid "Additional Reference"
-msgstr ""
+msgstr "Papildomas numeris"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
@@ -580,7 +635,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: field:stock.location,complete_name:0 field:stock.location,name:0
+#: field:stock.location,complete_name:0
+#: field:stock.location,name:0
 msgid "Location Name"
 msgstr "Vietos pavadinimas"
 
@@ -597,20 +653,21 @@ msgstr "Judėjimo informacija"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Outgoing"
-msgstr ""
+msgstr "Išvykstančios prekės"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "August"
-msgstr ""
+msgstr "Rugpjūtis"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_tracking_form
 #: model:ir.model,name:stock.model_stock_tracking
-#: model:ir.ui.menu,name:stock.menu_action_tracking_form view:stock.tracking:0
+#: model:ir.ui.menu,name:stock.menu_action_tracking_form
+#: view:stock.tracking:0
 msgid "Packs"
-msgstr ""
+msgstr "Pakai"
 
 #. module: stock
 #: constraint:stock.move:0
@@ -626,7 +683,7 @@ msgstr "Pirkimai ir pardavimai"
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "June"
-msgstr ""
+msgstr "Birželis"
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -651,12 +708,13 @@ msgstr "Gavėjas"
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
-msgstr ""
+msgstr "Atsargų vietų struktūra"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "October"
-msgstr ""
+msgstr "Spalis"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
@@ -669,6 +727,8 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Kai atsargos apskaitomos nuolatos, šis apskaitos registras naudojamas "
+"automatiniam įrašų registravimui susijusiam su atsargų pokyčiais."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
@@ -676,7 +736,7 @@ msgid "Process Picking"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:417
+#: code:addons/stock/product.py:448
 #, python-format
 msgid "Future Receptions"
 msgstr ""
@@ -700,7 +760,7 @@ msgid "Process Now"
 msgstr "Vykdyti dabar"
 
 #. module: stock
-#: field:stock.location,address_id:0
+#: field:stock.location,partner_id:0
 msgid "Location Address"
 msgstr "Vietos adresas"
 
@@ -736,12 +796,12 @@ msgstr ""
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Periodical (manual)"
-msgstr ""
+msgstr "Periodiškai (rankiniu būdu)"
 
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
-msgstr "Planiniai užsakymai"
+msgstr "Užsakymai"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -757,14 +817,12 @@ msgstr ""
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Transit Location for Inter-Companies Transfers"
-msgstr ""
+msgstr "Tranzitinė atsargų vieta"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: model:ir.model,name:stock.model_stock_change_product_qty
-#: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "Keisti produkto kiekį"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -772,23 +830,24 @@ msgid "Merge Inventory"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:433
+#: code:addons/stock/product.py:464
 #, python-format
 msgid "Future P&L"
 msgstr ""
 
 #. module: stock
-#: view:board.board:0
-#: model:ir.actions.act_window,name:stock.action_incoming_product_board
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree4 view:stock.picking:0
+#: model:ir.model,name:stock.model_stock_picking_in
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree4
+#: view:stock.picking.in:0
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Atvykstančios siuntos"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:stock.move:0 view:stock.picking:0
+#: view:report.stock.inventory:0
+#: view:stock.move:0
 msgid "Scrap"
-msgstr ""
+msgstr "Nurašyti"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -814,10 +873,11 @@ msgid "Stock Locations"
 msgstr ""
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 #: field:stock.move,price_unit:0
 msgid "Unit Price"
-msgstr "Vieneto kaina"
+msgstr "Kaina"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines_exist
@@ -827,7 +887,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,date_expected:0
 msgid "Scheduled Date"
-msgstr "Numatoma data"
+msgstr "Suplanuota data"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -840,17 +900,26 @@ msgid "Urgent"
 msgstr "Skubu"
 
 #. module: stock
-#: view:stock.picking:0 report:stock.picking.list:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Journal"
-msgstr ""
+msgstr "Žurnalas"
 
 #. module: stock
 #: help:stock.picking,location_id:0
+#: help:stock.picking.in,location_id:0
+#: help:stock.picking.out,location_id:0
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Palikite tuščią lauką, jeigu gamybos ir baigtos produkcijos vietos sutampa. "
+"Nurodykite, jeigu gaminama fiksuotoje vietoje. Tai gali būti ir kontakto "
+"vieta, jeigu gamyba atliekama subrangos būdu."
 
 #. module: stock
 #: view:res.partner:0
@@ -860,7 +929,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
-msgstr ""
+msgstr "Įvykdymo terminas (dienos)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -868,11 +937,11 @@ msgid "Stock by Location"
 msgstr "Atsargos pagal vietą"
 
 #. module: stock
-#: help:stock.move,address_id:0
+#: help:stock.move,partner_id:0
 msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
-msgstr ""
+msgstr "Adresas, kur bus pristatyti produktai."
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -884,6 +953,7 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
+"Nebenaudojamos atsargų vietos gali būti paslėptos, vietoj to, kad ištrinti."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -899,7 +969,7 @@ msgstr "Virtualios atsargos"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr "Žiūrėti"
+msgstr "Rodinys"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -913,7 +983,7 @@ msgid "Delivery Information"
 msgstr ""
 
 #. module: stock
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
@@ -937,7 +1007,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.lines.date,date:0
 msgid "Latest Inventory Date"
-msgstr ""
+msgstr "Paskutinio inventorizavimo data"
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -966,6 +1036,28 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"* Tiekėjo vieta: virtuali vieta naudojama kaip atsargų paėmimo vieta, iš "
+"tiekėjo gaunamų produktų siuntose\n"
+"                       \n"
+"* Rodinys: virtuali vieta naudojama sandėlio hierarchinės struktūros "
+"kūrimui, vaikinių vietų apjungimui. Ši vieta nenaudojama atsargų "
+"perkėlimams\n"
+"                       \n"
+"* Vidinė vieta: fizinė vieta jūsų sandėlyje\n"
+"                       \n"
+"* Pirkėjo vieta: virtuali vieta naudojama kaip atsargų pristatymo vieta, "
+"pirkėjui tiekiamų produktų siuntose\n"
+"                       \n"
+"* Inventorizacija: virtuali vieta naudojama kaip korespondencinė vieta "
+"atsargų lygio taisymams inventorizacijos metu\n"
+"                       \n"
+"* Planiniai užsakymai: virtuali vieta naudojama kaip laikina korespondencinė "
+"vieta užsakymams, kurių paėmimo (tiekėjo arba gamybos) vieta dar nėra "
+"žinoma. Ši virtuali vieta turi likti tuščia po planinio užsakymo įvykdymo.\n"
+"                       \n"
+"* Gamyba: virtuali korespondencinė vieta naudojama gamybos operacijoms: "
+"šioje vietoje sunaudojamos žaliavos bei pagaminami produktai\n"
+"                      "
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -973,7 +1065,7 @@ msgid "Author"
 msgstr "Autorius"
 
 #. module: stock
-#: code:addons/stock/stock.py:1332
+#: code:addons/stock/stock.py:1401
 #, python-format
 msgid "Delivery Order"
 msgstr ""
@@ -986,15 +1078,19 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Manual Operation"
-msgstr "Rankinės operacijos"
+msgstr "Rankinis perkėlimas"
 
 #. module: stock
-#: view:stock.location:0 view:stock.move:0
+#: view:stock.location:0
+#: view:stock.move:0
+#: view:stock.picking.in:0
 msgid "Supplier"
-msgstr ""
+msgstr "Tiekėjas"
 
 #. module: stock
 #: field:stock.picking,date_done:0
+#: field:stock.picking.in,date_done:0
+#: field:stock.picking.out,date_done:0
 msgid "Date Done"
 msgstr "Atlikimo data"
 
@@ -1012,19 +1108,20 @@ msgstr ""
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "March"
-msgstr ""
+msgstr "Kovas"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_inventory_line_split
 #: model:ir.model,name:stock.model_stock_inventory_line_split
-#: view:stock.inventory:0 view:stock.inventory.line:0
+#: view:stock.inventory:0
+#: view:stock.inventory.line:0
 msgid "Split inventory lines"
 msgstr ""
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Physical Inventory"
-msgstr ""
+msgstr "Inventorizacija"
 
 #. module: stock
 #: help:stock.location,chained_company_id:0
@@ -1032,6 +1129,8 @@ msgid ""
 "The company the Picking List containing the chained move will belong to "
 "(leave empty to use the default company determination rules"
 msgstr ""
+"Įmonė, kuriai priklausys siunta su susietuoju perkėlimu (palikus lauką "
+"tuščią, įmonė bus priskirta pagal numatytąsias taisykles)"
 
 #. module: stock
 #: help:stock.location,chained_picking_type:0
@@ -1040,6 +1139,8 @@ msgid ""
 "empty to automatically detect the type based on the source and destination "
 "locations)."
 msgstr ""
+"Tipas siuntos, kuriai bus priskirtas susietasis perkėlimas (palikus tuščią "
+"lauką, tipas bus priskirtas automatiškai pagal paėmimo ir pristatymo vietas)."
 
 #. module: stock
 #: view:stock.move.split:0
@@ -1058,9 +1159,10 @@ msgid "Partner Locations"
 msgstr "Partnerio vietos"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
 msgid "Total quantity"
-msgstr ""
+msgstr "Bendras kiekis"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1076,7 +1178,7 @@ msgstr ""
 #. module: stock
 #: help:stock.location,chained_delay:0
 msgid "Delay between original move and chained move in days"
-msgstr ""
+msgstr "Terminas dienomis, nuo pirminio iki susietojo perkėlimo"
 
 #. module: stock
 #: view:stock.fill.inventory:0
@@ -1092,13 +1194,21 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"Naudojama, jeigu pasirinktas susietosios vietos tipas.\n"
+"Automatinis perkėlimas: automatiškai sukuriamas ir patvirtintinamas produktų "
+"perkėlimas į susietąją atsargų vietą.\n"
+"Rankinis perkėlimas: sukuriamas produktų perkėlimas į susietąją atsargų "
+"vietą, kurį darbuotojas turi patvirtinti.\n"
+"Tiesioginis: pirminio perkėlimo pristatymo vieta pakeičiama susietąja "
+"atsargų vieta."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_traceability.py:54
 #: view:stock.production.lot:0
+#: view:stock.tracking:0
 #, python-format
 msgid "Downstream Traceability"
-msgstr ""
+msgstr "Atsekti žemyn"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1117,7 +1227,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1350
+#: code:addons/stock/stock.py:1414
 #, python-format
 msgid "is in draft state."
 msgstr ""
@@ -1137,7 +1247,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "Bus užpajamuota"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -1145,35 +1255,35 @@ msgid "Shop 1"
 msgstr ""
 
 #. module: stock
-#: view:stock.change.product.qty:0 view:stock.change.standard.price:0
-#: view:stock.fill.inventory:0 view:stock.inventory.merge:0
-#: view:stock.invoice.onshipping:0 view:stock.location.product:0
-#: view:stock.move:0 view:stock.partial.move:0 view:stock.partial.picking:0
-#: view:stock.picking:0 view:stock.return.picking:0 view:stock.split.into:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "_Cancel"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "Ready"
-msgstr ""
+msgstr "Paruošta"
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Calendar View"
-msgstr "Kalendorius"
+msgstr "Kalendoriaus rodinys"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional Info"
-msgstr ""
+msgstr "Papildoma informacija"
 
 #. module: stock
 #: field:stock.partial.move.line,move_id:0
 #: field:stock.partial.picking.line,move_id:0
 #: field:stock.return.picking.memory,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "DK įrašas"
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1181,15 +1291,18 @@ msgid "From"
 msgstr "Nuo"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0 field:stock.picking,invoice_state:0
+#: view:stock.picking:0
+#: field:stock.picking,invoice_state:0
+#: field:stock.picking.in,invoice_state:0
+#: field:stock.picking.out,invoice_state:0
 msgid "Invoice Control"
-msgstr "Sąskaitų faktūrų kontrolė"
+msgstr "S/F kontrolė"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
@@ -1203,14 +1316,16 @@ msgstr ""
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 view:stock.picking:0
+#: selection:report.stock.move,state:0
+#: view:stock.picking:0
 msgid "Waiting"
 msgstr "Laukiama"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
+#: view:stock.move.split:0
 msgid "Split"
-msgstr "Padalyti"
+msgstr "Išskaidyti"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1239,10 +1354,15 @@ msgid "Picking List:"
 msgstr ""
 
 #. module: stock
-#: field:stock.inventory,date:0 field:stock.move,create_date:0
-#: field:stock.production.lot,date:0 field:stock.tracking,date:0
+#: field:stock.inventory,date:0
+#: field:stock.move,create_date:0
+#: field:stock.picking,date:0
+#: field:stock.picking.in,date:0
+#: field:stock.picking.out,date:0
+#: field:stock.production.lot,date:0
+#: field:stock.tracking,date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Sukūrimo data"
 
 #. module: stock
 #: field:report.stock.lines.date,id:0
@@ -1250,9 +1370,9 @@ msgid "Inventory Line Id"
 msgstr "Atsargų eilutės nr."
 
 #. module: stock
-#: help:stock.location,address_id:0
+#: help:stock.location,partner_id:0
 msgid "Address of  customer or supplier."
-msgstr ""
+msgstr "Pirkėjo arba tiekėjo adresas."
 
 #. module: stock
 #: view:report.stock.move:0 field:report.stock.move,picking_id:0
@@ -1264,7 +1384,7 @@ msgstr "Važtaraštis"
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Pirkėjo vieta"
+msgstr "Pirkėjo sandėlis"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:85
@@ -1282,7 +1402,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "Vietoje esančių atsargų apžvalga"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
@@ -1300,7 +1420,7 @@ msgid "None"
 msgstr "Nieko"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action3 view:stock.tracking:0
+#: model:ir.actions.act_window,name:stock.action3
 msgid "Downstream traceability"
 msgstr "Atsekti žemyn"
 
@@ -1316,24 +1436,26 @@ msgid "OpenERP S.A."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:140
-#, python-format
+#: view:stock.picking.in:0
 msgid "Receive"
-msgstr ""
+msgstr "Priimti"
 
 #. module: stock
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
 msgstr ""
+"Nebenaudojamos Incoterm sąlygos gali būti paslėptos, vietoj to, kad ištrinti."
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0 field:stock.picking,date:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Order Date"
-msgstr ""
+msgstr "Užsakymo data"
 
 #. module: stock
-#: view:stock.location:0 field:stock.location,location_id:0
+#: view:stock.location:0
+#: field:stock.location,location_id:0
 msgid "Parent Location"
 msgstr "Tėvinė vieta"
 
@@ -1352,7 +1474,7 @@ msgstr ""
 #. module: stock
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between all companies"
-msgstr ""
+msgstr "Palikite šį lauką tuščią, jeigu atsargų vieta dalinasi kitos įmonės."
 
 #. module: stock
 #: code:addons/stock/stock.py:2337
@@ -1363,7 +1485,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_delay:0
 msgid "Chaining Lead Time"
-msgstr ""
+msgstr "Susiejimo terminas"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:85
@@ -1392,7 +1514,7 @@ msgstr ""
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
-msgstr "Tiekėjo vieta"
+msgstr "Tiekėjo sandėlis"
 
 #. module: stock
 #: code:addons/stock/stock.py:2358
@@ -1404,7 +1526,7 @@ msgstr ""
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "September"
-msgstr ""
+msgstr "Rugsėjis"
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -1422,12 +1544,12 @@ msgstr ""
 #: field:stock.partial.move.line,currency:0
 #: field:stock.partial.picking.line,currency:0
 msgid "Currency"
-msgstr ""
+msgstr "Valiuta"
 
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Sekti gaminamas partijas"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:44
@@ -1437,30 +1559,33 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
 #: model:ir.actions.act_window,name:stock.action_move_form2
-#: model:ir.ui.menu,name:stock.menu_action_move_form2 view:stock.inventory:0
-#: view:stock.move:0 view:stock.picking:0 view:stock.production.lot:0
-#: view:stock.tracking:0
+#: model:ir.ui.menu,name:stock.menu_action_move_form2
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.production.lot:0
 msgid "Stock Moves"
 msgstr "Atsargų judėjimas"
 
 #. module: stock
 #: selection:report.stock.move,type:0
 #: selection:stock.location,chained_picking_type:0
+#: selection:stock.move,type:0
 #: selection:stock.picking,type:0
+#: selection:stock.picking.in,type:0
+#: selection:stock.picking.out,type:0
 msgid "Sending Goods"
-msgstr "Siuntimas"
+msgstr "Išvykstanti"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.move:0
 msgid "Cancel Availability"
 msgstr "Atšauktos rezervacijos"
 
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr ""
+msgstr "Numatoma perkėlimo įvykdymo data"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1479,18 +1604,20 @@ msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Back Orders"
-msgstr ""
+msgstr "Pradiniai užsakymai"
 
 #. module: stock
-#: view:product.product:0 view:product.template:0
+#: view:product.product:0
+#: view:product.template:0
 msgid "Counter-Part Locations Properties"
-msgstr "Kitų vietų ypatybės"
+msgstr "Kitų vietų savybės"
 
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
-msgstr ""
+msgstr "Lokalizavimas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
@@ -1498,7 +1625,7 @@ msgid "Stock report by tracking lots"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:429
+#: code:addons/stock/product.py:460
 #, python-format
 msgid "Delivered Qty"
 msgstr "Pristatyti kiekiai"
@@ -1515,23 +1642,28 @@ msgid "Production Lot Numbers"
 msgstr ""
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,date:0
-#: field:report.stock.move,date:0 view:stock.inventory:0
-#: report:stock.inventory.move:0 view:stock.move:0 field:stock.move,date:0
-#: field:stock.partial.move,date:0 field:stock.partial.picking,date:0
-#: view:stock.picking:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,date:0
+#: field:report.stock.move,date:0
+#: view:stock.inventory:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move,date:0
+#: field:stock.partial.move,date:0
+#: field:stock.partial.picking,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Išplėstiniai filtrai..."
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Atsargų vieta"
+msgstr "Sandėliavimo vieta"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -1584,10 +1716,11 @@ msgid "You can not remove a lot line !"
 msgstr "Jūs negalite ištrinti partijos eilutės!"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_move_scrap view:stock.move:0
-#: view:stock.move.scrap:0 view:stock.picking:0
+#: model:ir.model,name:stock.model_stock_move_scrap
+#: view:stock.move:0
+#: view:stock.move.scrap:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Nurašyti produktus"
 
 #. module: stock
 #: code:addons/stock/stock.py:1157
@@ -1596,16 +1729,28 @@ msgid "You cannot remove the picking which is in %s state !"
 msgstr ""
 
 #. module: stock
-#: view:stock.inventory.line.split:0 view:stock.move.consume:0
-#: view:stock.move.scrap:0 view:stock.move.split:0 view:stock.picking:0
+#: view:stock.change.product.qty:0
+#: view:stock.change.standard.price:0
+#: view:stock.config.settings:0
+#: view:stock.fill.inventory:0
+#: view:stock.inventory.line.split:0
+#: view:stock.inventory.merge:0
+#: view:stock.invoice.onshipping:0
+#: view:stock.location.product:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.move.split:0
+#: view:stock.partial.move:0
+#: view:stock.partial.picking:0
+#: view:stock.return.picking:0
+#: view:stock.split.into:0
 msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Siuntos grąžinimas"
 
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -1614,23 +1759,33 @@ msgstr "Suskirstyti į gamybos partijas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
-#: field:product.product,location_id:0 view:report.stock.inventory:0
+#: field:product.product,location_id:0
+#: view:report.stock.inventory:0
 #: field:report.stock.inventory,location_id:0
 #: field:stock.change.product.qty,location_id:0
 #: field:stock.fill.inventory,location_id:0
-#: field:stock.inventory.line,location_id:0 report:stock.inventory.move:0
-#: view:stock.location:0 view:stock.move:0
-#: field:stock.move.consume,location_id:0 field:stock.move.scrap,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move.consume,location_id:0
+#: field:stock.move.scrap,location_id:0
 #: field:stock.partial.move.line,location_id:0
 #: field:stock.partial.picking.line,location_id:0
-#: field:stock.picking,location_id:0 report:stock.picking.list:0
+#: field:stock.picking,location_id:0
+#: field:stock.picking.in,location_id:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
+#: field:stock.picking.out,location_id:0
 #: field:stock.report.prodlots,location_id:0
 #: field:stock.report.tracklots,location_id:0
 msgid "Location"
 msgstr "Vieta"
 
 #. module: stock
+#: code:addons/stock/stock.py:1881
 #: view:product.template:0
+#, python-format
 msgid "Information"
 msgstr "Informacija"
 
@@ -1642,7 +1797,7 @@ msgstr ""
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Provide the quantities of the returned products."
-msgstr "Nurodo kiekius grąžintų produktų."
+msgstr "Įveskite grąžinamų produktų kiekius."
 
 #. module: stock
 #: code:addons/stock/stock.py:1978
@@ -1653,24 +1808,26 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: view:product.product:0
 #: view:stock.change.standard.price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Savikaina"
 
 #. module: stock
-#: view:product.product:0 field:product.product,valuation:0
+#: view:product.product:0
+#: field:product.product,valuation:0
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Atsargų apskaita"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.invoice.onshipping:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "Išrašyti sąskaitą"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Process Later"
-msgstr "Atidėti"
+msgstr "Įvykdyti vėliau"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
@@ -1678,10 +1835,11 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Ši vieta bus naudojama kaip šaltinio vieta, atsargoms, gaunamoms iš tiekėjo."
+"Atsargų vieta, iš kurios šis kontaktas tiekia produktus. Kitu atveju bus "
+"naudojama numatytoji tiekėjo atsargų vieta."
 
 #. module: stock
-#: field:stock.warehouse,partner_address_id:0
+#: field:stock.warehouse,partner_id:0
 msgid "Owner Address"
 msgstr "Savininkas"
 
@@ -1703,12 +1861,12 @@ msgstr ""
 #. module: stock
 #: field:report.stock.move,day_diff1:0
 msgid "Planned Lead Time (Days)"
-msgstr ""
+msgstr "Planuotas įvykdymo terminas (dienos)"
 
 #. module: stock
 #: field:stock.change.standard.price,new_price:0
 msgid "Price"
-msgstr ""
+msgstr "Suma"
 
 #. module: stock
 #: view:stock.location:0
@@ -1734,7 +1892,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:419
+#: code:addons/stock/product.py:450
 #, python-format
 msgid "Received Qty"
 msgstr "Gauti kiekiai"
@@ -1742,7 +1900,7 @@ msgstr "Gauti kiekiai"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Vidinis numeris"
 
 #. module: stock
 #: help:stock.production.lot,prefix:0
@@ -1750,16 +1908,17 @@ msgid ""
 "Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL "
 "[INT_REF]"
 msgstr ""
+"Priešdėlis naudojamas serijos numerio atvaizdavimui: "
+"PRIEŠDĖLIS/SERIJOS_NUMERIS [VIDINIS_IDENT]"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
 #: model:ir.model,name:stock.model_stock_fill_inventory
 #: view:stock.fill.inventory:0
 msgid "Import Inventory"
-msgstr ""
+msgstr "Įkelti atsargas"
 
 #. module: stock
-#: field:stock.incoterms,name:0 field:stock.move,name:0
+#: field:stock.incoterms,name:0
 #: field:stock.warehouse,name:0
 msgid "Name"
 msgstr "Pavadinimas"
@@ -1805,22 +1964,23 @@ msgstr ""
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Stockable"
-msgstr ""
+msgstr "Sandėliuojamas"
 
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Real Time (automated)"
-msgstr ""
+msgstr "Nuolatos (automatiškai)"
 
 #. module: stock
 #: help:stock.move,tracking_id:0
 msgid "Logistical shipping unit: pallet, box, pack ..."
-msgstr ""
+msgstr "Logistinis krovinio vienetas: padėklas, dėžė, pakuotė ..."
 
 #. module: stock
-#: view:stock.change.product.qty:0 view:stock.change.standard.price:0
+#: view:stock.change.product.qty:0
+#: view:stock.change.standard.price:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Taikyti"
 
 #. module: stock
 #: report:lot.stock.overview:0 report:lot.stock.overview_all:0
@@ -1834,9 +1994,10 @@ msgid "Inventory Location"
 msgstr "Inventorizacijos vieta"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
 msgid "Total value"
-msgstr ""
+msgstr "Bendra vertė"
 
 #. module: stock
 #: help:stock.location,chained_journal_id:0
@@ -1844,6 +2005,9 @@ msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
 msgstr ""
+"Atsargų žurnalas, kuriame fiksuojami atsargų perkėlimai į susietąją vietą, "
+"kai susiejimo tipas nėra tiesioginis (palikus lauką tuščią, perkėlimai nėra "
+"fiksuojami)"
 
 #. module: stock
 #: view:board.board:0
@@ -1854,13 +2018,13 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Creation"
-msgstr ""
+msgstr "Sukurta"
 
 #. module: stock
 #: field:stock.partial.move.line,cost:0
 #: field:stock.partial.picking.line,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Savikaina"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -1870,10 +2034,9 @@ msgid "Stock Input Account"
 msgstr "Atsargų padidėjimo sąskaita"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr ""
+msgstr "Sandėlio valdymas"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -1883,7 +2046,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automatinis s/f sukūrimas po pristatymo"
+msgstr "Tiesioginis"
 
 #. module: stock
 #: code:addons/stock/stock.py:2406
@@ -1902,6 +2065,8 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
+"Perkėlimo data: kol perkėlimas neįvykdytas, tai planuojama perkėlimo data, "
+"kitu atveju, tai perkėlimo įvykdymo data"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
@@ -1909,16 +2074,20 @@ msgid "stock.move.memory.out"
 msgstr ""
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
-#: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 #: view:stock.production.lot:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupuoti pagal..."
 
 #. module: stock
 #: view:stock.location:0
 msgid "Chained Locations"
-msgstr "Vietų valdymas"
+msgstr "Susietoji atsargų vieta"
 
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
@@ -1926,7 +2095,7 @@ msgid "Inventory loss"
 msgstr "Atsargų nurašymas"
 
 #. module: stock
-#: code:addons/stock/stock.py:1341
+#: code:addons/stock/stock.py:1405
 #, python-format
 msgid "Document"
 msgstr ""
@@ -1937,13 +2106,19 @@ msgid "Input Picking List"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,product_uom:0 field:stock.partial.move.line,product_uom:0
+#: view:stock.inventory:0
+#: field:stock.inventory.line.split,product_uom:0
+#: view:stock.move:0
+#: field:stock.move,product_uom:0
+#: field:stock.move.split,product_uom:0
+#: field:stock.partial.move.line,product_uom:0
 #: field:stock.partial.picking.line,product_uom:0
+#: view:stock.production.lot:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Matavimo vienetas"
 
 #. module: stock
-#: code:addons/stock/product.py:175
+#: code:addons/stock/product.py:195
 #, python-format
 msgid "Products: "
 msgstr "Produktai: "
@@ -1969,18 +2144,18 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Atstatyti į juodraštį"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr ""
+msgstr "Atsargų žurnalai"
 
 #. module: stock
 #: selection:report.stock.move,type:0
 msgid "Others"
-msgstr ""
+msgstr "Kita"
 
 #. module: stock
 #: code:addons/stock/product.py:89
@@ -1997,7 +2172,7 @@ msgstr ""
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr ""
+msgstr "Nurašymai"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2007,7 +2182,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr ""
+msgstr "Sekti gaunamas partijas"
 
 #. module: stock
 #: view:board.board:0
@@ -2015,7 +2190,7 @@ msgid "Warehouse board"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:439
+#: code:addons/stock/product.py:470
 #, python-format
 msgid "Future Qty"
 msgstr ""
@@ -2026,23 +2201,31 @@ msgid "Stock Variation Account"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,note:0 view:stock.picking:0 field:stock.picking,note:0
+#: field:stock.move,note:0
+#: field:stock.picking,note:0
+#: field:stock.picking.in,note:0
+#: field:stock.picking.out,note:0
 msgid "Notes"
 msgstr "Pastabos"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Value"
-msgstr "Reikšmė"
+msgstr "Vertė"
 
 #. module: stock
-#: field:report.stock.move,type:0 field:stock.location,chained_picking_type:0
+#: field:report.stock.move,type:0
+#: field:stock.location,chained_picking_type:0
+#: field:stock.move,type:0
 #: field:stock.picking,type:0
+#: field:stock.picking.in,type:0
+#: field:stock.picking.out,type:0
 msgid "Shipping Type"
-msgstr "Pristatymo tipas"
+msgstr "Siuntos tipas"
 
 #. module: stock
-#: code:addons/stock/stock.py:2312
+#: code:addons/stock/stock.py:2492
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Jūs galite ištrinti tik juodraščio būsenos įrašus"
@@ -2051,26 +2234,34 @@ msgstr "Jūs galite ištrinti tik juodraščio būsenos įrašus"
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.ui.menu,name:stock.menu_product_in_config_stock
 #: model:ir.ui.menu,name:stock.menu_stock_product
-#: model:ir.ui.menu,name:stock.menu_stock_products_menu view:stock.inventory:0
-#: view:stock.partial.move:0 view:stock.partial.picking:0 view:stock.picking:0
+#: model:ir.ui.menu,name:stock.menu_stock_products_menu
+#: view:stock.config.settings:0
+#: view:stock.inventory:0
+#: view:stock.partial.move:0
+#: view:stock.picking:0
 msgid "Products"
 msgstr "Produktai"
 
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Change Price"
-msgstr ""
+msgstr "Keisti kainą"
 
 #. module: stock
 #: field:stock.picking,move_type:0
+#: field:stock.picking.in,move_type:0
+#: field:stock.picking.out,move_type:0
 msgid "Delivery Method"
 msgstr "Pristatymo būdas"
 
 #. module: stock
 #: help:report.stock.move,location_dest_id:0
-#: help:stock.move,location_dest_id:0 help:stock.picking,location_dest_id:0
+#: help:stock.move,location_dest_id:0
+#: help:stock.picking,location_dest_id:0
+#: help:stock.picking.in,location_dest_id:0
+#: help:stock.picking.out,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Atsargų vieta, kurioje talpinami pabaigti produktai ."
 
 #. module: stock
 #: help:product.category,property_stock_valuation_account_id:0
@@ -2078,6 +2269,8 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Kai atsargos apskaitomos nuolatos, šioje sąskaitoje bus fiksuojama turimų "
+"atsargų vertė."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2091,13 +2284,14 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
+#: view:stock.partial.move:0
 msgid "Stock Move"
 msgstr "Atsargų judėjimas"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr ""
+msgstr "Vėlavimas (dienos)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1697
@@ -2111,13 +2305,14 @@ msgid "Expected date for the picking to be processed"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:435
+#: code:addons/stock/product.py:466
 #, python-format
 msgid "P&L Qty"
 msgstr "Kiekis"
 
 #. module: stock
-#: view:stock.production.lot:0 field:stock.production.lot,revisions:0
+#: view:stock.production.lot:0
+#: field:stock.production.lot,revisions:0
 msgid "Revisions"
 msgstr "Revizijos"
 
@@ -2135,6 +2330,11 @@ msgid ""
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
+"Jeigu produktas apskaitomas nuolatos, sistema automatiškai sukurs atsargų "
+"judėjimą koresponduojančius įrašus. Atsargų apskaitos sąskaitoje, "
+"nustatomoje ant produkto kategorijos, rodoma turimų atsargų vertė. Atsargų "
+"padidėjimo bei sumažėjimo sąskaitose fiksuojami atsargų judėjimą "
+"koresponduojantys įrašai."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_inventory_report
@@ -2145,11 +2345,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: help:report.stock.move,location_id:0 help:stock.move,location_id:0
+#: help:report.stock.move,location_id:0
+#: help:stock.move,location_id:0
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
-msgstr ""
+msgstr "Atsargų vieta, iš kurios paimami produktai."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -2168,7 +2369,7 @@ msgstr ""
 #. module: stock
 #: view:stock.invoice.onshipping:0
 msgid "Create"
-msgstr ""
+msgstr "Sukurti"
 
 #. module: stock
 #: view:stock.move:0 view:stock.picking:0
@@ -2178,25 +2379,28 @@ msgstr ""
 #. module: stock
 #: field:stock.move,priority:0
 msgid "Priority"
-msgstr "Svarba"
+msgstr "Svarbumas"
 
 #. module: stock
 #: view:stock.move:0
+#: field:stock.move,origin:0
 msgid "Source"
-msgstr ""
+msgstr "Susijęs dokumentas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory
 #: selection:report.stock.inventory,location_type:0
-#: field:stock.inventory.line,inventory_id:0 report:stock.inventory.move:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
 #: selection:stock.location,usage:0
 msgid "Inventory"
-msgstr "Inventorius"
+msgstr "Atsargos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: view:stock.picking:0
 msgid "Picking List"
-msgstr ""
+msgstr "Siunta"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2212,7 +2416,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Cancel Inventory"
-msgstr "Atšaukti atsargas"
+msgstr "Atšaukti inventorizaciją"
 
 #. module: stock
 #: field:stock.move.split.lines,name:0
@@ -2236,7 +2440,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Matavimo vienetai"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2247,12 +2451,12 @@ msgstr "Fiksuota vieta"
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "July"
-msgstr ""
+msgstr "Liepa"
 
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Consumable"
-msgstr ""
+msgstr "Suvartojami"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -2266,12 +2470,17 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr ""
+msgstr "Atsargų kiekio prognozė"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_journal
-#: field:report.stock.move,stock_journal:0 view:stock.journal:0
-#: field:stock.journal,name:0 field:stock.picking,stock_journal_id:0
+#: field:product.category,property_stock_journal:0
+#: field:report.stock.move,stock_journal:0
+#: view:stock.journal:0
+#: field:stock.journal,name:0
+#: field:stock.picking,stock_journal_id:0
+#: field:stock.picking.in,stock_journal_id:0
+#: field:stock.picking.out,stock_journal_id:0
 msgid "Stock Journal"
 msgstr "Atsargų žurnalas"
 
@@ -2279,7 +2488,7 @@ msgstr "Atsargų žurnalas"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
-msgstr "Planiniai užsakymai"
+msgstr "Planinis užsakymas"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -2287,33 +2496,36 @@ msgid "Maxtor Suppliers"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:78
-#: code:addons/stock/wizard/stock_change_standard_price.py:107
+#: code:addons/stock/wizard/stock_change_product_qty.py:86
 #, python-format
 msgid "Active ID is not set in Context"
 msgstr ""
 
 #. module: stock
+#: view:stock.move:0
 #: view:stock.picking:0
 msgid "Force Availability"
 msgstr "Priverstinai rezervuoti"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.move_scrap view:stock.move.scrap:0
+#: model:ir.actions.act_window,name:stock.move_scrap
+#: view:stock.move.scrap:0
 msgid "Scrap Move"
-msgstr ""
+msgstr "Nurašymas"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_reception_picking_move
-#: model:ir.ui.menu,name:stock.menu_action_pdct_in view:stock.move:0
+#: code:addons/stock/wizard/stock_partial_picking.py:100
+#, python-format
 msgid "Receive Products"
-msgstr ""
+msgstr "Gaunami produktai"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:102
 #: model:ir.actions.act_window,name:stock.action_out_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
+#, python-format
 msgid "Deliver Products"
-msgstr ""
+msgstr "Tiekiami produktai"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2326,15 +2538,19 @@ msgid "Internal Picking list"
 msgstr ""
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,month:0
+#: view:report.stock.move:0
 #: field:report.stock.move,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mėnuo"
 
 #. module: stock
 #: help:stock.picking,date_done:0
+#: help:stock.picking.in,date_done:0
+#: help:stock.picking.out,date_done:0
 msgid "Date of Completion"
-msgstr ""
+msgstr "Siuntos perdavimo įvykdymo data"
 
 #. module: stock
 #: help:stock.production.lot,name:0
@@ -2345,7 +2561,7 @@ msgstr ""
 #: help:stock.tracking,active:0
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
-msgstr ""
+msgstr "Nebenaudojami pakai gali būti paslėpti, vietoj to, kad ištrinti."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -2360,23 +2576,30 @@ msgstr "Atsargos"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Todo"
-msgstr ""
+msgstr "Planuojamas"
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,company_id:0
-#: view:report.stock.move:0 field:report.stock.move,company_id:0
-#: field:stock.inventory,company_id:0 field:stock.inventory.line,company_id:0
-#: field:stock.location,company_id:0 field:stock.move,company_id:0
-#: field:stock.picking,company_id:0 field:stock.production.lot,company_id:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,company_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,company_id:0
+#: field:stock.inventory,company_id:0
+#: field:stock.inventory.line,company_id:0
+#: field:stock.location,company_id:0
+#: field:stock.move,company_id:0
+#: field:stock.picking,company_id:0
+#: field:stock.picking.in,company_id:0
+#: field:stock.picking.out,company_id:0
+#: field:stock.production.lot,company_id:0
 #: field:stock.production.lot.revision,company_id:0
 #: field:stock.warehouse,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Unit Of Measure"
-msgstr ""
+msgstr "Matavimo vienetas"
 
 #. module: stock
 #: code:addons/stock/product.py:121
@@ -2397,9 +2620,11 @@ msgid "Real Stock"
 msgstr "Tikros atsargos"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
 #: view:stock.fill.inventory:0
+#: view:stock.inventory:0
 msgid "Fill Inventory"
-msgstr "Užpildyti inventorizaciją"
+msgstr "Atsargų kiekių užpildymas"
 
 #. module: stock
 #: constraint:product.template:0
@@ -2422,8 +2647,11 @@ msgid "Revision Date"
 msgstr "Revizijos data"
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,prodlot_id:0
-#: view:stock.move:0 report:stock.picking.list:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,prodlot_id:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Lot"
 msgstr "Partija"
 
@@ -2435,7 +2663,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
-msgstr "Kiekis (Pirkimo mat. vnt.)"
+msgstr "Kiekis (pardavimo matai)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1743
@@ -2451,8 +2679,10 @@ msgstr "Rezervuoti"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Contact Address :"
-msgstr ""
+msgstr "Kontaktinis adresas :"
 
 #. module: stock
 #: field:stock.move,backorder_id:0
@@ -2460,7 +2690,8 @@ msgid "Back Order"
 msgstr "Užsakymas"
 
 #. module: stock
-#: field:stock.incoterms,active:0 field:stock.location,active:0
+#: field:stock.incoterms,active:0
+#: field:stock.location,active:0
 #: field:stock.tracking,active:0
 msgid "Active"
 msgstr "Aktyvus"
@@ -2476,13 +2707,13 @@ msgid "Properties"
 msgstr "Savybės"
 
 #. module: stock
-#: code:addons/stock/stock.py:1082
+#: code:addons/stock/stock.py:1120
 #, python-format
 msgid "Error, no partner !"
 msgstr "Klaida, nėra nurodytas partneris!"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:47
+#: code:addons/stock/wizard/stock_fill_inventory.py:63
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr ""
@@ -2496,7 +2727,8 @@ msgid "Incoterms"
 msgstr "Incoterm sąlygos"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 #: report:stock.inventory.move:0
 msgid "Total:"
 msgstr "Iš viso:"
@@ -2508,6 +2740,8 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
+"Incoterm - tai prekių pristatymo sąlygų rinkinys. Jos apibrėžia kaštų ir "
+"rizikos pasiskirstymą tarp pirkėjo ir pardavėjo, bei transportavimo būdus."
 
 #. module: stock
 #: help:stock.fill.inventory,recursive:0
@@ -2515,6 +2749,8 @@ msgid ""
 "If checked, products contained in child locations of selected location will "
 "be included as well."
 msgstr ""
+"Jeigu pažymėta, atsargos, esančios pasirinktos vietos vaikinėse vietose, "
+"taip pat bus įtrauktos."
 
 #. module: stock
 #: field:stock.move.track,tracking_prefix:0
@@ -2522,12 +2758,14 @@ msgid "Tracking prefix"
 msgstr "Stebėjimo prefiksas"
 
 #. module: stock
+#: view:stock.inventory:0
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr ""
+msgstr "Inventorizacijos numeris"
 
 #. module: stock
-#: code:addons/stock/stock.py:1334
+#: code:addons/stock/stock.py:1403
+#: code:addons/stock/stock.py:1428
 #, python-format
 msgid "Internal picking"
 msgstr ""
@@ -2543,7 +2781,7 @@ msgid "To"
 msgstr "Iki"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Process"
 msgstr ""
 
@@ -2553,9 +2791,14 @@ msgid "Revision Name"
 msgstr "Revizijos pavadinimas"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.model,name:stock.model_stock_warehouse
+#: model:ir.ui.menu,name:stock.menu_board_warehouse
+#: model:ir.ui.menu,name:stock.menu_stock_config_settings
 #: model:ir.ui.menu,name:stock.menu_stock_root
-#: field:product.product,warehouse_id:0 view:stock.warehouse:0
+#: model:ir.ui.menu,name:stock.next_id_61
+#: field:product.product,warehouse_id:0
+#: view:stock.warehouse:0
 msgid "Warehouse"
 msgstr "Sandėlis"
 
@@ -2578,10 +2821,17 @@ msgid "Customers Packings"
 msgstr ""
 
 #. module: stock
-#: selection:report.stock.inventory,state:0 view:report.stock.move:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
-#: view:stock.move:0 selection:stock.move,state:0 view:stock.picking:0
-#: selection:stock.picking,state:0
+#: selection:report.stock.inventory,state:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: view:stock.move:0
+#: selection:stock.move,state:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Done"
 msgstr "Atlikta"
 
@@ -2590,7 +2840,7 @@ msgstr "Atlikta"
 #: model:ir.model,name:stock.model_stock_change_standard_price
 #: view:stock.change.standard.price:0
 msgid "Change Standard Price"
-msgstr ""
+msgstr "Keisti savikainą"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -2599,16 +2849,18 @@ msgstr "Virtualios vietos"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
+#: selection:stock.picking.in,invoice_state:0
+#: selection:stock.picking.out,invoice_state:0
 msgid "To Be Invoiced"
 msgstr "Reikia išrašyti s/f"
 
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
-msgstr "Atlikimo data"
+msgstr "Įvykdymo data"
 
 #. module: stock
-#: code:addons/stock/stock.py:1083
+#: code:addons/stock/stock.py:1135
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -2624,7 +2876,7 @@ msgstr "Neskubu"
 #. module: stock
 #: view:stock.move:0
 msgid "To Do"
-msgstr ""
+msgstr "Neatlikti"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -2635,14 +2887,14 @@ msgstr "Sandėliai"
 #. module: stock
 #: field:stock.journal,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Atsakingas asmuo"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr ""
+msgstr "Atsargų analizė"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -2653,21 +2905,30 @@ msgstr "Tikslinis žurnalas"
 #: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
 #: model:stock.location,name:stock.stock_location_stock
 msgid "Stock"
-msgstr "Sandėlys"
+msgstr "Sandėlis"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
-#: view:report.stock.inventory:0 field:report.stock.inventory,product_id:0
-#: field:report.stock.lines.date,product_id:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,product_id:0
+#: field:report.stock.lines.date,product_id:0
+#: view:report.stock.move:0
 #: field:report.stock.move,product_id:0
 #: field:stock.change.product.qty,product_id:0
 #: field:stock.inventory.line,product_id:0
-#: field:stock.inventory.line.split,product_id:0 report:stock.inventory.move:0
-#: view:stock.move:0 field:stock.move,product_id:0
-#: field:stock.move.consume,product_id:0 field:stock.move.scrap,product_id:0
+#: field:stock.inventory.line.split,product_id:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move,product_id:0
+#: field:stock.move.consume,product_id:0
+#: field:stock.move.scrap,product_id:0
 #: field:stock.move.split,product_id:0
 #: field:stock.partial.move.line,product_id:0
-#: field:stock.partial.picking.line,product_id:0 view:stock.production.lot:0
+#: field:stock.partial.picking.line,product_id:0
+#: field:stock.picking,product_id:0
+#: field:stock.picking.in,product_id:0
+#: field:stock.picking.out,product_id:0
+#: view:stock.production.lot:0
 #: field:stock.production.lot,product_id:0
 #: field:stock.report.prodlots,product_id:0
 #: field:stock.report.tracklots,product_id:0
@@ -2686,7 +2947,7 @@ msgstr ""
 #. module: stock
 #: field:stock.return.picking,invoice_state:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Apskaita"
 
 #. module: stock
 #: code:addons/stock/stock.py:2379 code:addons/stock/stock.py:2440
@@ -2698,7 +2959,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr "Produkto mat. vnt."
+msgstr "Pardavimo matai"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -2733,7 +2994,8 @@ msgid "Address"
 msgstr ""
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Variants"
 msgstr "Variantai"
 
@@ -2748,14 +3010,15 @@ msgid "Suppliers"
 msgstr "Tiekėjai"
 
 #. module: stock
-#: field:report.stock.inventory,value:0 field:report.stock.move,value:0
+#: field:report.stock.inventory,value:0
+#: field:report.stock.move,value:0
 msgid "Total Value"
-msgstr ""
+msgstr "Bendra vertė"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produktai pagal kategorijas"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
@@ -2778,7 +3041,7 @@ msgstr "Produktai pagal vietas"
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
 msgid "Include children"
-msgstr ""
+msgstr "Įtraukti vaikines vietas"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -2804,12 +3067,14 @@ msgstr ""
 #. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
-msgstr ""
+msgstr "Pako numeris"
 
 #. module: stock
-#: view:report.stock.move:0 field:report.stock.move,location_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,location_id:0
 #: field:stock.inventory.line.split,location_id:0
-#: field:stock.move,location_id:0 field:stock.move.split,location_id:0
+#: field:stock.move,location_id:0
+#: field:stock.move.split,location_id:0
 msgid "Source Location"
 msgstr "Šaltinio vieta"
 
@@ -2839,23 +3104,26 @@ msgid "Virtual Stock Value"
 msgstr "Virtualių atsargų vertė"
 
 #. module: stock
-#: view:product.product:0 view:stock.inventory.line.split:0
-#: view:stock.move.split:0
+#: view:product.product:0
+#: view:stock.inventory.line.split:0
 msgid "Lots"
 msgstr "Partijos"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "New pack"
 msgstr ""
 
 #. module: stock
 #: view:stock.move:0
 msgid "Destination"
-msgstr ""
+msgstr "Pristatymo vieta"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
+#: selection:stock.picking.in,move_type:0
+#: selection:stock.picking.out,move_type:0
 msgid "All at once"
 msgstr "Viską vienu metu"
 
@@ -2874,15 +3142,16 @@ msgid "Can not process quantity %s for Product %s !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:445
+#: code:addons/stock/product.py:476
 #, python-format
 msgid "Future Productions"
 msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Neužpajamuota"
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -2898,12 +3167,12 @@ msgstr "Inventorizacijos datos"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total incoming quantity"
-msgstr ""
+msgstr "Bendras atvykstantis kiekis"
 
 #. module: stock
 #: field:report.stock.move,product_qty_out:0
 msgid "Out Qty"
-msgstr ""
+msgstr "Išvyksta"
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
@@ -2911,9 +3180,9 @@ msgid "Moves for this production lot"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Put in current pack"
-msgstr ""
+msgstr "Dėti į esamą paką"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2953,8 +3222,10 @@ msgid "UserError"
 msgstr "Naudotojo klaida"
 
 #. module: stock
-#: view:stock.inventory.line.split:0 view:stock.move.consume:0
-#: view:stock.move.scrap:0 view:stock.move.split:0 view:stock.split.into:0
+#: view:stock.inventory.line.split:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.split.into:0
 msgid "Ok"
 msgstr "Gerai"
 
@@ -2964,15 +3235,28 @@ msgid "Non European Customers"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:75 code:addons/stock/product.py:89
-#: code:addons/stock/product.py:92 code:addons/stock/product.py:99
-#: code:addons/stock/product.py:120 code:addons/stock/product.py:146
-#: code:addons/stock/stock.py:2116 code:addons/stock/stock.py:2119
-#: code:addons/stock/stock.py:2122 code:addons/stock/stock.py:2125
-#: code:addons/stock/stock.py:2128 code:addons/stock/stock.py:2131
-#: code:addons/stock/stock.py:2445
-#: code:addons/stock/wizard/stock_fill_inventory.py:47
-#: code:addons/stock/wizard/stock_splitinto.py:49
+#: code:addons/stock/product.py:100
+#: code:addons/stock/product.py:110
+#: code:addons/stock/product.py:113
+#: code:addons/stock/product.py:120
+#: code:addons/stock/product.py:141
+#: code:addons/stock/product.py:167
+#: code:addons/stock/report/report_stock.py:78
+#: code:addons/stock/report/report_stock.py:134
+#: code:addons/stock/stock.py:543
+#: code:addons/stock/stock.py:804
+#: code:addons/stock/stock.py:1204
+#: code:addons/stock/stock.py:1213
+#: code:addons/stock/stock.py:2287
+#: code:addons/stock/stock.py:2290
+#: code:addons/stock/stock.py:2293
+#: code:addons/stock/stock.py:2296
+#: code:addons/stock/stock.py:2299
+#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2525
+#: code:addons/stock/stock.py:2634
+#: code:addons/stock/wizard/stock_fill_inventory.py:63
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
 #, python-format
 msgid "Error!"
@@ -2993,16 +3277,21 @@ msgstr "Ar Jūs norite apjungti šį inventorių?"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
-#: selection:stock.move,state:0 selection:stock.picking,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Atšauktas"
 
 #. module: stock
-#: view:stock.move:0 field:stock.partial.move,picking_id:0
+#: view:stock.move:0
+#: field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr ""
+msgstr "Siunta"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3026,9 +3315,12 @@ msgstr ""
 #. module: stock
 #: selection:report.stock.move,type:0
 #: selection:stock.location,chained_picking_type:0
+#: selection:stock.move,type:0
 #: selection:stock.picking,type:0
+#: selection:stock.picking.in,type:0
+#: selection:stock.picking.out,type:0
 msgid "Getting Goods"
-msgstr "Gaunami produktai"
+msgstr "Atvykstanti"
 
 #. module: stock
 #: help:stock.location,chained_location_type:0
@@ -3044,6 +3336,14 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Nurodo ar ši vieta yra susieta su kita atsargų vieta, pvz. gavus produktus į "
+"šią vietą, jie turi būti perkelti į kitą, susietąją, atsargų vietą. "
+"Susietoji vieta yra nustatoma pagal tipą:\n"
+"* Nieko: Nenaudoti susiejimo\n"
+"* Pirkėjas: Susietoji vieta paimama iš kontakto formoje esančio lauko "
+"„Pirkėjo vieta“, pagal kontaktą, iš kurio gaunami produktai.\n"
+"* Fiksuota vieta: Susietoji vieta nurodoma šioje formoje, lauke „Susietoji "
+"vieta“."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -3055,18 +3355,18 @@ msgid "Warning"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1348
+#: code:addons/stock/stock.py:1412
 #, python-format
 msgid "is done."
 msgstr ""
 
 #. module: stock
-#: view:board.board:0
-#: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 #: model:ir.actions.act_window,name:stock.action_picking_tree
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree view:stock.picking:0
+#: model:ir.model,name:stock.model_stock_picking_out
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree
+#: view:stock.picking.out:0
 msgid "Delivery Orders"
-msgstr "Pristatymo užsakymai"
+msgstr "Išvykstančios siuntos"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3074,17 +3374,18 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
-"Ši vieta bus naudojama kaip tikslo vieta atsargoms, kurios perduodamos "
-"pirkėjui."
+"Atsargų vieta į kurią tiekiami produktai šiam kontaktui. Kitu atveju bus "
+"naudojama numatytoji pirkėjo atsargų vieta."
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
-#: view:stock.picking:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
 msgid "Confirmed"
 msgstr "Patvirtinta"
 
 #. module: stock
+#: view:stock.move:0
 #: view:stock.picking:0
 msgid "Confirm"
 msgstr "Patvirtinti"
@@ -3092,11 +3393,10 @@ msgstr "Patvirtinti"
 #. module: stock
 #: help:stock.location,icon:0
 msgid "Icon show in  hierarchical tree view"
-msgstr ""
+msgstr "Piktogramos rodomos atsargų vietų struktūros formoje"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
-#: view:stock.inventory.merge:0
 msgid "Merge inventories"
 msgstr "Sujungti inventorius"
 
@@ -3115,6 +3415,7 @@ msgstr ""
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
+"Pažymėkite šį laukelį norėdami naudoti vietą pažeistų produktų nurašymui."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
@@ -3124,25 +3425,30 @@ msgstr "Susijęs važtaraštis"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr ""
+msgstr "Bendras išvykstantis kiekis"
 
 #. module: stock
+#: field:stock.move,backorder_id:0
 #: field:stock.picking,backorder_id:0
+#: field:stock.picking.in,backorder_id:0
+#: field:stock.picking.out,backorder_id:0
 msgid "Back Order of"
-msgstr ""
+msgstr "Pradinis užsakymas"
 
 #. module: stock
-#: help:stock.partial.move.line,cost:0 help:stock.partial.picking.line,cost:0
+#: help:stock.partial.move.line,cost:0
+#: help:stock.partial.picking.line,cost:0
 msgid "Unit Cost for this product line"
-msgstr ""
+msgstr "Produkto vieneto savikaina"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
 #: view:report.stock.inventory:0
-#: field:report.stock.inventory,product_categ_id:0 view:report.stock.move:0
+#: field:report.stock.inventory,product_categ_id:0
+#: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Produkto kategorija"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
@@ -3156,7 +3462,7 @@ msgid "Reporting"
 msgstr "Ataskaitos"
 
 #. module: stock
-#: code:addons/stock/stock.py:1343
+#: code:addons/stock/stock.py:1407
 #, python-format
 msgid " for the "
 msgstr ""
@@ -3167,10 +3473,9 @@ msgid "Quantity to leave in the current pack"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 #: view:stock.invoice.onshipping:0
 msgid "Create invoice"
-msgstr "Sukurti sąskaitą faktūrą"
+msgstr "Išrašyti sąskaitą"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -3197,14 +3502,19 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"Jeigu produkto savikaina padidinama, bus debetuojama atsargų apskaitos "
+"sąskaita bei  kredituojama atsargų sumažėjimo sąskaita, reikšme = (kainos "
+"skirtumas * turimas kiekis).\n"
+"Jeigu produkto savikaina sumažinama, bus kredituojama atsargų apskaitos "
+"sąskaita bei  debetuojama atsargų padidėjimo sąskaita."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr ""
+msgstr "Susiejimo žurnalas"
 
 #. module: stock
-#: code:addons/stock/stock.py:738
+#: code:addons/stock/stock.py:782
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr ""
@@ -3212,10 +3522,10 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
 msgid "Customers"
-msgstr "Klientai"
+msgstr "Pirkėjai"
 
 #. module: stock
-#: code:addons/stock/stock.py:1347
+#: code:addons/stock/stock.py:1411
 #, python-format
 msgid "is cancelled."
 msgstr ""
@@ -3232,7 +3542,7 @@ msgid "Process Document"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:427
+#: code:addons/stock/product.py:458
 #, python-format
 msgid "Future Deliveries"
 msgstr ""
@@ -3243,14 +3553,16 @@ msgid "Additional info"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0 field:stock.move,tracking_id:0
+#: view:stock.move:0
+#: field:stock.move,tracking_id:0
+#: view:stock.tracking:0
 msgid "Pack"
-msgstr ""
+msgstr "Pakas"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Date Expected"
-msgstr ""
+msgstr "Numatoma data"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3268,23 +3580,26 @@ msgstr "Automatiškai patvirtinti"
 
 #. module: stock
 #: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
 msgid "Weight"
-msgstr ""
+msgstr "Svoris"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Produkto šablonas"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "December"
-msgstr ""
+msgstr "Gruodis"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic Move"
-msgstr "Automatiniai įrašai"
+msgstr "Automatinis perkėlimas"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -3295,14 +3610,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Return Products"
-msgstr ""
+msgstr "Grąžinti produktus"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Įvykdyti inventorizaciją"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -3324,8 +3640,10 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
+#: selection:stock.picking.in,invoice_state:0
+#: selection:stock.picking.out,invoice_state:0
 msgid "Invoiced"
-msgstr "Užpajamuota"
+msgstr "Sąskaitos faktūros"
 
 #. module: stock
 #: field:stock.move,address_id:0
@@ -3334,13 +3652,17 @@ msgstr ""
 
 #. module: stock
 #: field:stock.picking,max_date:0
+#: field:stock.picking.in,max_date:0
+#: field:stock.picking.out,max_date:0
 msgid "Max. Expected Date"
 msgstr ""
 
 #. module: stock
 #: field:stock.picking,auto_picking:0
+#: field:stock.picking.in,auto_picking:0
+#: field:stock.picking.out,auto_picking:0
 msgid "Auto-Picking"
-msgstr ""
+msgstr "Vykdyti automatiškai"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3350,19 +3672,28 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
 msgid "Chaining Type"
-msgstr ""
+msgstr "Susiejimo tipas"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
-#: selection:report.stock.move,type:0 view:stock.location:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,type:0
+#: view:stock.location:0
 #: selection:stock.location,chained_picking_type:0
+#: selection:stock.move,type:0
 #: selection:stock.picking,type:0
+#: selection:stock.picking.in,type:0
+#: selection:stock.picking.out,type:0
 msgid "Internal"
-msgstr "Vidinis perdavimas"
+msgstr "Vidinis perkėlimas"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
 msgid "Draft"
 msgstr "Juodraštis"
 
@@ -3370,7 +3701,7 @@ msgstr "Juodraštis"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr ""
+msgstr "Sandėlio atsargos"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -3406,7 +3737,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1346
+#: code:addons/stock/stock.py:1410
 #, python-format
 msgid "is ready to process."
 msgstr ""
@@ -3419,7 +3750,7 @@ msgstr ""
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
 msgid "Set to zero"
-msgstr ""
+msgstr "Nustatyti nulius"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
@@ -3428,9 +3759,10 @@ msgid "None of these picking lists require invoicing."
 msgstr ""
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "November"
-msgstr ""
+msgstr "Lapkritis"
 
 #. module: stock
 #: code:addons/stock/product.py:100 code:addons/stock/stock.py:2128
@@ -3439,7 +3771,7 @@ msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:441
+#: code:addons/stock/product.py:472
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Nesuplanuoti kiekiai"
@@ -3453,7 +3785,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
-msgstr ""
+msgstr "Susietoji įmonė"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3464,7 +3796,7 @@ msgstr "Patikrinti rezervacija"
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "January"
-msgstr ""
+msgstr "Sausis"
 
 #. module: stock
 #: help:product.product,track_incoming:0
@@ -3476,7 +3808,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr "Ateities atsargų judėjimas"
+msgstr "Būsimas atsargų judėjimas"
 
 #. module: stock
 #: field:stock.move,move_history_ids2:0
@@ -3484,15 +3816,14 @@ msgid "Move History (parent moves)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:423
+#: code:addons/stock/product.py:454
 #, python-format
 msgid "Future Stock"
-msgstr ""
+msgstr "Būsimos atsargos"
 
 #. module: stock
-#: code:addons/stock/stock.py:513 code:addons/stock/stock.py:1149
-#: code:addons/stock/stock.py:1157
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:112
+#: code:addons/stock/stock.py:1680
+#: code:addons/stock/stock.py:1682
 #, python-format
 msgid "Error"
 msgstr "Klaida"
@@ -3516,23 +3847,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:res.request.link,name:stock.req_link_tracking
-#: field:stock.change.product.qty,prodlot_id:0
-#: field:stock.inventory.line,prod_lot_id:0
-#: field:stock.inventory.line.split.lines,name:0
-#: field:stock.inventory.line.split.lines,prodlot_id:0
-#: report:stock.inventory.move:0 field:stock.move,prodlot_id:0
-#: field:stock.move.split.lines,name:0
-#: field:stock.move.split.lines,prodlot_id:0
-#: field:stock.partial.move.line,prodlot_id:0
-#: field:stock.partial.picking.line,prodlot_id:0 view:stock.production.lot:0
-#: field:stock.production.lot,name:0
+#: report:stock.inventory.move:0
 msgid "Production Lot"
 msgstr "Gamybos partija"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_traceability view:stock.move:0
-#: view:stock.picking:0 view:stock.production.lot:0 view:stock.tracking:0
+#: model:ir.ui.menu,name:stock.menu_traceability
+#: view:stock.config.settings:0
+#: view:stock.move:0
+#: view:stock.tracking:0
 msgid "Traceability"
 msgstr "Atsekamumas"
 
@@ -3543,19 +3866,21 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
-#: model:ir.ui.menu,name:stock.menu_action_location_form view:stock.picking:0
+#: model:ir.ui.menu,name:stock.menu_action_location_form
+#: view:stock.location:0
+#: view:stock.move:0
 msgid "Locations"
-msgstr "Vietos"
+msgstr "Atsargų vietos"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.inventory:0
 msgid "General Information"
 msgstr "Bendra informacija"
 
 #. module: stock
 #: field:stock.production.lot,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Priešdėlis"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3566,16 +3891,20 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0 field:stock.partial.move,move_ids:0
+#: view:stock.move:0
+#: field:stock.partial.move,move_ids:0
 #: field:stock.return.picking,product_return_moves:0
 msgid "Moves"
-msgstr "Perkėlimai"
+msgstr "Žurnalo įrašas"
 
 #. module: stock
-#: view:report.stock.move:0 field:report.stock.move,location_dest_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,location_dest_id:0
 #: field:stock.partial.move.line,location_dest_id:0
 #: field:stock.partial.picking.line,location_dest_id:0
 #: field:stock.picking,location_dest_id:0
+#: field:stock.picking.in,location_dest_id:0
+#: field:stock.picking.out,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Tikslo vieta"
 
@@ -3642,10 +3971,14 @@ msgstr ""
 #. module: stock
 #: view:report.stock.inventory:0
 msgid "Real"
-msgstr ""
+msgstr "Turima"
 
 #. module: stock
-#: report:stock.picking.list:0 view:stock.production.lot.revision:0
+#: field:stock.move,name:0
+#: report:stock.picking.list:0
+#: report:stock.picking.list.in:0
+#: report:stock.picking.list.out:0
+#: view:stock.production.lot.revision:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
 msgstr "Aprašymas"
@@ -3654,11 +3987,10 @@ msgstr "Aprašymas"
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "May"
-msgstr ""
+msgstr "Gegužė"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_move.py:133
-#, python-format
+#: view:stock.picking.out:0
 msgid "Deliver"
 msgstr ""
 
@@ -3671,7 +4003,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action5 view:stock.tracking:0
+#: model:ir.actions.act_window,name:stock.action5
 msgid "Upstream traceability"
 msgstr "Atsekti aukštyn"
 
@@ -3679,10 +4011,10 @@ msgstr "Atsekti aukštyn"
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
 #: report:lot.stock.overview_all:0
 msgid "Location Content"
-msgstr ""
+msgstr "Atsargų vietos apžvalga"
 
 #. module: stock
-#: code:addons/stock/product.py:447
+#: code:addons/stock/product.py:478
 #, python-format
 msgid "Produced Qty"
 msgstr "Pagaminti kiekiai"
@@ -3697,7 +4029,7 @@ msgstr "Atsargų sumažėjimo sąskaita"
 #. module: stock
 #: field:stock.location,chained_location_type:0
 msgid "Chained Location Type"
-msgstr "Vietų tipas"
+msgstr "Susietosios vietos tipas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
@@ -3705,16 +4037,17 @@ msgid "Stock report by production lots"
 msgstr "Atsargų ataskaita pagal produkcijos partijas"
 
 #. module: stock
-#: view:stock.location:0 selection:stock.location,chained_location_type:0
-#: view:stock.move:0
+#: view:stock.location:0
+#: selection:stock.location,chained_location_type:0
+#: view:stock.picking.out:0
 msgid "Customer"
-msgstr "Klientas"
+msgstr "Pirkėjas"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "February"
-msgstr ""
+msgstr "Vasaris"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -3722,20 +4055,21 @@ msgid "Production Lot Identification"
 msgstr ""
 
 #. module: stock
-#: field:stock.location,scrap_location:0 view:stock.move.scrap:0
+#: field:stock.location,scrap_location:0
+#: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr ""
+msgstr "Nurašymo vieta"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "April"
-msgstr ""
+msgstr "Balandis"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:stock.move:0
+#: view:report.stock.inventory:0
 msgid "Future"
-msgstr ""
+msgstr "Ateitis"
 
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
@@ -3743,12 +4077,7 @@ msgid "Invoiced date"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:738
-#: code:addons/stock/wizard/stock_fill_inventory.py:116
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:96
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:98
-#: code:addons/stock/wizard/stock_return_picking.py:99
-#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_partial_move.py:72
 #: code:addons/stock/wizard/stock_return_picking.py:189
 #, python-format
 msgid "Warning !"
@@ -3757,7 +4086,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
 msgid "Output"
-msgstr "Išvėžimas"
+msgstr "Išvežimas"
 
 #. module: stock
 #: selection:stock.move.split.lines,action:0
@@ -3775,10 +4104,12 @@ msgid "Optional: next stock move when chaining them"
 msgstr ""
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,year:0
-#: view:report.stock.move:0 field:report.stock.move,year:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,year:0
+#: view:report.stock.move:0
+#: field:report.stock.move,year:0
 msgid "Year"
-msgstr ""
+msgstr "Metai"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -3791,7 +4122,9 @@ msgid "Partial Move"
 msgstr ""
 
 #. module: stock
-#: help:stock.location,posx:0 help:stock.location,posy:0
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
 msgstr ""
+"Papildomi lokalizacijos duomenys, naudojami tik informaciniai tikslai"

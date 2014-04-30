@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:51+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:49+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -36,6 +36,7 @@ msgstr "必須加入"
 #. module: base_calendar
 #: help:calendar.event,exdate:0
 #: help:calendar.todo,exdate:0
+#: help:crm.meeting,exdate:0
 msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
@@ -70,6 +71,7 @@ msgstr "邀請"
 #. module: base_calendar
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
+#: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
 msgstr "重覆定期會議"
 
@@ -77,29 +79,30 @@ msgstr "重覆定期會議"
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
 #: model:ir.ui.menu,name:base_calendar.menu_crm_meeting_avail_alarm
 msgid "Alarms"
-msgstr "警報"
+msgstr "警示"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Sunday"
 msgstr "星期日"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,role:0
 msgid "Role"
 msgstr "角色"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Invitation details"
 msgstr "邀約詳情"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fourth"
 msgstr "第四"
 
@@ -114,14 +117,17 @@ msgstr "顯示為"
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
 #: selection:calendar.todo,select1:0
+#: field:crm.meeting,day:0
+#: selection:crm.meeting,select1:0
 msgid "Date of month"
 msgstr "月份日期"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Public"
-msgstr ""
+msgstr "公開"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -131,6 +137,7 @@ msgstr " "
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "March"
 msgstr "三月"
 
@@ -144,18 +151,21 @@ msgstr "警告！"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Friday"
 msgstr "星期五"
 
 #. module: base_calendar
 #: field:calendar.event,allday:0
 #: field:calendar.todo,allday:0
+#: field:crm.meeting,allday:0
 msgid "All Day"
 msgstr "整天"
 
 #. module: base_calendar
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
+#: field:crm.meeting,select1:0
 msgid "Option"
 msgstr "選項"
 
@@ -163,9 +173,9 @@ msgstr "選項"
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 msgid "Free"
-msgstr ""
+msgstr "自由"
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
@@ -190,6 +200,7 @@ msgstr "活動參考"
 #. module: base_calendar
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
+#: field:crm.meeting,we:0
 msgid "Wed"
 msgstr "三"
 
@@ -201,13 +212,14 @@ msgstr "將時間顯示為"
 #. module: base_calendar
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
+#: field:crm.meeting,tu:0
 msgid "Tue"
 msgstr "二"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -218,8 +230,9 @@ msgstr "每年"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Last"
-msgstr ""
+msgstr "最後"
 
 #. module: base_calendar
 #: help:calendar.attendee,state:0
@@ -238,15 +251,12 @@ msgid "Days"
 msgstr "日"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Invitation Detail"
 msgstr "邀約詳情"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1194
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "錯誤！"
@@ -300,7 +310,6 @@ msgid "The event ends"
 msgstr "活動結束"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
 msgstr "分組根據..."
@@ -345,7 +354,7 @@ msgstr "活動結束日期"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
-msgstr ""
+msgstr "與會者"
 
 #. module: base_calendar
 #: field:calendar.event,date_deadline:0
@@ -354,9 +363,11 @@ msgid "Deadline"
 msgstr "截止日期"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:389
-#: code:addons/base_calendar/base_calendar.py:1004
-#: code:addons/base_calendar/base_calendar.py:1006
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -364,10 +375,11 @@ msgstr "警告！"
 #. module: base_calendar
 #: help:calendar.event,active:0
 #: help:calendar.todo,active:0
+#: help:crm.meeting,active:0
 msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
-msgstr ""
+msgstr "若啟用欄位設為真，則你可以隱藏事件的警告訊息而不需將其刪除。"
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -379,20 +391,22 @@ msgstr "基本行事曆功能"
 #: field:calendar.event,organizer_id:0
 #: field:calendar.todo,organizer:0
 #: field:calendar.todo,organizer_id:0
+#: field:crm.meeting,organizer:0
+#: field:crm.meeting,organizer_id:0
 msgid "Organizer"
 msgstr "組織者"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
+#: field:crm.meeting,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "負責人"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: model:res.request.link,name:base_calendar.request_link_meeting
+#: model:res.request.link,name:base_calendar.request_link_event
 msgid "Event"
 msgstr "活動"
 
@@ -412,6 +426,8 @@ msgstr "先於"
 #: view:calendar.event:0
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
+#: field:crm.meeting,date_open:0
+#: selection:crm.meeting,state:0
 msgid "Confirmed"
 msgstr "確認"
 
@@ -423,7 +439,11 @@ msgstr "編輯所有活動"
 #. module: base_calendar
 #: field:calendar.alarm,attendee_ids:0
 #: field:calendar.event,attendee_ids:0
+#: field:calendar.event,partner_ids:0
 #: field:calendar.todo,attendee_ids:0
+#: field:calendar.todo,partner_ids:0
+#: field:crm.meeting,attendee_ids:0
+#: field:crm.meeting,partner_ids:0
 msgid "Attendees"
 msgstr "出席者"
 
@@ -440,6 +460,7 @@ msgstr "行事曆任務"
 #. module: base_calendar
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
+#: field:crm.meeting,su:0
 msgid "Sun"
 msgstr "日"
 
@@ -466,13 +487,14 @@ msgstr "委託自"
 #. module: base_calendar
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
+#: selection:crm.meeting,select1:0
 msgid "Day of month"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
 #: field:calendar.event,location:0
 #: field:calendar.todo,location:0
+#: field:crm.meeting,location:0
 msgid "Location"
 msgstr "地點"
 
@@ -482,7 +504,6 @@ msgid "Send mail?"
 msgstr "要發送郵件嗎？"
 
 #. module: base_calendar
-#: field:base_calendar.invite.attendee,email:0
 #: selection:calendar.alarm,action:0
 #: field:calendar.attendee,email:0
 msgid "Email"
@@ -501,6 +522,7 @@ msgstr "執行"
 #. module: base_calendar
 #: field:calendar.event,exdate:0
 #: field:calendar.todo,exdate:0
+#: field:crm.meeting,exdate:0
 msgid "Exception Date/Times"
 msgstr "例外日期／時間"
 
@@ -513,6 +535,7 @@ msgstr "保密"
 #. module: base_calendar
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
+#: field:crm.meeting,end_date:0
 msgid "Repeat Until"
 msgstr "重覆直至"
 
@@ -526,7 +549,7 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Visibility"
-msgstr ""
+msgstr "能見度"
 
 #. module: base_calendar
 #: field:calendar.attendee,rsvp:0
@@ -536,6 +559,7 @@ msgstr "需回覆？"
 #. module: base_calendar
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
+#: field:crm.meeting,base_calendar_url:0
 msgid "Caldav URL"
 msgstr ""
 
@@ -545,19 +569,20 @@ msgid "Select range to Exclude"
 msgstr "選取排除範圍"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
 msgid "Recurrent ID"
-msgstr ""
+msgstr "循環ID"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "July"
 msgstr "七月"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Accepted"
 msgstr "接受"
@@ -565,6 +590,7 @@ msgstr "接受"
 #. module: base_calendar
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
+#: field:crm.meeting,th:0
 msgid "Thu"
 msgstr "四"
 
@@ -608,8 +634,9 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Private"
-msgstr ""
+msgstr "私有的"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -630,14 +657,14 @@ msgid "Mark as"
 msgstr "標為"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: field:calendar.attendee,partner_address_id:0
+#: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr "聯絡人"
 
 #. module: base_calendar
 #: help:calendar.event,rrule_type:0
 #: help:calendar.todo,rrule_type:0
+#: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
 msgstr "活動自動以此區間重覆"
 
@@ -668,39 +695,47 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "First"
 msgstr "第一"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,class:0
+#: field:calendar.todo,class:0
+#: field:crm.meeting,class:0
 msgid "Privacy"
-msgstr ""
+msgstr "隱私"
 
 #. module: base_calendar
 #: field:calendar.event,vtimezone:0
 #: field:calendar.todo,vtimezone:0
+#: field:crm.meeting,vtimezone:0
 msgid "Timezone"
 msgstr "時區"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Subject"
 msgstr "主旨"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
 msgid "Needs Action"
-msgstr ""
+msgstr "需要動作"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "September"
 msgstr "九月"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "December"
 msgstr "十二月"
 
@@ -727,13 +762,14 @@ msgstr "個人"
 #. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
+#: help:crm.meeting,count:0
 msgid "Repeat x times"
 msgstr "重覆x次"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "擁有者"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -748,10 +784,9 @@ msgstr "開始日期"
 #. module: base_calendar
 #: field:calendar.attendee,cn:0
 msgid "Common name"
-msgstr ""
+msgstr "共用名稱"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Declined"
 msgstr "拒絕"
@@ -767,8 +802,8 @@ msgid "My Events"
 msgstr "我的活動"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Decline"
 msgstr "拒絕"
 
@@ -802,6 +837,7 @@ msgstr "基本警示資訊"
 #. module: base_calendar
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
+#: field:crm.meeting,fr:0
 msgid "Fri"
 msgstr "五"
 
@@ -825,14 +861,16 @@ msgstr "成員"
 #. module: base_calendar
 #: help:calendar.event,location:0
 #: help:calendar.todo,location:0
+#: help:crm.meeting,location:0
 msgid "Location of Event"
 msgstr "活動地點"
 
 #. module: base_calendar
 #: field:calendar.event,rrule:0
 #: field:calendar.todo,rrule:0
+#: field:crm.meeting,rrule:0
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "循環性規則"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -856,6 +894,9 @@ msgstr "停止重覆"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,alarm_id:0
+#: field:calendar.todo,alarm_id:0
+#: field:crm.meeting,alarm_id:0
 msgid "Reminder"
 msgstr "提示"
 
@@ -887,6 +928,7 @@ msgstr "受邀者電郵"
 #: field:calendar.alarm,repeat:0
 #: field:calendar.event,count:0
 #: field:calendar.todo,count:0
+#: field:crm.meeting,count:0
 #: field:res.alarm,repeat:0
 msgid "Repeat"
 msgstr "重覆"
@@ -901,24 +943,28 @@ msgstr "指向出席者目錄資訊網址參照"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "August"
 msgstr "八月"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Monday"
 msgstr "星期一"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Third"
 msgstr "第三"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "June"
 msgstr "六月"
 
@@ -931,11 +977,11 @@ msgstr "活動日期"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "The"
-msgstr ""
+msgstr "這"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_from:0
 msgid "Delegated From"
 msgstr "委託自"
@@ -948,12 +994,14 @@ msgstr "用戶"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,date:0
+#: field:crm.meeting,date:0
 msgid "Date"
 msgstr "日期"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "November"
 msgstr "十一月"
 
@@ -970,6 +1018,7 @@ msgstr "資料"
 #. module: base_calendar
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
 msgid "Mon"
 msgstr "一"
 
@@ -988,12 +1037,16 @@ msgstr "不重覆"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "October"
 msgstr "十月"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
+#: selection:calendar.attendee,state:0
 #: view:calendar.event:0
+#: selection:calendar.event,state:0
+#: selection:calendar.todo,state:0
+#: view:crm.meeting:0
 msgid "Uncertain"
 msgstr "不確定"
 
@@ -1011,6 +1064,7 @@ msgstr "觸發點"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "January"
 msgstr "一月"
 
@@ -1029,6 +1083,7 @@ msgstr "區間"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Wednesday"
 msgstr "星期三"
 
@@ -1041,6 +1096,7 @@ msgstr "區間不能為負"
 #. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
+#: field:crm.meeting,message_summary:0
 msgid "Summary"
 msgstr "摘要"
 
@@ -1048,6 +1104,7 @@ msgstr "摘要"
 #: field:calendar.alarm,active:0
 #: field:calendar.event,active:0
 #: field:calendar.todo,active:0
+#: field:crm.meeting,active:0
 #: field:res.alarm,active:0
 msgid "Active"
 msgstr "活躍"
@@ -1060,7 +1117,7 @@ msgstr "選擇月內重覆會議之日子"
 #. module: base_calendar
 #: field:calendar.alarm,action:0
 msgid "Action"
-msgstr ""
+msgstr "動作"
 
 #. module: base_calendar
 #: help:base_calendar.invite.attendee,type:0
@@ -1086,7 +1143,6 @@ msgid "Participation role for the calendar user"
 msgstr "行事曆用戶參與角色"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_to:0
 msgid "Delegated To"
 msgstr "委託"
@@ -1099,6 +1155,7 @@ msgstr "定義觸發警示要引起之行動"
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
+#: selection:crm.meeting,end_type:0
 msgid "End date"
 msgstr "結束日期"
 
@@ -1127,8 +1184,9 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr ""
 
@@ -1172,14 +1230,14 @@ msgstr "完成"
 #. module: base_calendar
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
+#: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr "每（日／週／月／年）重覆"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: field:base_calendar.invite.attendee,user_ids:0
+#: model:ir.model,name:base_calendar.model_res_users
 msgid "Users"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -1187,7 +1245,6 @@ msgid "of"
 msgstr "之於"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Cancel"
 msgstr "取消"
@@ -1200,6 +1257,7 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Tuesday"
 msgstr "星期二"
 
@@ -1217,11 +1275,11 @@ msgid "Responsible User"
 msgstr "負責用戶"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1466
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 #, python-format
 msgid "Busy"
 msgstr "忙碌"
@@ -1253,12 +1311,14 @@ msgstr "固定時間"
 #. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
+#: field:crm.meeting,recurrency:0
 msgid "Recurrent"
 msgstr "定期重覆"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
+#: field:crm.meeting,rrule_type:0
 msgid "Recurrency"
 msgstr "定期重覆"
 
@@ -1271,12 +1331,14 @@ msgstr "活動邀請"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Thursday"
 msgstr "星期四"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
 #: field:calendar.todo,exrule:0
+#: field:crm.meeting,exrule:0
 msgid "Exception Rule"
 msgstr "例外規則"
 
@@ -1294,6 +1356,7 @@ msgstr "詳情"
 #. module: base_calendar
 #: help:calendar.event,exrule:0
 #: help:calendar.todo,exrule:0
+#: help:crm.meeting,exrule:0
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
@@ -1302,6 +1365,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
+#: field:crm.meeting,month_list:0
 msgid "Month"
 msgstr "月"
 
@@ -1332,12 +1396,14 @@ msgstr "網址參照"
 #: field:calendar.event,name:0
 #: field:calendar.todo,description:0
 #: field:calendar.todo,name:0
+#: field:crm.meeting,description:0
 msgid "Description"
 msgstr "說明"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "May"
 msgstr "五月"
 
@@ -1366,7 +1432,7 @@ msgstr "停止"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
 msgid "ir.values"
-msgstr ""
+msgstr "ir.values"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
@@ -1374,7 +1440,6 @@ msgid "Objects"
 msgstr "物件"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Delegated"
 msgstr "已委託"
@@ -1382,6 +1447,7 @@ msgstr "已委託"
 #. module: base_calendar
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
+#: field:crm.meeting,sa:0
 msgid "Sat"
 msgstr "六"
 
@@ -1402,12 +1468,16 @@ msgstr "指定代理該行事曆用戶之用戶"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,date_deadline:0
+#: field:calendar.todo,date_deadline:0
+#: field:crm.meeting,date_deadline:0
 msgid "End Date"
 msgstr "結束日期"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "February"
 msgstr "二月"
 
@@ -1423,6 +1493,7 @@ msgid "Resource"
 msgstr "資源"
 
 #. module: base_calendar
+#: field:crm.meeting.type,name:0
 #: field:res.alarm,name:0
 msgid "Name"
 msgstr "名稱"
@@ -1440,12 +1511,11 @@ msgid ""
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,alarm_id:0
 #: field:calendar.event,base_calendar_alarm_id:0
-#: field:calendar.todo,alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
+#: field:crm.meeting,base_calendar_alarm_id:0
 msgid "Alarm"
-msgstr ""
+msgstr "警示"
 
 #. module: base_calendar
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
@@ -1461,6 +1531,7 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "April"
 msgstr "四月"
 
@@ -1472,19 +1543,21 @@ msgstr "定期重覆持續時間"
 #. module: base_calendar
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
+#: field:crm.meeting,week_list:0
 msgid "Weekday"
 msgstr "週日"
 
 #. module: base_calendar
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
+#: field:crm.meeting,byday:0
 msgid "By day"
-msgstr ""
+msgstr "每日"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -1494,8 +1567,9 @@ msgstr "音訊"
 #. module: base_calendar
 #: field:calendar.event,id:0
 #: field:calendar.todo,id:0
+#: field:crm.meeting,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -1515,7 +1589,7 @@ msgstr "出席者資訊"
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "資源ID"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:418
@@ -1526,17 +1600,19 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0
 msgid "Sent By"
-msgstr ""
+msgstr "寄件人"
 
 #. module: base_calendar
 #: field:calendar.event,sequence:0
 #: field:calendar.todo,sequence:0
+#: field:crm.meeting,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "順序"
 
 #. module: base_calendar
 #: help:calendar.event,alarm_id:0
 #: help:calendar.todo,alarm_id:0
+#: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
 msgstr "將警示設於活動開始前此時間"
 
@@ -1546,14 +1622,15 @@ msgid "Internal User"
 msgstr "內部用戶"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Accept"
 msgstr "接受"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Saturday"
 msgstr "星期六"
 
@@ -1565,14 +1642,14 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Second"
 msgstr "秒"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
-msgstr ""
+msgstr "空閒/忙碌"
 
 #. module: base_calendar
 #: field:calendar.event,end_type:0
@@ -1586,6 +1663,7 @@ msgstr "結束定期重覆方法"
 #: field:calendar.event,duration:0
 #: field:calendar.todo,date:0
 #: field:calendar.todo,duration:0
+#: field:crm.meeting,duration:0
 #: field:res.alarm,duration:0
 #: field:res.alarm,trigger_duration:0
 msgid "Duration"
@@ -1615,5 +1693,6 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "第五"

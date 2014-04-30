@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:04+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:14+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -25,7 +25,8 @@ msgid ""
 msgstr "如果“有效”字段设为false，它对信息进行隐藏但不删除它。"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "必备条件"
 
@@ -45,8 +46,10 @@ msgid "Group By..."
 msgstr "分组..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "部门"
 
@@ -61,7 +64,8 @@ msgid "Jobs"
 msgstr "职务"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "公司"
@@ -98,7 +102,8 @@ msgid "Create Partner"
 msgstr "创建业务伙伴"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "天数"
 
@@ -138,7 +143,8 @@ msgid "Junior Developer"
 msgstr "初级开发人员"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "申请的职位"
 
@@ -163,7 +169,7 @@ msgid "Reference"
 msgstr "单号"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "申请人状态"
@@ -189,7 +195,7 @@ msgid "Salary Proposed"
 msgstr "提议薪酬"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "业务伙伴"
@@ -200,7 +206,9 @@ msgid "Avg Proposed Salary"
 msgstr "平均提议的薪酬"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "有效"
 
@@ -247,8 +255,11 @@ msgid "A partner is already defined on this job request."
 msgstr "业务伙伴已定义职务空缺申请。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "新建"
 
@@ -288,7 +299,8 @@ msgid ""
 msgstr "定义您招聘流程的阶段如：电话联系，首次面谈，第二次面谈，拒绝录用。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "创建日期"
@@ -299,7 +311,8 @@ msgid "Planned Date"
 msgstr "计划的日期"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "评价"
@@ -310,8 +323,10 @@ msgid "Job"
 msgstr "职位"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "阶段"
@@ -332,7 +347,8 @@ msgid "Recruitment / Applicants Stages"
 msgstr "招聘 / 申请阶段"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "期望的薪酬"
 
@@ -343,13 +359,12 @@ msgstr "7月"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+#: field:hr.applicant,name:0
 msgid "Subject"
 msgstr "主题"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "申请人"
 
@@ -384,7 +399,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "定义一个序列按顺序显示列表中的各阶段。"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,partner_id:0
 msgid "Contact"
 msgstr "联系方式"
 
@@ -456,7 +471,8 @@ msgid "Update Date"
 msgstr "更新日期"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "提议薪酬"
 
@@ -502,7 +518,9 @@ msgid "Group By ..."
 msgstr "分组..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
 msgstr "进行中"
 
@@ -530,7 +548,8 @@ msgid "Degrees"
 msgstr "学历"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "已结束"
 
@@ -560,13 +579,18 @@ msgid "Meeting"
 msgstr "会议"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Pending"
 msgstr "待处理"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "状态"
 
@@ -581,8 +605,10 @@ msgid "August"
 msgstr "8月"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -683,7 +709,8 @@ msgid "Not Good"
 msgstr "不好"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "日期"
 
@@ -733,7 +760,7 @@ msgid "State"
 msgstr "状态"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "取消"
@@ -760,7 +787,8 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "定义一个显示学历列表的序列"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "负责人"
@@ -813,12 +841,14 @@ msgid "Reply"
 msgstr "回复"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "面谈"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "月份"
 
@@ -838,8 +868,10 @@ msgid "Contract Signed"
 msgstr "签订合同"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "已拒绝"
 
@@ -850,8 +882,10 @@ msgid "Applicant '%s' is being hired."
 msgstr "申请人 '%s'被录用。"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
 msgstr "录用"
 
@@ -877,7 +911,8 @@ msgid "February"
 msgstr "2月"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "姓名"
@@ -915,13 +950,13 @@ msgid "The job request '%s' has been set 'in progress'."
 msgstr "这职位空缺 '%s'已被定义为 “进行中”"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "年"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "剩余天数"
 

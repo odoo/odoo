@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:08+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -25,13 +25,13 @@ msgstr "Manueller Betrieb"
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,activity_from_id:0
 msgid "Previous Activity"
-msgstr "Vorgelagerte Aktion"
+msgstr "Vorherige Aktivität"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr "Der aktuelle Schritt bietet keine EMail oder Report als Vorschau."
+msgstr "Der aktuelle Schritt bietet keine E-Mail oder Report als Vorschau."
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
@@ -84,7 +84,7 @@ msgid ""
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
 msgstr ""
-"Definiere einen Plan Umsatzerlös, der bis zu diesem Punkt einer Kampagne "
+"Definiere einen Plan-Umsatzerlös, der bis zu diesem Punkt einer Kampagne "
 "normalerweise generiert werden sollte. Sie können unter Reports auch "
 "Auswertungen zu dieser Kampagne analysieren."
 
@@ -145,7 +145,7 @@ msgstr ""
 "durchsuchende] Variablen nutzen:\n"
 "   - Aktivität: die Aktivitäten einer Kampagnen\n"
 "   - Arbeitsliste: Einzelposten der Kampagne, z.B. Adresse \n"
-"   - Ressource: Die Object Ressource der Einzelposten, z.B. Leads\n"
+"   - Ressource: Die Object Ressource der Einzelposten, z.B. Interessenten\n"
 "   - Überleitungen: Liste der Überleitungen von einer Aktion zur Folgeaktion "
 "einer Kampagne\n"
 "...- re: Python regular expression Anwendung"
@@ -154,9 +154,10 @@ msgstr ""
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Set to Draft"
-msgstr "Setze auf Entwurf"
+msgstr "Setze auf 'Entwurf'"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "Nächste Aktivitäten"
@@ -172,7 +173,7 @@ msgid "This Year"
 msgstr "Akt. Jahr"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "No preview"
 msgstr "Keine Vorschau"
@@ -255,17 +256,16 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
-"Test - Alle Aktivitäten werden sofort ausgeführt(ohne dass auf die "
-"Zeitintervalle bei den Übergängen gewartet wird) es werden aber kein Reports "
-"oder EMails erzeugt.\n"
+"Test - Alle Aktivitäten werden sofort ausgeführt (ohne dass auf die "
+"Zeitintervalle bei den Übergängen gewartet wird). Es werden aber kein "
+"Reports oder E-Mails erzeugt.\n"
 "Test in Realtime - Alle Aktivitäten werden sofort ausgeführt, es werden aber "
-"keine  Reports oder EMails erzeugt.\n"
+"keine  Reports oder EM- ails erzeugt.\n"
 "Mit manuelller Bestätigung- Die Kampagne verläuft wie konfiguriert, "
-"allerdings muss der.\n"
-"Benutzer die Einzelschritte der Kampagne per Hand aktivieren.Normal - die "
-"Kampagne verläuft normal, es werden alle EMails und Reports "
-"unmittelbarerzeugt (Achtung in diesem Modus - da sie live am System "
-"arbeiten.)"
+"allerdings muss der  Benutzer die Einzelschritte der Kampagne per Hand\n"
+" aktivieren.Normal - die Kampagne verläuft normal, es werden alle E-Mails "
+"und Reports unmittelbar erzeugt (Achtung in diesem Modus - da sie live am "
+"System arbeiten.)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
@@ -326,11 +326,11 @@ msgid ""
 msgstr ""
 "Der Aktionstyp der ausgeführt wird, wenn eine Auftragsposition dieser "
 "Kampagne bei dieser Aktion an der Reihe ist:\n"
-"    - EMail: Sende eine EMail unter Nutzung des vordefinierten "
+"    - E-Mail: Sendet eine E-Mail unter Nutzung des vordefinierten "
 "Mailtemplates. \n"
-"   - Report: Drucke einen Report der für diese Ressource existiert und "
+"   - Report: Druckt einen Report der für diese Ressource existiert und "
 "speichere den Report in ein bestimmtes Verzeichnis.\n"
-"       - Benutzerdefinierte Aktion: Starte eine vordefinierte Aktion, z.B. "
+"       - Benutzerdefinierte Aktion: Starte teine vordefinierte Aktion, z.B. "
 "zur Vornahme eines gezielten Dateneintrags.\n"
 "  "
 
@@ -377,7 +377,7 @@ msgstr "Status"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "Marketing Reports"
-msgstr "Marketing Auswertungen"
+msgstr "Marketing-Auswertungen"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,type:0
@@ -414,6 +414,7 @@ msgid "Run"
 msgstr "Starte"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "Vorherige Aktionen"
@@ -426,19 +427,20 @@ msgstr "Datum der letzten Ausführung"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activities"
-msgstr "Marketing Kampagne Aktivitäten"
+msgstr "Marketingkampagnen Aktivitäten"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,error_msg:0
 msgid "Error Message"
-msgstr "Fehler Bericht"
+msgstr "Fehlerbericht"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "Kampagnen"
 
@@ -475,7 +477,7 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
-"Definiere variable Kosten, mit denen zu rechnen ist, wenn diese Aktion an "
+"Definiert variable Kosten, mit denen zu rechnen ist, wenn diese Aktion an "
 "der Reihe ist. Sie können detaillierte Auswertungen zu Ihrer Kampagne in dem "
 "Reportbereich finden."
 
@@ -487,11 +489,9 @@ msgstr "Stunde(n)"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
-msgstr "Kampagnen Segment"
+msgstr "Kampagnen-Segment"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -503,7 +503,7 @@ msgid ""
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
 "Durch Aktivierung, können einzelne Positionen, die nicht durchgeführt werden "
-"konnten als Abgebrochen anstelle von Gelöscht gekennzeichnet werden."
+"konnten als 'Abgebrochen' anstelle von 'Gelöscht' gekennzeichnet werden."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -511,6 +511,7 @@ msgid "Exceptions"
 msgstr "Ausnahmen"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
 msgstr "Auftragspositionen"
@@ -518,7 +519,7 @@ msgstr "Auftragspositionen"
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
 msgid "Fixed Cost"
-msgstr "Fix Kosten"
+msgstr "Fix-Kosten"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -558,9 +559,11 @@ msgid "Next Activity"
 msgstr "Nächste Aktivität"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
-msgstr "Kampagnen Rückverfolgung"
+msgstr "Kampagnen-Nachverfolgung"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
@@ -576,7 +579,7 @@ msgstr "Akt. Monat"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Test Mode"
-msgstr "Test Modus"
+msgstr "Testmodus"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -589,9 +592,9 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
-msgstr "Kampagnen Auswertungen"
+msgstr "Kampagnen-Auswertungen"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
@@ -601,7 +604,7 @@ msgstr "Die auszuführende Aktion, wenn diese Aktivität an der Reihe ist"
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
 msgid "Partner Field"
-msgstr "Partner Feld"
+msgstr "Partnerfeld"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -629,7 +632,7 @@ msgstr "Die Vorlagenbezeichnung muss eindeutig sein !"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr "Teste Sofort"
+msgstr "Sofort testen"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -750,7 +753,6 @@ msgstr "Neu erstellt"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "Datum"
 
@@ -760,7 +762,6 @@ msgid "November"
 msgstr "November"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "Bedingung"
@@ -795,7 +796,7 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,email_template_id:0
 msgid "Email Template"
-msgstr "Vorlage der Email"
+msgstr "Vorlage der E-Mail"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -832,7 +833,6 @@ msgid "Error"
 msgstr "Fehler"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "Aktion"
@@ -957,8 +957,10 @@ msgid "Campaign Step"
 msgstr "Kampagnen Schritt"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "Segmente"
@@ -984,6 +986,7 @@ msgid "Day(s)"
 msgstr "Tag(e)"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
@@ -1010,13 +1013,14 @@ msgstr "Nach %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
-msgstr "Marketing Kampagne"
+msgstr "Marketingkampagne"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
 msgid "End Date"
-msgstr "Bis Datum:"
+msgstr "Enddatum"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -1047,10 +1051,10 @@ msgstr ""
 "Auswertungen."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
+#: code:addons/marketing_campaign/marketing_campaign.py:793
 #, python-format
 msgid "Email Preview"
-msgstr "EMail Vorschau"
+msgstr "E-Mail Vorschau"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
@@ -1069,8 +1073,8 @@ msgstr ""
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
 msgstr ""
-"Wenn Datum nicht gewählt wird, muss eine einzelne Auftragsposition manuell "
-"ausgelöst werden."
+"Wenn kein Datum nicht festgelegt wird, muss eine einzelne Auftragsposition "
+"manuell ausgelöst werden."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -1086,7 +1090,6 @@ msgstr "Modus"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1118,7 +1121,6 @@ msgid "Next Synchronization"
 msgstr "Nächste Synchronisierung"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
 msgstr "Filter"
@@ -1141,12 +1143,11 @@ msgstr "Variable Kosten"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr "Mit Manueller Bestätigung"
+msgstr "Mit manueller Bestätigung"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
 msgid "Cost"
 msgstr "Kosten"
 

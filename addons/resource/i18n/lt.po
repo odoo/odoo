@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:21+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:30+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -41,8 +41,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
-"Jeigu tuščias, pagrinde tai nurodo kompanijos atostogas. Jeigu resursas "
-"nurodytas, atostogos/išvykimas yra tik šiam resursui"
+"Jeigu laukas tuščias, prastova taikoma visiems resursams. Kai resursas "
+"pasirinktas, atostogos/prastova taikoma tik šiam resursui."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -60,6 +60,7 @@ msgstr "Išvykimų resursai"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Darbo laikas"
@@ -129,12 +130,12 @@ msgstr "Darbo periodas"
 #: view:resource.resource:0
 #: field:resource.resource,company_id:0
 msgid "Company"
-msgstr "Kompanija"
+msgstr "Įmonė"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr "Medžiaga"
+msgstr "Daiktinis"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -196,7 +197,6 @@ msgid "Resource"
 msgstr "Resursas"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -230,6 +230,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Nebenaudojami resursai gali būti paslėpti, vietoj to, kad būtų pašalinti."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -244,7 +245,7 @@ msgstr "Susijęs naudotojo pavadinimas resurso prieigai valdyti"
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr "Nurodyti resurso tvarkaraštį"
+msgstr "Nurodo resurso darbo grafiką"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
@@ -293,7 +294,7 @@ msgstr "Darbo laikas"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Resurso išvykimai"
+msgstr "Resursų prastovos"
 
 #. module: resource
 #: view:resource.resource:0
@@ -327,7 +328,7 @@ msgstr "Efektyvumo koeficientas"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr "Žmogus"
+msgstr "Žmogiškasis"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

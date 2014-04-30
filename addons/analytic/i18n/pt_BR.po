@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:48+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:45+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -44,10 +44,10 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
-msgstr "Estado"
+msgstr "Situação"
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
 msgstr "Gerente de Contas"
 
@@ -59,7 +59,7 @@ msgstr "Rascunho"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr "Encerrado"
+msgstr "Finalizado"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -194,12 +194,12 @@ msgstr "Crédito"
 #. module: analytic
 #: field:account.analytic.line,amount:0
 msgid "Amount"
-msgstr "Montante"
+msgstr "Valor"
 
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
 msgid "Contact"
-msgstr "Contatar"
+msgstr "Contato"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -216,7 +216,7 @@ msgstr "Cancelado"
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr "Balanço"
+msgstr "Saldo"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -235,7 +235,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr "Data de término"
+msgstr "Data Final"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
@@ -248,6 +248,8 @@ msgid "Full Account Name"
 msgstr "Nome Completo da Conta"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -256,7 +258,7 @@ msgstr "Conta Analítica"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr "Exibir"
+msgstr "Visualizar"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0

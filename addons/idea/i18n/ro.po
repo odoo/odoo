@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2012-01-06 19:05+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:06+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:16+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -52,10 +52,7 @@ msgid "Ideas Analysis"
 msgstr "Analiza Ideilor"
 
 #. module: idea
-#: view:idea.category:0
 #: view:idea.idea:0
-#: view:idea.vote:0
-#: view:report.vote:0
 msgid "Group By..."
 msgstr "Grupati dupa..."
 
@@ -296,8 +293,6 @@ msgstr "Iulie"
 #. module: idea
 #: view:idea.idea:0
 #: selection:idea.idea,state:0
-#: view:report.vote:0
-#: selection:report.vote,idea_state:0
 msgid "Accepted"
 msgstr "Acceptat(a)"
 
@@ -366,18 +361,12 @@ msgstr "Luna"
 
 #. module: idea
 #: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
 msgstr "Deschide idei"
 
 #. module: idea
 #: view:idea.category:0
-#: field:idea.category,name:0
 #: view:idea.idea:0
-#: field:idea.idea,category_id:0
-#: view:report.vote:0
-#: field:report.vote,category_id:0
 msgid "Category"
 msgstr "Categorie"
 
@@ -500,7 +489,7 @@ msgid "idea.idea"
 msgstr "idee.idee"
 
 #. module: idea
-#: field:idea.category,summary:0
+#: field:idea.idea,message_summary:0
 msgid "Summary"
 msgstr "Rezumat"
 
@@ -531,8 +520,7 @@ msgstr "Data comenzii"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,user_id:0
-#: view:report.vote:0
+#: field:idea.idea,create_uid:0
 msgid "Creator"
 msgstr "Initiator"
 
@@ -572,7 +560,6 @@ msgstr "Analiza Vot Idee"
 #: model:ir.actions.act_window,name:idea.action_idea_idea
 #: model:ir.ui.menu,name:idea.menu_idea_idea
 #: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
 msgid "Ideas"
 msgstr "Idei"
 
@@ -598,9 +585,7 @@ msgid "Comments:"
 msgstr "Comentarii:"
 
 #. module: idea
-#: view:idea.category:0
 #: field:idea.idea,description:0
-#: field:idea.post.vote,note:0
 msgid "Description"
 msgstr "Descriere"
 
@@ -611,7 +596,6 @@ msgstr "Mai"
 
 #. module: idea
 #: selection:idea.idea,state:0
-#: view:report.vote:0
 msgid "Refused"
 msgstr "Respins"
 
@@ -662,14 +646,7 @@ msgid "Average Score"
 msgstr "Punctaj mediu"
 
 #. module: idea
-#: field:idea.comment,idea_id:0
-#: field:idea.select,idea_id:0
-#: view:idea.vote:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-#: model:ir.ui.menu,name:idea.menu_idea_reporting
-#: view:report.vote:0
-#: field:report.vote,idea_id:0
+#: view:idea.idea:0
 msgid "Idea"
 msgstr "Idee"
 

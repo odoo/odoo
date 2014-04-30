@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:30+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -60,13 +60,14 @@ msgstr "Entwurf"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
 msgid "Supplier"
 msgstr "Lieferant"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Requisition Type"
-msgstr "Bedarfsanforderung Typ"
+msgstr "Bestellmeldung Typ"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -77,7 +78,7 @@ msgstr "Produkte Details"
 #: report:purchase.requisition:0
 #: field:purchase.requisition,date_start:0
 msgid "Requisition Date"
-msgstr "Datum Bedarfsmeldung"
+msgstr "Datum Bestellmeldung"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -90,12 +91,12 @@ msgstr "Datum Bedarfsmeldung"
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr "Bedarfsanforderung"
+msgstr "Bestellmeldung"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Bedarfsanforderung Positionen"
+msgstr "Bestellmeldung Positionen"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -142,12 +143,12 @@ msgstr "Anfrage eines Angebots"
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Multiple Requisitions"
-msgstr "Bedarfsmeldung (Multiple)"
+msgstr "Multiple Bestellmeldung"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
-msgstr "Bestätigung Lieferant"
+msgstr "Auftrag vom Lieferanten bestätigt"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -185,7 +186,7 @@ msgstr "Referenz Bestellung"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Start Date"
-msgstr "Von Datum"
+msgstr "Start Datum"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -214,33 +215,33 @@ msgstr "Menge"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
-msgstr "Bedarfsmeldungen"
+msgstr "Bestellmeldungen"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "End Date"
-msgstr "Bis Datum"
+msgstr "Ende Datum"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: field:purchase.requisition,name:0
 msgid "Requisition Reference"
-msgstr "Bedarfsreferenz"
+msgstr "Bestellmeldung Referenz"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
 msgid "Products to Purchase"
-msgstr "Zu beschaffende Produkte"
+msgstr "Zu bestellende Produkte"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Requisition Deadline"
-msgstr "Bedarfsmeldung Ablauf"
+msgstr "Bestellmeldung Fristablauf"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Search Purchase Requisition"
-msgstr "Suche Bedarfsmeldung"
+msgstr "Suche Bestellmeldung"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -250,7 +251,7 @@ msgstr "Bemerkungen"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Date Ordered"
-msgstr "Bestelldatum"
+msgstr "Bestellung Datum"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -261,34 +262,33 @@ msgid ""
 "orders.On confirmation of a purchase order it does not cancel the remaining "
 "orders"
 msgstr ""
-"Bedarfsmeldung (Exklusiv): Bei Bestätigung einer Bestellung, werden "
+"Bestellmeldung (Exklusiv): Bei Bestätigung einer Bestellung, werden "
 "automatisch verbleibende Angebote gelöscht.\n"
-"Bedarfsmeldung (Multiple): Ermöglicht mehrere Bestellungen für einen "
+"Bestellmeldung (Multiple): Ermöglicht mehrere Bestellungen für einen "
 "gemeldeten Bedarf. Bei Bestätigung einer Bestellung verbleiben die "
 "bestehenden Angebote im System"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Cancel Purchase Order"
-msgstr "Storniere Beschaffungsauftrag"
+msgstr "Storniere Bestellung"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 #: view:purchase.requisition:0
 msgid "Purchase Order"
-msgstr "Beschaffungsauftrag"
+msgstr "Bestellung"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "Error!"
 msgstr "Fehler!"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
-msgstr "Produkt ME"
+msgstr "Produkt Einheit"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -298,7 +298,7 @@ msgstr "Produkte"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Order Date"
-msgstr "Auftragsdatum"
+msgstr "Bestelldatum"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -313,7 +313,7 @@ msgstr "["
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr "Bedarfsmeldung Partner"
+msgstr "Bestellmeldung Lieferant"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -323,17 +323,17 @@ msgstr "]"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Quotation Detail"
-msgstr "Angebot Details"
+msgstr "Angebotsanfrage Details"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr "Bedarfsmeldung für Beschaffung"
+msgstr "Bestellmeldung für Beschaffung"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr "Beschaffungsaufträge"
+msgstr "Bestellungen"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -355,12 +355,12 @@ msgstr "Beschaffung"
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
 msgid "Warehouse"
-msgstr "Zentrallager"
+msgstr "Lager"
 
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
-msgstr "Letzte Bedarfsmeldung"
+msgstr "Letzte Bestellmeldung"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -370,12 +370,12 @@ msgstr "Angebote"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
-msgstr "Menge"
+msgstr "Anzahl"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Purchase Requisition (exclusive)"
-msgstr "Bedarfsmeldung (Exklusiv)"
+msgstr "Bestellmeldung (Exklusiv)"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
@@ -401,10 +401,10 @@ msgstr "Abbrechen"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Confirm Purchase Order"
-msgstr "Bestätige Beschaffungsauftrag"
+msgstr "Bestätige Bestellung"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -426,9 +426,9 @@ msgstr "Nicht zugewiesen"
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Requisition"
-msgstr "Bedarfsmeldung"
+msgstr "Bestellmeldung"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
-msgstr "Beschaffungsaufträge"
+msgstr "Bestellungen"

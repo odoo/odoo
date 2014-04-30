@@ -13,13 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:02+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:12+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
-msgstr "Bekräftade utgifter"
+msgstr "Bekräftade utlägg"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -38,7 +39,8 @@ msgid "Confirmation Date"
 msgstr "Bekräftat datum"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
 msgid "Group By..."
 msgstr "Gruppera på..."
 
@@ -48,8 +50,10 @@ msgid "Air Ticket"
 msgstr "Flygbiljett"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Avdelning"
 
@@ -64,7 +68,8 @@ msgid "# of Invoiced Lines"
 msgstr "# fakturarader"
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Bolag"
@@ -85,7 +90,9 @@ msgid "Expenses Statistics"
 msgstr "Utgiftstatistik"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr "Godkänd"
@@ -101,6 +108,8 @@ msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
 msgstr ""
+"Datum för acceptans av utgiftsblanketten. Den fylls i när knappen Acceptera "
+"trycks in."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -158,7 +167,6 @@ msgid "   Month   "
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr "Referens"
@@ -166,7 +174,7 @@ msgstr "Referens"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Certified honest and conform,"
-msgstr ""
+msgstr "Certifierad ärlig och överensstämmer,"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -174,16 +182,19 @@ msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
 msgstr ""
+"Datum för bekräftelse av utgiftsblanketten. Den fylls i när knappen Bekräfta "
+"trycks in."
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr "antal rader"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
-msgstr "Avslagna utgifter"
+msgstr "Avslagna utlägg"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_car_product_template
@@ -209,26 +220,27 @@ msgstr "Godkänn"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_supplierinvoice0
 msgid "The accoutant validates the sheet"
-msgstr ""
+msgstr "Den som bokför bekräftar blanketten"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:187
 #, python-format
 msgid "The employee's home address must have a partner linked."
-msgstr ""
+msgstr "Arbetstagarens hemadress måste ha en partner länkad."
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
 msgid "Delay to Valid"
-msgstr ""
+msgstr "Försening att bekräfta"
 
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr ""
+msgstr "Sekvensen ordning vid visning av en lista över kostnadsrader."
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Objektkonto"
@@ -251,27 +263,33 @@ msgid ""
 "Please configure Default Expense account for Product purchase, "
 "`property_account_expense_categ`"
 msgstr ""
+"Vänligen konfigurera kontot StandardKostnad för produktinköpet, "
+"`property_account_expense_categ`"
 
 #. module: hr_expense
-#: report:hr.expense:0 view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0
+#: view:hr.expense.report:0
 msgid "Employee"
-msgstr "Anställd"
+msgstr "Medarbetare"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.report,product_qty:0
+#: report:hr.expense:0
+#: field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "Antal"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Totalt pris"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
-msgstr ""
+msgstr "Vissa kostnader kan faktureras kunden"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:173
@@ -283,6 +301,7 @@ msgstr "Fel !"
 
 #. module: hr_expense
 #: view:board.board:0
+#: view:hr.expense.expense:0
 #: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
 msgstr "Mina utlägg"
@@ -295,25 +314,27 @@ msgstr "Skapad datum"
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.hr_expenses
 msgid "HR expenses"
-msgstr "Personalutgifter"
+msgstr "Personalutlägg"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
 msgid "Sheet ID"
-msgstr ""
+msgstr "Blankett ID"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimburseexpense0
 msgid "Reimburse expense"
-msgstr ""
+msgstr "Ersätt Kostnader"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0
+#: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
-msgstr ""
+msgstr "Forcera Journal"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr "Antal produkter"
 
@@ -325,12 +346,12 @@ msgstr "juli"
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
 msgid "After creating invoice, reimburse expenses"
-msgstr ""
+msgstr "Efter skapandet av faktura, ersätt kostnader"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
-msgstr ""
+msgstr "Ersättning"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -338,9 +359,10 @@ msgid "    Month-1    "
 msgstr "    Månad-1    "
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0
+#: field:hr.expense.report,date_valid:0
 msgid "Validation Date"
-msgstr ""
+msgstr "Bekräftad datum"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -350,14 +372,16 @@ msgid "Expenses Analysis"
 msgstr "Utgiftsanalys"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "Utgift"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Utläggstransaktioner"
@@ -365,7 +389,7 @@ msgstr "Utläggstransaktioner"
 #. module: hr_expense
 #: field:hr.expense.report,delay_confirm:0
 msgid "Delay to Confirm"
-msgstr ""
+msgstr "Fördröjning att bekräfta"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -378,7 +402,8 @@ msgid "December"
 msgstr "december"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr "Månad"
@@ -397,7 +422,7 @@ msgstr "Väntar på godkännande"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
 msgid "Employee encode all his expenses"
-msgstr ""
+msgstr "Medarbetare kodifierar alla sina utgifter"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0 view:hr.expense.report:0
@@ -408,7 +433,7 @@ msgstr "Fakturerad"
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
 msgid "Can Constitute an Expense"
-msgstr ""
+msgstr "Kan utgöra en utgift"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -418,7 +443,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0 selection:hr.expense.report,state:0
 msgid "Reimbursed"
-msgstr ""
+msgstr "Återbetalad"
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -428,7 +453,7 @@ msgstr "Anteckning"
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimbursereinvoice0
 msgid "Create Customer invoice"
-msgstr ""
+msgstr "Skapa kundfaktura"
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -438,7 +463,7 @@ msgstr "Preliminär"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting data"
-msgstr ""
+msgstr "Redovisningsdata"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -453,9 +478,10 @@ msgstr "augusti"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_approved0
 msgid "The direct manager approves the sheet"
-msgstr ""
+msgstr "Chefen godkänner blanketten."
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Totalsumma"
@@ -468,7 +494,7 @@ msgstr "juni"
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_draftexpenses0
 msgid "Draft Expenses"
-msgstr ""
+msgstr "Utkast Kostnader"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -476,12 +502,13 @@ msgid "Customer Project"
 msgstr "Kundprojekt"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
+#: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "Användare"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.expense,date:0
+#: report:hr.expense:0
+#: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "Datum"
@@ -500,7 +527,7 @@ msgstr "Utökade filter..."
 #: code:addons/hr_expense/hr_expense.py:185
 #, python-format
 msgid "The employee must have a Home address."
-msgstr ""
+msgstr "Arbetstagaren måste ha en hemadress."
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -525,12 +552,12 @@ msgstr "Personalutlägg"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
 msgid "The employee validates his expense sheet"
-msgstr ""
+msgstr "Medarbetaren granskar sin utläggsansökan"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_refused0
 msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr ""
+msgstr "Chefen underkänner blanketten. Sätt som utkast."
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
@@ -549,7 +576,8 @@ msgid "Waiting"
 msgstr "Väntar"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,day:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,day:0
 msgid "Day"
 msgstr "Dag"
 
@@ -564,7 +592,6 @@ msgid "References"
 msgstr "Referenser"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.report,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr "Faktura"
@@ -588,7 +615,7 @@ msgstr "Annan information"
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is invoiced"
-msgstr ""
+msgstr "Journalen används när kostnaden faktureras"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -614,7 +641,7 @@ msgstr "Godkänn"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
-msgstr ""
+msgstr "Detta dokument skall vara daterad och undertecknad för ersättning"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
@@ -622,12 +649,14 @@ msgid "Expense is refused."
 msgstr "Utgiften är nekad"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
+#: report:hr.expense:0
+#: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr "Styckpris"
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
@@ -639,7 +668,9 @@ msgid "Expenses of My Department"
 msgstr "Avdelningens utgifter"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Beskrivning"
@@ -666,6 +697,7 @@ msgstr "# konton"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 #: model:process.node,name:hr_expense.process_node_refused0
 msgid "Refused"
 msgstr "Nekad"
@@ -678,7 +710,7 @@ msgstr "Ref."
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
-msgstr "Anställds namn"
+msgstr "Medarbetarens namn"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -690,6 +722,11 @@ msgid ""
 "and the employee can be reimbursed. You can also reinvoice the customer at "
 "the end of the flow."
 msgstr ""
+"OpenERP kostnadshanteringmodul gör att du kan spåra hela flödet. Varje månad "
+"registrerar de anställda sina kostnader. I slutet av månaden, bekräftar "
+"deras chefer kostnadsblanketten, som skapar kostnader för projekt / det "
+"analytiska konton. Den som bokför bekräftar de föreslagna posterna och den "
+"anställde kan ersättas. Du kan även återfakturera kunden i slutet av flödet."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -697,10 +734,10 @@ msgid "This Month"
 msgstr "Denna månad"
 
 #. module: hr_expense
-#: field:hr.expense.expense,user_valid:0 view:hr.expense.report:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,user_id:0
 msgid "Validation User"
-msgstr ""
+msgstr "Bekräfta Användare"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -730,7 +767,7 @@ msgstr "Skapar leverantörsfaktura"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.hotel_rent_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "Hotellboende"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -752,6 +789,12 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
+"När kostnadsbegäran skapas blir statusen \"Utkast\".\n"
+"  När den bekräftas av användaren och begäran skickas till admin, är "
+"statusen \"Inväntar bekräftelse\".\n"
+"Om administratören godkänner det, blir statusen \"Godkänd\".\n"
+"  Om en faktura görs för kostnadsbegäran, blir statusen \"Fakturerad\".\n"
+"  Om kostnaden betalas till användaren blir statusen \"Återbetalad\"."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -759,7 +802,9 @@ msgid "Approve"
 msgstr "Godkänn"
 
 #. module: hr_expense
-#: view:hr.expense.line:0 field:hr.expense.line,total_amount:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.line:0
+#: field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "Summa"
 
@@ -780,7 +825,7 @@ msgstr "Utlägg godkänt"
 #: model:ir.ui.menu,name:hr_expense.next_id_49
 #: model:product.category,name:hr_expense.cat_expense
 msgid "Expenses"
-msgstr "Utgifter"
+msgstr "Utlägg"
 
 #. module: hr_expense
 #: constraint:product.product:0
@@ -788,12 +833,14 @@ msgid "Error: Invalid ean code"
 msgstr "Fel: felaktig EAN-kod"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,year:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,year:0
 msgid "Year"
 msgstr "År"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
 msgstr "Att godkänna"
 
@@ -803,6 +850,8 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from an HR expense sheet line."
 msgstr ""
+"Avgör om produkten visas i listan över produkter i ett urval från en "
+"personalkostnadsblankettsrad."
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0

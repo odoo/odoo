@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -23,7 +23,7 @@ msgid "Openerp user"
 msgstr "OpenERP bruker"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,requirements:0
+#: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Krav"
 
@@ -40,17 +40,21 @@ msgstr "Koble den ansatte til informasjon"
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "SIN No"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "Personal"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.job:0
+#: view:hr.employee:0
+#: view:hr.job:0
 msgid "Group By..."
 msgstr "Grupper etter..."
 
@@ -63,10 +67,19 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Ledige stillingene brukes til å definere jobber og deres krav. Du kan holde "
+"rede på hvor mange ansatte du har per stilling, og hvor mange du forventer i "
+"fremtiden. Du kan også legge ved en undersøkelse til en stilling som vil bli "
+"brukt i rekrutteringsprosessen for å evaluere søkere til denne jobben "
+"stilling."
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
-#: field:hr.job,department_id:0 view:res.users:0
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Avdeling"
 
@@ -78,7 +91,7 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Merk som gammel."
 
 #. module: hr
 #: view:hr.job:0
@@ -88,7 +101,7 @@ msgstr "Jobber"
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "I Rekruttering."
 
 #. module: hr
 #: view:hr.installer:0
@@ -96,7 +109,9 @@ msgid "title"
 msgstr "tittel"
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.department,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "Firma"
@@ -104,7 +119,7 @@ msgstr "Firma"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Forventet på rekruttering"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -127,6 +142,8 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Partner som er relatert til den aktuelle medarbeideren. Regnskapsmessig "
+"transaksjon vil bli skrevet på denne partneren tilhører ansatt."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
@@ -171,6 +188,9 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Firmaets avdeling Struktur brukes til å administrere alle dokumenter knyttet "
+"til ansatte ved avdelinger: kostnader og timeliste validering, forlater "
+"ledelsen, rekruttering, etc."
 
 #. module: hr
 #: view:hr.employee:0
@@ -188,16 +208,18 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Beslektet bruker feltet på Ansatt skjemaet tillater å knytte OpenERP "
+"brukeren (og hennes rettigheter) til den ansatte."
 
 #. module: hr
 #: view:hr.job:0 selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "I Rekruttering."
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "ID nummer"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -251,7 +273,7 @@ msgid "Child Categories"
 msgstr "Underordnede kategorier"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,description:0
+#: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "Arbeidsbeskrivelse"
@@ -262,7 +284,8 @@ msgid "Office Location"
 msgstr "Kontorsted"
 
 #. module: hr
-#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "Ansatt"
@@ -279,6 +302,7 @@ msgstr "E-postaddresse arbeid"
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Navn"
@@ -299,13 +323,14 @@ msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Personaladministrasjon Konsoll"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
 msgid "Job"
 msgstr "Jobb"
 
@@ -334,7 +359,7 @@ msgstr "Kategorier"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Forventet ansatte."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -355,7 +380,6 @@ msgstr "Feil ! Du kan ikke opprette rekursive kategorier."
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Avdelinger"
 
@@ -367,7 +391,7 @@ msgstr "Ansattkontakt"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Mitt Styret."
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -442,11 +466,22 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Her kan du administrere arbeidsstyrken ved å lage ansatte og tildele dem "
+"spesifikke egenskaper i systemet. Opprettholde alle ansatte relatert "
+"informasjon og holde styr på alt som trenger å bli registrert for dem. Den "
+"personlige informasjonen kategorien vil hjelpe deg å opprettholde sine "
+"identitetsdata. Kategorier kategorien gir deg muligheten til å tildele dem "
+"relaterte ansattes kategorier avhengig av deres stilling og virksomhet i "
+"selskapet. En kategori kan være en ansiennitet nivå i bedriften eller en "
+"avdeling. Den Timelister kategorien gjør det mulig å tildele dem en bestemt "
+"timeliste og analytisk journal hvor de vil være i stand til å angi tid "
+"gjennom systemet. I notatet kategorien kan du angi tekstdata som bør tas opp "
+"for en bestemt ansatt."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Ansatt bank lønnskonto."
 
 #. module: hr
 #: field:hr.department,note:0
@@ -457,6 +492,7 @@ msgstr "Notat"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Det valgte firmaet er ikke i listen over tillatte firmaer for denne brukeren"
 
 #. module: hr
 #: view:hr.employee:0
@@ -472,10 +508,12 @@ msgstr "Adresse arbeid"
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "HR Ledelse Kontrollpanel."
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -513,12 +551,12 @@ msgstr "Aktiv"
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursiv Hierarki av ansatte."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Bankkonto nummer."
 
 #. module: hr
 #: view:hr.department:0
@@ -543,6 +581,8 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"I den ansatte form, det er forskjellige type informasjon som "
+"kontaktinformasjon."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -552,7 +592,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Gammel"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
@@ -582,10 +622,10 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Ansatt form og struktur."
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
 msgstr "Bilde"
 
@@ -607,7 +647,7 @@ msgstr "Personlig informasjon"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Pass No"
 
 #. module: hr
 #: view:res.users:0
@@ -658,7 +698,7 @@ msgid "Extends employee profiles to help manage their contracts."
 msgstr ""
 
 #. module: hr
-#: field:hr.installer,hr_payroll:0
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
 msgstr ""
 
@@ -673,9 +713,9 @@ msgid "Job Name"
 msgstr "Jobbnavn"
 
 #. module: hr
-#: view:hr.job:0 selection:hr.job,state:0
+#: view:hr.job:0
 msgid "In Position"
-msgstr ""
+msgstr "I posisjon."
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -693,7 +733,7 @@ msgid "Nationality"
 msgstr "Nasjonalitet"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,notes:0
+#: field:hr.employee,notes:0
 msgid "Notes"
 msgstr "Notater"
 
@@ -705,7 +745,7 @@ msgstr "hr.installer"
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "HR ledelse styret."
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -724,21 +764,20 @@ msgid "Gender"
 msgstr "Kjønn"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "Ansatte"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Sosialtrygdnummer"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -764,12 +803,13 @@ msgstr "Underavdelinger"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Jobb posisjon"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,coach_id:0
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Trener"
 
 #. module: hr
 #: view:hr.installer:0
@@ -782,10 +822,11 @@ msgid "Expenses"
 msgstr ""
 
 #. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Leder"
 
 #. module: hr
 #: selection:hr.employee,marital:0

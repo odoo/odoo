@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:32+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -37,6 +37,8 @@ msgstr ""
 #: help:res.groups,share:0
 msgid "Group created to set access rights for sharing data with some users."
 msgstr ""
+"Néhány felhasználóval megosztani kívánt adat elérési jogosultságaihoz "
+"csoport létrehozva."
 
 #. module: share
 #: constraint:res.users:0
@@ -91,7 +93,7 @@ msgstr "Következő"
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
-msgstr ""
+msgstr "A megosztani kívánt adatokat tartalmazó képernyőt megnyitó művelet."
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:68
@@ -105,10 +107,10 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:546
 #, python-format
 msgid "(Copy for sharing)"
-msgstr ""
+msgstr "(másolás a megosztáshoz)"
 
 #. module: share
 #: field:share.wizard.result.line,newly_created:0
@@ -154,7 +156,8 @@ msgid "Share wizard: step 1"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:850
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "Username"
 msgstr "Felhasználónév"
@@ -162,7 +165,7 @@ msgstr "Felhasználónév"
 #. module: share
 #: field:res.users,share:0
 msgid "Share User"
-msgstr ""
+msgstr "Felhasználó megosztás"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:452
@@ -211,7 +214,8 @@ msgid "Sharing Tools"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:852
+#: code:addons/share/wizard/share_wizard.py:884
 #, python-format
 msgid "Database"
 msgstr "Adatbázis"
@@ -222,10 +226,10 @@ msgid "Send Email Notification(s)"
 msgstr "E-mail értesítés(ek) küldése"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:599
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
-msgstr ""
+msgstr "Szűrőt hozott létre ez a felhasználó %s (%s) erre a csoportra %s"
 
 #. module: share
 #: view:res.groups:0
@@ -243,7 +247,8 @@ msgid "Share Group"
 msgstr "Megosztott csoport"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:883
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -268,7 +273,7 @@ msgstr ""
 #. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Csoportok hozzáférése"
 
 #. module: share
 #: view:share.wizard:0
@@ -276,6 +281,8 @@ msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
 msgstr ""
+"Kérem válassza a műveletet ami megnyitja a megosztani kívánt adatot a "
+"képernyőn"
 
 #. module: share
 #: selection:share.wizard,user_type:0
@@ -283,27 +290,30 @@ msgid "Existing external users"
 msgstr ""
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Összegzés"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
+"Közvetett megosztási szűrő ettől a felhasználótól %s (%s) erre a csoportra %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid "Email required"
 msgstr "E-mail szükséges"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: code:addons/share/wizard/share_wizard.py:513
 #, python-format
 msgid "Copied access for sharing"
-msgstr ""
+msgstr "Átmásolt hozzáférések a megosztáshoz"
 
 #. module: share
 #: view:share.wizard:0
@@ -311,6 +321,8 @@ msgid ""
 "Optionally, you may specify an additional domain restriction that will be "
 "applied to the shared data."
 msgstr ""
+"Lehetőségként, meghatározhat elérési tartomány korlátozást ami a megosztott "
+"adatra érvényesítve lesz."
 
 #. module: share
 #: view:share.wizard:0
@@ -343,22 +355,26 @@ msgid ""
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
 "to be able to send outgoing emails."
 msgstr ""
+"Az aktuális felhasználónak kell legyen email címe a Felhasználó "
+"részleteinél, hogy email-eket tudjon küldeni."
 
 #. module: share
 #: view:res.users:0
 msgid "Regular users only (no share user)"
-msgstr ""
+msgstr "Csak szabályos felhasználó (nem megosztott felhasználó)"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
-msgstr ""
+msgstr "Útvonal URL megosztása"
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -366,23 +382,26 @@ msgid "Domain"
 msgstr "Domain"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:658
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
 "supported at the moment.\n"
 "You may want to try a simpler filter."
 msgstr ""
+"Bocsánat, a megjelenített képernyő és szűrő, amit meg szeretne osztani, nem "
+"támogatott jelenleg.\n"
+"Megpróbálhat egy egyszerűbb szűrőt."
 
 #. module: share
 #: field:share.wizard,access_mode:0
 msgid "Access Mode"
-msgstr ""
+msgstr "Hozzáférés mód"
 
 #. module: share
 #: view:share.wizard:0
 msgid "Access info"
-msgstr ""
+msgstr "Hozzáférési információ"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:454
@@ -395,10 +414,13 @@ msgstr ""
 #. module: share
 #: field:share.wizard,action_id:0
 msgid "Action to share"
-msgstr ""
+msgstr "Művelet a megosztáshoz"
 
 #. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
 #: view:share.wizard:0
+#, python-format
 msgid "Share"
 msgstr "Megosztás"
 
@@ -429,12 +451,13 @@ msgstr ""
 #: model:ir.model,name:share.model_share_wizard
 #: field:share.wizard.result.line,share_wizard_id:0
 msgid "Share Wizard"
-msgstr ""
+msgstr "Megosztás varázsló"
 
 #. module: share
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
 msgstr ""
+"Válassza ki a fálhasználó(k) típusát akikkel az adatokat megkívánja osztani."
 
 #. module: share
 #: view:share.wizard:0
@@ -452,11 +475,13 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
+"Külső felhasználó korlátozott hozzáféréssel, az adat megosztás céljából "
+"létrehozva."
 
 #. module: share
 #: help:share.wizard,domain:0
 msgid "Optional domain for further data filtering"
-msgstr ""
+msgstr "Tárgykör lehetőség további adat szűréshez"
 
 #. module: share
 #: selection:share.wizard,access_mode:0

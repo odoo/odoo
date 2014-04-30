@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:57+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:56+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
+msgstr "질의 목록"
 
 #. module: crm_profiling
 #: model:ir.module.module,description:crm_profiling.module_meta_information
@@ -51,6 +51,8 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
+"판매과정에서 영업팀이 정확한 질문할 수 있도록 안내하기 위해 특정 주제와 관련된 질의서를 생성할 수 있습니다. 분할 도구는 다른 질의서의 "
+"응답에 따라 협력업체를 분류로 자동으로 할당할 수 있도록 합니다."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -58,7 +60,7 @@ msgstr ""
 #: model:ir.model,name:crm_profiling.model_crm_profiling_question
 #: field:open.questionnaire.line,question_id:0
 msgid "Question"
-msgstr "질문"
+msgstr "질의"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
@@ -74,24 +76,24 @@ msgstr ""
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr "파트너 세그먼테이션"
+msgstr "협력업체 분할"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
 #: field:open.questionnaire.line,answer_id:0
 msgid "Answer"
-msgstr "답변"
+msgstr "응답"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "협력업체 분할"
 
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
-msgstr "프로파일링"
+msgstr "정보 수집"
 
 #. module: crm_profiling
 #: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
@@ -107,24 +109,24 @@ msgstr "설명"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr "배제된 답변들"
+msgstr "배제된 응답"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
 #: view:crm_profiling.question:0
 #: field:res.partner,answers_ids:0
 msgid "Answers"
-msgstr "답변"
+msgstr "응답"
 
 #. module: crm_profiling
 #: field:open.questionnaire,questionnaire_id:0
 msgid "Questionnaire name"
-msgstr "질의서 이름"
+msgstr "질의서명"
 
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Use a questionnaire"
-msgstr "질의서 이용"
+msgstr "질의서를 이용"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -140,7 +142,7 @@ msgid ""
 "Check                             this box if you want to use this tab as "
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
-msgstr ""
+msgstr "이 탭을 분할 규칙의 일부로 사용하기 원할 경우 이 상자를 체크하십시오. 체크하지 않을 경우 하단의 기준은 무시됩니다."
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -150,7 +152,7 @@ msgstr "에러 ! 재귀적 프로파일은 생성하지 못합니다."
 #. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
-msgstr "프로파일링 규칙 이용"
+msgstr "정보 수집 규칙을 사용"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -161,12 +163,12 @@ msgstr "가용한 답변들"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr "포함된 답변들"
+msgstr "포함된 응답"
 
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
-msgstr "자식 프로파일"
+msgstr "하위 프로파일"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -179,7 +181,7 @@ msgstr "질문"
 #. module: crm_profiling
 #: field:crm.segmentation,parent_id:0
 msgid "Parent Profile"
-msgstr "부모 프로파일"
+msgstr "상위 프로파일"
 
 #. module: crm_profiling
 #: view:open.questionnaire:0
@@ -189,7 +191,7 @@ msgstr "취소"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "협력업체"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/wizard/open_questionnaire.py:77

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-30 05:25+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:44+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -23,7 +23,7 @@ msgid "Unreconciliation transactions"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Nedskrivning."
@@ -31,12 +31,12 @@ msgstr "Nedskrivning."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Ref"
-msgstr ""
+msgstr "Betaling referanse."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr ""
+msgstr "Åpne kundens journal oppføringer."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -62,6 +62,8 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
+#: code:addons/account_voucher/account_voucher.py:231
+#, python-format
 msgid "Supplier"
 msgstr "Leverandør"
 
@@ -89,11 +91,12 @@ msgid "Bill Payment"
 msgstr "Betal regning ."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
+"Du må konfigurere kontoens basiskode og kontoens skatteklasse på '% s' skatt!"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -156,7 +159,7 @@ msgstr "Kupong statistikker."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate"
-msgstr ""
+msgstr "Valider."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -282,6 +285,7 @@ msgid "Unreconcile"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Skatt."
@@ -295,7 +299,7 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "# av kupong linjer."
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -398,7 +402,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Voucher"
-msgstr ""
+msgstr "Leverandør kupong."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -412,8 +416,6 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipt"
 msgstr "Salgs kvittering."
 
@@ -442,16 +444,16 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "Avg. på grunn av Forsinkelse."
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:33
+#: code:addons/account_voucher/invoice.py:34
 #, python-format
 msgid "Pay Invoice"
 msgstr "Betal faktura."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Ingen konto base kode og konto skatt kode."
@@ -464,7 +466,7 @@ msgstr "Skatt beløp."
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr ""
+msgstr "Kupong inngang."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -478,7 +480,7 @@ msgstr "Partner."
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "Betaling forskjell."
 
 #. module: account_voucher
 #: constraint:account.bank.statement.line:0
@@ -491,7 +493,7 @@ msgstr ""
 #: view:account.voucher:0
 #: field:account.voucher,audit:0
 msgid "To Review"
-msgstr ""
+msgstr "Til gjennomgang."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -524,6 +526,7 @@ msgstr "Måned."
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Valuta."
@@ -531,13 +534,13 @@ msgstr "Valuta."
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 msgid "Payable and Receivables"
-msgstr ""
+msgstr "Betalbar og Fordringer."
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "Betal senere eller gruppe fondene."
 
 #. module: account_voucher
 #: view:sale.receipt.report:0 field:sale.receipt.report,user_id:0
@@ -548,7 +551,7 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Avg. Forsinkelse til betaling."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -701,7 +704,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "Åpen leverandør journal inngang."
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -809,7 +812,7 @@ msgstr "Avbryt."
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -888,7 +891,7 @@ msgstr "Interne notater."
 #: view:account.voucher:0
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr ""
+msgstr "Kreditter."
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
@@ -950,7 +953,7 @@ msgstr "Standard type."
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "Påmeldingene med erklæringen fra fakturaer."
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -965,7 +968,7 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Effektiv dato for regnskapsføring."
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -998,7 +1001,7 @@ msgstr "År."
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr ""
+msgstr "Åpen balanse."
 
 #. module: account_voucher
 #: view:account.voucher:0

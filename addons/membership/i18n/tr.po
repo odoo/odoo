@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:09+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
 msgid "invoice to associate"
-msgstr ""
+msgstr "Ödemeli Üye"
 
 #. module: membership
 #: model:process.process,name:membership.process_process_membershipprocess0
@@ -31,50 +31,50 @@ msgstr "Üyelik Prosesi (Süreci)"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
-msgstr ""
+msgstr "Ücretli Üye"
 
 #. module: membership
 #: view:report.membership:0
 #: view:res.partner:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupla İle..."
 
 #. module: membership
 #: field:report.membership,num_paid:0
 msgid "# Paid"
-msgstr ""
+msgstr "# Ödenen"
 
 #. module: membership
 #: field:report.membership,tot_earned:0
 msgid "Earned Amount"
-msgstr ""
+msgstr "Kazanılan Tutar"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "Üyelik Analizi"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "March"
-msgstr ""
+msgstr "Mart"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
 msgid "Set an associate member of partner."
-msgstr ""
+msgstr "Partner ortak üyesi ayarlayın."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
 msgid "Invoice is be paid."
-msgstr ""
+msgstr "Fatura ödenmeştir"
 
 #. module: membership
 #: field:membership.membership_line,company_id:0
 #: view:report.membership:0
 #: field:report.membership,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
@@ -89,17 +89,17 @@ msgstr "Bekleyen Fatura"
 #. module: membership
 #: help:report.membership,date_to:0
 msgid "End membership date"
-msgstr ""
+msgstr "Son üyelik tarihi"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Tedarikçiler"
 
 #. module: membership
 #: view:res.partner:0
 msgid "All Members"
-msgstr ""
+msgstr "Tüm Üyeler"
 
 #. module: membership
 #: field:res.partner,membership_stop:0
@@ -109,7 +109,7 @@ msgstr "Üyelik Tarih Bitişi"
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
 msgid "Product to member"
-msgstr ""
+msgstr "Ürün Üyesine"
 
 #. module: membership
 #: view:res.partner:0
@@ -129,28 +129,28 @@ msgstr ""
 #. module: membership
 #: field:report.membership,tot_pending:0
 msgid "Pending Amount"
-msgstr ""
+msgstr "Bekleyen Tutar"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
-msgstr ""
+msgstr "Partner ilişkili."
 
 #. module: membership
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
-msgstr ""
+msgstr "# Faturalanmış"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Members Analysis"
-msgstr ""
+msgstr "Üye Analiz"
 
 #. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
-msgstr ""
+msgstr "Son Üyelik Tarihi"
 
 #. module: membership
 #: field:product.product,membership_date_from:0
@@ -161,18 +161,18 @@ msgstr "Başlangıç Tarihi"
 #: code:addons/membership/membership.py:414
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "İş Ortağı fatura oluşturma için bir adresi yok."
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
 #: field:membership.membership_line,partner:0
 msgid "Partner"
-msgstr "Ortak"
+msgstr "İş Ortağı"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetopaid0
 msgid "Invoice to paid"
-msgstr ""
+msgstr "Ödenmiş Fatura"
 
 #. module: membership
 #: view:res.partner:0
@@ -187,7 +187,7 @@ msgstr "Başlangıç"
 #. module: membership
 #: constraint:membership.membership_line:0
 msgid "Error, this membership product is out of date"
-msgstr ""
+msgstr "Hata, bu üyelik ürünün kullanım süresi dolmuştur"
 
 #. module: membership
 #: help:res.partner,membership_state:0
@@ -215,13 +215,12 @@ msgstr "Oluştur"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Member line"
-msgstr ""
+msgstr "Üye satırı"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
-msgstr "Üyelik Tarih Başlangıcı"
+msgstr "Üyelik Başlangıc Tarihi"
 
 #. module: membership
 #: code:addons/membership/membership.py:410
@@ -233,16 +232,17 @@ msgstr ""
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
-msgstr ""
+msgstr "Ücretli Üye"
 
 #. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
-msgstr ""
+msgstr "# Bekleyen"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "Üyeler"
@@ -252,7 +252,7 @@ msgstr "Üyeler"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Non Member"
-msgstr ""
+msgstr "Üyedeğil"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
@@ -262,12 +262,12 @@ msgstr "Fatura Aç"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "July"
-msgstr ""
+msgstr "Temmuz"
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
 msgid "Golden Membership"
-msgstr ""
+msgstr "Altın Üyelik"
 
 #. module: membership
 #: help:res.partner,associate_member:0
@@ -277,16 +277,16 @@ msgid ""
 msgstr ""
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
-msgstr ""
+msgstr "Ürün Üyeliği"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
 msgid "Define product for membership."
-msgstr ""
+msgstr "Üyelik için ürün tanımlayın."
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
@@ -312,7 +312,7 @@ msgstr "Ürün Üyeliği"
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
-msgstr ""
+msgstr "Üyelik Tarihi"
 
 #. module: membership
 #: help:res.partner,free_member:0
@@ -327,12 +327,12 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid " Membership State"
-msgstr ""
+msgstr " Üyelik Durumu"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Memberships"
-msgstr ""
+msgstr "Üyelikleri"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_paidmember0
@@ -347,7 +347,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "September"
-msgstr ""
+msgstr "Eylül"
 
 #. module: membership
 #: model:ir.module.module,description:membership.module_meta_information
@@ -369,7 +369,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Fatura Satırı"
 
 #. module: membership
 #: help:membership.membership_line,state:0
@@ -393,18 +393,18 @@ msgstr ""
 #: view:report.membership:0
 #: field:report.membership,month:0
 msgid "Month"
-msgstr ""
+msgstr "Ay"
 
 #. module: membership
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Grupla İle"
 
 #. module: membership
 #: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
-msgstr ""
+msgstr "İş Ortağı ücretsiz bir üyesidir."
 
 #. module: membership
 #: model:product.pricelist,name:membership.list1m
@@ -414,6 +414,7 @@ msgstr "Üye Satış Fiyat Listesi"
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr ""
 
@@ -432,7 +433,7 @@ msgstr ""
 #: model:ir.model,name:membership.model_membership_invoice
 #: view:membership.invoice:0
 msgid "Membership Invoice"
-msgstr ""
+msgstr "Üyelik Faturası"
 
 #. module: membership
 #: view:report.membership:0
@@ -444,25 +445,26 @@ msgstr ""
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
 msgid "Define membership product."
-msgstr ""
+msgstr "Üyelik ürüni tanımlayın."
 
 #. module: membership
 #: view:product.product:0
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice
 #: field:membership.membership_line,account_invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr "Free Üye"
+msgstr "Ücretsiz Üye"
 
 #. module: membership
 #: model:product.pricelist.version,name:membership.ver1m
@@ -478,12 +480,12 @@ msgstr ""
 #. module: membership
 #: view:report.membership:0
 msgid "Forecast"
-msgstr ""
+msgstr "Tahmin"
 
 #. module: membership
 #: field:report.membership,partner_id:0
 msgid "Member"
-msgstr ""
+msgstr "Üye"
 
 #. module: membership
 #: constraint:res.partner:0
@@ -493,7 +495,7 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Date From"
-msgstr ""
+msgstr "Tarihi Itibaren"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -513,12 +515,12 @@ msgstr "Üyelik İptal Tarihi"
 #. module: membership
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Müşteriler"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "August"
-msgstr ""
+msgstr "Ağustos"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
@@ -530,11 +532,11 @@ msgstr "Ürün Üyeliği"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "June"
-msgstr ""
+msgstr "Haziran"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
 #: view:product.product:0
 #: field:product.product,membership:0
 #: view:report.membership:0
@@ -548,7 +550,7 @@ msgstr "Üyelik"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Invoiced Member"
-msgstr ""
+msgstr "Faturalanmış Üye"
 
 #. module: membership
 #: help:membership.membership_line,date:0
@@ -560,7 +562,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr ""
+msgstr "Üye Bekleyen"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_associationpartner0
@@ -570,7 +572,7 @@ msgstr "Şirket Carisi"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #. module: membership
 #: view:product.product:0
@@ -585,7 +587,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "October"
-msgstr ""
+msgstr "Ekim"
 
 #. module: membership
 #: view:product.product:0
@@ -595,12 +597,13 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "January"
-msgstr ""
+msgstr "Ocak"
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
-msgstr ""
+msgstr "Üyelik Ücreti"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
@@ -610,12 +613,12 @@ msgstr "Üyelik Bedeli"
 #. module: membership
 #: help:res.partner,membership_amount:0
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "İş Ortağı tarafından müzakere fiyatı"
 
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr ""
+msgstr "Basit Üyelik"
 
 #. module: membership
 #: help:product.product,membership:0
@@ -627,7 +630,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr ""
+msgstr "Eski Üye"
 
 #. module: membership
 #: field:membership.membership_line,date_to:0
@@ -637,9 +640,8 @@ msgstr "Bitiş"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
-msgstr ""
+msgstr "Mevcut Üyelik Durumu"
 
 #. module: membership
 #: view:report.membership:0
@@ -659,7 +661,7 @@ msgstr "Taslak Faturayı Şimdi Aç."
 #. module: membership
 #: view:product.product:0
 msgid "Inactive"
-msgstr ""
+msgstr "Pasif"
 
 #. module: membership
 #: view:report.membership:0
@@ -669,7 +671,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "December"
-msgstr ""
+msgstr "Aralık"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -679,7 +681,7 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid "All non Members"
-msgstr ""
+msgstr "Üye Olmayan Tümü"
 
 #. module: membership
 #: view:product.product:0
@@ -689,7 +691,7 @@ msgstr "Bilgi"
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
-msgstr ""
+msgstr "Hesap fatura satırı"
 
 #. module: membership
 #: view:product.product:0
@@ -703,9 +705,6 @@ msgstr "Üye Taslak Faturası"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Üye Fiyatı"
 
@@ -717,7 +716,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: membership
 #: view:product.product:0
@@ -732,12 +731,12 @@ msgstr "Free Üye"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
-msgstr ""
+msgstr "Gümüş Üyelik"
 
 #. module: membership
 #: view:product.product:0
@@ -748,27 +747,27 @@ msgstr ""
 #: field:report.membership,date_to:0
 #: view:res.partner:0
 msgid "End Date"
-msgstr ""
+msgstr "Bitiş Tarihi"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "February"
-msgstr ""
+msgstr "Şubat"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
 msgid "Invoiced member"
-msgstr ""
+msgstr "Faturalanmış üyes"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "April"
-msgstr ""
+msgstr "Nisan"
 
 #. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Üyelik iptal edildiği tarihi"
 
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
@@ -778,13 +777,13 @@ msgstr "İptal Tarihi"
 #. module: membership
 #: model:process.node,name:membership.process_node_waitingmember0
 msgid "Waiting member"
-msgstr ""
+msgstr "Bekleyen üye"
 
 #. module: membership
 #: field:report.membership,date_from:0
 #: view:res.partner:0
 msgid "Start Date"
-msgstr ""
+msgstr "Başlangıç ​​Tarihi"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -794,17 +793,17 @@ msgstr "Ürün Üyeliği"
 #. module: membership
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
-msgstr ""
+msgstr "Üyelik Tutarı"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr ""
+msgstr "İptalEdilen Üye"
 
 #. module: membership
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
@@ -812,7 +811,7 @@ msgstr ""
 #: view:report.membership:0
 #: field:report.membership,year:0
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #. module: membership
 #: view:report.membership:0

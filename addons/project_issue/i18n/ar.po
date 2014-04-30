@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:17+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -23,7 +23,8 @@ msgid "Avg. Delay to Open"
 msgstr "متوسط. تأخر الفتح"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "Group By..."
 msgstr "تجميع حسب..."
 
@@ -58,7 +59,8 @@ msgid "Progress (%)"
 msgstr "نسبة التقدم (%)"
 
 #. module: project_issue
-#: field:project.issue,company_id:0 view:project.issue.report:0
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
 msgstr "شركة"
@@ -84,7 +86,7 @@ msgid "Days to Open"
 msgstr "الأيام للفتح"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
+#: code:addons/project_issue/project_issue.py:479
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -102,7 +104,8 @@ msgid "Date Closed"
 msgstr "تاريخ الإغلاق"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,day:0
+#: view:project.issue.report:0
+#: field:project.issue.report,day:0
 msgid "Day"
 msgstr "يوم"
 
@@ -112,7 +115,8 @@ msgid "Add Internal Note"
 msgstr "أضف ملاحظة داخلية"
 
 #. module: project_issue
-#: field:project.issue,task_id:0 view:project.issue.report:0
+#: field:project.issue,task_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
 msgstr "مهمة"
@@ -134,8 +138,10 @@ msgstr "الرسائل"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0 field:project.issue,project_id:0
-#: view:project.issue.report:0 field:project.issue.report,project_id:0
+#: view:project.issue:0
+#: field:project.issue,project_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "مشروع"
 
@@ -145,7 +151,8 @@ msgid "My Open Project issues"
 msgstr "حالات فتح المشروع الخاص بي"
 
 #. module: project_issue
-#: selection:project.issue,state:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "ملغي"
 
@@ -251,8 +258,10 @@ msgid "Next"
 msgstr "التالي"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,priority:0
-#: view:project.issue.report:0 field:project.issue.report,priority:0
+#: view:project.issue:0
+#: field:project.issue,priority:0
+#: view:project.issue.report:0
+#: field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "أولوية"
 
@@ -262,8 +271,10 @@ msgid "Send New Email"
 msgstr "إرسال رسالة جديدة"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,version_id:0
-#: view:project.issue.report:0 field:project.issue.report,version_id:0
+#: view:project.issue:0
+#: field:project.issue,version_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "النسخة"
 
@@ -293,7 +304,8 @@ msgid "Email"
 msgstr "بريد إلكتروني"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0
+#: field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "القناة"
 
@@ -304,7 +316,8 @@ msgid "Lowest"
 msgstr "أدنى"
 
 #. module: project_issue
-#: field:project.issue,create_date:0 view:project.issue.report:0
+#: field:project.issue,create_date:0
+#: view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "تاريخ الإنشاء"
@@ -337,7 +350,8 @@ msgid "Project Issue Dashboard"
 msgstr "لوحة التخكم لحالة المشروع"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: view:project.issue:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "تم"
@@ -353,8 +367,10 @@ msgid "Categories"
 msgstr "الفئات"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,type_id:0
+#: view:project.issue:0
+#: field:project.issue,stage_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "مرحلة"
 
@@ -386,6 +402,9 @@ msgstr "حالات المشروع الخاص بي"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,partner_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "جهة الاتصال"
 
@@ -421,7 +440,7 @@ msgstr ""
 "لمنتجاتك على ما يمكنك عمله في القضية."
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:330
+#: code:addons/project_issue/project_issue.py:371
 #, python-format
 msgid "Tasks"
 msgstr "مهام"
@@ -452,7 +471,8 @@ msgid "This is the current user to whom the related task have been assigned"
 msgstr "يكون هذا المستخدم الحالي الذي تم تعيين المهمة ذات الصلة له"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
 msgstr "شهر"
@@ -463,8 +483,7 @@ msgid "project.issue.report"
 msgstr "مشروع.حالة.تقرير"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:408 view:project.issue:0
-#, python-format
+#: view:project.issue:0
 msgid "Escalate"
 msgstr "تصعيد"
 
@@ -490,8 +509,7 @@ msgstr ""
 "    "
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,categ_id:0
-#: view:project.issue.report:0 field:project.issue.report,categ_id:0
+#: view:project.issue:0
 msgid "Category"
 msgstr "فئة"
 
@@ -523,7 +541,8 @@ msgid "Low"
 msgstr "منخفض"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0
+#: selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "مغلق"
 
@@ -533,13 +552,16 @@ msgid "Avg. Delay to Close"
 msgstr "متوسط تأخر الغلق"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
-#: view:project.issue.report:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+#: selection:project.issue.report,state:0
 msgid "Pending"
 msgstr "معلّق"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,state:0
+#: field:project.issue.report,state:0
 msgid "Status"
 msgstr "الحالة"
 
@@ -559,6 +581,7 @@ msgid "August"
 msgstr "أغسطس"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
@@ -570,7 +593,8 @@ msgid "Global CC"
 msgstr "CC العالمية"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "To Do"
 msgstr "في انتظار التنفيذ"
 
@@ -585,7 +609,8 @@ msgid "Days to Close"
 msgstr "الأيام للغلق"
 
 #. module: project_issue
-#: field:project.issue,active:0 field:project.issue.version,active:0
+#: field:project.issue,active:0
+#: field:project.issue.version,active:0
 msgid "Active"
 msgstr "نشط"
 
@@ -631,7 +656,7 @@ msgid "Issues By State"
 msgstr "الحالات بالبيان"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,date:0
+#: field:project.issue,date:0
 msgid "Date"
 msgstr "تاريخ"
 
@@ -651,7 +676,8 @@ msgid "History"
 msgstr "محفوظات"
 
 #. module: project_issue
-#: field:project.issue,user_id:0 view:project.issue.report:0
+#: field:project.issue,user_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "مكلف إلى"
@@ -709,22 +735,22 @@ msgid "Close"
 msgstr "إغلاق"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue.report,state:0
+#: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "فتح"
 
 #. module: project_issue
+#: field:account.analytic.account,use_issues:0
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0
+#: view:project.project:0
 msgid "Issues"
 msgstr "الإصدارات"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_state
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
@@ -770,7 +796,9 @@ msgid "Reply"
 msgstr "رد"
 
 #. module: project_issue
+#: view:project.issue:0
 #: field:project.issue,name:0
+#: view:project.project:0
 msgid "Issue"
 msgstr "حالة"
 
@@ -780,7 +808,7 @@ msgid "Feature Tracker Search"
 msgstr "اظهر بحث التعقب"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,description:0
+#: view:project.issue:0
 msgid "Description"
 msgstr "وصف"
 
@@ -800,7 +828,8 @@ msgid "Sale Team    "
 msgstr "فريق البيع    "
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,email:0
+#: view:project.issue.report:0
+#: field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "عدد الرسائل"
 
@@ -894,12 +923,12 @@ msgstr "لا يوجد عنوان"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
-#: help:project.issue.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "عدد الايام لغلق مسألة المشروع"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,section_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "فريق المبيعات"
 
@@ -925,7 +954,8 @@ msgid "Last Action"
 msgstr "آخر إجراء"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,name:0
+#: view:project.issue.report:0
+#: field:project.issue.report,name:0
 msgid "Year"
 msgstr "سنة"
 

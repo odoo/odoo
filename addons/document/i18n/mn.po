@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:57+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -56,14 +56,13 @@ msgstr ""
 "will be used."
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Хавтасны нэр онцгой тэмдэгт агуулж болно!"
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
 
@@ -90,9 +89,8 @@ msgstr "Сарын файлууд"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
-msgstr "3 сар"
+msgstr "3-р сар"
 
 #. module: document
 #: view:document.configuration:0
@@ -118,7 +116,7 @@ msgstr "Динамик утга"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr "Баримтын менежмент"
+msgstr "Баримтын удирдлага"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -142,13 +140,14 @@ msgid "Path"
 msgstr "Зам"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Хавтасны нэр давхцахгүй!"
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Индекслэсэн агуулга"
@@ -164,7 +163,7 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Хавтасууд"
@@ -185,8 +184,8 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Алдаа!"
@@ -224,7 +223,6 @@ msgstr "Мэдлэгийн Програмын Тохиргоо"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Харилцагч"
 
@@ -239,14 +237,12 @@ msgid "Document directory"
 msgstr "Баримтын хавтас"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
-msgstr "ValidateError"
+msgstr "Баталгаатай алдаа"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -255,7 +251,6 @@ msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
@@ -278,10 +273,8 @@ msgid "Configure Resource Directory"
 msgstr "Нөөцийн Директорыг Тохируулах"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Файлын хэмжээ"
 
@@ -294,8 +287,6 @@ msgstr "Агуулгын төрөл"
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Төрөл"
 
@@ -347,7 +338,6 @@ msgstr "Тайлан"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "7 сар"
 
@@ -378,7 +368,7 @@ msgid "Modified"
 msgstr "Засагдсан"
 
 #. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr "Бичих алдаа!"
@@ -406,7 +396,6 @@ msgstr "Харилцагчийн файл"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Сүүлд зассан хэрэглэгч"
@@ -429,7 +418,6 @@ msgstr "Домэйн"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Зассан огноо"
@@ -445,7 +433,6 @@ msgid "All users files"
 msgstr "Бүх хэрэглэгчийн файл"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -453,7 +440,6 @@ msgstr "Файлын хэмжээ, сараар"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "12 сар"
 
@@ -524,11 +510,9 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Эзэмшигч"
 
@@ -544,7 +528,6 @@ msgstr "Агуулга"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Үүсгэсэн огноо"
@@ -610,7 +593,6 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "8 сар"
 
@@ -621,7 +603,6 @@ msgstr "Directory cannot be parent of itself!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "6 сар"
 
@@ -633,7 +614,6 @@ msgstr "Хэрэглэгч"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Группүүд"
 
@@ -644,12 +624,10 @@ msgstr "Идэвхтэй"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "11 сар"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Өгөгдөл"
@@ -674,7 +652,6 @@ msgstr "Тодорхойлолт"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "10 сар"
 
@@ -741,12 +718,10 @@ msgstr "Хавтасны нэр давхцаж болохгүй!"
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Үүсгэгч"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -754,7 +729,6 @@ msgstr "Файлууд, сараар"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "9 сар"
 
@@ -828,9 +802,6 @@ msgstr "Файлууд, хэрэглэгчээр"
 #. module: document
 #: field:report.document.file,month:0
 #: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
 msgid "Month"
 msgstr "Сар"
 
@@ -851,7 +822,6 @@ msgstr "Мод бүтэц"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "5 сар"
 
@@ -891,7 +861,6 @@ msgstr "Шинэ файл"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "1 сар"
 
@@ -948,7 +917,6 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "2 сар"
 
@@ -960,7 +928,6 @@ msgstr "Статистик ( хэрэглэгчээр )"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Нэр"
 
@@ -981,14 +948,12 @@ msgstr "If set, media is for reading only"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "4 сар"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "Файлын тоо"
 
@@ -1004,8 +969,7 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
-"Only members of these groups will have access to this directory and its "
-"files."
+"Зөвхөн эдгээр бүлгийн гишүүд энэ хавтас болон файлуудыг ашиглах боломжтой."
 
 #. module: document
 #: view:document.directory:0
@@ -1061,15 +1025,11 @@ msgstr "Файлууд, нөөцийн төрлөөр"
 
 #. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Жил"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Хадгалах ой"
 

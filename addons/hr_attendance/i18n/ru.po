@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -129,9 +129,7 @@ msgstr ""
 "руководителем."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
 msgid "Attendances By Month"
 msgstr "Служебное время за месяц"
 
@@ -168,7 +166,7 @@ msgid "Employee attendance"
 msgstr "Служебное время сотрудника"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
+#: code:addons/hr_attendance/hr_attendance.py:161
 #, python-format
 msgid "Warning"
 msgstr "Предупреждение"
@@ -186,6 +184,7 @@ msgid "A sign-in must be right after a sign-out !"
 msgstr "Отметка о приходе должна следовать сразу за отметкой об уходе!"
 
 #. module: hr_attendance
+#: view:hr.attendance:0
 #: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
@@ -253,8 +252,10 @@ msgid "Min Delay"
 msgstr "Мин. задержка"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
+#, python-format
 msgid "Sign In"
 msgstr "Зарегистрироваться"
 
@@ -382,8 +383,6 @@ msgstr "Январь"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign in"
 msgstr "Вход"
 
@@ -441,8 +440,6 @@ msgstr "ID сотрудника"
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -466,8 +463,6 @@ msgstr "Печатать отчёт посещаемости ежемесячн�
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Выход"
 
@@ -478,6 +473,7 @@ msgstr "Задержка"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Сотрудник"
@@ -521,8 +517,10 @@ msgid "Your last sign in"
 msgstr "Ваш послежний вход"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
+#, python-format
 msgid "Sign Out"
 msgstr "Выйти"
 

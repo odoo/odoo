@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:16+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:26+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -25,7 +25,7 @@ msgstr ""
 #. module: project
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+msgstr "Genbrug opgavebeskrivelsen på brugerens opgave"
 
 #. module: project
 #: code:addons/project/project.py:951
@@ -39,7 +39,7 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
-msgstr ""
+msgstr "Dette styrer den enhed, der bruges på projektet og dets opgaver."
 
 #. module: project
 #: constraint:res.users:0
@@ -50,11 +50,12 @@ msgstr ""
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
 msgstr ""
+"Indtast her antal tilbageværende timer nødvendige for at lukke opgaven."
 
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr ""
+msgstr "Deadlines"
 
 #. module: project
 #: code:addons/project/project.py:155
@@ -69,7 +70,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_delegate.py:78
 #, python-format
 msgid "CHECK: "
-msgstr ""
+msgstr "CHECK: "
 
 #. module: project
 #: field:project.installer,project_issue:0
@@ -89,13 +90,14 @@ msgstr ""
 #. module: project
 #: field:project.task.delegate,planned_hours_me:0
 msgid "Hours to Validate"
-msgstr ""
+msgstr "Timer til godkendelse"
 
 #. module: project
-#: field:project.project,progress_rate:0 view:report.project.task.user:0
+#: field:project.project,progress_rate:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Fremdrift"
 
 #. module: project
 #: help:project.task,remaining_hours:0
@@ -103,46 +105,48 @@ msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
 msgstr ""
+"Den samlede tilbageværende tid kan genberegnes periodisk af den "
+"opgaveansvarlige."
 
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
+msgstr "Styrer rækkefølgen i visning af projekter"
 
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+msgstr "Fejl! projekt-startdato skal være lavere end projekt-slutdato."
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr ""
+msgstr "Revurderings opgave"
 
 #. module: project
 #: field:project.project,members:0
 msgid "Project Members"
-msgstr ""
+msgstr "Projektdeltagere"
 
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr ""
+msgstr "Opgaver pr. ansvarlig"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Marts"
 
 #. module: project
 #: view:project.task:0
 msgid "Delegated tasks"
-msgstr ""
+msgstr "Uddelegerede opgaver"
 
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr ""
+msgstr "Uddelegerede opgaver"
 
 #. module: project
 #: help:project.project,warn_header:0
@@ -152,20 +156,25 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.my_open_tasks_action
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "My Tasks"
-msgstr ""
+msgstr "Mine opgaver"
 
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Fejl! Du kan ikke oprette rekursive opgaver."
 
 #. module: project
-#: field:project.task,company_id:0 field:project.task.work,company_id:0
-#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0
+#: field:project.task.work,company_id:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: project
 #: field:project.installer,project_scrum:0
@@ -185,18 +194,18 @@ msgstr ""
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Fase navn"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr ""
+msgstr "Sæt til afventer"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Dage til at starte op"
 
 #. module: project
 #: view:project.task:0
@@ -206,7 +215,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr ""
+msgstr "Nyt projekt baseret på skabelon"
 
 #. module: project
 #: constraint:project.project:0
@@ -216,19 +225,19 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "Very urgent"
-msgstr ""
+msgstr "Haster/vigtigt"
 
 #. module: project
 #: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "Bruger du vil uddelegere denne opgave til"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,day:0
-#: field:task.by.days,day:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dag"
 
 #. module: project
 #: code:addons/project/project.py:851
@@ -244,15 +253,19 @@ msgstr ""
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
 msgid "Draft task"
-msgstr ""
+msgstr "Opgave kladde"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
+#: view:project.config.settings:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0 view:report.project.task.user:0
+#: field:project.task.work,task_id:0
+#: view:report.project.task.user:0
 msgid "Task"
-msgstr ""
+msgstr "Opgave"
 
 #. module: project
 #: view:project.project:0
@@ -265,16 +278,18 @@ msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
 msgstr ""
+"Forventet tid til at klare opgaven, normalt angivet af projektlederen, når "
+"opgaven er i kladde-status."
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "Opgavearbejde på projekt"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 field:project.task,notes:0
+#: field:project.task,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Bemærkninger"
 
 #. module: project
 #: view:project.vs.hours:0
@@ -287,19 +302,20 @@ msgid "Invoice Address"
 msgstr ""
 
 #. module: project
-#: field:project.task,name:0 field:report.project.task.user,name:0
+#: field:project.task,name:0
+#: field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr ""
+msgstr "Opgave resumé"
 
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr ""
+msgstr "Er ikke en skabelon opgave"
 
 #. module: project
-#: view:project.task:0 view:res.partner:0
+#: view:res.partner:0
 msgid "Start Task"
-msgstr ""
+msgstr "Opgave"
 
 #. module: project
 #: help:project.installer,project_timesheet:0
@@ -315,12 +331,15 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.task,state:0 selection:project.task.history,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
+#: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: model:project.task.type,name:project.project_tt_cancel
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulleret"
 
 #. module: project
 #: view:board.board:0
@@ -341,12 +360,12 @@ msgstr ""
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
-msgstr ""
+msgstr "Udført opgave"
 
 #. module: project
 #: help:project.task.delegate,prefix:0
 msgid "Title for your validation task"
-msgstr ""
+msgstr "Titel for din evalueringsopgave"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -357,12 +376,13 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr ""
+msgstr "Opgave er udført"
 
 #. module: project
-#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0
+#: field:report.project.task.user,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Slut dato"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -372,17 +392,19 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr ""
+msgstr "Uddelegerer opgaver til den anden bruger"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
+#: view:project.project:0
+#: view:project.task:0
+#: view:report.project.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppér efter..."
 
 #. module: project
 #: help:project.task,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Beregnet ud fra det samlede udførte arbejde"
 
 #. module: project
 #: help:project.project,warn_customer:0
@@ -399,12 +421,12 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
 msgid "Testing"
-msgstr ""
+msgstr "Afprøver"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr ""
+msgstr "Forventet tid til den tildelte bruger afslutter denne opgave"
 
 #. module: project
 #: view:project.project:0
@@ -419,25 +441,25 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
-#: field:project.project,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyse konto"
 
 #. module: project
 #: field:project.task.work,user_id:0
 msgid "Done by"
-msgstr ""
+msgstr "Udført af"
+
+#. module: project
+#: view:project.config.settings:0
+msgid "Planning"
+msgstr "Planlægning"
 
 #. module: project
 #: view:project.task:0
-msgid "Planning"
-msgstr ""
-
-#. module: project
-#: view:project.task:0 field:project.task,date_deadline:0
+#: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Deadline"
 
 #. module: project
 #: view:project.task.delegate:0 view:project.task.reevaluate:0
@@ -445,11 +467,9 @@ msgid "_Cancel"
 msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner view:project.project:0
-#: field:project.task,partner_id:0 view:report.project.task.user:0
-#: field:report.project.task.user,partner_id:0
+#: model:ir.model,name:project.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: project
 #: constraint:account.analytic.account:0
@@ -469,9 +489,10 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,nbr:0
 msgid "# of tasks"
-msgstr ""
+msgstr "Antal opgaver"
 
 #. module: project
 #: view:project.task:0
@@ -481,12 +502,12 @@ msgstr ""
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "Revurder opgaver"
 
 #. module: project
-#: field:project.vs.hours,user_id:0 field:report.project.task.user,user_id:0
+#: field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr ""
+msgstr "Tildelt"
 
 #. module: project
 #: view:project.project:0
@@ -501,17 +522,18 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Reset as Project"
-msgstr ""
+msgstr "Reset tilbage til Projekt"
 
 #. module: project
-#: view:project.project:0 selection:project.vs.hours,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
 msgid "Template"
-msgstr ""
+msgstr "Skabelon"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr ""
+msgstr "Specifikation"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_project
@@ -531,12 +553,13 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
-msgstr ""
+msgstr "Vil skifte til åben stadie fra kladde stadie"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
-msgstr ""
+msgstr "Antal dage"
 
 #. module: project
 #: help:project.task,active:0
@@ -545,22 +568,25 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Dette felt beregnes automatisk og opfører sig som det booleske \"Aktiv\" "
+"felt: Hvis opgaven knyttes til en skabelon eller et uaktiveret projekt, "
+"bliver det gemt med mindre man specifikt beder om andet."
 
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr ""
+msgstr "Procentandel af lukkede opgaver i forhold til alle opgaver."
 
 #. module: project
 #: view:project.task.delegate:0
 #: field:project.task.delegate,new_task_description:0
 msgid "New Task Description"
-msgstr ""
+msgstr "Ny opgavebeskrivelse"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr ""
+msgstr "Projekt opgave"
 
 #. module: project
 #: view:project.installer:0
@@ -570,7 +596,7 @@ msgstr ""
 #. module: project
 #: help:project.task,total_hours:0
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "Beregnet som: Forbrug tid + resterende tid"
 
 #. module: project
 #: help:project.task.close,partner_email:0
@@ -581,12 +607,12 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,hours_effective:0
 msgid "Effective Hours"
-msgstr ""
+msgstr "Effektive timer"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task Title"
-msgstr ""
+msgstr "Evaluerings titel"
 
 #. module: project
 #: view:project.task:0
@@ -608,20 +634,22 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Medium"
-msgstr ""
+msgstr "Medium"
 
 #. module: project
-#: view:project.task:0 field:project.task,remaining_hours:0
+#: view:project.task:0
+#: field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
-#: field:project.vs.hours,remaining_hours:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Tilbageværende timer"
 
 #. module: project
-#: view:project.task:0 view:project.task.work:0
+#: view:project.task:0
+#: view:project.task.work:0
 msgid "Task Work"
-msgstr ""
+msgstr "Opgave arbejde"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_board_note_tree
@@ -633,7 +661,7 @@ msgstr ""
 #: field:project.task.history,planned_hours:0
 #: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
-msgstr ""
+msgstr "Planlagt tid"
 
 #. module: project
 #: code:addons/project/wizard/mail_compose_message.py:64
@@ -644,7 +672,7 @@ msgstr ""
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr ""
+msgstr "Opgaver ikke tildelt nogen bruger"
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -652,6 +680,7 @@ msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Sum af planlagte timer fra alle opgaver på dette projekt med underprojekter."
 
 #. module: project
 #: field:project.task.delegate,name:0
@@ -659,20 +688,21 @@ msgid "Delegated Title"
 msgstr ""
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
-msgstr ""
+msgstr "Mine projekter"
 
 #. module: project
 #: view:project.task:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Ekstra info"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
@@ -680,26 +710,29 @@ msgid "Configuration"
 msgstr ""
 
 #. module: project
-#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0
+#: field:report.project.task.user,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Startdato"
 
 #. module: project
-#: code:addons/project/project.py:324
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_open_view_project_all
-#: view:project.project:0 field:project.task.type,project_ids:0
+#: model:ir.ui.menu,name:project.menu_projects
+#: view:project.project:0
+#: field:project.task.type,project_ids:0
+#: view:res.company:0
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "Projekter"
 
 #. module: project
-#: view:project.task:0 field:project.task,type_id:0
+#: view:project.task:0
+#: field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
-#: view:report.project.task.user:0 field:report.project.task.user,type_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Fase"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -723,7 +756,7 @@ msgstr ""
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr ""
+msgstr "Ny titel på opgaven tildelt brugeren"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -745,7 +778,7 @@ msgstr ""
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
 msgid "Draft Open task"
-msgstr ""
+msgstr "Åbne kladde-opgaver"
 
 #. module: project
 #: view:project.project:0
@@ -755,49 +788,52 @@ msgstr ""
 #. module: project
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
-msgstr ""
+msgstr "Forsinkelses timer"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: view:report.project.task.user:0
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Opgave analyse"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Opgaver pr. bruger og projekt"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_delegate0
 #: view:project.task:0
 msgid "Delegate"
-msgstr ""
+msgstr "Uddelegér"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
 #: view:project.project:0
 msgid "Templates of Projects"
-msgstr ""
+msgstr "Projekt skabeloner"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.model,name:project.model_project_project
+#: model:ir.ui.menu,name:project.menu_project_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: field:project.vs.hours,project:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
-#: field:res.users,context_project_id:0 field:task.by.days,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "_Evaluate"
-msgstr ""
+msgstr "_evaluere"
 
 #. module: project
 #: view:board.board:0
@@ -811,42 +847,43 @@ msgid "Please specify the email address of Project Manager."
 msgstr ""
 
 #. module: project
-#: model:ir.actions.todo.category,name:project.category_project_config
-#: view:res.company:0
+#: view:project.config.settings:0
 msgid "Project Management"
-msgstr ""
+msgstr "Projektstyring"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr ""
+msgstr "Uddelegering af projekt opgaver"
 
 #. module: project
+#: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
-#: model:ir.ui.menu,name:project.menu_tasks_config
-#: model:ir.ui.menu,name:project.project_report_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.task:0 view:res.partner:0 field:res.partner,task_ids:0
+#: view:project.project:0
+#: view:project.task:0
+#: view:res.partner:0
+#: field:res.partner,task_ids:0
 msgid "Tasks"
-msgstr ""
+msgstr "Opgaver"
 
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr ""
+msgstr "Overordnet"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr ""
+msgstr "Opgave ansvarlig"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -864,12 +901,12 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: project
 #: field:project.installer,config_logo:0
@@ -879,7 +916,7 @@ msgstr ""
 #. module: project
 #: field:project.task,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Fremdrift (%)"
 
 #. module: project
 #: help:project.task,state:0
@@ -897,34 +934,33 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr ""
 
 #. module: project
-#: view:project.task.history.cumulative:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Måned"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "Projekt opgaver"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:0
 msgid "Task Stage"
-msgstr ""
+msgstr "Opgave fase"
 
 #. module: project
-#: field:project.task,planned_hours:0
 #: field:project.task.delegate,planned_hours:0
-#: field:project.vs.hours,planned_hours:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
-msgstr ""
+msgstr "Planlagte timer"
 
 #. module: project
 #: view:project.project:0
 msgid "Set as Template"
-msgstr ""
+msgstr "Gør til skabelon"
 
 #. module: project
 #: view:project.project:0
@@ -937,14 +973,15 @@ msgid "Long Term Planning"
 msgstr ""
 
 #. module: project
-#: view:project.project:0 view:project.task:0
+#: view:project.task:0
 msgid "Start Date"
-msgstr ""
+msgstr "Start dato"
 
 #. module: project
-#: view:project.task:0 field:project.task,parent_ids:0
+#: view:project.task:0
+#: field:project.task,parent_ids:0
 msgid "Parent Tasks"
-msgstr ""
+msgstr "Moder-opgaver"
 
 #. module: project
 #: field:project.project,warn_customer:0
@@ -972,34 +1009,36 @@ msgid "Helps accountants manage analytic and crossover budgets."
 msgstr ""
 
 #. module: project
-#: field:project.task,priority:0 field:report.project.task.user,priority:0
+#: field:project.task,priority:0
+#: field:report.project.task.user,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #. module: project
 #: view:project.project:0
 msgid "Administration"
-msgstr ""
+msgstr "Administration"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_reevaluate
 msgid "project.task.reevaluate"
-msgstr ""
+msgstr "project.task.reevaluate"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "My Task"
-msgstr ""
+msgstr "Mine opgaver"
 
 #. module: project
 #: view:project.project:0
 msgid "Member"
-msgstr ""
+msgstr "Medlem"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projekt opgaver"
 
 #. module: project
 #: constraint:res.partner:0
@@ -1008,16 +1047,15 @@ msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Kladde"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Lav"
 
 #. module: project
 #: view:project.project:0
@@ -1035,22 +1073,28 @@ msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
 msgstr ""
+"Projektmedlemmer er brugere, der kan få adgang til opgaver knyttet til dette "
+"projekt."
 
 #. module: project
-#: view:project.project:0 field:project.task,manager_id:0
+#: view:project.project:0
+#: field:project.task,manager_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Projektleder"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0 view:report.project.task.user:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Afventer"
 
 #. module: project
 #: view:project.task:0
@@ -1059,9 +1103,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
-#: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Stages"
-msgstr ""
+msgstr "Faser"
 
 #. module: project
 #: view:project.installer:0
@@ -1069,9 +1112,10 @@ msgid "Configure"
 msgstr ""
 
 #. module: project
-#: view:project.project:0 field:project.project,complete_name:0
+#: view:project.project:0
+#: field:project.project,complete_name:0
 msgid "Project Name"
-msgstr ""
+msgstr "Projektnavn"
 
 #. module: project
 #: help:project.task.delegate,state:0
@@ -1079,11 +1123,13 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+"Nyt stadie af din opgave. Afventende bliver automatisk genåbnet når den "
+"uddelegerede opgave lukkes"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: project
 #: help:project.installer,project_scrum:0
@@ -1096,7 +1142,7 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Dage til at lukke"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
@@ -1112,7 +1158,7 @@ msgstr ""
 #. module: project
 #: field:project.project,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1122,12 +1168,12 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Udvidede filtre"
 
 #. module: project
 #: field:project.task.close,partner_email:0
@@ -1148,7 +1194,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: project
 #: help:project.task.close,manager_warn:0
@@ -1158,7 +1204,7 @@ msgstr ""
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
-msgstr ""
+msgstr "Åben opgave"
 
 #. module: project
 #: field:project.task.close,manager_email:0
@@ -1171,16 +1217,17 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Hvis det aktive felt er blankt, kan du gemme projektet uden at slette det."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Firmaer"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr ""
+msgstr "Når en opgave er afsluttet, vil den ændre status til Udført"
 
 #. module: project
 #: code:addons/project/project.py:251
@@ -1190,9 +1237,10 @@ msgstr ""
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #. module: project
 #: model:ir.ui.menu,name:project.next_id_86
@@ -1237,12 +1285,12 @@ msgstr ""
 #. module: project
 #: help:report.project.task.user,opening_days:0
 msgid "Number of Days to Open the task"
-msgstr ""
+msgstr "Antal dage til åbning af opgaven"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr ""
+msgstr "Uddelegeret til"
 
 #. module: project
 #: view:res.partner:0
@@ -1250,14 +1298,15 @@ msgid "History"
 msgstr ""
 
 #. module: project
-#: field:project.task,user_id:0 view:report.project.task.user:0
+#: field:project.task,user_id:0
+#: view:report.project.task.user:0
 msgid "Assigned to"
-msgstr ""
+msgstr "Tildelt til"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "Delegated Task"
-msgstr ""
+msgstr "Uddelegeret opgave"
 
 #. module: project
 #: field:project.installer,project_gtd:0
@@ -1286,10 +1335,12 @@ msgid "Month works"
 msgstr ""
 
 #. module: project
-#: field:project.project,priority:0 field:project.project,sequence:0
-#: field:project.task,sequence:0 field:project.task.type,sequence:0
+#: field:project.project,priority:0
+#: field:project.project,sequence:0
+#: field:project.task,sequence:0
+#: field:project.task.type,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Rækkefølge"
 
 #. module: project
 #: view:project.task:0 field:project.task,state:0
@@ -1307,6 +1358,10 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"Denne rapport gør det muligt for dig at analysere performance på projekter "
+"og brugere. Du kan måle på antal opgaver, antal timer brugt sammenlignet med "
+"forventede timer, det gennemsnitlige antal dage til at starte og slutte en "
+"opgave etc."
 
 #. module: project
 #: code:addons/project/project.py:862
@@ -1326,23 +1381,32 @@ msgid ""
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
+"Knyt dette projekt til en analytisk konto hvis du ønsker finansiel styring. "
+"Sætter dig i stand til at forbinde projekter med budgetter, planlægning "
+"omkostnings og omsætningsanalyser, tidsskemaer o.s.v."
 
 #. module: project
-#: view:project.project:0 view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0 selection:report.project.task.user,state:0
-#: view:res.partner:0 selection:task.by.days,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
 msgid "Done"
-msgstr ""
+msgstr "Udført"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.config.settings:0
+#: view:project.task.delegate:0
+#: view:project.task.reevaluate:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annullér"
 
 #. module: project
 #: selection:project.vs.hours,state:0
@@ -1351,9 +1415,9 @@ msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
-#: view:project.project:0 selection:project.vs.hours,state:0
+#: view:project.project:0
 msgid "Open"
-msgstr ""
+msgstr "Åben"
 
 #. module: project
 #: code:addons/project/project.py:118
@@ -1368,13 +1432,15 @@ msgid "ID: %(task_id)s"
 msgstr ""
 
 #. module: project
-#: view:project.task:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "I gang"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:82
@@ -1385,7 +1451,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Genaktivér"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_close
@@ -1396,7 +1462,7 @@ msgstr ""
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+msgstr "Fejl! Opgave slutdato skal være større end opgave startdato"
 
 #. module: project
 #: view:res.users:0
@@ -1407,12 +1473,12 @@ msgstr ""
 #: field:project.task.history,user_id:0
 #: field:project.task.history.cumulative,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Ansvarlig"
 
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr ""
+msgstr "Søg projekt"
 
 #. module: project
 #: help:project.installer,project_gtd:0
@@ -1437,7 +1503,7 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Very Low"
-msgstr ""
+msgstr "Meget lav"
 
 #. module: project
 #: field:project.project,warn_manager:0
@@ -1447,7 +1513,7 @@ msgstr ""
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "Overskredet deadline"
 
 #. module: project
 #: help:project.project,effective_hours:0
@@ -1455,6 +1521,8 @@ msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Antal timer brugt på alle opgaver relateret til dette projekt og dets "
+"underprojekter"
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -1466,7 +1534,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
 msgid "Re-evaluate Task"
-msgstr ""
+msgstr "Gen-evaluer opgaver"
 
 #. module: project
 #: help:project.installer,project_long_term:0
@@ -1478,7 +1546,7 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
 msgid "Development"
-msgstr ""
+msgstr "Udvikling"
 
 #. module: project
 #: field:project.installer,project_timesheet:0
@@ -1491,30 +1559,31 @@ msgid "My Remaining Hours by Project"
 msgstr ""
 
 #. module: project
-#: field:project.task,description:0 view:project.task.type:0
+#: view:project.task:0
+#: field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
 msgid "Your Task Title"
-msgstr ""
+msgstr "Din opgave titel"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "Urgent"
-msgstr ""
+msgstr "Haster"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Maj"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task"
-msgstr ""
+msgstr "Opgaver til godkendelse"
 
 #. module: project
 #: field:task.by.days,total_task:0
@@ -1542,12 +1611,13 @@ msgstr ""
 #. module: project
 #: field:project.task.delegate,user_id:0
 msgid "Assign To"
-msgstr ""
+msgstr "Uddelegér til"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
-msgstr ""
+msgstr "Tidsforbrug"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_account
@@ -1557,7 +1627,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1577,6 +1647,7 @@ msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Totalt antal timer på alle opgaver på dette projekt med underprojekter"
 
 #. module: project
 #: help:project.task.close,manager_email:0
@@ -1584,21 +1655,22 @@ msgid "Email Address of Project's Manager"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
+#: field:project.task,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Kunde"
 
 #. module: project
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
-msgstr ""
+msgstr "Slut dato"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_task_by_days_graph
@@ -1626,17 +1698,18 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
-msgstr ""
+msgstr "Indtast dine arbejdstimer"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,year:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "År"
 
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr ""
+msgstr "Antal dage til lukning af opgaven"
 
 #. module: project
 #: view:board.board:0
@@ -1651,12 +1724,12 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: project
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
-msgstr ""
+msgstr "Forbrug af timer"
 
 #. module: project
 #: view:project.project:0 view:project.task:0
@@ -1666,17 +1739,17 @@ msgstr ""
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
 msgid "Open Done Task"
-msgstr ""
+msgstr "Åben udført opgave"
 
 #. module: project
 #: field:res.company,project_time_mode_id:0
 msgid "Project Time Unit"
-msgstr ""
+msgstr "Projekt tidsenhed"
 
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "Forbrugte timer"
 
 #. module: project
 #: code:addons/project/project.py:959
@@ -1685,36 +1758,35 @@ msgid "The task '%s' is pending."
 msgstr ""
 
 #. module: project
-#: field:project.task,total_hours:0 field:project.vs.hours,total_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Total timer"
 
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "Styrer rækkefølgen ved liste-visning af projekter"
 
 #. module: project
 #: field:project.task,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: view:project.task:0
 msgid "Users"
-msgstr ""
+msgstr "Brugere"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "Overskredne opgaver"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr ""
+msgstr "Flet"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_remaining_hours_graph
@@ -1745,12 +1817,12 @@ msgstr ""
 #. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
-msgstr ""
+msgstr "Tid i alt"
 
 #. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
-msgstr ""
+msgstr "Evaluerings stadie"
 
 #. module: project
 #: code:addons/project/project.py:882
@@ -1761,7 +1833,7 @@ msgstr ""
 #. module: project
 #: field:project.task,work_ids:0
 msgid "Work done"
-msgstr ""
+msgstr "Udført arbejde"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -1769,16 +1841,19 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
 msgstr ""
+"Forventet tid til din godkendelse af arbejde udført af den du uddelegerer "
+"denne opgave til."
 
 #. module: project
-#: view:project.project:0 model:res.groups,name:project.group_project_manager
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr ""
+msgstr "Leder"
 
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Opret dato"
 
 #. module: project
 #: code:addons/project/project.py:890
@@ -1794,7 +1869,7 @@ msgstr ""
 #. module: project
 #: field:project.task.work,name:0
 msgid "Work summary"
-msgstr ""
+msgstr "Arbejds sammendrag"
 
 #. module: project
 #: view:project.installer:0
@@ -1807,15 +1882,15 @@ msgid "Automatically synchronizes project tasks and crm cases."
 msgstr ""
 
 #. module: project
-#: view:project.project:0 field:project.project,type_ids:0
+#: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
-msgstr ""
+msgstr "Opgave faser"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
-msgstr ""
+msgstr "Uddelegér din opgave til en anden bruger"
 
 #. module: project
 #: view:project.project:0 field:project.project,warn_footer:0

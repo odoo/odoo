@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:57+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:56+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,send_to:0
@@ -25,7 +25,7 @@ msgstr "Wysłane do"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
 msgid "Delay to Close"
-msgstr ""
+msgstr "Opóźnienie do zamknięcia"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,planned_revenue:0
@@ -74,7 +74,7 @@ msgid "Delay to close"
 msgstr "Opóźnienie do zamknięcia"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "Cała historia"
 
@@ -111,7 +111,7 @@ msgid "Day"
 msgstr "Dzień"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
 msgstr "Ostatnia wiadomość"
 
@@ -159,10 +159,10 @@ msgid "Pending"
 msgstr "Oczekiwanie"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr ""
@@ -198,7 +198,6 @@ msgstr "Od"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
 msgstr ""
@@ -237,6 +236,7 @@ msgid "HTML formatting?"
 msgstr "Formatowanie HTML?"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "Typ"
@@ -293,7 +293,7 @@ msgid "Stage"
 msgstr "Etap"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
 #, python-format
 msgid "Fwd"
 msgstr "Przek."
@@ -307,15 +307,16 @@ msgstr "Lokalizacja geograficzna"
 #: view:crm.lead.report.assign:0
 #: view:crm.partner.report.assign:0
 msgid "Opportunities Assignment Analysis"
-msgstr ""
+msgstr "Analiza przypisań szans"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "Wyślij historię"
 
@@ -325,7 +326,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Zamknij"
@@ -357,7 +357,7 @@ msgstr "Opóźnienie do otwarcia"
 #: view:crm.partner.report.assign:0
 #: field:crm.partner.report.assign,grade_id:0
 msgid "Grade"
-msgstr ""
+msgstr "Ocena"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -438,7 +438,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: field:crm.lead,date_assign:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "Data przypisania"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability_max:0
@@ -481,8 +481,6 @@ msgid "Delay to Open"
 msgstr "Opóźnienie do otwarcia"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -512,7 +510,7 @@ msgstr "Długość geograficzna"
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Lead Assign"
-msgstr ""
+msgstr "Przypisz sygnał"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -522,7 +520,7 @@ msgstr "Październik"
 #. module: crm_partner_assign
 #: view:crm.lead:0
 msgid "Assignation"
-msgstr ""
+msgstr "Przypisanie"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,email_cc:0
@@ -612,6 +610,7 @@ msgid "Probable Revenue"
 msgstr "Prawdopodobny dochód"
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "Przypisany partner"
@@ -675,11 +674,12 @@ msgid "CRM Lead Report"
 msgstr "Raport sygnałów CRM"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "Informacja o sprawie"
 
 #. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
 msgstr "Numeracja"

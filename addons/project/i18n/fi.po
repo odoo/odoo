@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:16+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:26+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -54,7 +54,7 @@ msgstr "Syötä tähän jäljelläolevat tunnit tehtävän suorittamiseksi."
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr "Takarajat"
+msgstr "Määräajat"
 
 #. module: project
 #: code:addons/project/project.py:155
@@ -92,7 +92,8 @@ msgid "Hours to Validate"
 msgstr "Tarkistettavat tunnit"
 
 #. module: project
-#: field:project.project,progress_rate:0 view:report.project.task.user:0
+#: field:project.project,progress_rate:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
 msgstr "Edistyminen"
@@ -114,7 +115,7 @@ msgstr "Antaa järjestysnumeron näytettäessä projektilistaa"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr "Virhe: projektin alkupäivä tulee olla aikaisempi kuin loppupäivä."
+msgstr "Virhe: projektin alkupäivän tulee olla ennen loppupäivää."
 
 #. module: project
 #: view:project.task.reevaluate:0
@@ -155,7 +156,10 @@ msgstr ""
 "Asiakkaalle lähetettävän tehtävän valmistumisviesti sähköpostin ylätunniste."
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.my_open_tasks_action
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Omat tehtävät"
 
@@ -165,8 +169,10 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Virhe ! Et voi luoda rekursiivisiä tehtäviä."
 
 #. module: project
-#: field:project.task,company_id:0 field:project.task.work,company_id:0
-#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0
+#: field:project.task.work,company_id:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "Yritys"
 
@@ -209,7 +215,7 @@ msgstr "Muuta vaihe"
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr "Uusi projekti perustuen pohjaan"
+msgstr "Uusi projekti mallista"
 
 #. module: project
 #: constraint:project.project:0
@@ -228,8 +234,8 @@ msgid "User you want to delegate this task to"
 msgstr "Käyttäjä jolle haluat delegoida tämän tehtävän"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,day:0
-#: field:task.by.days,day:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,day:0
 msgid "Day"
 msgstr "Päivä"
 
@@ -251,9 +257,13 @@ msgstr "Luonnos tehtävä"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
+#: view:project.config.settings:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0 view:report.project.task.user:0
+#: field:project.task.work,task_id:0
+#: view:report.project.task.user:0
 msgid "Task"
 msgstr "Tehtävä"
 
@@ -274,10 +284,10 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr "Projektin tehtävät työt"
+msgstr "Projektitehtävän työt"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 field:project.task,notes:0
+#: field:project.task,notes:0
 msgid "Notes"
 msgstr "Muistiinpanot"
 
@@ -292,17 +302,18 @@ msgid "Invoice Address"
 msgstr "Laskutusosoite"
 
 #. module: project
-#: field:project.task,name:0 field:report.project.task.user,name:0
+#: field:project.task,name:0
+#: field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Tehtävän yhteenveto"
 
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr "Ei malli tehtävä"
+msgstr "Ei ole mallitehtävä"
 
 #. module: project
-#: view:project.task:0 view:res.partner:0
+#: view:res.partner:0
 msgid "Start Task"
 msgstr "Aloita tehtävä"
 
@@ -324,10 +335,13 @@ msgstr ""
 "muotoilua."
 
 #. module: project
-#: selection:project.task,state:0 selection:project.task.history,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
+#: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: model:project.task.type,name:project.project_tt_cancel
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
 msgid "Cancelled"
 msgstr "Peruutettu"
 
@@ -369,7 +383,8 @@ msgid "Task is Completed"
 msgstr "Tehtävä on valmis"
 
 #. module: project
-#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0
+#: field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Lopetuspäivämäärä"
 
@@ -381,17 +396,19 @@ msgstr "   Kuukausi   "
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr "Muille käyttäjille delegoidut tehtävät"
+msgstr "Delegoi tehtävät muille käyttäjille"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
+#: view:project.project:0
+#: view:project.task:0
+#: view:report.project.task.user:0
 msgid "Group By..."
 msgstr "Ryhmittely.."
 
 #. module: project
 #: help:project.task,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr "Laskettu käyttäen sumaana tehtyjen tehtävien määrää."
+msgstr "Laskettu tehdyn työn yhteismäärästä"
 
 #. module: project
 #: help:project.project,warn_customer:0
@@ -415,8 +432,7 @@ msgstr "Testaus"
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr ""
-"Suorittavan käyttäjän arvio tehtävän loppuunsuorittamiseen kuluvasta ajasta"
+msgstr "Suorittavan käyttäjän arvio tehtävän jäljelläolevasta ajasta."
 
 #. module: project
 #: view:project.project:0
@@ -431,7 +447,6 @@ msgstr "Tehtävä '%s' suljettu"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
-#: field:project.project,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Analyyttinen tili"
 
@@ -441,12 +456,13 @@ msgid "Done by"
 msgstr "Tehnyt"
 
 #. module: project
-#: view:project.task:0
+#: view:project.config.settings:0
 msgid "Planning"
 msgstr "Suunnittelu"
 
 #. module: project
-#: view:project.task:0 field:project.task,date_deadline:0
+#: view:project.task:0
+#: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "Määräaika"
@@ -457,9 +473,7 @@ msgid "_Cancel"
 msgstr "_Peruuta"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner view:project.project:0
-#: field:project.task,partner_id:0 view:report.project.task.user:0
-#: field:report.project.task.user,partner_id:0
+#: model:ir.model,name:project.model_res_partner
 msgid "Partner"
 msgstr "Kumppani"
 
@@ -483,7 +497,8 @@ msgstr ""
 "läsnäoloja."
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "tehtävien määrä"
 
@@ -495,10 +510,10 @@ msgstr "Edellinen"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr "uudelleenarvioi tehtävä"
+msgstr "Arvioi tehtävä uudelleen"
 
 #. module: project
-#: field:project.vs.hours,user_id:0 field:report.project.task.user,user_id:0
+#: field:report.project.task.user,user_id:0
 msgid "Assigned To"
 msgstr "Määritelty käyttäjälle"
 
@@ -518,7 +533,8 @@ msgid "Reset as Project"
 msgstr "aseta projektiksi"
 
 #. module: project
-#: view:project.project:0 selection:project.vs.hours,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
 msgid "Template"
 msgstr "Sapluuna"
 
@@ -548,7 +564,8 @@ msgid "From draft state, it will come into the open state."
 msgstr "Luonnostilasta avoin tilaan"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "Päivien määrä"
 
@@ -559,11 +576,15 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Tämän kentän arvo lasketaan automaattisesti, ja se käyttäytyy samalla tavoin "
+"kuin arvoltaan 'aktiivinen' boolean-kenttä: jos tehtävä on yhdistetty ei-"
+"aktiiviseen tai malliprojektiin, sitä ei näytetä, paitsi erikseen "
+"pyydettäessä."
 
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr "Prosenttiosuun suljetuista tehtävistä kokonaistehtävämäärän mukaan"
+msgstr "Prosenttiosuus: suljetut tehtävät / kaikki tehtävät"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -574,7 +595,7 @@ msgstr "Uuden tehtävän kuvaus"
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr "Projekti tehtävä"
+msgstr "Projektitehtävä"
 
 #. module: project
 #: view:project.installer:0
@@ -625,15 +646,17 @@ msgid "Medium"
 msgstr "Keskitaso"
 
 #. module: project
-#: view:project.task:0 field:project.task,remaining_hours:0
+#: view:project.task:0
+#: field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
-#: field:project.vs.hours,remaining_hours:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Jäljellä olevat tunnit"
 
 #. module: project
-#: view:project.task:0 view:project.task.work:0
+#: view:project.task:0
+#: view:project.task.work:0
 msgid "Task Work"
 msgstr "Tehtävän tyot"
 
@@ -658,7 +681,7 @@ msgstr "Tehtävä '%s' on suljettu"
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr "Ei määritellyt tehtävät käyttäjille"
+msgstr "Käyttäjille kohdistamattomat tehtävät"
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -666,8 +689,8 @@ msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
-"Summa projektin tehtäviin suunniteltujen tuntien määrästä mukaanlukien "
-"alaprojektit."
+"Projektin ja sen aliprojektien kaikkien tehtävien suunniteltujen tuntien "
+"yhteismäärä."
 
 #. module: project
 #: field:project.task.delegate,name:0
@@ -675,7 +698,8 @@ msgid "Delegated Title"
 msgstr "Delegoinnin otsikko"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Omat projektit"
@@ -696,24 +720,27 @@ msgid "Configuration"
 msgstr "Konfiguraatio"
 
 #. module: project
-#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0
+#: field:report.project.task.user,date_start:0
 msgid "Starting Date"
-msgstr "Aloituspäivämäärä"
+msgstr "Alkupäivä"
 
 #. module: project
-#: code:addons/project/project.py:324
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_open_view_project_all
-#: view:project.project:0 field:project.task.type,project_ids:0
+#: model:ir.ui.menu,name:project.menu_projects
+#: view:project.project:0
+#: field:project.task.type,project_ids:0
+#: view:res.company:0
 #, python-format
 msgid "Projects"
 msgstr "Projektit"
 
 #. module: project
-#: view:project.task:0 field:project.task,type_id:0
+#: view:project.task:0
+#: field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
-#: view:report.project.task.user:0 field:report.project.task.user,type_id:0
 msgid "Stage"
 msgstr "Vaihe"
 
@@ -739,7 +766,7 @@ msgstr "Päivämäärät"
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr "Tehtävän uusi otsikko joka delegoitiin käyttäjälle."
+msgstr "Käyttäjälle delegoidun tehtävän uusi otsikko."
 
 #. module: project
 #: view:report.project.task.user:0
@@ -763,7 +790,7 @@ msgstr "Projekti vs. suunnitellut ja kokonaistunnit"
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
 msgid "Draft Open task"
-msgstr "Luonnos avaa tehtävä"
+msgstr "Luonnos: Avoin tehtävä"
 
 #. module: project
 #: view:project.project:0
@@ -797,25 +824,28 @@ msgstr "Delegoi"
 #: model:ir.actions.act_window,name:project.open_view_template_project
 #: view:project.project:0
 msgid "Templates of Projects"
-msgstr "Projektien mallipohjat"
+msgstr "Projektien mallit"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.model,name:project.model_project_project
+#: model:ir.ui.menu,name:project.menu_project_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: field:project.vs.hours,project:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
-#: field:res.users,context_project_id:0 field:task.by.days,project_id:0
 msgid "Project"
 msgstr "Projekti"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "_Evaluate"
-msgstr ""
+msgstr "_Arvioi"
 
 #. module: project
 #: view:board.board:0
@@ -829,8 +859,7 @@ msgid "Please specify the email address of Project Manager."
 msgstr "Määrittele projektipäällikön sähköpostiosoite"
 
 #. module: project
-#: model:ir.actions.todo.category,name:project.category_project_config
-#: view:res.company:0
+#: view:project.config.settings:0
 msgid "Project Management"
 msgstr "Projektinhallinta"
 
@@ -843,23 +872,25 @@ msgstr "Elokuu"
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr "Projektitehtävän suorittaja (delegaatti)"
+msgstr "Projektitehtävän delegointi"
 
 #. module: project
+#: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
-#: model:ir.ui.menu,name:project.menu_tasks_config
-#: model:ir.ui.menu,name:project.project_report_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.task:0 view:res.partner:0 field:res.partner,task_ids:0
+#: view:project.project:0
+#: view:project.task:0
+#: view:res.partner:0
+#: field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "Tehtävät"
 
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr "vanhempi"
+msgstr "Edeltävä"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
@@ -915,7 +946,7 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Laskettu: käytetty aika / kokonaisaika"
 
 #. module: project
-#: view:project.task.history.cumulative:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
 msgstr "Kuukausi"
@@ -932,9 +963,8 @@ msgid "Task Stage"
 msgstr "Tehtävän vaihe"
 
 #. module: project
-#: field:project.task,planned_hours:0
 #: field:project.task.delegate,planned_hours:0
-#: field:project.vs.hours,planned_hours:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Suunnitellut tunnit"
@@ -955,14 +985,15 @@ msgid "Long Term Planning"
 msgstr "Pitkän aikavälin suunnittelu"
 
 #. module: project
-#: view:project.project:0 view:project.task:0
+#: view:project.task:0
 msgid "Start Date"
-msgstr "Aloituspvm"
+msgstr "Alkupäivä"
 
 #. module: project
-#: view:project.task:0 field:project.task,parent_ids:0
+#: view:project.task:0
+#: field:project.task,parent_ids:0
 msgid "Parent Tasks"
-msgstr "Ylätason tehtävät"
+msgstr "Edeltävät tehtävät"
 
 #. module: project
 #: field:project.project,warn_customer:0
@@ -991,7 +1022,8 @@ msgstr ""
 "Auttaa kirjanpitäjiä hallitsemaan analyyttisiä ja ristikkäisiä budjetteja."
 
 #. module: project
-#: field:project.task,priority:0 field:report.project.task.user,priority:0
+#: field:project.task,priority:0
+#: field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Prioriteetti"
 
@@ -1016,9 +1048,10 @@ msgid "Member"
 msgstr "Jäsen"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "Project Tasks"
-msgstr "Projekti tehtävät"
+msgstr "Projektitehtävät"
 
 #. module: project
 #: constraint:res.partner:0
@@ -1027,8 +1060,7 @@ msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0
 msgid "Draft"
 msgstr "Luonnos"
 
@@ -1054,22 +1086,26 @@ msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
 msgstr ""
-"Projektin jäsenet ovat käyttäjiä joilla on pääsy projektiin liittyviin "
-"tehtäviin"
+"Projektin jäsenet ovat käyttäjiä, joilla on pääsy tähän projektiin "
+"liittyviin tehtäviin."
 
 #. module: project
-#: view:project.project:0 field:project.task,manager_id:0
+#: view:project.project:0
+#: field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "Projektipäällikkö"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0 view:report.project.task.user:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
 msgid "Pending"
 msgstr "Odottava"
 
@@ -1080,7 +1116,6 @@ msgstr "Tehtävän muokkaus"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
-#: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Stages"
 msgstr "Vaiheet"
 
@@ -1090,7 +1125,8 @@ msgid "Configure"
 msgstr "Konfiguroi"
 
 #. module: project
-#: view:project.project:0 field:project.project,complete_name:0
+#: view:project.project:0
+#: field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "Projektin nimi"
 
@@ -1207,7 +1243,7 @@ msgstr "Yritykset"
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr "kun tehtävä on valmistunut, se muuttuu valmis tilaan."
+msgstr "Kun tehtävä on valmistunut, se muuttuu tilaan 'valmis'."
 
 #. module: project
 #: code:addons/project/project.py:251
@@ -1217,7 +1253,8 @@ msgstr "Projekti '%s' on avattu."
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -1253,7 +1290,7 @@ msgstr "Konfiguraation eteneminen"
 #. module: project
 #: view:project.task.delegate:0
 msgid "_Delegate"
-msgstr ""
+msgstr "_Delegoi"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:91
@@ -1279,7 +1316,8 @@ msgid "History"
 msgstr "Historia"
 
 #. module: project
-#: field:project.task,user_id:0 view:report.project.task.user:0
+#: field:project.task,user_id:0
+#: view:report.project.task.user:0
 msgid "Assigned to"
 msgstr "Annettu tehtäväksi"
 
@@ -1315,10 +1353,12 @@ msgid "Month works"
 msgstr "Kuukauden työt"
 
 #. module: project
-#: field:project.project,priority:0 field:project.project,sequence:0
-#: field:project.task,sequence:0 field:project.task.type,sequence:0
+#: field:project.project,priority:0
+#: field:project.project,sequence:0
+#: field:project.task,sequence:0
+#: field:project.task.type,sequence:0
 msgid "Sequence"
-msgstr "Sekvenssi"
+msgstr "Järjestysluku"
 
 #. module: project
 #: view:project.task:0 field:project.task,state:0
@@ -1336,6 +1376,10 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"Tämän raportin avulla voit analysoida projektien ja käyttäjien tehokkuutta. "
+"Voit analysoida tehtävien määriä, käytettyjen tuntien määriä verrattuna "
+"suunniteltuihin tunteihin, tehtävän avaamiseen tai päättämiseen käytettyjen "
+"päivien keskiarvoa jne."
 
 #. module: project
 #: code:addons/project/project.py:862
@@ -1357,19 +1401,25 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: view:project.project:0 view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0 selection:report.project.task.user,state:0
-#: view:res.partner:0 selection:task.by.days,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
 msgid "Done"
 msgstr "Valmis"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.config.settings:0
+#: view:project.task.delegate:0
+#: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -1380,7 +1430,7 @@ msgstr "Sulje"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
-#: view:project.project:0 selection:project.vs.hours,state:0
+#: view:project.project:0
 msgid "Open"
 msgstr "Avaa"
 
@@ -1399,11 +1449,13 @@ msgid "ID: %(task_id)s"
 msgstr ""
 
 #. module: project
-#: view:project.task:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Käynnissä"
 
@@ -1427,8 +1479,7 @@ msgstr "Lähetä sähköposti"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
-"Virhe! Tehtävän lopetuspäivän tulee olla myöhäisempi kuin aloituspäivä"
+msgstr "Virhe! Tehtävän loppupäivän tulee olla alkupäivän jälkeen"
 
 #. module: project
 #: view:res.users:0
@@ -1444,7 +1495,7 @@ msgstr "Vastuuhenkilö"
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr "Hae projektia"
+msgstr "Hae projekti"
 
 #. module: project
 #: help:project.installer,project_gtd:0
@@ -1479,7 +1530,7 @@ msgstr "Varoita päällikköä"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr "Ylitetty aikaraja"
+msgstr "Määräaika ylitetty"
 
 #. module: project
 #: help:project.project,effective_hours:0
@@ -1487,8 +1538,8 @@ msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
-"Tähän projektiin liittyvien tehtävien ja alatason projektien käytetty "
-"kokonaistuntimäärä."
+"Tehtäviin käytetty kokonaistuntimäärä tässä projektissa ja sen "
+"aliprojekteissa."
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -1529,7 +1580,8 @@ msgid "My Remaining Hours by Project"
 msgstr "Omat jäljelläolevat tunnit projekteittain"
 
 #. module: project
-#: field:project.task,description:0 view:project.task.type:0
+#: view:project.task:0
+#: field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Kuvaus"
@@ -1537,7 +1589,7 @@ msgstr "Kuvaus"
 #. module: project
 #: field:project.task.delegate,prefix:0
 msgid "Your Task Title"
-msgstr "Tehtävän otsikko"
+msgstr "Oman tehtävän otsikko"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -1583,7 +1635,8 @@ msgid "Assign To"
 msgstr "Määritä tehtävä käyttäjälle"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Kulutettu aika"
 
@@ -1617,7 +1670,7 @@ msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
-"Tämän projektin tehtävien ja alatason projektieen kokonaistuntimäärä."
+"Kokonaistuntimäärä: kaikki tehtävät tästä projektista ja sen aliprojekteista."
 
 #. module: project
 #: help:project.task.close,manager_email:0
@@ -1625,12 +1678,13 @@ msgid "Email Address of Project's Manager"
 msgstr "Projektipäällikön sähköpostiosoite"
 
 #. module: project
-#: view:project.project:0
+#: field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Asiakas"
 
 #. module: project
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
@@ -1672,7 +1726,8 @@ msgid "Encode your working hours."
 msgstr "Syötä työtuntisi"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,year:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,year:0
 msgid "Year"
 msgstr "Vuosi"
 
@@ -1709,7 +1764,7 @@ msgstr "Muut"
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
 msgid "Open Done Task"
-msgstr "Avaa valmiiksimerkitty tehtävä"
+msgstr "Avaa jo valmistunut tehtävä"
 
 #. module: project
 #: field:res.company,project_time_mode_id:0
@@ -1728,7 +1783,6 @@ msgid "The task '%s' is pending."
 msgstr "Tehtävä '%s' on odottavassa tilassa."
 
 #. module: project
-#: field:project.task,total_hours:0 field:project.vs.hours,total_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1814,11 +1868,12 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
 msgstr ""
-"Arvioitu aika joka käytetään tehtävän tehneen työn tarkistamiseen (henkilö "
-"jolle delegoit tehtävän)"
+"Sinulle arvioitu aika, jonka käytät työntekijän, jolle delegoit tehtävän, "
+"tekemän työn arvioimiseen."
 
 #. module: project
-#: view:project.project:0 model:res.groups,name:project.group_project_manager
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr "Päällikkö"
 
@@ -1854,7 +1909,7 @@ msgid "Automatically synchronizes project tasks and crm cases."
 msgstr "Synkronoi automaattisesti projektin tehtävät ja crm tapaukset."
 
 #. module: project
-#: view:project.project:0 field:project.project,type_ids:0
+#: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Tehtävien vaiheet"

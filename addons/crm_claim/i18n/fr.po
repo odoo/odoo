@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-05-17 14:44+0000\n"
-"Last-Translator: Quentin THEURET <Unknown>\n"
+"Last-Translator: Quentin THEURET @TeMPO Consulting <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:56+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:55+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -25,7 +25,7 @@ msgstr "# de cas"
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Group By..."
-msgstr "Grouper par ..."
+msgstr "Grouper par..."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -130,6 +130,7 @@ msgstr "Réclamations factuelles"
 #. module: crm_claim
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Cancelled"
 msgstr "Annulé"
 
@@ -269,6 +270,7 @@ msgid "July"
 msgstr "Juillet"
 
 #. module: crm_claim
+#: view:crm.claim.stage:0
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
 msgstr "Étapes de la réclamation"
@@ -307,7 +309,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_claim_stage_act
+#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
 msgid "Stages"
 msgstr "Étapes"
 
@@ -412,6 +414,7 @@ msgstr "Basse"
 #: field:crm.claim,date_closed:0
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Closed"
 msgstr "Fermé"
 
@@ -420,6 +423,7 @@ msgstr "Fermé"
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Pending"
 msgstr "En attente"
 
@@ -532,9 +536,9 @@ msgstr "Ces personnes recevront un courriel."
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Réclamations"
@@ -556,6 +560,7 @@ msgid "History"
 msgstr "Historique"
 
 #. module: crm_claim
+#: view:crm.claim:0
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
@@ -580,7 +585,6 @@ msgid "State"
 msgstr "Status"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Terminé(e)"
@@ -591,7 +595,6 @@ msgid "Claim Reporter"
 msgstr "Rédacteur de la réclamation"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -602,7 +605,6 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -611,6 +613,8 @@ msgstr "Ouverte"
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+#: selection:crm.claim.stage,state:0
 msgid "In Progress"
 msgstr "En cours"
 

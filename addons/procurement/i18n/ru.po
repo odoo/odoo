@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -30,7 +30,7 @@ msgstr "Планировщики"
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
-msgstr "Сделать закупки"
+msgstr "Сделать снабжения"
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -39,6 +39,9 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
+"Запускает автоматическое снабжение для всех ТМЦ, которые имеют виртуальный "
+"запас меньше 0. Возможно вы не должны использовать этот параметр, мы "
+"предлагаем использование настройки MTO по продуктам."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -48,21 +51,23 @@ msgstr "Группировать по ..."
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr "Черновик закупки ТМЦ и положение точки заказа"
+msgstr "Черновик снабжения ТМЦ и положение точки заказа"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:291
+#: code:addons/procurement/procurement.py:290
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Не задан поставщик для ТМЦ!"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
+#: view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "Единица измерения"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
+#: field:product.template,procure_method:0
 msgid "Procurement Method"
 msgstr "Метод снабжения"
 
@@ -86,11 +91,10 @@ msgstr "Компания"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr "Кол-во во второй ед. изм."
+msgstr "Количество в е.п."
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Причина"
 
@@ -112,7 +116,7 @@ msgstr "Не используется в расчётах, только для �
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr "Последняя закупка"
+msgstr "Последнее снабжение"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -228,13 +232,13 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
 msgstr ""
-"Ссылка на документ, создавший этот запрос на снабжение.\n"
+"Ссылка на документ, создавший этот запрос снабжения.\n"
 "Выполнено OpenERP автоматически."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr "Заказы на снабжение для обработки"
+msgstr "Заказы снабжения для обработки"
 
 #. module: procurement
 #: constraint:res.company:0
@@ -242,7 +246,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Ошибка ! Нельзя создать рекурсивные компании."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:386
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Снабжение '%s' в исключительной ситуации: "
@@ -285,7 +289,7 @@ msgstr "Лучшая цена (не активна!)"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Product & Location"
-msgstr "Продукция и местоположения"
+msgstr "Товар и место хранения"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
@@ -312,6 +316,12 @@ msgid ""
 "operations to fullfil the need: purchase order proposition, manufacturing "
 "order, etc."
 msgstr ""
+"Заказ снабжения используется для записи потребности конкретного продукта в "
+"конкретном месте хранения. Заказ снабжения создаётся обычно автоматически из "
+"заказов продаж, правила выхода логистики или правил минимума запаса. Когда "
+"заказ снабжения подтверждён, он автоматически создаёт необходимые операции "
+"для удовлетворения потребности: предложение заказа закупки, заказ "
+"изготовления и т.п."
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
@@ -330,11 +340,10 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr ""
-"Не достаточный запас и не определено правило минимальной точки заказа."
+msgstr "Не достаточен запас и нет правила минимума точки заказа."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -363,7 +372,7 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
-"Если вы составляете запрос на снабжение вручную, вероятно вы хотите "
+"Если вы составляете запрос снабжения вручную, вероятно вы хотите "
 "использовать изготовление на заказ."
 
 #. module: procurement
@@ -386,7 +395,7 @@ msgstr "Снабжение"
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 msgid "Procurement Orders"
-msgstr "Заказы на снабжение"
+msgstr "Заказы снабжения"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -401,7 +410,7 @@ msgstr "Исключения"
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
 msgid "Assignment from Production or Purchase Order."
-msgstr "Выделение из заказа на производство или на закупку."
+msgstr "Назначение из заказа производства или закупки."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property
@@ -412,7 +421,7 @@ msgstr "Параметр"
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr "Заявка на снабжение"
+msgstr "Заявка снабжения"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -438,14 +447,14 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
-msgstr "Связанные заказы на снабжение"
+msgstr "Связанные заказы снабжения"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
 msgstr ""
-"Мастер проверит все правила минимальных запасов и создаст заказ на снабжение."
+"Мастер проверит все правила минимальных запасов и создаст заказ снабжения."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -511,14 +520,13 @@ msgid ""
 "background, you may have to wait for a few minutes until it has finished "
 "computing."
 msgstr ""
-"Этот мастер позволяет вам обработать все заказы на снабжение, производство "
-"и/или закупку, которые будут обработаны в соответствии с их настройками. По "
+"Этот мастер позволяет вам обработать все заказы снабжения, производства "
+"и/или закупки, которые будут обработаны в соответствии с их настройками. По "
 "умолчанию, планировщик запускается каждую ночь. Вы можете использовать это "
 "меню для его принудительного запуска. Помните, что он работает в фоновом "
 "режиме, вы должны подождать несколько минут до окончания обработки."
 
 #. module: procurement
-#: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
 msgstr "Примечание"
@@ -535,6 +543,7 @@ msgstr "Этот мастер планирует снабжение"
 
 #. module: procurement
 #: view:procurement.order:0
+#: field:procurement.order,state:0
 msgid "Status"
 msgstr "Статус"
 
@@ -549,7 +558,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:383
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Не достаточный запас."
@@ -581,7 +590,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "Нет правила минимальной точки заказа"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:151
+#: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Авто точка зак.: %s"
@@ -609,7 +618,7 @@ msgstr "Доп. информация"
 #. module: procurement
 #: help:procurement.order,name:0
 msgid "Procurement name."
-msgstr "Название закупки."
+msgstr "Название снабжения."
 
 #. module: procurement
 #: constraint:stock.move:0
@@ -648,7 +657,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "Нельзя удалить заказ(ы) на снабжение в состоянии %s !"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:327
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Недостаточно данных !"
@@ -668,7 +677,7 @@ msgstr "Прочее"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Locations"
-msgstr "Местоположения"
+msgstr "Места хранения"
 
 #. module: procurement
 #: selection:procurement.order,procure_method:0
@@ -697,8 +706,6 @@ msgstr "Закупаемое количество будет округлять�
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
-#: selection:procurement.order,state:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -751,20 +758,14 @@ msgid "Procurement Exceptions"
 msgstr "Проблемы снабжения"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:product.product:0
-#: view:stock.warehouse.orderpoint:0
+#: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
 msgstr "Правила минимальных запасов"
 
 #. module: procurement
 #: field:procurement.order,close_move:0
 msgid "Close Move at end"
-msgstr ""
+msgstr "Закрыть перемещение в конце"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -788,6 +789,7 @@ msgstr "Временный"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Описание"
 
@@ -813,6 +815,8 @@ msgstr "Ед. изм."
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
+#: selection:procurement.order,procure_method:0
+#: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Изготовить на заказ"
 
@@ -837,7 +841,7 @@ msgid ""
 "quantity."
 msgstr ""
 "Вы можете определить правило минимальных запасов так, что OpenERP будет "
-"автоматически создавать черновики заказов на производство или  закупку в "
+"автоматически создавать черновики заказов производства или  закупки в "
 "соответствии с количеством запасов. Если минимальное количество ТМЦ (= "
 "остаток на складе минус все подтвержденные заказы и зарезервированное) "
 "меньше минимального количества, OpenERP будет генерировать запрос на "
@@ -860,7 +864,7 @@ msgid ""
 "generate task, production orders or purchase orders."
 msgstr ""
 "Этот мастер будет планировать снабжение этой продукцией. Процесс снабжения "
-"может генерировать задачи, заказы на производство, заказы на закупку."
+"может генерировать задачи, заказы производства, заказы закупки."
 
 #. module: procurement
 #: view:res.company:0
@@ -881,7 +885,7 @@ msgstr "макс."
 #. module: procurement
 #: field:procurement.order,product_uos:0
 msgid "Product UoS"
-msgstr "Вторая ед. изм."
+msgstr "Ед.продажи товара"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:356
@@ -910,21 +914,20 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)."
 msgstr ""
-"Заказы на снабжение представляют собой необходимость определенного "
-"количества ТМЦ, в данный момент времени, в данном месте. Заказ на продажу "
-"это типичный источник для заказа на снабжение (но это различные документы). "
-"В зависимости от требуемых условий снабжения и свойств ТМЦ алгоритм "
-"снабжения будет резервировать ТМЦ на складе, заказывать ТМЦ у поставщика, "
-"передавать заказ на производство и т.д. Исключительная ситуация при "
-"снабжении случается когда системе не удается найти способ выполнить "
-"снабжение. Некоторые исключительные ситуации могут разрешиться сами собой "
-"автоматически, другие требуют вмешательства (определяется по конкретному "
-"сообщению об ошибке)."
+"Заказы снабжения представляют собой необходимость определенного количества "
+"ТМЦ, в данный момент времени, в данном месте. Заказ продаж это типичный "
+"источник для заказа снабжения (но это различные документы). В зависимости от "
+"требуемых условий снабжения и свойств ТМЦ алгоритм снабжения будет "
+"резервировать ТМЦ на складе, заказывать ТМЦ у поставщика, передавать заказ "
+"на производство и т.д. Исключительная ситуация при снабжении случается когда "
+"системе не удается найти способ выполнить снабжение. Некоторые "
+"исключительные ситуации могут разрешиться сами собой автоматически, другие "
+"требуют вмешательства (определяется по конкретному сообщению об ошибке)."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
 msgid "Product UoM"
-msgstr "Ед. изм. продукции"
+msgstr "Ед. изм. ТМЦ"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -944,7 +947,7 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Very Urgent"
-msgstr "Весьма срочно"
+msgstr "Очень срочно"
 
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
@@ -957,7 +960,7 @@ msgid "Procurement Details"
 msgstr "Детали снабжения"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:152
+#: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
 msgstr "ПЛАНИРОВЩИК"

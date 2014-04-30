@@ -14,16 +14,16 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
 msgid "Openerp user"
-msgstr ""
+msgstr "ผู้ใช้ OpenERP"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,requirements:0
+#: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "ความต้องการ"
 
@@ -40,17 +40,21 @@ msgstr "เชื่อมโยงไปยังข้อมูลของพ
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "หมายเลข SIN"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "ทรัพยากรบุคคล"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.job:0
+#: view:hr.employee:0
+#: view:hr.job:0
 msgid "Group By..."
 msgstr "จัดกลุ่มตาม..."
 
@@ -65,8 +69,12 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
-#: field:hr.job,department_id:0 view:res.users:0
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "แผนก"
 
@@ -88,7 +96,7 @@ msgstr "งาน"
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr "อยู่ในการรับสมัครงาน"
+msgstr "อยู่ระหว่างรับสมัครงาน"
 
 #. module: hr
 #: view:hr.installer:0
@@ -96,7 +104,9 @@ msgid "title"
 msgstr "คำนำหน้าชื่อ"
 
 #. module: hr
-#: field:hr.department,company_id:0 view:hr.employee:0 view:hr.job:0
+#: field:hr.department,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
 msgstr "บริษัท"
@@ -104,7 +114,7 @@ msgstr "บริษัท"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr "ที่คาดหวังในการสรรหา"
+msgstr "คาดหวังในการสรรหา"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -131,7 +141,7 @@ msgstr ""
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr "เชื่อมโยงผู้ใช้เข้ากับพนักงาน"
+msgstr "เชื่อมโยงผู้ใช้กับพนักงาน"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
@@ -151,7 +161,7 @@ msgstr "พนักงานหน่วยงานของฉัน"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Married"
-msgstr "แต่งงานแล้ว"
+msgstr "แต่งงาน"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -197,7 +207,7 @@ msgstr "อยู่ในระหว่างการคัดเลือก
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "หมายเลข บัตรประชาชน"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
@@ -248,10 +258,10 @@ msgstr "โทรศัพท์ที่ทำงาน"
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr "ประเภทย่อย"
+msgstr "กลุ่มย่อย"
 
 #. module: hr
-#: view:hr.job:0 field:hr.job,description:0
+#: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
 msgstr "รายละเอียดงาน"
@@ -262,7 +272,8 @@ msgid "Office Location"
 msgstr "ที่ตั้งสำนักงาน"
 
 #. module: hr
-#: view:hr.employee:0 model:ir.model,name:hr.model_hr_employee
+#: view:hr.employee:0
+#: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "พนักงาน"
@@ -279,6 +290,7 @@ msgstr "อีเมล์"
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "ชื่อ"
@@ -296,16 +308,17 @@ msgstr "การรายงาน"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: view:board.board:0
 msgid "Human Resources Dashboard"
 msgstr "กระดานข้อมูลทรัพยากรมนุษย์"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,job_id:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
 msgid "Job"
 msgstr "งาน"
 
@@ -317,7 +330,7 @@ msgstr "สมาชิก"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
-msgstr "การกำหนดค่า"
+msgstr "ตั้งค่า"
 
 #. module: hr
 #: view:hr.installer:0
@@ -344,7 +357,7 @@ msgstr "หย่าร้าง"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr "ประเภทสินค้าหลัก"
+msgstr "หมวดหมู่หลัก"
 
 #. module: hr
 #: constraint:hr.employee.category:0
@@ -355,7 +368,6 @@ msgstr ""
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "แผนก"
 
@@ -389,7 +401,7 @@ msgstr "การแบ่งประเภทของพนักงาน"
 #: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "ประเภทของพนักงาน"
+msgstr "หมวดหมู่พนักงาน"
 
 #. module: hr
 #: field:hr.installer,config_logo:0
@@ -426,7 +438,7 @@ msgstr "ขั้นตอนการสรรหา"
 #. module: hr
 #: field:hr.employee.category,name:0
 msgid "Category"
-msgstr "ประเภท"
+msgstr "หมวดหมู่"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -446,12 +458,12 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "หมาเลขบัญชีธนาคารพนักงาน"
+msgstr "หมายเลขบัญชีธนาคารพนักงาน"
 
 #. module: hr
 #: field:hr.department,note:0
 msgid "Note"
-msgstr "บันทึก"
+msgstr "บันทึกย่อ"
 
 #. module: hr
 #: constraint:res.users:0
@@ -476,6 +488,8 @@ msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
 msgstr "สถานะ"
 
@@ -503,7 +517,7 @@ msgstr "การบริหารวันหยุด/วันลา"
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "หมายเลข SSN"
 
 #. module: hr
 #: view:hr.employee:0
@@ -518,7 +532,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr ""
+msgstr "เลขบัญชีธนาคาร"
 
 #. module: hr
 #: view:hr.department:0
@@ -543,6 +557,7 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"ในแบบฟอร์มของพนักงานที่มีลักษณะแตกต่างกันของข้อมูลเช่นข้อมูลการติดต่อ"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -585,7 +600,7 @@ msgid "Employee form and structure"
 msgstr "โครงสร้างและรูปแบบพนักงาน"
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
 msgstr "รูปภาพ"
 
@@ -629,12 +644,12 @@ msgstr "ปัจจุบัน"
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "ภายใต้สังกัด"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "หมวดหมู่พนักงาน"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -658,7 +673,7 @@ msgid "Extends employee profiles to help manage their contracts."
 msgstr ""
 
 #. module: hr
-#: field:hr.installer,hr_payroll:0
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
 msgstr "เงินเดือน"
 
@@ -670,12 +685,12 @@ msgstr "โสด"
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "ชื่อตำแหน่งงาน"
 
 #. module: hr
-#: view:hr.job:0 selection:hr.job,state:0
+#: view:hr.job:0
 msgid "In Position"
-msgstr ""
+msgstr "ในตำแหน่ง"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -693,9 +708,9 @@ msgid "Nationality"
 msgstr "สัญชาติ"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,notes:0
+#: field:hr.employee,notes:0
 msgid "Notes"
-msgstr "บันทึก"
+msgstr "บันทึกย่อ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
@@ -724,14 +739,13 @@ msgid "Gender"
 msgstr "เพศ"
 
 #. module: hr
-#: view:hr.employee:0 view:hr.employee.category:0
-#: field:hr.employee.category,employee_ids:0 view:hr.job:0
+#: view:hr.employee:0
+#: field:hr.employee.category,employee_ids:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "พนักงาน"
 
@@ -753,12 +767,12 @@ msgstr "หมายเลขประกันสังคม"
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "การสร้างผู้ใช้ OpenERP"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "หน่วยงานในสังกัด"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -767,9 +781,10 @@ msgid "Job Positions"
 msgstr "ตำแหน่งงาน"
 
 #. module: hr
-#: view:hr.employee:0 field:hr.employee,coach_id:0
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "โค้ช"
 
 #. module: hr
 #: view:hr.installer:0
@@ -782,7 +797,8 @@ msgid "Expenses"
 msgstr "ค่าใช้จ่าย"
 
 #. module: hr
-#: field:hr.department,manager_id:0 view:hr.employee:0
+#: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "ผู้จัดการ"
@@ -790,7 +806,7 @@ msgstr "ผู้จัดการ"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "ม่าย"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
@@ -800,4 +816,4 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr ""
+msgstr "ผู้ใต้บังคับบัญชา"

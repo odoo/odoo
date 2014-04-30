@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -24,7 +24,7 @@ msgstr "Zaman İzleme"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Gruplandır İle..."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -125,9 +125,7 @@ msgid ""
 msgstr "Hata ! Personelin yönetici olduğu bir bölümü seçemezsiniz."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
 msgid "Attendances By Month"
 msgstr "Aylara göre Devamlılık"
 
@@ -141,7 +139,7 @@ msgstr "Çalışanların adı"
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr "Devamlılık nedenleri"
+msgstr "Devamlılık Nedenleri"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
@@ -164,7 +162,7 @@ msgid "Employee attendance"
 msgstr "Personel Devamlılığı"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
+#: code:addons/hr_attendance/hr_attendance.py:161
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -182,6 +180,7 @@ msgid "A sign-in must be right after a sign-out !"
 msgstr "Giriş bir çıkıştan hemen sonra yapılmalı !"
 
 #. module: hr_attendance
+#: view:hr.attendance:0
 #: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
@@ -239,7 +238,7 @@ msgstr "Devamlılık Hata Raporu"
 #: field:hr.attendance.error,init_date:0
 #: field:hr.attendance.week,init_date:0
 msgid "Starting Date"
-msgstr "Başlangıç Tarihi"
+msgstr "Başlama Tarihi"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -247,8 +246,10 @@ msgid "Min Delay"
 msgstr "Enaz Gecikme"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
+#, python-format
 msgid "Sign In"
 msgstr "Giriş"
 
@@ -294,7 +295,7 @@ msgstr "Fazladan saatler için Giriş/Çıkış nedenlerini belirt"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
 msgid "Print Monthly Attendance Report"
-msgstr "Aylık Devamlılık Raporunu yazdır"
+msgstr "Aylık Devamlılık Raporunu Yazdır"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
@@ -375,8 +376,6 @@ msgstr "Ocak"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign in"
 msgstr "Giriş"
 
@@ -434,8 +433,6 @@ msgstr "Çalışan No"
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "İptal"
 
@@ -458,8 +455,6 @@ msgstr "Devamlılık Raporunu Aylık olara Yazdır"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Çıkış"
 
@@ -470,6 +465,7 @@ msgstr "Gecikme"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Personel"
@@ -513,8 +509,10 @@ msgid "Your last sign in"
 msgstr "Son Girişiniz"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
+#, python-format
 msgid "Sign Out"
 msgstr "Çıkış"
 

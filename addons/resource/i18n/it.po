@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:21+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:30+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -60,6 +60,7 @@ msgstr "Permessi"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Tempo di lavoro"
@@ -166,7 +167,7 @@ msgstr "Motivo"
 #: view:resource.resource:0
 #: field:resource.resource,user_id:0
 msgid "User"
-msgstr "User"
+msgstr "Utente"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -181,7 +182,7 @@ msgstr "Ricerca permessi del periodo lavorativo"
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
-msgstr "Data di termine"
+msgstr "Data finale"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -194,10 +195,9 @@ msgstr "Giorni di chiusura"
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
 msgid "Resource"
-msgstr "Risorsa"
+msgstr "Risorse"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -231,8 +231,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Se il campo attivo è impostato a falso, permetterà di nascondere senza "
-"rimuovere il record risorsa."
+"Se il campo attivo è impostato a falso, permetterà di nascondere il record "
+"risorsa senza rimuoverlo."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -306,6 +306,10 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"Risorse permettono di creare e gestire risorse che possono essere coinvolte "
+"in una specifica fase di un progetto. E' inoltre possibile indicare un "
+"livello di efficienza e carico di lavoro basato sulle loro ore di lavoro "
+"settimanali."
 
 #. module: resource
 #: view:resource.resource:0

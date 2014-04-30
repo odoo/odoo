@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:57+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -57,14 +57,13 @@ msgstr ""
 "(name) käytetään."
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Kansion nimi sisältää erikoismerkkejä!"
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Ryhmittely.."
 
@@ -91,7 +90,6 @@ msgstr "Tiedostoja kuukautta kohti"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Maaliskuu"
 
@@ -143,13 +141,14 @@ msgid "Path"
 msgstr "Polku"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Kansionimen tulee olla ainutkertainen!"
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Indeksoitu sisältö"
@@ -165,7 +164,7 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Hakemistot"
@@ -186,8 +185,8 @@ msgid "Project"
 msgstr "Projekti"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Virhe!"
@@ -225,7 +224,6 @@ msgstr "Tiedonhallintaohjelmiston konfiguraatio"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Kumppani"
 
@@ -240,11 +238,9 @@ msgid "Document directory"
 msgstr "Dokumenttihakemisto"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
 msgstr "Tarkistusvirhe"
@@ -252,11 +248,10 @@ msgstr "Tarkistusvirhe"
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
@@ -279,10 +274,8 @@ msgid "Configure Resource Directory"
 msgstr "Konfiguroi resurssin hakemisto"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Tiedostokoko"
 
@@ -295,8 +288,6 @@ msgstr "Sisällön tyyppi"
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Tyyppi"
 
@@ -349,7 +340,6 @@ msgstr "Raportti"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Heinäkuu"
 
@@ -380,7 +370,7 @@ msgid "Modified"
 msgstr "Muokattu"
 
 #. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr "Virhe kirjoitettaessa asiakirjaa !"
@@ -408,7 +398,6 @@ msgstr "Tiedostot yhteistyökumppaneittain"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Viimeksi muuttanut käyttäjä"
@@ -431,7 +420,6 @@ msgstr "Toimialue"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Muokkauspäivä"
@@ -447,7 +435,6 @@ msgid "All users files"
 msgstr "Kaikki käyttäjän tiedostot"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -455,7 +442,6 @@ msgstr "Tiedoston koko kuukausittain"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "Joulukuu"
 
@@ -511,11 +497,9 @@ msgstr ""
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Omistaja"
 
@@ -531,7 +515,6 @@ msgstr "Sisältö"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Luontipäivä"
@@ -597,7 +580,6 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Elokuu"
 
@@ -608,7 +590,6 @@ msgstr "Hakemisto ei voi olla itsensä ylähakemisto!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Kesäkuu"
 
@@ -620,7 +601,6 @@ msgstr "Käyttäjä"
 
 #. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Ryhmät"
 
@@ -631,12 +611,10 @@ msgstr "Aktiivinen"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "Marraskuu"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Data"
@@ -660,7 +638,6 @@ msgstr "Määritelmä"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Lokakuu"
 
@@ -727,12 +704,10 @@ msgstr "Hakemiston nimen tulee olla uniikki !"
 
 #. module: document
 #: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Tekijä"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -740,7 +715,6 @@ msgstr "Tiedostot kuukausittain"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Syyskuu"
 
@@ -762,7 +736,7 @@ msgstr "Tiedostonimi"
 #. module: document
 #: view:document.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -814,9 +788,6 @@ msgstr "Tiedostoja käyttäjittäin"
 #. module: document
 #: field:report.document.file,month:0
 #: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
 msgid "Month"
 msgstr "Kuukausi"
 
@@ -837,7 +808,6 @@ msgstr "Puurakenne"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Toukokuu"
 
@@ -871,7 +841,7 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:board.board:0
@@ -880,7 +850,6 @@ msgstr "Uudet tiedostot"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Tammikuu"
 
@@ -938,7 +907,6 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Helmikuu"
 
@@ -950,7 +918,6 @@ msgstr "Tilastot käyttäjittäin"
 
 #. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Nimi"
 
@@ -971,14 +938,12 @@ msgstr "Jos asetettu, media on vain lukemista varten"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "Huhtikuu"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "Tiedostojen määrä"
 
@@ -1050,15 +1015,11 @@ msgstr "Tiedostoja resurssityypeittäin"
 
 #. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Vuosi"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Tallennusmedia"
 

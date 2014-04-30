@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:17+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -53,23 +53,25 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr ""
+msgstr "Næste faser"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr ""
+msgstr "Projektets opgaver"
 
 #. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
-msgstr ""
+msgstr "Faser"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: view:project.user.allocation:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruppér efter..."
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -116,18 +118,18 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Opgave"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Beregn et enkelt projekt"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr ""
+msgstr "Tidligere faser"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
@@ -138,7 +140,7 @@ msgstr ""
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
-msgstr ""
+msgstr " Bliver beregnet af behovsberegneren ud fra start dato og varighed."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -150,18 +152,18 @@ msgstr ""
 #: view:project.user.allocation:0
 #: field:project.user.allocation,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fejl!"
 
 #. module: project_long_term
 #: selection:project.phase,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulleret"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:465
@@ -173,7 +175,7 @@ msgstr ""
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Slut dato"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -183,7 +185,7 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
-msgstr ""
+msgstr "Deadline"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -220,7 +222,7 @@ msgstr ""
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "C_ompute"
-msgstr ""
+msgstr "C_ompute"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -253,7 +255,7 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
-msgstr ""
+msgstr "Mindste start dato"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_resource_allocation
@@ -271,7 +273,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
 msgid "Resources"
-msgstr ""
+msgstr "Ressourcer"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
@@ -284,12 +286,12 @@ msgstr ""
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Startdato"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+#: view:project.phase:0
 msgid "Related Tasks"
-msgstr ""
+msgstr "Relaterede opgaver"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -305,12 +307,12 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
 msgid "force the phase to start after this date"
-msgstr ""
+msgstr "Tving fasen til at starte efter denne dato"
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projekt opgaver"
 
 #. module: project_long_term
 #: field:project.phase,resource_ids:0
@@ -344,16 +346,18 @@ msgid ""
 "It's computed by the scheduler according the project date or the end date of "
 "the previous phase."
 msgstr ""
+"Bliver beregnet af behovsberegneren ud fra projekt start dato og slut datoen "
+"fra den tidligere fase."
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Month"
-msgstr ""
+msgstr "Måned"
 
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr ""
+msgstr "Fasens start dato skal være lavere end slut datoen."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
@@ -375,7 +379,7 @@ msgstr ""
 #: field:project.phase,date_start:0
 #: field:project.user.allocation,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Start dato"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -385,18 +389,18 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr ""
+msgstr "Tving fasen til at slutte før denne dato"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Draft"
-msgstr ""
+msgstr "Kladde"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Afventer"
 
 #. module: project_long_term
 #: field:project.resource.allocation,name:0
@@ -407,7 +411,7 @@ msgstr ""
 #: view:project.user.allocation:0
 #: field:project.user.allocation,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Bruger"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -422,17 +426,17 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Projektet beregner opgaver"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Constraints"
-msgstr ""
+msgstr "Begrænsninger"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Styrer rækkefølgen ved visning af en liste over faser."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -442,29 +446,30 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr ""
+msgstr "Projekt faser"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Done"
-msgstr ""
+msgstr "Udført"
 
 #. module: project_long_term
-#: view:project.phase:0
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annullér"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "I gang"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Tilbageværende timer"
 
 #. module: project_long_term
 #: constraint:project.task:0
@@ -480,7 +485,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 msgid "Working Time"
-msgstr ""
+msgstr "Arbejdstid"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -490,7 +495,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Phase"
-msgstr ""
+msgstr "Start fase"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
@@ -501,7 +506,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Total timer"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
@@ -514,9 +519,10 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr ""
 
 #. module: project_long_term
+#: view:project.project:0
 #: view:project.user.allocation:0
 msgid "Phase"
-msgstr ""
+msgstr "Fase"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -532,7 +538,7 @@ msgstr ""
 #: field:project.phase,date_end:0
 #: field:project.user.allocation,date_end:0
 msgid "End Date"
-msgstr ""
+msgstr "Slut dato"
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
@@ -543,12 +549,12 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,name:0
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Opgave detaljer"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_resource_resource
@@ -558,7 +564,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
-msgstr ""
+msgstr "Planlægning"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -567,7 +573,7 @@ msgstr ""
 #: field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
-msgstr ""
+msgstr "Projekt fase"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -594,7 +600,7 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Rækkefølge"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -604,21 +610,22 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Ferie på ressource"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 #: view:project.compute.tasks:0
 msgid "Schedule Tasks"
-msgstr ""
+msgstr "Planlæg opgaver"
 
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Angives standard i dage"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Varighed"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:00+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:10+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: event
 #: view:event.event:0
@@ -69,10 +69,9 @@ msgid "Make Invoices"
 msgstr "生成发票"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: field:event.registration,date_open:0
 msgid "Registration Date"
-msgstr "登记记录日期"
+msgstr "活动日期"
 
 #. module: event
 #: help:event.event,main_speaker_id:0
@@ -100,7 +99,7 @@ msgstr "当此事件开具发票时，这价格为登记记录中成本的默认
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "March"
-msgstr "3月"
+msgstr "三月"
 
 #. module: event
 #: field:event.event,mail_confirm:0
@@ -127,14 +126,10 @@ msgid "Invoice Date"
 msgstr "发票日期"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:88
 #: view:event.registration:0
-#: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
-#: view:partner.event.registration:0
-#, python-format
 msgid "Event Registration"
-msgstr "事件登记记录"
+msgstr "活动登记记录"
 
 #. module: event
 #: view:report.event.registration:0
@@ -159,7 +154,7 @@ msgstr "小计"
 #. module: event
 #: view:report.event.registration:0
 msgid "Event on Registration"
-msgstr "登记记录的事件"
+msgstr "登记记录的活动"
 
 #. module: event
 #: view:report.event.registration:0
@@ -177,9 +172,10 @@ msgstr "添加内部备注"
 #: model:ir.ui.menu,name:event.menu_report_event_registration
 #: view:report.event.registration:0
 msgid "Events Analysis"
-msgstr "事件分析"
+msgstr "活动分析"
 
 #. module: event
+#: field:event.event,message_ids:0
 #: field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "消息"
@@ -195,16 +191,15 @@ msgid "Ticket for Opera"
 msgstr "歌剧门票"
 
 #. module: event
-#: code:addons/event/event.py:125
 #: view:event.event:0
-#, python-format
 msgid "Confirm Event"
-msgstr "确认事件"
+msgstr "确认活动"
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -267,8 +262,8 @@ msgid "Customer Invoices"
 msgstr "客户发票"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Draft"
 msgstr "草稿"
 
@@ -280,19 +275,17 @@ msgstr "事件类型"
 #. module: event
 #: model:ir.model,name:event.model_event_type
 msgid " Event Type "
-msgstr " 事件类型 "
+msgstr " 活动类型 "
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
 msgid "Event"
-msgstr "事件"
+msgstr "活动"
 
 #. module: event
 #: view:event.registration:0
@@ -305,7 +298,8 @@ msgstr "标记"
 #: selection:event.event,state:0
 #: view:event.registration:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "已确认"
 
@@ -374,7 +368,6 @@ msgstr "回复"
 
 #. module: event
 #: field:event.event,register_current:0
-#: view:report.event.registration:0
 msgid "Confirmed Registrations"
 msgstr "确认登记记录"
 
@@ -390,7 +383,7 @@ msgid "Type"
 msgstr "类型"
 
 #. module: event
-#: field:event.registration,email_from:0
+#: field:event.registration,email:0
 msgid "Email"
 msgstr "电子邮件"
 
@@ -454,7 +447,7 @@ msgstr "7月"
 #. module: event
 #: view:event.event:0
 msgid "Event Organization"
-msgstr "事件结构"
+msgstr "活动组织机构"
 
 #. module: event
 #: view:event.registration:0
@@ -468,7 +461,6 @@ msgstr "日期"
 
 #. module: event
 #: view:event.confirm:0
-#: view:event.confirm.registration:0
 msgid "Confirm Anyway"
 msgstr "总是确认"
 
@@ -481,15 +473,13 @@ msgstr "警告：这事件 '%s'已达到最高极限 (%s)。"
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
 msgid "Registration"
 msgstr "登记记录"
 
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number Of Events"
-msgstr "事件数"
+msgstr "活动数量"
 
 #. module: event
 #: help:event.event,state:0
@@ -503,7 +493,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Cancel Event"
-msgstr "取消事件"
+msgstr "取消活动"
 
 #. module: event
 #: view:event.event:0
@@ -517,7 +507,6 @@ msgid "Last 30 Days"
 msgstr "最近30天"
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
@@ -525,11 +514,10 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: event
-#: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
-msgstr "事件填充状态"
+msgstr "活动填充状态"
 
 #. module: event
 #: field:event.make.invoice,grouped:0
@@ -547,7 +535,6 @@ msgid "Ticket for Concert"
 msgstr "演唱会票"
 
 #. module: event
-#: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
 msgstr "不确认登记记录"
@@ -564,11 +551,7 @@ msgstr "日志"
 
 #. module: event
 #: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-#: view:report.event.registration:0
-#: field:report.event.registration,state:0
+#: field:event.event,state_id:0
 msgid "State"
 msgstr "状态"
 
@@ -657,7 +640,7 @@ msgstr "已开票"
 #: view:event.event:0
 #: view:report.event.registration:0
 msgid "My Events"
-msgstr "我的事件"
+msgstr "我的活动"
 
 #. module: event
 #: view:event.event:0
@@ -700,11 +683,15 @@ msgstr "已结束"
 #. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_event_event_assiciation
+#: model:ir.ui.menu,name:event.menu_reporting_events
 #: view:res.partner:0
 msgid "Events"
-msgstr "事件"
+msgstr "活动"
 
 #. module: event
 #: field:partner.event.registration,nb_register:0
@@ -753,7 +740,7 @@ msgstr "我的登记记录"
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
-msgstr "警告：这事件没有达到最低登记记录的规定，你肯定要确认它？"
+msgstr "警告：这活动没有达到最低登记记录的规定，你肯定要确认它？"
 
 #. module: event
 #: field:event.registration,active:0
@@ -812,17 +799,13 @@ msgid "Set To Draft"
 msgstr "设为草稿"
 
 #. module: event
-#: code:addons/event/event.py:499
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Confirm Registration"
 msgstr "确认登记记录"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
 #: view:res.partner:0
 msgid "Date"
 msgstr "日期"
@@ -852,7 +835,7 @@ msgstr "地址"
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 msgid "Types of Events"
-msgstr "事件类型"
+msgstr "活动类型"
 
 #. module: event
 #: view:event.registration:0
@@ -881,12 +864,8 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "错误！结束日期不能在开始日期前。"
 
 #. module: event
-#: code:addons/event/event.py:446
 #: selection:event.event,state:0
-#: view:event.make.invoice:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
-#, python-format
+#: selection:report.event.registration,event_state:0
 msgid "Done"
 msgstr "完成"
 
@@ -908,8 +887,7 @@ msgid "Year"
 msgstr "年"
 
 #. module: event
-#: code:addons/event/event.py:465
-#, python-format
+#: view:event.confirm:0
 msgid "Cancel"
 msgstr "取消"
 
@@ -946,9 +924,6 @@ msgstr "自动确认： [%s] %s"
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration,user_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
 msgid "Responsible"
 msgstr "负责人"
 
@@ -1014,10 +989,7 @@ msgid "Product"
 msgstr "产品"
 
 #. module: event
-#: view:event.event:0
 #: field:event.event,note:0
-#: view:event.registration:0
-#: field:event.registration,description:0
 msgid "Description"
 msgstr "描述"
 
@@ -1027,6 +999,7 @@ msgid " # No of Confirmed Registrations"
 msgstr " # 没确认登记记录"
 
 #. module: event
+#: view:event.event:0
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "订阅"
@@ -1039,7 +1012,7 @@ msgstr "5月"
 #. module: event
 #: view:res.partner:0
 msgid "Events Registration"
-msgstr "事件登记记录"
+msgstr "活动登记记录"
 
 #. module: event
 #: help:event.event,mail_registr:0
@@ -1060,7 +1033,7 @@ msgstr "地址:"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
-msgstr "下一个事件"
+msgstr "下一个活动"
 
 #. module: event
 #: view:partner.event.registration:0
@@ -1079,6 +1052,8 @@ msgid "Beginning Date of Event"
 msgstr "事件开始日期"
 
 #. module: event
+#: view:event.event:0
+#: selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "未确认"
@@ -1090,7 +1065,7 @@ msgid "Auto Registration: [%s] %s"
 msgstr "自动登记记录： [%s] %s"
 
 #. module: event
-#: field:event.registration,date_deadline:0
+#: field:event.event,date_end:0
 msgid "End Date"
 msgstr "结束日期"
 
@@ -1106,7 +1081,8 @@ msgstr "商会控制台"
 
 #. module: event
 #: view:event.event:0
-#: field:event.registration.badge,name:0
+#: field:event.event,name:0
+#: field:event.registration,name:0
 msgid "Name"
 msgstr "名称"
 
@@ -1118,6 +1094,7 @@ msgid ""
 msgstr "勾选此项, 如果你使用自动确认邮件或提醒"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "国家"
@@ -1129,11 +1106,7 @@ msgid "Registration is set as Cannot be invoiced"
 msgstr "登记记录设置为不能开发票"
 
 #. module: event
-#: code:addons/event/event.py:527
-#: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Close Registration"
 msgstr "结束登记记录"
 
@@ -1143,30 +1116,32 @@ msgid "April"
 msgstr "4月"
 
 #. module: event
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
 msgid "Summary"
 msgstr "概要"
 
 #. module: event
 #: view:event.event:0
 #: view:event.type:0
+#: field:event.type,name:0
 #: view:report.event.registration:0
-#: field:report.event.registration,type:0
+#: field:report.event.registration,event_type:0
 msgid "Event Type"
-msgstr "事件类型"
+msgstr "活动类型"
 
 #. module: event
 #: view:event.event:0
 #: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration_association
+#: view:res.partner:0
 msgid "Registrations"
 msgstr "登记记录"
 
 #. module: event
-#: field:event.registration,date:0
+#: field:event.event,date_begin:0
 msgid "Start Date"
 msgstr "开始日期"
 
@@ -1177,9 +1152,10 @@ msgid "Maximum Registrations"
 msgstr "最多的登记记录"
 
 #. module: event
-#: field:report.event.registration,date:0
+#: field:event.registration,event_begin_date:0
+#: field:report.event.registration,event_date:0
 msgid "Event Start Date"
-msgstr "事件开始日期"
+msgstr "活动开始日期"
 
 #. module: event
 #: view:event.event:0
@@ -1202,7 +1178,7 @@ msgstr "如果登记记录在 %s 状态，不能开发票。"
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 msgid "Event Confirmation"
-msgstr "事件确认"
+msgstr "活动确认"
 
 #. module: event
 #: view:event.event:0

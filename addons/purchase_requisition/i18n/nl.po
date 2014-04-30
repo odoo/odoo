@@ -14,14 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:30+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "In Progress"
-msgstr "Loopt"
+msgstr "In behandeling"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
@@ -59,6 +59,7 @@ msgstr "Concept"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
 msgid "Supplier"
 msgstr "Leverancier"
 
@@ -151,7 +152,7 @@ msgstr "Goedgekeurd door leverancier"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Reset to Draft"
-msgstr "Terugzetten naar Concept"
+msgstr "Terugzetten naar concept"
 
 #. module: purchase_requisition
 #: model:ir.module.module,description:purchase_requisition.module_meta_information
@@ -202,7 +203,7 @@ msgstr ""
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -272,14 +273,13 @@ msgid "Purchase Order"
 msgstr "Inkooporder"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
 msgstr "Product maateenheid"
 
@@ -384,7 +384,7 @@ msgstr "Fout: ongeldige ean code"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Done"
-msgstr "Klaar"
+msgstr "Verwerkt"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
@@ -397,7 +397,7 @@ msgid "Confirm Purchase Order"
 msgstr "Inkooporder bevestigen"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Annuleren"
 

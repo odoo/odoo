@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:23+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:32+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
 msgid "Note"
-msgstr ""
+msgstr "Notat"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -48,6 +48,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Hvis det aktive felt er sat til Falsk, vil det give dig mulighed for at "
+"gemme faktura typen uden at fjerne den."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -90,7 +92,7 @@ msgstr ""
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr ""
+msgstr "Ikke-grupperet"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -109,11 +111,14 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Faktura typer bruges på partnere, salgsordrer og leveringsordrer. Du kan "
+"oprette en specifik fakturajournal efter dine kunders behov: Daglig, hver "
+"onsdag, månedligt etc."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr ""
+msgstr "Faktura metode"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
@@ -121,10 +126,16 @@ msgid "Sales Order"
 msgstr "Salgsordre"
 
 #. module: sale_journal
+#: view:sale.order:0
 #: field:sale.order,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
 #: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "Fakturatype"
 

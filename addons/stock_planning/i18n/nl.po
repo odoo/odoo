@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2012-01-09 12:53+0000\n"
-"Last-Translator: Erwin <Unknown>\n"
+"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:27+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:35+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -332,7 +332,7 @@ msgstr "Minimum regel"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procure Incoming Left"
-msgstr "Verwerk inkomend over"
+msgstr "Verwerk restant inkomend"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:646
@@ -1159,7 +1159,7 @@ msgstr "Laat zien over welke producten deze prognose gaat"
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
@@ -1279,6 +1279,9 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Geeft aan voor welk magazijn deze prognose betreft. Indien u tijdens de "
+"voorraadplanning een verkoopprognose nodig hebt, selecteer dan nu een "
+"magazijn."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
@@ -1301,6 +1304,9 @@ msgid ""
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
 msgstr ""
+"Geef de hoeveelheid in (volgens planning), welke binnen gaat komen. Verander "
+"deze waarde en bekijk de voorraad simulatie. de waarde moet gelijk of groter "
+"zijn dan de waarde \"bevestigd inkomend\"."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
@@ -1360,6 +1366,11 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Resterende hoeveelheid naar gepland inkomende hoeveelheid. Deze is het "
+"berekende verschil tussen gepland en bevestigd inkomend. Voor de huidige "
+"periode is de waarde van reeds binnengekomen ook meegenomen in de "
+"berekening. Deze waarde is gebruikt om een verwerving te maken voor de "
+"ontbrekende hoeveelheid."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0

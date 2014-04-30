@@ -9,14 +9,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2011-05-18 15:19+0000\n"
-"Last-Translator: Lorenzo Battistini - Agile BG - Domsense "
+"Last-Translator: Lorenzo Battistini - Agile BG "
 "<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:30+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -60,6 +60,7 @@ msgstr "Bozza"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
 msgid "Supplier"
 msgstr "Fornitore"
 
@@ -276,14 +277,13 @@ msgid "Purchase Order"
 msgstr "Ordine di Acquisto"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "Error!"
 msgstr "Errore!"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
 msgstr "UoM prodotto"
 
@@ -362,7 +362,7 @@ msgstr "Ultima richiesta"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Quotations"
-msgstr "Quotazioni"
+msgstr "Preventivi"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -401,7 +401,7 @@ msgid "Confirm Purchase Order"
 msgstr "Conferma ordine di acquisto"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Annulla"
 

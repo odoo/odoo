@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:06+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:16+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -51,12 +51,9 @@ msgid "Ideas Analysis"
 msgstr "Idéanalys"
 
 #. module: idea
-#: view:idea.category:0
 #: view:idea.idea:0
-#: view:idea.vote:0
-#: view:report.vote:0
 msgid "Group By..."
-msgstr "Gruppera efter"
+msgstr "Gruppera efter..."
 
 #. module: idea
 #: model:ir.module.module,description:idea.module_meta_information
@@ -86,7 +83,7 @@ msgstr "Mars"
 #: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
-msgstr ""
+msgstr "Idén måste vara status \"Öppen\" innan man kan rösta för den idén."
 
 #. module: idea
 #: view:report.vote:0
@@ -166,7 +163,7 @@ msgstr "Väldigt dålig"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "Idéröster"
 
 #. module: idea
 #: view:report.vote:0
@@ -178,22 +175,22 @@ msgstr "# Rader"
 #: code:addons/idea/wizard/idea_post_vote.py:91
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "Du kan inte rösta på denna idé mer än %s gånger"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "Idékategori"
 
 #. module: idea
 #: help:idea.idea,description:0
 msgid "Content of the idea"
-msgstr ""
+msgstr "Innebörden av idén"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Idea Category"
-msgstr "Idé kategori"
+msgstr "Idékategori"
 
 #. module: idea
 #: view:idea.idea:0
@@ -212,7 +209,7 @@ msgstr "Ej röstat"
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr ""
+msgstr "Kategorins namn måste vara unikt"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
@@ -222,7 +219,7 @@ msgstr "välj idé"
 #. module: idea
 #: view:idea.stat:0
 msgid "stat"
-msgstr ""
+msgstr "status"
 
 #. module: idea
 #: field:idea.category,child_ids:0
@@ -253,7 +250,7 @@ msgstr "Bra"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr ""
+msgstr "Datum när en idé öppnades"
 
 #. module: idea
 #: view:idea.idea:0
@@ -267,6 +264,9 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"När idén skaps blir statusen \"Utkast\".\n"
+"Om idén öppnas av användaren, blir statusen \"Öppen\".\n"
+"Om idén accepteras blir statusen\"Godkänd\"."
 
 #. module: idea
 #: field:idea.category,visibility:0
@@ -282,8 +282,6 @@ msgstr "Juli"
 #. module: idea
 #: view:idea.idea:0
 #: selection:idea.idea,state:0
-#: view:report.vote:0
-#: selection:report.vote,idea_state:0
 msgid "Accepted"
 msgstr "Accepterad"
 
@@ -323,7 +321,7 @@ msgstr "Maximalt antal röster per användare"
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Överordnad kategori"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -352,18 +350,12 @@ msgstr "Månad"
 
 #. module: idea
 #: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
 msgstr "Öppna idéer"
 
 #. module: idea
 #: view:idea.category:0
-#: field:idea.category,name:0
 #: view:idea.idea:0
-#: field:idea.idea,category_id:0
-#: view:report.vote:0
-#: field:report.vote,category_id:0
 msgid "Category"
 msgstr "Kategori"
 
@@ -389,7 +381,7 @@ msgstr "Öppnad"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
-msgstr ""
+msgstr "Idéers röster"
 
 #. module: idea
 #: view:idea.idea:0
@@ -399,13 +391,13 @@ msgstr "Ny idé"
 #. module: idea
 #: view:idea.vote.stat:0
 msgid "vote_stat of ideas"
-msgstr ""
+msgstr "röststatus för idéer"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
 #: model:ir.ui.menu,name:idea.menu_idea_category_tree
 msgid "Ideas by Categories"
-msgstr ""
+msgstr "Idéer genom kategori"
 
 #. module: idea
 #: selection:report.vote,idea_state:0
@@ -439,7 +431,7 @@ msgstr "Användarnamn"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
-msgstr ""
+msgstr "Idérörster Statistik"
 
 #. module: idea
 #: field:idea.comment,user_id:0
@@ -457,7 +449,7 @@ msgstr "Datum"
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Post"
-msgstr ""
+msgstr "Post"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
@@ -486,14 +478,14 @@ msgid "idea.idea"
 msgstr "idea.idea"
 
 #. module: idea
-#: field:idea.category,summary:0
+#: field:idea.idea,message_summary:0
 msgid "Summary"
 msgstr "Summering"
 
 #. module: idea
 #: field:idea.idea,name:0
 msgid "Idea Summary"
-msgstr ""
+msgstr "Idésammanfattning"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -517,8 +509,7 @@ msgstr "Orderdatum"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,user_id:0
-#: view:report.vote:0
+#: field:idea.idea,create_uid:0
 msgid "Creator"
 msgstr "Skapare"
 
@@ -531,7 +522,7 @@ msgstr "Ge röst"
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "Ställ in på 1 om du bara behöver en röst per användare"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -546,26 +537,25 @@ msgstr "Stäng"
 #. module: idea
 #: view:idea.idea:0
 msgid "Open"
-msgstr "öppna"
+msgstr "Öppna"
 
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote Analysis"
-msgstr ""
+msgstr "Idéröstanalys"
 
 #. module: idea
 #: view:idea.idea:0
 #: model:ir.actions.act_window,name:idea.action_idea_idea
 #: model:ir.ui.menu,name:idea.menu_idea_idea
 #: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
 msgid "Ideas"
 msgstr "Idéer"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "Posta röst"
 
 #. module: idea
 #: view:idea.idea:0
@@ -576,7 +566,7 @@ msgstr "Nuvarande"
 #: field:idea.vote.stat,score:0
 #: field:report.vote,score:0
 msgid "Score"
-msgstr ""
+msgstr "Poäng"
 
 #. module: idea
 #: view:idea.vote:0
@@ -584,9 +574,7 @@ msgid "Comments:"
 msgstr "Kommentarer:"
 
 #. module: idea
-#: view:idea.category:0
 #: field:idea.idea,description:0
-#: field:idea.post.vote,note:0
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -597,7 +585,6 @@ msgstr "Maj"
 
 #. module: idea
 #: selection:idea.idea,state:0
-#: view:report.vote:0
 msgid "Refused"
 msgstr "Nekad"
 
@@ -610,7 +597,7 @@ msgstr ""
 #. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
-msgstr ""
+msgstr "Datum röstning"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -625,7 +612,7 @@ msgstr "    Idag    "
 #. module: idea
 #: field:idea.vote.stat,nbr:0
 msgid "Number of Votes"
-msgstr ""
+msgstr "Antal röster"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -635,39 +622,32 @@ msgstr "April"
 #. module: idea
 #: field:idea.idea,count_comments:0
 msgid "Count of comments"
-msgstr ""
+msgstr "Räkna kommentarer"
 
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "Röstningsstatus"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
-msgstr ""
+msgstr "Medelpoäng"
 
 #. module: idea
-#: field:idea.comment,idea_id:0
-#: field:idea.select,idea_id:0
-#: view:idea.vote:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-#: model:ir.ui.menu,name:idea.menu_idea_reporting
-#: view:report.vote:0
-#: field:report.vote,idea_id:0
+#: view:idea.idea:0
 msgid "Idea"
 msgstr "Idé"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Accept"
-msgstr "Acceptera"
+msgstr "Godkänn"
 
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "Posta röst"
 
 #. module: idea
 #: view:report.vote:0
@@ -678,4 +658,4 @@ msgstr "År"
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "Välj idé att rösta på"

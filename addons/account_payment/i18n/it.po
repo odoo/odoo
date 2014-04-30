@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:47+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:44+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -107,7 +107,7 @@ msgstr "Movimenti"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Conto Usato"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -134,7 +134,7 @@ msgstr "_Aggiungi all'ordine di pagamento"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Popolamento estratto pagamento"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -171,7 +171,7 @@ msgstr "Riferimento"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "La riga pagamento deve essere unica|"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -211,7 +211,7 @@ msgstr "Data fattura"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Tipo esecuzione"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -236,6 +236,7 @@ msgstr "Informazione di transazione"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Modalità Pagamento"
 
@@ -256,6 +257,9 @@ msgid ""
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
 msgstr ""
+"Scegliere un'opzione per l'ordine di pagamento: 'Fisso' significa per una "
+"data prestabilita. 'Diretto' significa esucizione diretta. 'Data scadenza' "
+"significa alla data pianificata per l'esecuzione."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -276,7 +280,7 @@ msgstr "Data di esecuzione"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Sezionale di cassa o banca per il metodo di pagamento"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -297,7 +301,7 @@ msgstr "Conto destinazione"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Cerca ordini di pagamento"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -332,7 +336,7 @@ msgstr "Gestione pagamenti"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Riga estratto conto bancario"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -371,7 +375,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Popolamento estratto contabile pagamento"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -381,7 +385,7 @@ msgstr "Modalità di pagamento"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Data Importo"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -402,7 +406,7 @@ msgstr "Bozza"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
+msgstr "Il successore di Comunicazioni"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -413,12 +417,12 @@ msgstr ""
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr ""
+msgstr "Indirizzo del cliente ordinante"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Popolamento estratto:"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -444,7 +448,7 @@ msgstr "Righe pagamento"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Voci sezionale"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -458,6 +462,7 @@ msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
 msgstr ""
+"La registrazione farà riferimento alle informazioni del cliente ordinante."
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -467,6 +472,7 @@ msgstr "Cerca"
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
 msgid "Payment Order"
 msgstr "Ordine di pagamento"
 
@@ -508,12 +514,12 @@ msgstr "Totale in valuta dell'azienda"
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr ""
+msgstr "Il cliente ordinante"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Emissione pagamento"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -560,7 +566,6 @@ msgstr "Comunicazione"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
-#: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
 msgstr "Annulla"
@@ -608,7 +613,7 @@ msgstr ""
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Sicuri di voler emettere il pagamento?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -624,7 +629,7 @@ msgstr "Conto bancario"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
+msgstr "Conferma pagamenti"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -642,12 +647,12 @@ msgstr "Pagamento"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Ordine pagamento / Pagamento"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr ""
+msgstr "Registrazione"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -672,12 +677,12 @@ msgstr "Conto bancario"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr ""
+msgstr "Informazioni registrazione"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -693,7 +698,7 @@ msgstr "Totale"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Emetti pagamento"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -705,12 +710,12 @@ msgstr "Partner"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Popolamento pagamento"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Conto bancario per il metodo di pagamento"
 
 #. module: account_payment
 #: constraint:account.move.line:0

@@ -14,13 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:02+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:12+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
-msgstr "承認された経費"
+msgstr "承認済経費"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -39,7 +40,8 @@ msgid "Confirmation Date"
 msgstr "確認日"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
 msgid "Group By..."
 msgstr "グループ化…"
 
@@ -49,8 +51,10 @@ msgid "Air Ticket"
 msgstr "航空券"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "部門"
 
@@ -65,7 +69,8 @@ msgid "# of Invoiced Lines"
 msgstr "請求の行数"
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "会社"
@@ -73,7 +78,7 @@ msgstr "会社"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Set to Draft"
-msgstr "草稿に設定"
+msgstr "ドラフトに設定"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -86,7 +91,9 @@ msgid "Expenses Statistics"
 msgstr "経費統計"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_approved
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr "承認済み"
@@ -136,7 +143,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Cancelled"
-msgstr "キャンセルされました"
+msgstr "取消済"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -151,7 +158,7 @@ msgstr "確認待ち"
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Accepted"
-msgstr "受理済み"
+msgstr "受理済"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -159,7 +166,6 @@ msgid "   Month   "
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr "参照"
@@ -177,7 +183,8 @@ msgid ""
 msgstr "経費票の確認日。確認ボタンが押されると設定されます。"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr "行数"
 
@@ -229,7 +236,8 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr "経費行のリストを表示する際には、銃所番号を指定して下さい。"
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
+#: field:hr.expense.line,analytic_account:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "分析アカウント"
@@ -254,18 +262,22 @@ msgid ""
 msgstr "製品 `property_account_expense_categ` を購入するのためのデフォルトの経費科目を設定して下さい。"
 
 #. module: hr_expense
-#: report:hr.expense:0 view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0
+#: view:hr.expense.report:0
 msgid "Employee"
 msgstr "従業員"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.report,product_qty:0
+#: report:hr.expense:0
+#: field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "数量"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "合計価格"
 
@@ -284,6 +296,7 @@ msgstr "エラー"
 
 #. module: hr_expense
 #: view:board.board:0
+#: view:hr.expense.expense:0
 #: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
 msgstr "私の経費"
@@ -309,12 +322,14 @@ msgid "Reimburse expense"
 msgstr "経費の精算"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0
+#: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "記録を要請する。"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr "プロダクトの数"
 
@@ -339,7 +354,8 @@ msgid "    Month-1    "
 msgstr "    月-1    "
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0
+#: field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "検証日"
 
@@ -351,14 +367,16 @@ msgid "Expenses Analysis"
 msgstr "経費分析"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "経費"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "経費の行"
@@ -379,7 +397,8 @@ msgid "December"
 msgstr "12月"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr "月"
@@ -457,6 +476,7 @@ msgid "The direct manager approves the sheet"
 msgstr "直属マネジャが帳票を承認します。"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "合計金額"
@@ -477,12 +497,13 @@ msgid "Customer Project"
 msgstr "顧客のプロジェクト"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
+#: field:hr.expense.expense,user_id:0
 msgid "User"
 msgstr "ユーザ"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.expense,date:0
+#: report:hr.expense:0
+#: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "日付"
@@ -550,7 +571,8 @@ msgid "Waiting"
 msgstr "待ち"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,day:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,day:0
 msgid "Day"
 msgstr "日"
 
@@ -565,7 +587,6 @@ msgid "References"
 msgstr "参照"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.report,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr "請求書"
@@ -623,12 +644,14 @@ msgid "Expense is refused."
 msgstr "経費は拒否されました。"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
+#: report:hr.expense:0
+#: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr "単価"
 
 #. module: hr_expense
-#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
@@ -640,7 +663,9 @@ msgid "Expenses of My Department"
 msgstr "私の部門の経費"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr "詳細"
@@ -667,6 +692,7 @@ msgstr "アカウントの数"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_refused
 #: model:process.node,name:hr_expense.process_node_refused0
 msgid "Refused"
 msgstr "拒否"
@@ -700,7 +726,7 @@ msgid "This Month"
 msgstr "今月"
 
 #. module: hr_expense
-#: field:hr.expense.expense,user_valid:0 view:hr.expense.report:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "検証ユーザ"
@@ -743,7 +769,7 @@ msgstr "4月"
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Expense Note"
-msgstr "経費の注記"
+msgstr "経費注記"
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
@@ -764,10 +790,12 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Approve"
-msgstr "承認する。"
+msgstr "承認"
 
 #. module: hr_expense
-#: view:hr.expense.line:0 field:hr.expense.line,total_amount:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.line:0
+#: field:hr.expense.line,total_amount:0
 msgid "Total"
 msgstr "合計"
 
@@ -796,14 +824,16 @@ msgid "Error: Invalid ean code"
 msgstr "エラー：無効な商品識別番号です。"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,year:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,year:0
 msgid "Year"
 msgstr "年"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
+#: model:mail.message.subtype,name:hr_expense.mt_expense_confirmed
 msgid "To Approve"
-msgstr "承認する。"
+msgstr "未承認"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0

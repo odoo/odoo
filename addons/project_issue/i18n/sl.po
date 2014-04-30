@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-17 05:01+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr ""
+msgstr "Povprečni zamik do odprtja"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -31,7 +31,7 @@ msgstr "Združeno po..."
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to Open the Issue"
-msgstr ""
+msgstr "Delovne ure do odprtja zadeve"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -46,7 +46,7 @@ msgstr "Odprto"
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
 msgid "Date of Opening"
-msgstr ""
+msgstr "Datum odprtja"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -68,7 +68,7 @@ msgstr "Podjetje"
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "E-pošta opazovalcev"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -83,15 +83,17 @@ msgstr "project.issue.version"
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Dnevi do odprtja"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:479
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
 msgstr ""
+"Te zadeve ne morete stopnjevati.\n"
+"Dotični projekt nima nastavljenega stopnjevalnega projekta!"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -165,22 +167,22 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
-msgstr ""
+msgstr "Datum zaprtja"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Search"
-msgstr ""
+msgstr "Iskalnik po sledilniku zadev"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "Povp. št. delovnih ur do odprtja"
 
 #. module: project_issue
 #: field:project.issue,date_action_next:0
 msgid "Next Action"
-msgstr ""
+msgstr "Naslednja aktivnost"
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -188,6 +190,8 @@ msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
 msgstr ""
+"Če se katerakoli zadeva stopnjuje iz tega projekta, bo navedena pod tukaj "
+"izbranim projektom."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -202,6 +206,10 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
+"Poročilo o projektnih zadevah omogoča analizo kvalitete podpore ali "
+"poprodajnih storitev. Zadevam sledimo po starosti. Možna je analiza časa "
+"potrebnega za odprtje ali zaprtje zadeve, števila izmenjanih e-poštnih "
+"sporočil  in povprečne porabe časa na posamezni zadevi."
 
 #. module: project_issue
 #: view:project.issue:0 field:project.issue,partner_id:0
@@ -240,12 +248,12 @@ msgstr "Vzdrževanje"
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
-msgstr ""
+msgstr "Analiza zadev"
 
 #. module: project_issue
 #: field:project.issue.version,name:0
 msgid "Version Number"
-msgstr "Številka različice"
+msgstr "Različica"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -367,7 +375,7 @@ msgstr "Skupine"
 #: view:project.issue.report:0
 #: field:project.issue.report,stage_id:0
 msgid "Stage"
-msgstr "Faza"
+msgstr "Stopnja"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -393,7 +401,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
 msgid "My Project Issues"
-msgstr ""
+msgstr "Moje projektne zadeve"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -411,7 +419,7 @@ msgstr ""
 #. module: project_issue
 #: view:board.board:0
 msgid "My Issues"
-msgstr ""
+msgstr "Moje zadeve"
 
 #. module: project_issue
 #: help:project.issue,canal_id:0
@@ -430,7 +438,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:365
+#: code:addons/project_issue/project_issue.py:371
 #, python-format
 msgid "Tasks"
 msgstr "Naloge"
@@ -438,7 +446,7 @@ msgstr "Naloge"
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr ""
+msgstr "# zadev"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -453,7 +461,7 @@ msgstr "December"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Issue Tracker Tree"
-msgstr ""
+msgstr "Pregled sledilnika zadev"
 
 #. module: project_issue
 #: help:project.issue,assigned_to:0
@@ -503,7 +511,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Number of Project Issues"
-msgstr ""
+msgstr "#Število projektnih zadev"
 
 #. module: project_issue
 #: help:project.issue,email_cc:0
@@ -512,6 +520,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Tu e poštni naslovi bodo dodani v CC polje vseh vhodnih in izhodnih sporočil "
+"za ta zapis preden bodo razposlana. V primeru večih e-poštnih naslovov jih "
+"ločite z vejico."
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -533,7 +544,7 @@ msgstr "Zaprto"
 #. module: project_issue
 #: field:project.issue.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "Povprečen zamik do zaprtja"
 
 #. module: project_issue
 #: selection:project.issue,state:0
@@ -552,7 +563,7 @@ msgstr "Status"
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Project Issues"
-msgstr ""
+msgstr "#Projektne zadeve"
 
 #. module: project_issue
 #: view:board.board:0
@@ -590,7 +601,7 @@ msgstr "Junij"
 #. module: project_issue
 #: field:project.issue,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Dnevi do zaprtja"
 
 #. module: project_issue
 #: field:project.issue,active:0
@@ -627,12 +638,12 @@ msgstr "Januar"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "Sledilnik značilnosti"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Prejemniki e-pošte"
 
 #. module: project_issue
 #: view:board.board:0
@@ -701,7 +712,7 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue.version:0
 msgid "Issue Version"
-msgstr ""
+msgstr "Verzija"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -732,13 +743,13 @@ msgstr "Odprto"
 #: view:project.issue:0
 #: view:project.project:0
 msgid "Issues"
-msgstr ""
+msgstr "Zadeve"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
-msgstr ""
+msgstr "Projektna zadeva"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -780,12 +791,12 @@ msgstr ""
 #: field:project.issue,name:0
 #: view:project.project:0
 msgid "Issue"
-msgstr ""
+msgstr "Zadeva"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Search"
-msgstr ""
+msgstr "Iskanje po sledilniku značilnosti"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -811,7 +822,7 @@ msgstr ""
 #: view:project.issue.report:0
 #: field:project.issue.report,email:0
 msgid "# Emails"
-msgstr ""
+msgstr "# E-sporočil"
 
 #. module: project_issue
 #: field:project.issue,partner_name:0
@@ -844,12 +855,12 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature description"
-msgstr ""
+msgstr "Opis značilnosti"
 
 #. module: project_issue
 #: field:project.project,project_escalation_id:0
 msgid "Project Escalation"
-msgstr ""
+msgstr "Stopnjevanje projekta"
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -857,6 +868,8 @@ msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
 msgstr ""
+"Prodajna ekipa kateri pripada Primer.                             Določite "
+"odgovornega uporabnika in E-poštni račun za mail gateway."
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -882,7 +895,7 @@ msgstr "Reference"
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to Close the Issue"
-msgstr ""
+msgstr "Delovne ure do zaprtja zadeve"
 
 #. module: project_issue
 #: field:project.issue,id:0
@@ -898,18 +911,18 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "Število dni do zaprtja projektne razprave"
 
 #. module: project_issue
 #: view:project.issue.report:0
 #: field:project.issue.report,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "Prodajna ekipa"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
 msgid "Avg. Working Hours to Close"
-msgstr ""
+msgstr "Povp. št. delovnih ur do zaprtja"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -925,7 +938,7 @@ msgstr "Rok"
 #. module: project_issue
 #: field:project.issue,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Zadnja aktivnost"
 
 #. module: project_issue
 #: view:project.issue.report:0

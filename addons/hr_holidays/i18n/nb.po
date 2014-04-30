@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-22 05:21+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:13+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -29,7 +29,6 @@ msgstr "Tildeling type."
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr ""
 
@@ -62,28 +61,29 @@ msgstr "Avdeling"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Avvist"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Kategori av ansatte."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Brown"
-msgstr ""
+msgstr "Brun"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Remaining Days"
-msgstr ""
+msgstr "Gjenværende dagene."
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
-msgstr ""
+msgstr "Av ansatte"
 
 #. module: hr_holidays
 #: help:hr.holidays,employee_id:0
@@ -95,7 +95,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Sett som utkast."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
@@ -112,7 +112,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Green"
-msgstr ""
+msgstr "Lysegrønn"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -130,15 +130,17 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: view:hr.holidays:0
 #: selection:hr.holidays,state:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
-msgstr ""
+msgstr "Godkjent."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Refuse"
-msgstr ""
+msgstr "Nekt"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:344
@@ -148,12 +150,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: view:board.board:0
+#: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
-msgstr ""
+msgstr "Etterlater."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays
@@ -161,6 +162,8 @@ msgid "Leave"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
 msgstr ""
@@ -169,7 +172,7 @@ msgstr ""
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Kansellert."
 
 #. module: hr_holidays
 #: help:hr.holidays,type:0
@@ -182,12 +185,12 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
-msgstr ""
+msgstr "Gyldighet"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
 msgid "Color in Report"
-msgstr ""
+msgstr "Farger i rapport."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
@@ -195,23 +198,26 @@ msgid "HR Holidays Summary Report By Employee"
 msgstr ""
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
-#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leave Type"
-msgstr ""
+msgstr "Etterlate type."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:199
-#: code:addons/hr_holidays/hr_holidays.py:344
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
+#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:432
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Advarsel!"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -239,28 +245,26 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
-#, python-format
 msgid "Confirmed"
-msgstr ""
+msgstr "Bekreftet"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,date_from:0
 #: field:hr.holidays.summary.employee,date_from:0
 msgid "From"
-msgstr ""
+msgstr "Fra"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Confirm"
-msgstr ""
+msgstr "Bekreft"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The start date must be before the end date !"
-msgstr ""
+msgstr "Startdatoen må være før sluttdatoen!"
 
 #. module: hr_holidays
 #: model:ir.module.module,description:hr_holidays.module_meta_information
@@ -308,12 +312,12 @@ msgstr ""
 #: view:hr.holidays:0
 #: field:hr.holidays,state:0
 msgid "State"
-msgstr ""
+msgstr "Stat."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
 msgid "Total holidays by type"
-msgstr ""
+msgstr "Totalt ferie etter type."
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -322,22 +326,22 @@ msgstr ""
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Ansatt"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Type"
-msgstr ""
+msgstr "Type."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Red"
-msgstr ""
+msgstr "Rød."
 
 #. module: hr_holidays
 #: view:hr.holidays.remaining.leaves.user:0
 msgid "Leaves by Type"
-msgstr ""
+msgstr "Etterlater av type."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -352,14 +356,13 @@ msgstr ""
 #. module: hr_holidays
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
+msgstr "Feil! la startdato være lavere enn forlate sluttdato."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
-#: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
-msgstr ""
+msgstr "Antall dager."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -369,7 +372,7 @@ msgstr ""
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr ""
+msgstr "Du må velge en ansatt eller en kategori."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -380,14 +383,13 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Venter på godkjenning."
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
 msgid "Employee(s)"
-msgstr ""
+msgstr "Anstatt(e)"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -399,24 +401,24 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
 msgid "Linked Requests"
-msgstr ""
+msgstr "Koblede forespørsler."
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Overordnet."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Lavender"
-msgstr ""
+msgstr "Lavendel"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
-msgstr ""
+msgstr "Etterlat forespørsel."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
@@ -427,13 +429,12 @@ msgstr ""
 #: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 msgid "Employee's Holidays"
-msgstr ""
+msgstr "Ansattes Ferier."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: field:hr.holidays,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,max_leaves:0
@@ -445,7 +446,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:board.board:0
 msgid "All Employee Leaves"
-msgstr ""
+msgstr "Alle ansatte forlater."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -456,23 +457,22 @@ msgstr ""
 #: view:hr.holidays.summary.dept:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 msgid "Holidays by Department"
-msgstr ""
+msgstr "Ferier etter avdeling."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
-msgstr ""
+msgstr "Svart"
 
 #. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
-msgstr ""
+msgstr "Ferie."
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-#: field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,meeting_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Møte."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -494,12 +494,12 @@ msgstr ""
 #: field:hr.holidays,user_id:0
 #: field:hr.holidays.remaining.leaves.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Bruker."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
@@ -527,22 +527,26 @@ msgid "Casual Leave"
 msgstr ""
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
+#: view:hr.holidays.summary.employee:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
+#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr ""
+msgstr "Etterlat sum."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Feil"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Blue"
-msgstr ""
+msgstr "Lyseblå."
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
@@ -567,7 +571,6 @@ msgid "General"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr ""
@@ -592,11 +595,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
-#: selection:hr.holidays.summary.employee,holiday_type:0
-#, python-format
 msgid "Validated"
 msgstr ""
 
@@ -629,6 +628,7 @@ msgid "Details"
 msgstr ""
 
 #. module: hr_holidays
+#: view:board.board:0
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
@@ -640,12 +640,16 @@ msgid "By Employee Category"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:354
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
+#: field:resource.calendar.leaves,holiday_id:0
+#, python-format
 msgid "Leave Request"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr ""
@@ -690,6 +694,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
+#: selection:hr.holidays,state:0
 msgid "Second Approval"
 msgstr ""
 
@@ -784,5 +789,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr ""

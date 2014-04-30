@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:26+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:35+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -93,7 +93,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr "Konum"
+msgstr "Yer"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
@@ -151,7 +151,7 @@ msgstr "A Kapısı"
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr "Satın Al"
+msgstr "Alım"
 
 #. module: stock_location
 #: view:product.product:0
@@ -161,7 +161,7 @@ msgstr "İtilen akışlar"
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr "Sevk Etme Bölgesi"
+msgstr "Gönderim Bölgesi"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -177,7 +177,7 @@ msgstr "Çekilen akışlar"
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: stock_location
 #: view:product.product:0
@@ -193,28 +193,28 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr "Oluştur"
+msgstr "Üretme"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr "Sipariş Ver"
+msgstr "Sipariş Yapma"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Stokla"
+msgstr "Stoktan Al"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr "Ortak Adresi"
+msgstr "Partner Adresi"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr "Faturalandırılacak"
+msgstr "Faturalandırma"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -388,7 +388,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr "Satınalma Tipi"
+msgstr "Tedarik Türü"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -399,7 +399,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr "Ad"
+msgstr "Adı"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -421,13 +421,13 @@ msgstr "Ürün"
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr "Satınalma Metodu"
+msgstr "TeminEtme Metodu"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr "Sevkıyat Türü"
+msgstr "Sevkiyat Türü"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -436,9 +436,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Stokla': Gerektiğinde stoktan alın ya da tekrar tedarik edilinceye kadar "
-"bekleyin. 'Sipariş Ver': Gerektiğinde, satın alın ya da satınalma talebi "
-"oluşturun."
+"Stoktan Al: Gerektiğinde ürün stoktan alınacaktır ya da yeniden tedarik "
+"edilmesi beklenecektir. Sipariş Ver: Gerektiğinde ürün, tedarik isteği "
+"üzerine satınalınır ya da üretilir."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -448,7 +448,7 @@ msgstr "Tedarik işleminin yapılacağı hedef konumdur"
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr "Stok Kartları"
+msgstr "Ürünler"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:118
@@ -470,7 +470,7 @@ msgstr "Uygun Değil"
 #. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr "Gecikme (Gün)"
+msgstr "Geçikme (Gün)"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:67
@@ -505,13 +505,13 @@ msgstr "Aynı üründen olmayan bir grup atamaya çalışıyorsunuz"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr "Satınalma"
+msgstr "Tedarik"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr "Varış Konumu"
+msgstr "Hedef Lokasyonu"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
@@ -528,7 +528,7 @@ msgstr "Mal Alımı"
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr "İşlem Tipi"
+msgstr "İşlem Türü"
 
 #. module: stock_location
 #: constraint:product.product:0
@@ -556,22 +556,22 @@ msgstr "Operasyon"
 #. module: stock_location
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "Konum Rotası"
+msgstr "Lokasyonu Rotası"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr "Yevmiye defteri"
+msgstr "Yevmiye"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr "Basamağı İptal Et"
+msgstr "Basamak İptal"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr "Faturalandırıldı"
+msgstr "Faturalandı"

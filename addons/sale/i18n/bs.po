@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-05 05:47+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:31+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -44,6 +44,7 @@ msgstr ""
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
+#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Količina"
 
@@ -51,7 +52,7 @@ msgstr "Količina"
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dan"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -97,7 +98,6 @@ msgid "All at Once"
 msgstr "Sve odjednom"
 
 #. module: sale
-#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -118,10 +118,11 @@ msgid "Procurement Order"
 msgstr ""
 
 #. module: sale
+#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale
 #: view:sale.order:0
@@ -181,7 +182,7 @@ msgstr "Prinudni prenos"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Označite kućicu za grupisanje faktura istih kupaca"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -207,7 +208,7 @@ msgstr "Referenca naloga"
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "Ostali podaci"
 
 #. module: sale
 #: view:sale.order:0
@@ -230,7 +231,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "Faktura obavljene prodaje"
 
 #. module: sale
 #: view:sale.order:0
@@ -263,7 +264,7 @@ msgstr "Pakovanje"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "Prema prodajnoj narudžbi"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -271,13 +272,13 @@ msgid "Shop Name"
 msgstr "Naziv prodajnog mjesta"
 
 #. module: sale
-#: code:addons/sale/sale.py:1017
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Nije definisan kupac !"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree2
+#: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
 msgstr "Iznimka u prodaji"
 
@@ -339,7 +340,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Jun"
 
 #. module: sale
 #: code:addons/sale/sale.py:587
@@ -350,30 +351,30 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Statistika prodajnih narudžbi"
 
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "Analitički konto povezan sa prodajnom narudžbom."
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktobar"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
+#: model:ir.actions.act_window,name:sale.action_quotations
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Predračuni"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Cjenovnik za trenutnu prodajnu narudžbu"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -383,7 +384,7 @@ msgstr "Samo isporuka"
 #. module: sale
 #: report:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "JIB:"
 
 #. module: sale
 #: help:sale.order.line,delay:0
@@ -395,7 +396,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "Datum predračuna"
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
@@ -415,7 +416,6 @@ msgid "Number Packages"
 msgstr "Broj pakovanja"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
 msgstr "U toku"
@@ -426,6 +426,8 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
+"Prodavač potvrđuje predračun. Stanje prodajnog naloga postaje 'U toku' ili "
+"'Ručni postupak u toku'."
 
 #. module: sale
 #: code:addons/sale/sale.py:974
@@ -470,7 +472,7 @@ msgstr "Bilješke"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "Adresa fakture za trenutnu prodajnu narudžbu."
 
 #. module: sale
 #: view:sale.installer:0
@@ -478,7 +480,7 @@ msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0
+#: field:sale.order,invoice_exists:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Fakturisano"
@@ -491,12 +493,12 @@ msgstr "Otpremnica"
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Datum potvrde"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "Partner u raspodjeli"
 
 #. module: sale
 #: sql_constraint:sale.order:0
@@ -506,12 +508,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Mart"
 
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "Ukupan iznos."
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -526,7 +528,7 @@ msgstr "Adresa fakture (kupca):"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Mjerna jedinica "
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -550,7 +552,7 @@ msgstr "Adresa fakture (kupca)"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Search Uninvoiced Lines"
-msgstr ""
+msgstr "Pretraži nefakturisane stavke"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -561,7 +563,7 @@ msgstr "Ponuda / Nalog"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# linija"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
@@ -570,9 +572,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
-#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Stavka prodajne narudžbe"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -590,6 +591,7 @@ msgid "Order N°"
 msgstr "Nalog N°"
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Stavke naloga"
@@ -613,7 +615,7 @@ msgstr "Količina (JM)"
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Datum kreiranja"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -628,7 +630,7 @@ msgstr "Ukupno :"
 #. module: sale
 #: view:sale.report:0
 msgid "My Sales"
-msgstr ""
+msgstr "Moje prodaje"
 
 #. module: sale
 #: code:addons/sale/sale.py:293
@@ -649,18 +651,17 @@ msgstr "Cjenovnik"
 #: view:sale.report:0
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "# kol"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Datum narudžbe"
 
 #. module: sale
 #: view:sale.order.line:0
-#: field:sale.report,shipped:0
 msgid "Shipped"
-msgstr ""
+msgstr "Otpremljeno"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
@@ -675,21 +676,21 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Septembar"
 
 #. module: sale
-#: code:addons/sale/sale.py:1124
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "Odaberite cjenovnik ili kupca prije odabira proizvoda!"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,categ_id:0
 msgid "Category of Product"
-msgstr ""
+msgstr "Kategorija proizvoda"
 
 #. module: sale
 #: report:sale.order:0
@@ -759,7 +760,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Napredni filteri..."
 
 #. module: sale
 #: model:ir.module.module,description:sale.module_meta_information
@@ -792,7 +793,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sales Shop"
-msgstr ""
+msgstr "Prodavnica"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -802,7 +803,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembar"
 
 #. module: sale
 #: view:sale.order:0
@@ -821,6 +822,8 @@ msgid ""
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
+"Ovo je lista faktura koje su generisane za prodajne narudžbe. Ista prodajna "
+"narudžba može biti fakturisana više puta (npr. prema stavkama)."
 
 #. module: sale
 #: report:sale.order:0
@@ -840,7 +843,6 @@ msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Količina"
@@ -852,11 +854,8 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Otkaži"
@@ -873,9 +872,10 @@ msgstr "Izuzetak"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
 msgstr "Kreriaj Fakturu"
@@ -914,11 +914,10 @@ msgstr ""
 #. module: sale
 #: help:sale.order.line,sequence:0
 msgid "Gives the sequence order when displaying a list of sales order lines."
-msgstr ""
+msgstr "Daje poredak kada prikazuje listu prodajnih naloga."
 
 #. module: sale
 #: report:sale.order:0
-#: view:sale.order.line:0
 msgid "Price"
 msgstr "Cijena"
 
@@ -933,7 +932,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Ukupna Cijena"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -969,7 +968,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr ""
+msgstr "Prodajna narudžba u pripremi"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -984,7 +983,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Ukupan uračunati porez"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -1009,14 +1008,14 @@ msgstr "Potvrdi Ponudu"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "Referenca na dokument koji je generisao ovu prodajnu narudžbu."
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 #: view:sale.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupiši po..."
 
 #. module: sale
 #: view:sale.order:0
@@ -1038,7 +1037,7 @@ msgstr "Raspored čekanja"
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Metoda naručivanja"
 
 #. module: sale
 #: code:addons/sale/sale.py:1126
@@ -1083,7 +1082,6 @@ msgid "Create Procurement Order"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1097,7 +1095,7 @@ msgstr "Način otpreme"
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "Datum kreiranja prodajne narudžbe"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
@@ -1108,7 +1106,7 @@ msgstr ""
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Napravi fakture"
 
 #. module: sale
 #: view:sale.order:0
@@ -1123,7 +1121,7 @@ msgstr "Fax:"
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr ""
+msgstr "Iznos avansa"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -1157,7 +1155,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Jul"
 
 #. module: sale
 #: field:sale.order.line,procurement_id:0
@@ -1190,7 +1188,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mjesec"
 
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
@@ -1205,7 +1203,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "Potrebna revizija knjigovođe."
 
 #. module: sale
 #: view:sale.report:0
@@ -1216,7 +1214,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
+msgstr "Stavka prodajne narudžbe Make_invoice"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1230,7 +1228,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr ""
+msgstr "Stari predračuni"
 
 #. module: sale
 #: field:sale.order,invoiced:0
@@ -1242,7 +1240,7 @@ msgstr "Plaćeno"
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: view:sale.report:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Analiza prodaje"
 
 #. module: sale
 #: field:sale.order.line,property_ids:0
@@ -1251,7 +1249,7 @@ msgstr "Postavke"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0
+#: view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Ponuda"
@@ -1263,6 +1261,9 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
+"Ako je pravilo otpremanja prodajne narudžbe 'Otpremanje i ručni postupak u "
+"toku', prodavač kreira fakturu ručno. Faktura se kreira automatski ako je "
+"postavljeno pravilo otpremanja 'Plaćanje prije dostave'."
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
@@ -1271,8 +1272,10 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+#: model:ir.actions.act_window,name:sale.open_board_sales
+#: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
+#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1285,6 +1288,7 @@ msgid "Unit Price"
 msgstr "Jedinična cijena"
 
 #. module: sale
+#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1298,8 +1302,11 @@ msgid "sale.installer"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
+#: view:sale.order:0
+#, python-format
 msgid "Invoice"
 msgstr "Faktura"
 
@@ -1319,12 +1326,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Izvorni dokument"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "To Do"
-msgstr ""
+msgstr "Za uraditi"
 
 #. module: sale
 #: field:sale.order,picking_policy:0
@@ -1339,7 +1346,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "Iznos bez poreza."
 
 #. module: sale
 #: code:addons/sale/sale.py:574
@@ -1350,7 +1357,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "Faktura za avans"
 
 #. module: sale
 #: field:sale.order,incoterm:0
@@ -1407,7 +1414,6 @@ msgid "Product UoS"
 msgstr "Proizvod JM"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "U toku"
@@ -1431,7 +1437,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "Zanemari iznimku"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1441,6 +1447,9 @@ msgid ""
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
 msgstr ""
+"U zavisnosti od kontrole fakturisanja, faktura može biti bazirana na "
+"dostavljenim ili na naručenim količinama. Tako, prodajnu narudžbu može "
+"generisati fakturu ili otpremnicu onog trenutka kada je prodavač potvrdi."
 
 #. module: sale
 #: code:addons/sale/sale.py:1116
@@ -1463,7 +1472,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "Referenca kupca"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -1494,20 +1503,19 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-#: view:sale.order:0
 msgid "Make Invoices"
-msgstr ""
+msgstr "Kreiraj fakture"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Za fakturisanje"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr ""
+msgstr "Datum potvrde prodajne narudžbe"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1516,17 +1524,17 @@ msgstr ""
 #: field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Kompanija"
 
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Datum fakturisanja"
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr ""
+msgstr "Iznos za fakturisanje unaprijed."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1575,7 +1583,6 @@ msgstr "Poništeno"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
@@ -1590,7 +1597,7 @@ msgstr ""
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "Datum potvrde"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:111
@@ -1616,14 +1623,18 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
+#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#: field:stock.picking,sale_id:0
+#: selection:sale.order,state:0
+#, python-format
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajna narudžba"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
@@ -1661,12 +1672,12 @@ msgid "Sales by Product's Category in last 90 days"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Stavka Fakture"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1703,10 +1714,10 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Avgust"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1714,6 +1725,10 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
+"Faktura se ne može kreirati za ovu stavku prodajne narudžbe zbog jednog od "
+"sljedećih razloga:\n"
+"1. Stanje ove stavke prodajne narudžbe je \"U pripremi\" ili \"Otkazano\"!\n"
+"2. Stavka prodajne narudžbe je već fakturisana!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1721,8 +1736,6 @@ msgid "Weight"
 msgstr "Težina"
 
 #. module: sale
-#: view:sale.open.invoice:0
-#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Fakture"
@@ -1730,7 +1743,7 @@ msgstr "Fakture"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Decembar"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
@@ -1750,7 +1763,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Uninvoiced"
-msgstr ""
+msgstr "Nefakturisano"
 
 #. module: sale
 #: report:sale.order:0
@@ -1766,7 +1779,7 @@ msgstr "Prodavač"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Drives procurement and invoicing"
-msgstr ""
+msgstr "Pokreće naručivanje i fakturisanje"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -1774,10 +1787,7 @@ msgid "Untaxed Amount"
 msgstr "Neoporezovan iznos"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
 #, python-format
 msgid "Advance Invoice"
 msgstr "Predračun"
@@ -1810,7 +1820,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr ""
+msgstr "Iznos poreza."
 
 #. module: sale
 #: view:sale.order:0
@@ -1834,7 +1844,7 @@ msgid "Ordered Date"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
@@ -1875,7 +1885,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: sale
 #: view:sale.installer:0
@@ -1883,7 +1893,7 @@ msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree4
+#: model:ir.actions.act_window,name:sale.action_orders_in_progress
 msgid "Sales Order in Progress"
 msgstr "Prodajni nalog u obradi"
 
@@ -1902,7 +1912,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "Odgoda obveze"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -1919,12 +1929,12 @@ msgstr "Dodjeli"
 #. module: sale
 #: field:sale.report,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Datum narudžbe"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr ""
+msgstr "Prodajna narudžba potvrđen i pretvorena u fakturu."
 
 #. module: sale
 #: code:addons/sale/sale.py:293
@@ -1987,7 +1997,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "Pokazatelj da je faktura plaćena."
 
 #. module: sale
 #: report:sale.order:0
@@ -1998,7 +2008,7 @@ msgstr "Opis"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Maj"
 
 #. module: sale
 #: help:sale.installer,sale_order_dates:0
@@ -2015,12 +2025,12 @@ msgstr "Kupac"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr ""
+msgstr "Avans"
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #. module: sale
 #: help:sale.installer,sale_journal:0
@@ -2032,7 +2042,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: sale
 #: view:sale.shop:0
@@ -2048,7 +2058,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Pretraži prodajne narudžbe"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
@@ -2076,6 +2086,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"Ovaj izvještaj radi analizu vaših ponuda i prodajnih narudžbi. Analiza "
+"provjerava prihode od prodaje i sortira ih prema različitim kriterijima "
+"grupisanja (prodavač, partner, proizvod, itd.) Koristite ovaj izvještaj za "
+"izvođenje analize na prodajama koje još nisu fakturisane. Ako želite "
+"analizirati prihod, trebali bi koristiti Izvještaj analize faktura u "
+"računovodstvenoj aplikaciji."
 
 #. module: sale
 #: report:sale.order:0
@@ -2083,7 +2099,6 @@ msgid "Quotation N°"
 msgstr "Ponuda N°"
 
 #. module: sale
-#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "Izuzeto"

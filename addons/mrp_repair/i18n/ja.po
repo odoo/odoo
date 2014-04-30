@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:11+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:21+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -85,7 +85,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr "修理オーダーのキャンセル"
+msgstr "修理オーダ取消"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -101,7 +101,7 @@ msgstr "印刷日"
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr "パートナの請求書住所によるグループ"
+msgstr "取引先請求先によるグループ化"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:435
@@ -122,7 +122,7 @@ msgstr "請求書の例外"
 #. module: mrp_repair
 #: field:mrp.repair,address_id:0
 msgid "Delivery Address"
-msgstr "配達住所"
+msgstr "配送先"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -144,7 +144,6 @@ msgstr "請求書住所："
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-#: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
 msgstr "保証制限"
 
@@ -168,7 +167,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
 #: field:mrp.repair,amount_tax:0
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
@@ -202,7 +200,7 @@ msgid "Move"
 msgstr "移動"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:370
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "修理フォームではパートなの請求書住所を選択する必要があります。"
@@ -211,7 +209,7 @@ msgstr "修理フォームではパートなの請求書住所を選択する必
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr "修理オーダー"
+msgstr "修理オーダ"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
@@ -233,7 +231,7 @@ msgstr "追加情報"
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr "修理オーダー参照"
+msgstr "修理オーダ参照"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -241,7 +239,7 @@ msgid "Draft"
 msgstr "ドラフト"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:384
+#: code:addons/mrp_repair/mrp_repair.py:385
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "パートナ %s にアカウントが定義されていません。"
@@ -256,12 +254,12 @@ msgstr "確認済"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr "修理オーダー"
+msgstr "修理オーダ"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
-msgstr "修理オーダー番号："
+msgstr "修理オーダ番号："
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
@@ -343,12 +341,14 @@ msgid "Pricelist"
 msgstr "価格リスト"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
 msgstr "見積注記"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:435
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -357,7 +357,7 @@ msgstr "警告"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr "修理オーダー検索"
+msgstr "修理オーダ検索"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -383,6 +383,7 @@ msgstr "請求の方法"
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0
+#: selection:mrp.repair,state:0
 msgid "Repaired"
 msgstr "修理済"
 
@@ -424,6 +425,7 @@ msgid "Yes"
 msgstr ""
 
 #. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair,invoiced:0
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
@@ -462,8 +464,9 @@ msgstr "修理参照"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
+#: view:mrp.repair:0
 msgid "Repair Order"
-msgstr "修理オーダー"
+msgstr "修理オーダ"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -554,7 +557,9 @@ msgid "Quotations"
 msgstr "見積"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0
 #: report:repair.order:0
 msgid "Quantity"
 msgstr "数量"
@@ -584,7 +589,6 @@ msgid "Unit Price"
 msgstr "単価"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Done"
 msgstr "完了"
@@ -611,7 +615,7 @@ msgid "Fees"
 msgstr "費用"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
+#: view:mrp.repair.cancel:0
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "キャンセル"
@@ -690,7 +694,6 @@ msgid "Deliver"
 msgstr "配達"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
 #: field:mrp.repair,internal_notes:0
 msgid "Internal Notes"
 msgstr "内部注記"
@@ -720,7 +723,7 @@ msgstr "アクティブIDが見つかりません。"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr "修理オーダーは請求されていません。"
+msgstr "修理オーダは未請求です。"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -796,7 +799,7 @@ msgid "Ready to Repair"
 msgstr "修理準備完了"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:370
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "No partner !"
 msgstr "パートナがありません。"

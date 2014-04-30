@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-05-25 19:05+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"Last-Translator: Ferdinand <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:18+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -57,10 +57,12 @@ msgstr "Nächste Phasen"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr "Projekt Aufgaben"
+msgstr "Projektaufgaben"
 
 #. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
 msgstr "Phasen"
 
@@ -120,7 +122,7 @@ msgstr "Aufgabe"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr "Berechne Einzelprojekt"
+msgstr "Einzelprojekt berechnen"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -174,7 +176,7 @@ msgstr "Warnung!"
 #. module: project_long_term
 #: help:project.user.allocation,date_end:0
 msgid "Ending Date"
-msgstr "Ende Datum"
+msgstr "Enddatum"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -288,10 +290,10 @@ msgstr ""
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
 msgid "Starting Date"
-msgstr "Start Datum"
+msgstr "Startdatum"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+#: view:project.phase:0
 msgid "Related Tasks"
 msgstr "Verknüpfte Aufgaben"
 
@@ -315,7 +317,7 @@ msgstr "erzwinge Phasenbeginn nach diesem Datum"
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr "Projekt Aufgaben"
+msgstr "Projektaufgaben"
 
 #. module: project_long_term
 #: field:project.phase,resource_ids:0
@@ -350,7 +352,7 @@ msgid ""
 "the previous phase."
 msgstr ""
 "Wird berechnet durch einen Planungsassistenten in Abhängigkeit vom "
-"Projektdatum oder dem Ende Datum der vorherigen Projektphase."
+"Projektdatum oder dem Enddatum der vorherigen Projektphase."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -360,7 +362,7 @@ msgstr "Monat"
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr "Start Datum der Phase muss vor dem Ende Datum sein."
+msgstr "Startdatum der Phase muss vor dem Enddatum sein."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
@@ -390,7 +392,7 @@ msgstr ""
 #: field:project.phase,date_start:0
 #: field:project.user.allocation,date_start:0
 msgid "Start Date"
-msgstr "Start Datum"
+msgstr "Startdatum"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -400,7 +402,7 @@ msgstr "Zuweisung Ressourcen"
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr "erzwinge Ende der Periode vor"
+msgstr "Ende der Periode erzwinge vor"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -447,7 +449,7 @@ msgstr "Bedingungen"
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr "Erzeugt die Reihenfolge bei Anzeige der Phasen."
+msgstr "Legt Reihenfolge der Phasen in Anzeige fest"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -457,7 +459,7 @@ msgstr "Erzeugt die Reihenfolge bei Anzeige der Phasen."
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr "Projekt Phasen"
+msgstr "Projektphasen"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -466,7 +468,8 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: project_long_term
-#: view:project.phase:0
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -517,7 +520,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Total Hours"
-msgstr "Gesamte Stunden"
+msgstr "Gesamtstunden"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
@@ -530,6 +533,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr "Berechne Aufgabenterminierung für spezifiziertes Projekt."
 
 #. module: project_long_term
+#: view:project.project:0
 #: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Phase"
@@ -553,7 +557,7 @@ msgstr ""
 #: field:project.phase,date_end:0
 #: field:project.user.allocation,date_end:0
 msgid "End Date"
-msgstr "Ende Datum"
+msgstr "Enddatum"
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
@@ -588,12 +592,12 @@ msgstr "Terminierung"
 #: field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
-msgstr "Projekt Phase"
+msgstr "Projektphase"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr "Berechne Projekt Phasen"
+msgstr "Berechne Projektphasen"
 
 #. module: project_long_term
 #: field:project.schedule.tasks,msg:0
@@ -632,7 +636,7 @@ msgstr "Ressource Abwesenheit"
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 #: view:project.compute.tasks:0
 msgid "Schedule Tasks"
-msgstr "Berechne Aufgaben"
+msgstr "Aufgaben terminieren"
 
 #. module: project_long_term
 #: help:project.phase,duration:0
@@ -640,6 +644,7 @@ msgid "By default in days"
 msgstr "Gem. Standard in Tagen"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Dauer"

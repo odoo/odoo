@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:57+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:56+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,send_to:0
@@ -41,7 +41,7 @@ msgstr "кол-во вопросов"
 #: view:crm.lead.report.assign:0
 #: view:crm.partner.report.assign:0
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr "Группировать по ..."
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -74,7 +74,7 @@ msgid "Delay to close"
 msgstr "Задержка закрытия"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "Вся история"
 
@@ -111,7 +111,7 @@ msgid "Day"
 msgstr "День"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
 msgstr "Последнее эл. письмо"
 
@@ -142,7 +142,7 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
 msgstr ""
-"Предоставляет возможность назначить кандидата этому партнёру. 0 обозначает "
+"Дает вероятность назначения кандидата этому партнёру. 0 обозначает "
 "отсутствие назначения."
 
 #. module: crm_partner_assign
@@ -165,10 +165,10 @@ msgid "Pending"
 msgstr "В ожидании"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Партнер"
@@ -206,7 +206,6 @@ msgstr "От"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
 msgstr "Статус партнёра"
@@ -245,6 +244,7 @@ msgid "HTML formatting?"
 msgstr "Форматирование HTML ?"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "Тип"
@@ -252,7 +252,7 @@ msgstr "Тип"
 #. module: crm_partner_assign
 #: help:crm.lead,partner_assigned_id:0
 msgid "Partner this case has been forwarded/assigned to."
-msgstr "Партнер по которому возник этот вопрос."
+msgstr "Партнер которому был назначен этот вопрос."
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -301,7 +301,7 @@ msgid "Stage"
 msgstr "Этап"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
 #, python-format
 msgid "Fwd"
 msgstr "Прд"
@@ -315,15 +315,16 @@ msgstr "Геолокация"
 #: view:crm.lead.report.assign:0
 #: view:crm.partner.report.assign:0
 msgid "Opportunities Assignment Analysis"
-msgstr "Анализ распределения предложений"
+msgstr "Анализ назначений предложений"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "Послать историю"
 
@@ -333,7 +334,6 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Закрыть"
@@ -342,7 +342,7 @@ msgstr "Закрыть"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr "Анализ распред. сделок"
+msgstr "Анализ назначений предложений"
 
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,delay_close:0
@@ -392,7 +392,7 @@ msgstr "Тема"
 #: view:crm.lead.report.assign:0
 #: view:crm.partner.report.assign:0
 msgid "Salesman"
-msgstr "Менеджер продаж"
+msgstr "Продавец"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,reply_to:0
@@ -488,8 +488,6 @@ msgid "Delay to Open"
 msgstr "Задержка открытия"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -574,7 +572,7 @@ msgstr "Наименование уровня"
 #. module: crm_partner_assign
 #: help:crm.lead,date_assign:0
 msgid "Last date this case was forwarded/assigned to a partner"
-msgstr "Последняя дата, когда это дело было передано или назначено партнёру"
+msgstr "Последняя дата, когда этот вопрос был назначен партнёру"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,state:0
@@ -619,6 +617,7 @@ msgid "Probable Revenue"
 msgstr "Вероятная выручка"
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "Назначенный партнер"
@@ -679,17 +678,18 @@ msgstr "crm.lead"
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
 msgid "CRM Lead Report"
-msgstr "Отчет по кандидатам в CRM"
+msgstr "CRM - отчет по кандидатам"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "Информация о вопросе"
 
 #. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
-msgstr "Последовательность"
+msgstr "Нумерация"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,body:0

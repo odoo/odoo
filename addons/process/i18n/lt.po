@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:23+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
@@ -29,6 +29,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+"Jeigu aktyvus laukelis nustatytas kaip \"ne\", leidžiame paslėpti procesą, "
+"jo nepašalinus."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -76,7 +78,6 @@ msgid "Nodes"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
@@ -180,7 +181,7 @@ msgstr "Pastabos"
 #. module: process
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
-msgstr ""
+msgstr "Perėjimas"
 
 #. module: process
 #: view:process.process:0
@@ -259,9 +260,13 @@ msgid "Ending Transitions"
 msgstr ""
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/js/process.js:243
+#: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
 #: field:process.node,process_id:0
 #: view:process.process:0
+#, python-format
 msgid "Process"
 msgstr ""
 

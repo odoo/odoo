@@ -14,19 +14,24 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:56+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:54+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "# Leads"
-msgstr ""
+msgstr "เป้าหมาย"
 
 #. module: crm
-#: view:crm.lead:0 selection:crm.lead,type:0 view:crm.lead.report:0
+#: code:addons/crm/crm_lead.py:897
+#: selection:crm.case.stage,type:0
+#: view:crm.lead:0
+#: selection:crm.lead,type:0
+#: view:crm.lead.report:0
 #: selection:crm.lead.report,type:0
+#, python-format
 msgid "Lead"
-msgstr ""
+msgstr "ผู้นำ"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
@@ -54,6 +59,7 @@ msgid "Visibility"
 msgstr "มองเห็นได้"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
 msgstr "คำนำหน้าชื่อ"
@@ -74,9 +80,9 @@ msgid "Today"
 msgstr "วันนี้"
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0 view:crm.merge.opportunity:0
+#: view:crm.lead2opportunity.partner.mass:0
 msgid "Select Opportunities"
-msgstr ""
+msgstr "เลือกโอกาส"
 
 #. module: crm
 #: view:crm.meeting:0 view:crm.phonecall2opportunity:0
@@ -85,7 +91,8 @@ msgid " "
 msgstr " "
 
 #. module: crm
-#: view:crm.lead.report:0 field:crm.phonecall.report,delay_close:0
+#: view:crm.lead.report:0
+#: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
 msgstr ""
 
@@ -101,12 +108,14 @@ msgid "Can not add note!"
 msgstr "ไม่สามารถเพิ่มบันทึกได้!"
 
 #. module: crm
+#: view:crm.case.stage:0
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
 msgstr "ชื่อขั้นตอน"
 
 #. module: crm
-#: view:crm.lead.report:0 view:crm.phonecall.report:0
+#: view:crm.lead.report:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,day:0
 msgid "Day"
 msgstr "วัน"
@@ -134,9 +143,7 @@ msgid "No Repeat"
 msgstr "ไม่มีซ้ำ"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:491
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:104
-#: code:addons/crm/wizard/crm_lead_to_partner.py:47
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Warning !"
 msgstr "คำเตือน !"
@@ -152,8 +159,11 @@ msgid "Rule Name"
 msgstr "ชื่อกฎ"
 
 #. module: crm
-#: view:crm.case.resource.type:0 view:crm.lead:0 field:crm.lead,type_id:0
-#: view:crm.lead.report:0 field:crm.lead.report,type_id:0
+#: view:crm.case.resource.type:0
+#: view:crm.lead:0
+#: field:crm.lead,type_id:0
+#: view:crm.lead.report:0
+#: field:crm.lead.report,type_id:0
 #: model:ir.model,name:crm.model_crm_case_resource_type
 msgid "Campaign"
 msgstr "แคมเปญ"
@@ -166,7 +176,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Opportunities"
-msgstr ""
+msgstr "ค้นหาโอกาส"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:46
@@ -176,8 +186,10 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_merge_opportunities.py:46
-#: code:addons/crm/wizard/crm_merge_opportunities.py:53
+#: code:addons/crm/crm_lead.py:637
+#: code:addons/crm/crm_lead.py:758
+#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
 msgstr "คำเตือน!"
@@ -190,17 +202,14 @@ msgid "Opportunities Analysis"
 msgstr "การวิเคราะห์โอกาส"
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,partner_id:0 view:crm.lead.report:0
+#: view:crm.lead:0
+#: field:crm.lead,partner_id:0
+#: view:crm.lead.report:0
 #: field:crm.lead.report,partner_id:0
-#: field:crm.lead2opportunity.partner,partner_id:0
-#: field:crm.lead2opportunity.partner.mass,partner_id:0
-#: field:crm.lead2partner,partner_id:0 view:crm.meeting:0
-#: field:crm.meeting,partner_id:0 field:crm.opportunity2phonecall,partner_id:0
-#: field:crm.partner2opportunity,partner_id:0 view:crm.phonecall:0
-#: field:crm.phonecall,partner_id:0 view:crm.phonecall.report:0
+#: field:crm.opportunity2phonecall,partner_id:0
+#: view:crm.phonecall:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,partner_id:0
-#: field:crm.phonecall2opportunity,partner_id:0
-#: field:crm.phonecall2partner,partner_id:0
 #: field:crm.phonecall2phonecall,partner_id:0
 #: model:ir.model,name:crm.model_res_partner
 #: model:process.node,name:crm.process_node_partner0
@@ -224,14 +233,14 @@ msgid "Edit all Occurrences  of recurrent Meeting."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:216
-#: model:crm.case.categ,name:crm.categ_meet3 view:crm.phonecall:0
+#: code:addons/crm/crm_phonecall.py:211
+#: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
 msgstr "การโทรศัพท์"
 
 #. module: crm
-#: field:crm.lead,optout:0
+#: field:crm.lead,opt_out:0
 msgid "Opt-Out"
 msgstr ""
 
@@ -280,7 +289,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead
 #: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
 msgid "Leads Analysis"
-msgstr "การวิเคราะห์ Lead"
+msgstr "การวิเคราะห์เป้าหมาย"
 
 #. module: crm
 #: view:crm.lead2opportunity.action:0
@@ -302,9 +311,9 @@ msgid "Campaigns"
 msgstr "แคมเปญ"
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.crm_lead_categ_action
+#: view:crm.lead:0
+#: field:crm.lead,categ_ids:0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phonecall-act
-#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Categories"
 msgstr "ประเภท"
 
@@ -314,7 +323,7 @@ msgid "Forever"
 msgstr "ตลอดไป"
 
 #. module: crm
-#: help:crm.lead,optout:0
+#: help:crm.lead,opt_out:0
 msgid ""
 "If opt-out is checked, this contact has refused to receive emails or "
 "unsubscribed to a campaign."
@@ -339,12 +348,11 @@ msgid "Link to an existing partner"
 msgstr "เชื่อมโยงไปยังพาร์ทเนอร์ที่มีอยู่"
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,contact_id:0 view:crm.meeting:0
 #: field:crm.opportunity2phonecall,contact_name:0
-#: field:crm.phonecall,partner_contact:0
+#: field:crm.phonecall,partner_id:0
 #: field:crm.phonecall2phonecall,contact_name:0
 msgid "Contact"
-msgstr "ชื่อผู้ติดต่อ"
+msgstr "รายชื่อ"
 
 #. module: crm
 #: view:crm.installer:0
@@ -373,7 +381,8 @@ msgid "Opportunity Meeting"
 msgstr ""
 
 #. module: crm
-#: help:crm.lead.report,delay_close:0 help:crm.phonecall.report,delay_close:0
+#: help:crm.lead.report,delay_close:0
+#: help:crm.phonecall.report,delay_close:0
 msgid "Number of Days to close the case"
 msgstr ""
 
@@ -388,9 +397,9 @@ msgid "Fundraising"
 msgstr ""
 
 #. module: crm
-#: view:res.partner:0 field:res.partner,opportunity_ids:0
+#: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr ""
+msgstr "เป้าหมายและโอกาส"
 
 #. module: crm
 #: view:crm.send.mail:0
@@ -439,10 +448,10 @@ msgid "Select Action"
 msgstr "เลือกการดำเนินการ"
 
 #. module: crm
-#: field:base.action.rule,trg_categ_id:0 view:crm.lead:0
-#: field:crm.lead,categ_id:0 view:crm.lead.report:0
-#: field:crm.lead.report,categ_id:0 field:crm.opportunity2phonecall,categ_id:0
-#: field:crm.phonecall,categ_id:0 view:crm.phonecall.report:0
+#: view:crm.lead:0
+#: field:crm.opportunity2phonecall,categ_id:0
+#: field:crm.phonecall,categ_id:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,categ_id:0
 #: field:crm.phonecall2phonecall,categ_id:0
 msgid "Category"
@@ -451,7 +460,7 @@ msgstr "ประเภท"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "#Opportunities"
-msgstr ""
+msgstr "โอกาส"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_oppor2
@@ -499,20 +508,17 @@ msgid "Very first contact with new prospect"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead2opportunity.partner:0 view:crm.partner2opportunity:0
-#: model:ir.actions.act_window,name:crm.action_view_crm_partner2opportunity
-#: model:ir.actions.act_window,name:crm.crm_partner2opportunity
+#: view:crm.lead2opportunity.partner:0
 msgid "Create Opportunity"
-msgstr ""
+msgstr "สร้างโอกาส"
 
 #. module: crm
-#: view:crm.installer:0
+#: view:sale.config.settings:0
 msgid "Configure"
 msgstr "การกำหนดค่า"
 
 #. module: crm
-#: code:addons/crm/crm.py:433 view:crm.lead:0 view:res.partner:0
-#, python-format
+#: view:crm.lead:0
 msgid "Escalate"
 msgstr ""
 
@@ -524,7 +530,7 @@ msgstr "บริหารความสัมพันธ์กับลูก
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "June"
 msgstr "มิถุนายน"
 
@@ -557,7 +563,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "October"
 msgstr "ตุลาคม"
 
@@ -567,12 +573,14 @@ msgid "Included Answers :"
 msgstr ""
 
 #. module: crm
-#: help:crm.meeting,email_from:0 help:crm.phonecall,email_from:0
+#: help:crm.phonecall,email_from:0
 msgid "These people will receive email."
 msgstr "คนเหล่านี้จะได้รับอีเมล์"
 
 #. module: crm
-#: view:crm.meeting:0 field:crm.meeting,name:0
+#: field:crm.case.section,message_summary:0
+#: field:crm.lead,message_summary:0
+#: field:crm.phonecall,message_summary:0
 msgid "Summary"
 msgstr "สรุป"
 
@@ -626,7 +634,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "#Phone calls"
-msgstr ""
+msgstr "การโทร"
 
 #. module: crm
 #: help:crm.segmentation,categ_id:0
@@ -688,7 +696,7 @@ msgstr ""
 #: field:crm.case.section,resource_calendar_id:0
 #: model:ir.ui.menu,name:crm.menu_action_resource_calendar_form
 msgid "Working Time"
-msgstr ""
+msgstr "เวลาทำงาน"
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -725,7 +733,8 @@ msgid "Leads Form"
 msgstr ""
 
 #. module: crm
-#: view:crm.segmentation:0 model:ir.model,name:crm.model_crm_segmentation
+#: view:crm.segmentation:0
+#: model:ir.model,name:crm.model_crm_segmentation
 msgid "Partner Segmentation"
 msgstr ""
 
@@ -742,7 +751,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead.report,probable_revenue:0
 msgid "Probable Revenue"
-msgstr ""
+msgstr "รายได้ที่น่าจะเป็น"
 
 #. module: crm
 #: help:crm.segmentation,name:0
@@ -750,32 +759,38 @@ msgid "The name of the segmentation."
 msgstr ""
 
 #. module: crm
-#: field:crm.case.stage,probability:0 field:crm.lead,probability:0
+#: field:crm.case.stage,probability:0
 msgid "Probability (%)"
-msgstr ""
+msgstr "คาดว่า"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Generation"
-msgstr ""
+msgstr "การสร้างเป้าหมาย"
 
 #. module: crm
 #: view:board.board:0
 msgid "Statistics Dashboard"
-msgstr ""
+msgstr "แดชบอร์ดสถิติ"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:718 view:crm.lead:0 selection:crm.lead,type:0
-#: view:crm.lead.report:0 selection:crm.lead.report,type:0
+#: code:addons/crm/crm_lead.py:877
+#: model:crm.case.stage,name:crm.stage_lead2
+#: selection:crm.case.stage,type:0
+#: view:crm.lead:0
+#: selection:crm.lead,type:0
+#: view:crm.lead.report:0
+#: selection:crm.lead.report,type:0
 #: field:crm.meeting,opportunity_id:0
+#: field:res.partner,opportunity_count:0
 #, python-format
 msgid "Opportunity"
-msgstr ""
+msgstr "โอกาส"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead7
 msgid "Television"
-msgstr ""
+msgstr "โทรทัศน์"
 
 #. module: crm
 #: field:crm.installer,crm_caldav:0
@@ -785,15 +800,16 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Stop Process"
-msgstr ""
+msgstr "หยุดการทำงาน"
 
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Search Phonecalls"
-msgstr ""
+msgstr "ค้นหาการโทรศัพท์"
 
 #. module: crm
-#: view:crm.lead2partner:0 view:crm.phonecall2partner:0
+#: view:crm.lead2partner:0
+#: view:crm.phonecall2partner:0
 msgid "Continue"
 msgstr ""
 
@@ -813,9 +829,9 @@ msgid "Set Team to"
 msgstr ""
 
 #. module: crm
-#: view:calendar.attendee:0 field:calendar.attendee,categ_id:0
+#: field:calendar.attendee,categ_id:0
 msgid "Event Type"
-msgstr ""
+msgstr "ชนิดเหตุการณ์"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_installer
@@ -825,7 +841,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,exclusif:0
 msgid "Exclusive"
-msgstr ""
+msgstr "พิเศษ"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:91
@@ -842,12 +858,12 @@ msgstr ""
 #: field:crm.lead.report,create_date:0
 #: field:crm.phonecall.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "วันที่สร้าง"
 
 #. module: crm
 #: field:crm.lead,ref2:0
 msgid "Reference 2"
-msgstr ""
+msgstr "อ้างอิงที่ 2"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -855,9 +871,10 @@ msgid "Sales Purchase"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.stage:0 field:crm.case.stage,requirements:0
+#: view:crm.case.stage:0
+#: field:crm.case.stage,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "ความต้องการ"
 
 #. module: crm
 #: help:crm.meeting,exdate:0
@@ -877,19 +894,22 @@ msgid "Gives the sequence order when displaying a list of case stages."
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead2opportunity.partner,opportunity_ids:0
+#: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
 #: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
-#: field:crm.merge.opportunity,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
-#: model:ir.ui.menu,name:crm.menu_crm_case_opp
+#: model:ir.actions.act_window,name:crm.relate_partner_opportunities
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model:process.node,name:crm.process_node_opportunities0
+#: view:res.partner:0
 msgid "Opportunities"
-msgstr ""
+msgstr "โอกาส"
 
 #. module: crm
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
-msgstr ""
+msgstr "ประเภทบริษัทคู่ค้า"
 
 #. module: crm
 #: view:crm.add.note:0
@@ -910,24 +930,24 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Mark Won"
-msgstr ""
+msgstr "เราทำได้สำเร็จ"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Purchase Amount"
-msgstr ""
+msgstr "จำนวนที่สั่งซื้อ"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Mark Lost"
-msgstr ""
+msgstr "เราไม่สามารถทำได้"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "March"
-msgstr ""
+msgstr "มีนาคม"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:230
@@ -938,7 +958,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "วันที่จะเปิด"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -956,9 +976,10 @@ msgid "<"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,mobile:0 field:crm.phonecall,partner_mobile:0
+#: field:crm.lead,mobile:0
+#: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
-msgstr ""
+msgstr "มือถือ"
 
 #. module: crm
 #: field:crm.meeting,end_type:0
@@ -985,7 +1006,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "อ้างอิง"
 
 #. module: crm
 #: field:crm.lead,optin:0
@@ -993,16 +1014,12 @@ msgid "Opt-In"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:814 code:addons/crm/crm_phonecall.py:296
-#: code:addons/crm/wizard/crm_phonecall_to_meeting.py:83 view:crm.meeting:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_meeting_new
-#: model:ir.actions.act_window,name:crm.crm_case_categ_meet
-#: model:ir.ui.menu,name:crm.menu_crm_case_categ_meet
-#: model:ir.ui.menu,name:crm.menu_meeting_sale view:res.partner:0
+#: model:ir.actions.act_window,name:crm.crm_meeting_partner
+#: view:res.partner:0
 #: field:res.partner,meeting_ids:0
-#, python-format
 msgid "Meetings"
-msgstr ""
+msgstr "การประชุม"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1010,10 +1027,11 @@ msgid "Choose day where repeat the meeting"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,date_action_next:0 field:crm.lead,title_action:0
-#: field:crm.meeting,date_action_next:0 field:crm.phonecall,date_action_next:0
+#: field:crm.lead,date_action_next:0
+#: field:crm.lead,title_action:0
+#: field:crm.phonecall,date_action_next:0
 msgid "Next Action"
-msgstr ""
+msgstr "การกระทำต่อไป"
 
 #. module: crm
 #: field:crm.meeting,end_date:0
@@ -1041,13 +1059,13 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr ""
+msgstr "การจำแนกคู่ค้า"
 
 #. module: crm
-#: field:crm.meeting,user_id:0 view:crm.phonecall:0
-#: field:crm.phonecall,user_id:0 view:res.partner:0
+#: view:crm.phonecall:0
+#: field:crm.phonecall,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "รับผิดชอบ"
 
 #. module: crm
 #: view:res.partner:0
@@ -1075,9 +1093,10 @@ msgid "Stage:"
 msgstr ""
 
 #. module: crm
-#: model:crm.case.stage,name:crm.stage_lead5 view:crm.lead:0
+#: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:0
 msgid "Won"
-msgstr ""
+msgstr "ชนะ"
 
 #. module: crm
 #: field:crm.lead.report,delay_expected:0
@@ -1087,7 +1106,7 @@ msgstr ""
 #. module: crm
 #: model:crm.case.section,name:crm.section_sales_department
 msgid "Sales Department"
-msgstr ""
+msgstr "ฝ่ายขาย"
 
 #. module: crm
 #: field:crm.send.mail,html:0
@@ -1095,10 +1114,12 @@ msgid "HTML formatting?"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,type:0 field:crm.lead.report,type:0
-#: view:crm.opportunity2phonecall:0 view:crm.phonecall2phonecall:0
+#: field:crm.case.stage,type:0
+#: field:crm.lead,type:0
+#: field:crm.lead.report,type:0
+#: view:crm.opportunity2phonecall:0
 msgid "Type"
-msgstr ""
+msgstr "ประเภท"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1106,11 +1127,12 @@ msgid "Compute Segmentation"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Lowest"
-msgstr ""
+msgstr "ต่ำสุด"
 
 #. module: crm
 #: view:crm.add.note:0
@@ -1122,16 +1144,17 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "August"
-msgstr ""
+msgstr "สิงหาคม"
 
 #. module: crm
-#: field:crm.lead,create_date:0 field:crm.meeting,create_date:0
-#: view:crm.phonecall:0 field:crm.phonecall,create_date:0
+#: field:crm.lead,create_date:0
+#: view:crm.phonecall:0
+#: field:crm.phonecall,create_date:0
 #: field:crm.phonecall.report,creation_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "วันที่สร้าง"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor5
@@ -1144,9 +1167,9 @@ msgid "Recurrent ID"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 view:crm.meeting:0 view:res.partner:0
+#: field:crm.lead,name:0
 msgid "Subject"
-msgstr ""
+msgstr "ชื่อเรื่อง"
 
 #. module: crm
 #: field:crm.meeting,tu:0
@@ -1154,10 +1177,13 @@ msgid "Tue"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.stage:0 view:crm.lead:0 field:crm.lead,stage_id:0
-#: view:crm.lead.report:0 field:crm.lead.report,stage_id:0
+#: view:crm.case.stage:0
+#: view:crm.lead:0
+#: field:crm.lead,stage_id:0
+#: view:crm.lead.report:0
+#: field:crm.lead.report,stage_id:0
 msgid "Stage"
-msgstr ""
+msgstr "สถานะ"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1230,20 +1256,19 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: view:crm.case.section:0 field:crm.case.section,stage_ids:0
+#: view:crm.case.section:0
+#: field:crm.case.section,stage_ids:0
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 msgid "Stages"
-msgstr ""
+msgstr "ขั้นตอน"
 
 #. module: crm
 #: field:crm.lead,planned_revenue:0
-#: field:crm.partner2opportunity,planned_revenue:0
-#: field:crm.phonecall2opportunity,planned_revenue:0
 msgid "Expected Revenue"
-msgstr ""
+msgstr "เป้าหมายรายได้"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
@@ -1255,9 +1280,9 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "September"
-msgstr ""
+msgstr "กันยายน"
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
@@ -1268,18 +1293,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
 #: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
 msgid "Phone Calls Analysis"
-msgstr ""
+msgstr "วิเคราะห์การใช้โทรศัพท์"
 
 #. module: crm
 #: field:crm.lead.report,opening_date:0
 #: field:crm.phonecall.report,opening_date:0
 msgid "Opening Date"
-msgstr ""
+msgstr "วันที่เปิด"
 
 #. module: crm
 #: help:crm.phonecall,duration:0
 msgid "Duration in Minutes"
-msgstr ""
+msgstr "ระยะเวลา (นาที)"
 
 #. module: crm
 #: help:crm.installer,crm_helpdesk:0
@@ -1287,7 +1312,8 @@ msgid "Manages a Helpdesk service."
 msgstr ""
 
 #. module: crm
-#: field:crm.partner2opportunity,name:0 field:crm.phonecall2opportunity,name:0
+#: field:crm.partner2opportunity,name:0
+#: field:crm.phonecall2opportunity,name:0
 msgid "Opportunity Name"
 msgstr ""
 
@@ -1297,6 +1323,8 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the sales team "
 "without removing it."
 msgstr ""
+"ถ้าเขตข้อมูลที่ใช้งานอยู่จะถูกกำหนดเป็นจริง "
+"จะทำให้คุณสามารถซ่อนทีมขายโดยไม่ลบออก"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1342,8 +1370,8 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: view:crm.lead2partner:0 view:crm.phonecall:0 view:crm.phonecall2partner:0
-#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
+#: view:crm.lead2partner:0
+#: view:crm.phonecall2partner:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2partner
 #: model:ir.actions.act_window,name:crm.action_crm_phonecall2partner
 msgid "Create a Partner"
@@ -1352,7 +1380,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation,state:0
 msgid "Execution Status"
-msgstr ""
+msgstr "สถานะการทำงาน"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -1362,17 +1390,19 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,day_close:0
 msgid "Days to Close"
-msgstr ""
+msgstr "วันที่จะปิด"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1075
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
-msgstr ""
+msgstr "ไม่มีข้อมูล"
 
 #. module: crm
-#: field:crm.lead,id:0 field:crm.meeting,id:0 field:crm.phonecall,id:0
+#: field:crm.lead,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner2opportunity
@@ -1380,16 +1410,18 @@ msgid "Partner To Opportunity"
 msgstr ""
 
 #. module: crm
-#: field:crm.meeting,date:0 field:crm.opportunity2phonecall,date:0
-#: view:crm.phonecall:0 field:crm.phonecall,date:0
-#: field:crm.phonecall2phonecall,date:0 view:res.partner:0
+#: field:crm.opportunity2phonecall,date:0
+#: view:crm.phonecall:0
+#: field:crm.phonecall,date:0
+#: field:crm.phonecall2phonecall,date:0
 msgid "Date"
-msgstr ""
+msgstr "วันที่"
 
 #. module: crm
-#: view:crm.lead.report:0 view:crm.phonecall.report:0
+#: view:crm.lead.report:0
+#: view:crm.phonecall.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "ตัวกรองเพิ่มเติม"
 
 #. module: crm
 #: field:crm.phonecall2opportunity,name:0
@@ -1399,7 +1431,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "Search"
-msgstr ""
+msgstr "ค้นหา"
 
 #. module: crm
 #: view:board.board:0
@@ -1432,25 +1464,23 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,code:0
 msgid "Code"
-msgstr ""
+msgstr "รหัส"
 
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Teams"
-msgstr ""
+msgstr "ทีมลูก"
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,state:0 view:crm.lead.report:0
-#: field:crm.lead.report,state:0 field:crm.meeting,state:0
-#: field:crm.phonecall,state:0 view:crm.phonecall.report:0
-#: field:crm.phonecall.report,state:0
+#: view:crm.lead:0
+#: field:crm.lead,state_id:0
 msgid "State"
-msgstr ""
+msgstr "สถานะ"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead1
 msgid "Telesales"
-msgstr ""
+msgstr "การขายทางโทรศัพท์"
 
 #. module: crm
 #: field:crm.meeting,freq:0
@@ -1460,17 +1490,17 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "References"
-msgstr ""
+msgstr "อ้างอิง"
 
 #. module: crm
-#: code:addons/crm/crm.py:441 view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
-#: view:crm.lead2opportunity.partner.mass:0 view:crm.lead2partner:0
-#: view:crm.partner2opportunity:0 view:crm.phonecall:0
-#: view:crm.phonecall2partner:0 view:res.partner:0
-#, python-format
+#: view:crm.lead2opportunity.partner.mass:0
+#: view:crm.merge.opportunity:0
+#: view:crm.opportunity2phonecall:0
+#: view:crm.phonecall:0
+#: view:crm.phonecall2phonecall:0
 msgid "Cancel"
-msgstr ""
+msgstr "ยกเลิก"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
@@ -1507,7 +1537,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
 msgid "Phonecall Categories"
-msgstr ""
+msgstr "ประเภทการโทร"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1527,7 +1557,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
-msgstr ""
+msgstr "ยอดขาย"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_send_email.py:141
@@ -1556,10 +1586,11 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: field:crm.case.categ,name:0 field:crm.lead,name:0
+#: field:crm.case.categ,name:0
+#: field:crm.payment.mode,name:0
 #: field:crm.segmentation,name:0
 msgid "Name"
-msgstr ""
+msgstr "ชื่อ"
 
 #. module: crm
 #: field:crm.meeting,alarm_id:0 field:crm.meeting,base_calendar_alarm_id:0
@@ -1575,7 +1606,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: view:crm.lead.report:0 view:crm.phonecall.report:0
+#: view:crm.lead.report:0
 msgid "My Case(s)"
 msgstr ""
 
@@ -1602,16 +1633,18 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 view:crm.phonecall:0
+#: view:crm.lead:0
+#: view:crm.phonecall:0
 msgid "Creation"
-msgstr ""
+msgstr "การสร้าง"
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "High"
-msgstr ""
+msgstr "สูง"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_partner0
@@ -1664,13 +1697,15 @@ msgstr ""
 #. module: crm
 #: field:crm.lead.report,planned_revenue:0
 msgid "Planned Revenue"
-msgstr ""
+msgstr "รายได้ตามแผน"
 
 #. module: crm
-#: view:crm.lead:0 view:crm.lead.report:0 view:crm.phonecall:0
+#: view:crm.lead:0
+#: view:crm.lead.report:0
+#: view:crm.phonecall:0
 #: view:crm.phonecall.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "จัดกลุ่มตาม..."
 
 #. module: crm
 #: help:crm.lead,partner_id:0
@@ -1695,7 +1730,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Running"
-msgstr ""
+msgstr "กำลังทำงานอยู่"
 
 #. module: crm
 #: selection:crm.meeting,freq:0
@@ -1705,7 +1740,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,zip:0
 msgid "Zip"
-msgstr ""
+msgstr "รหัสไปรษณีย์"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
@@ -1734,7 +1769,7 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
 msgid "Phone calls"
-msgstr ""
+msgstr "การโทรศัพท์"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1762,11 +1797,12 @@ msgid "Mon"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Highest"
-msgstr ""
+msgstr "สูงสุด"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
@@ -1783,10 +1819,10 @@ msgid "Recurrent Meeting"
 msgstr ""
 
 #. module: crm
-#: view:crm.case.section:0 view:crm.lead:0 field:crm.lead,description:0
-#: view:crm.opportunity2phonecall:0
+#: view:crm.case.section:0
+#: field:crm.lead,description:0
 msgid "Notes"
-msgstr ""
+msgstr "บันทึก"
 
 #. module: crm
 #: selection:crm.meeting,freq:0
@@ -1796,7 +1832,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation.line,expr_value:0
 msgid "Value"
-msgstr ""
+msgstr "มูลค่า"
 
 #. module: crm
 #: view:crm.lead:0 view:crm.lead.report:0
@@ -1804,7 +1840,7 @@ msgid "Opportunity by Categories"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,partner_name:0
+#: field:crm.lead,partner_name:0
 msgid "Customer Name"
 msgstr ""
 
@@ -1816,7 +1852,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,reply_to:0
 msgid "Reply-To"
-msgstr ""
+msgstr "ตอบกลับไปยัง"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -1839,16 +1875,17 @@ msgid "Prospect is converting to business partner"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,name:crm.phonecall2opportunity_act
+#: view:crm.phonecall2opportunity:0
 msgid "Convert To Opportunity"
 msgstr ""
 
 #. module: crm
-#: view:crm.phonecall:0 selection:crm.phonecall,state:0
-#: view:crm.phonecall.report:0 selection:crm.phonecall.report,state:0
-#: view:res.partner:0
+#: view:crm.phonecall:0
+#: selection:crm.phonecall,state:0
+#: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
 msgid "Held"
-msgstr ""
+msgstr "ถูกพักรอแล้ว"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1858,7 +1895,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Extra Info"
-msgstr ""
+msgstr "ข้อมูลเพิ่มเติม"
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -1904,11 +1941,15 @@ msgid "Send"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,priority:0 view:crm.lead.report:0
-#: field:crm.lead.report,priority:0 field:crm.phonecall,priority:0
-#: view:crm.phonecall.report:0 field:crm.phonecall.report,priority:0
+#: view:crm.lead:0
+#: field:crm.lead,priority:0
+#: view:crm.lead.report:0
+#: field:crm.lead.report,priority:0
+#: field:crm.phonecall,priority:0
+#: view:crm.phonecall.report:0
+#: field:crm.phonecall.report,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "ความสำคัญ"
 
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
@@ -1959,9 +2000,10 @@ msgid "Segmentation line"
 msgstr ""
 
 #. module: crm
-#: view:crm.opportunity2phonecall:0 view:crm.phonecall2phonecall:0
+#: view:crm.opportunity2phonecall:0
+#: view:crm.phonecall2phonecall:0
 msgid "Planned Date"
-msgstr ""
+msgstr "วันที่ตามแผน"
 
 #. module: crm
 #: field:crm.meeting,base_calendar_url:0
@@ -1971,7 +2013,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Expected Revenues"
-msgstr ""
+msgstr "รายได้ที่คาดหวัง"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead6
@@ -1979,7 +2021,8 @@ msgid "Google Adwords 2"
 msgstr ""
 
 #. module: crm
-#: help:crm.lead,type:0 help:crm.lead.report,type:0
+#: help:crm.lead,type:0
+#: help:crm.lead.report,type:0
 msgid "Type is used to separate Leads and Opportunities"
 msgstr ""
 
@@ -1991,9 +2034,9 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "July"
-msgstr ""
+msgstr "กรกฎาคม"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_section_act
@@ -2015,7 +2058,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_case_section
 #: model:ir.ui.menu,name:crm.menu_crm_case_section_act
 msgid "Sales Teams"
-msgstr ""
+msgstr "ทีมขาย"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2partner
@@ -2023,7 +2066,7 @@ msgid "Lead to Partner"
 msgstr ""
 
 #. module: crm
-#: view:crm.segmentation:0 field:crm.segmentation.line,segmentation_id:0
+#: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
 msgstr ""
@@ -2031,7 +2074,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Team"
-msgstr ""
+msgstr "ทีม"
 
 #. module: crm
 #: field:crm.installer,outlook:0
@@ -2039,29 +2082,30 @@ msgid "MS-Outlook"
 msgstr ""
 
 #. module: crm
-#: view:crm.phonecall:0 selection:crm.phonecall,state:0
-#: view:crm.phonecall.report:0 view:res.partner:0
+#: selection:crm.phonecall,state:0
+#: view:crm.phonecall.report:0
 msgid "Not Held"
 msgstr ""
 
 #. module: crm
 #: field:crm.lead.report,probability:0
 msgid "Probability"
-msgstr ""
+msgstr "ความน่าจะเป็น"
 
 #. module: crm
-#: view:crm.lead.report:0 field:crm.meeting,month_list:0
-#: view:crm.phonecall.report:0 field:crm.phonecall.report,month:0
+#: view:crm.lead.report:0
+#: view:crm.phonecall.report:0
+#: field:crm.phonecall.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "เดือน"
 
 #. module: crm
 #: view:crm.lead:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
-#: model:ir.ui.menu,name:crm.menu_crm_case_categ0_act_leads
+#: model:ir.ui.menu,name:crm.menu_crm_leads
 #: model:process.node,name:crm.process_node_leads0
 msgid "Leads"
-msgstr ""
+msgstr "เป้าหมาย"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
@@ -2091,11 +2135,10 @@ msgid "Start Date"
 msgstr ""
 
 #. module: crm
-#: view:crm.phonecall:0 selection:crm.phonecall,state:0
-#: view:crm.phonecall.report:0 selection:crm.phonecall.report,state:0
-#: view:res.partner:0
+#: view:crm.phonecall.report:0
+#: selection:crm.phonecall.report,state:0
 msgid "Todo"
-msgstr ""
+msgstr "สิ่งที่จะทำ"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -2118,9 +2161,10 @@ msgid "Reset to Unconfirmed"
 msgstr ""
 
 #. module: crm
-#: field:crm.opportunity2phonecall,note:0 field:crm.phonecall2phonecall,note:0
+#: field:crm.opportunity2phonecall,note:0
+#: field:crm.phonecall2phonecall,note:0
 msgid "Note"
-msgstr ""
+msgstr "บันทึก"
 
 #. module: crm
 #: constraint:res.users:0
@@ -2128,19 +2172,22 @@ msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Low"
-msgstr ""
+msgstr "ต่ำ"
 
 #. module: crm
-#: selection:crm.add.note,state:0 field:crm.lead,date_closed:0
-#: selection:crm.lead,state:0 view:crm.lead.report:0
-#: selection:crm.lead.report,state:0 field:crm.meeting,date_closed:0
+#: selection:crm.case.stage,state:0
+#: field:crm.lead,date_closed:0
+#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
+#: selection:crm.lead.report,state:0
 #: field:crm.phonecall,date_closed:0
 msgid "Closed"
-msgstr ""
+msgstr "ปิดแล้ว"
 
 #. module: crm
 #: view:crm.installer:0
@@ -2153,12 +2200,13 @@ msgid "Internal Meeting"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:454 selection:crm.add.note,state:0 view:crm.lead:0
-#: selection:crm.lead,state:0 view:crm.lead.report:0
-#: selection:crm.lead.report,state:0 selection:crm.phonecall.report,state:0
-#, python-format
+#: selection:crm.case.stage,state:0
+#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
+#: selection:crm.lead.report,state:0
+#: selection:crm.phonecall.report,state:0
 msgid "Pending"
-msgstr ""
+msgstr "รอดำเนินการ"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_meet1
@@ -2174,27 +2222,32 @@ msgstr ""
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
-#: model:ir.ui.menu,name:crm.menu_crm_config_phonecall view:res.partner:0
+#: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
 msgid "Phone Calls"
-msgstr ""
+msgstr "การโทร"
 
 #. module: crm
-#: help:crm.lead.report,delay_open:0 help:crm.phonecall.report,delay_open:0
+#: help:crm.lead.report,delay_open:0
+#: help:crm.phonecall.report,delay_open:0
 msgid "Number of Days to open the case"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,phone:0 field:crm.opportunity2phonecall,phone:0
-#: field:crm.phonecall,partner_phone:0 field:crm.phonecall2phonecall,phone:0
+#: field:crm.lead,phone:0
+#: field:crm.opportunity2phonecall,phone:0
+#: view:crm.phonecall:0
+#: field:crm.phonecall,partner_phone:0
+#: field:crm.phonecall2phonecall,phone:0
 msgid "Phone"
-msgstr ""
+msgstr "โทรศัพท์"
 
 #. module: crm
-#: field:crm.case.channel,active:0 field:crm.case.section,active:0
-#: field:crm.lead,active:0 field:crm.meeting,active:0
+#: field:crm.case.channel,active:0
+#: field:crm.case.section,active:0
+#: field:crm.lead,active:0
 #: field:crm.phonecall,active:0
 msgid "Active"
-msgstr ""
+msgstr "เปิดใช้งาน"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:856
@@ -2223,10 +2276,9 @@ msgid "CC"
 msgstr ""
 
 #. module: crm
-#: view:crm.send.mail:0
-#: model:ir.actions.act_window,name:crm.action_crm_send_mail
+#: view:crm.lead:0
 msgid "Send Mail"
-msgstr ""
+msgstr "ส่งเมล์"
 
 #. module: crm
 #: selection:crm.meeting,freq:0
@@ -2246,12 +2298,10 @@ msgid "This may help associations in their fundraising process and tracking."
 msgstr ""
 
 #. module: crm
-#: field:crm.lead2opportunity.partner,action:0
-#: field:crm.lead2opportunity.partner.mass,action:0
-#: field:crm.lead2partner,action:0 field:crm.opportunity2phonecall,action:0
-#: field:crm.phonecall2partner,action:0 field:crm.phonecall2phonecall,action:0
+#: field:crm.opportunity2phonecall,action:0
+#: field:crm.phonecall2phonecall,action:0
 msgid "Action"
-msgstr ""
+msgstr "การกระทำ"
 
 #. module: crm
 #: field:crm.installer,crm_claim:0
@@ -2286,12 +2336,12 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Misc"
-msgstr ""
+msgstr "เบ็ดเตล็ด"
 
 #. module: crm
-#: model:crm.case.categ,name:crm.categ_oppor8 view:crm.meeting:0
+#: model:crm.case.categ,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "อื่น ๆ"
 
 #. module: crm
 #: view:crm.meeting:0 selection:crm.meeting,state:0
@@ -2314,11 +2364,11 @@ msgid "_Schedule Call"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:396 view:crm.lead:0 view:crm.lead.report:0
-#: selection:crm.lead.report,state:0 view:res.partner:0
-#, python-format
+#: view:crm.lead:0
+#: view:crm.lead.report:0
+#: selection:crm.lead.report,state:0
 msgid "Open"
-msgstr ""
+msgstr "เปิด"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -2326,9 +2376,10 @@ msgid "Tuesday"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
-msgstr ""
+msgstr "จังหวัด"
 
 #. module: crm
 #: selection:crm.meeting,show_as:0
@@ -2458,10 +2509,11 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Leads"
-msgstr ""
+msgstr "ค้นหา"
 
 #. module: crm
-#: view:crm.lead.report:0 view:crm.phonecall.report:0
+#: view:crm.lead.report:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,delay_open:0
 msgid "Delay to open"
 msgstr ""
@@ -2479,7 +2531,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Referrer"
-msgstr ""
+msgstr "ที่อ้างถึง"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity
@@ -2499,7 +2551,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Continue Process"
-msgstr ""
+msgstr "ทำงานต่อ"
 
 #. module: crm
 #: view:crm.installer:0
@@ -2522,7 +2574,7 @@ msgstr ""
 #: field:crm.opportunity2phonecall,user_id:0
 #: field:crm.phonecall2phonecall,user_id:0
 msgid "Assign To"
-msgstr ""
+msgstr "มอบหมายถึง"
 
 #. module: crm
 #: field:crm.add.note,state:0
@@ -2530,16 +2582,16 @@ msgid "Set New State To"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,date_action_last:0 field:crm.meeting,date_action_last:0
+#: field:crm.lead,date_action_last:0
 #: field:crm.phonecall,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "การกระทำล่าสุด"
 
 #. module: crm
-#: field:crm.meeting,duration:0 field:crm.phonecall,duration:0
+#: field:crm.phonecall,duration:0
 #: field:crm.phonecall.report,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "ระยะเวลา"
 
 #. module: crm
 #: field:crm.send.mail,reply_to:0
@@ -2558,12 +2610,13 @@ msgid "A partner is already defined on this lead."
 msgstr ""
 
 #. module: crm
-#: field:crm.lead.report,nbr:0 field:crm.phonecall.report,nbr:0
+#: field:crm.lead.report,nbr:0
+#: field:crm.phonecall.report,nbr:0
 msgid "# of Cases"
 msgstr ""
 
 #. module: crm
-#: help:crm.meeting,section_id:0 help:crm.phonecall,section_id:0
+#: help:crm.phonecall,section_id:0
 msgid "Sales team to which Case belongs to."
 msgstr ""
 
@@ -2591,7 +2644,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,fax:0
 msgid "Fax"
-msgstr ""
+msgstr "แฟกซ์"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
@@ -2615,11 +2668,14 @@ msgid "Assignment"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,company_id:0 view:crm.lead.report:0
-#: field:crm.lead.report,company_id:0 field:crm.phonecall,company_id:0
-#: view:crm.phonecall.report:0 field:crm.phonecall.report,company_id:0
+#: field:crm.lead,company_id:0
+#: view:crm.lead.report:0
+#: field:crm.lead.report,company_id:0
+#: field:crm.phonecall,company_id:0
+#: view:crm.phonecall.report:0
+#: field:crm.phonecall.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "บริษัท"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -2634,7 +2690,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation.line,operator:0
 msgid "Mandatory / Optional"
-msgstr ""
+msgstr "บังคับ / เพิ่มเติม"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_view_attendee_form
@@ -2645,7 +2701,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.categ,object_id:0
 msgid "Object Name"
-msgstr ""
+msgstr "ชื่อออปเจ็กต์"
 
 #. module: crm
 #: help:crm.lead,email_from:0
@@ -2655,7 +2711,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,referred:0
 msgid "Referred By"
-msgstr ""
+msgstr "อ้างอิงโดย"
 
 #. module: crm
 #: view:crm.lead:0 model:ir.model,name:crm.model_crm_add_note
@@ -2674,10 +2730,11 @@ msgid "Last"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead,message_ids:0 field:crm.meeting,message_ids:0
+#: field:crm.case.section,message_ids:0
+#: field:crm.lead,message_ids:0
 #: field:crm.phonecall,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "ข้อความ"
 
 #. module: crm
 #: help:crm.case.stage,on_change:0
@@ -2691,16 +2748,19 @@ msgid "Error!"
 msgstr ""
 
 #. module: crm
-#: field:crm.opportunity2phonecall,name:0 field:crm.phonecall2phonecall,name:0
+#: field:crm.opportunity2phonecall,name:0
+#: field:crm.phonecall2phonecall,name:0
 msgid "Call summary"
-msgstr ""
+msgstr "สรุปการโทร"
 
 #. module: crm
-#: selection:crm.add.note,state:0 selection:crm.lead,state:0
-#: selection:crm.lead.report,state:0 selection:crm.meeting,state:0
-#: selection:crm.phonecall,state:0 selection:crm.phonecall.report,state:0
+#: selection:crm.case.stage,state:0
+#: selection:crm.lead,state:0
+#: selection:crm.lead.report,state:0
+#: selection:crm.phonecall,state:0
+#: selection:crm.phonecall.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "ยกเลิกแล้ว"
 
 #. module: crm
 #: field:crm.add.note,body:0
@@ -2716,7 +2776,7 @@ msgstr ""
 #: field:crm.lead.report,date_closed:0
 #: field:crm.phonecall.report,date_closed:0
 msgid "Close Date"
-msgstr ""
+msgstr "วันปิด"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2776,14 +2836,14 @@ msgid "Warning"
 msgstr ""
 
 #. module: crm
-#: field:crm.phonecall,name:0 view:res.partner:0
+#: field:crm.phonecall,name:0
 msgid "Call Summary"
-msgstr ""
+msgstr "สรุปการโทร"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
 msgid "Operator"
-msgstr ""
+msgstr "ผู้ปฏิบัติการ"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2phonecall
@@ -2794,7 +2854,7 @@ msgstr ""
 #: view:crm.lead:0
 #: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule/Log Call"
-msgstr ""
+msgstr "แผน/บันทึกการโทร"
 
 #. module: crm
 #: field:crm.installer,fetchmail:0
@@ -2802,9 +2862,9 @@ msgid "Fetch Emails"
 msgstr ""
 
 #. module: crm
-#: selection:crm.meeting,state:0
+#: selection:crm.phonecall,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "ยืนยันแล้ว"
 
 #. module: crm
 #: help:crm.send.mail,email_cc:0
@@ -2814,9 +2874,9 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: view:crm.meeting:0
+#: view:crm.phonecall:0
 msgid "Confirm"
-msgstr ""
+msgstr "ยืนยัน"
 
 #. module: crm
 #: field:crm.meeting,su:0
@@ -2826,7 +2886,7 @@ msgstr ""
 #. module: crm
 #: field:crm.phonecall.report,section_id:0
 msgid "Section"
-msgstr ""
+msgstr "หัวข้อ"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2844,7 +2904,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Optional Expression"
-msgstr ""
+msgstr "เงื่อนไขเพิ่มเติม"
 
 #. module: crm
 #: selection:crm.meeting,select1:0
@@ -2852,15 +2912,18 @@ msgid "Day of month"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead2opportunity,probability:0
+#: field:crm.lead,probability:0
 msgid "Success Rate (%)"
-msgstr ""
+msgstr "อัตราการสำเสร็จ"
 
 #. module: crm
-#: selection:crm.add.note,state:0 model:crm.case.stage,name:crm.stage_lead1
-#: view:crm.lead:0 selection:crm.lead,state:0 view:crm.lead.report:0
+#: model:crm.case.stage,name:crm.stage_lead1
+#: selection:crm.case.stage,state:0
+#: view:crm.lead:0
+#: selection:crm.lead,state:0
+#: view:crm.lead.report:0
 msgid "New"
-msgstr ""
+msgstr "ใหม่"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -2868,21 +2931,26 @@ msgid "Mail TO"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,email_from:0 field:crm.meeting,email_from:0
+#: view:crm.lead:0
+#: field:crm.lead,email_from:0
 #: field:crm.phonecall,email_from:0
 msgid "Email"
-msgstr ""
+msgstr "อีเมล"
 
 #. module: crm
-#: view:crm.case.channel:0 view:crm.lead:0 field:crm.lead,channel_id:0
-#: view:crm.lead.report:0 field:crm.lead.report,channel_id:0
+#: view:crm.case.channel:0
+#: view:crm.lead:0
+#: field:crm.lead,channel_id:0
+#: view:crm.lead.report:0
+#: field:crm.lead.report,channel_id:0
 msgid "Channel"
-msgstr ""
+msgstr "ช่องทาง"
 
 #. module: crm
-#: view:crm.opportunity2phonecall:0 view:crm.phonecall2phonecall:0
+#: view:crm.opportunity2phonecall:0
+#: view:crm.phonecall2phonecall:0
 msgid "Schedule Call"
-msgstr ""
+msgstr "แผนการโทร"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
@@ -2894,7 +2962,7 @@ msgstr ""
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
-msgstr ""
+msgstr "ทำประวัติย่อ"
 
 #. module: crm
 #: help:crm.segmentation,exclusif:0
@@ -2930,7 +2998,7 @@ msgstr ""
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
 msgid "Creating business opportunities from Leads"
-msgstr ""
+msgstr "สร้างโอกาสจากเป้าหมาย"
 
 #. module: crm
 #: help:crm.send.mail,html:0
@@ -2992,9 +3060,9 @@ msgid "Daily"
 msgstr ""
 
 #. module: crm
-#: model:crm.case.stage,name:crm.stage_lead2
+#: model:crm.case.stage,name:crm.stage_lead3
 msgid "Qualification"
-msgstr ""
+msgstr "คุณสมบัติ"
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -3009,9 +3077,9 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "December"
-msgstr ""
+msgstr "ธันวาคม"
 
 #. module: crm
 #: field:crm.installer,config_logo:0
@@ -3064,7 +3132,8 @@ msgid "Salesman"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,date_deadline:0
+#: view:crm.lead:0
+#: field:crm.lead,date_deadline:0
 msgid "Expected Closing"
 msgstr ""
 
@@ -3081,7 +3150,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "ตารางเวลาการประชุม"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3091,17 +3160,19 @@ msgstr ""
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone2
 msgid "Outbound"
-msgstr ""
+msgstr "ขาออก"
 
 #. module: crm
-#: field:crm.lead,date_open:0 field:crm.phonecall,date_open:0
+#: field:crm.lead,date_open:0
+#: field:crm.phonecall,date_open:0
 msgid "Opened"
-msgstr ""
+msgstr "เปิดแล้ว"
 
 #. module: crm
-#: view:crm.case.section:0 field:crm.case.section,member_ids:0
+#: view:crm.case.section:0
+#: field:crm.case.section,member_ids:0
 msgid "Team Members"
-msgstr ""
+msgstr "สมาชิกในทีม"
 
 #. module: crm
 #: view:crm.lead:0 view:crm.meeting:0 view:crm.phonecall:0
@@ -3143,16 +3214,16 @@ msgid "Success Probability"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm.py:466 selection:crm.lead.report,state:0
-#: selection:crm.phonecall,state:0 selection:crm.phonecall.report,state:0
-#, python-format
+#: selection:crm.lead.report,state:0
+#: selection:crm.phonecall,state:0
+#: selection:crm.phonecall.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "ฉบับร่าง"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
 msgid "Cases by Sales Team"
-msgstr ""
+msgstr "เรื่องโดยทีมขาย"
 
 #. module: crm
 #: field:crm.meeting,attendee_ids:0
@@ -3160,17 +3231,17 @@ msgid "Attendees"
 msgstr ""
 
 #. module: crm
-#: view:crm.meeting:0 view:crm.phonecall:0
+#: view:crm.lead:0
+#: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
-#: model:res.request.link,name:crm.request_link_meeting
 msgid "Meeting"
-msgstr ""
+msgstr "การประชุม"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of Case"
-msgstr ""
+msgstr "หมวดของเรื่อง"
 
 #. module: crm
 #: view:crm.lead:0 view:crm.phonecall:0
@@ -3198,16 +3269,17 @@ msgid "Configuration Progress"
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.lead,priority:0
+#: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
 #: selection:crm.phonecall.report,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "ปกติ"
 
 #. module: crm
 #: field:crm.lead,street2:0
 msgid "Street2"
-msgstr ""
+msgstr "ตำบล"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_meeting_categ_action
@@ -3226,16 +3298,17 @@ msgid "Delay to Open"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead.report,user_id:0 field:crm.phonecall.report,user_id:0
+#: field:crm.lead.report,user_id:0
+#: field:crm.phonecall.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "ผู้ใช้"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "November"
-msgstr ""
+msgstr "พฤศจิกายน"
 
 #. module: crm
 #: code:addons/crm/crm_action_rule.py:67
@@ -3247,7 +3320,7 @@ msgstr ""
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
-msgstr ""
+msgstr "โอกาสโดยขั้นตอน"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_create_partner
@@ -3257,9 +3330,9 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "January"
-msgstr ""
+msgstr "มกราคม"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_stage_act
@@ -3273,12 +3346,12 @@ msgstr ""
 #. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
 msgid "Contract"
-msgstr ""
+msgstr "สัญญา"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead4
 msgid "Twitter Ads"
-msgstr ""
+msgstr "โฆษณา Twitter"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:831 code:addons/crm/wizard/crm_add_note.py:28
@@ -3289,7 +3362,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Planned Revenues"
-msgstr ""
+msgstr "เป้าหมายรายได้"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor7
@@ -3336,9 +3409,9 @@ msgid "Close"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0 view:crm.phonecall:0
+#: view:crm.lead:0
 msgid "Categorization"
-msgstr ""
+msgstr "การจัดประเภท"
 
 #. module: crm
 #: model:ir.model,name:crm.model_base_action_rule
@@ -3352,8 +3425,9 @@ msgstr ""
 
 #. module: crm
 #: field:crm.meeting,phonecall_id:0
+#: model:ir.model,name:crm.model_crm_phonecall
 msgid "Phonecall"
-msgstr ""
+msgstr "การโทร"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -3373,7 +3447,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,function:0
 msgid "Function"
-msgstr ""
+msgstr "ฟังก์ชั่น"
 
 #. module: crm
 #: view:crm.add.note:0
@@ -3386,31 +3460,38 @@ msgid "State of Mind"
 msgstr ""
 
 #. module: crm
-#: field:crm.case.section,note:0 view:crm.meeting:0
-#: field:crm.meeting,description:0 view:crm.phonecall:0
-#: field:crm.phonecall,description:0 field:crm.segmentation,description:0
+#: field:crm.case.section,note:0
+#: field:crm.phonecall,description:0
+#: view:crm.segmentation:0
+#: field:crm.segmentation,description:0
 msgid "Description"
-msgstr ""
+msgstr "รายละเอียด"
 
 #. module: crm
-#: field:base.action.rule,trg_section_id:0 field:crm.case.categ,section_id:0
-#: field:crm.case.resource.type,section_id:0 view:crm.case.section:0
-#: field:crm.case.section,name:0 view:crm.lead:0 field:crm.lead,section_id:0
-#: view:crm.lead.report:0 field:crm.lead.report,section_id:0
+#: field:crm.case.categ,section_id:0
+#: field:crm.case.resource.type,section_id:0
+#: view:crm.case.section:0
+#: field:crm.case.section,name:0
+#: field:crm.lead,section_id:0
+#: view:crm.lead.report:0
+#: field:crm.lead.report,section_id:0
 #: field:crm.lead2opportunity.partner.mass,section_id:0
-#: field:crm.meeting,section_id:0 field:crm.opportunity2phonecall,section_id:0
-#: view:crm.phonecall:0 field:crm.phonecall,section_id:0
-#: view:crm.phonecall.report:0 field:crm.phonecall2phonecall,section_id:0
-#: field:res.partner,section_id:0 field:res.users,context_section_id:0
+#: field:crm.opportunity2phonecall,section_id:0
+#: field:crm.payment.mode,section_id:0
+#: view:crm.phonecall:0
+#: field:crm.phonecall,section_id:0
+#: view:crm.phonecall.report:0
+#: field:crm.phonecall2phonecall,section_id:0
+#: field:res.partner,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "ทีมขาย"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "May"
-msgstr ""
+msgstr "พฤษภาคม"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor2
@@ -3431,7 +3512,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,street:0
 msgid "Street"
-msgstr ""
+msgstr "ที่อยู่"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -3441,45 +3522,51 @@ msgstr ""
 #. module: crm
 #: field:crm.case.section,working_hours:0
 msgid "Working Hours"
-msgstr ""
+msgstr "ชั่วโมงทำงาน"
 
 #. module: crm
-#: view:crm.lead:0 field:crm.lead,is_customer_add:0
+#: code:addons/crm/crm_lead.py:1002
+#: view:crm.lead:0
+#: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
+#: field:crm.partner.binding,partner_id:0
+#, python-format
 msgid "Customer"
-msgstr ""
+msgstr "ลูกค้า"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "February"
-msgstr ""
+msgstr "กุมภาพันธ์"
 
 #. module: crm
 #: view:crm.phonecall:0
-#: model:ir.actions.act_window,name:crm.crm_case_categ_meet_create_partner
 msgid "Schedule a Meeting"
-msgstr ""
+msgstr "วางแผนการประชุม"
 
 #. module: crm
-#: model:crm.case.stage,name:crm.stage_lead6 view:crm.lead:0
+#: model:crm.case.stage,name:crm.stage_lead8
+#: view:crm.lead:0
 msgid "Lost"
-msgstr ""
+msgstr "ไม่สำเร็จ"
 
 #. module: crm
-#: field:crm.lead,country_id:0 view:crm.lead.report:0
+#: view:crm.lead:0
+#: field:crm.lead,country_id:0
+#: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "ประเทศ"
 
 #. module: crm
-#: view:crm.lead:0 view:crm.lead2opportunity.partner:0
-#: selection:crm.lead2opportunity.partner,name:0
+#: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
-#: selection:crm.lead2opportunity.partner.mass,name:0 view:crm.phonecall:0
-#: view:res.partner:0
+#: view:crm.phonecall:0
 msgid "Convert to Opportunity"
-msgstr ""
+msgstr "แปลงเป็นโอกาส"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -3489,14 +3576,14 @@ msgstr ""
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
 #: selection:crm.lead.report,deadline_month:0
-#: selection:crm.meeting,month_list:0 selection:crm.phonecall.report,month:0
+#: selection:crm.phonecall.report,month:0
 msgid "April"
-msgstr ""
+msgstr "เมษายน"
 
 #. module: crm
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
-msgstr ""
+msgstr "ชื่อแคมเปญ"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3515,9 +3602,9 @@ msgid "Option"
 msgstr ""
 
 #. module: crm
-#: model:crm.case.stage,name:crm.stage_lead4
+#: model:crm.case.stage,name:crm.stage_lead5
 msgid "Negotiation"
-msgstr ""
+msgstr "กำลังเจรจา"
 
 #. module: crm
 #: view:crm.lead:0
@@ -3525,9 +3612,9 @@ msgid "Exp.Closing"
 msgstr ""
 
 #. module: crm
-#: field:crm.case.stage,sequence:0 field:crm.meeting,sequence:0
+#: field:crm.case.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "ลำดับ"
 
 #. module: crm
 #: field:crm.send.mail,body:0
@@ -3542,7 +3629,7 @@ msgstr ""
 #. module: crm
 #: field:crm.segmentation.line,expr_name:0
 msgid "Control Variable"
-msgstr ""
+msgstr "ตัวแปรควบคุม"
 
 #. module: crm
 #: selection:crm.meeting,byday:0
@@ -3550,22 +3637,24 @@ msgid "Second"
 msgstr ""
 
 #. module: crm
-#: model:crm.case.stage,name:crm.stage_lead3
+#: model:crm.case.stage,name:crm.stage_lead4
 msgid "Proposition"
-msgstr ""
+msgstr "ข้อเสนอ"
 
 #. module: crm
+#: view:crm.phonecall:0
 #: field:res.partner,phonecall_ids:0
 msgid "Phonecalls"
-msgstr ""
+msgstr "การโทร"
 
 #. module: crm
-#: view:crm.lead.report:0 view:crm.phonecall.report:0
+#: view:crm.lead.report:0
+#: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "ปี"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
-msgstr ""
+msgstr "ข่าวสาร"

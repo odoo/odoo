@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:09+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -187,7 +187,7 @@ msgstr "来自"
 #. module: membership
 #: constraint:membership.membership_line:0
 msgid "Error, this membership product is out of date"
-msgstr "错误，这个会员产品已过期"
+msgstr "错误，这个会员卡已过期"
 
 #. module: membership
 #: help:res.partner,membership_state:0
@@ -226,7 +226,6 @@ msgstr "会员明细"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "入会日期"
 
@@ -250,6 +249,7 @@ msgstr "# 正在等待"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "会员"
@@ -284,7 +284,7 @@ msgid ""
 msgstr "你将作为哪个客户的附属会员。你的会员资格会随着主会员的状态变化。"
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
@@ -314,7 +314,7 @@ msgstr "会员资格到哪一天结束"
 #. module: membership
 #: view:product.product:0
 msgid "Membership products"
-msgstr "会员产品"
+msgstr "会员卡"
 
 #. module: membership
 #: field:membership.membership_line,date:0
@@ -437,6 +437,7 @@ msgstr "会员售价表"
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "附属会员"
 
@@ -483,6 +484,7 @@ msgstr "发票"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "免费会员"
@@ -556,8 +558,8 @@ msgid "June"
 msgstr "6月"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
 #: view:product.product:0
 #: field:product.product,membership:0
 #: view:report.membership:0
@@ -621,6 +623,7 @@ msgid "January"
 msgstr "1月"
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "会费"
@@ -660,7 +663,6 @@ msgstr "到"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
 msgstr "当前会员状态"
 
@@ -726,9 +728,6 @@ msgstr "会员草稿发票"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "会员价格"
 
@@ -827,7 +826,7 @@ msgid "Cancelled Member"
 msgstr "已取消的会员"
 
 #. module: membership
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "错误：无效的(EAN)条码"
 

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -53,18 +53,20 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "ドラフトの製品の調達とその発注点の場所"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:291
+#: code:addons/procurement/procurement.py:290
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "この製品には仕入先が定義されていません。"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
+#: view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
+#: field:product.template,procure_method:0
 msgid "Procurement Method"
 msgstr "調達方法"
 
@@ -92,7 +94,6 @@ msgstr "販売単位の数量"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "理由"
 
@@ -104,7 +105,7 @@ msgstr "調達計算"
 #. module: procurement
 #: field:procurement.order,message:0
 msgid "Latest error"
-msgstr "最新のエラー"
+msgstr "直近のエラー"
 
 #. module: procurement
 #: help:mrp.property,composition:0
@@ -114,7 +115,7 @@ msgstr "情報目的のみであるため、計算には使用されません。
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr "最新の調達"
+msgstr "直近の調達"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -230,7 +231,7 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr "調達オーダーの処理"
+msgstr "未処理調達オーダ"
 
 #. module: procurement
 #: constraint:res.company:0
@@ -238,7 +239,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:386
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "調達 %s は例外です： "
@@ -328,10 +329,10 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr "十分な在庫がなく、かつ最小発注点ルールが定義されていません。"
+msgstr "在庫不足かつ最小発注点規則の定義がありません。"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -359,7 +360,7 @@ msgstr "数量倍数"
 msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
-msgstr "調達を手動で作成する場合、あなたは恐らくオーダー方法のための型を使うことを望むでしょう。"
+msgstr "調達をマニュアル作成する場合、特別な理由がなければ「オーダ」を選択してください。"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -500,7 +501,6 @@ msgstr ""
 "待たされるかもしれません。"
 
 #. module: procurement
-#: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
 msgstr "注記"
@@ -517,8 +517,9 @@ msgstr "ウィザードは調達をスケジュールします。"
 
 #. module: procurement
 #: view:procurement.order:0
+#: field:procurement.order,state:0
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -531,15 +532,15 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "違う製品のロットを割り当てることはできません。"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:383
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
-msgstr "十分な在庫ではありません。"
+msgstr "在庫不足です。"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_procureproducts0
@@ -563,7 +564,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "最小発注点ルールが定義されていません。"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:151
+#: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "自動発注点：%s"
@@ -630,7 +631,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:327
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "データが不足しています。"
@@ -679,13 +680,11 @@ msgstr ""
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
-#: selection:procurement.order,state:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
-msgstr "キャンセル"
+msgstr "取消"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
@@ -695,7 +694,7 @@ msgstr "再オーダーのモード"
 #. module: procurement
 #: field:procurement.order,origin:0
 msgid "Source Document"
-msgstr "基となるドキュメント"
+msgstr "参照元"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -730,16 +729,10 @@ msgstr "詳細"
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
 #: view:procurement.order:0
 msgid "Procurement Exceptions"
-msgstr "調達の例外"
+msgstr "調達例外"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:product.product:0
-#: view:stock.warehouse.orderpoint:0
+#: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
 msgstr "最小在庫ルール"
 
@@ -770,6 +763,7 @@ msgstr "一時的"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "説明"
 
@@ -795,8 +789,10 @@ msgstr "製品単位"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
+#: selection:procurement.order,procure_method:0
+#: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "オーダーの作成"
+msgstr "オーダー"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -848,7 +844,7 @@ msgstr "MRPと物流のスケジューラ"
 #: field:mrp.property,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
-msgstr "名前"
+msgstr "名称"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -927,7 +923,7 @@ msgid "Procurement Details"
 msgstr "調達の詳細"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:152
+#: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
 msgstr "スケジューラ"

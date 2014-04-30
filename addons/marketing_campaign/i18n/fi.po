@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:08+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -28,10 +28,11 @@ msgid "Previous Activity"
 msgstr "Edellinen toiminto"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
+"Toiminnon tälle vaiheelle ei ole tarkasteltavaa sähköpostia tai raporttia."
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
@@ -93,7 +94,7 @@ msgstr ""
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Editor"
-msgstr ""
+msgstr "Kampanjaeditori"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -138,6 +139,7 @@ msgid "Set to Draft"
 msgstr "Aseta luonnokseksi"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "Seuraavat toiminnot"
@@ -153,7 +155,7 @@ msgid "This Year"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "No preview"
 msgstr "Ei esikatselua"
@@ -183,7 +185,7 @@ msgstr "Palauta"
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Valitse resurssi, josta kampanja suoritetaan"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -207,6 +209,8 @@ msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
 msgstr ""
+"Päivä, jolloin tämä osio synkronoitiin viimeksi (automaattisesti tai "
+"manuaalisesti)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -254,7 +258,7 @@ msgstr "Kampanja"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,start:0
 msgid "Start"
-msgstr ""
+msgstr "Alku"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
@@ -369,6 +373,7 @@ msgid "Run"
 msgstr "Suorita"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "Aiemmat toiminnot"
@@ -381,7 +386,7 @@ msgstr "Päivä jolloin tämä osio suljettiin tai peruutettiin."
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activities"
-msgstr ""
+msgstr "Markkinointikampanjatoiminnot"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -394,6 +399,7 @@ msgstr "Virheviesti"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "Kampanjat"
 
@@ -442,8 +448,6 @@ msgid "Campaign Segment"
 msgstr "Kampanjaosio"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "Peruuta"
@@ -461,6 +465,7 @@ msgid "Exceptions"
 msgstr "Poikkeukset"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
 msgstr "Työkohteet"
@@ -508,7 +513,9 @@ msgid "Next Activity"
 msgstr "Seuraava toiminto"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "Kampanjan seuranta"
 
@@ -538,7 +545,7 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "Kampanjatilastot"
 
@@ -563,7 +570,7 @@ msgstr "Kampanja-analyysi"
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "Välin tulee olla nolla tai positiivinen kokonaisluku"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -667,7 +674,6 @@ msgstr "Juuri luodut"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "Päivämäärä"
 
@@ -677,7 +683,6 @@ msgid "November"
 msgstr "marraskuu"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr ""
@@ -747,7 +752,6 @@ msgid "Error"
 msgstr "Virhe"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "Toiminto"
@@ -863,8 +867,10 @@ msgid "Campaign Step"
 msgstr "Kampanjan vaihe"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "Osiot"
@@ -890,6 +896,7 @@ msgid "Day(s)"
 msgstr "päivä(ä)"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
@@ -916,6 +923,7 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
 msgstr "Markkinointikampanja"
 
@@ -949,7 +957,7 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
+#: code:addons/marketing_campaign/marketing_campaign.py:793
 #, python-format
 msgid "Email Preview"
 msgstr "Sähköpostin esikatselu"
@@ -980,12 +988,11 @@ msgstr "huhtikuu"
 #: view:marketing.campaign:0
 #: field:marketing.campaign,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Tila"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1012,10 +1019,9 @@ msgid "Next Synchronization"
 msgstr "Seuraava synkronointi"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
-msgstr ""
+msgstr "Suodatin"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1040,7 +1046,6 @@ msgstr ""
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
 msgid "Cost"
 msgstr "Kustannus"
 

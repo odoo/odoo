@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-04 05:45+0000\n"
-"X-Generator: Launchpad (build 16660)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:29+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -135,7 +135,7 @@ msgstr ""
 "Eingangsrechnung vornehmen."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:350
+#: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/wizard/purchase_line_invoice.py:137
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: view:res.partner:0
@@ -224,7 +224,7 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
-"Diese Preisliste wird anstelle der Standard Preisliste für Einkäufe beim "
+"Diese Preisliste wird anstelle der Standard-Preisliste für Einkäufe beim "
 "aktuellen Partner verwendet."
 
 #. module: purchase
@@ -287,7 +287,7 @@ msgstr "Referenz ME"
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
 #: view:res.partner:0
 msgid "Purchases"
-msgstr "Einkäufe"
+msgstr "Einkauf"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -597,7 +597,7 @@ msgstr "Tel.:"
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr "Lieferauftrag"
+msgstr "Packauftrag"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -706,7 +706,7 @@ msgstr ""
 "Lieferfähigkeit und Termintreue."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:956
+#: code:addons/purchase/purchase.py:982
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -737,7 +737,7 @@ msgstr "Erzeuge Rechnung"
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
-msgstr "Reservierung Auslieferungsziel"
+msgstr "Reservierung Ziel"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:236
@@ -1163,7 +1163,7 @@ msgstr "Bestellungen"
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr "Erzeuge Rechnungen"
+msgstr "Manuell erstellte Rechnungen"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:318
@@ -1204,12 +1204,14 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr "Bitte wählen Sie Zusammenfassen von Bestellungen über das Menü."
+msgstr ""
+"Bitte wählen Sie mehrere Bestellungen um sie in einer Liste zusammen zu "
+"fassen."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr "Lieferauftrag erstellt"
+msgstr "Packliste erstellt"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1331,7 +1333,7 @@ msgstr "Produkte nach Kategorien"
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr "Tage b. Bestellung"
+msgstr "Tage zur Bestätigung"
 
 #. module: purchase
 #: help:purchase.order,origin:0
@@ -1456,7 +1458,7 @@ msgstr "Referenzbeleg"
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
-msgstr "Zusammenfassung Bestellung"
+msgstr "Bestellungen zusammenfassen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice

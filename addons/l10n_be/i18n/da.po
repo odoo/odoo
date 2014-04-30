@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:07+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:17+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: l10n_be
 #: field:partner.vat.intra,test_xml:0
@@ -28,7 +28,7 @@ msgid "Client Name"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "XML File has been Created."
 msgstr ""
 
@@ -53,17 +53,14 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:265
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "utilstrækkelige data!"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "Create XML"
 msgstr ""
 
@@ -75,6 +72,7 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Save the File with '.xml' extension."
 msgstr ""
 
@@ -84,10 +82,10 @@ msgid "Save XML"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:258
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "Gem"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_vat_listing_clients
@@ -97,15 +95,14 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
 #: field:partner.vat.intra,msg:0
-#: field:partner.vat.list_13,msg:0
 msgid "File created"
-msgstr ""
+msgstr "Fil oprettet"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:201
 #, python-format
 msgid "Save XML For Vat declaration"
-msgstr ""
+msgstr "Gem XML for momsafregning"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
@@ -124,21 +121,21 @@ msgid "Vat Declaraion"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat.intra:0
 #: field:partner.vat.intra,no_vat:0
 msgid "Partner With No VAT"
-msgstr ""
+msgstr "Partner  uden moms"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: field:partner.vat.intra,tax_code_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_list
 msgid "partner.vat.list"
-msgstr ""
+msgstr "Partner.moms.liste"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.partner_vat_listing
@@ -179,9 +176,8 @@ msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,tax_code_id:0
-#: field:partner.vat.intra,tax_code_id:0
 msgid "Tax Code"
-msgstr ""
+msgstr "Momskode"
 
 #. module: l10n_be
 #: view:vat.listing.clients:0
@@ -199,7 +195,7 @@ msgid "Sets the XML output as test file"
 msgstr ""
 
 #. module: l10n_be
-#: field:partner.vat_13,limit_amount:0
+#: field:partner.vat,limit_amount:0
 msgid "Limit Amount"
 msgstr ""
 
@@ -224,7 +220,7 @@ msgstr ""
 #. module: l10n_be
 #: field:vat.listing.clients,vat:0
 msgid "VAT"
-msgstr ""
+msgstr "Moms"
 
 #. module: l10n_be
 #: field:vat.listing.clients,country:0
@@ -232,9 +228,7 @@ msgid "Country"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.account.template,name:l10n_be.a2900
-#: model:account.account.template,name:l10n_be.a400
-#: model:account.account.template,name:l10n_be.a_recv
+#: field:partner.vat.list,partner_ids:0
 msgid "Clients"
 msgstr ""
 
@@ -319,7 +313,7 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Save xml"
-msgstr ""
+msgstr "Gem xml"
 
 #. module: l10n_be
 #: field:partner.vat.intra,mand_id:0
@@ -329,9 +323,9 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
 #: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list_13,file_save:0
+#: field:partner.vat.list,file_save:0
 msgid "Save File"
-msgstr ""
+msgstr "Gem fil"
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_code:0
@@ -350,7 +344,7 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
-#: field:partner.vat.list_13,name:0
+#: field:partner.vat.list,name:0
 msgid "File Name"
 msgstr ""
 
@@ -366,6 +360,7 @@ msgid "Fiscal Year"
 msgstr ""
 
 #. module: l10n_be
+#: model:ir.actions.act_window,name:l10n_be.action_vat_declaration
 #: model:ir.model,name:l10n_be.model_l1on_be_vat_declaration
 msgid "Vat Declaration"
 msgstr ""
@@ -374,11 +369,11 @@ msgstr ""
 #: view:partner.vat.intra:0
 #: field:partner.vat.intra,country_ids:0
 msgid "European Countries"
-msgstr ""
+msgstr "Europæiske lande"
 
 #. module: l10n_be
-#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
-#: view:partner.vat_13:0
+#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
+#: view:partner.vat:0
 msgid "Partner VAT Listing"
 msgstr ""
 
@@ -407,7 +402,7 @@ msgstr ""
 #. module: l10n_be
 #: field:partner.vat.intra,period_code:0
 msgid "Period Code"
-msgstr ""
+msgstr "Periode kode"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_payment:0
@@ -420,7 +415,10 @@ msgid "View Client"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat_13:0
+#: view:l1on_be.vat.declaration:0
+#: view:partner.vat:0
+#: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Cancel"
 msgstr ""
 
@@ -432,10 +430,10 @@ msgid "Close"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:119
 #, python-format
 msgid "Please select at least one Period."
-msgstr ""
+msgstr "Vælg mindst én periode."
 
 #. module: l10n_be
 #: model:ir.module.module,description:l10n_be.module_meta_information
@@ -485,4 +483,4 @@ msgstr ""
 #. module: l10n_be
 #: field:partner.vat.intra,period_ids:0
 msgid "Period (s)"
-msgstr ""
+msgstr "Periode (r)"

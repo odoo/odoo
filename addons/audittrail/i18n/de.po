@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:47+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
@@ -23,7 +23,7 @@ msgid "Audit Trail"
 msgstr "Nachvollziehbarkeit"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:75
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr "WARNUNG: audittrail ist nicht Teil dieses Pools"
@@ -40,6 +40,7 @@ msgid "Subscribed"
 msgstr "Abonniert"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
 msgstr "Regel Belegrückverfolgung"
@@ -47,7 +48,7 @@ msgstr "Regel Belegrückverfolgung"
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_audit_logs
 msgid "Audit Logs"
 msgstr "Audit Protokolle"
 
@@ -243,7 +244,7 @@ msgid "Log Reads"
 msgstr "Protokoll Lesevorgänge"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:76
+#: code:addons/audittrail/audittrail.py:77
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr "Ändern der Nachvollziehbarkeit -- Regel auf Entwurf setzten"
@@ -337,6 +338,7 @@ msgid "AuditTrail Logs"
 msgstr "Belegsammlung Protokolle"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Audittrail Vorgangsprotokollierung"

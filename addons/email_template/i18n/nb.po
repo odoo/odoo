@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:59+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:58+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -52,7 +52,7 @@ msgstr "Personlig e-post"
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
-msgstr ""
+msgstr "Rapporter Filnavn."
 
 #. module: email_template
 #: view:email.template:0
@@ -79,10 +79,8 @@ msgid ""
 msgstr ""
 
 #. module: email_template
+#: field:email.template,body_html:0
 #: field:email_template.preview,body_html:0
-#: field:email_template.preview,body_text:0
-#: field:email_template.send.wizard,body_html:0
-#: field:email_template.send.wizard,body_text:0
 msgid "Body"
 msgstr "Innhold"
 
@@ -242,7 +240,7 @@ msgstr "OK"
 #: field:email.template,auto_delete:0
 #: field:email_template.preview,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "Automatisk Slett."
 
 #. module: email_template
 #: selection:email_template.account,send_pref:0
@@ -277,7 +275,7 @@ msgid "From Email"
 msgstr "Fra e-post"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Warning"
 msgstr "Advarsel"
@@ -363,7 +361,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
 msgid "Template Preview"
-msgstr ""
+msgstr "Forhåndsvisning av mal"
 
 #. module: email_template
 #: field:email.template,def_body_html:0
@@ -533,6 +531,9 @@ msgid ""
 "emails so you can identify replies and link them back to the corresponding "
 "resource record. This is useful for CRM leads for example"
 msgstr ""
+"Aktiver dette du ønsker å inkludere en spesiell sporing markør i utgående e-"
+"post, slik at du kan identifisere svar og knytte dem tilbake til den "
+"tilsvarende ressurs posten. Dette er nyttig for CRM fører for eksempel."
 
 #. module: email_template
 #: view:email.template:0
@@ -548,7 +549,7 @@ msgstr "Signatur"
 #: field:email.template,sub_object:0
 #: field:email_template.preview,sub_object:0
 msgid "Sub-model"
-msgstr ""
+msgstr "Sub-modell."
 
 #. module: email_template
 #: view:email.template:0
@@ -605,7 +606,7 @@ msgstr "SMTP SERVER eller PORT ikke angitt"
 #. module: email_template
 #: view:email.template:0
 msgid "Note: This is Raw HTML."
-msgstr ""
+msgstr "Merk: Dette er Raw HTML."
 
 #. module: email_template
 #: view:email.template:0
@@ -795,6 +796,7 @@ msgstr "TLS"
 
 #. module: email_template
 #: field:email.template,lang:0
+#: field:email_template.preview,lang:0
 msgid "Language"
 msgstr "Språk"
 
@@ -839,7 +841,7 @@ msgstr ""
 "denne malen"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:183
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Send e-post(%s)"
@@ -858,7 +860,7 @@ msgstr ""
 #: field:email.template,copyvalue:0
 #: field:email_template.preview,copyvalue:0
 msgid "Expression"
-msgstr ""
+msgstr "Uttrykk"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -867,7 +869,8 @@ msgid "History"
 msgstr ""
 
 #. module: email_template
-#: view:email.template:0
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
 msgid "Attachments"
 msgstr "Vedlegg"
 
@@ -1130,12 +1133,12 @@ msgstr "Navn"
 #: field:email.template,track_campaign_item:0
 #: field:email_template.preview,track_campaign_item:0
 msgid "Resource Tracking"
-msgstr ""
+msgstr "Ressurs Sporing."
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr ""
+msgstr "E-post Mal Forhåndsvisning."
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -1183,7 +1186,7 @@ msgstr "email_template.account"
 #. module: email_template
 #: view:email.template:0
 msgid "Model"
-msgstr ""
+msgstr "Modell"
 
 #. module: email_template
 #: code:addons/email_template/email_template_account.py:236

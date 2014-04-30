@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:14+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -55,12 +55,12 @@ msgid "Mainboard ASUStek A7V8X-X"
 msgstr "Placa mare ASUStek A7V8X-X"
 
 #. module: product
-#: help:product.template,seller_qty:0
+#: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "Aquesta és la quantitat mínima a comprar al proveïdor principal."
 
 #. module: product
-#: model:product.uom,name:product.uom_day
+#: model:product.uom,name:product.product_uom_day
 msgid "Day"
 msgstr "Dia"
 
@@ -103,7 +103,7 @@ msgstr ""
 "la mateixa categoria."
 
 #. module: product
-#: field:product.template,seller_qty:0
+#: field:product.product,seller_qty:0
 msgid "Supplier Quantity"
 msgstr "Quantitat proveïdor"
 
@@ -121,14 +121,12 @@ msgstr "Atenció!"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "Tarifa"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Base Prices"
 msgstr "Preus base"
@@ -265,7 +263,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  per ex.: 1 * (aquesta unitat) = ràtio * (unitat referencia)"
 
 #. module: product
-#: code:addons/product/product.py:418
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Productes: "
@@ -311,7 +309,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: product
-#: field:product.template,seller_id:0
+#: field:product.product,seller_id:0
 msgid "Main Supplier"
 msgstr "Proveïdor principal"
 
@@ -328,6 +326,7 @@ msgstr "Empaquetament"
 #. module: product
 #: view:product.product:0
 #: field:product.template,categ_id:0
+#: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Categoria"
 
@@ -431,7 +430,6 @@ msgid "Products Price Search"
 msgstr "Cerca preu dels productes"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
@@ -475,7 +473,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Data final de validesa d'aquesta versió de tarifa."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.product_category_all
 msgid "All products"
 msgstr "Tots els productes"
 
@@ -634,7 +632,6 @@ msgstr "Despeses restaurant"
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Error: Codi EAN erroni"
 
@@ -686,6 +683,7 @@ msgstr "KIT prestatge de 100cm"
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Proveïdor"
 
@@ -719,7 +717,6 @@ msgid "Price List"
 msgstr "Llista de preus"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
 msgstr "Proveïdors"
@@ -754,7 +751,7 @@ msgstr ""
 "o en la UdM per defecte del producte en cas contrari."
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_7
 msgid "Accessories"
 msgstr "Accessoris"
 
@@ -803,6 +800,7 @@ msgstr "Imprimeix"
 #. module: product
 #: view:product.product:0
 #: field:product.ul,type:0
+#: field:product.uom,uom_type:0
 msgid "Type"
 msgstr "Tipus"
 
@@ -844,7 +842,6 @@ msgstr ""
 "lo buit per a tots els productes"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
 msgstr "Abastament & Ubicacions"
@@ -855,7 +852,7 @@ msgid "Kitchen Design Project"
 msgstr "Projecte disseny de cuina"
 
 #. module: product
-#: model:product.uom,name:product.uom_hour
+#: model:product.uom,name:product.product_uom_hour
 msgid "Hour"
 msgstr "Hora"
 
@@ -897,6 +894,7 @@ msgid "Supplier Information"
 msgstr "Informació del proveïdor"
 
 #. module: product
+#: model:ir.model,name:product.model_res_currency
 #: field:product.price.type,currency_id:0
 #: report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
@@ -976,7 +974,6 @@ msgid "Extended Filters..."
 msgstr "Filtres extensos..."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_purchase:0
 msgid "Purchase Description"
@@ -1120,11 +1117,8 @@ msgstr "Unitats de logística"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
-#: field:product.uom,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Nom"
@@ -1225,6 +1219,9 @@ msgstr "Camp associat en el formulari de producte."
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "Unitat de mesura"
 
@@ -1286,7 +1283,7 @@ msgstr ""
 "    "
 
 #. module: product
-#: help:product.template,seller_delay:0
+#: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
 "and the reception of goods for this product and for the default supplier. It "
@@ -1298,13 +1295,13 @@ msgstr ""
 "les comandes."
 
 #. module: product
-#: help:product.template,seller_id:0
+#: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
 "Proveïdor principal que té la prioritat més alta en la llista de proveïdors."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_5
 #: view:product.product:0
 msgid "Services"
 msgstr "Serveis"
@@ -1424,6 +1421,7 @@ msgstr ""
 "aviat com es troba un element coincident."
 
 #. module: product
+#: view:product.product:0
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Consumible"
@@ -1439,7 +1437,6 @@ msgid "The gross weight in Kg."
 msgstr "El pes brut en Kg."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
 msgstr "Proveïment"
@@ -1812,6 +1809,7 @@ msgid "Box 30x40x60"
 msgstr "Caixa 30x40x60"
 
 #. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
 #: selection:product.template,type:0
 msgid "Service"
 msgstr "Servei"
@@ -1845,7 +1843,7 @@ msgstr ""
 "Preu base per calcular el preu de client. També dit el preu de catàleg."
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Secció empresa del formulario de producte"
@@ -1875,7 +1873,7 @@ msgstr ""
 "d'estar en la mateixa categoria que la unitat de mesura per defecte."
 
 #. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
+#: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
 msgstr "Aquest producte està configurat amb exemple de fluxos empeny/estira."
 
@@ -1901,7 +1899,7 @@ msgid "Pricelist Type"
 msgstr "Tipus de tarifa"
 
 #. module: product
-#: model:product.category,name:product.product_category_otherproducts0
+#: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Altres productes"
 
@@ -1911,6 +1909,7 @@ msgid "Characteristics"
 msgstr "Característiques"
 
 #. module: product
+#: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "Pot ser venut"
@@ -1931,7 +1930,7 @@ msgid "Based on"
 msgstr "Basat en"
 
 #. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
+#: model:product.category,name:product.product_category_10
 msgid "Raw Materials"
 msgstr "Matèries primeres"
 
@@ -2009,7 +2008,7 @@ msgstr ""
 "eliminar-la."
 
 #. module: product
-#: field:product.template,seller_delay:0
+#: field:product.product,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Termini de lliurament del proveïdor"
 
@@ -2101,7 +2100,6 @@ msgstr ""
 "una Unitat de Mesura que no pugui dividir-se encara més, com una peça."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Descriptions"
 msgstr "Descripcions"
@@ -2182,7 +2180,6 @@ msgstr "Pot ser llogat"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
 msgid "Cost Price"
 msgstr "Preu cost"
 
@@ -2248,7 +2245,6 @@ msgid "tonne"
 msgstr "tona"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr "Terminis"
@@ -2274,7 +2270,6 @@ msgstr ""
 #: field:product.packaging,name:0
 #: report:product.pricelist:0
 #: view:product.product:0
-#: view:product.template:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "Descripció"
@@ -2311,6 +2306,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Volum"
 
@@ -2321,7 +2317,6 @@ msgstr "Caixa"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Variants de producte"
 
@@ -2331,7 +2326,8 @@ msgid "Shelves"
 msgstr "Prestatges"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:379
+#: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
 msgstr "Altra tarifa"
@@ -2346,6 +2342,7 @@ msgstr "Plantilla de producte"
 
 #. module: product
 #: field:product.template,cost_method:0
+#: model:res.groups,name:product.group_costing_method
 msgid "Costing Method"
 msgstr "Mètode cost"
 

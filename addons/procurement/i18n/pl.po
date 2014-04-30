@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:24+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -51,21 +51,23 @@ msgstr "Grupuj wg..."
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr ""
+msgstr "Projekt zapotrzebowania na produkt i strefa punktu zamawiania"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:291
+#: code:addons/procurement/procurement.py:290
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Nie zdefiniowano dostawcy dla tego produktu!"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
+#: view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "Jednostka Miary"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
+#: field:product.template,procure_method:0
 msgid "Procurement Method"
 msgstr "Metoda zapotrzebowania"
 
@@ -93,7 +95,6 @@ msgstr "Ilość JS"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Przyczyna"
 
@@ -237,7 +238,7 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "Zapotrzebowania do przetworzenia"
 
 #. module: procurement
 #: constraint:res.company:0
@@ -245,10 +246,10 @@ msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:386
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
-msgstr ""
+msgstr "Zapotrzebowanie '%s' jest w stanie wyjątkowym: "
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -333,7 +334,7 @@ msgid "Quantity"
 msgstr "Ilość"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Brak zapasu i brak reguły minimalnego zapasu"
@@ -440,7 +441,7 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
-msgstr ""
+msgstr "Powiązane zapotrzebowania"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -462,7 +463,7 @@ msgstr "Pilne"
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr ""
+msgstr "plus"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:328
@@ -479,6 +480,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Jeśli pole nie jest aktywne, pozwoli ci ukryć punkt zamawiania bez jego "
+"kasowania."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -517,7 +520,6 @@ msgstr ""
 "planista działa w tle i będziesz musiał poczekać na efekty kilka minut."
 
 #. module: procurement
-#: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
 msgstr "Notatka"
@@ -534,6 +536,7 @@ msgstr "Ten kreator zaplanuje zapotrzebowania."
 
 #. module: procurement
 #: view:procurement.order:0
+#: field:procurement.order,state:0
 msgid "Status"
 msgstr "Stan"
 
@@ -548,10 +551,10 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:383
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
-msgstr ""
+msgstr "Brak zapasu."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -580,7 +583,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:151
+#: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Automatyczny PN: %s"
@@ -647,7 +650,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "Nie mozna usunąć Zapotrzebowania, które jest w stanie %s !"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:327
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Zbyt mało danych !"
@@ -696,8 +699,6 @@ msgstr "Ilość zapotrzebowania będzie zaokrąglona do tej wielokrotności."
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
-#: selection:procurement.order,state:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -707,7 +708,7 @@ msgstr "Anuluj"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "Tryb ponownego zamawiania"
+msgstr "Tryb zamawiania"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -723,7 +724,7 @@ msgstr "Nie pilne"
 #: code:addons/procurement/procurement.py:297
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "Brak dostawcy dla tego produktu."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -750,13 +751,7 @@ msgid "Procurement Exceptions"
 msgstr "Wyjątki zapotrzebowania"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:product.product:0
-#: view:stock.warehouse.orderpoint:0
+#: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
 msgstr "Reguły minimalnych zapasów"
 
@@ -787,13 +782,14 @@ msgstr "Tymczasowo"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Opis"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr ""
+msgstr "min."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -812,6 +808,8 @@ msgstr "JM produktu"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
+#: selection:procurement.order,procure_method:0
+#: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Na zamówienie"
 
@@ -835,6 +833,12 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Możesz zdefiniować regułę minimalnego zapasu, a OpenERP będzie tworzyło "
+"automatycznie projekt Zamówienia produkcji albo Zamówienia zakupu kiedy "
+"przewidywany zapas spadnie poniżej minimalnego. Kiedy zapas wirtualny (= "
+"zapas rzeczywisty minus potwierdzone wydania i rezerwacje) jest poniżej "
+"minimum, to OpenERP wygeneruje zapotrzebowanie, które spowoduje uzupełnienie "
+"zapasu do jego maklsymalnej wartości."
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -869,7 +873,7 @@ msgstr "Nazwa"
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr ""
+msgstr "maks"
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -921,6 +925,8 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
 msgstr ""
+"To jest okno czasowe analizy planisty przy obliczaniu zapotrzebowań. "
+"Zapotrzebowania spoza okresu dzisiaj + zakres będą wyliczane następnym razem."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -938,7 +944,7 @@ msgid "Procurement Details"
 msgstr "Szczegóły zapotrzebowania"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:152
+#: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
-msgstr ""
+msgstr "PLANISTA"

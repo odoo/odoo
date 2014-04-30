@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:23+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:32+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
 msgid "Note"
-msgstr ""
+msgstr "Zabilješka"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -34,12 +34,12 @@ msgstr ""
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Fakturisanje"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Prodaja i nabava"
+msgstr "Prodaja i Nabavka"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -47,11 +47,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Ako je aktivno polje postavljeno na netačno, možete sakriti tip fatkture bez "
+"da ga uklonite."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
 msgid "Notes"
-msgstr ""
+msgstr "Zabilješke"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
@@ -89,12 +91,12 @@ msgstr ""
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr ""
+msgstr "Ne grupisano"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr ""
+msgstr "Grupisano"
 
 #. module: sale_journal
 #: constraint:res.partner:0
@@ -108,46 +110,55 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Tipovi faktura se koriste za partnere, prodajne narudžbe i narudžbe dostave. "
+"Možete kreirati specifčni dnevnik fakturisanja da grupišete vaše fakture "
+"prema potrebama kupaca: dnevne, svake srijede, mjesečne, itd."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr ""
+msgstr "Način fakturisanja"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajna narudžba"
 
 #. module: sale_journal
+#: view:sale.order:0
 #: field:sale.order,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
 #: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
-msgstr ""
+msgstr "Tip fakture"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivan"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr ""
+msgstr "Tipovi faktura"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lista prikupljanja proizvoda"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information

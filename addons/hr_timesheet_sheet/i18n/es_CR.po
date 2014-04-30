@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:06+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:16+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
@@ -30,7 +30,8 @@ msgstr ""
 "problema."
 
 #. module: hr_timesheet_sheet
-#: field:hr.analytic.timesheet,sheet_id:0 field:hr.attendance,sheet_id:0
+#: field:hr.analytic.timesheet,sheet_id:0
+#: field:hr.attendance,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.account,sheet_id:0
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
@@ -48,20 +49,21 @@ msgid "No employee defined for your user !"
 msgstr "¡No se ha definido un empleado para su usuario!"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0
+#: view:hr_timesheet_sheet.sheet:0
 #: view:timesheet.report:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
-#: field:hr_timesheet_sheet.sheet,total_attendance_day:0
 msgid "Total Attendance"
 msgstr "Total servicio"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
-#: field:hr_timesheet_sheet.sheet,department_id:0 view:timesheet.report:0
+#: field:hr_timesheet_sheet.sheet,department_id:0
+#: view:timesheet.report:0
 #: field:timesheet.report,department_id:0
 msgid "Department"
 msgstr "Departamento"
@@ -86,19 +88,23 @@ msgstr ""
 "menor que %.2f!"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "March"
 msgstr "Marzo"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,company_id:0
-#: field:hr_timesheet_sheet.sheet,company_id:0 view:timesheet.report:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,company_id:0
+#: field:hr_timesheet_sheet.sheet,company_id:0
+#: view:timesheet.report:0
 #: field:timesheet.report,company_id:0
 msgid "Company"
 msgstr "Compañía"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 view:hr_timesheet_sheet.sheet:0
+#: view:hr.timesheet.report:0
+#: view:hr_timesheet_sheet.sheet:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_timesheet_report
@@ -113,7 +119,8 @@ msgid "Set to Draft"
 msgstr "Cambiar a borrador"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0 field:timesheet.report,date_to:0
+#: field:hr_timesheet_sheet.sheet,date_to:0
+#: field:timesheet.report,date_to:0
 msgid "Date to"
 msgstr "Fecha hasta"
 
@@ -128,8 +135,11 @@ msgid "Validate"
 msgstr "Validar"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,day:0
-#: selection:res.company,timesheet_range:0 view:timesheet.report:0
+#: selection:hr.config.settings,timesheet_range:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,day:0
+#: selection:res.company,timesheet_range:0
+#: view:timesheet.report:0
 #: field:timesheet.report,day:0
 msgid "Day"
 msgstr "Día"
@@ -213,8 +223,10 @@ msgid "Employee's timesheet entry"
 msgstr "Entrada de hojas de asistencia del empleado"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,account_id:0
-#: view:timesheet.report:0 field:timesheet.report,account_id:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,account_id:0
+#: view:timesheet.report:0
+#: field:timesheet.report,account_id:0
 msgid "Analytic Account"
 msgstr "Cuenta analítica"
 
@@ -235,17 +247,17 @@ msgid " Month "
 msgstr " Mes "
 
 #. module: hr_timesheet_sheet
+#: view:hr.employee:0
 #: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: view:res.company:0
 msgid "Timesheets"
 msgstr "Hojas de trabajo"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
-#: view:timesheet.report:0 selection:timesheet.report,state:0
+#: view:timesheet.report:0
+#: selection:timesheet.report,state:0
 msgid "Confirmed"
 msgstr "Confirmada"
 
@@ -378,11 +390,13 @@ msgstr "Líneas de la hoja de asistencia"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
+#: view:hr_timesheet_sheet.sheet:0
 msgid "Hours"
 msgstr "Horas"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 field:timesheet.report,cost:0
+#: view:timesheet.report:0
+#: field:timesheet.report,cost:0
 msgid "#Cost"
 msgstr "#Coste"
 
@@ -411,7 +425,8 @@ msgid "The project manager validates the timesheets."
 msgstr "El jefe de proyecto valida las hojas de asistencia."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "July"
 msgstr "Julio"
 
@@ -442,13 +457,12 @@ msgid "Daily View"
 msgstr "Vista diaria"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 field:timesheet.report,quantity:0
+#: view:timesheet.report:0
 msgid "#Quantity"
 msgstr "#Cantidad"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
-#: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
 #: view:hr_timesheet_sheet.sheet.day:0
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
@@ -465,7 +479,8 @@ msgid "Sign In"
 msgstr "Registrar entrada"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 field:timesheet.report,total_timesheet:0
+#: view:timesheet.report:0
+#: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
 msgstr "#Total hoja asistencia"
 
@@ -480,12 +495,14 @@ msgid "Go to:"
 msgstr "Ir a:"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "September"
 msgstr "Septiembre"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "December"
 msgstr "Diciembre"
 
@@ -495,14 +512,18 @@ msgid "It will open your current timesheet"
 msgstr "Abrirá su hoja de asistencia actual"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,month:0
-#: selection:res.company,timesheet_range:0 view:timesheet.report:0
+#: selection:hr.config.settings,timesheet_range:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,month:0
+#: selection:res.company,timesheet_range:0
+#: view:timesheet.report:0
 #: field:timesheet.report,month:0
 msgid "Month"
 msgstr "Mes"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 field:timesheet.report,total_diff:0
+#: view:timesheet.report:0
+#: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
 msgstr "#Total dif."
 
@@ -551,7 +572,8 @@ msgstr ""
 "específicos de selección gracias a la herramienta de búsqueda."
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 selection:timesheet.report,state:0
+#: view:timesheet.report:0
+#: selection:timesheet.report,state:0
 msgid "Draft"
 msgstr "Borrador"
 
@@ -577,17 +599,20 @@ msgid " Year "
 msgstr " Año "
 
 #. module: hr_timesheet_sheet
+#: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Week"
 msgstr "Semana"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "August"
 msgstr "Agosto"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "June"
 msgstr "Junio"
 
@@ -609,8 +634,10 @@ msgid "Timesheets by Period"
 msgstr "Hojas de asistencia por periodo"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,user_id:0
-#: field:hr_timesheet_sheet.sheet,user_id:0 view:timesheet.report:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,user_id:0
+#: field:hr_timesheet_sheet.sheet,user_id:0
+#: view:timesheet.report:0
 #: field:timesheet.report,user_id:0
 msgid "User"
 msgstr "Usuario"
@@ -621,17 +648,21 @@ msgid "Timesheet by Account"
 msgstr "Hoja de servicios por cuenta"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,date:0 field:hr_timesheet_sheet.sheet.day,name:0
+#: field:hr.timesheet.report,date:0
+#: field:hr_timesheet_sheet.sheet.day,name:0
+#: field:timesheet.report,date:0
 msgid "Date"
 msgstr "Fecha"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "November"
 msgstr "Noviembre"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 view:timesheet.report:0
+#: view:hr.timesheet.report:0
+#: view:timesheet.report:0
 msgid "Extended Filters..."
 msgstr "Filtros extendidos..."
 
@@ -651,7 +682,8 @@ msgid "My Total Attendance By Week"
 msgstr "Mi asistencia total por semana"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "October"
 msgstr "Octubre"
 
@@ -667,7 +699,8 @@ msgstr ""
 "generando por tanto costes en la cuenta analítica correspondiente."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "January"
 msgstr "Enero"
 
@@ -687,8 +720,10 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,general_account_id:0
-#: view:timesheet.report:0 field:timesheet.report,general_account_id:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,general_account_id:0
+#: view:timesheet.report:0
+#: field:timesheet.report,general_account_id:0
 msgid "General Account"
 msgstr "Cuenta general"
 
@@ -707,7 +742,8 @@ msgstr ""
 "de asistencia para una hoja. Póngalo a 0 si no desea ningún tipo de control."
 
 #. module: hr_timesheet_sheet
-#: view:hr_timesheet_sheet.sheet:0 field:hr_timesheet_sheet.sheet,period_ids:0
+#: view:hr_timesheet_sheet.sheet:0
+#: field:hr_timesheet_sheet.sheet,period_ids:0
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Period"
 msgstr "Período"
@@ -722,12 +758,12 @@ msgstr "¡No puede modificar una entrada en una hoja de servicios confirmada!"
 #: view:hr.timesheet.current.open:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Timesheet"
 msgstr "Mi hoja de asistencia"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 selection:timesheet.report,state:0
+#: view:timesheet.report:0
+#: selection:timesheet.report,state:0
 msgid "Done"
 msgstr "Realizado"
 
@@ -757,7 +793,7 @@ msgid "Timesheet by Accounts"
 msgstr "Hoja de servicios por cuentas"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:51
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
 msgstr "Abrir hoja de asistencia"
@@ -818,8 +854,10 @@ msgid "Timesheet Line"
 msgstr "Línea hoja de servicios"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,product_id:0
-#: view:timesheet.report:0 field:timesheet.report,product_id:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,product_id:0
+#: view:timesheet.report:0
+#: field:timesheet.report,product_id:0
 msgid "Product"
 msgstr "Producto"
 
@@ -831,7 +869,8 @@ msgid "Attendances"
 msgstr "Servicios"
 
 #. module: hr_timesheet_sheet
-#: field:hr.timesheet.report,name:0 field:timesheet.report,name:0
+#: field:hr.timesheet.report,name:0
+#: field:timesheet.report,name:0
 msgid "Description"
 msgstr "Descripción"
 
@@ -841,7 +880,8 @@ msgid "The employee periodically confirms his own timesheets."
 msgstr "El empleado confirma periódicamente sus propias hojas de asistencia."
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "May"
 msgstr "Mayo"
 
@@ -880,7 +920,6 @@ msgstr "Análisis de las hojas de asistencia"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
-#: field:hr_timesheet_sheet.sheet,total_difference_day:0
 #: field:hr_timesheet_sheet.sheet.day,total_difference:0
 msgid "Difference"
 msgstr "Diferencia"
@@ -891,7 +930,8 @@ msgid "Absent"
 msgstr "Ausente"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "February"
 msgstr "Febrero"
 
@@ -906,7 +946,8 @@ msgid "Information of time spent on a service"
 msgstr "Información del tiempo dedicado a un servicio"
 
 #. module: hr_timesheet_sheet
-#: selection:hr.timesheet.report,month:0 selection:timesheet.report,month:0
+#: selection:hr.timesheet.report,month:0
+#: selection:timesheet.report,month:0
 msgid "April"
 msgstr "Abril"
 
@@ -931,12 +972,14 @@ msgid "Analytic accounts"
 msgstr "Cuentas analíticas"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 field:timesheet.report,to_invoice:0
+#: view:timesheet.report:0
+#: field:timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
 msgstr "Tipo de facturación"
 
 #. module: hr_timesheet_sheet
-#: view:timesheet.report:0 field:timesheet.report,total_attendance:0
+#: view:timesheet.report:0
+#: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
 msgstr "Nº total asistencia"
 
@@ -946,7 +989,6 @@ msgid "Cost"
 msgstr "Coste"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_current:0
 #: field:timesheet.report,date_current:0
 msgid "Current date"
 msgstr "Fecha actual"
@@ -957,13 +999,16 @@ msgid "Hr Timesheet"
 msgstr "Parte de horas de RRHH"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.report:0 field:hr.timesheet.report,year:0
-#: view:timesheet.report:0 field:timesheet.report,year:0
+#: view:hr.timesheet.report:0
+#: field:hr.timesheet.report,year:0
+#: view:timesheet.report:0
+#: field:timesheet.report,year:0
 msgid "Year"
 msgstr "Año"
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0 selection:hr_timesheet_sheet.sheet,state:0
+#: view:hr.timesheet.current.open:0
+#: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
 msgstr "Abierto"
 
@@ -973,7 +1018,11 @@ msgid "To Approve"
 msgstr "Para aprobar"
 
 #. module: hr_timesheet_sheet
+#. openerp-web
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:15
+#: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:40
 #: view:hr_timesheet_sheet.sheet.account:0
+#, python-format
 msgid "Total"
 msgstr "Total"
 

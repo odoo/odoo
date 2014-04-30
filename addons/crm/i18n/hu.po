@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-10 05:40+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:53+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -22,7 +22,7 @@ msgid "# Leads"
 msgstr "# Érdeklődések"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:898
+#: code:addons/crm/crm_lead.py:897
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -186,9 +186,10 @@ msgstr ""
 "Csak a Partnerhez rendelt Lehetőséget lehet más Lehetőséggel összefűzni."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:640
-#: code:addons/crm/crm_lead.py:761
-#: code:addons/crm/crm_phonecall.py:280
+#: code:addons/crm/crm_lead.py:637
+#: code:addons/crm/crm_lead.py:758
+#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
 msgstr "Vigyázat!"
@@ -232,7 +233,7 @@ msgid "Edit all Occurrences  of recurrent Meeting."
 msgstr "Az ismétlődő találkozók összes eseményének szerkesztése."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:209
+#: code:addons/crm/crm_phonecall.py:211
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -784,7 +785,7 @@ msgid "Statistics Dashboard"
 msgstr "Statisztika vezérlőpult"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:878
+#: code:addons/crm/crm_lead.py:877
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -1405,7 +1406,7 @@ msgid "Days to Close"
 msgstr "Lezárásig hátralévő napok"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1057
+#: code:addons/crm/crm_lead.py:1075
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1487,7 +1488,7 @@ msgstr "Alcsoportok"
 #: view:crm.lead:0
 #: field:crm.lead,state_id:0
 msgid "State"
-msgstr "Állapot"
+msgstr "Állam/Megye"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead1
@@ -2086,7 +2087,6 @@ msgid "Lead to Partner"
 msgstr ""
 
 #. module: crm
-#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -3498,6 +3498,7 @@ msgstr "Hozzáállás"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
+#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Leírás"
@@ -3560,7 +3561,7 @@ msgid "Working Hours"
 msgstr "Munkaórák"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:986
+#: code:addons/crm/crm_lead.py:1002
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0

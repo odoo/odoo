@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:40+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:36+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -38,7 +38,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Журналын бичилт тулгах"
+msgstr "Журналын бичилт холбох"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
@@ -48,7 +48,6 @@ msgstr "Ваучер удирдлага"
 #. module: account
 #: view:account.account:0
 #: view:account.bank.statement:0
-#: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Statistics"
 msgstr "Дансны статистик"
@@ -82,7 +81,7 @@ msgstr "Дэд татвар тодорхойлолт"
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "Өнөөдрийг хүртэлх авлагын насжилт"
+msgstr "Өнөөдрийг хүртэлх төлөгдөөгүй авлага"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
@@ -108,6 +107,7 @@ msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Debit"
 msgstr "Нийт дебит"
 
@@ -138,23 +138,27 @@ msgid "Origin"
 msgstr "Эх үүсвэр"
 
 #. module: account
-#: view:account.account:0
+#. openerp-web
 #: view:account.automatic.reconcile:0
 #: field:account.move.line,reconcile_id:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
+#: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
+#, python-format
 msgid "Reconcile"
 msgstr "Тулгах"
 
 #. module: account
+#: field:account.bank.statement,name:0
 #: field:account.bank.statement.line,ref:0
 #: field:account.entries.report,ref:0
-#: view:account.invoice:0
 #: field:account.move,ref:0
 #: field:account.move.line,ref:0
 #: field:account.subscription,ref:0
+#: xsl:account.transfer:0
+#: field:cash.box.in,ref:0
 msgid "Reference"
-msgstr "Дугаар"
+msgstr "Лавлах"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -171,7 +175,24 @@ msgstr ""
 "устгалгүйгээр нуух боломжийг олгоно."
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account.py:641
+#: code:addons/account/account.py:686
+#: code:addons/account/account.py:781
+#: code:addons/account/account.py:1058
+#: code:addons/account/account_invoice.py:820
+#: code:addons/account/account_invoice.py:823
+#: code:addons/account/account_invoice.py:826
+#: code:addons/account/account_invoice.py:1545
+#: code:addons/account/account_move_line.py:98
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
+#: code:addons/account/account_move_line.py:864
+#: code:addons/account/wizard/account_fiscalyear_close.py:62
+#: code:addons/account/wizard/account_invoice_state.py:44
+#: code:addons/account/wizard/account_invoice_state.py:68
+#: code:addons/account/wizard/account_state_open.py:37
+#: code:addons/account/wizard/account_validate_account_move.py:39
+#: code:addons/account/wizard/account_validate_account_move.py:61
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -198,7 +219,7 @@ msgid "Negative"
 msgstr "Сөрөг"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:95
+#: code:addons/account/wizard/account_move_journal.py:96
 #, python-format
 msgid "Journal: %s"
 msgstr "Журнал: %s"
@@ -210,9 +231,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Аналитик журналын төрлийг сонгоно уу. Энэ нь аналитик журналын бичилт үүсгэх "
-"үед хэрэглэгдэнэ. Жишээ нь нэхэмжлэл дээр аналитик журнал сонгох үед зөвхөн "
-"ижил төрлийн журналуудаас сонгох боломжтой."
+"Шинжилгээний журналын төрлийг сонгоно уу. Энэ нь шинжилгээний журналын "
+"бичилт үүсгэх үед хэрэглэгдэнэ. Жишээ нь нэхэмжлэл дээр шинжилгээний журнал "
+"сонгох үед зөвхөн ижил төрлийн журналуудаас сонгох боломжтой."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -260,7 +281,7 @@ msgstr ""
 "тооцохгүй"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1241
+#: code:addons/account/account_invoice.py:1254
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
 msgstr "'%s' нэхэмжлэл хэсэгчлэн төлөгдсөн: %s%s of %s%s (%s%s үлдэгдэл)"
@@ -276,7 +297,7 @@ msgid "Belgian Reports"
 msgstr "Белги тайлан"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1200
+#: code:addons/account/account_move_line.py:1215
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
 msgstr "Та хаагдсан журналд гүйлгээ нэмэх/засварлах боломжгүй."
@@ -288,8 +309,6 @@ msgstr "Тооцоолсон үлдэгдэл"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
-#: model:ir.actions.act_window,name:account.action_view_account_use_model
-#: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
 msgstr "Давтан гүйлгээ үүсгэх"
 
@@ -301,7 +320,7 @@ msgstr "Санхүүгийн жил хаах"
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr "Зөрүүг хаах"
+msgstr "Хасалтыг зөвшөөрөх"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -314,7 +333,7 @@ msgid "St."
 msgstr "Хүндэт."
 
 #. module: account
-#: code:addons/account/account_invoice.py:551
+#: code:addons/account/account_invoice.py:560
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
 msgstr ""
@@ -331,7 +350,7 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
-"Тухайн орон нутгын дансны модыг танай байгуулагад тохирох хувилбараар "
+"Тухайн орон нутгын дансны төлөвлөгөөг танай байгуулагад тохирох хувилбараар "
 "суулгах боломжтой."
 
 #. module: account
@@ -350,7 +369,6 @@ msgid "Account Unreconcile"
 msgstr "Дансны тулгалтыг арилгах"
 
 #. module: account
-#: view:product.product:0
 #: view:product.template:0
 msgid "Purchase Properties"
 msgstr "Худалдан авалтын талбарууд"
@@ -404,7 +422,7 @@ msgstr "Худалдан авалтын буцаалт"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "Нээх / Хаах Нөхцөл"
+msgstr "Нээх/Хаах нөхцөл байдал"
 
 #. module: account
 #: help:account.journal,currency:0
@@ -431,6 +449,7 @@ msgstr "Үндсэн дебит данс"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Credit"
 msgstr "Нийт кредит"
 
@@ -450,7 +469,7 @@ msgstr "Тулгалтыг арилгахаар нээх"
 #: field:account.tax.template,chart_template_id:0
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
-msgstr "Загвар дансны мод"
+msgstr "Төлөвлөгөөний үлгэр"
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -486,6 +505,7 @@ msgstr ""
 #: field:account.automatic.reconcile,journal_id:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement,journal_id:0
+#: field:account.bank.statement.line,journal_id:0
 #: report:account.central.journal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,journal_id:0
@@ -493,6 +513,8 @@ msgstr ""
 #: field:account.invoice,journal_id:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,journal_id:0
+#: view:account.journal:0
+#: field:account.journal.cashbox.line,journal_id:0
 #: field:account.journal.period,journal_id:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
@@ -542,7 +564,7 @@ msgstr "Данс энэ журнальд хэрэглэгдсэн"
 #: help:account.vat.declaration,chart_account_id:0
 #: help:accounting.report,chart_account_id:0
 msgid "Select Charts of Accounts"
-msgstr "Дансны модоо сонго"
+msgstr "Дансны төлөвлөгөө сонго"
 
 #. module: account
 #: view:product.product:0
@@ -589,8 +611,10 @@ msgid "The accountant confirms the statement."
 msgstr "Нягтлан ордерийн гүйлгээг батлана."
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
@@ -603,6 +627,7 @@ msgid "Invoice Address Name"
 msgstr "Нэхэмжлэлийн хаягийн нэр"
 
 #. module: account
+#: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "3 Monthly"
 msgstr "3 сараар"
@@ -624,9 +649,10 @@ msgstr "   30 Хоног   "
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
 msgid "Sequences"
-msgstr "Дараалал"
+msgstr "Дарааллууд"
 
 #. module: account
+#: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Taxes Mapping"
 msgstr "Татварын харгалзаа"
@@ -634,7 +660,7 @@ msgstr "Татварын харгалзаа"
 #. module: account
 #: report:account.central.journal:0
 msgid "Centralized Journal"
-msgstr "Төв журнал"
+msgstr "Төвлөрсөн журнал"
 
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
@@ -647,7 +673,7 @@ msgid "Tax Code Amount"
 msgstr "Татварын кодын дүн"
 
 #. module: account
-#: code:addons/account/account.py:3116
+#: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
 msgstr "SAJ"
@@ -679,8 +705,8 @@ msgid "Journal Period"
 msgstr "Журналын мөчлөг"
 
 #. module: account
-#: code:addons/account/account_move_line.py:750
-#: code:addons/account/account_move_line.py:803
+#: code:addons/account/account_move_line.py:766
+#: code:addons/account/account_move_line.py:819
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
@@ -692,8 +718,9 @@ msgstr ""
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
+#: code:addons/account/report/account_partner_ledger.py:272
 #, python-format
 msgid "Receivable Accounts"
 msgstr "Авлагын данс"
@@ -701,7 +728,7 @@ msgstr "Авлагын данс"
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr "Ерөнхий дэвтэр"
+msgstr "Ерөнхий тайлан"
 
 #. module: account
 #: view:account.invoice:0
@@ -714,9 +741,10 @@ msgid "Are you sure you want to create entries?"
 msgstr "Та гүйлгээ үүсгэхдээ итгэлтэй байна уу?"
 
 #. module: account
+#: model:account.account.type,name:account.conf_account_type_chk
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
-msgstr "Шалгах"
+msgstr "Чек"
 
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
@@ -738,14 +766,14 @@ msgstr "Хувь"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_charts
 msgid "Charts"
-msgstr "Моднууд"
+msgstr "Дансны төлөвлөгөө"
 
 #. module: account
 #: code:addons/account/project/wizard/project_account_analytic_line.py:47
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr "Аналитик бичилтийн мөрүүд"
+msgstr "Шинжилгээний бичилтийн мөрүүд"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
@@ -754,6 +782,7 @@ msgid "You can only change currency for Draft Invoice !"
 msgstr "Та зөвхөн ноорог нэхэмжлэлийн валютыг солих боломжтой !"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.analytic.journal:0
 #: field:account.analytic.journal,type:0
 #: field:account.bank.statement.line,type:0
@@ -764,6 +793,7 @@ msgstr "Та зөвхөн ноорог нэхэмжлэлийн валютыг �
 #: view:account.journal:0
 #: field:account.journal,type:0
 #: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 #: field:report.invoice.created,type:0
 msgid "Type"
 msgstr "Төрөл"
@@ -780,7 +810,6 @@ msgstr "Уг нэхэмжлэлийг тухайн харилцагч хэрхэ
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
-#: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
@@ -789,7 +818,7 @@ msgstr "Тулгалтыг арилгах"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Аналитик журнал"
+msgstr "Шинжилгээний санхүүгийн журнал"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -825,7 +854,8 @@ msgstr "өдөр"
 msgid ""
 "If checked, the new chart of accounts will not contain this by default."
 msgstr ""
-"Хэрэв тэмдэглэгдсэн бол шинэ дансны мод нь үүнийг анхны байдлаараа агуулахгүй"
+"Хэрэв тэмдэглэгдсэн бол шинэ дансны төлөвлөгөө нь үүнийг анхны байдлаараа "
+"агуулахгүй"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:110
@@ -844,6 +874,7 @@ msgstr "шинэ захиалга"
 
 #. module: account
 #: view:account.payment.term:0
+#: field:account.payment.term.line,value:0
 msgid "Computation"
 msgstr "Тооцоололт"
 
@@ -871,7 +902,7 @@ msgstr "Дундаж төлөлсөн хугацаа"
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr "Татварын мод"
+msgstr "Татварын төлөвлөгөө"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -890,8 +921,6 @@ msgid "Total With Tax"
 msgstr "Татвартай нийлбэр"
 
 #. module: account
-#: view:account.invoice:0
-#: view:account.move:0
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Approve"
@@ -919,7 +948,7 @@ msgstr "Өргөтгөсөн хайлт..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Нээлт, хаалтын журнал"
+msgstr "Төвлөрсөн Журналын"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -944,7 +973,7 @@ msgid ""
 "basic amount(without tax)."
 msgstr ""
 "Хэрэв татварын данс нь татварын код бол энэ талбар нь татварын дүнг агуулна. "
-"Хэрэв татварын данс нь татварын суурь код бол энэ дүн нь суурь дүнг "
+"Хэрэв татварын данс нь суурь татварын код бол энэ дүн нь суурь дүнг "
 "(татваргүй дүнг) агуулна."
 
 #. module: account
@@ -975,18 +1004,17 @@ msgid "Code"
 msgstr "Код"
 
 #. module: account
-#: code:addons/account/account.py:2268
-#: code:addons/account/account_bank_statement.py:357
-#: code:addons/account/account_invoice.py:73
-#: code:addons/account/account_invoice.py:688
-#: code:addons/account/account_move_line.py:173
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_bank_statement.py:424
+#: code:addons/account/account_invoice.py:77
+#: code:addons/account/account_invoice.py:775
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Аналитик журнал алга !"
+msgstr "Шинжилгээний журнал алга !"
 
 #. module: account
 #: report:account.partner.balance:0
-#: view:account.partner.balance:0
 #: model:ir.actions.act_window,name:account.action_account_partner_balance
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
@@ -1044,6 +1072,7 @@ msgid "In dispute"
 msgstr "Маргаантай"
 
 #. module: account
+#: view:account.journal:0
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
@@ -1075,7 +1104,7 @@ msgstr "Өмнөхөөсөө дахин гүйлгээ үүсгэх"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3003
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Bank"
 msgstr "Банк"
@@ -1088,7 +1117,7 @@ msgstr "Мөчлөг эхлэх"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement"
-msgstr "Орлого зарлагын ордер батлах"
+msgstr "Хуулга батлах"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1128,10 +1157,11 @@ msgstr "Тулгагдаагүй гүйлгээнүүд"
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
 #: field:account.tax,description:0
+#: view:account.tax.code:0
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
-msgstr "Татварын ангилал"
+msgstr "Татварын Код"
 
 #. module: account
 #: field:account.account,currency_mode:0
@@ -1157,7 +1187,7 @@ msgid "Entry Label"
 msgstr "Гүйлгээний нэр"
 
 #. module: account
-#: code:addons/account/account.py:1129
+#: code:addons/account/account.py:1136
 #, python-format
 msgid "You can not modify/delete a journal with entries for this period !"
 msgstr "Та энэ мөчлөгийн энэ журналд бичилт засварлах/устгах боломжгүй !"
@@ -1177,7 +1207,6 @@ msgstr "Бусад"
 #. module: account
 #: view:account.account:0
 #: report:account.account.balance:0
-#: view:account.analytic.line:0
 #: field:account.automatic.reconcile,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
 #: view:account.entries.report:0
@@ -1224,7 +1253,6 @@ msgstr "Төвшин"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
-#: view:account.invoice.line:0
 #: field:account.invoice.line,invoice_line_tax_id:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -1237,8 +1265,7 @@ msgid "Taxes"
 msgstr "Татвар"
 
 #. module: account
-#: code:addons/account/wizard/account_financial_report.py:69
-#: code:addons/account/wizard/account_report_common.py:144
+#: code:addons/account/wizard/account_financial_report.py:70
 #, python-format
 msgid "Select a starting and an ending period"
 msgstr "Эхлэх дуусах мөчлөгийг сонго"
@@ -1263,7 +1290,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "Бичлэгүүдийг тулгах"
+msgstr "Бичилтүүдийг холбох"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1325,7 +1352,7 @@ msgstr "Авлагын данс"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr "Төв журнал"
+msgstr "Төвлөрсөн журнал"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1271
@@ -1334,8 +1361,10 @@ msgid "You can not use this general account in this journal !"
 msgstr "Та энэ журналд ерөнхий данс хэрэглэх боломжгүй !"
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
@@ -1349,7 +1378,7 @@ msgstr "Татвар хайх"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
 msgid "Account Analytic Cost Ledger"
-msgstr "Аналитик өртөгийн тайлан"
+msgstr "Шинжилгээний санхүүгийн өртөгийн тайлан"
 
 #. module: account
 #: view:account.model:0
@@ -1373,6 +1402,7 @@ msgstr "Татвар тооцоолох"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
+#: field:account.config.settings,code_digits:0
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
 msgstr "Оронгийн хэмжээ"
@@ -1385,6 +1415,7 @@ msgstr "Гараар үүсгэх үед 'Ноорог' төлвийг алга�
 #. module: account
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total:0
+#: field:account.invoice.report,user_currency_price_total:0
 msgid "Total Without Tax"
 msgstr "Татваргүй нийлбэр"
 
@@ -1441,7 +1472,7 @@ msgstr ""
 #: view:account.automatic.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Write-Off Move"
-msgstr "Зөрүү гүйцээлтийн бичилт"
+msgstr "Хасалтын бичилт"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
@@ -1451,7 +1482,7 @@ msgstr "Давтан гүйлгээ"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Санхүүгийн байршилын загвар"
+msgstr "Санхүүгийн харгалзааны үлгэр"
 
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
@@ -1484,7 +1515,6 @@ msgid "Groups"
 msgstr "Бүлгүүд"
 
 #. module: account
-#: field:account.invoice,amount_untaxed:0
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
 msgstr "Татваргүй"
@@ -1521,7 +1551,7 @@ msgstr "Буцаалтын татварын данс"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,line_ids:0
 msgid "Statement lines"
-msgstr "Орлого зарлагын гүйлгээ"
+msgstr "Хуулгын мөрүүд"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1561,8 +1591,10 @@ msgstr "төлбөр хийх хязгаар"
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.move.line,invoice:0
+#: code:addons/account/account_invoice.py:1157
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
+#, python-format
 msgid "Invoice"
 msgstr "Нэхэмжлэл"
 
@@ -1570,7 +1602,7 @@ msgstr "Нэхэмжлэл"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to invoice"
-msgstr "Нэхэмжлэгдэх аналитик өртөг"
+msgstr "Нэхэмжлэгдэх шинжилгээний өртөг"
 
 #. module: account
 #: view:ir.sequence:0
@@ -1583,6 +1615,7 @@ msgid "Separated Journal Sequences"
 msgstr "Журналын дугаарлалтыг салгах"
 
 #. module: account
+#: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Хариуцагч"
@@ -1594,6 +1627,7 @@ msgstr "Нийлбэр :"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
+#: view:report.account_type.sales:0
 msgid "Sales by Account Type"
 msgstr "Борлуулалт дансны төрлөөр"
 
@@ -1614,7 +1648,7 @@ msgstr "Нэхэмжлэл"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr "Толгой татварын ангилал"
+msgstr "Язгуур татварын код"
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -1655,7 +1689,7 @@ msgid "The account is not defined to be reconciled !"
 msgstr "Данс нь гүйцээгдэхээр тохируулагдаагүй байна !"
 
 #. module: account
-#: field:account.cashbox.line,pieces:0
+#: field:account.journal.cashbox.line,pieces:0
 msgid "Values"
 msgstr "Утга"
 
@@ -1702,7 +1736,7 @@ msgstr "Бүх харицлагч"
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Analytic Account Charts"
-msgstr "Аналитик дансны мод"
+msgstr "Шинжилгээний дансны төлөвлөгөө"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1716,7 +1750,7 @@ msgid "Customer Ref:"
 msgstr "Захаиалагчийн сурвалж:"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:292
+#: code:addons/account/account_cash_statement.py:293
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
 msgstr "%s хэрэглэгч %s журналд хандах эрхгүй байна !"
@@ -1800,6 +1834,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,move_id:0
 #: field:account.invoice,move_name:0
+#: field:account.move.line,move_id:0
 msgid "Journal Entry"
 msgstr "Ажил гүйлгээ"
 
@@ -1814,7 +1849,6 @@ msgid "Sub Total"
 msgstr "Нийлбэр"
 
 #. module: account
-#: view:account.account:0
 #: view:account.treasury.report:0
 #: model:ir.actions.act_window,name:account.action_account_treasury_report_all
 #: model:ir.model,name:account.model_account_treasury_report
@@ -1829,18 +1863,18 @@ msgstr "Алдаа! Тойрог хамааралтай компани үүсг�
 
 #. module: account
 #: view:account.analytic.account:0
+#: field:account.invoice.tax,account_analytic_id:0
 msgid "Analytic account"
-msgstr "Аналитик данс"
+msgstr "Шинжилгээний данс"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:339
+#: code:addons/account/account_bank_statement.py:406
 #, python-format
 msgid "Please verify that an account is defined in the journal."
 msgstr "Журналд данс тодорхойлогдсон эсэхийг нягтална уу."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
-#: selection:account.move.line,state:0
 msgid "Valid"
 msgstr "Хүчинтэй"
 
@@ -1953,7 +1987,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Бичилтүүдийн тулгалтыг арилгах"
+msgstr "Гүйлгээ холболтыг салгах"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -2009,7 +2043,7 @@ msgstr "Энэ жил"
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr "Татварын мод"
+msgstr "Татварын төлөвлөгөө"
 
 #. module: account
 #: constraint:account.period:0
@@ -2026,7 +2060,7 @@ msgstr ""
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Pro-forma"
-msgstr "Про-форма"
+msgstr "Урьдчилсан"
 
 #. module: account
 #: code:addons/account/installer.py:348
@@ -2035,7 +2069,7 @@ msgid " Journal"
 msgstr " Журнал"
 
 #. module: account
-#: code:addons/account/account.py:1461
+#: code:addons/account/account.py:1478
 #, python-format
 msgid ""
 "There is no default default debit account defined \n"
@@ -2061,7 +2095,7 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
-msgstr "Дансны Модны Үлгэр Хайх"
+msgstr "Дансны Төлөвлөгөөний Үлгэр Хайх"
 
 #. module: account
 #: view:account.installer:0
@@ -2076,11 +2110,9 @@ msgstr ""
 #. module: account
 #: view:account.account.type:0
 #: field:account.account.type,note:0
-#: view:account.analytic.account:0
 #: report:account.invoice:0
 #: field:account.invoice,name:0
 #: field:account.invoice.line,name:0
-#: field:account.invoice.refund,description:0
 #: report:account.overdue:0
 #: field:account.payment.term,note:0
 #: view:account.tax.code:0
@@ -2093,7 +2125,7 @@ msgid "Description"
 msgstr "Тайлбар"
 
 #. module: account
-#: code:addons/account/account.py:3119
+#: code:addons/account/account.py:3204
 #, python-format
 msgid "ECNJ"
 msgstr "ECNJ"
@@ -2112,7 +2144,7 @@ msgid "Income Account"
 msgstr "Орлогын данс"
 
 #. module: account
-#: code:addons/account/account_invoice.py:370
+#: code:addons/account/account_invoice.py:379
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
 msgstr ""
@@ -2155,8 +2187,10 @@ msgstr "Барааны загвар"
 #: field:account.common.journal.report,fiscalyear_id:0
 #: field:account.common.partner.report,fiscalyear_id:0
 #: field:account.common.report,fiscalyear_id:0
+#: view:account.config.settings:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
+#: view:account.fiscalyear:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
 #: field:account.general.journal,fiscalyear_id:0
@@ -2165,6 +2199,7 @@ msgstr "Барааны загвар"
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
+#: field:account.open.closed.fiscalyear,fyear_id:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,fiscalyear_id:0
 #: field:account.partner.ledger,fiscalyear_id:0
@@ -2202,6 +2237,7 @@ msgid "Keep empty for all open fiscal year"
 msgstr "Хоосон орхивол бүх нээлттэй жил хэрэглэгдэнэ"
 
 #. module: account
+#: view:account.move:0
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Дансны бичилт"
@@ -2212,14 +2248,12 @@ msgid "Main Sequence"
 msgstr "Үндсэн дараалал"
 
 #. module: account
-#: field:account.invoice,payment_term:0
 #: field:account.invoice.report,payment_term:0
 #: view:account.payment.term:0
 #: field:account.payment.term,name:0
 #: view:account.payment.term.line:0
 #: field:account.payment.term.line,payment_id:0
 #: model:ir.model,name:account.model_account_payment_term
-#: field:res.partner,property_payment_term:0
 msgid "Payment Term"
 msgstr "Төлбөрийн нөхцөл"
 
@@ -2240,17 +2274,15 @@ msgid "Filters"
 msgstr "Шүүлтүүр"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.bank.statement:0
 #: selection:account.bank.statement,state:0
 #: view:account.fiscalyear:0
 #: selection:account.fiscalyear,state:0
 #: selection:account.invoice,state:0
 #: selection:account.invoice.report,state:0
-#: view:account.open.closed.fiscalyear:0
 #: selection:account.period,state:0
-#: code:addons/account/wizard/account_move_journal.py:106
 #: selection:report.invoice.created,state:0
-#, python-format
 msgid "Open"
 msgstr "Нээлттэй"
 
@@ -2275,10 +2307,10 @@ msgstr "Харилцагчийн тулгалт"
 #: field:account.tax,tax_code_id:0
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Татварын дансны код"
+msgstr "Татварын Кодын Данс"
 
 #. module: account
-#: code:addons/account/account_invoice.py:572
+#: code:addons/account/account_invoice.py:581
 #, python-format
 msgid ""
 "Can't find any account journal of %s type for this company.\n"
@@ -2358,7 +2390,7 @@ msgid "Account Model Entries"
 msgstr "Дансны загвар гүйлгээ"
 
 #. module: account
-#: code:addons/account/account.py:3117
+#: code:addons/account/account.py:3202
 #, python-format
 msgid "EXJ"
 msgstr "EXJ"
@@ -2369,7 +2401,6 @@ msgid "Supplier Taxes"
 msgstr "Нийлүүлэгчийн татвар"
 
 #. module: account
-#: help:account.invoice,date_due:0
 #: help:account.invoice,payment_term:0
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
@@ -2419,15 +2450,19 @@ msgid "Error ! You can not create recursive categories."
 msgstr ""
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
+#: model:account.account.type,name:account.conf_account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
+#: report:account.journal.period.print.sale.purchase:0
 #: field:account.move.line,account_tax_id:0
+#: view:account.tax:0
+#: model:ir.model,name:account.model_account_tax
 msgid "Tax"
 msgstr "Татвар"
 
 #. module: account
 #: view:account.analytic.account:0
+#: view:account.analytic.line:0
 #: field:account.bank.statement.line,analytic_account_id:0
 #: field:account.entries.report,analytic_account_id:0
 #: field:account.invoice.line,account_analytic_id:0
@@ -2435,7 +2470,7 @@ msgstr "Татвар"
 #: field:account.move.line,analytic_account_id:0
 #: field:account.move.line.reconcile.writeoff,analytic_id:0
 msgid "Analytic Account"
-msgstr "Аналитик данс"
+msgstr "Шинжилгээний Данс"
 
 #. module: account
 #: view:account.account:0
@@ -2451,13 +2486,21 @@ msgid "Accounts"
 msgstr "Данс"
 
 #. module: account
-#: code:addons/account/account_invoice.py:369
+#: code:addons/account/account.py:3541
+#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_invoice.py:507
+#: code:addons/account/account_invoice.py:609
+#: code:addons/account/account_invoice.py:624
+#: code:addons/account/account_invoice.py:632
+#: code:addons/account/account_invoice.py:657
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid "Configuration Error!"
 msgstr "Тохиргооны алдаа!"
 
 #. module: account
 #: field:account.invoice.report,price_average:0
+#: field:account.invoice.report,user_currency_price_average:0
 msgid "Average Price"
 msgstr "Дундаж үнэ"
 
@@ -2483,7 +2526,6 @@ msgid "Label"
 msgstr "Шошго"
 
 #. module: account
-#: view:account.tax:0
 #: view:res.partner.bank:0
 msgid "Accounting Information"
 msgstr "Санхүүгийн мэдээлэл"
@@ -2512,13 +2554,13 @@ msgstr "Хөнг.(%)"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Ref"
-msgstr "Дугаар"
+msgstr "Сурвалж"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
 msgstr ""
-"Данс нь татварын суурь код эсвэл татварын кодын дансны аль нэг байх ёстой."
+"Данс нь суурь татварын код эсвэл татварын кодын дансны аль нэг байх ёстой."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
@@ -2534,10 +2576,9 @@ msgstr "Төлсөн/Тулгагдсан"
 #: field:account.tax,ref_base_code_id:0
 #: field:account.tax.template,ref_base_code_id:0
 msgid "Refund Base Code"
-msgstr "Буцаалтын суурь ангилал"
+msgstr "Буцаалтын суурь код"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_bank_statement_periodic_tree
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Bank Statements"
@@ -2549,7 +2590,6 @@ msgid "True"
 msgstr "Үнэн"
 
 #. module: account
-#: view:account.bank.statement:0
 #: view:account.common.report:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -2623,25 +2663,24 @@ msgid "This wizard will create recurring accounting entries"
 msgstr "Энэ визард давтан гүйлгээний бичилт үүсгэнэ"
 
 #. module: account
-#: code:addons/account/account.py:1321
+#: code:addons/account/account.py:1329
 #, python-format
 msgid "No sequence defined on the journal !"
 msgstr "Журнал дээр дугаарлалт тодорхойлогдоогүй байна !"
 
 #. module: account
-#: code:addons/account/account.py:2268
-#: code:addons/account/account_invoice.py:688
-#: code:addons/account/account_move_line.py:173
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_invoice.py:775
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "'%s' журналд аналитик журнал тодорхойлогдоогүй байна!"
+msgstr "'%s' журналд шинжилгээний журнал тодорхойлогдоогүй байна!"
 
 #. module: account
-#: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "Татварын ангилал"
+msgstr "Татварын кодууд"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -2679,7 +2718,7 @@ msgid "Payment entries are the second input of the reconciliation."
 msgstr "Төлбөрийн бичилт нь тулгалтын хоёр дахь оролт байдаг"
 
 #. module: account
-#: selection:account.print.journal,sort_selection:0
+#: report:account.journal.period.print:0
 msgid "Reference Number"
 msgstr "Баримтын дугаар"
 
@@ -2760,7 +2799,7 @@ msgstr "Санхүү бүртгэл"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit And Loss"
-msgstr "Орлого зарлагын тайлан"
+msgstr "Ашиг, алдагдал"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -2790,7 +2829,7 @@ msgstr ""
 #: view:account.analytic.line:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 msgid "Analytic Entries"
-msgstr "Аналитик бичилт"
+msgstr "Шинжилгээний бичилт"
 
 #. module: account
 #: code:addons/account/account.py:962
@@ -2898,7 +2937,7 @@ msgstr "Нийт тоо хэмжээ"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,writeoff_acc_id:0
 msgid "Write-Off account"
-msgstr "Цуцлалтын данс"
+msgstr "Хасалтын данс"
 
 #. module: account
 #: field:account.model.line,model_id:0
@@ -2921,8 +2960,8 @@ msgid "View"
 msgstr "Харах"
 
 #. module: account
-#: code:addons/account/account.py:3363
-#: code:addons/account/account_bank.py:90
+#: code:addons/account/account.py:3460
+#: code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
 msgstr "BNK"
@@ -2930,7 +2969,7 @@ msgstr "BNK"
 #. module: account
 #: field:account.move.line,analytic_lines:0
 msgid "Analytic lines"
-msgstr "Аналитик бичилт"
+msgstr "Шинжилгээний бичилт"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -2945,7 +2984,7 @@ msgstr "Захиалагчийн кредит"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr "Татварын кодны загвар"
+msgstr "Татварын кодны үлгэр"
 
 #. module: account
 #: view:account.subscription:0
@@ -2963,6 +3002,7 @@ msgid "Gives the sequence order to journal column."
 msgstr "Журналын баганы харагдах эрэмбэ дарааллыг тодорхойлно."
 
 #. module: account
+#: report:account.journal.period.print.sale.purchase:0
 #: view:account.tax.template:0
 msgid "Tax Declaration"
 msgstr "Татвар тодорхойлолт"
@@ -2988,7 +3028,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr "Дансны модны загвар"
+msgstr "Дансны төлөвлөгөөний үлгэр"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -3029,7 +3069,6 @@ msgid "No End of year journal defined for the fiscal year"
 msgstr "Энэ санхүүгийн жилд Жилийн төгсгөлийн журнал алга байна"
 
 #. module: account
-#: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
 msgstr ""
@@ -3082,6 +3121,7 @@ msgstr "Захиалгын цуваа"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
 #: view:account.journal:0
 #: selection:account.journal,type:0
 #: view:account.model:0
@@ -3110,7 +3150,7 @@ msgid "Starting Balance"
 msgstr "Нээлтийн үлдэгдэл"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1332
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "No Partner Defined !"
 msgstr "Харилцагч алга !"
@@ -3161,13 +3201,13 @@ msgstr "Дансны төлөвлөгөө тохируулга"
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr "Нэхэмжлэлд тусгагдахгүй"
+msgstr "Нэхэмжлэлд хэвлэгдэхгүй"
 
 #. module: account
 #: report:account.vat.declaration:0
 #: field:account.vat.declaration,chart_tax_id:0
 msgid "Chart of Tax"
-msgstr "Татварын мод"
+msgstr "Татварын төлөвлөгөө"
 
 #. module: account
 #: view:account.journal:0
@@ -3177,12 +3217,11 @@ msgstr "Санхүүгийн журнал хайх"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
-msgstr "Хүлээгдэж буй нэхэмжлэл"
+msgstr "Шийд хүлээсэн нэхэмжлэл"
 
 #. module: account
 #: view:account.invoice.report:0
 #: selection:account.subscription,period_type:0
-#: view:analytic.entries.report:0
 msgid "year"
 msgstr "жил"
 
@@ -3221,7 +3260,7 @@ msgstr "Баланс тэнцээгүй"
 #. module: account
 #: view:account.chart:0
 msgid "Account charts"
-msgstr "Дансны мод"
+msgstr "Дансны төлөвлөгөө"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -3242,10 +3281,11 @@ msgstr "Гүйлгээ хайх"
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr "Ангилалын нэр"
+msgstr "Татварын кодын нэр"
 
 #. module: account
 #: report:account.invoice:0
+#: view:account.invoice:0
 #: model:process.node,name:account.process_node_draftinvoices0
 msgid "Draft Invoice"
 msgstr "Ноорог нэхэмжлэл"
@@ -3274,7 +3314,7 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 msgid "Counterpart"
-msgstr "Эсрэг тал"
+msgstr "Харьцах данс"
 
 #. module: account
 #: view:account.journal:0
@@ -3327,9 +3367,13 @@ msgid "VAT :"
 msgstr "НӨАТ :"
 
 #. module: account
+#: report:account.account.balance:0
 #: report:account.central.journal:0
+#: view:account.config.settings:0
+#: report:account.general.journal:0
 #: report:account.general.ledger:0
-#: field:account.installer,charts:0
+#: report:account.general.ledger_landscape:0
+#: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -3337,7 +3381,7 @@ msgstr "НӨАТ :"
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
 msgid "Chart of Accounts"
-msgstr "Дансны мод"
+msgstr "Дансны төлөвлөгөө"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -3352,7 +3396,7 @@ msgstr "Хуулбар гүйлгээнд хэрэглэгдэх"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "Харилцагч, харилцагчаар гүйцээлтийн боловсруулалт"
+msgstr "Харилцагч, харилцагчаар тулгалтын боловсруулалт"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3369,8 +3413,10 @@ msgstr ""
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
 #: report:account.analytic.account.journal:0
+#: view:account.analytic.line:0
 #: selection:account.balance.report,filter:0
 #: field:account.bank.statement,date:0
+#: field:account.bank.statement.line,date:0
 #: selection:account.central.journal,filter:0
 #: selection:account.common.account.report,filter:0
 #: selection:account.common.journal.report,filter:0
@@ -3381,6 +3427,7 @@ msgstr ""
 #: selection:account.general.journal,filter:0
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
+#: field:account.invoice.refund,date:0
 #: field:account.invoice.report,date:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
@@ -3394,10 +3441,10 @@ msgstr ""
 #: selection:account.print.journal,sort_selection:0
 #: selection:account.report.general.ledger,filter:0
 #: selection:account.report.general.ledger,sortby:0
-#: field:account.subscription.generate,date:0
 #: field:account.subscription.line,date:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: xsl:account.transfer:0
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
@@ -3412,7 +3459,7 @@ msgid "Unreconcile"
 msgstr "Тулгалтыг арилгах"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:84
+#: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account"
 msgstr "Энэ журнал үндсэн дебит, кредит данстай байх ёстой"
@@ -3420,10 +3467,10 @@ msgstr "Энэ журнал үндсэн дебит, кредит данстай
 #. module: account
 #: view:account.chart.template:0
 msgid "Chart of Accounts Template"
-msgstr "Загвар дансны мод"
+msgstr "Дансны төлөвлөгөөний үлгэр"
 
 #. module: account
-#: code:addons/account/account.py:2280
+#: code:addons/account/account.py:2358
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -3435,7 +3482,7 @@ msgstr ""
 "Үүнд харилагчийг тодорхойлно уу!"
 
 #. module: account
-#: code:addons/account/account_move_line.py:837
+#: code:addons/account/account_move_line.py:846
 #, python-format
 msgid "Some entries are already reconciled !"
 msgstr "Зарим гүйлгээнүүд аль хэдий нь тулгагдсан байна !"
@@ -3524,7 +3571,7 @@ msgstr "Маргаантай"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Search Analytic Lines"
-msgstr "Аналитик бичилт хайх"
+msgstr "Шинжилгээний бичилт хайх"
 
 #. module: account
 #: field:res.partner,property_account_payable:0
@@ -3567,7 +3614,7 @@ msgid "Analytic Items"
 msgstr "Шинжилгээний бичилтүүд"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
+#: code:addons/account/account_move_line.py:1168
 #, python-format
 msgid "Unable to change tax !"
 msgstr "Татварыг солих боломжгүй !"
@@ -3578,7 +3625,7 @@ msgid "#Entries"
 msgstr "Бичилтийн тоо"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1429
+#: code:addons/account/account_invoice.py:1431
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
@@ -3613,7 +3660,6 @@ msgstr "Харгалзуулалт"
 #: field:account.account,name:0
 #: field:account.account.template,name:0
 #: report:account.analytic.account.inverted.balance:0
-#: field:account.bank.statement,name:0
 #: field:account.chart.template,name:0
 #: field:account.model.line,name:0
 #: field:account.move.line,name:0
@@ -3641,11 +3687,14 @@ msgstr "Standard Encoding"
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr "Аналитик бичилт хийх журнал"
+msgstr "Шинжилгээний бичилт хийх журнал"
 
 #. module: account
-#: model:ir.actions.todo.category,name:account.category_accounting_configuration
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_account_config
+#: model:ir.ui.menu,name:account.menu_board_account
 #: model:ir.ui.menu,name:account.menu_finance
+#: model:ir.ui.menu,name:account.menu_finance_reporting
 #: model:process.node,name:account.process_node_accountingentries0
 #: model:process.node,name:account.process_node_supplieraccountingentries0
 #: view:product.product:0
@@ -3674,7 +3723,7 @@ msgstr "Ерөнхий данс бүртгэл"
 #. module: account
 #: report:account.overdue:0
 msgid "Balance :"
-msgstr "Баланс :"
+msgstr "Үлдэгдэл"
 
 #. module: account
 #: help:account.fiscalyear.close,journal_id:0
@@ -3687,17 +3736,15 @@ msgstr ""
 "Энд хэрэглэдэг шилдэг туршлага нь жилийн нээлтийн журналийн үүсгэж бүх "
 "нээлтийн бичилтүүдийг нэгтгэх хэрэгтэй. Гэхдээ үүнийг үүсгэхдээ дебит/кредит "
 "дансны анхны утгуудыг нь тодорхойлох хэрэгтэй. Гэхдээ эдгээр дансаа 'байдал' "
-"гэсэн төрөлтэй эсрэг тал нь төвлөрсөн байхаар үүсгэх хэрэгтэй."
+"гэсэн төрөлтэй харьцах данс нь төвлөрсөн байхаар үүсгэх хэрэгтэй."
 
 #. module: account
 #: view:account.installer:0
-#: view:wizard.multi.charts.accounts:0
 msgid "title"
 msgstr "гарчиг"
 
 #. module: account
 #: view:account.invoice:0
-#: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
 msgstr "Ноорог болгох"
@@ -3761,6 +3808,7 @@ msgid "Tax Name"
 msgstr "Татварын нэр"
 
 #. module: account
+#: view:account.config.settings:0
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
 msgstr "Тохиргоо"
@@ -3775,7 +3823,7 @@ msgstr "Сарын төгөсгөл 30 өдөр"
 #: model:ir.actions.act_window,name:account.action_account_analytic_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_balance
 msgid "Analytic Balance"
-msgstr "Аналитик баланс"
+msgstr "Шинжилгээний баланс"
 
 #. module: account
 #: report:account.balancesheet:0
@@ -3827,7 +3875,6 @@ msgstr "Дансны төрөл"
 
 #. module: account
 #: report:account.account.balance:0
-#: view:account.balance.report:0
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
@@ -3902,7 +3949,6 @@ msgid "Reference UoM"
 msgstr "Х.Н-н код"
 
 #. module: account
-#: field:account.account,note:0
 #: field:account.account.template,note:0
 msgid "Note"
 msgstr "Тэмдэглэл"
@@ -3915,6 +3961,7 @@ msgstr "Хугацаа хэтэрсэн данс"
 #. module: account
 #: selection:account.invoice,state:0
 #: report:account.overdue:0
+#: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Төлсөн"
 
@@ -3926,7 +3973,7 @@ msgstr "Татварууд"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr "Account Base Code"
+msgstr "Дансны Суурь Код"
 
 #. module: account
 #: help:account.move,state:0
@@ -3943,7 +3990,7 @@ msgstr ""
 "(нэхэмжлэл,харилцахын ордер...) шиг 'Батлагдсан' төлөвтэйгээр үүснэ."
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:93
+#: code:addons/account/account_analytic_line.py:91
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Энэ бараанд зарлагын данс алга:\"%s\" (id:%d)"
@@ -3968,7 +4015,6 @@ msgstr "Татварын тайлбар"
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -4013,7 +4059,7 @@ msgid "Default taxes"
 msgstr "Үндсэн татвар"
 
 #. module: account
-#: code:addons/account/account_invoice.py:88
+#: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "Free Reference"
 msgstr "Бусад холбогдол"
@@ -4050,7 +4096,7 @@ msgstr "  сарын өдөр: 0"
 #. module: account
 #: model:ir.model,name:account.model_account_chart
 msgid "Account chart"
-msgstr "Дансны мод"
+msgstr "Дансны төлөвлөгөө"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -4074,7 +4120,7 @@ msgid "Bank statements are entered in the system."
 msgstr "Банкны хуулгын системд оруулдаг."
 
 #. module: account
-#: code:addons/account/wizard/account_reconcile.py:133
+#: code:addons/account/wizard/account_reconcile.py:122
 #, python-format
 msgid "Reconcile Writeoff"
 msgstr "Тулгалтын хасалт"
@@ -4091,7 +4137,6 @@ msgstr "Дансны төрлөөр"
 
 #. module: account
 #: view:account.bank.statement:0
-#: field:account.bank.statement,balance_end_cash:0
 msgid "Closing Balance"
 msgstr "Хаалтын үлдэгдэл"
 
@@ -4114,7 +4159,7 @@ msgstr "Нэхэмжлэл хэвлэх"
 #. module: account
 #: view:account.tax.template:0
 msgid "Credit Notes"
-msgstr "Орлогын тэмдэглэл"
+msgstr "Буцаалтууд"
 
 #. module: account
 #: code:addons/account/account.py:2067
@@ -4185,7 +4230,6 @@ msgstr "Account Analytic Cost Ledger For Journal Report"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
-#: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Recurring Models"
 msgstr "Давтан гүйлгээний загвар"
 
@@ -4195,20 +4239,20 @@ msgid "4"
 msgstr "4"
 
 #. module: account
-#: view:account.invoice:0
+#: xsl:account.transfer:0
 msgid "Change"
 msgstr "Солих"
 
 #. module: account
-#: code:addons/account/account.py:1431
-#: code:addons/account/account.py:1460
-#: code:addons/account/account.py:1467
-#: code:addons/account/account_invoice.py:920
-#: code:addons/account/account_move_line.py:1104
-#: code:addons/account/wizard/account_automatic_reconcile.py:152
-#: code:addons/account/wizard/account_fiscalyear_close.py:73
-#: code:addons/account/wizard/account_fiscalyear_close.py:83
-#: code:addons/account/wizard/account_fiscalyear_close.py:86
+#: code:addons/account/account.py:1448
+#: code:addons/account/account.py:1477
+#: code:addons/account/account.py:1484
+#: code:addons/account/account_invoice.py:931
+#: code:addons/account/account_move_line.py:1119
+#: code:addons/account/wizard/account_automatic_reconcile.py:148
+#: code:addons/account/wizard/account_fiscalyear_close.py:88
+#: code:addons/account/wizard/account_fiscalyear_close.py:99
+#: code:addons/account/wizard/account_fiscalyear_close.py:102
 #: code:addons/account/wizard/account_move_journal.py:165
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -4232,12 +4276,13 @@ msgid "Consider reconciled entries"
 msgstr "Гүйцээгдсэн бичилтийг хамруулах"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.actions.act_window,name:account.action_validate_account_move_line
 #: model:ir.ui.menu,name:account.menu_validate_account_moves
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Журналийн бичилтүүдийг илгээх"
+msgstr "Журналын бичилтүүдийг батлах"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4267,7 +4312,7 @@ msgstr "Ажил гүйлгээ үүсгэх"
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr "Татварын мод сонго"
+msgstr "Татварын төлөвлөгөөгөө сонго"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -4278,9 +4323,10 @@ msgstr "Дансны харгалзаа"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
+#: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:337
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Customer"
 msgstr "Захиалагч"
@@ -4302,7 +4348,7 @@ msgid "You must define an analytic journal of type '%s' !"
 msgstr "Та '%s' төрлийн аналитик журнал тодорхойлох ёстой !"
 
 #. module: account
-#: code:addons/account/account.py:1567
+#: code:addons/account/account.py:1584
 #, python-format
 msgid ""
 "Couldn't create move with currency different from the secondary currency of "
@@ -4322,7 +4368,7 @@ msgstr "Буцаалтын огноо"
 #: field:account.tax,ref_tax_code_id:0
 #: field:account.tax.template,ref_tax_code_id:0
 msgid "Refund Tax Code"
-msgstr "Буцаалтын татварын ангилал"
+msgstr "Буцаалтын Татварын Код"
 
 #. module: account
 #: view:validate.account.move:0
@@ -4340,8 +4386,7 @@ msgid "Account Balance -"
 msgstr "Дансны тэнцэл-"
 
 #. module: account
-#: code:addons/account/invoice.py:997
-#, python-format
+#: view:account.invoice:0
 msgid "Invoice "
 msgstr "Нэхэмжлэл "
 
@@ -4368,6 +4413,7 @@ msgstr "Шинэ санхүүгийн жил"
 
 #. module: account
 #: view:account.invoice:0
+#: view:account.tax:0
 #: view:account.tax.template:0
 #: selection:account.vat.declaration,based_on:0
 #: model:ir.actions.act_window,name:account.act_res_partner_2_account_invoice_opened
@@ -4379,7 +4425,7 @@ msgid "Invoices"
 msgstr "Нэхэмжлэл"
 
 #. module: account
-#: code:addons/account/account_invoice.py:828
+#: code:addons/account/account_invoice.py:839
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -4458,27 +4504,19 @@ msgid "Tax Application"
 msgstr "Татварын хэрэглээ"
 
 #. module: account
+#: view:account.bank.statement:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: code:addons/account/wizard/account_move_journal.py:153
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
-#: model:ir.actions.act_window,name:account.action_account_manual_reconcile
+#: model:ir.actions.act_window,name:account.action_account_items
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
-#: model:ir.actions.act_window,name:account.action_account_moves_bank
-#: model:ir.actions.act_window,name:account.action_account_moves_purchase
-#: model:ir.actions.act_window,name:account.action_account_moves_sale
-#: model:ir.actions.act_window,name:account.action_move_line_search
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.actions.act_window,name:account.action_move_line_tree1
+#: model:ir.actions.act_window,name:account.action_tax_code_items
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
-#: model:ir.ui.menu,name:account.menu_action_account_moves_bank
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_purchase
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
-#, python-format
 msgid "Journal Items"
 msgstr "Журналын бичилт"
 
@@ -4551,8 +4589,7 @@ msgid "Group Invoice Lines"
 msgstr "Нэхэмжлэлээр бүлэглэх"
 
 #. module: account
-#: view:account.invoice.cancel:0
-#: view:account.invoice.confirm:0
+#: view:account.automatic.reconcile:0
 msgid "Close"
 msgstr "Хаах"
 
@@ -4562,7 +4599,6 @@ msgid "Moves"
 msgstr "Ажил гүйлгээ"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
 msgstr "Account Vat Declaration"
@@ -4578,7 +4614,7 @@ msgid "Check Date not in the Period"
 msgstr "Огноог мөчлөгтэй нь нягтлах"
 
 #. module: account
-#: code:addons/account/account.py:1351
+#: code:addons/account/account.py:1361
 #, python-format
 msgid ""
 "You can not modify a posted entry of this journal !\n"
@@ -4599,7 +4635,7 @@ msgid "Child Tax Accounts"
 msgstr "Дэд татварууд"
 
 #. module: account
-#: code:addons/account/account.py:1090
+#: code:addons/account/account.py:1097
 #, python-format
 msgid "Start period should be smaller then End period"
 msgstr "Эхлэх мөчлөг нь дуусах мөчлөгөөс өмнөх хугацааных байх ёстой"
@@ -4612,7 +4648,7 @@ msgstr "5"
 #. module: account
 #: report:account.analytic.account.balance:0
 msgid "Analytic Balance -"
-msgstr "Аналитик баланс -"
+msgstr "Шинжилгээний баланс -"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4631,7 +4667,6 @@ msgstr "Аналитик баланс -"
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.journal,target_move:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
@@ -4674,6 +4709,7 @@ msgid "Python Code (reverse)"
 msgstr "Python Code (reverse)"
 
 #. module: account
+#: field:account.invoice,payment_term:0
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
@@ -4697,7 +4733,9 @@ msgstr ""
 #: field:account.invoice.report,year:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,year:0
+#: view:report.account.sales:0
 #: field:report.account.sales,name:0
+#: view:report.account_type.sales:0
 #: field:report.account_type.sales,name:0
 msgid "Year"
 msgstr "Жил"
@@ -4713,7 +4751,7 @@ msgid "Line 1:"
 msgstr "Мөр 1:"
 
 #. module: account
-#: code:addons/account/account.py:1307
+#: code:addons/account/account.py:1315
 #, python-format
 msgid "Integrity Error !"
 msgstr "Өгөгдлийн алдаа !"
@@ -4740,6 +4778,7 @@ msgid "Description on invoices"
 msgstr "Нэхэмжлэлийн тайлбар"
 
 #. module: account
+#: view:account.move.line:0
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
 msgstr "Тулгалт хийх дараагийн харилцагч"
@@ -4757,6 +4796,7 @@ msgstr "Тулгалтын дүн"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
+#: model:ir.actions.act_window,name:account.action_account_report_bs
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 msgid "Balance Sheet"
 msgstr "Баланс тайлан"
@@ -4769,7 +4809,6 @@ msgstr "Санхүүгийн тайлан"
 #. module: account
 #: field:account.move,line_id:0
 #: view:analytic.entries.report:0
-#: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
 msgid "Entries"
 msgstr "Ажил гүйлгээнүүд"
@@ -4798,6 +4837,7 @@ msgstr "Тооцоолох програмчлалын код (хэрэв төр�
 
 #. module: account
 #: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
 #: view:account.journal:0
 #: selection:account.journal,type:0
 #: view:account.model:0
@@ -4811,14 +4851,18 @@ msgstr "Борлуулалт"
 #: view:account.analytic.line:0
 #: field:account.bank.statement.line,amount:0
 #: report:account.invoice:0
+#: field:account.invoice.line,price_subtotal:0
 #: field:account.invoice.tax,amount:0
 #: view:account.move:0
 #: field:account.move,amount:0
 #: view:account.move.line:0
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
+#: xsl:account.transfer:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,amount:0
+#: field:cash.box.in,amount:0
+#: field:cash.box.out,amount:0
 msgid "Amount"
 msgstr "Дүн"
 
@@ -4868,7 +4912,7 @@ msgstr "Бичилт цуцлахыг зөвшөөрөх"
 #. module: account
 #: field:account.tax.code,sign:0
 msgid "Coefficent for parent"
-msgstr "Эцэгт коффициентлэх нь"
+msgstr "Эцэгт коэффициентлэх нь"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -4906,7 +4950,7 @@ msgstr "Аналитик бичилт шилжилгээ"
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_code_template_form
 msgid "Tax Code Templates"
-msgstr "Татварын ангилалын загвар"
+msgstr "Татварын ангилалын үлгэр"
 
 #. module: account
 #: model:ir.model,name:account.model_account_installer
@@ -4924,8 +4968,8 @@ msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
 msgstr ""
-"Сарын өдрийг тооцоолхоос өмнө хоногийн тоог нэмж өгнө. Хэрвээ огноо=15/01, "
-"Хоногийн тоо=22, Сарын өдөр=-1 бол тогтоосон хугацаа 28/02."
+"Тооцооллын сарын өдрийг тооцоолохоос нэмэх өмнө хоногийн тоо. Хэрвээ "
+"огноо=15/01, Хоногийн тоо=22, Сарын өдөр=-1 бол эцсийн хугацаа 28/02."
 
 #. module: account
 #: code:addons/account/account.py:2896
@@ -4966,18 +5010,19 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr "Дансны Ерөнхий Дансны Тайлан"
+msgstr "Дансны ерөнхий тайлан"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
 #: field:account.invoice,reference:0
 msgid "Communication"
-msgstr "Харилцаа холбоо"
+msgstr "Гүйлгээний утга"
 
 #. module: account
+#: view:account.config.settings:0
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Аналитик санхүү"
+msgstr "Шинжилгээний санхүү"
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -4987,9 +5032,10 @@ msgid "Customer Refund"
 msgstr "Захиалагчийн буцаалт"
 
 #. module: account
-#: view:account.account:0
 #: field:account.account,tax_ids:0
+#: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
+#: view:account.chart.template:0
 msgid "Default Taxes"
 msgstr "Үндсэн татвар"
 
@@ -4999,7 +5045,7 @@ msgstr "Үндсэн татвар"
 #: field:account.tax.template,ref_tax_sign:0
 #: field:account.tax.template,tax_sign:0
 msgid "Tax Code Sign"
-msgstr "Татварын ангилалын тэмдэг"
+msgstr "Татварын Кодын Тэмдэг"
 
 #. module: account
 #: model:ir.model,name:account.model_report_invoice_created
@@ -5012,13 +5058,13 @@ msgid "End of Year Entries Journal"
 msgstr "Жилийн хаалтын бичилтийн журнал"
 
 #. module: account
-#: code:addons/account/account.py:3446
+#: code:addons/account/account.py:3463
 #: code:addons/account/account_bank_statement.py:338
-#: code:addons/account/account_invoice.py:427
-#: code:addons/account/account_invoice.py:527
-#: code:addons/account/account_invoice.py:542
-#: code:addons/account/account_invoice.py:550
-#: code:addons/account/account_invoice.py:572
+#: code:addons/account/account_invoice.py:436
+#: code:addons/account/account_invoice.py:536
+#: code:addons/account/account_invoice.py:551
+#: code:addons/account/account_invoice.py:559
+#: code:addons/account/account_invoice.py:581
 #: code:addons/account/wizard/account_move_journal.py:63
 #, python-format
 msgid "Configuration Error !"
@@ -5031,7 +5077,7 @@ msgid ""
 "something to reconcile or not. This figure already count the current partner "
 "as reconciled."
 msgstr ""
-"Эдгээр нь гүйцээлт хийх шаардлагатай эсэхийг шалгахаар үлдэж байгаа "
+"Эдгээр нь тулгалт хийх шаардлагатай эсэхийг шалгахаар үлдэж байгаа "
 "харилцагчдын жагсаалт. Энэ зураглал нь идэвхтэй харилцагчдыг тулгалт "
 "хийгдсэнээр тоолсон байгаа."
 
@@ -5082,7 +5128,7 @@ msgstr "6"
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_form
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 msgid "Analytic Accounts"
-msgstr "Аналитик данс"
+msgstr "Шинжилгээний данс"
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -5099,7 +5145,7 @@ msgid "Sort By"
 msgstr "Эрэмбэ"
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1485
 #, python-format
 msgid ""
 "There is no default default credit account defined \n"
@@ -5158,8 +5204,8 @@ msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
 "be chosen as the power of the automatic reconciliation"
 msgstr ""
-"Хэсэгчилсэн дүнгүүдийг нэгтгэгдэж автомат гүйцээлтээр баланстай тулах "
-"цэгүүдийг олж болдог нь автомат тулгалтын давуу тал юм."
+"Хэсэгчилсэн дүнгүүдийг нэгтгэгдэж автомат тулалт баланстай тулах цэгүүдийг "
+"олж болдог нь автомат тулгалтын давуу тал юм."
 
 #. module: account
 #: help:account.payment.term.line,sequence:0
@@ -5174,7 +5220,7 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "Санхүүгийн харгалзуулалтын загвар"
+msgstr "Санхүүгийн харгалзааны үлгэр"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -5252,10 +5298,10 @@ msgstr "Журналын гүйлгээ харах"
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Opening Entries"
-msgstr "Санхүүгийн жилийн нээлтийн гүйлгээ тохируулах"
+msgstr "Нээлтийн бичилтийг үүсгэх"
 
 #. module: account
-#: code:addons/account/account_move_line.py:759
+#: code:addons/account/account_move_line.py:775
 #, python-format
 msgid "Already Reconciled!"
 msgstr "Аль хэдий нь тулгагдсан!"
@@ -5279,10 +5325,11 @@ msgstr "Үүсгэх огноо"
 
 #. module: account
 #: view:account.analytic.journal:0
+#: field:account.analytic.journal.report,analytic_account_journal_id:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Аналитик журнал"
+msgstr "Шинжилгээний журнал"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -5291,10 +5338,10 @@ msgstr "Дэд дансууд"
 
 #. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:857
+#: code:addons/account/account_move_line.py:879
 #, python-format
 msgid "Write-Off"
-msgstr "Зөрүү"
+msgstr "Хасалт"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -5308,9 +5355,10 @@ msgstr "account.analytic.line.extended"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
+#: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:339
+#: code:addons/account/account_invoice.py:390
 #, python-format
 msgid "Supplier"
 msgstr "Нийлүүлэгч"
@@ -5326,6 +5374,7 @@ msgstr "3 сар"
 
 #. module: account
 #: view:account.account.template:0
+#: view:account.chart.template:0
 msgid "Account Template"
 msgstr "Дансны загвар"
 
@@ -5351,7 +5400,9 @@ msgstr "Үнэлгээ"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:301
+#: code:addons/account/report/account_partner_ledger.py:276
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "Авлага өглөгийн данс"
@@ -5373,7 +5424,8 @@ msgid "Max Qty:"
 msgstr "дээд тоо хэмжээ"
 
 #. module: account
-#: view:account.invoice.refund:0
+#: view:account.invoice:0
+#: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
 msgstr "Нэхэмжлэл буцаалт"
 
@@ -5464,8 +5516,8 @@ msgid "Filter by"
 msgstr "Шүүлтүүр"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1155
-#: code:addons/account/account_move_line.py:1238
+#: code:addons/account/account_move_line.py:1170
+#: code:addons/account/account_move_line.py:1253
 #, python-format
 msgid "You can not use an inactive account!"
 msgstr "Та идэвхигүй дансыг хэрэглэх боломжгүй!"
@@ -5510,7 +5562,7 @@ msgstr "Шүүлтгүй"
 #. module: account
 #: field:account.payment.term.line,days:0
 msgid "Number of Days"
-msgstr "Өдрийн дугаар"
+msgstr "Хоногийн тоо"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -5518,15 +5570,15 @@ msgid "7"
 msgstr "7"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:402
-#: code:addons/account/account_invoice.py:392
+#: code:addons/account/account_bank_statement.py:403
+#: code:addons/account/account_invoice.py:401
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid action !"
 msgstr "Буруу үйлдэл !"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:102
+#: code:addons/account/wizard/account_move_journal.py:103
 #, python-format
 msgid "Period: %s"
 msgstr "Мөчлөг: %s"
@@ -5534,7 +5586,7 @@ msgstr "Мөчлөг: %s"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "Татварын жилийн харгалзааны үлгэр"
+msgstr "Татварын санхүүгийн харгалзааны үлгэр"
 
 #. module: account
 #: help:account.tax,name:0
@@ -5581,7 +5633,7 @@ msgid "Multipication factor for Base code"
 msgstr "Суурь кодын үржүүлэх коэффициент"
 
 #. module: account
-#: code:addons/account/wizard/account_report_common.py:150
+#: code:addons/account/wizard/account_report_common.py:151
 #, python-format
 msgid "not implemented"
 msgstr "хэрэгжүүлээгүй"
@@ -5604,14 +5656,14 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "Санхүүгийн жилийн харгалзуулалтын тайлбар :"
+msgstr "Санхүүгийн харгалзааны тайлбар :"
 
 #. module: account
 #: view:analytic.entries.report:0
 #: model:ir.actions.act_window,name:account.action_analytic_entries_report
 #: model:ir.ui.menu,name:account.menu_action_analytic_entries_report
 msgid "Analytic Entries Analysis"
-msgstr "Аналитик гүйлгээ шинжилгээ"
+msgstr "Шинжилгээний гүйлгээний шинжилгээ"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -5621,7 +5673,7 @@ msgstr "Өнгөрсөн"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Entry"
-msgstr "Аналитик бичилт"
+msgstr "Шинжилгээний бичилт"
 
 #. module: account
 #: view:res.company:0
@@ -5692,9 +5744,10 @@ msgid "Latest Reconciliation Date"
 msgstr "Сүүлд Тулгалт хийсэн огноо"
 
 #. module: account
+#: view:account.analytic.line:0
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Аналитик бичилт"
+msgstr "Шинжилгээний мөр"
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -5707,7 +5760,6 @@ msgid "Create an Account based on this template"
 msgstr "Энэ үлгэр дээр суурилж данс үүсгэх"
 
 #. module: account
-#: view:account.account.type:0
 #: view:account.tax.code:0
 msgid "Reporting Configuration"
 msgstr "Тайлангийн тохиргоо"
@@ -5762,7 +5814,7 @@ msgstr "Шинээр үүсгэх татваруудын жагсаалт"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_intracom
 msgid "IntraCom"
-msgstr ""
+msgstr "IntraCom"
 
 #. module: account
 #: view:account.move.line.reconcile.writeoff:0
@@ -5771,6 +5823,7 @@ msgstr "Хавсралт мэдээлэл"
 
 #. module: account
 #: field:account.chart,fiscalyear:0
+#: view:account.fiscalyear:0
 msgid "Fiscal year"
 msgstr "Санхүүгийн жил"
 
@@ -5780,7 +5833,6 @@ msgid "Partial Reconcile Entries"
 msgstr "Хэсэгчилсэн тулгагдсан бичилтүүд"
 
 #. module: account
-#: view:account.addtmpl.wizard:0
 #: view:account.aged.trial.balance:0
 #: view:account.analytic.balance:0
 #: view:account.analytic.chart:0
@@ -5789,35 +5841,33 @@ msgstr "Хэсэгчилсэн тулгагдсан бичилтүүд"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.automatic.reconcile:0
-#: view:account.bank.statement:0
 #: view:account.change.currency:0
 #: view:account.chart:0
 #: view:account.common.report:0
+#: view:account.config.settings:0
 #: view:account.fiscalyear.close:0
 #: view:account.fiscalyear.close.state:0
-#: view:account.invoice:0
+#: view:account.invoice.cancel:0
+#: view:account.invoice.confirm:0
 #: view:account.invoice.refund:0
 #: view:account.journal.select:0
-#: view:account.move:0
 #: view:account.move.bank.reconcile:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.select:0
 #: view:account.move.line.reconcile.writeoff:0
 #: view:account.move.line.unreconcile.select:0
-#: view:account.open.closed.fiscalyear:0
-#: view:account.partner.reconcile.process:0
 #: view:account.period.close:0
+#: view:account.state.open:0
 #: view:account.subscription.generate:0
 #: view:account.tax.chart:0
 #: view:account.unreconcile:0
-#: view:account.unreconcile.reconcile:0
 #: view:account.use.model:0
 #: view:account.vat.declaration:0
-#: code:addons/account/wizard/account_move_journal.py:105
+#: view:cash.box.in:0
+#: view:cash.box.out:0
 #: view:project.account.analytic.line:0
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
-#, python-format
 msgid "Cancel"
 msgstr "Цуцлах"
 
@@ -5865,7 +5915,7 @@ msgid "Current"
 msgstr "Одоогийн"
 
 #. module: account
-#: view:account.bank.statement:0
+#: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr "Касс"
 
@@ -5897,7 +5947,7 @@ msgstr "Үнэ"
 #. module: account
 #: view:project.account.analytic.line:0
 msgid "View Account Analytic Lines"
-msgstr "Дансны аналитик бичилт харах"
+msgstr "Дансны шинжилгээний мөрүүд харах"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -5936,6 +5986,7 @@ msgid "Applicable Type"
 msgstr "Хэрэглэх төрөл"
 
 #. module: account
+#: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
 msgstr "Нэхэмжлэлийн дугаарлалт"
@@ -5962,7 +6013,7 @@ msgstr "Хөрвөлт"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Аналитик журналын бичилт"
+msgstr "Шинжилгээний журналын бичилт"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6019,7 +6070,9 @@ msgstr "Эхлэх огноог оруулна уу !"
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1160
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Refund"
 msgstr "Нийлүүлэгчийн буцаалт"
 
@@ -6077,7 +6130,9 @@ msgid "Account Profit And Loss Report"
 msgstr "Орлого зарлагын тайлан"
 
 #. module: account
+#: field:account.analytic.line,product_uom_id:0
 #: field:account.invoice.line,uos_id:0
+#: field:account.move.line,product_uom_id:0
 msgid "Unit of Measure"
 msgstr "Хэмжих нэгж"
 
@@ -6102,8 +6157,9 @@ msgstr "account.sequence.fiscalyear"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.model,name:account.model_account_analytic_journal
+#: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Analytic Journal"
-msgstr "Аналитик журнал"
+msgstr "Шинжилгээний журнал"
 
 #. module: account
 #: view:account.entries.report:0
@@ -6138,26 +6194,23 @@ msgid "Invoice is already reconciled"
 msgstr "Нэхэмжлэл аль хэдий нь тулгагдсан"
 
 #. module: account
-#: view:account.account:0
 #: view:account.account.template:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement.line,note:0
 #: view:account.fiscal.position:0
 #: field:account.fiscal.position,note:0
 #: field:account.fiscal.position.template,note:0
-#: view:account.invoice.line:0
-#: field:account.invoice.line,note:0
 msgid "Notes"
 msgstr "Тэмдэглэл"
 
 #. module: account
 #: model:ir.model,name:account.model_analytic_entries_report
 msgid "Analytic Entries Statistics"
-msgstr "Аналитик бичилт статистик"
+msgstr "Шинжилгээний бичилтийн статистик"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:145
-#: code:addons/account/account_move_line.py:933
+#: code:addons/account/account_analytic_line.py:142
+#: code:addons/account/account_move_line.py:955
 #, python-format
 msgid "Entries: "
 msgstr "Гүйлгээ: "
@@ -6168,7 +6221,7 @@ msgid "Create manual recurring entries in a chosen journal."
 msgstr "Сонгосон журнал дээр давтагдах бичилтүүдийг гараар үүсгэх"
 
 #. module: account
-#: code:addons/account/account.py:1563
+#: code:addons/account/account.py:1580
 #, python-format
 msgid "Couldn't create move between different companies"
 msgstr "Компани хооронд гүйлгээ хийх боломжгүй"
@@ -6208,13 +6261,11 @@ msgstr "Төлөв нь ноорог"
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1043
-#, python-format
 msgid "Total debit"
 msgstr "Нийт дебит"
 
 #. module: account
-#: code:addons/account/account_move_line.py:808
+#: code:addons/account/account_move_line.py:829
 #, python-format
 msgid "Entry \"%s\" is not valid !"
 msgstr "\"%s\" гүйлгээ алга !"
@@ -6282,32 +6333,8 @@ msgid "  valuation: percent"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:622
-#: code:addons/account/account.py:624
-#: code:addons/account/account.py:963
-#: code:addons/account/account.py:1052
-#: code:addons/account/account.py:1129
-#: code:addons/account/account.py:1344
-#: code:addons/account/account.py:1351
-#: code:addons/account/account.py:2280
-#: code:addons/account/account.py:2596
-#: code:addons/account/account_analytic_line.py:92
-#: code:addons/account/account_analytic_line.py:101
-#: code:addons/account/account_bank_statement.py:301
-#: code:addons/account/account_bank_statement.py:314
-#: code:addons/account/account_bank_statement.py:352
-#: code:addons/account/account_cash_statement.py:292
-#: code:addons/account/account_cash_statement.py:314
-#: code:addons/account/account_invoice.py:808
-#: code:addons/account/account_invoice.py:839
-#: code:addons/account/account_invoice.py:1030
-#: code:addons/account/account_move_line.py:1200
-#: code:addons/account/account_move_line.py:1216
-#: code:addons/account/account_move_line.py:1218
-#: code:addons/account/wizard/account_invoice_refund.py:108
-#: code:addons/account/wizard/account_invoice_refund.py:110
-#: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
-#: code:addons/account/wizard/account_use_model.py:44
+#: code:addons/account/account.py:1024
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "Error !"
 msgstr "Алдаа !"
@@ -6343,7 +6370,7 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
-"Төлөгдсөн гэж үзэж байгаа нэхэмжлэлүүдийн бичилтүүдийн эсрэг талтайгаа "
+"Төлөгдсөн гэж үзэж байгаа нэхэмжлэлүүдийн бичилтүүд нь харьцсан данстайгаа "
 "тулгагдсан байх ёстой. Энэ нь ихэнхдээ төлбөртэй тулгагддаг. Автомат "
 "тулгаглтын хувьд OpenERP нь өөрөө дансдуудад тулгаж болох бичилтүүдийг "
 "хайдаг. Энэ харилцагч бүр харгалзах бичилтүүдийг олдог."
@@ -6405,7 +6432,6 @@ msgstr ""
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -6444,12 +6470,11 @@ msgstr "Дансны тулгалт"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "Санхүүгийн татварын харгалзаа"
+msgstr "Татварын санхүүгийн харгалзаа"
 
 #. module: account
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
-#: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
 #: model:ir.actions.report.xml,name:account.account_general_ledger_landscape
@@ -6496,7 +6521,7 @@ msgstr "Нэмэлт Талбарууд"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr "Дансны Татварын Мод"
+msgstr "Дансны Татварын Төлөвлөгөө"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6511,7 +6536,7 @@ msgid "Total:"
 msgstr "Нийт:"
 
 #. module: account
-#: code:addons/account/account.py:2229
+#: code:addons/account/account.py:2304
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -6549,7 +6574,7 @@ msgid "Child Codes"
 msgstr "Удамшил шифрүүд"
 
 #. module: account
-#: code:addons/account/account_invoice.py:495
+#: code:addons/account/account_invoice.py:504
 #: code:addons/account/wizard/account_invoice_refund.py:145
 #, python-format
 msgid "Data Insufficient !"
@@ -6564,7 +6589,7 @@ msgstr "Захиалагчийн нэхэмжлэл"
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
 msgid "Write-Off amount"
-msgstr "Зөрүү дүн"
+msgstr "Хасалтын дүн"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -6607,6 +6632,7 @@ msgstr ""
 
 #. module: account
 #: field:account.invoice,origin:0
+#: field:account.invoice.line,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
 msgstr "Эх баримт"
@@ -6625,7 +6651,7 @@ msgstr ""
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:56
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
@@ -6706,7 +6732,7 @@ msgstr "Сарын эргэц"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Analytic Lines"
-msgstr "Аналитик бичилт"
+msgstr "Шинжилгээний мөрүүд"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -6765,7 +6791,7 @@ msgstr "Эцэг загвар"
 #: field:account.move.line,statement_id:0
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement"
-msgstr "Орлого зарлагын ордер"
+msgstr "Хуулга"
 
 #. module: account
 #: help:account.journal,default_debit_account_id:0
@@ -6830,7 +6856,6 @@ msgid "Icon"
 msgstr "Дүрс"
 
 #. module: account
-#: view:account.automatic.reconcile:0
 #: view:account.use.model:0
 msgid "Ok"
 msgstr "Ok"
@@ -6843,8 +6868,8 @@ msgstr "Үл мэдэх харилцагч"
 
 #. module: account
 #: view:account.bank.statement:0
-#: code:addons/account/account.py:420
-#: code:addons/account/account.py:432
+#: code:addons/account/account.py:422
+#: code:addons/account/account.py:434
 #, python-format
 msgid "Opening Balance"
 msgstr "Нээлтийн үлдэгдэл"
@@ -6856,8 +6881,8 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
-"Энэ сонголтыг тэмдэглэснээр журналын бичилт бүрд шинэ эсрэг талыг "
-"үүсгэлгүйгээр бүх бичилт нэг ерөнхий эсрэг талыг хэрэглэнэ. Санхүүгийн "
+"Энэ сонголтыг тэмдэглэснээр журналын бичилт бүрд шинэ харьцах дансыг "
+"үүсгэлгүйгээр бүх бичилт нэг ерөнхий харьцах дансыг хэрэглэнэ. Санхүүгийн "
 "жилийг хаахад энэ нь хэрэглэгддэг."
 
 #. module: account
@@ -6905,7 +6930,7 @@ msgstr ""
 "ялгаатай татварын жагсаалтууд гарах боломжтой."
 
 #. module: account
-#: code:addons/account/account.py:1088
+#: code:addons/account/account.py:1095
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
 msgstr "Та нэг компаны мөчлөгүүдээс сонгох хэрэгтэй"
@@ -6921,7 +6946,7 @@ msgid "Create Entries"
 msgstr "Ажил гүйлгээ үүсгэх"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_finance_reporting
+#: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
 msgstr "Тайлан"
 
@@ -7047,7 +7072,7 @@ msgstr ""
 #: report:account.invoice:0
 #: view:account.invoice:0
 msgid "PRO-FORMA"
-msgstr "ПРО-ФОРМА"
+msgstr "УРЬДЧИЛСАН"
 
 #. module: account
 #: help:account.installer.modules,account_followup:0
@@ -7083,6 +7108,7 @@ msgstr "Хэрэглэгч"
 
 #. module: account
 #: report:account.general.journal:0
+#: xsl:account.transfer:0
 msgid ":"
 msgstr ":"
 
@@ -7101,13 +7127,13 @@ msgstr ""
 "төлөлт хийвэл зохих эцсийн огноог илэрхийлнэ."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1302
+#: code:addons/account/account_move_line.py:1317
 #, python-format
 msgid "Bad account !"
 msgstr "Буруу данс !"
 
 #. module: account
-#: code:addons/account/account.py:3108
+#: code:addons/account/account.py:3193
 #, python-format
 msgid "Sales Journal"
 msgstr "Борлуулалтын журнал"
@@ -7124,13 +7150,12 @@ msgid "Invoice Tax"
 msgstr "Татварын нэхэмжлэл"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1277
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid "No piece number !"
 msgstr "Хэсгийн Дугаар Алга !"
 
 #. module: account
-#: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
 msgstr "Борлуулалтын талбарууд"
@@ -7153,7 +7178,6 @@ msgstr "Хүртэл"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
-#: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to close"
 msgstr "Хаах санхүүгийн жил"
 
@@ -7179,7 +7203,9 @@ msgstr "5 сар"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:299
+#: code:addons/account/report/account_partner_ledger.py:274
 #, python-format
 msgid "Payable Accounts"
 msgstr "Өглөгийн данс"
@@ -7187,13 +7213,13 @@ msgstr "Өглөгийн данс"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr "Дансны модны загвар"
+msgstr "Дансны төлөвлөгөөний үлгэр"
 
 #. module: account
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr "Ангилалын код"
+msgstr "Татварын кодын код"
 
 #. module: account
 #: view:validate.account.move:0
@@ -7211,7 +7237,7 @@ msgstr "Борлуулалтын татвар"
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3003
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Cash"
 msgstr "Бэлэн мөнгө"
@@ -7230,11 +7256,9 @@ msgstr "Нэхэмжлэлийн Төлбөр"
 #. module: account
 #: field:account.bank.statement.line,sequence:0
 #: field:account.financial.report,sequence:0
+#: field:account.invoice.line,sequence:0
 #: field:account.invoice.tax,sequence:0
-#: view:account.journal:0
-#: field:account.journal.column,sequence:0
 #: field:account.model.line,sequence:0
-#: field:account.payment.term.line,sequence:0
 #: field:account.sequence.fiscalyear,sequence_id:0
 #: field:account.tax,sequence:0
 #: field:account.tax.code,sequence:0
@@ -7274,6 +7298,7 @@ msgid "Link to the automatically generated Journal Items."
 msgstr "Автоматаар бичигдсэн ажил гүйлгээтэй холбогдоно."
 
 #. module: account
+#: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "Monthly"
 msgstr "Сараар"
@@ -7353,12 +7378,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr "Кассын мөнгө"
+msgstr "Кассын мөр"
 
 #. module: account
-#: view:account.partner.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
@@ -7376,18 +7401,10 @@ msgid "Fixed"
 msgstr "Тогтмол утга"
 
 #. module: account
-#: code:addons/account/account.py:629
-#: code:addons/account/account.py:642
-#: code:addons/account/account.py:645
-#: code:addons/account/account.py:664
-#: code:addons/account/account.py:787
-#: code:addons/account/account.py:1077
-#: code:addons/account/account_invoice.py:732
-#: code:addons/account/account_invoice.py:735
-#: code:addons/account/account_invoice.py:738
-#: code:addons/account/account_move_line.py:97
-#: code:addons/account/account_move_line.py:750
-#: code:addons/account/account_move_line.py:803
+#: code:addons/account/account.py:653
+#: code:addons/account/account.py:656
+#: code:addons/account/account.py:668
+#: code:addons/account/account.py:1031
 #, python-format
 msgid "Warning !"
 msgstr "Анхааруулга !"
@@ -7445,7 +7462,7 @@ msgid "Can not %s draft/proforma/cancel invoice."
 msgstr "%s нэхэмжлэлийг ноорог/проформа/цуцлах боломжгүй."
 
 #. module: account
-#: code:addons/account/account_invoice.py:810
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "No Invoice Lines !"
 msgstr "Нэхэмжлэлийн мөр алга !"
@@ -7484,7 +7501,7 @@ msgid "Tax Use In"
 msgstr "Татварын хэрэглээ"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:353
+#: code:addons/account/account_bank_statement.py:420
 #, python-format
 msgid "The account entries lines are not in valid state."
 msgstr "Журналын бичилтүүд хүчингүй байна."
@@ -7492,10 +7509,10 @@ msgstr "Журналын бичилтүүд хүчингүй байна."
 #. module: account
 #: field:account.account.type,close_method:0
 msgid "Deferral Method"
-msgstr "Хойшлогдсон Арга"
+msgstr "Өндөрлөх Арга"
 
 #. module: account
-#: code:addons/account/account_invoice.py:379
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Invoice '%s' is paid."
 msgstr "'%s' нэхэмжлэл төлөгдсөн."
@@ -7560,13 +7577,12 @@ msgid "Associated Partner"
 msgstr "Холбогдох харилцагч"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1332
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Та эхлээд харилцагч сонгох хэрэгтэй !"
 
 #. module: account
-#: view:account.invoice:0
 #: field:account.invoice,comment:0
 msgid "Additional Information"
 msgstr "Нэмэлт мэдээлэл"
@@ -7577,8 +7593,8 @@ msgid "Bank and Cash Accounts"
 msgstr "Касс болон харилцахын данс"
 
 #. module: account
-#: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
+#: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
 msgstr "Нийт үлдэгдэл"
 
@@ -7627,7 +7643,7 @@ msgid "Choose Fiscal Year"
 msgstr "Санхүүгийн жил сонгох"
 
 #. module: account
-#: code:addons/account/account.py:3111
+#: code:addons/account/account.py:3196
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr "Худалдан авалтын буцаалтын журнал"
@@ -7695,7 +7711,7 @@ msgstr "Ерөнхий тайлан"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
-msgstr "Цуцлалтын журнал"
+msgstr "Хасалтын журнал"
 
 #. module: account
 #: help:res.partner,property_payment_term:0
@@ -7718,7 +7734,7 @@ msgstr "Орлогын толгой данс"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "Санхүүгийн жилийн харгалзуулалтын үлгэр"
+msgstr "Санхүүгийн харгалзааны үлгэр"
 
 #. module: account
 #: view:account.entries.report:0
@@ -7778,6 +7794,7 @@ msgstr "Компаны валют"
 #: field:account.common.journal.report,chart_account_id:0
 #: field:account.common.partner.report,chart_account_id:0
 #: field:account.common.report,chart_account_id:0
+#: view:account.config.settings:0
 #: field:account.general.journal,chart_account_id:0
 #: field:account.partner.balance,chart_account_id:0
 #: field:account.partner.ledger,chart_account_id:0
@@ -7820,7 +7837,7 @@ msgstr "Хэсэгчлэн Тулгах"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr "Дансны урвуу аналитик баланс"
+msgstr "Дансны урвуу шинжилгээний баланс"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -7937,7 +7954,7 @@ msgstr "Уг нэхэмжлэл дээр хэрэглэгдэх харилцаг
 #: view:account.tax.code.template:0
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr "Эцэг ангилал"
+msgstr "Эцэг Код"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -7945,7 +7962,7 @@ msgid "Payment Term Line"
 msgstr "төлбөрийн нөхцөлийн шугам"
 
 #. module: account
-#: code:addons/account/account.py:3109
+#: code:addons/account/account.py:3194
 #, python-format
 msgid "Purchase Journal"
 msgstr "Худалдан авалтын журнал"
@@ -7956,7 +7973,7 @@ msgid "Refund Invoice: Creates the refund invoice, ready for editing."
 msgstr "Нэхэмжлэл буцаах: Засварлах боломжтой буцаалтын нэхэмжлэл үүсгэнэ."
 
 #. module: account
-#: field:account.invoice.line,price_subtotal:0
+#: field:account.invoice,amount_untaxed:0
 msgid "Subtotal"
 msgstr "Нийлбэр"
 
@@ -8007,8 +8024,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
-"Журналын бичилтүүдийн Авлага болон Өглөгийн зөрүүний дн нь компаний валютаар "
-"илэрхийлэгдсэн байдал."
+"Журналын бичилтүүдийн Авлага болон Өглөгийн зөрүүний дүн нь компаний "
+"валютаар илэрхийлэгдсэн байдал."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -8061,6 +8078,7 @@ msgstr "Мөнгөн Сан"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.common.report:0
+#: view:account.invoice:0
 msgid "Print"
 msgstr "Хэвлэх"
 
@@ -8074,9 +8092,10 @@ msgstr "Зөвшөөрөгдсөн дансууд (хоосон орхивол �
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr "Аналитик дансны мод"
+msgstr "Шинжилгээний дансны төлөвлөгөө"
 
 #. module: account
+#: view:account.journal:0
 #: model:ir.ui.menu,name:account.menu_configuration_misc
 msgid "Miscellaneous"
 msgstr "Бусад зүйлс"
@@ -8090,7 +8109,7 @@ msgstr "Энэ нийлүүлэгчид өгөх нийт өглөгийн дү�
 #: model:process.node,name:account.process_node_analytic0
 #: model:process.node,name:account.process_node_analyticcost0
 msgid "Analytic Costs"
-msgstr "Аналитик өртөг"
+msgstr "Шинжилгээний өртөг"
 
 #. module: account
 #: field:account.analytic.journal,name:0
@@ -8114,11 +8133,12 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
-"Энэ ваучерийн тоо хэмжээ тайлангийн мөр дэх тоо хэмжээтэй ижил байх ёстой."
+"Энэ ваучерийн төлбөрийн мөнгөн дүн ордерийн гүйлгээний мөр дээрх дүнтэй ижил "
+"байх ёстой."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1155
-#: code:addons/account/account_move_line.py:1238
+#: code:addons/account/account_move_line.py:1170
+#: code:addons/account/account_move_line.py:1253
 #, python-format
 msgid "Bad account!"
 msgstr "Буруу данс!"
@@ -8129,7 +8149,7 @@ msgid "Keep empty for all open fiscal years"
 msgstr "Хоосон орхивол бүх нээлттэй санхүүгийн жилийг тооцно"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1105
+#: code:addons/account/account_move_line.py:1120
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
 msgstr "Төвлөрүүлэх дансны хөдөлгөөн (%s) батлагдсан!"
@@ -8144,7 +8164,6 @@ msgstr ""
 "дүн бичнэ."
 
 #. module: account
-#: view:account.account:0
 #: report:account.analytic.account.journal:0
 #: field:account.bank.statement,currency:0
 #: report:account.central.journal:0
@@ -8170,6 +8189,7 @@ msgstr ""
 #: field:report.account_type.sales,currency_id:0
 #: field:report.invoice.created,currency_id:0
 #: field:res.partner.bank,currency_id:0
+#: field:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency"
 msgstr "Валют"
 
@@ -8251,16 +8271,17 @@ msgid "Contracts"
 msgstr "Гэрээнүүд"
 
 #. module: account
-#: field:account.cashbox.line,ending_id:0
-#: field:account.cashbox.line,starting_id:0
+#: field:account.cashbox.line,bank_statement_id:0
 #: field:account.entries.report,reconcile_id:0
 #: field:account.financial.report,balance:0
+#: field:account.financial.report,credit:0
+#: field:account.financial.report,debit:0
 msgid "unknown"
 msgstr "үл мэдэх"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3113
+#: code:addons/account/account.py:3198
 #, python-format
 msgid "Opening Entries Journal"
 msgstr "Нээлтийн гүйлгээний журнал"
@@ -8323,7 +8344,6 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 #: field:account.move.line,amount_residual:0
-#: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount"
 msgstr "Үлдэгдэл дүн"
 
@@ -8335,7 +8355,6 @@ msgstr "Журналын бичилт"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
-#: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Open Journal"
 msgstr "Журнал нээх"
 
@@ -8352,7 +8371,7 @@ msgid "Period from"
 msgstr "Эхлэл мөчлөг"
 
 #. module: account
-#: code:addons/account/account.py:3110
+#: code:addons/account/account.py:3195
 #, python-format
 msgid "Sales Refund Journal"
 msgstr "Борлуулалтын буцаалтын журнал"
@@ -8370,7 +8389,6 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
-#: view:account.payment.term:0
 msgid "Information"
 msgstr "Мэдээлэл"
 
@@ -8395,7 +8413,7 @@ msgstr "Барааны мэдээлэл"
 #: view:account.move.line:0
 #: model:ir.ui.menu,name:account.next_id_40
 msgid "Analytic"
-msgstr "Аналитик"
+msgstr "Шинжилгээ"
 
 #. module: account
 #: model:process.node,name:account.process_node_invoiceinvoice0
@@ -8409,7 +8427,7 @@ msgid "Purchase Tax(%)"
 msgstr "Худалдан авалтын татвар(%)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:810
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Нэхэмжлэлийн мөр үүсгэнэ үү."
@@ -8425,7 +8443,7 @@ msgid "Configure Your Accounting Application"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3118
+#: code:addons/account/account.py:3203
 #, python-format
 msgid "SCNJ"
 msgstr "SCNJ"
@@ -8508,18 +8526,16 @@ msgid "Companies that refers to partner"
 msgstr "Харилцагчаас компани хамаарах"
 
 #. module: account
-#: view:account.journal:0
 #: field:account.journal.column,view_id:0
 #: view:account.journal.view:0
 #: field:account.journal.view,name:0
+#: model:account.journal.view,name:account.account_journal_view
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
 msgstr "Журналын харагдац"
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1046
-#, python-format
 msgid "Total credit"
 msgstr "Нийт кредит"
 
@@ -8563,26 +8579,24 @@ msgid "Current currency is not confirured properly !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1088
-#: code:addons/account/account.py:1090
-#: code:addons/account/account.py:1321
-#: code:addons/account/account.py:1563
-#: code:addons/account/account.py:1567
-#: code:addons/account/account.py:3368
-#: code:addons/account/account_move_line.py:807
-#: code:addons/account/account_move_line.py:830
-#: code:addons/account/account_move_line.py:832
-#: code:addons/account/account_move_line.py:835
-#: code:addons/account/account_move_line.py:837
+#: code:addons/account/account.py:1095
+#: code:addons/account/account.py:1097
+#: code:addons/account/account.py:1329
+#: code:addons/account/account.py:1580
+#: code:addons/account/account.py:1584
+#: code:addons/account/account.py:3385
+#: code:addons/account/account_move_line.py:823
+#: code:addons/account/account_move_line.py:843
+#: code:addons/account/account_move_line.py:846
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
 #: code:addons/account/wizard/account_change_currency.py:64
 #: code:addons/account/wizard/account_change_currency.py:70
-#: code:addons/account/wizard/account_financial_report.py:69
+#: code:addons/account/wizard/account_financial_report.py:70
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
-#: code:addons/account/wizard/account_report_common.py:144
-#: code:addons/account/wizard/account_report_common.py:150
+#: code:addons/account/wizard/account_report_common.py:145
+#: code:addons/account/wizard/account_report_common.py:151
 #, python-format
 msgid "Error"
 msgstr "Алдаа"
@@ -8598,7 +8612,6 @@ msgid "Profit & Loss (Income Accounts)"
 msgstr "Орлого зарлагын тайлан (Орлого)"
 
 #. module: account
-#: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
 msgstr ""
@@ -8714,7 +8727,7 @@ msgid "Cannot delete bank statement(s) which are already confirmed !"
 msgstr "Та аль хэдий нь батлагдсан ордерийг устгах боломжгүй !"
 
 #. module: account
-#: code:addons/account/wizard/account_automatic_reconcile.py:152
+#: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile"
 msgstr "Та тулгах дансаа сонгох шаардлагатай"
@@ -8762,13 +8775,14 @@ msgstr "Гар Бичилт"
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.line,move_id:0
+#: view:account.move:0
+#: view:account.move.line:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
 msgstr "Ажил гүйлгээ"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
+#: code:addons/account/account_move_line.py:1168
 #, python-format
 msgid "You can not change the tax, you should remove and recreate lines !"
 msgstr "Та татварыг өөрчлөх боломжгүй, харин устгаад шинээр үүсгэж болно !"
@@ -8815,13 +8829,12 @@ msgid "Common Report"
 msgstr "Нийтлэг тайлан"
 
 #. module: account
-#: view:account.account:0
 #: field:account.account,child_consol_ids:0
 msgid "Consolidated Children"
 msgstr "Нэгтгэсэн дэд дансууд"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:87
+#: code:addons/account/wizard/account_fiscalyear_close.py:103
 #, python-format
 msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
@@ -8847,7 +8860,7 @@ msgstr "7 сар"
 #. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
-msgstr "Дансны мод"
+msgstr "Дансны төлөвлөгөө"
 
 #. module: account
 #: field:account.subscription.line,subscription_id:0
@@ -8857,7 +8870,7 @@ msgstr "захиалга"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr "Дансны аналитик баланс"
+msgstr "Дансны шинжилгээний баланс"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8917,6 +8930,7 @@ msgid "Standard entries"
 msgstr "Стандарт ажил гүйлгээ"
 
 #. module: account
+#: view:account.subscription:0
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
 msgstr "Дансны захиалга"
@@ -8979,7 +8993,7 @@ msgid "Unreconciled"
 msgstr "Тулгагдаагүй"
 
 #. module: account
-#: code:addons/account/account_invoice.py:828
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid "Bad total !"
 msgstr "Нийлбэр буруу !"
@@ -9010,7 +9024,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr "Хүлээгдэж буй"
+msgstr "Шийд хүлээсэн"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_analyticinvoice0
@@ -9044,7 +9058,7 @@ msgid "Active"
 msgstr "Идэвхитэй"
 
 #. module: account
-#: code:addons/account/account_invoice.py:372
+#: code:addons/account/account_invoice.py:381
 #, python-format
 msgid "Unknown Error"
 msgstr "Үл мэдэгдэх Алдаа"
@@ -9068,7 +9082,7 @@ msgstr "Энэ бол тухайн харилцагчийн өглөгийн б�
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr "Мөчлөг нээж хаах"
+msgstr "Нээлт/Хаалтын мөчлөг"
 
 #. module: account
 #: field:account.account,currency_id:0
@@ -9118,7 +9132,6 @@ msgstr ""
 "хэрэглэнэ."
 
 #. module: account
-#: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
 msgstr "Ерөнхий журнал"
@@ -9141,7 +9154,6 @@ msgstr ""
 "Үүнд харилцагчийг тодорхойл!"
 
 #. module: account
-#: field:account.cashbox.line,number:0
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
@@ -9165,7 +9177,7 @@ msgstr "Ерөнхий"
 #: selection:account.common.partner.report,filter:0
 #: view:account.common.report:0
 #: selection:account.common.report,filter:0
-#: view:account.fiscalyear:0
+#: field:account.config.settings,period:0
 #: field:account.fiscalyear,period_ids:0
 #: selection:account.general.journal,filter:0
 #: field:account.installer,period:0
@@ -9180,8 +9192,8 @@ msgstr "Ерөнхий"
 #: view:accounting.report:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
-#: model:ir.actions.act_window,name:account.action_account_period_form
-#: model:ir.ui.menu,name:account.menu_action_account_period_form
+#: model:ir.actions.act_window,name:account.action_account_period
+#: model:ir.ui.menu,name:account.menu_action_account_period
 #: model:ir.ui.menu,name:account.next_id_23
 msgid "Periods"
 msgstr "Мөчлөг"
@@ -9324,7 +9336,6 @@ msgstr "Энэ сар"
 #: view:account.analytic.cost.ledger:0
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
-#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
 msgstr "Мөчлөг сонгох"
 
@@ -9367,6 +9378,7 @@ msgid "End Date"
 msgstr "Дуусах огноо"
 
 #. module: account
+#: view:account.open.closed.fiscalyear:0
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
@@ -9402,7 +9414,7 @@ msgid "This is a model for recurring accounting entries"
 msgstr "Энэ модел нь давтагдах дансдын бичилтийг хийхэд зориулагдсан"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:102
+#: code:addons/account/account_analytic_line.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr "Энэ бараанд орлогын данс тодорхойлогдоогүй байна: \"%s\" (id:%d)"
@@ -9420,10 +9432,8 @@ msgid "  value amount: 0.02"
 msgstr ""
 
 #. module: account
-#: view:account.fiscalyear:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: view:account.period:0
 msgid "States"
 msgstr "Төлөв байдал"
 
@@ -9432,7 +9442,6 @@ msgstr "Төлөв байдал"
 #: report:account.analytic.account.inverted.balance:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: view:account.analytic.line:0
-#: view:account.bank.statement:0
 #: field:account.invoice,amount_total:0
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
@@ -9441,13 +9450,14 @@ msgid "Total"
 msgstr "Нийт"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:97
+#: code:addons/account/wizard/account_move_journal.py:98
 #, python-format
 msgid "Journal: All"
 msgstr "Жургал: Бүгд"
 
 #. module: account
 #: field:account.account,company_id:0
+#: report:account.account.balance:0
 #: field:account.aged.trial.balance,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.balance.report,company_id:0
@@ -9458,20 +9468,23 @@ msgstr "Жургал: Бүгд"
 #: field:account.common.journal.report,company_id:0
 #: field:account.common.partner.report,company_id:0
 #: field:account.common.report,company_id:0
+#: field:account.config.settings,company_id:0
 #: view:account.entries.report:0
 #: field:account.entries.report,company_id:0
 #: field:account.fiscal.position,company_id:0
 #: field:account.fiscalyear,company_id:0
+#: report:account.general.journal:0
 #: field:account.general.journal,company_id:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,company_id:0
 #: field:account.invoice,company_id:0
 #: field:account.invoice.line,company_id:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,company_id:0
 #: field:account.invoice.tax,company_id:0
-#: view:account.journal:0
 #: field:account.journal,company_id:0
 #: field:account.journal.period,company_id:0
+#: report:account.journal.period.print:0
 #: field:account.model,company_id:0
 #: field:account.move,company_id:0
 #: field:account.move.line,company_id:0
@@ -9553,13 +9566,9 @@ msgid "End period"
 msgstr "Дуусах мөчлөг"
 
 #. module: account
-#: code:addons/account/account_move_line.py:759
-#: code:addons/account/account_move_line.py:842
-#: code:addons/account/wizard/account_invoice_state.py:44
-#: code:addons/account/wizard/account_invoice_state.py:68
-#: code:addons/account/wizard/account_state_open.py:37
-#: code:addons/account/wizard/account_validate_account_move.py:39
-#: code:addons/account/wizard/account_validate_account_move.py:61
+#. openerp-web
+#: code:addons/account/account_move_line.py:780
+#: code:addons/account/static/src/js/account_move_reconciliation.js:90
 #, python-format
 msgid "Warning"
 msgstr "Анхааруулга"
@@ -9597,15 +9606,17 @@ msgstr "Борлуулалтын Тайлан Дансаар"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "Санхүүгийн харгалзуулалт"
+msgstr "Дансдын Санхүүгийн харгалзаа"
 
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1158
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Invoice"
 msgstr "Нийлүүлэгчийн нэхэмжлэл"
 
@@ -9634,6 +9645,7 @@ msgid "Debit"
 msgstr "Дебит"
 
 #. module: account
+#: view:account.invoice:0
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
 msgstr "Нэхэмжлэлийн мөр"
@@ -9649,7 +9661,7 @@ msgid "Recurring"
 msgstr "Давтан гүйлгээ"
 
 #. module: account
-#: code:addons/account/account_move_line.py:832
+#: code:addons/account/account_move_line.py:843
 #, python-format
 msgid "Entry is already reconciled"
 msgstr "Бичилт аль хэдий нь тулгагдсан"
@@ -9680,8 +9692,10 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With movements"
 msgstr "Гүйлгээтэй"
@@ -9694,7 +9708,7 @@ msgstr "Дансны тохиргоо"
 #. module: account
 #: view:account.tax.code.template:0
 msgid "Account Tax Code Template"
-msgstr "Дансны татварын кодны загвар"
+msgstr "Дансны татварын кодны үлгэр"
 
 #. module: account
 #: model:process.node,name:account.process_node_manually0
@@ -9780,7 +9794,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
 msgid "Account Analytic Chart"
-msgstr "Аналитик дансны мод"
+msgstr "Шинжилгээний дансны төлөвлөгөө"
 
 #. module: account
 #: help:account.invoice,residual:0
@@ -9800,12 +9814,13 @@ msgid "Configuration Progress"
 msgstr "Тохиргооны явц"
 
 #. module: account
+#: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
 msgstr "Дансны харгалзаа"
 
 #. module: account
-#: code:addons/account/account_invoice.py:364
+#: code:addons/account/account_invoice.py:373
 #, python-format
 msgid "Invoice '%s' is waiting for validation."
 msgstr "'%s' нэхэмжлэл хяналт хүлээж байна."
@@ -9853,9 +9868,9 @@ msgstr "Нэхэмжлэл хайх"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
-#: view:account.invoice.refund:0
 #: view:account.invoice.report:0
-#: model:ir.actions.act_window,name:account.action_account_invoice_refund
+#: code:addons/account/account_invoice.py:1159
+#, python-format
 msgid "Refund"
 msgstr "Буцаалт"
 
@@ -9870,9 +9885,6 @@ msgid "Total Receivable"
 msgstr "Нийт авлага"
 
 #. module: account
-#: view:account.account:0
-#: view:account.account.template:0
-#: view:account.journal:0
 #: view:account.move.line:0
 msgid "General Information"
 msgstr "Ерөнхий мэдээлэл"
@@ -9936,9 +9948,9 @@ msgid "Partner's"
 msgstr "Харилцагчийн"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_fiscalyear_form
+#: model:ir.actions.act_window,name:account.action_account_fiscalyear
 #: view:ir.sequence:0
-#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear_form
+#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
 msgstr "Санхүүгийн жил"
 
@@ -9984,7 +9996,7 @@ msgstr "Банкны данс"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr "Төв журнал хэвлэх"
+msgstr "Төвлөрсөн журналын Данс"
 
 #. module: account
 #: report:account.overdue:0

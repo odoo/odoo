@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -126,7 +126,7 @@ msgid "Deadline"
 msgstr "Rok"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_id:0
+#: field:base.action.rule.lead.test,partner_id:0
 msgid "Partner"
 msgstr "Stranka"
 
@@ -167,12 +167,12 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Action Rule"
-msgstr ""
+msgstr "Pravilo aktivnosti"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr ""
+msgstr "Polja, ki se spremenijo"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -187,7 +187,7 @@ msgstr ""
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Hours"
-msgstr ""
+msgstr "Ure"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -197,7 +197,7 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Zamik po datumu sprožitve"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
@@ -241,7 +241,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr ""
+msgstr "Tip zamika"
 
 #. module: base_action_rule
 #: help:base.action.rule,regex_name:0
@@ -289,12 +289,12 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Zamik po datumu izvedbe"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions"
-msgstr ""
+msgstr "Pogoji"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -306,8 +306,9 @@ msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
+#: field:base.action.rule.lead.test,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivno"
 
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:329
@@ -328,12 +329,12 @@ msgstr ""
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
 msgid "Gives the sequence order when displaying a list of rules."
-msgstr ""
+msgstr "Določitev zaporedja nalogov pri izpisu seznama pravil"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
 msgid "Months"
-msgstr ""
+msgstr "Mesecev"
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
@@ -380,7 +381,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr ""
+msgstr "Pravila aktivnosti"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_body:0
@@ -388,9 +389,9 @@ msgid "Content of mail"
 msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_user_id:0
+#: field:base.action.rule.lead.test,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odgovoren"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -442,10 +443,10 @@ msgstr ""
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
 #: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
 msgid "Automated Actions"
-msgstr ""
+msgstr "Avtomatska dejanja"
 
 #. module: base_action_rule
-#: field:base.action.rule,server_action_id:0
+#: field:base.action.rule,server_action_ids:0
 msgid "Server Action"
 msgstr ""
 
@@ -469,12 +470,12 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Zaporedje"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Actions"
-msgstr ""
+msgstr "Dejanja"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
@@ -491,7 +492,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Datum nastanka"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -499,6 +500,6 @@ msgid "Conditions on States"
 msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_date_type:0
+#: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Sproženo dne"

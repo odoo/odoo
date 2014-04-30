@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-04-28 14:02+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2014-04-21 16:32+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:47+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-22 08:03+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -24,23 +24,23 @@ msgstr "Terminierung bei Auswahl 'festes Datum'"
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr "Partner Währung"
+msgstr "Partnerwährung"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr "Setze auf Entwurf"
+msgstr "Auf Entwurf setzen"
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr "Wähle anzuwendenden Zahlungsmodus"
+msgstr "Festlelegten Zahlungsmodus wählen"
 
 #. module: account_payment
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr "Gruppierung..."
+msgstr "Gruppieren nach ..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -105,13 +105,13 @@ msgstr "bevorzugtes Datum"
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr "Frei"
+msgstr "Kostenlos"
 
 #. module: account_payment
 #: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr "Buchungen nach Journal"
+msgstr "Buchungen"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -138,7 +138,7 @@ msgstr "Buchungszeile"
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
-msgstr "_Add to payment order"
+msgstr "_Hinzufügen zu Zahlungsvorschlag"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
@@ -160,12 +160,12 @@ msgstr "Falscher Buchungsbetrag in Soll oder Haben"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr "Gesamt in eigener Währung"
+msgstr "Gesamt (in eigener Währung)"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr "Abgebrochen"
+msgstr "Storniert"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
@@ -246,6 +246,7 @@ msgstr "Information Zahlungsvorgang"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Zahlungsart"
 
@@ -295,7 +296,7 @@ msgstr "Bank oder Barkasse Journal für den Zahlungsmodus"
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr "festes Datum"
+msgstr "Festes Datum"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
@@ -311,7 +312,7 @@ msgstr "Konto Zahlungsempfänger"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr "Suche Zahlungsaufträge"
+msgstr "Zahlungsanweisungen durchsuchen"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -321,7 +322,7 @@ msgstr "Erzeugt"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Select Invoices to Pay"
-msgstr "Wähle Rechnungen"
+msgstr "Rechnungen zur Zahlung wählen"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -331,12 +332,12 @@ msgstr "Betrag in Fremdwährung"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr "Verbuche Zahlungsvorschlag"
+msgstr "Zahlungsvorschlag verbuchen"
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr "Betreffzeile Empfänger"
+msgstr "Kommunikationsart"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -351,7 +352,7 @@ msgstr "Bankauszug Positionen"
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr "Datum fällig"
+msgstr "Fälligkeitsdatum"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -379,7 +380,7 @@ msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
 msgstr ""
-"Wenn kein Zahlungsdatum vorgegeben ist, wird die Banks sofort überweisen."
+"Wenn kein Zahlungsdatum vorgegeben ist, wird die Bank sofort überweisen."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -394,12 +395,12 @@ msgstr "Zahlungsmodus"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr "Datum Wertstellung"
+msgstr "Datum der Wertstellung"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Type"
-msgstr "Zahlungstyp"
+msgstr "Zahlungsart"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -441,7 +442,7 @@ msgstr "Gesamt Haben"
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr "Wähle ein Datum wenn Ihre Auswahl 'festes Datum' sein soll."
+msgstr "Wählen Sie ein Datum wenn Ihre Auswahl 'festes Datum' sein soll."
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -480,13 +481,14 @@ msgstr "Suche"
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
 msgid "Payment Order"
-msgstr "Zahlungsvorschlag"
+msgstr "Zahlungsanweisung"
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr "Datum Zahlung"
+msgstr "Zahlungsdatum"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -546,7 +548,7 @@ msgstr "Zahlungsmodus"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr "Zahlungsvorschlag"
+msgstr "Zahlungsanweisung"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -573,7 +575,6 @@ msgstr "Betreffzeile"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
-#: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -641,7 +642,7 @@ msgstr "Bankkonto"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr "Bestätige Zahlungsvorschlag"
+msgstr "Zahlungsvorschlag bestätigen"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -659,7 +660,7 @@ msgstr "Zahlungsverkehr"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr "Zahlungsvorschlag"
+msgstr "Zahlungsanweisung / Zahlung"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -672,8 +673,8 @@ msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
 msgstr ""
-"Verwende diesen Text Zwischen Kunde und der eigenen Firma. Was sollen Sie "
-"dem Empfänger über diesen Auftrag mitteilen?"
+"Wird als Mitteilungstext zwischen beauftragendem Kunden und der derzeitigen "
+"Firma genutzt. Was sollen Sie dem Empfänger über diesen Auftrag mitteilen?"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -683,7 +684,7 @@ msgstr "Bezeichnung"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr "Bank Konto"
+msgstr "Bankkonto"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -704,7 +705,7 @@ msgstr "Auftrag"
 #. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
-msgstr "Betrag gesammt"
+msgstr "Betrag gesamt"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -722,7 +723,7 @@ msgstr "Partner"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr "Erzeuge Zahlungsvorschlag"
+msgstr "Zahlungsvorschlag erzeugen"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0

@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2012-01-04 11:04+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:57+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:56+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,send_to:0
@@ -35,7 +35,7 @@ msgstr "Venitul planificat"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
 msgid "# of Cases"
-msgstr "# din Cazuri"
+msgstr "# de Cazuri"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -74,7 +74,7 @@ msgid "Delay to close"
 msgstr "Intarziere la inchidere"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "Intreaga poveste"
 
@@ -111,7 +111,7 @@ msgid "Day"
 msgstr "Zi"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
 msgstr "Ultimul email"
 
@@ -166,10 +166,10 @@ msgid "Pending"
 msgstr "In asteptare"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Partener"
@@ -207,7 +207,6 @@ msgstr "De la"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
 msgstr "Grad partener"
@@ -246,6 +245,7 @@ msgid "HTML formatting?"
 msgstr "Formatare HTML?"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "Tip"
@@ -302,7 +302,7 @@ msgid "Stage"
 msgstr "Etapa"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
 #, python-format
 msgid "Fwd"
 msgstr "Fwd (redirectionare)"
@@ -319,12 +319,13 @@ msgid "Opportunities Assignment Analysis"
 msgstr "Analiza Atribuirii Oportunitatilor"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "Anuleaza"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "Trimite istoric"
 
@@ -334,7 +335,6 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Inchideti"
@@ -435,7 +435,7 @@ msgstr "Scazut(a)"
 #: view:crm.lead.report.assign:0
 #: selection:crm.lead.report.assign,state:0
 msgid "Closed"
-msgstr "Inchis"
+msgstr "Inchis(a)"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -489,8 +489,6 @@ msgid "Delay to Open"
 msgstr "Intarziere la Deschidere"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -587,7 +585,7 @@ msgstr "Deschideti"
 #. module: crm_partner_assign
 #: field:res.partner,date_localization:0
 msgid "Geo Localization Date"
-msgstr "Data Localizare Geo"
+msgstr "Data Geo Localizare"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -621,6 +619,7 @@ msgid "Probable Revenue"
 msgstr "Venituri probabile"
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "Partener alocat"
@@ -684,11 +683,12 @@ msgid "CRM Lead Report"
 msgstr "Raport pista MRC"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "Informatii caz"
 
 #. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
 msgstr "Secventa"

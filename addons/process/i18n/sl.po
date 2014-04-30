@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:13+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:23+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
@@ -28,7 +28,7 @@ msgstr "Vozlišče procesa"
 msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
-msgstr ""
+msgstr "Tu lahko skrijete proces."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -54,7 +54,7 @@ msgstr "Stanje"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr ""
+msgstr "Vrsta vozlišča"
 
 #. module: process
 #: field:process.node,help_url:0
@@ -76,7 +76,6 @@ msgid "Nodes"
 msgstr "Vozlišča"
 
 #. module: process
-#: view:process.node:0
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
@@ -85,7 +84,7 @@ msgstr "Pogoji"
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Iskanje prehodov procesa."
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -152,7 +151,7 @@ msgstr "Začasno"
 #: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.ui.menu,name:process.menu_process_form
 msgid "Processes"
-msgstr ""
+msgstr "Procesi"
 
 #. module: process
 #: field:process.condition,name:0
@@ -185,7 +184,7 @@ msgstr "Prehod"
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr ""
+msgstr "Iskanje procesa"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -201,7 +200,7 @@ msgstr "Aktivno"
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
+msgstr "Povezane skupine"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -240,13 +239,13 @@ msgstr "Izraz"
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr ""
+msgstr "Obvezne skupine"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Prihajajočite transakcije"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -259,22 +258,26 @@ msgid "Ending Transitions"
 msgstr "Končna stanja"
 
 #. module: process
+#. openerp-web
+#: code:addons/process/static/src/js/process.js:243
+#: code:addons/process/static/src/xml/process.xml:33
 #: model:ir.model,name:process.model_process_process
 #: field:process.node,process_id:0
 #: view:process.process:0
+#, python-format
 msgid "Process"
 msgstr "Procesiraj"
 
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr ""
+msgstr "Iskanje vozlišča procesa"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Other Conditions"
-msgstr ""
+msgstr "Drugi pogoji"
 
 #. module: process
 #: model:ir.ui.menu,name:process.menu_process

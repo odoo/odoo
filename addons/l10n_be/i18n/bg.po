@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:07+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:16+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: l10n_be
 #: field:partner.vat.intra,test_xml:0
@@ -27,7 +27,7 @@ msgid "Client Name"
 msgstr "Име на клиент"
 
 #. module: l10n_be
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "XML File has been Created."
 msgstr "XML файлът е създаден."
 
@@ -52,17 +52,14 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:265
 #, python-format
 msgid "Data Insufficient!"
 msgstr "Недостатъчни данни!"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "Create XML"
 msgstr "Създаване на XML"
 
@@ -74,6 +71,7 @@ msgstr "Период"
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Save the File with '.xml' extension."
 msgstr ""
 
@@ -83,7 +81,7 @@ msgid "Save XML"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:258
 #, python-format
 msgid "Save"
 msgstr "Запазване"
@@ -96,12 +94,11 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
 #: field:partner.vat.intra,msg:0
-#: field:partner.vat.list_13,msg:0
 msgid "File created"
 msgstr "Файлът е създаден"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:201
 #, python-format
 msgid "Save XML For Vat declaration"
 msgstr ""
@@ -123,7 +120,6 @@ msgid "Vat Declaraion"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat.intra:0
 #: field:partner.vat.intra,no_vat:0
 msgid "Partner With No VAT"
 msgstr ""
@@ -131,6 +127,7 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: field:partner.vat.intra,tax_code_id:0
 msgid "Company"
 msgstr "Фирма"
 
@@ -178,7 +175,6 @@ msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,tax_code_id:0
-#: field:partner.vat.intra,tax_code_id:0
 msgid "Tax Code"
 msgstr "Код на данък"
 
@@ -198,7 +194,7 @@ msgid "Sets the XML output as test file"
 msgstr ""
 
 #. module: l10n_be
-#: field:partner.vat_13,limit_amount:0
+#: field:partner.vat,limit_amount:0
 msgid "Limit Amount"
 msgstr "Ограчение на сметка"
 
@@ -233,9 +229,7 @@ msgid "Country"
 msgstr "Държава"
 
 #. module: l10n_be
-#: model:account.account.template,name:l10n_be.a2900
-#: model:account.account.template,name:l10n_be.a400
-#: model:account.account.template,name:l10n_be.a_recv
+#: field:partner.vat.list,partner_ids:0
 msgid "Clients"
 msgstr "Клиенти"
 
@@ -330,7 +324,7 @@ msgstr "MandataireId"
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
 #: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list_13,file_save:0
+#: field:partner.vat.list,file_save:0
 msgid "Save File"
 msgstr "Запази файла"
 
@@ -351,7 +345,7 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
-#: field:partner.vat.list_13,name:0
+#: field:partner.vat.list,name:0
 msgid "File Name"
 msgstr "Име на файл"
 
@@ -367,6 +361,7 @@ msgid "Fiscal Year"
 msgstr "Фискална година"
 
 #. module: l10n_be
+#: model:ir.actions.act_window,name:l10n_be.action_vat_declaration
 #: model:ir.model,name:l10n_be.model_l1on_be_vat_declaration
 msgid "Vat Declaration"
 msgstr ""
@@ -378,8 +373,8 @@ msgid "European Countries"
 msgstr "Европейски държави"
 
 #. module: l10n_be
-#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
-#: view:partner.vat_13:0
+#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
+#: view:partner.vat:0
 msgid "Partner VAT Listing"
 msgstr ""
 
@@ -421,7 +416,10 @@ msgid "View Client"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat_13:0
+#: view:l1on_be.vat.declaration:0
+#: view:partner.vat:0
+#: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Cancel"
 msgstr "Откажи"
 
@@ -433,7 +431,7 @@ msgid "Close"
 msgstr "Затваряне"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:119
 #, python-format
 msgid "Please select at least one Period."
 msgstr ""

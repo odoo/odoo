@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2012-01-11 11:19+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:09+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -232,7 +232,6 @@ msgstr "Linie membru"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Data de incepere a apartenentei ca membru"
 
@@ -256,6 +255,7 @@ msgstr "# In asteptare"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "Membri"
@@ -292,7 +292,7 @@ msgstr ""
 "considerare starea apartenentei membrului asociat."
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
@@ -456,6 +456,7 @@ msgstr "Lista de preturi membri"
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "Membru asociat"
 
@@ -502,6 +503,7 @@ msgstr "Factura"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "Membru necotizant"
@@ -577,8 +579,8 @@ msgid "June"
 msgstr "Iunie"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
 #: view:product.product:0
 #: field:product.product,membership:0
 #: view:report.membership:0
@@ -642,6 +644,7 @@ msgid "January"
 msgstr "Ianuarie"
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "Taxa de Membru"
@@ -681,7 +684,6 @@ msgstr "Catre"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
 msgstr "Starea actuala a calitatii de membru"
 
@@ -747,9 +749,6 @@ msgstr "Factura ciorna pentru calitatea de membru."
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Pret membru"
 
@@ -848,7 +847,7 @@ msgid "Cancelled Member"
 msgstr "Membru anulat"
 
 #. module: membership
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "Eroare: cod ean invalid"
 

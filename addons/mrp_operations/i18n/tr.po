@@ -13,12 +13,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:11+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:21+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
@@ -45,12 +44,12 @@ msgstr "Ürün Siparişi [%s] durumunda başlatılamaz"
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Group By..."
-msgstr "Şuna göre grupla"
+msgstr "Gruplandır..."
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Information from the routing definition."
-msgstr "Yönlendirme tanımlamasından gelen bilgiler."
+msgstr "Rota tanımlamasından gelen bilgiler."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -59,7 +58,6 @@ msgstr "Mart"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
 msgid "Work Centers"
 msgstr "İş Merkezleri"
 
@@ -68,7 +66,7 @@ msgstr "İş Merkezleri"
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
-msgstr "Devam et"
+msgstr "Sürdür"
 
 #. module: mrp_operations
 #: report:mrp.code.barcode:0
@@ -83,7 +81,7 @@ msgstr "Üretilecek Ürün"
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
 msgid "Production Operation"
-msgstr "Üretim Operasyonu"
+msgstr "Üretim İşlemi"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -93,7 +91,7 @@ msgstr "Serbest Serileştirme"
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
-msgstr "Mrp Operasyonları"
+msgstr "Ürt İşlemleri"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -132,14 +130,14 @@ msgstr "İş Merkezi"
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
 msgid "The work orders are created on the basis of the production order."
-msgstr "İş emirleri ürün siparişi bazında oluşturulur."
+msgstr "İş emirleri ürün siparişine göre oluşturulur."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:134
-#: code:addons/mrp_operations/mrp_operations.py:470
-#: code:addons/mrp_operations/mrp_operations.py:474
-#: code:addons/mrp_operations/mrp_operations.py:486
-#: code:addons/mrp_operations/mrp_operations.py:489
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:469
+#: code:addons/mrp_operations/mrp_operations.py:481
+#: code:addons/mrp_operations/mrp_operations.py:484
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -160,7 +158,7 @@ msgstr "Onaylanan İş Emirleri"
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
 #: view:mrp.production.workcenter.line:0
 msgid "Operations"
-msgstr "Operasyonlar"
+msgstr "İşlemler"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
@@ -170,7 +168,7 @@ msgstr "Stok Hareketi"
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr "# / Satır"
+msgstr "Satır Sayısı"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -253,7 +251,7 @@ msgstr "İptal edilecek hiçbir Operasyon yok!"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
-msgstr "Ürün Mik."
+msgstr "Ürün Mik"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -263,9 +261,13 @@ msgstr "Temmuz"
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "Operasyon Adı"
+msgstr "İşlem Adı"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
 msgstr "Durum"
@@ -308,7 +310,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
 msgid "Operation Cancelled"
-msgstr "Operasyon İptal Edildi"
+msgstr "İşlem İptal Edildi"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -343,10 +345,9 @@ msgstr "İş Emri Raporu"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
-#: field:mrp.production.workcenter.line,date_start_date:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
-msgstr "Baş. Tarihi"
+msgstr "Başlama Tarihi"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -414,7 +415,7 @@ msgstr "Beklemede"
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
 msgid "Production Operation Code"
-msgstr "Üretim Operasyon Kodu"
+msgstr "Üretim İşlem Kodu"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:467
@@ -555,13 +556,13 @@ msgstr "Ocak"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
 msgid "Finish the operation."
-msgstr "Operasyonu tamamlayın."
+msgstr "İşlemi tamamlayın."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
+#: code:addons/mrp_operations/mrp_operations.py:454
 #, python-format
 msgid "Operation is not started yet !"
-msgstr "Operasyon henüz başlatılmadı!"
+msgstr "İşlem henüz başlatılmadı!"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
@@ -569,10 +570,10 @@ msgid "Information from the production order."
 msgstr "Üretim emrinden bilgiler."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:459
-#: code:addons/mrp_operations/mrp_operations.py:466
-#: code:addons/mrp_operations/mrp_operations.py:479
-#: code:addons/mrp_operations/mrp_operations.py:482
+#: code:addons/mrp_operations/mrp_operations.py:454
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "Sorry!"
 msgstr "Üzgünüz!"
@@ -602,7 +603,7 @@ msgstr "İş Merkezi Üretim başlatma bitirme iş akışı"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr "Operasyon Kodları"
+msgstr "İşlem Kodları"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -612,14 +613,14 @@ msgstr "Mik."
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_doneoperation0
 msgid "Operation Done"
-msgstr "Operasyon Yapıldı"
+msgstr "İşlem Yapıldı"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 #: view:mrp.workorder:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
-msgstr "Bitti"
+msgstr "Yapıldı"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
@@ -627,7 +628,6 @@ msgid "Start/Stop Barcode"
 msgstr "Başlatma/Durdurma Barkodu"
 
 #. module: mrp_operations
-#: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Cancel"
 msgstr "İptal"
@@ -650,7 +650,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
-msgstr "Operasyonu Başlat"
+msgstr "İşlemi Başlat"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -747,7 +747,7 @@ msgstr "İş Emri Analizi"
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr "Tamamlandı"
+msgstr "Bitirildi"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
@@ -762,7 +762,7 @@ msgstr "İş Merkezi Saatleri"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr "Çalışma Saati"
+msgstr "Çalışma Saatleri"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -779,12 +779,12 @@ msgstr "Şubat"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation cancelled"
-msgstr "Operasyon iptal edildi"
+msgstr "İşlem iptal edildi"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_startoperation0
 msgid "Start the operation."
-msgstr "Operasyonu başlatın."
+msgstr "İşlemi başlatın."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -794,7 +794,7 @@ msgstr "Nisan"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
 msgid "Operation done"
-msgstr "Operasyon yapıldı"
+msgstr "İşlem yapıldı"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -807,7 +807,7 @@ msgid ""
 "When the operation is finished, the operator updates the system by finishing "
 "the work order."
 msgstr ""
-"Operasyon tamamlandığında, operatör iş emrini tamamlayarak sistemi günceller."
+"İşlem tamamlandığında, operatör iş emrini tamamlayarak sistemi günceller."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0

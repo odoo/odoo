@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-02 05:05+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:43+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
@@ -84,13 +84,15 @@ msgstr "Компанија"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:258
+#, python-format
 msgid "Invoice Date"
 msgstr "Датум на фактура"
 
 #. module: account_followup
 #: field:account_followup.print,email_subject:0
 msgid "Email Subject"
-msgstr ""
+msgstr "Тема на e-mail"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
@@ -143,12 +145,12 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "Салдо > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "Вкупно задолжување"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -166,12 +168,12 @@ msgstr ""
 #: field:account_followup.followup,followup_line:0
 #: view:res.partner:0
 msgid "Follow-up"
-msgstr ""
+msgstr "Проследи"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "VAT:"
-msgstr ""
+msgstr "ДДВ:"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -179,23 +181,23 @@ msgstr ""
 #: field:account_followup.stat.by.partner,partner_id:0
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Date :"
-msgstr ""
+msgstr "Датум :"
 
 #. module: account_followup
 #: field:account_followup.print,partner_ids:0
 msgid "Partners"
-msgstr ""
+msgstr "Партнери"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Потсетник за фактури"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -210,7 +212,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr ""
+msgstr "Не е судска постапка"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -220,7 +222,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
-msgstr ""
+msgstr "Задолжување"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -233,12 +235,14 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Ref"
-msgstr ""
+msgstr "Референца"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
+"Дава секвенциски редослед кога ја прикажува листата на ставки за "
+"проследување."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -250,12 +254,12 @@ msgstr ""
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Ниво на проследување"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr ""
+msgstr "Последно проследување"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -284,7 +288,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Испрати е-пошта на јазикот на партнерот"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -294,7 +298,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr ""
+msgstr "Испечатени пораки"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -308,13 +312,13 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Партнер за потсетување"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Проследувања"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -376,7 +380,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Блокирано"
 
 #. module: account_followup
 #: help:account_followup.print,date:0
@@ -438,7 +442,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Ставки на дневник"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -481,12 +485,12 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat,credit:0
 msgid "Credit"
-msgstr ""
+msgstr "Побарување"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Maturity Date"
-msgstr ""
+msgstr "Датум на доспевање"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -509,7 +513,7 @@ msgstr ""
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Салдо"
 
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
@@ -526,7 +530,7 @@ msgstr ""
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr ""
+msgstr "Последно движење"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
@@ -536,12 +540,12 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Период"
 
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -551,7 +555,7 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Судски спор"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
@@ -582,18 +586,20 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Оваа фискална година"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr ""
+msgstr "Записи на партнер"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -616,13 +622,13 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup,name:0
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr ""
+msgstr "Прво движење"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -655,17 +661,17 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr ""
+msgstr "Документ: Извод од салдо на клиент"
 
 #. module: account_followup
 #: field:account_followup.print,summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Резиме"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr ""
+msgstr "Вкупно побарува"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -675,7 +681,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Секвенца"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -685,7 +691,7 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr ""
+msgstr "Реф. на клиент :"
 
 #. module: account_followup
 #: view:account.followup.print.all:0

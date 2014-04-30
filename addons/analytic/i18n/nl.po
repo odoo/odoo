@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:48+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:45+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Subrekeningen"
+msgstr "Onderliggende kostenplaatsen"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr "Naam rekening"
+msgstr "Naam kostenplaats"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -47,9 +47,9 @@ msgid "State"
 msgstr "Status"
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr "Rekeningbeheerder"
+msgstr "Beheerder kostenplaats"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -84,8 +84,8 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
-"* Nadat de rekening is gemaakt, wordt de status 'Concept'.                   "
-"               \n"
+"* Nadat de kostenplaats is gemaakt, wordt de status 'Concept'.               "
+"                   \n"
 "* Als er een gekoppelde relatie is, kan de status naar 'Open'.               "
 "                   \n"
 "* Als er openstaand saldo is, kan de status naar 'Wacht'.                    "
@@ -102,7 +102,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
-msgstr "Rekeningsoort"
+msgstr "Soort kostenplaats"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -165,7 +165,7 @@ msgstr "Kostenplaats valuta"
 #: field:account.analytic.account,quantity:0
 #: field:account.analytic.line,unit_amount:0
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -179,7 +179,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr "Rekening hirarcie"
+msgstr "Kostenplaats hirarcie"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -231,8 +231,8 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
-"Als u de soort weergave selecteert, betekent het dat u niet toelaat dat er "
-"geen journaalposten met die rekening gemaakt kunnen worden."
+"Als u de soort weergave selecteert, betekent dat u het niet toelaat dat er "
+"journaalposten op deze kostenplaats gemaakt worden."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -250,6 +250,8 @@ msgid "Full Account Name"
 msgstr "Volledige naam kostenplaats"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"

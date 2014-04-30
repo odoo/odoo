@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:57+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:56+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,send_to:0
@@ -74,7 +74,7 @@ msgid "Delay to close"
 msgstr "Vertraging tot sluiting"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "Hele verhaal"
 
@@ -111,7 +111,7 @@ msgid "Day"
 msgstr "Dag"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
 msgstr "Laatste email"
 
@@ -163,13 +163,13 @@ msgstr ""
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,state:0
 msgid "Pending"
-msgstr "Wachtend"
+msgstr "In afwachting"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Relatie"
@@ -207,10 +207,9 @@ msgstr "Van"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
-msgstr "Partner klasse"
+msgstr "Relatie klasse"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -246,6 +245,7 @@ msgid "HTML formatting?"
 msgstr "HTML formaat?"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "Soort"
@@ -268,7 +268,7 @@ msgstr "Leads analyse"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,creation_date:0
 msgid "Creation Date"
-msgstr "Datum gemaakt"
+msgstr "Aanmaakdatum"
 
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,html:0
@@ -302,7 +302,7 @@ msgid "Stage"
 msgstr "Stadium"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
 #, python-format
 msgid "Fwd"
 msgstr "Doorsturen"
@@ -319,12 +319,13 @@ msgid "Opportunities Assignment Analysis"
 msgstr "Prospect toekenning analyse"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "Verstuur geschiedenis"
 
@@ -334,7 +335,6 @@ msgid "Contact"
 msgstr "Contactpersoon"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Sluiten"
@@ -343,7 +343,7 @@ msgstr "Sluiten"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr "Verkoopkans toekenning analyse"
+msgstr "Prospect toekenning analyse"
 
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,delay_close:0
@@ -489,8 +489,6 @@ msgid "Delay to Open"
 msgstr "Vertraging tot openen"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -621,6 +619,7 @@ msgid "Probable Revenue"
 msgstr "Verwachte omzet"
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "Toegewezen relatie"
@@ -633,7 +632,7 @@ msgstr "Adres"
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
-msgstr "Verkoopkans"
+msgstr "Prospect"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,partner_id:0
@@ -661,7 +660,7 @@ msgstr "Land"
 #. module: crm_partner_assign
 #: view:res.partner:0
 msgid "Convert to Opportunity"
-msgstr "Omzetten naar verkoopkans"
+msgstr "Converteren naar prospect"
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -684,11 +683,12 @@ msgid "CRM Lead Report"
 msgstr "CRM Lead overzicht"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "Dossier informatie"
 
 #. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
 msgstr "Volgnummer"
@@ -712,7 +712,7 @@ msgstr "Verkoopteam"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,create_date:0
 msgid "Create Date"
-msgstr "Datum gemaakt"
+msgstr "Aanmaakdatum"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,state:0

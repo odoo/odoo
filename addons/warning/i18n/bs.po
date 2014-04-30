@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:28+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:36+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Stavka nabavne narudžbe"
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
@@ -30,7 +30,7 @@ msgstr ""
 #. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Poruka za stavku nabavne narudžbe"
 
 #. module: warning
 #: constraint:res.partner:0
@@ -40,7 +40,7 @@ msgstr ""
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lista prikupljanja proizvoda"
 
 #. module: warning
 #: field:product.product,sale_line_warn:0
@@ -55,7 +55,7 @@ msgstr "Upozorenje kod Kupovine ovog Proizvoda"
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: warning
 #: sql_constraint:purchase.order:0
@@ -87,7 +87,7 @@ msgstr "Upozorenje"
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Blokiranje poruke"
 
 #. module: warning
 #: view:res.partner:0
@@ -128,13 +128,13 @@ msgstr ""
 #. module: warning
 #: field:res.partner,picking_warn:0
 msgid "Stock Picking"
-msgstr ""
+msgstr "Prikupljanje proizvoda zalihe"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Nabavna narudžba"
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
@@ -144,7 +144,7 @@ msgstr ""
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Poruka za narudžbu nabave"
 
 #. module: warning
 #: code:addons/warning/warning.py:32
@@ -160,17 +160,22 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, odabirom "
+"opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok. "
+"Poruku treba napisati u slijedećem polju."
 
 #. module: warning
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:213
-#: code:addons/warning/warning.py:246
+#: code:addons/warning/warning.py:130
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Alert for %s !"
-msgstr ""
+msgstr "Alarm za %s !"
 
 #. module: warning
 #: field:res.partner,invoice_warn_msg:0
@@ -185,23 +190,25 @@ msgstr ""
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
-msgstr ""
+msgstr "Upozorenje na prikupljanjima proizvoda"
 
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Upozorenje na narudžbama nabave"
 
 #. module: warning
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:134
-#: code:addons/warning/warning.py:164
-#: code:addons/warning/warning.py:214
-#: code:addons/warning/warning.py:247
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:193
+#: code:addons/warning/warning.py:219
+#: code:addons/warning/warning.py:267
+#: code:addons/warning/warning.py:300
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Upozorenje za %s"
 
 #. module: warning
 #: view:res.partner:0
@@ -209,26 +216,28 @@ msgid "Warning on the Sale Order"
 msgstr ""
 
 #. module: warning
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "Moruka za prikupljanje proizvoda sa zalihe"
 
 #. module: warning
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajna narudžba"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
+#: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Stavka prodajne narudžbe"

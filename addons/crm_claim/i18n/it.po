@@ -9,14 +9,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-07-08 10:53+0000\n"
-"Last-Translator: Leonardo Pistone - Agile BG - Domsense "
-"<leonardo.pistone@domsense.com>\n"
+"Last-Translator: Leonardo Pistone - camptocamp "
+"<leonardo.pistone@camptocamp.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:56+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:55+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -129,6 +129,7 @@ msgstr "Reclami reali"
 #. module: crm_claim
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Cancelled"
 msgstr "Cancellato"
 
@@ -202,7 +203,7 @@ msgstr "Cause principali"
 #. module: crm_claim
 #: field:crm.claim,user_fault:0
 msgid "Trouble Responsible"
-msgstr ""
+msgstr "Responsabile Problematiche"
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
@@ -259,6 +260,8 @@ msgid ""
 "Have a general overview of all claims processed in the system by sorting "
 "them with specific criteria."
 msgstr ""
+"Per avere una visione generale di tutti i reclami processati nel sistema "
+"ordinando gli stesso per specifici criteri"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -266,9 +269,10 @@ msgid "July"
 msgstr "Luglio"
 
 #. module: crm_claim
+#: view:crm.claim.stage:0
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
-msgstr "Stadi del reclamo"
+msgstr "Fasi del Reclamo"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
@@ -281,7 +285,7 @@ msgstr "Categorie"
 #: view:crm.claim.report:0
 #: field:crm.claim.report,stage_id:0
 msgid "Stage"
-msgstr "Stadio"
+msgstr "Fase"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -304,9 +308,9 @@ msgid "Contact"
 msgstr "Contatto"
 
 #. module: crm_claim
-#: model:ir.ui.menu,name:crm_claim.menu_crm_claim_stage_act
+#: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
 msgid "Stages"
-msgstr "Stadi"
+msgstr "Fasi"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
@@ -391,6 +395,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Questi indirizzi email verranno aggiunti nel campo CC di tutte le email, in "
+"entrate e uscita, prima di essere spedite. E' necessario separare gli "
+"indirizzi con una virgola"
 
 #. module: crm_claim
 #: selection:crm.claim.report,state:0
@@ -407,6 +414,7 @@ msgstr "Basso"
 #: field:crm.claim,date_closed:0
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Closed"
 msgstr "Chiuso"
 
@@ -415,6 +423,7 @@ msgstr "Chiuso"
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Pending"
 msgstr "In sospeso"
 
@@ -494,7 +503,7 @@ msgstr "Filtri estesi..."
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Closure"
-msgstr ""
+msgstr "Chiusura"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -526,9 +535,9 @@ msgstr "Queste persone riceveranno email."
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
 msgstr "Reclami"
@@ -550,6 +559,7 @@ msgid "History"
 msgstr "Storico"
 
 #. module: crm_claim
+#: view:crm.claim:0
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
@@ -574,7 +584,6 @@ msgid "State"
 msgstr "Stato"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
 msgstr "Completato"
@@ -582,10 +591,9 @@ msgstr "Completato"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Reporter"
-msgstr ""
+msgstr "Segnalatore del Reclamo"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Cancel"
 msgstr "Annulla"
@@ -596,7 +604,6 @@ msgid "Close"
 msgstr "Chiudi"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -605,6 +612,8 @@ msgstr "Apri"
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+#: selection:crm.claim.stage,state:0
 msgid "In Progress"
 msgstr "In corso"
 

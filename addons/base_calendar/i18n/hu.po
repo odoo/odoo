@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:51+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -35,10 +35,13 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.event,exdate:0
 #: help:calendar.todo,exdate:0
+#: help:crm.meeting,exdate:0
 msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
 msgstr ""
+"Ez a tulajdonság meghatározza a visszatérő naptári bejegyzések dátum/idő "
+"kivétel listáját"
 
 #. module: base_calendar
 #: constraint:res.users:0
@@ -69,6 +72,7 @@ msgstr "Meghívó"
 #. module: base_calendar
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
+#: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
 msgstr "Ismétlődő megbeszélések"
 
@@ -81,24 +85,25 @@ msgstr "Riasztások"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Sunday"
 msgstr "Vasárnap"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,role:0
 msgid "Role"
 msgstr "Szerep"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Invitation details"
 msgstr "Meghívó részletei"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fourth"
 msgstr "Negyedik"
 
@@ -113,12 +118,15 @@ msgstr "Megjelenítés másként"
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
 #: selection:calendar.todo,select1:0
+#: field:crm.meeting,day:0
+#: selection:crm.meeting,select1:0
 msgid "Date of month"
 msgstr "Hónap napja"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Public"
 msgstr "Nyilvános"
 
@@ -130,6 +138,7 @@ msgstr " "
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "March"
 msgstr "Március"
 
@@ -143,18 +152,21 @@ msgstr "Vigyázat!"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Friday"
 msgstr "Péntek"
 
 #. module: base_calendar
 #: field:calendar.event,allday:0
 #: field:calendar.todo,allday:0
+#: field:crm.meeting,allday:0
 msgid "All Day"
 msgstr "Egész nap"
 
 #. module: base_calendar
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
+#: field:crm.meeting,select1:0
 msgid "Option"
 msgstr "Opció"
 
@@ -162,24 +174,24 @@ msgstr "Opció"
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 msgid "Free"
 msgstr "Szabad"
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
 msgid "Indicats whether the favor of a reply is requested"
-msgstr ""
+msgstr "Jelzi, hogy szükséges-e  válasz írása"
 
 #. module: base_calendar
 #: field:calendar.alarm,alarm_id:0
 msgid "Basic Alarm"
-msgstr ""
+msgstr "Alap riasztás"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
 msgid "The users that the original request was delegated to"
-msgstr ""
+msgstr "A felhasználó akinek az eredeti igény be lett nyújtva"
 
 #. module: base_calendar
 #: field:calendar.attendee,ref:0
@@ -189,6 +201,7 @@ msgstr "Esemény hiv."
 #. module: base_calendar
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
+#: field:crm.meeting,we:0
 msgid "Wed"
 msgstr "Sze"
 
@@ -200,6 +213,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
+#: field:crm.meeting,tu:0
 msgid "Tue"
 msgstr "K"
 
@@ -217,13 +231,14 @@ msgstr "Éves"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Last"
 msgstr "Utolsó"
 
 #. module: base_calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "A látogatók részvételi helyzete"
 
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
@@ -237,15 +252,12 @@ msgid "Days"
 msgstr "Napok"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Invitation Detail"
 msgstr "Meghívó részlete"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1194
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -253,7 +265,7 @@ msgstr "Hiba!"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Chair Person"
-msgstr ""
+msgstr "Elnök személye"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -299,7 +311,6 @@ msgid "The event ends"
 msgstr "Esemény vége"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
@@ -322,7 +333,7 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
 msgid "Specify the type of Invitation"
-msgstr ""
+msgstr "Határozza meg a meghívó típusát"
 
 #. module: base_calendar
 #: selection:calendar.event,freq:0
@@ -339,7 +350,7 @@ msgstr "Esemény vége"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
-msgstr ""
+msgstr "Lehetséges részvétel"
 
 #. module: base_calendar
 #: field:calendar.event,date_deadline:0
@@ -348,9 +359,11 @@ msgid "Deadline"
 msgstr "Határidő"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:389
-#: code:addons/base_calendar/base_calendar.py:1004
-#: code:addons/base_calendar/base_calendar.py:1006
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "Vigyázat!"
@@ -358,10 +371,13 @@ msgstr "Vigyázat!"
 #. module: base_calendar
 #: help:calendar.event,active:0
 #: help:calendar.todo,active:0
+#: help:crm.meeting,active:0
 msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
 msgstr ""
+"Ha az aktív mező igazra állított, akkor lehetősége van a találkozó riasztási "
+"információ eltüntetésére annak törlse nélkül."
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -373,20 +389,22 @@ msgstr "Alapvető naptár funkció"
 #: field:calendar.event,organizer_id:0
 #: field:calendar.todo,organizer:0
 #: field:calendar.todo,organizer_id:0
+#: field:crm.meeting,organizer:0
+#: field:crm.meeting,organizer_id:0
 msgid "Organizer"
 msgstr "Szervező"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
+#: field:crm.meeting,user_id:0
 msgid "Responsible"
 msgstr "Felelős"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: model:res.request.link,name:base_calendar.request_link_meeting
+#: model:res.request.link,name:base_calendar.request_link_event
 msgid "Event"
 msgstr "Esemény"
 
@@ -406,6 +424,8 @@ msgstr "Előtte"
 #: view:calendar.event:0
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
+#: field:crm.meeting,date_open:0
+#: selection:crm.meeting,state:0
 msgid "Confirmed"
 msgstr "Jóváhagyott"
 
@@ -417,7 +437,11 @@ msgstr "Összes esemény szerkesztése"
 #. module: base_calendar
 #: field:calendar.alarm,attendee_ids:0
 #: field:calendar.event,attendee_ids:0
+#: field:calendar.event,partner_ids:0
 #: field:calendar.todo,attendee_ids:0
+#: field:calendar.todo,partner_ids:0
+#: field:crm.meeting,attendee_ids:0
+#: field:crm.meeting,partner_ids:0
 msgid "Attendees"
 msgstr "Résztvevők"
 
@@ -429,11 +453,12 @@ msgstr "Megerősítés"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_todo
 msgid "Calendar Task"
-msgstr ""
+msgstr "Naptárfeladat"
 
 #. module: base_calendar
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
+#: field:crm.meeting,su:0
 msgid "Sun"
 msgstr "V"
 
@@ -455,18 +480,19 @@ msgstr "Emlékeztető részletei"
 #. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
 msgid "Delegrated From"
-msgstr ""
+msgstr "Megbízotti űrlap"
 
 #. module: base_calendar
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
+#: selection:crm.meeting,select1:0
 msgid "Day of month"
 msgstr "A hónap napja"
 
 #. module: base_calendar
-#: view:calendar.event:0
 #: field:calendar.event,location:0
 #: field:calendar.todo,location:0
+#: field:crm.meeting,location:0
 msgid "Location"
 msgstr "Helyszín"
 
@@ -476,7 +502,6 @@ msgid "Send mail?"
 msgstr "Levél elküldése?"
 
 #. module: base_calendar
-#: field:base_calendar.invite.attendee,email:0
 #: selection:calendar.alarm,action:0
 #: field:calendar.attendee,email:0
 msgid "Email"
@@ -490,13 +515,14 @@ msgstr "Esemény részletei"
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Run"
-msgstr ""
+msgstr "Futtatás"
 
 #. module: base_calendar
 #: field:calendar.event,exdate:0
 #: field:calendar.todo,exdate:0
+#: field:crm.meeting,exdate:0
 msgid "Exception Date/Times"
-msgstr ""
+msgstr "Dátum/idő kivételek"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
@@ -507,8 +533,9 @@ msgstr "Bizalmas"
 #. module: base_calendar
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
+#: field:crm.meeting,end_date:0
 msgid "Repeat Until"
-msgstr ""
+msgstr "Ismétlés eddig"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
@@ -525,11 +552,12 @@ msgstr "Láthatóság"
 #. module: base_calendar
 #: field:calendar.attendee,rsvp:0
 msgid "Required Reply?"
-msgstr ""
+msgstr "Válasz szükséges?"
 
 #. module: base_calendar
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
+#: field:crm.meeting,base_calendar_url:0
 msgid "Caldav URL"
 msgstr "CalDAV URL"
 
@@ -539,19 +567,20 @@ msgid "Select range to Exclude"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
 msgid "Recurrent ID"
 msgstr "Időszakos ID"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "July"
 msgstr "Július"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Accepted"
 msgstr "Elfogadott"
@@ -559,13 +588,14 @@ msgstr "Elfogadott"
 #. module: base_calendar
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
+#: field:crm.meeting,th:0
 msgid "Thu"
 msgstr "Cs"
 
 #. module: base_calendar
 #: field:calendar.attendee,child_ids:0
 msgid "Delegrated To"
-msgstr ""
+msgstr "Megvízás ennek"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -581,7 +611,7 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Participation required"
-msgstr ""
+msgstr "Részvétel szükséges"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -602,6 +632,7 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Private"
 msgstr "Privát"
 
@@ -624,16 +655,16 @@ msgid "Mark as"
 msgstr "Megjelölés"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: field:calendar.attendee,partner_address_id:0
+#: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: base_calendar
 #: help:calendar.event,rrule_type:0
 #: help:calendar.todo,rrule_type:0
+#: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Találkozó automatikus ismétlése ebben az intervallumban"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -662,39 +693,47 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "First"
 msgstr "Első"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,class:0
+#: field:calendar.todo,class:0
+#: field:crm.meeting,class:0
 msgid "Privacy"
 msgstr "Adatvédelem"
 
 #. module: base_calendar
 #: field:calendar.event,vtimezone:0
 #: field:calendar.todo,vtimezone:0
+#: field:crm.meeting,vtimezone:0
 msgid "Timezone"
 msgstr "Időzóna"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Subject"
 msgstr "Tárgy"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
 msgid "Needs Action"
-msgstr ""
+msgstr "Beavatkozás szükséges"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "September"
 msgstr "Szeptember"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "December"
 msgstr "December"
 
@@ -716,13 +755,14 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Individual"
-msgstr ""
+msgstr "Önálló"
 
 #. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
+#: help:crm.meeting,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "Ismételje X ideig"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
@@ -742,10 +782,9 @@ msgstr "Kezdő dátum"
 #. module: base_calendar
 #: field:calendar.attendee,cn:0
 msgid "Common name"
-msgstr ""
+msgstr "Ismert név"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Declined"
 msgstr "Elutasítva"
@@ -761,8 +800,8 @@ msgid "My Events"
 msgstr "Saját eseményeim"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Decline"
 msgstr "Visszautasít"
 
@@ -791,11 +830,12 @@ msgstr "Kapcsolatok"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
-msgstr ""
+msgstr "Alap ristási információ"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
+#: field:crm.meeting,fr:0
 msgid "Fri"
 msgstr "P"
 
@@ -814,17 +854,19 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,member:0
 msgid "Member"
-msgstr ""
+msgstr "Tag"
 
 #. module: base_calendar
 #: help:calendar.event,location:0
 #: help:calendar.todo,location:0
+#: help:crm.meeting,location:0
 msgid "Location of Event"
 msgstr "Esemény helyszíne"
 
 #. module: base_calendar
 #: field:calendar.event,rrule:0
 #: field:calendar.todo,rrule:0
+#: field:crm.meeting,rrule:0
 msgid "Recurrent Rule"
 msgstr "Időszakos szabály"
 
@@ -850,6 +892,9 @@ msgstr "Ismétlődés vége"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,alarm_id:0
+#: field:calendar.todo,alarm_id:0
+#: field:crm.meeting,alarm_id:0
 msgid "Reminder"
 msgstr "Emlékeztető"
 
@@ -881,6 +926,7 @@ msgstr "E-mail a meghívott személynek"
 #: field:calendar.alarm,repeat:0
 #: field:calendar.event,count:0
 #: field:calendar.todo,count:0
+#: field:crm.meeting,count:0
 #: field:res.alarm,repeat:0
 msgid "Repeat"
 msgstr "Ismétlődés"
@@ -890,29 +936,33 @@ msgstr "Ismétlődés"
 msgid ""
 "Reference to the URIthat points to the directory information corresponding "
 "to the attendee."
-msgstr ""
+msgstr "URI hivatkozás mely a felszólaló információs könyvtárára mutat"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "August"
 msgstr "Augusztus"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Monday"
 msgstr "Hétfő"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Third"
 msgstr "Harmadik"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "June"
 msgstr "Június"
 
@@ -925,14 +975,14 @@ msgstr "Esemény időpontja"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "The"
-msgstr ""
+msgstr "A"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_from:0
 msgid "Delegated From"
-msgstr ""
+msgstr "Átruházva ettől"
 
 #. module: base_calendar
 #: field:calendar.attendee,user_id:0
@@ -942,19 +992,21 @@ msgstr "Felhasználó"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,date:0
+#: field:crm.meeting,date:0
 msgid "Date"
 msgstr "Dátum"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "November"
 msgstr "November"
 
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr ""
+msgstr "Mutassa a csoportot, akihez a hallgató tartozik"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -964,6 +1016,7 @@ msgstr "Adat"
 #. module: base_calendar
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
 msgid "Mon"
 msgstr "H"
 
@@ -982,12 +1035,16 @@ msgstr "Nincs ismétlés"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "October"
 msgstr "Október"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
+#: selection:calendar.attendee,state:0
 #: view:calendar.event:0
+#: selection:calendar.event,state:0
+#: selection:calendar.todo,state:0
+#: view:crm.meeting:0
 msgid "Uncertain"
 msgstr "Bizonytalan"
 
@@ -1000,11 +1057,12 @@ msgstr "Nyelv"
 #: field:calendar.alarm,trigger_occurs:0
 #: field:res.alarm,trigger_occurs:0
 msgid "Triggers"
-msgstr ""
+msgstr "Események"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "January"
 msgstr "Január"
 
@@ -1012,7 +1070,7 @@ msgstr "Január"
 #: field:calendar.alarm,trigger_related:0
 #: field:res.alarm,trigger_related:0
 msgid "Related to"
-msgstr ""
+msgstr "Összefügg ezzel:"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_interval:0
@@ -1023,6 +1081,7 @@ msgstr "Intervallum"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Wednesday"
 msgstr "Szerda"
 
@@ -1035,6 +1094,7 @@ msgstr "Az intervallum nem lehet negatív"
 #. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
+#: field:crm.meeting,message_summary:0
 msgid "Summary"
 msgstr "Összegzés"
 
@@ -1042,6 +1102,7 @@ msgstr "Összegzés"
 #: field:calendar.alarm,active:0
 #: field:calendar.event,active:0
 #: field:calendar.todo,active:0
+#: field:crm.meeting,active:0
 #: field:res.alarm,active:0
 msgid "Active"
 msgstr "Aktív"
@@ -1049,7 +1110,7 @@ msgstr "Aktív"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr ""
+msgstr "Vállaszon napot a hónapban, ahová a találkozót sokszorozni szeretné"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1068,6 +1129,8 @@ msgid ""
 "Duration' and 'Repeat' are both optional, but if one occurs, so MUST the "
 "other"
 msgstr ""
+"'Hossza' és 'Ismétlés' mindegyik egy lehetőség, de ha az egyik előfordul, "
+"amásiknak is alő KELL fordulnia"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event_edit_all
@@ -1077,22 +1140,23 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.attendee,role:0
 msgid "Participation role for the calendar user"
-msgstr ""
+msgstr "A naptár felhasználójának részvételi szabálya"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_to:0
 msgid "Delegated To"
-msgstr ""
+msgstr "Feladattal megbízva"
 
 #. module: base_calendar
 #: help:calendar.alarm,action:0
 msgid "Defines the action to be invoked when an alarm is triggered"
 msgstr ""
+"Meghatározza a segítségül hivható műveletet egy vészjelzés beindítása esetén"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
+#: selection:crm.meeting,end_type:0
 msgid "End date"
 msgstr "Befejezési dátuma"
 
@@ -1104,7 +1168,7 @@ msgstr "Esemény keresése"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency Option"
-msgstr ""
+msgstr "Ismétlődés lehetőségei"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -1119,10 +1183,13 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"Ha egy aktív mező igazra állított, akkor lehetővé teszi az esemény riasztás "
+"információ eltüntetését annak törlése nélkül."
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "Időszakos ID dátuma"
 
@@ -1166,12 +1233,12 @@ msgstr "Kész"
 #. module: base_calendar
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
+#: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
 msgstr "Ismétlés (nap/hét/hó/év)"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: field:base_calendar.invite.attendee,user_ids:0
+#: model:ir.model,name:base_calendar.model_res_users
 msgid "Users"
 msgstr "Felhasználók"
 
@@ -1181,7 +1248,6 @@ msgid "of"
 msgstr "/"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Cancel"
 msgstr "Mégse"
@@ -1194,6 +1260,7 @@ msgstr "res.users"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Tuesday"
 msgstr "Kedd"
 
@@ -1204,6 +1271,8 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
+"Egy jóval összetettebb leírást biztosít a naptári bejegyzéshez, mint amit az "
+"\"ÖSSZEGZÉS\" tulajdonságoknál létre lett hozva"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1211,11 +1280,11 @@ msgid "Responsible User"
 msgstr "Felelős felhasználó"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1466
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 #, python-format
 msgid "Busy"
 msgstr "Foglalt"
@@ -1223,7 +1292,7 @@ msgstr "Foglalt"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Naptári esemény"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
@@ -1247,12 +1316,14 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
+#: field:crm.meeting,recurrency:0
 msgid "Recurrent"
 msgstr "Időszakos"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
+#: field:crm.meeting,rrule_type:0
 msgid "Recurrency"
 msgstr "Ismétlődés"
 
@@ -1265,12 +1336,14 @@ msgstr "Rendezvény meghívók"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Thursday"
 msgstr "Csütörtök"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
 #: field:calendar.todo,exrule:0
+#: field:crm.meeting,exrule:0
 msgid "Exception Rule"
 msgstr "Kivétel szabály"
 
@@ -1279,6 +1352,8 @@ msgstr "Kivétel szabály"
 msgid ""
 "To specify the language for text values in aproperty or property parameter."
 msgstr ""
+"Nyelv meghatározása a tulajdonság vagy a tulajdonság paraméter szöveg "
+"értékekhez."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1288,14 +1363,18 @@ msgstr "Részletek"
 #. module: base_calendar
 #: help:calendar.event,exrule:0
 #: help:calendar.todo,exrule:0
+#: help:crm.meeting,exrule:0
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
 msgstr ""
+"Meghatároz egy idő szabályt vagy ismétlődési mintát az ismétlődési "
+"szabályból való kizáráshoz."
 
 #. module: base_calendar
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
+#: field:crm.meeting,month_list:0
 msgid "Month"
 msgstr "Hónap"
 
@@ -1317,7 +1396,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
 msgid "URI Reference"
-msgstr ""
+msgstr "URI Referencia"
 
 #. module: base_calendar
 #: field:calendar.alarm,description:0
@@ -1326,12 +1405,14 @@ msgstr ""
 #: field:calendar.event,name:0
 #: field:calendar.todo,description:0
 #: field:calendar.todo,name:0
+#: field:crm.meeting,description:0
 msgid "Description"
 msgstr "Leírás"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "May"
 msgstr "Május"
 
@@ -1368,7 +1449,6 @@ msgid "Objects"
 msgstr "Tárgyak"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Delegated"
 msgstr "Átruházva"
@@ -1376,6 +1456,7 @@ msgstr "Átruházva"
 #. module: base_calendar
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
+#: field:crm.meeting,sa:0
 msgid "Sat"
 msgstr "Szo"
 
@@ -1392,16 +1473,20 @@ msgstr "Percenként"
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
 msgid "Specify the user that is acting on behalf of the calendar user"
-msgstr ""
+msgstr "Határozza meg a falhasználót aki a  naptár felhasználója lesz"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,date_deadline:0
+#: field:calendar.todo,date_deadline:0
+#: field:crm.meeting,date_deadline:0
 msgid "End Date"
 msgstr "Befejezés dátuma"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "February"
 msgstr "Február"
 
@@ -1417,6 +1502,7 @@ msgid "Resource"
 msgstr "Forrás"
 
 #. module: base_calendar
+#: field:crm.meeting.type,name:0
 #: field:res.alarm,name:0
 msgid "Name"
 msgstr "Név"
@@ -1424,7 +1510,7 @@ msgstr "Név"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
 msgid "Event alarm information"
-msgstr ""
+msgstr "Találkozó riasztási információ"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1432,12 +1518,13 @@ msgid ""
 "Contains the text to be                      used as the message subject for "
 "email                      or contains the text to be used for display"
 msgstr ""
+"Tartalmazza az e-mail tárgyaként felhasznált szöveget vagy a megjeleníteni "
+"kívánt üzenetet"
 
 #. module: base_calendar
-#: field:calendar.event,alarm_id:0
 #: field:calendar.event,base_calendar_alarm_id:0
-#: field:calendar.todo,alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
+#: field:crm.meeting,base_calendar_alarm_id:0
 msgid "Alarm"
 msgstr "Figyelmeztetés"
 
@@ -1455,6 +1542,7 @@ msgstr "Küldés felhasználónként"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "April"
 msgstr "Április"
 
@@ -1466,12 +1554,14 @@ msgstr "Ismétlődő időszak"
 #. module: base_calendar
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
+#: field:crm.meeting,week_list:0
 msgid "Weekday"
 msgstr "Hétköznap"
 
 #. module: base_calendar
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
+#: field:crm.meeting,byday:0
 msgid "By day"
 msgstr "Nappal"
 
@@ -1488,13 +1578,14 @@ msgstr "Hang"
 #. module: base_calendar
 #: field:calendar.event,id:0
 #: field:calendar.todo,id:0
+#: field:crm.meeting,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "For information Purpose"
-msgstr ""
+msgstr "Információs célokra"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1504,7 +1595,7 @@ msgstr "Meghívás"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "Résztvevők információi"
 
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
@@ -1520,19 +1611,21 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0
 msgid "Sent By"
-msgstr ""
+msgstr "Küldte"
 
 #. module: base_calendar
 #: field:calendar.event,sequence:0
 #: field:calendar.todo,sequence:0
+#: field:crm.meeting,sequence:0
 msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: base_calendar
 #: help:calendar.event,alarm_id:0
 #: help:calendar.todo,alarm_id:0
+#: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr ""
+msgstr "Most beállított riasztás, mielőtt az esemény elkezdődne"
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
@@ -1540,14 +1633,15 @@ msgid "Internal User"
 msgstr "Belső felhasználó"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Accept"
 msgstr "Elfogad"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Saturday"
 msgstr "Szombat"
 
@@ -1559,12 +1653,12 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Second"
 msgstr "Második"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr "Szabad/elfoglalt"
 
@@ -1580,6 +1674,7 @@ msgstr ""
 #: field:calendar.event,duration:0
 #: field:calendar.todo,date:0
 #: field:calendar.todo,duration:0
+#: field:crm.meeting,duration:0
 #: field:res.alarm,duration:0
 #: field:res.alarm,trigger_duration:0
 msgid "Duration"
@@ -1605,9 +1700,15 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
+"* Hangforrásra mutat,                     mely beindul, ha a hangra "
+"riasztást ad,\n"
+"                    * Fájl mely elküldésre szánt mint e-mail melléklet,\n"
+"                    * Művelet forrásra mutat, melyet segítségül hív ha       "
+"               a riasztás a művelet miatt lett kapcsolva."
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Ötödik"

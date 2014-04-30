@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:32+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -116,7 +116,7 @@ msgstr ""
 "Félicitations, vous avez défini un nouvel accès partagé avec succès !"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:546
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(copie pour partage)"
@@ -167,7 +167,8 @@ msgid "Share wizard: step 1"
 msgstr "Assistant de partage : étape 1"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:850
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "Username"
 msgstr "Nom d’utilisateur"
@@ -227,7 +228,8 @@ msgid "Sharing Tools"
 msgstr "Outils de partage"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:852
+#: code:addons/share/wizard/share_wizard.py:884
 #, python-format
 msgid "Database"
 msgstr "Base de données"
@@ -238,7 +240,7 @@ msgid "Send Email Notification(s)"
 msgstr "Envoyer des notifications par courriel"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:599
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "Partager le filtre créé par l'utilisateur %s (%s) pour le groupe %s"
@@ -259,7 +261,8 @@ msgid "Share Group"
 msgstr "Groupe de partage"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:883
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -301,25 +304,27 @@ msgid "Existing external users"
 msgstr "Utilisateurs externes existants"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Résumé"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
 "Filtre de partage indirect créé par l'utilisateur %s (%s) pour le groupe %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid "Email required"
 msgstr "Courriel requis"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: code:addons/share/wizard/share_wizard.py:513
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Accès copié pour le partage"
@@ -385,14 +390,15 @@ msgstr ""
 "    "
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
 "to be able to send outgoing emails."
 msgstr ""
 "L'utilisateur actuel doit avoir une adresse courriel configurée dans "
-"'Préférence utilisateur' pour pouvoir envoyer des courriels vers l'extérieur."
+"'Préférences' pour pouvoir envoyer des courriels vers l'extérieur."
 
 #. module: share
 #: view:res.users:0
@@ -400,7 +406,8 @@ msgid "Regular users only (no share user)"
 msgstr "Utilisateurs standard uniquement (pas d'utilisateur partagé)"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "Adresse URL de partage"
 
@@ -410,7 +417,7 @@ msgid "Domain"
 msgstr "Domaine"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:658
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -447,7 +454,10 @@ msgid "Action to share"
 msgstr "Action à partager"
 
 #. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
 #: view:share.wizard:0
+#, python-format
 msgid "Share"
 msgstr "Partager"
 
@@ -484,8 +494,8 @@ msgstr "Assistant de partage"
 #: help:share.wizard,user_type:0
 msgid "Select the type of user(s) you would like to share data with."
 msgstr ""
-"Veuillez sélectionner le ou les utilisateur(s) avec le(s)quel(s) vous voulez "
-"partager les données."
+"Veuillez sélectionner le type d'utilisateur(s) avec le(s)quel(s) vous "
+"aimeriez partager des données."
 
 #. module: share
 #: view:share.wizard:0

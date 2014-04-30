@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:33+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -106,7 +106,7 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr "恭喜，你已设置好新的共享权限！"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:546
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "（共享复制）"
@@ -155,7 +155,8 @@ msgid "Share wizard: step 1"
 msgstr "共享向导 - 步骤·"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:850
+#: code:addons/share/wizard/share_wizard.py:882
 #, python-format
 msgid "Username"
 msgstr "用户名"
@@ -214,7 +215,8 @@ msgid "Sharing Tools"
 msgstr "共享工具"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:852
+#: code:addons/share/wizard/share_wizard.py:884
 #, python-format
 msgid "Database"
 msgstr "数据库"
@@ -225,7 +227,7 @@ msgid "Send Email Notification(s)"
 msgstr "发送通知的电子邮件"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:599
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "创建用户 %s （%s ）的共享过滤器，在用户组 %s"
@@ -246,7 +248,8 @@ msgid "Share Group"
 msgstr "共享用户组"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:883
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -286,24 +289,26 @@ msgid "Existing external users"
 msgstr "现有的外部用户"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "简述"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr "创建用户 %s  （%s ）间接共享过滤器，在用户组 %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid "Email required"
 msgstr "需要一个电子邮件地址"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: code:addons/share/wizard/share_wizard.py:513
 #, python-format
 msgid "Copied access for sharing"
 msgstr "共享的复制访问"
@@ -354,7 +359,8 @@ msgstr ""
 "    "
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -367,7 +373,8 @@ msgid "Regular users only (no share user)"
 msgstr "只是普通用户（不是共享用户）"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "共享URL"
 
@@ -377,7 +384,7 @@ msgid "Domain"
 msgstr "过滤条件"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:658
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -409,7 +416,10 @@ msgid "Action to share"
 msgstr "共享操作"
 
 #. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
 #: view:share.wizard:0
+#, python-format
 msgid "Share"
 msgstr "共享"
 

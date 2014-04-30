@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:17+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -23,7 +23,8 @@ msgid "Avg. Delay to Open"
 msgstr "Ledtid innan öppning i medeltal"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "Group By..."
 msgstr "Gruppera efter..."
 
@@ -58,7 +59,8 @@ msgid "Progress (%)"
 msgstr "Upparbetat (%)"
 
 #. module: project_issue
-#: field:project.issue,company_id:0 view:project.issue.report:0
+#: field:project.issue,company_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,company_id:0
 msgid "Company"
 msgstr "Bolag"
@@ -84,7 +86,7 @@ msgid "Days to Open"
 msgstr "Dagar för att öppna"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:406
+#: code:addons/project_issue/project_issue.py:479
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -104,7 +106,8 @@ msgid "Date Closed"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,day:0
+#: view:project.issue.report:0
+#: field:project.issue.report,day:0
 msgid "Day"
 msgstr "Dag"
 
@@ -114,10 +117,11 @@ msgid "Add Internal Note"
 msgstr "Lägg till intern notering"
 
 #. module: project_issue
-#: field:project.issue,task_id:0 view:project.issue.report:0
+#: field:project.issue,task_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,task_id:0
 msgid "Task"
-msgstr "Ärende"
+msgstr "Uppgift"
 
 #. module: project_issue
 #: view:board.board:0
@@ -136,8 +140,10 @@ msgstr "Meddelanden"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
-#: view:project.issue:0 field:project.issue,project_id:0
-#: view:project.issue.report:0 field:project.issue.report,project_id:0
+#: view:project.issue:0
+#: field:project.issue,project_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,project_id:0
 msgid "Project"
 msgstr "Projekt"
 
@@ -147,7 +153,8 @@ msgid "My Open Project issues"
 msgstr "Mina öppna projektärenden"
 
 #. module: project_issue
-#: selection:project.issue,state:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: selection:project.issue.report,state:0
 msgid "Cancelled"
 msgstr "Avbruten"
 
@@ -254,8 +261,10 @@ msgid "Next"
 msgstr "Nästa"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,priority:0
-#: view:project.issue.report:0 field:project.issue.report,priority:0
+#: view:project.issue:0
+#: field:project.issue,priority:0
+#: view:project.issue.report:0
+#: field:project.issue.report,priority:0
 msgid "Priority"
 msgstr "Prioritet"
 
@@ -265,8 +274,10 @@ msgid "Send New Email"
 msgstr "Skicka ett nytt epost meddelande"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,version_id:0
-#: view:project.issue.report:0 field:project.issue.report,version_id:0
+#: view:project.issue:0
+#: field:project.issue,version_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "Version"
 
@@ -296,7 +307,8 @@ msgid "Email"
 msgstr "Epost"
 
 #. module: project_issue
-#: field:project.issue,channel_id:0 field:project.issue.report,channel_id:0
+#: field:project.issue,channel_id:0
+#: field:project.issue.report,channel_id:0
 msgid "Channel"
 msgstr "Kanal"
 
@@ -307,7 +319,8 @@ msgid "Lowest"
 msgstr "Lägsta"
 
 #. module: project_issue
-#: field:project.issue,create_date:0 view:project.issue.report:0
+#: field:project.issue,create_date:0
+#: view:project.issue.report:0
 #: field:project.issue.report,creation_date:0
 msgid "Creation Date"
 msgstr "Registeringsdatum"
@@ -340,7 +353,8 @@ msgid "Project Issue Dashboard"
 msgstr "Ärendeinfopanel"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
+#: view:project.issue:0
+#: selection:project.issue,state:0
 #: view:project.issue.report:0
 msgid "Done"
 msgstr "Klart"
@@ -356,8 +370,10 @@ msgid "Categories"
 msgstr "Kategorier"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
-#: field:project.issue.report,type_id:0
+#: view:project.issue:0
+#: field:project.issue,stage_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,stage_id:0
 msgid "Stage"
 msgstr "Steg"
 
@@ -389,6 +405,9 @@ msgstr "Mina projektärenden"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,partner_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "Kontakt"
 
@@ -423,7 +442,7 @@ msgstr ""
 "du kan knyta till problem/frågor/ärenden."
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:330
+#: code:addons/project_issue/project_issue.py:371
 #, python-format
 msgid "Tasks"
 msgstr "Uppgifter"
@@ -454,7 +473,8 @@ msgid "This is the current user to whom the related task have been assigned"
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 #: field:project.issue.report,month:0
 msgid "Month"
 msgstr "Månad"
@@ -465,8 +485,7 @@ msgid "project.issue.report"
 msgstr "project.issue.report"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:408 view:project.issue:0
-#, python-format
+#: view:project.issue:0
 msgid "Escalate"
 msgstr "Eskalera"
 
@@ -489,8 +508,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,categ_id:0
-#: view:project.issue.report:0 field:project.issue.report,categ_id:0
+#: view:project.issue:0
 msgid "Category"
 msgstr "Kategori"
 
@@ -522,7 +540,8 @@ msgid "Low"
 msgstr "Låg"
 
 #. module: project_issue
-#: field:project.issue,date_closed:0 selection:project.issue.report,state:0
+#: field:project.issue,date_closed:0
+#: selection:project.issue.report,state:0
 msgid "Closed"
 msgstr "Stängd"
 
@@ -532,13 +551,16 @@ msgid "Avg. Delay to Close"
 msgstr "Tid till avslut i snitt"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue,state:0
-#: view:project.issue.report:0 selection:project.issue.report,state:0
+#: selection:project.issue,state:0
+#: view:project.issue.report:0
+#: selection:project.issue.report,state:0
 msgid "Pending"
 msgstr "Väntande"
 
 #. module: project_issue
 #: view:project.issue:0
+#: field:project.issue,state:0
+#: field:project.issue.report,state:0
 msgid "Status"
 msgstr "Status"
 
@@ -558,6 +580,7 @@ msgid "August"
 msgstr "augusti"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
@@ -569,7 +592,8 @@ msgid "Global CC"
 msgstr "Global CC"
 
 #. module: project_issue
-#: view:project.issue:0 view:project.issue.report:0
+#: view:project.issue:0
+#: view:project.issue.report:0
 msgid "To Do"
 msgstr "Att göra"
 
@@ -584,7 +608,8 @@ msgid "Days to Close"
 msgstr "Dagar i behandling"
 
 #. module: project_issue
-#: field:project.issue,active:0 field:project.issue.version,active:0
+#: field:project.issue,active:0
+#: field:project.issue.version,active:0
 msgid "Active"
 msgstr "Aktiv"
 
@@ -630,7 +655,7 @@ msgid "Issues By State"
 msgstr "Ärende per status"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,date:0
+#: field:project.issue,date:0
 msgid "Date"
 msgstr "Datum"
 
@@ -650,7 +675,8 @@ msgid "History"
 msgstr "Historik"
 
 #. module: project_issue
-#: field:project.issue,user_id:0 view:project.issue.report:0
+#: field:project.issue,user_id:0
+#: view:project.issue.report:0
 #: field:project.issue.report,user_id:0
 msgid "Assigned to"
 msgstr "Tilldelad"
@@ -708,22 +734,22 @@ msgid "Close"
 msgstr "Stäng"
 
 #. module: project_issue
-#: view:project.issue:0 selection:project.issue.report,state:0
+#: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "Öppen"
 
 #. module: project_issue
+#: field:account.analytic.account,use_issues:0
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
 #: view:project.issue:0
+#: view:project.project:0
 msgid "Issues"
 msgstr "Ärenden"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_stage
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_graph_state
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:0
 msgid "Project Issue"
@@ -769,7 +795,9 @@ msgid "Reply"
 msgstr "Svara"
 
 #. module: project_issue
+#: view:project.issue:0
 #: field:project.issue,name:0
+#: view:project.project:0
 msgid "Issue"
 msgstr "Ärende"
 
@@ -779,7 +807,7 @@ msgid "Feature Tracker Search"
 msgstr "Egenskapssökning"
 
 #. module: project_issue
-#: view:project.issue:0 field:project.issue,description:0
+#: view:project.issue:0
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -799,7 +827,8 @@ msgid "Sale Team    "
 msgstr ""
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,email:0
+#: view:project.issue.report:0
+#: field:project.issue.report,email:0
 msgid "# Emails"
 msgstr "# e-postmeddelanden"
 
@@ -893,12 +922,12 @@ msgstr "Saknar titel"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
-#: help:project.issue.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "Antal dagar för att stänga ärendet"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,section_id:0
+#: view:project.issue.report:0
+#: field:project.issue.report,section_id:0
 msgid "Sale Team"
 msgstr "Säljteam"
 
@@ -924,7 +953,8 @@ msgid "Last Action"
 msgstr "Senaste åtgärd"
 
 #. module: project_issue
-#: view:project.issue.report:0 field:project.issue.report,name:0
+#: view:project.issue.report:0
+#: field:project.issue.report,name:0
 msgid "Year"
 msgstr "År"
 

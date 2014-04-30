@@ -14,23 +14,24 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-23 05:11+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:45+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
 msgid "ir.model.fields.anonymize.wizard"
-msgstr ""
+msgstr "ir.model.fields.anonymize.wizard"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_name:0
 msgid "Field Name"
-msgstr ""
+msgstr "Талбарын нэр"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,field_id:0
+#: field:ir.model.fields.anonymization.migration.fix,field_name:0
 msgid "Field"
-msgstr ""
+msgstr "Талбар"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,state:0
@@ -41,12 +42,12 @@ msgstr ""
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,file_import:0
 msgid "Import"
-msgstr ""
+msgstr "Оруулж ирэх"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
 msgid "ir.model.fields.anonymization"
-msgstr ""
+msgstr "ir.model.fields.anonymization"
 
 #. module: anonymization
 #: model:ir.module.module,shortdesc:anonymization.module_meta_information
@@ -56,14 +57,14 @@ msgstr ""
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,direction:0
 msgid "Direction"
-msgstr ""
+msgstr "Чиглэл"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
 #: view:ir.model.fields.anonymization:0
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
 msgid "Anonymized Fields"
-msgstr ""
+msgstr "Нэр мэдэгдэхгүй болсон талбарууд"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
@@ -86,27 +87,27 @@ msgstr ""
 #. module: anonymization
 #: field:ir.model.fields.anonymization,state:0
 msgid "unknown"
-msgstr ""
+msgstr "үл мэдэгдэх"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,model_id:0
 msgid "Object"
-msgstr ""
+msgstr "Обьект"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,filepath:0
 msgid "File path"
-msgstr ""
+msgstr "Файлын зам"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization.history,date:0
 msgid "Date"
-msgstr ""
+msgstr "Огноо"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,file_export:0
 msgid "Export"
-msgstr ""
+msgstr "Экспорт"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
@@ -116,40 +117,39 @@ msgstr ""
 #. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Өгөгдлийн Баазыг Нэргүйжүүлэх"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
 msgid "Anonymize database"
-msgstr ""
+msgstr "Өгөгдлийн баазыг нэр мэдэгдэхгүй болгох"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
 #: field:ir.model.fields.anonymization.history,field_ids:0
 msgid "Fields"
-msgstr ""
+msgstr "Талбарууд"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Clear"
-msgstr ""
+msgstr "Цэвэрлэх"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "clear -> anonymized"
-msgstr ""
+msgstr "цэвэрлэх-> нэр мэдэгдэгдэхгүй болсон"
 
 #. module: anonymization
-#: view:ir.model.fields.anonymize.wizard:0
 #: field:ir.model.fields.anonymize.wizard,summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Хураангуй"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymization:0
 msgid "Anonymized Field"
-msgstr ""
+msgstr "Нэр мэдэгдэгдэхгүй болсон талбар"
 
 #. module: anonymization
 #: model:ir.module.module,description:anonymization.module_meta_information
@@ -171,26 +171,25 @@ msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
-#: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Not Existing"
-msgstr ""
+msgstr "Байхгүй"
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,model_name:0
 msgid "Object Name"
-msgstr ""
+msgstr "Обьектийн нэр"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
 #: view:ir.model.fields.anonymization.history:0
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_history
 msgid "Anonymization History"
-msgstr ""
+msgstr "Нэр мэдэгдэхгүй болгосон түүх"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
 msgid "ir.model.fields.anonymization.history"
-msgstr ""
+msgstr "ir.model.fields.anonymization.history"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
@@ -201,26 +200,26 @@ msgstr ""
 #. module: anonymization
 #: field:ir.model.fields.anonymize.wizard,name:0
 msgid "File Name"
-msgstr ""
+msgstr "Файлын нэр"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "anonymized -> clear"
-msgstr ""
+msgstr "Хэн нэгнийг -> цэвэрлэх"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Started"
-msgstr ""
+msgstr "Эхэлсэн"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Done"
-msgstr ""
+msgstr "Хийсэн"
 
 #. module: anonymization
 #: view:ir.model.fields.anonymization.history:0
 #: field:ir.model.fields.anonymization.history,msg:0
 #: field:ir.model.fields.anonymize.wizard,msg:0
 msgid "Message"
-msgstr ""
+msgstr "Зурвас"

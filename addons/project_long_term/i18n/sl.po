@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-04 05:21+0000\n"
-"X-Generator: Launchpad (build 16462)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -53,12 +53,12 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr ""
+msgstr "Naslednje faze"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr ""
+msgstr "Projektna opravila"
 
 #. module: project_long_term
 #: field:account.analytic.account,use_phases:0
@@ -118,18 +118,18 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
-msgstr "Naloga"
+msgstr "Opravilo"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Izračunaj določen projekt"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr ""
+msgstr "Prejšnje faze"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
@@ -140,7 +140,7 @@ msgstr ""
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
-msgstr ""
+msgstr " Izračuna razporejevalnik glede na datum pričetka in trajanje."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -255,7 +255,7 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
-msgstr ""
+msgstr "Minimalen datum pričetka"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_resource_allocation
@@ -291,7 +291,7 @@ msgstr "Začetni datum"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Related Tasks"
-msgstr ""
+msgstr "Povezana opravila"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -307,12 +307,12 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
 msgid "force the phase to start after this date"
-msgstr ""
+msgstr "vsili začetek faze po tem datumu"
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr "Naloge projekta"
+msgstr "Projektna opravila"
 
 #. module: project_long_term
 #: field:project.phase,resource_ids:0
@@ -346,6 +346,8 @@ msgid ""
 "It's computed by the scheduler according the project date or the end date of "
 "the previous phase."
 msgstr ""
+"Preračuna razporejevalnik glede na datum projekta ali končni datum predhodne "
+"faze."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -355,7 +357,7 @@ msgstr "Mesec"
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr ""
+msgstr "Začetni datum faze mora biti nižji od končnega."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
@@ -387,7 +389,7 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr ""
+msgstr "Vsili zaključek faze pred tem datumom"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -424,7 +426,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Izračun projektnih opravil"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -434,7 +436,7 @@ msgstr "Omejitve"
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Poda zaporedje ob prikazu seznama faz."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -444,7 +446,7 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr ""
+msgstr "Projektne faze"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -455,7 +457,6 @@ msgstr "Končano"
 #. module: project_long_term
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
-#: view:project.phase:0
 msgid "Cancel"
 msgstr "Prekliči"
 
@@ -494,7 +495,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Phase"
-msgstr ""
+msgstr "Začni fazo"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
@@ -553,7 +554,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Podrobnosti opravil"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_resource_resource
@@ -572,12 +573,12 @@ msgstr "Razporejanje"
 #: field:project.task,phase_id:0
 #: field:project.user.allocation,phase_id:0
 msgid "Project Phase"
-msgstr ""
+msgstr "Projektna faza"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr ""
+msgstr "Izračun projektnih faz"
 
 #. module: project_long_term
 #: field:project.schedule.tasks,msg:0
@@ -594,7 +595,7 @@ msgstr ""
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Loops in phases not allowed"
-msgstr ""
+msgstr "Povratne zanke pri fazah niso dovoljene"
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
@@ -616,12 +617,12 @@ msgstr "Odsotnost virov"
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 #: view:project.compute.tasks:0
 msgid "Schedule Tasks"
-msgstr ""
+msgstr "Razporedi opravila"
 
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Privzeto v dnevih"
 
 #. module: project_long_term
 #: view:project.phase:0

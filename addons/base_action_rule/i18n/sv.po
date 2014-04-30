@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:48+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -95,6 +95,8 @@ msgid ""
 "These people will receive a copy of the future communication between partner "
 "and users by email"
 msgstr ""
+"Dessa personer kommer att få en kopia av framtida kommunikationer mellan "
+"företaget och användaren via mail."
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -111,6 +113,8 @@ msgstr "Regelnamn"
 msgid ""
 "Check this if you want the rule to send a reminder by email to the partner."
 msgstr ""
+"Markera detta om du vill att regeln ska skicka en påminnelse via mail till "
+"företaget."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -123,7 +127,7 @@ msgid "Deadline"
 msgstr "Tidsfrist"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_partner_id:0
+#: field:base.action.rule.lead.test,partner_id:0
 msgid "Partner"
 msgstr "Företag"
 
@@ -164,12 +168,12 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Action Rule"
-msgstr ""
+msgstr "Åtgärdsregel"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Fields to Change"
-msgstr ""
+msgstr "Fält att ändra"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -199,7 +203,7 @@ msgstr "Ledtid efter utlösningsdatum"
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
 msgid "Remind with Attachment"
-msgstr ""
+msgstr "Påminn med bifogad fil"
 
 #. module: base_action_rule
 #: constraint:ir.cron:0
@@ -238,7 +242,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
-msgstr ""
+msgstr "Ledtidstyp"
 
 #. module: base_action_rule
 #: help:base.action.rule,regex_name:0
@@ -269,7 +273,7 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(partner)s = Partner name"
-msgstr ""
+msgstr "%(partner)s = Företagsnamn"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -286,7 +290,7 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
 msgid "Delay after trigger date"
-msgstr ""
+msgstr "Ledtid efter utlösningsdatum"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -303,6 +307,7 @@ msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
+#: field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Aktiv"
 
@@ -310,7 +315,7 @@ msgstr "Aktiv"
 #: code:addons/base_action_rule/base_action_rule.py:329
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "Inget E-mail-ID hittat för din bolagsadress!"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -372,20 +377,20 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
-msgstr ""
+msgstr "E-postinformation"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
 msgid "Action Rules"
-msgstr ""
+msgstr "Åtgärdsregler"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_body:0
 msgid "Content of mail"
-msgstr ""
+msgstr "E-postinnehåll"
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_user_id:0
+#: field:base.action.rule.lead.test,user_id:0
 msgid "Responsible"
 msgstr "Ansvarig"
 
@@ -442,7 +447,7 @@ msgid "Automated Actions"
 msgstr "Automatiserade händelser"
 
 #. module: base_action_rule
-#: field:base.action.rule,server_action_id:0
+#: field:base.action.rule,server_action_ids:0
 msgid "Server Action"
 msgstr ""
 
@@ -471,7 +476,7 @@ msgstr "Sekvens"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Actions"
-msgstr ""
+msgstr "Åtgärder"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
@@ -496,6 +501,6 @@ msgid "Conditions on States"
 msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,trg_date_type:0
+#: field:base.action.rule,trg_date_id:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Utlösningsdatum"

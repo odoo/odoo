@@ -9,18 +9,18 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-05-25 18:39+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"Last-Translator: Ferdinand <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:48+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:45+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "untergeordnete Konten"
+msgstr "Untergeordnete Kostenstelle"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -47,9 +47,9 @@ msgid "State"
 msgstr "Status"
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr "Verantw. Mitarbeiter"
+msgstr "Kundenbetreuer"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -121,7 +121,7 @@ msgstr "In Wartestellung"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analytische Buchungszeile"
+msgstr "Kostenstellen-Buchung"
 
 #. module: analytic
 #: field:account.analytic.account,description:0
@@ -153,7 +153,7 @@ msgstr "Benutzer"
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr "Übergeordnetes Analyse Konto"
+msgstr "Übergeordnete Kostenstelle"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -169,7 +169,7 @@ msgstr "Währung des Kontos"
 #: field:account.analytic.account,quantity:0
 #: field:account.analytic.line,unit_amount:0
 msgid "Quantity"
-msgstr "Menge"
+msgstr "Anzahl"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -178,13 +178,13 @@ msgid ""
 "cost price. Always expressed in the company main currency."
 msgstr ""
 "Berechnet durch Multiplikation von Menge und Herstellungskosten bzw. "
-"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der Standard "
-"Währung des Unternehmens."
+"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der "
+"Standardwährung des Unternehmens."
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr "Kontenhierarchie"
+msgstr "Kostenstellen-Hierachie"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -250,13 +250,15 @@ msgstr "Kontonummer"
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
-msgstr "Vollständige Kontobezeichnung"
+msgstr "Bezeichnung der Kostenstelle"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analytisches Konto"
+msgstr "Kostenstelle"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -281,4 +283,4 @@ msgstr "Offen"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr "Analytische Buchungen"
+msgstr "Kostenstellenbuchungen"

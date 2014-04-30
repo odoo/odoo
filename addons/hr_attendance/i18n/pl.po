@@ -13,23 +13,23 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:01+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:11+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Rejestracja czasu pracy"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupuj wg..."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Today"
-msgstr ""
+msgstr "Dziś"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -67,7 +67,7 @@ msgstr ""
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr "Data wpisu"
+msgstr "Data wejścia"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
@@ -86,7 +86,7 @@ msgstr "Powody obecności"
 #: view:hr.attendance:0
 #: field:hr.attendance,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dzień"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -121,11 +121,9 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
 msgid "Attendances By Month"
-msgstr ""
+msgstr "Obecności w miesiącu"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,name:0
@@ -160,7 +158,7 @@ msgid "Employee attendance"
 msgstr "Obecności pracownika"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
+#: code:addons/hr_attendance/hr_attendance.py:161
 #, python-format
 msgid "Warning"
 msgstr "Ostrzeżenie"
@@ -178,6 +176,7 @@ msgid "A sign-in must be right after a sign-out !"
 msgstr ""
 
 #. module: hr_attendance
+#: view:hr.attendance:0
 #: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
@@ -193,12 +192,12 @@ msgstr "Maks. opóźnienie (min)"
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "Print"
-msgstr ""
+msgstr "Drukuj"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "Szukaj obecności"
 
 #. module: hr_attendance
 #: model:ir.module.module,description:hr_attendance.module_meta_information
@@ -240,8 +239,10 @@ msgid "Min Delay"
 msgstr "Minimalne opóźnienie"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
+#, python-format
 msgid "Sign In"
 msgstr "Wejście"
 
@@ -281,12 +282,12 @@ msgstr ""
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "Okresla powód wejścia/wyjścia w przypadku dodatkowych godzin."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
 msgid "Print Monthly Attendance Report"
-msgstr ""
+msgstr "Drukuj miesięczny raport obecności"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
@@ -367,8 +368,6 @@ msgstr "Styczeń"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign in"
 msgstr "Wejście"
 
@@ -410,7 +409,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
-msgstr ""
+msgstr "Drukuj tygodniowy raport obecności"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,emp_id:0
@@ -422,8 +421,6 @@ msgstr ""
 #: view:hr.attendance.error:0
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -447,8 +444,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Wyjście"
 
@@ -459,6 +454,7 @@ msgstr "Opóźnienie"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Pracownik"
@@ -500,8 +496,10 @@ msgid "Your last sign in"
 msgstr "Twoje ostatnie wejście"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
+#, python-format
 msgid "Sign Out"
 msgstr "Wyjście"
 

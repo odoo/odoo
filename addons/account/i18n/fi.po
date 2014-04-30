@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:38+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:34+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -50,7 +50,6 @@ msgstr "Kuponkien hallinta"
 #. module: account
 #: view:account.account:0
 #: view:account.bank.statement:0
-#: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Statistics"
 msgstr "Tilitilastot"
@@ -84,7 +83,7 @@ msgstr "Alatason määrittelyt"
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "Ikääntyneet saatavat tähän päivään asti"
+msgstr "Erääntyneet saatavat tähän päivään asti"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
@@ -112,8 +111,9 @@ msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Debit"
-msgstr "Summa debet"
+msgstr "Debet yhteensä"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -143,21 +143,25 @@ msgid "Origin"
 msgstr "Lähde"
 
 #. module: account
-#: view:account.account:0
+#. openerp-web
 #: view:account.automatic.reconcile:0
 #: field:account.move.line,reconcile_id:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
+#: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
+#, python-format
 msgid "Reconcile"
-msgstr "Suoritus"
+msgstr "Täsmäytä"
 
 #. module: account
+#: field:account.bank.statement,name:0
 #: field:account.bank.statement.line,ref:0
 #: field:account.entries.report,ref:0
-#: view:account.invoice:0
 #: field:account.move,ref:0
 #: field:account.move.line,ref:0
 #: field:account.subscription,ref:0
+#: xsl:account.transfer:0
+#: field:cash.box.in,ref:0
 msgid "Reference"
 msgstr "Viite"
 
@@ -172,11 +176,28 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
-"Jos aktiivinen kenttä on tilassa epätosi (false), voit piilottaa maksun "
-"poistamatta sitä."
+"Jos aktiivinen kenttä on asetettu tilaan epätosi (false), niin voit "
+"piilottaa maksuehdon poistamatta sitä."
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account.py:641
+#: code:addons/account/account.py:686
+#: code:addons/account/account.py:781
+#: code:addons/account/account.py:1058
+#: code:addons/account/account_invoice.py:820
+#: code:addons/account/account_invoice.py:823
+#: code:addons/account/account_invoice.py:826
+#: code:addons/account/account_invoice.py:1545
+#: code:addons/account/account_move_line.py:98
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
+#: code:addons/account/account_move_line.py:864
+#: code:addons/account/wizard/account_fiscalyear_close.py:62
+#: code:addons/account/wizard/account_invoice_state.py:44
+#: code:addons/account/wizard/account_invoice_state.py:68
+#: code:addons/account/wizard/account_state_open.py:37
+#: code:addons/account/wizard/account_validate_account_move.py:39
+#: code:addons/account/wizard/account_validate_account_move.py:61
 #, python-format
 msgid "Warning!"
 msgstr "Varoitus!"
@@ -195,7 +216,7 @@ msgstr "Kaikki analyyttiset merkinnät"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr "Lasku muodostettu 15 päivän sisällä"
+msgstr "Viimeisten 15 päivän aikana luodut laskut"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -203,7 +224,7 @@ msgid "Negative"
 msgstr "Negatiivinen"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:95
+#: code:addons/account/wizard/account_move_journal.py:96
 #, python-format
 msgid "Journal: %s"
 msgstr "Päiväkirja: %s"
@@ -263,7 +284,7 @@ msgid ""
 msgstr "Valitse tämä jos et halua ALV:tä liitettävän verokoodeihin laskuilla"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1241
+#: code:addons/account/account_invoice.py:1254
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
 msgstr "Lasku '%s' on osittain maksettu: %s%s määrästä %s%s (%s%s jäljellä)"
@@ -279,7 +300,7 @@ msgid "Belgian Reports"
 msgstr "Belgialaiset raportit"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1200
+#: code:addons/account/account_move_line.py:1215
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
 msgstr "Et voi muokata merkintöjä suljetussa päiväkirjassa."
@@ -291,10 +312,8 @@ msgstr "Laskettu saldo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
-#: model:ir.actions.act_window,name:account.action_view_account_use_model
-#: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr "Käsin toistettava"
+msgstr "Manuaalisesti toistettava"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -304,7 +323,7 @@ msgstr "Sulje kirjanpitovuosi"
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr "Salli hylkäykset"
+msgstr "Salli alaskirjaukset"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -317,7 +336,7 @@ msgid "St."
 msgstr "St."
 
 #. module: account
-#: code:addons/account/account_invoice.py:551
+#: code:addons/account/account_invoice.py:560
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
 msgstr "Laskurivin tilin yritys ei täsmää laskun yritykseen"
@@ -333,6 +352,8 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
+"Asentaa lokalisoidut tilikartat vastaamaan mahdollisimman tarkasti "
+"yrityksesi paikallisia kirjanpitotarpeitasi omassa maassasi."
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:63
@@ -347,10 +368,9 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Poista tilin täsmäytys"
+msgstr "Peruuta tilin täsmäytys"
 
 #. module: account
-#: view:product.product:0
 #: view:product.template:0
 msgid "Purchase Properties"
 msgstr "Ostojen ominaisuudet"
@@ -367,7 +387,7 @@ msgstr "Konfiguroi"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr "Kesäkuu"
+msgstr "kesäkuu"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_bank
@@ -391,17 +411,17 @@ msgstr "account.bank.accounts.wizard"
 #: field:account.move.line,date_created:0
 #: field:account.move.reconcile,create_date:0
 msgid "Creation date"
-msgstr "Luomispäivämäärä"
+msgstr "Luontipäivä"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr "Oston hyvitys"
+msgstr "Ostohyvitys"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "Avaus/sulkeimistilanne"
+msgstr "Avaus/sulkemistilanne"
 
 #. module: account
 #: help:account.journal,currency:0
@@ -425,12 +445,13 @@ msgstr ""
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr "Oletus debet tili"
+msgstr "Oletusarvoinen debet-tili"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Credit"
-msgstr "Summa kredit"
+msgstr "Kredit yhteensä"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -477,6 +498,7 @@ msgstr ""
 #: field:account.automatic.reconcile,journal_id:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement,journal_id:0
+#: field:account.bank.statement.line,journal_id:0
 #: report:account.central.journal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,journal_id:0
@@ -484,6 +506,8 @@ msgstr ""
 #: field:account.invoice,journal_id:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,journal_id:0
+#: view:account.journal:0
+#: field:account.journal.cashbox.line,journal_id:0
 #: field:account.journal.period,journal_id:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
@@ -505,7 +529,7 @@ msgstr "Päiväkirja"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
 msgid "Confirm the selected invoices"
-msgstr "Vahvista vlitut laskut"
+msgstr "Vahvista valitut laskut"
 
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
@@ -553,7 +577,7 @@ msgstr "Li"
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "Suorittamattomat tapahtumat"
+msgstr "Täsmäyttämättömät tapahtumat"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:348
@@ -566,7 +590,7 @@ msgstr "Kassan saldo ei täsmää laskettuun saldoon !"
 #: field:account.fiscal.position,tax_ids:0
 #: field:account.fiscal.position.template,tax_ids:0
 msgid "Tax Mapping"
-msgstr "Verokartoitus"
+msgstr "Verokohdistus"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -580,8 +604,10 @@ msgid "The accountant confirms the statement."
 msgstr "Kirjanpitäjä vahvistaa tiliotteen."
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
@@ -594,6 +620,7 @@ msgid "Invoice Address Name"
 msgstr "Laskuosoitteen nimi"
 
 #. module: account
+#: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "3 Monthly"
 msgstr "neljännesvuosittainen"
@@ -618,9 +645,10 @@ msgid "Sequences"
 msgstr "Sarjat"
 
 #. module: account
+#: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Taxes Mapping"
-msgstr "Verokartoitus"
+msgstr "Verojen kohdistus"
 
 #. module: account
 #: report:account.central.journal:0
@@ -630,7 +658,7 @@ msgstr "Keskitetty päiväkirja"
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
 msgid "Main Sequence must be different from current !"
-msgstr "Pääjärjestyksen tulee olla eri nykyiseen nähden!"
+msgstr "Pääjärjestyksen tulee olla eri kuin nykyinen"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -638,7 +666,7 @@ msgid "Tax Code Amount"
 msgstr "Verokoodin määrä"
 
 #. module: account
-#: code:addons/account/account.py:3116
+#: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
 msgstr "SAJ"
@@ -662,7 +690,7 @@ msgstr "Tilin yhteiskumppanien raportti"
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
 msgid "Opening Entries Period"
-msgstr "Avaa kohteiden jaksoa"
+msgstr "Avaavien vientien jakso"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
@@ -670,8 +698,8 @@ msgid "Journal Period"
 msgstr "Päiväkirjan jakso"
 
 #. module: account
-#: code:addons/account/account_move_line.py:750
-#: code:addons/account/account_move_line.py:803
+#: code:addons/account/account_move_line.py:766
+#: code:addons/account/account_move_line.py:819
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
@@ -683,16 +711,17 @@ msgstr ""
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
+#: code:addons/account/report/account_partner_ledger.py:272
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Saatavat tilit"
+msgstr "Saatavatilit"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr ""
+msgstr "Kirjanpitoraportti"
 
 #. module: account
 #: view:account.invoice:0
@@ -702,9 +731,10 @@ msgstr "Uudelleen avaus"
 #. module: account
 #: view:account.use.model:0
 msgid "Are you sure you want to create entries?"
-msgstr "Oletko varma että haluat luoda merkinnät?"
+msgstr "Oletko varma että haluat luoda kirjaukset?"
 
 #. module: account
+#: model:account.account.type,name:account.conf_account_type_chk
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
 msgstr "Šekki"
@@ -736,7 +766,7 @@ msgstr "Tilikartat"
 #: model:ir.model,name:account.model_project_account_analytic_line
 #, python-format
 msgid "Analytic Entries by line"
-msgstr "Analyyttiset viennit riveittäin"
+msgstr "Analyyttiset kirjaukset riveittäin"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
@@ -745,6 +775,7 @@ msgid "You can only change currency for Draft Invoice !"
 msgstr "Voit vaihtaa valuutan vain luonnostilassa olevalle laskulle"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.analytic.journal:0
 #: field:account.analytic.journal,type:0
 #: field:account.bank.statement.line,type:0
@@ -755,6 +786,7 @@ msgstr "Voit vaihtaa valuutan vain luonnostilassa olevalle laskulle"
 #: view:account.journal:0
 #: field:account.journal,type:0
 #: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 #: field:report.invoice.created,type:0
 msgid "Type"
 msgstr "Tyyppi"
@@ -771,11 +803,10 @@ msgstr "Kumppanin viite tässä laskussa."
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
-#: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
-msgstr "Suoritusten poisto"
+msgstr "Täsmäytysten peruutus"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -804,7 +835,7 @@ msgstr "J.C. / Siirron nimi"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "September"
-msgstr "Syyskuu"
+msgstr "syyskuu"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -815,7 +846,7 @@ msgstr "päivät"
 #: help:account.account.template,nocreate:0
 msgid ""
 "If checked, the new chart of accounts will not contain this by default."
-msgstr "Jos valittu, uuti tilikirja ei sisälltä tätä oletusarvoisesti."
+msgstr "Jos valittu, uusi tilikartta ei sisällä tätä oletuksena."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:110
@@ -834,6 +865,7 @@ msgstr "Uusi ennakkomaksu"
 
 #. module: account
 #: view:account.payment.term:0
+#: field:account.payment.term.line,value:0
 msgid "Computation"
 msgstr "Laskenta"
 
@@ -863,17 +895,17 @@ msgstr "Keskimääräinen maksuviive"
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr "Verotaulukko"
+msgstr "Verotilit"
 
 #. module: account
 #: view:account.fiscalyear:0
 msgid "Create 3 Months Periods"
-msgstr "Luo 3 kuukauden jakso"
+msgstr "Luo neljännesvuoden jakso"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Due"
-msgstr "kuluessa"
+msgstr "Erääntyvät"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -882,8 +914,6 @@ msgid "Total With Tax"
 msgstr "Summa sisältäen veron"
 
 #. module: account
-#: view:account.invoice:0
-#: view:account.move:0
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Approve"
@@ -906,17 +936,17 @@ msgstr "Yhdistetty"
 #. module: account
 #: view:account.entries.report:0
 msgid "Extended Filters..."
-msgstr "Laajennetut Suotimet..."
+msgstr "Laajennetut suodattimet..."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Keskuspäiväkirja"
+msgstr "Keskitetty päiväkirja"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
-msgstr "Myynnin hyvitys"
+msgstr "Myyntihyvitys"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -944,7 +974,7 @@ msgstr "Ostot"
 #. module: account
 #: field:account.model,lines_id:0
 msgid "Model Entries"
-msgstr "Mallin merkit"
+msgstr "Mallikirjaukset"
 
 #. module: account
 #: field:account.account,code:0
@@ -964,18 +994,17 @@ msgid "Code"
 msgstr "Koodi"
 
 #. module: account
-#: code:addons/account/account.py:2268
-#: code:addons/account/account_bank_statement.py:357
-#: code:addons/account/account_invoice.py:73
-#: code:addons/account/account_invoice.py:688
-#: code:addons/account/account_move_line.py:173
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_bank_statement.py:424
+#: code:addons/account/account_invoice.py:77
+#: code:addons/account/account_invoice.py:775
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Ei analyyttinen päiväkirja!"
+msgstr "Ei analyyttistä päiväkirjaa!"
 
 #. module: account
 #: report:account.partner.balance:0
-#: view:account.partner.balance:0
 #: model:ir.actions.act_window,name:account.action_account_partner_balance
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
@@ -1001,7 +1030,7 @@ msgstr "Vuoden viikko"
 #. module: account
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
-msgstr "Maisematila"
+msgstr "Vaakasuora"
 
 #. module: account
 #: view:board.board:0
@@ -1011,7 +1040,7 @@ msgstr "Hyväksyttävät asiakaslaskut"
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr "Valitse suljettava kirjanpitovuosi"
+msgstr "Valitse suljettava tilikausi"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -1019,6 +1048,8 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
+"Nämä tyypit on määritelty maasi perusteella. Tyyppi sisältää lisää tietoa "
+"tilistä ja sen määrityksistä."
 
 #. module: account
 #: view:account.tax:0
@@ -1028,9 +1059,10 @@ msgstr "Voimassaolosäännöt"
 #. module: account
 #: report:account.partner.balance:0
 msgid "In dispute"
-msgstr "Väittelyssä"
+msgstr "riidanalainen"
 
 #. module: account
+#: view:account.journal:0
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
@@ -1062,7 +1094,7 @@ msgstr "Luo viennit ennen:"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3003
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Bank"
 msgstr "Pankki"
@@ -1110,6 +1142,7 @@ msgstr "Suoritusten poiston tapahtumat"
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
 #: field:account.tax,description:0
+#: view:account.tax.code:0
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
@@ -1123,12 +1156,12 @@ msgstr "Ulkomaalaisten valuuttojen kurssi(t)"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "Merkinnän rivin siirto."
+msgstr "Kirjatun vientirivin siirto."
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
 msgid "# of Transaction"
-msgstr "Liiketoimen nro"
+msgstr "Tapahtumien määrä"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -1136,10 +1169,10 @@ msgstr "Liiketoimen nro"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Entry Label"
-msgstr "Merkinnän nimike"
+msgstr "Kirjauksen nimi"
 
 #. module: account
-#: code:addons/account/account.py:1129
+#: code:addons/account/account.py:1136
 #, python-format
 msgid "You can not modify/delete a journal with entries for this period !"
 msgstr ""
@@ -1155,12 +1188,11 @@ msgstr "Dokumentin viite joka on luonut tämän laskun."
 #: view:account.analytic.line:0
 #: view:account.journal:0
 msgid "Others"
-msgstr "Toiset"
+msgstr "Muut"
 
 #. module: account
 #: view:account.account:0
 #: report:account.account.balance:0
-#: view:account.analytic.line:0
 #: field:account.automatic.reconcile,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
 #: view:account.entries.report:0
@@ -1207,7 +1239,6 @@ msgstr "taso"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
-#: view:account.invoice.line:0
 #: field:account.invoice.line,invoice_line_tax_id:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -1220,11 +1251,10 @@ msgid "Taxes"
 msgstr "Verot"
 
 #. module: account
-#: code:addons/account/wizard/account_financial_report.py:69
-#: code:addons/account/wizard/account_report_common.py:144
+#: code:addons/account/wizard/account_financial_report.py:70
 #, python-format
 msgid "Select a starting and an ending period"
-msgstr "Valitse alku ja loppujakso"
+msgstr "Valitse alku- ja loppujakso"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -1234,7 +1264,7 @@ msgstr "Tilimallit"
 #. module: account
 #: view:account.tax.code.template:0
 msgid "Search tax template"
-msgstr "Hae veropohja"
+msgstr "Etsi veromalli"
 
 #. module: account
 #: report:account.invoice:0
@@ -1246,7 +1276,7 @@ msgstr "Viitteenne"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "Tee suoritusmerkintöjä"
+msgstr "Täsmäytä kirjaukset"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1263,7 +1293,7 @@ msgstr "Alkusaldo"
 #. module: account
 #: view:account.invoice:0
 msgid "Reset to Draft"
-msgstr "Palauta luonnokseksi"
+msgstr "Palauta ehdotukseksi"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -1303,7 +1333,7 @@ msgstr "Pankkitilin omistaja"
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Tili saatavat"
+msgstr "Myyntireskontra"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
@@ -1317,27 +1347,29 @@ msgid "You can not use this general account in this journal !"
 msgstr "Et voi käyttää tätä yleistiliä tässä päiväkirjassa!"
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
-msgstr "Saldo ei ole tasan 0"
+msgstr "Tili saldo ei ole nolla (0)"
 
 #. module: account
 #: view:account.tax:0
 msgid "Search Taxes"
-msgstr "Hae veroja"
+msgstr "Etsi verot"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger
 msgid "Account Analytic Cost Ledger"
-msgstr ""
+msgstr "Analyyttisen kirjanpidon kustannuspaikka"
 
 #. module: account
 #: view:account.model:0
 msgid "Create entries"
-msgstr "Luo tapahtumat"
+msgstr "Luo kirjaukset"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -1356,6 +1388,7 @@ msgstr "Laske verot"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
+#: field:account.config.settings,code_digits:0
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
 msgstr "Desimaalien määrä"
@@ -1363,11 +1396,12 @@ msgstr "Desimaalien määrä"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Manual Entries"
-msgstr "Ohita 'luonnos' tila käsinsyötetyissä vienneissä"
+msgstr "Ohita tila \"Ehdotus\" manuaalikirjauksissa."
 
 #. module: account
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total:0
+#: field:account.invoice.report,user_currency_price_total:0
 msgid "Total Without Tax"
 msgstr "Summa ilman veroa"
 
@@ -1388,13 +1422,13 @@ msgstr "Vientien määrä "
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr ""
+msgstr "Valvontanäytön käyttämä väliaikainen taulu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Toimittajan hyvitykset"
+msgstr "Hyvitykset toimittajalta"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -1425,12 +1459,12 @@ msgstr "Arvonalennussiirto"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurring Entries"
-msgstr "Toistuvat viennit"
+msgstr "Toistuvat kirjaukset"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "Malli talouskannalle"
+msgstr "Verokannan malli"
 
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
@@ -1440,7 +1474,7 @@ msgstr "Verokoodien testaus"
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
-msgstr "Suoritetut tapahtumat"
+msgstr "Täsmäyttämättömät tapahtumat"
 
 #. module: account
 #: field:account.journal.view,columns_id:0
@@ -1463,7 +1497,6 @@ msgid "Groups"
 msgstr "Ryhmät"
 
 #. module: account
-#: field:account.invoice,amount_untaxed:0
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
 msgstr "Veroton"
@@ -1476,7 +1509,7 @@ msgstr "Siirry seuraavaan kumppaniin"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Search Bank Statements"
-msgstr "Hae pankkitiliotteita"
+msgstr "Etsi pankkitiliotteita"
 
 #. module: account
 #: sql_constraint:account.model.line:0
@@ -1488,7 +1521,7 @@ msgstr ""
 #: view:account.chart.template:0
 #: field:account.chart.template,property_account_payable:0
 msgid "Payable Account"
-msgstr "Maksettavat tili"
+msgstr "Ostovelat"
 
 #. module: account
 #: field:account.tax,account_paid_id:0
@@ -1528,15 +1561,17 @@ msgstr "Yleinen tili"
 #. module: account
 #: field:res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr "Maksettavat raja"
+msgstr "Ostovelkaraja"
 
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.move.line,invoice:0
+#: code:addons/account/account_invoice.py:1157
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
+#, python-format
 msgid "Invoice"
 msgstr "Lasku"
 
@@ -1549,7 +1584,7 @@ msgstr "Analyyttisiä kuluja laskutettavaksi"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequence"
-msgstr "Kirjanpitovuoden järjestys"
+msgstr "Tilikauden numerointi"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
@@ -1557,9 +1592,10 @@ msgid "Separated Journal Sequences"
 msgstr "Erotellut päiväkirjan sarjat"
 
 #. module: account
+#: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
-msgstr "Vastuuhenkilö"
+msgstr "Vastuullinen"
 
 #. module: account
 #: report:account.overdue:0
@@ -1568,6 +1604,7 @@ msgstr "Välisumma:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
+#: view:report.account_type.sales:0
 msgid "Sales by Account Type"
 msgstr "Myynti tilityypeittäin"
 
@@ -1626,7 +1663,7 @@ msgid "The account is not defined to be reconciled !"
 msgstr "Tiliä ei ole määritelty täsmäytettäväksi !"
 
 #. module: account
-#: field:account.cashbox.line,pieces:0
+#: field:account.journal.cashbox.line,pieces:0
 msgid "Values"
 msgstr "Arvot"
 
@@ -1636,6 +1673,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
+"Jos aktiivinen tili on asetettu tilaan \"epätosi\", se sallii päiväkirjan "
+"kauden piilottamisen poistammatta kuitenkaan sitä."
 
 #. module: account
 #: view:res.partner:0
@@ -1650,7 +1689,7 @@ msgstr "Valinnainen merkintöjen määrä"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
 msgid "Receivables & Payables"
-msgstr "Saatavat & Maksettavat"
+msgstr "Saatavat ja ostovelat"
 
 #. module: account
 #: code:addons/account/account_move_line.py:815
@@ -1661,7 +1700,7 @@ msgstr "Arvonalennuksen merkinnälle täytyy määrittää tili!"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr ""
+msgstr "Kirjanpidon yleinen päiväkirjaraportti"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1677,15 +1716,15 @@ msgstr "Analyyttisen kirjanpidon kartat"
 #: view:account.analytic.line:0
 #: view:analytic.entries.report:0
 msgid "My Entries"
-msgstr "Omat viennit"
+msgstr "Omat kirjaukset"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Customer Ref:"
-msgstr "Asiakkaan Viite:"
+msgstr "Asiakkaan viite:"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:292
+#: code:addons/account/account_cash_statement.py:293
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
 msgstr "Käyttäjällä %s ei ole oikeuksia päiväkirjaan %s !"
@@ -1693,12 +1732,12 @@ msgstr "Käyttäjällä %s ei ole oikeuksia päiväkirjaan %s !"
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr "Nämä jaksot voivat olla päällekkäisiä."
+msgstr "Nämä kaudet voivat olla päällekkäisiä."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr "Luonnostiliote"
+msgstr "Tiliote-ehdotus"
 
 #. module: account
 #: view:account.tax:0
@@ -1738,7 +1777,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Väärä kredit tai debet arvo tiliviennissä"
+msgstr "Väärä kredit- tai debetarvo kirjanpidon kirjauksessa!"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1760,7 +1799,7 @@ msgstr "Määrittele kirjanpitovuosi"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
 msgid "Entries By Line"
-msgstr "Viennit riveittäin"
+msgstr "Kirjaukset riveittäin"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -1770,6 +1809,7 @@ msgstr "tilikoodi"
 #. module: account
 #: field:account.invoice,move_id:0
 #: field:account.invoice,move_name:0
+#: field:account.move.line,move_id:0
 msgid "Journal Entry"
 msgstr "Päiväkirjavienti"
 
@@ -1784,7 +1824,6 @@ msgid "Sub Total"
 msgstr "Välisumma"
 
 #. module: account
-#: view:account.account:0
 #: view:account.treasury.report:0
 #: model:ir.actions.act_window,name:account.action_account_treasury_report_all
 #: model:ir.model,name:account.model_account_treasury_report
@@ -1799,18 +1838,18 @@ msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
 
 #. module: account
 #: view:account.analytic.account:0
+#: field:account.invoice.tax,account_analytic_id:0
 msgid "Analytic account"
 msgstr "Analyyttinen kirjanpito"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:339
+#: code:addons/account/account_bank_statement.py:406
 #, python-format
 msgid "Please verify that an account is defined in the journal."
 msgstr "Vahvista että päiväkirjassa on määriteltynä tili."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
-#: selection:account.move.line,state:0
 msgid "Valid"
 msgstr "Voimassa"
 
@@ -1844,7 +1883,7 @@ msgstr ""
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Comparison between accounting and payment entries"
-msgstr "Vertailu kirjanpito ja maksutapahtumien välillä"
+msgstr "Vertailu kirjanpitovientien ja maksutapahtumien välillä"
 
 #. module: account
 #: view:account.tax:0
@@ -1875,8 +1914,8 @@ msgid ""
 "If set to True then do not accept the entry if the entry date is not into "
 "the period dates"
 msgstr ""
-"Jos asetetaan arvoon tosi (true) ei jakson ulkopuolisia päivämääriä "
-"hyväksytä vientien päivämääriksi."
+"Jos asetettu arvoon Tosi (True), ei hyväksy kirjauspäiviä, jotka eivät kuulu "
+"tilijaksolle."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_pl_report
@@ -1917,12 +1956,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Poista merkintöjen suoritukset"
+msgstr "Peruuta kirjanpitovientien täsmäytykset"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
 msgid "Partial Entry lines"
-msgstr "Osittaiset merkintärivit"
+msgstr "Osittaiset vientirivit"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -1934,7 +1973,7 @@ msgstr "Tilikausi"
 #: view:account.journal.select:0
 #: view:project.account.analytic.line:0
 msgid "Open Entries"
-msgstr "Avoimet merkinnät"
+msgstr "Avoimet kirjaukset"
 
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
@@ -1944,7 +1983,7 @@ msgstr "Täsmäytettävät tilit"
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
 msgid "Import of the statement in the system from an electronic file"
-msgstr ""
+msgstr "Lue tiliote järjestelmään tiedostosta."
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
@@ -1999,7 +2038,7 @@ msgid " Journal"
 msgstr " päiväkirja"
 
 #. module: account
-#: code:addons/account/account.py:1461
+#: code:addons/account/account.py:1478
 #, python-format
 msgid ""
 "There is no default default debit account defined \n"
@@ -2020,7 +2059,7 @@ msgstr ""
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
-msgstr ""
+msgstr "Hae tilikarttamalleista"
 
 #. module: account
 #: view:account.installer:0
@@ -2033,11 +2072,9 @@ msgstr ""
 #. module: account
 #: view:account.account.type:0
 #: field:account.account.type,note:0
-#: view:account.analytic.account:0
 #: report:account.invoice:0
 #: field:account.invoice,name:0
 #: field:account.invoice.line,name:0
-#: field:account.invoice.refund,description:0
 #: report:account.overdue:0
 #: field:account.payment.term,note:0
 #: view:account.tax.code:0
@@ -2050,7 +2087,7 @@ msgid "Description"
 msgstr "Kuvaus"
 
 #. module: account
-#: code:addons/account/account.py:3119
+#: code:addons/account/account.py:3204
 #, python-format
 msgid "ECNJ"
 msgstr ""
@@ -2069,7 +2106,7 @@ msgid "Income Account"
 msgstr "Tulotili"
 
 #. module: account
-#: code:addons/account/account_invoice.py:370
+#: code:addons/account/account_invoice.py:379
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
 msgstr ""
@@ -2084,7 +2121,7 @@ msgstr "Kirjanpidon ominaisuudet"
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
 msgid "Entries Sorted By"
-msgstr "Merkintöjen järjestelyn peruste"
+msgstr "Kiirjausten järjestelyn peruste"
 
 #. module: account
 #: field:account.change.currency,currency_id:0
@@ -2111,8 +2148,10 @@ msgstr "Tuotteen malli"
 #: field:account.common.journal.report,fiscalyear_id:0
 #: field:account.common.partner.report,fiscalyear_id:0
 #: field:account.common.report,fiscalyear_id:0
+#: view:account.config.settings:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
+#: view:account.fiscalyear:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
 #: field:account.general.journal,fiscalyear_id:0
@@ -2121,6 +2160,7 @@ msgstr "Tuotteen malli"
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
+#: field:account.open.closed.fiscalyear,fyear_id:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,fiscalyear_id:0
 #: field:account.partner.ledger,fiscalyear_id:0
@@ -2155,12 +2195,13 @@ msgstr "Tilikausi"
 #: help:accounting.report,fiscalyear_id:0
 #: help:accounting.report,fiscalyear_id_cmp:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Jätä tyhjäksi käyttääksesi kaikkia avoimia tilikausia"
+msgstr "Jätä tyhjäksi kaikille avoimille tilikausille"
 
 #. module: account
+#: view:account.move:0
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr "Tilimerkintä"
+msgstr "Kirjanpitovienti"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2168,14 +2209,12 @@ msgid "Main Sequence"
 msgstr "Pääjakso"
 
 #. module: account
-#: field:account.invoice,payment_term:0
 #: field:account.invoice.report,payment_term:0
 #: view:account.payment.term:0
 #: field:account.payment.term,name:0
 #: view:account.payment.term.line:0
 #: field:account.payment.term.line,payment_id:0
 #: model:ir.model,name:account.model_account_payment_term
-#: field:res.partner,property_payment_term:0
 msgid "Payment Term"
 msgstr "Maksuehto"
 
@@ -2183,7 +2222,7 @@ msgstr "Maksuehto"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "Talouskannat"
+msgstr "Verokanta"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2196,17 +2235,15 @@ msgid "Filters"
 msgstr "Suodattimet"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.bank.statement:0
 #: selection:account.bank.statement,state:0
 #: view:account.fiscalyear:0
 #: selection:account.fiscalyear,state:0
 #: selection:account.invoice,state:0
 #: selection:account.invoice.report,state:0
-#: view:account.open.closed.fiscalyear:0
 #: selection:account.period,state:0
-#: code:addons/account/wizard/account_move_journal.py:106
 #: selection:report.invoice.created,state:0
-#, python-format
 msgid "Open"
 msgstr "Avoin"
 
@@ -2214,7 +2251,7 @@ msgstr "Avoin"
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
-msgstr "Laskun luonnostila"
+msgstr "Laskuehdotus"
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -2236,7 +2273,7 @@ msgid "Account Tax Code"
 msgstr "Tilin verokoodi"
 
 #. module: account
-#: code:addons/account/account_invoice.py:572
+#: code:addons/account/account_invoice.py:581
 #, python-format
 msgid ""
 "Can't find any account journal of %s type for this company.\n"
@@ -2254,7 +2291,7 @@ msgstr "Peruskoodi"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr ""
+msgstr "Antaa esitysjärjestyksen näytettäessä laskun verolistan"
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -2284,7 +2321,7 @@ msgstr "Debettien keskitys"
 #: view:account.invoice.confirm:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr "Vahvista luonnoslaskut"
+msgstr "Vahvista laskuehdotukset"
 
 #. module: account
 #: field:account.entries.report,day:0
@@ -2303,10 +2340,10 @@ msgstr "Uudistettavat tilit"
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr "Tilimallin merkinnät"
+msgstr "Tilimallin kirjaukset"
 
 #. module: account
-#: code:addons/account/account.py:3117
+#: code:addons/account/account.py:3202
 #, python-format
 msgid "EXJ"
 msgstr "EXJ"
@@ -2317,7 +2354,6 @@ msgid "Supplier Taxes"
 msgstr "Toimittajan verot"
 
 #. module: account
-#: help:account.invoice,date_due:0
 #: help:account.invoice,payment_term:0
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
@@ -2364,15 +2400,19 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Virhe ! Et voi luoda rekursiivisia luokkia."
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
+#: model:account.account.type,name:account.conf_account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
+#: report:account.journal.period.print.sale.purchase:0
 #: field:account.move.line,account_tax_id:0
+#: view:account.tax:0
+#: model:ir.model,name:account.model_account_tax
 msgid "Tax"
 msgstr "Vero"
 
 #. module: account
 #: view:account.analytic.account:0
+#: view:account.analytic.line:0
 #: field:account.bank.statement.line,analytic_account_id:0
 #: field:account.entries.report,analytic_account_id:0
 #: field:account.invoice.line,account_analytic_id:0
@@ -2396,13 +2436,21 @@ msgid "Accounts"
 msgstr "Tilit"
 
 #. module: account
-#: code:addons/account/account_invoice.py:369
+#: code:addons/account/account.py:3541
+#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_invoice.py:507
+#: code:addons/account/account_invoice.py:609
+#: code:addons/account/account_invoice.py:624
+#: code:addons/account/account_invoice.py:632
+#: code:addons/account/account_invoice.py:657
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid "Configuration Error!"
 msgstr "Konfiguraatio virhe!"
 
 #. module: account
 #: field:account.invoice.report,price_average:0
+#: field:account.invoice.report,user_currency_price_average:0
 msgid "Average Price"
 msgstr "Keskimääräinen hinta"
 
@@ -2426,7 +2474,6 @@ msgid "Label"
 msgstr "Otsikko"
 
 #. module: account
-#: view:account.tax:0
 #: view:res.partner.bank:0
 msgid "Accounting Information"
 msgstr "Kirjanpitotiedot"
@@ -2441,7 +2488,7 @@ msgstr "Erikoislaskenta"
 #: view:account.move.bank.reconcile:0
 #: model:ir.actions.act_window,name:account.action_account_bank_reconcile_tree
 msgid "Bank reconciliation"
-msgstr "Pankkitapahtumien suoritusmerkinnät"
+msgstr "Pankkitapahtumien täsmäytys"
 
 #. module: account
 #: report:account.invoice:0
@@ -2470,7 +2517,7 @@ msgstr "Automaattinen täsmäytys"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "Maksettu/Suoritettu"
+msgstr "Maksettu/Täsmäytetty"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -2479,7 +2526,6 @@ msgid "Refund Base Code"
 msgstr "Hyvityksen peruskoodi"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_bank_statement_periodic_tree
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Bank Statements"
@@ -2491,7 +2537,6 @@ msgid "True"
 msgstr "Tosi"
 
 #. module: account
-#: view:account.bank.statement:0
 #: view:account.common.report:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -2503,7 +2548,7 @@ msgstr "Päivämäärät"
 #: field:account.tax,parent_id:0
 #: field:account.tax.template,parent_id:0
 msgid "Parent Tax Account"
-msgstr "Ylin verotili"
+msgstr "Ylätason verotili"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -2517,13 +2562,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "Tase kumppanien erääntyvistä"
+msgstr "Kumppanien erääntymisraportti"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries"
-msgstr "Tiliviennit"
+msgstr "Kirjaukset"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -2559,25 +2604,24 @@ msgid "This wizard will create recurring accounting entries"
 msgstr "Velho luo toistuvat kirjanpitoviennit"
 
 #. module: account
-#: code:addons/account/account.py:1321
+#: code:addons/account/account.py:1329
 #, python-format
 msgid "No sequence defined on the journal !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2268
-#: code:addons/account/account_invoice.py:688
-#: code:addons/account/account_move_line.py:173
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_invoice.py:775
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Päiväkirjaan '%s' täytyy määritellä analyyttinen päiväkirja!"
 
 #. module: account
-#: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "Varokoodit"
+msgstr "Verokoodit"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -2614,7 +2658,7 @@ msgid "Payment entries are the second input of the reconciliation."
 msgstr ""
 
 #. module: account
-#: selection:account.print.journal,sort_selection:0
+#: report:account.journal.period.print:0
 msgid "Reference Number"
 msgstr "Viitenumero"
 
@@ -2670,7 +2714,7 @@ msgstr "Peruskoodin määrä"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr "Oletus myyntivero"
+msgstr "Oletusmyyntivero"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -2688,7 +2732,7 @@ msgstr "Taloudellinen kirjanpito"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
 msgid "Profit And Loss"
-msgstr "Voitto ja tappio"
+msgstr "Tulos"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -2702,7 +2746,7 @@ msgstr "Voitto ja tappio"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "Talouskanta"
+msgstr "Verokanta"
 
 #. module: account
 #: help:account.partner.ledger,initial_balance:0
@@ -2716,7 +2760,7 @@ msgstr ""
 #: view:account.analytic.line:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 msgid "Analytic Entries"
-msgstr "Analyyttiset merkinnät"
+msgstr "Analyyttiset kirjaukset"
 
 #. module: account
 #: code:addons/account/account.py:962
@@ -2763,7 +2807,7 @@ msgstr "Laskutusvaluutta"
 #. module: account
 #: field:account.payment.term,line_ids:0
 msgid "Terms"
-msgstr "Termit"
+msgstr "Ehdot"
 
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
@@ -2809,7 +2853,7 @@ msgstr "Rivinimi"
 #. module: account
 #: view:account.fiscalyear:0
 msgid "Search Fiscalyear"
-msgstr "Hae kirjanpitovuosi"
+msgstr "Hae tilikausi"
 
 #. module: account
 #: selection:account.tax,applicable_type:0
@@ -2847,8 +2891,8 @@ msgid "View"
 msgstr "Näkymä"
 
 #. module: account
-#: code:addons/account/account.py:3363
-#: code:addons/account/account_bank.py:90
+#: code:addons/account/account.py:3460
+#: code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
 msgstr "BNK"
@@ -2889,6 +2933,7 @@ msgid "Gives the sequence order to journal column."
 msgstr ""
 
 #. module: account
+#: report:account.journal.period.print.sale.purchase:0
 #: view:account.tax.template:0
 msgid "Tax Declaration"
 msgstr "Veron kuvaus"
@@ -2938,6 +2983,15 @@ msgid ""
 " 'Unreconciled' will copy only the journal items that were unreconciled on "
 "the first day of the new fiscal year."
 msgstr ""
+"Aseta menetelmä, jolla luodaan tilinpäätösviennit kaikille tämän tyyppisille "
+"tileille.\n"
+"\n"
+" \"Ei mitään\" tarkoittaa että tilinpäätöksessä ei tehdä mitään.\n"
+" \"Tasapaino\" 'käytetään yleensä käteistileille.\n"
+" \"Kaikki\" kopioi jokaisen olemassa olevan päiväkirjaviennin vuodelta, myös "
+"täsmäytetyt.\n"
+" \"Täsmäyttämätön\" kopioi vain päiväkirjaviennit, joita ei ole täsmäytetty "
+"uuden tilikauden ensimmäisenä päivänä."
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -2946,7 +3000,6 @@ msgid "No End of year journal defined for the fiscal year"
 msgstr "Vuodenloppu päiväkirjaa ei ole määritelty kirjanpitovuodelle"
 
 #. module: account
-#: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
 msgstr "Jätä tyhjäksi jos haluat käyttää kulutiliä"
@@ -2998,6 +3051,7 @@ msgstr "Ennakkomaksurivit"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
 #: view:account.journal:0
 #: selection:account.journal,type:0
 #: view:account.model:0
@@ -3011,7 +3065,7 @@ msgstr "Osto"
 #: view:account.installer:0
 #: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
-msgstr "Kirjanpitoohjelmiston konfiguraatio"
+msgstr "Kirjanpitoohjelmiston konfigurointi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -3023,10 +3077,10 @@ msgstr "Kirjanpidon työpöytä"
 #: field:account.bank.statement,balance_start:0
 #: field:account.treasury.report,starting_balance:0
 msgid "Starting Balance"
-msgstr "Aloitus balanssi"
+msgstr "Alkusaldo"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1332
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "No Partner Defined !"
 msgstr "Ei kumppania määriteltynä!"
@@ -3066,7 +3120,7 @@ msgstr ""
 #: selection:account.subscription,state:0
 #: selection:report.invoice.created,state:0
 msgid "Draft"
-msgstr "Luonnos"
+msgstr "Ehdotus"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
@@ -3083,7 +3137,7 @@ msgstr "lasku ei ole tulostettavissa"
 #: report:account.vat.declaration:0
 #: field:account.vat.declaration,chart_tax_id:0
 msgid "Chart of Tax"
-msgstr "Verotaulukko"
+msgstr "Verotilit"
 
 #. module: account
 #: view:account.journal:0
@@ -3098,7 +3152,6 @@ msgstr "Odottava lasku"
 #. module: account
 #: view:account.invoice.report:0
 #: selection:account.subscription,period_type:0
-#: view:analytic.entries.report:0
 msgid "year"
 msgstr "Vuosi"
 
@@ -3108,6 +3161,8 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
+"Kaikki valitut päiväkirjaviennit vahvistetaan ja kirjataan. Tämä tarkoittaa "
+"sitä, että et voi muuttaa enää niiden kirjanpitokenttiä."
 
 #. module: account
 #: code:addons/account/invoice.py:370
@@ -3130,7 +3185,7 @@ msgstr "Siirrot"
 #: view:account.move.line:0
 #: selection:account.move.line,state:0
 msgid "Unbalanced"
-msgstr "Epätasapainossa"
+msgstr "Saldoero"
 
 #. module: account
 #: view:account.chart:0
@@ -3160,9 +3215,10 @@ msgstr "Verotapauksen nimi"
 
 #. module: account
 #: report:account.invoice:0
+#: view:account.invoice:0
 #: model:process.node,name:account.process_node_draftinvoices0
 msgid "Draft Invoice"
-msgstr "Luonnoslasku"
+msgstr "Laskuehdotus"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -3237,9 +3293,13 @@ msgid "VAT :"
 msgstr "ALV:"
 
 #. module: account
+#: report:account.account.balance:0
 #: report:account.central.journal:0
+#: view:account.config.settings:0
+#: report:account.general.journal:0
 #: report:account.general.ledger:0
-#: field:account.installer,charts:0
+#: report:account.general.ledger_landscape:0
+#: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -3277,8 +3337,10 @@ msgstr "(Jos et valitse tilikautta, käytetään kaikkia avoimia tilikausia)"
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
 #: report:account.analytic.account.journal:0
+#: view:account.analytic.line:0
 #: selection:account.balance.report,filter:0
 #: field:account.bank.statement,date:0
+#: field:account.bank.statement.line,date:0
 #: selection:account.central.journal,filter:0
 #: selection:account.common.account.report,filter:0
 #: selection:account.common.journal.report,filter:0
@@ -3289,6 +3351,7 @@ msgstr "(Jos et valitse tilikautta, käytetään kaikkia avoimia tilikausia)"
 #: selection:account.general.journal,filter:0
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
+#: field:account.invoice.refund,date:0
 #: field:account.invoice.report,date:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
@@ -3302,10 +3365,10 @@ msgstr "(Jos et valitse tilikautta, käytetään kaikkia avoimia tilikausia)"
 #: selection:account.print.journal,sort_selection:0
 #: selection:account.report.general.ledger,filter:0
 #: selection:account.report.general.ledger,sortby:0
-#: field:account.subscription.generate,date:0
 #: field:account.subscription.line,date:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: xsl:account.transfer:0
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
@@ -3320,7 +3383,7 @@ msgid "Unreconcile"
 msgstr "Poista suoritukset"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:84
+#: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account"
 msgstr "Päiväkirjassa täyttyy olla oletus kredit- ja debet-tilit."
@@ -3331,7 +3394,7 @@ msgid "Chart of Accounts Template"
 msgstr "Tilikarttamalli"
 
 #. module: account
-#: code:addons/account/account.py:2280
+#: code:addons/account/account.py:2358
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -3340,7 +3403,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:837
+#: code:addons/account/account_move_line.py:846
 #, python-format
 msgid "Some entries are already reconciled !"
 msgstr "Joillakin merkinnöillä on jo maksusuoritus!"
@@ -3431,7 +3494,7 @@ msgstr "Hae analyyttisiä rivejä"
 #. module: account
 #: field:res.partner,property_account_payable:0
 msgid "Account Payable"
-msgstr "Tili maksettavat"
+msgstr "Ostovelat"
 
 #. module: account
 #: constraint:account.move:0
@@ -3449,7 +3512,7 @@ msgstr "Maksumääräys"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Valitse tämä jos haluat käyttäjän tekevän suoritusmerkinnät tällä tilillä."
+"Valitse tämä jos haluat käyttäjän täsmäyttävän tämän tilin kirjauksia."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -3468,7 +3531,7 @@ msgid "Analytic Items"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
+#: code:addons/account/account_move_line.py:1168
 #, python-format
 msgid "Unable to change tax !"
 msgstr "Veroa ei voida muuttaa!"
@@ -3479,7 +3542,7 @@ msgid "#Entries"
 msgstr "Vientien määrä"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1429
+#: code:addons/account/account_invoice.py:1431
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
@@ -3513,7 +3576,6 @@ msgstr "Mäppäys"
 #: field:account.account,name:0
 #: field:account.account.template,name:0
 #: report:account.analytic.account.inverted.balance:0
-#: field:account.bank.statement,name:0
 #: field:account.chart.template,name:0
 #: field:account.model.line,name:0
 #: field:account.move.line,name:0
@@ -3525,12 +3587,12 @@ msgstr "Nimi"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "Kirjanpidon koetaseen aikaraportti"
 
 #. module: account
 #: field:account.move.line,date:0
 msgid "Effective date"
-msgstr "Tehokas päiväys"
+msgstr "Kirjauspäivä"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -3541,11 +3603,14 @@ msgstr "Standardi koodaus"
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr ""
+msgstr "Päiväkirja analyyttisille kirjauksille"
 
 #. module: account
-#: model:ir.actions.todo.category,name:account.category_accounting_configuration
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_account_config
+#: model:ir.ui.menu,name:account.menu_board_account
 #: model:ir.ui.menu,name:account.menu_finance
+#: model:ir.ui.menu,name:account.menu_finance_reporting
 #: model:process.node,name:account.process_node_accountingentries0
 #: model:process.node,name:account.process_node_supplieraccountingentries0
 #: view:product.product:0
@@ -3585,16 +3650,14 @@ msgstr ""
 
 #. module: account
 #: view:account.installer:0
-#: view:wizard.multi.charts.accounts:0
 msgid "title"
 msgstr "otsikko"
 
 #. module: account
 #: view:account.invoice:0
-#: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
-msgstr "Aseta luonnokseksi"
+msgstr "Aseta ehdotukseksi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
@@ -3637,7 +3700,7 @@ msgstr "Keskimääräinen kurssi"
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Laskun suoritusmerkinnät tulisi poistaa jos se halutaan avata)"
+msgstr "(Avattavan laskun pitää olla täsmäyttämätön)"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -3652,9 +3715,10 @@ msgid "Tax Name"
 msgstr "Veronimi"
 
 #. module: account
+#: view:account.config.settings:0
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
-msgstr "Konfiguraatio"
+msgstr "Konfigurointi"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -3691,7 +3755,7 @@ msgstr "Hae veropohjia"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr "Viennit luonnostilassa"
+msgstr "Kirjausehdotukset"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -3717,12 +3781,11 @@ msgstr "Tilityyppi"
 
 #. module: account
 #: report:account.account.balance:0
-#: view:account.balance.report:0
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr ""
+msgstr "Koetase"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -3788,7 +3851,6 @@ msgid "Reference UoM"
 msgstr "Viitemittayksikkö"
 
 #. module: account
-#: field:account.account,note:0
 #: field:account.account.template,note:0
 msgid "Note"
 msgstr "Huomautus"
@@ -3801,6 +3863,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0
 #: report:account.overdue:0
+#: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Maksettu"
 
@@ -3825,7 +3888,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:93
+#: code:addons/account/account_analytic_line.py:91
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Tälle tuotteelle ei ole määritetty kulutiliä: \"%s\" (id:%d)"
@@ -3850,7 +3913,6 @@ msgstr "Veron kuvaus"
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -3861,7 +3923,7 @@ msgstr "Veron kuvaus"
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Kaikki viedyt merkinnät"
+msgstr "Kaikki kirjatut viennit."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:367
@@ -3895,7 +3957,7 @@ msgid "Default taxes"
 msgstr "Oletusverot"
 
 #. module: account
-#: code:addons/account/account_invoice.py:88
+#: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "Free Reference"
 msgstr "Avoin viite"
@@ -3954,7 +4016,7 @@ msgid "Bank statements are entered in the system."
 msgstr "Pankin tiliotteet syötetään järjestelmään."
 
 #. module: account
-#: code:addons/account/wizard/account_reconcile.py:133
+#: code:addons/account/wizard/account_reconcile.py:122
 #, python-format
 msgid "Reconcile Writeoff"
 msgstr ""
@@ -3971,7 +4033,6 @@ msgstr "Käyttäjätilit tyypin mukaan"
 
 #. module: account
 #: view:account.bank.statement:0
-#: field:account.bank.statement,balance_end_cash:0
 msgid "Closing Balance"
 msgstr "Loppusaldo"
 
@@ -4021,7 +4082,7 @@ msgstr "Pura tapahtumien täsmäytys"
 #. module: account
 #: view:account.use.model:0
 msgid "Create Entries From Models"
-msgstr "Luo merkinnät malleista"
+msgstr "Luo  viennit malleista"
 
 #. module: account
 #: field:account.account,reconcile:0
@@ -4047,7 +4108,7 @@ msgstr ""
 #: field:account.tax,price_include:0
 #: field:account.tax.template,price_include:0
 msgid "Tax Included in Price"
-msgstr "Vero lisätty hintaan"
+msgstr "Verollisin hinnoin"
 
 #. module: account
 #: constraint:account.account:0
@@ -4065,7 +4126,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
-#: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Recurring Models"
 msgstr "Toistuvat mallit"
 
@@ -4075,20 +4135,20 @@ msgid "4"
 msgstr "4"
 
 #. module: account
-#: view:account.invoice:0
+#: xsl:account.transfer:0
 msgid "Change"
 msgstr "Muuta"
 
 #. module: account
-#: code:addons/account/account.py:1431
-#: code:addons/account/account.py:1460
-#: code:addons/account/account.py:1467
-#: code:addons/account/account_invoice.py:920
-#: code:addons/account/account_move_line.py:1104
-#: code:addons/account/wizard/account_automatic_reconcile.py:152
-#: code:addons/account/wizard/account_fiscalyear_close.py:73
-#: code:addons/account/wizard/account_fiscalyear_close.py:83
-#: code:addons/account/wizard/account_fiscalyear_close.py:86
+#: code:addons/account/account.py:1448
+#: code:addons/account/account.py:1477
+#: code:addons/account/account.py:1484
+#: code:addons/account/account_invoice.py:931
+#: code:addons/account/account_move_line.py:1119
+#: code:addons/account/wizard/account_automatic_reconcile.py:148
+#: code:addons/account/wizard/account_fiscalyear_close.py:88
+#: code:addons/account/wizard/account_fiscalyear_close.py:99
+#: code:addons/account/wizard/account_fiscalyear_close.py:102
 #: code:addons/account/wizard/account_move_journal.py:165
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -4112,12 +4172,13 @@ msgid "Consider reconciled entries"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.actions.act_window,name:account.action_validate_account_move_line
 #: model:ir.ui.menu,name:account.menu_validate_account_moves
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Kirjaa päiväkirjaviennit"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4154,13 +4215,14 @@ msgstr "Valitse verokartta"
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr "Tilikartoitus"
+msgstr "Tiliin kohdistus"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
+#: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:337
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Customer"
 msgstr "Asiakas"
@@ -4182,7 +4244,7 @@ msgid "You must define an analytic journal of type '%s' !"
 msgstr "Sinun on määriteltävä analyyttinen päiväkirja tyyppiä '%s'!"
 
 #. module: account
-#: code:addons/account/account.py:1567
+#: code:addons/account/account.py:1584
 #, python-format
 msgid ""
 "Couldn't create move with currency different from the secondary currency of "
@@ -4214,8 +4276,7 @@ msgid "Account Balance -"
 msgstr "Tilin saldo -"
 
 #. module: account
-#: code:addons/account/invoice.py:997
-#, python-format
+#: view:account.invoice:0
 msgid "Invoice "
 msgstr "Lasku "
 
@@ -4242,6 +4303,7 @@ msgstr "Uusi tilikausi"
 
 #. module: account
 #: view:account.invoice:0
+#: view:account.tax:0
 #: view:account.tax.template:0
 #: selection:account.vat.declaration,based_on:0
 #: model:ir.actions.act_window,name:account.act_res_partner_2_account_invoice_opened
@@ -4253,7 +4315,7 @@ msgid "Invoices"
 msgstr "Laskut"
 
 #. module: account
-#: code:addons/account/account_invoice.py:828
+#: code:addons/account/account_invoice.py:839
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -4318,7 +4380,7 @@ msgstr "Pankkisuorituksiin käytettävä pankkitiliote"
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
 msgid "Draft invoices are validated. "
-msgstr "Luonnoslaskut on tarkistettu. "
+msgstr "Laskuehdotukset on vahvistettu. "
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4332,27 +4394,19 @@ msgid "Tax Application"
 msgstr "Verosovellus"
 
 #. module: account
+#: view:account.bank.statement:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: code:addons/account/wizard/account_move_journal.py:153
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
-#: model:ir.actions.act_window,name:account.action_account_manual_reconcile
+#: model:ir.actions.act_window,name:account.action_account_items
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
-#: model:ir.actions.act_window,name:account.action_account_moves_bank
-#: model:ir.actions.act_window,name:account.action_account_moves_purchase
-#: model:ir.actions.act_window,name:account.action_account_moves_sale
-#: model:ir.actions.act_window,name:account.action_move_line_search
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.actions.act_window,name:account.action_move_line_tree1
+#: model:ir.actions.act_window,name:account.action_tax_code_items
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
-#: model:ir.ui.menu,name:account.menu_action_account_moves_bank
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_purchase
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
-#, python-format
 msgid "Journal Items"
 msgstr "Päiväkirjan tapahtumat"
 
@@ -4410,7 +4464,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close:0
 msgid "Generate Fiscal Year Opening Entries"
-msgstr "Luo merkinnät tilikauden avaukselle"
+msgstr "Luo avausviennit tilikaudelle"
 
 #. module: account
 #: field:account.journal,group_invoice_lines:0
@@ -4418,8 +4472,7 @@ msgid "Group Invoice Lines"
 msgstr "Ryhmän laskurivit"
 
 #. module: account
-#: view:account.invoice.cancel:0
-#: view:account.invoice.confirm:0
+#: view:account.automatic.reconcile:0
 msgid "Close"
 msgstr "Sulje"
 
@@ -4429,7 +4482,6 @@ msgid "Moves"
 msgstr "Siirrot"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
 msgstr ""
@@ -4445,7 +4497,7 @@ msgid "Check Date not in the Period"
 msgstr "Tarkistuspäivä ei jaksolla"
 
 #. module: account
-#: code:addons/account/account.py:1351
+#: code:addons/account/account.py:1361
 #, python-format
 msgid ""
 "You can not modify a posted entry of this journal !\n"
@@ -4467,7 +4519,7 @@ msgid "Child Tax Accounts"
 msgstr "Alemmat verotilit"
 
 #. module: account
-#: code:addons/account/account.py:1090
+#: code:addons/account/account.py:1097
 #, python-format
 msgid "Start period should be smaller then End period"
 msgstr "Alkuperiodin tulee olla aikaisempi kuin loppuperiodin"
@@ -4499,7 +4551,6 @@ msgstr "Analyyttinen saldo -"
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.journal,target_move:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
@@ -4533,7 +4584,7 @@ msgstr ""
 #. module: account
 #: field:account.subscription.line,move_id:0
 msgid "Entry"
-msgstr "Merkintä"
+msgstr "Kirjaus"
 
 #. module: account
 #: field:account.tax,python_compute_inv:0
@@ -4542,6 +4593,7 @@ msgid "Python Code (reverse)"
 msgstr "Python -koodi (vastakohta)"
 
 #. module: account
+#: field:account.invoice,payment_term:0
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
@@ -4564,7 +4616,9 @@ msgstr ""
 #: field:account.invoice.report,year:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,year:0
+#: view:report.account.sales:0
 #: field:report.account.sales,name:0
+#: view:report.account_type.sales:0
 #: field:report.account_type.sales,name:0
 msgid "Year"
 msgstr "Vuosi"
@@ -4580,7 +4634,7 @@ msgid "Line 1:"
 msgstr "Rivi 1:"
 
 #. module: account
-#: code:addons/account/account.py:1307
+#: code:addons/account/account.py:1315
 #, python-format
 msgid "Integrity Error !"
 msgstr "Eheysvirhe!"
@@ -4607,6 +4661,7 @@ msgid "Description on invoices"
 msgstr "Laskujen kuvaus"
 
 #. module: account
+#: view:account.move.line:0
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
 msgstr "Seuraava täsmäytettävä kumppani"
@@ -4624,9 +4679,10 @@ msgstr "Suoritusajon tulos"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
+#: model:ir.actions.act_window,name:account.action_account_report_bs
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 msgid "Balance Sheet"
-msgstr "Tilinpäätös"
+msgstr "Tase"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -4636,10 +4692,9 @@ msgstr "Kirjanpitoraportit"
 #. module: account
 #: field:account.move,line_id:0
 #: view:analytic.entries.report:0
-#: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
 msgid "Entries"
-msgstr "Merkinnät"
+msgstr "Kirjaukset"
 
 #. module: account
 #: view:account.entries.report:0
@@ -4665,6 +4720,7 @@ msgstr "Suorita koodi (jos tyyppi=koodi)"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
 #: view:account.journal:0
 #: selection:account.journal,type:0
 #: view:account.model:0
@@ -4678,14 +4734,18 @@ msgstr "Myynti"
 #: view:account.analytic.line:0
 #: field:account.bank.statement.line,amount:0
 #: report:account.invoice:0
+#: field:account.invoice.line,price_subtotal:0
 #: field:account.invoice.tax,amount:0
 #: view:account.move:0
 #: field:account.move,amount:0
 #: view:account.move.line:0
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
+#: xsl:account.transfer:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,amount:0
+#: field:cash.box.in,amount:0
+#: field:cash.box.out,amount:0
 msgid "Amount"
 msgstr "Summa"
 
@@ -4693,7 +4753,7 @@ msgstr "Summa"
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
 #, python-format
 msgid "End of Fiscal Year Entry"
-msgstr "Tilikauden päättymisen merkintä"
+msgstr "Tilinpäätöskirjaus"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_customerinvoice0
@@ -4716,7 +4776,7 @@ msgstr ""
 #: field:account.tax,child_depend:0
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr "Vero alemmille"
+msgstr "Vero alatileille"
 
 #. module: account
 #: code:addons/account/account.py:2067
@@ -4728,12 +4788,12 @@ msgstr "Ajanjaksoa ei löydy!"
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr "Salli merkintöjen poisto"
+msgstr "Salli peruutusviennit"
 
 #. module: account
 #: field:account.tax.code,sign:0
 msgid "Coefficent for parent"
-msgstr ""
+msgstr "Kerroin ylätasolle"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -4804,7 +4864,7 @@ msgstr "Pankkipäiväkirja "
 #. module: account
 #: view:account.journal:0
 msgid "Entry Controls"
-msgstr "Merkintöjen hallinta"
+msgstr "Kirjausten hallinta"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -4843,6 +4903,7 @@ msgid "Communication"
 msgstr "Viestintä"
 
 #. module: account
+#: view:account.config.settings:0
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analyyttinen tilikirjanpito"
@@ -4855,9 +4916,10 @@ msgid "Customer Refund"
 msgstr "Asiakashyvitys"
 
 #. module: account
-#: view:account.account:0
 #: field:account.account,tax_ids:0
+#: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
+#: view:account.chart.template:0
 msgid "Default Taxes"
 msgstr "Oletusverot"
 
@@ -4877,16 +4939,16 @@ msgstr "Laskuraportti viimeisimmän 15 päivän ajalta"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Päätösmerkintöjen päiväkirja"
+msgstr "Tilinpäätöskirjausten päiväkirja"
 
 #. module: account
-#: code:addons/account/account.py:3446
+#: code:addons/account/account.py:3463
 #: code:addons/account/account_bank_statement.py:338
-#: code:addons/account/account_invoice.py:427
-#: code:addons/account/account_invoice.py:527
-#: code:addons/account/account_invoice.py:542
-#: code:addons/account/account_invoice.py:550
-#: code:addons/account/account_invoice.py:572
+#: code:addons/account/account_invoice.py:436
+#: code:addons/account/account_invoice.py:536
+#: code:addons/account/account_invoice.py:551
+#: code:addons/account/account_invoice.py:559
+#: code:addons/account/account_invoice.py:581
 #: code:addons/account/wizard/account_move_journal.py:63
 #, python-format
 msgid "Configuration Error !"
@@ -4917,7 +4979,7 @@ msgstr "Tuotteen määrä"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr ""
+msgstr "Kirjaamatta"
 
 #. module: account
 #: view:account.change.currency:0
@@ -4930,7 +4992,7 @@ msgstr "Vaihda valuuttaa"
 #: model:process.node,note:account.process_node_accountingentries0
 #: model:process.node,note:account.process_node_supplieraccountingentries0
 msgid "Accounting entries."
-msgstr ""
+msgstr "Kirjaukset"
 
 #. module: account
 #: view:account.invoice:0
@@ -4962,7 +5024,7 @@ msgid "Sort By"
 msgstr "Lajittelu"
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1485
 #, python-format
 msgid ""
 "There is no default default credit account defined \n"
@@ -5036,7 +5098,7 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "Talouskannan malli"
+msgstr "Verokannan malli"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -5110,10 +5172,10 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Opening Entries"
-msgstr "Luo avausviennit"
+msgstr "Luo avauskirjaukset"
 
 #. module: account
-#: code:addons/account/account_move_line.py:759
+#: code:addons/account/account_move_line.py:775
 #, python-format
 msgid "Already Reconciled!"
 msgstr "On jo täsmäytetty!"
@@ -5137,10 +5199,11 @@ msgstr "Luontipäivä"
 
 #. module: account
 #: view:account.analytic.journal:0
+#: field:account.analytic.journal.report,analytic_account_journal_id:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr ""
+msgstr "Analyyttiset päiväkirjat"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -5149,7 +5212,7 @@ msgstr "Alemmat tilit"
 
 #. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:857
+#: code:addons/account/account_move_line.py:879
 #, python-format
 msgid "Write-Off"
 msgstr "Arvonalennus"
@@ -5166,9 +5229,10 @@ msgstr "account.analytic.line.extended"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
+#: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:339
+#: code:addons/account/account_invoice.py:390
 #, python-format
 msgid "Supplier"
 msgstr "Toimittaja"
@@ -5184,6 +5248,7 @@ msgstr "Maaliskuu"
 
 #. module: account
 #: view:account.account.template:0
+#: view:account.chart.template:0
 msgid "Account Template"
 msgstr "Tilimalli"
 
@@ -5209,10 +5274,12 @@ msgstr "Arvostus"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:301
+#: code:addons/account/report/account_partner_ledger.py:276
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr "Saatavat ja maksettavat tilit"
+msgstr "Saatavat ja ostovelat -tilit"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -5231,7 +5298,8 @@ msgid "Max Qty:"
 msgstr "Enimmäismäärä"
 
 #. module: account
-#: view:account.invoice.refund:0
+#: view:account.invoice:0
+#: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
 msgstr "Hyvityslasku"
 
@@ -5311,8 +5379,8 @@ msgid "Filter by"
 msgstr "Suodata"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1155
-#: code:addons/account/account_move_line.py:1238
+#: code:addons/account/account_move_line.py:1170
+#: code:addons/account/account_move_line.py:1253
 #, python-format
 msgid "You can not use an inactive account!"
 msgstr "Et voi käyttää käytöstä poistettua tiliä!"
@@ -5327,7 +5395,7 @@ msgstr "Merkinnät eivät ole samassa tilissä tai ne on jo suoritettu! "
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Laskuverotili"
+msgstr "Laskun verotili"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -5365,15 +5433,15 @@ msgid "7"
 msgstr "7"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:402
-#: code:addons/account/account_invoice.py:392
+#: code:addons/account/account_bank_statement.py:403
+#: code:addons/account/account_invoice.py:401
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid action !"
 msgstr "Virheellinen toiminto!"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:102
+#: code:addons/account/wizard/account_move_journal.py:103
 #, python-format
 msgid "Period: %s"
 msgstr "Jakso: %s"
@@ -5381,7 +5449,7 @@ msgstr "Jakso: %s"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr ""
+msgstr "Verokannan malli"
 
 #. module: account
 #: help:account.tax,name:0
@@ -5399,7 +5467,7 @@ msgstr "Tulostuspäivä"
 #: selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "None"
-msgstr "Ei mikään"
+msgstr "Ei mitään"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -5428,7 +5496,7 @@ msgid "Multipication factor for Base code"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/account_report_common.py:150
+#: code:addons/account/wizard/account_report_common.py:151
 #, python-format
 msgid "not implemented"
 msgstr "ei toteutettu"
@@ -5449,14 +5517,14 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "Tilikausiposition huomautus :"
+msgstr "Verokanta, huomautus:"
 
 #. module: account
 #: view:analytic.entries.report:0
 #: model:ir.actions.act_window,name:account.action_analytic_entries_report
 #: model:ir.ui.menu,name:account.menu_action_analytic_entries_report
 msgid "Analytic Entries Analysis"
-msgstr ""
+msgstr "Analyyttisten kirjausten analyysi"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -5466,7 +5534,7 @@ msgstr "Mennyt"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Entry"
-msgstr "Analyyttinen merkintä"
+msgstr "Analyyttinen kirjaus"
 
 #. module: account
 #: view:res.company:0
@@ -5511,6 +5579,8 @@ msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
 msgstr ""
+"Heti kun täsmäytys on tehty, niin laskun tilaksi tulee \"Valmis\" (esim. "
+"maksettu)."
 
 #. module: account
 #: code:addons/account/invoice.py:997
@@ -5530,6 +5600,7 @@ msgid "Latest Reconciliation Date"
 msgstr "Viimeisin täsmäytyspäivä"
 
 #. module: account
+#: view:account.analytic.line:0
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Analyyttinen rivi"
@@ -5545,10 +5616,9 @@ msgid "Create an Account based on this template"
 msgstr "Luo tili tämän mallin pohjalta"
 
 #. module: account
-#: view:account.account.type:0
 #: view:account.tax.code:0
 msgid "Reporting Configuration"
-msgstr "Raportoinnin konfiguraatio"
+msgstr "Raportoinnin konfigurointi"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -5588,7 +5658,7 @@ msgstr ""
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
 msgid "Select a fiscal year to close"
-msgstr "Valitse suljettava kirjanpitovuosi"
+msgstr "Valitse suljettava tilikausi"
 
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
@@ -5607,6 +5677,7 @@ msgstr "Lisäsopimustiedot"
 
 #. module: account
 #: field:account.chart,fiscalyear:0
+#: view:account.fiscalyear:0
 msgid "Fiscal year"
 msgstr "Tilikausi"
 
@@ -5616,7 +5687,6 @@ msgid "Partial Reconcile Entries"
 msgstr "Vientien osittainen täsmäytys"
 
 #. module: account
-#: view:account.addtmpl.wizard:0
 #: view:account.aged.trial.balance:0
 #: view:account.analytic.balance:0
 #: view:account.analytic.chart:0
@@ -5625,35 +5695,33 @@ msgstr "Vientien osittainen täsmäytys"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.automatic.reconcile:0
-#: view:account.bank.statement:0
 #: view:account.change.currency:0
 #: view:account.chart:0
 #: view:account.common.report:0
+#: view:account.config.settings:0
 #: view:account.fiscalyear.close:0
 #: view:account.fiscalyear.close.state:0
-#: view:account.invoice:0
+#: view:account.invoice.cancel:0
+#: view:account.invoice.confirm:0
 #: view:account.invoice.refund:0
 #: view:account.journal.select:0
-#: view:account.move:0
 #: view:account.move.bank.reconcile:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.select:0
 #: view:account.move.line.reconcile.writeoff:0
 #: view:account.move.line.unreconcile.select:0
-#: view:account.open.closed.fiscalyear:0
-#: view:account.partner.reconcile.process:0
 #: view:account.period.close:0
+#: view:account.state.open:0
 #: view:account.subscription.generate:0
 #: view:account.tax.chart:0
 #: view:account.unreconcile:0
-#: view:account.unreconcile.reconcile:0
 #: view:account.use.model:0
 #: view:account.vat.declaration:0
-#: code:addons/account/wizard/account_move_journal.py:105
+#: view:cash.box.in:0
+#: view:cash.box.out:0
 #: view:project.account.analytic.line:0
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
-#, python-format
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -5668,7 +5736,7 @@ msgstr "Tilityypin nimi"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "Saatavat"
+msgstr "Saatava"
 
 #. module: account
 #: view:account.invoice:0
@@ -5701,7 +5769,7 @@ msgid "Current"
 msgstr "Nykyinen"
 
 #. module: account
-#: view:account.bank.statement:0
+#: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr "Kassakone"
 
@@ -5756,13 +5824,13 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "Täsmäytys: siirry seuraavaan kumppaniin"
+msgstr "Täsmäytys: Siirry seuraavaan kumppaniin"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
 msgid "Inverted Analytic Balance"
-msgstr "Vastaava analyyttinen saldo"
+msgstr "Käänteinen analyyttinen saldo"
 
 #. module: account
 #: field:account.tax.template,applicable_type:0
@@ -5770,6 +5838,7 @@ msgid "Applicable Type"
 msgstr "Sovellettava tyyppi"
 
 #. module: account
+#: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
 msgstr "Laskuviite"
@@ -5796,7 +5865,7 @@ msgstr "Likviditeetti"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr ""
+msgstr "Analyttisen päiväkirjan kirjaukset"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -5847,7 +5916,9 @@ msgstr "Syötä aloituspäivä !"
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1160
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Refund"
 msgstr "Toimittajan hyvitys"
 
@@ -5859,7 +5930,7 @@ msgstr "Työpöytä"
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
-msgstr "Merkintärivit"
+msgstr "Kirjausrivit"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -5905,9 +5976,11 @@ msgid "Account Profit And Loss Report"
 msgstr "Voitto ja tappiotilin raportti"
 
 #. module: account
+#: field:account.analytic.line,product_uom_id:0
 #: field:account.invoice.line,uos_id:0
+#: field:account.move.line,product_uom_id:0
 msgid "Unit of Measure"
-msgstr "Yksikön mitta"
+msgstr "Yksikkö"
 
 #. module: account
 #: constraint:account.payment.term.line:0
@@ -5929,6 +6002,7 @@ msgstr "account.sequence.fiscalyear"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.model,name:account.model_account_analytic_journal
+#: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Analytic Journal"
 msgstr "Analyyttinen päiväkirja"
 
@@ -5965,29 +6039,26 @@ msgid "Invoice is already reconciled"
 msgstr "Lasku on jo suoritettu"
 
 #. module: account
-#: view:account.account:0
 #: view:account.account.template:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement.line,note:0
 #: view:account.fiscal.position:0
 #: field:account.fiscal.position,note:0
 #: field:account.fiscal.position.template,note:0
-#: view:account.invoice.line:0
-#: field:account.invoice.line,note:0
 msgid "Notes"
 msgstr "Muistiinpanot"
 
 #. module: account
 #: model:ir.model,name:account.model_analytic_entries_report
 msgid "Analytic Entries Statistics"
-msgstr ""
+msgstr "Analyyttisten kirjausten tilastot"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:145
-#: code:addons/account/account_move_line.py:933
+#: code:addons/account/account_analytic_line.py:142
+#: code:addons/account/account_move_line.py:955
 #, python-format
 msgid "Entries: "
-msgstr "Merkinnät: "
+msgstr "Kirjaukset: "
 
 #. module: account
 #: view:account.use.model:0
@@ -5995,7 +6066,7 @@ msgid "Create manual recurring entries in a chosen journal."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1563
+#: code:addons/account/account.py:1580
 #, python-format
 msgid "Couldn't create move between different companies"
 msgstr "Ei voida luoda siirtoa eri yritysten välille"
@@ -6023,20 +6094,18 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
 msgid "State is draft"
-msgstr "Tila on luonnos"
+msgstr "Tila on ehdotus"
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1043
-#, python-format
 msgid "Total debit"
 msgstr "Kokonais debet"
 
 #. module: account
-#: code:addons/account/account_move_line.py:808
+#: code:addons/account/account_move_line.py:829
 #, python-format
 msgid "Entry \"%s\" is not valid !"
-msgstr "Merkintä \"%s\" ei ole kelvollinen!"
+msgstr "Kirjaus \"%s\" ei ole sallittu!"
 
 #. module: account
 #: report:account.invoice:0
@@ -6088,7 +6157,7 @@ msgstr "Luo"
 #. module: account
 #: model:process.transition.action,name:account.process_transition_action_createentries0
 msgid "Create entry"
-msgstr "Luo merkintä"
+msgstr "Luo kirjaus"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -6096,32 +6165,8 @@ msgid "  valuation: percent"
 msgstr "  arvoostus: prosenttia"
 
 #. module: account
-#: code:addons/account/account.py:622
-#: code:addons/account/account.py:624
-#: code:addons/account/account.py:963
-#: code:addons/account/account.py:1052
-#: code:addons/account/account.py:1129
-#: code:addons/account/account.py:1344
-#: code:addons/account/account.py:1351
-#: code:addons/account/account.py:2280
-#: code:addons/account/account.py:2596
-#: code:addons/account/account_analytic_line.py:92
-#: code:addons/account/account_analytic_line.py:101
-#: code:addons/account/account_bank_statement.py:301
-#: code:addons/account/account_bank_statement.py:314
-#: code:addons/account/account_bank_statement.py:352
-#: code:addons/account/account_cash_statement.py:292
-#: code:addons/account/account_cash_statement.py:314
-#: code:addons/account/account_invoice.py:808
-#: code:addons/account/account_invoice.py:839
-#: code:addons/account/account_invoice.py:1030
-#: code:addons/account/account_move_line.py:1200
-#: code:addons/account/account_move_line.py:1216
-#: code:addons/account/account_move_line.py:1218
-#: code:addons/account/wizard/account_invoice_refund.py:108
-#: code:addons/account/wizard/account_invoice_refund.py:110
-#: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
-#: code:addons/account/wizard/account_use_model.py:44
+#: code:addons/account/account.py:1024
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "Error !"
 msgstr "Virhe!"
@@ -6171,7 +6216,7 @@ msgstr "Tarkastettavaksi"
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Päiväkirjatapahtumat"
+msgstr "Päiväkirjaviennit"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -6211,7 +6256,6 @@ msgstr ""
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -6222,7 +6266,7 @@ msgstr ""
 #: code:addons/account/report/common_report_header.py:67
 #, python-format
 msgid "All Entries"
-msgstr "Kaikki merkinnät"
+msgstr "Kaikki kirjaukset"
 
 #. module: account
 #: constraint:product.template:0
@@ -6251,12 +6295,11 @@ msgstr "Tilien suoritusmerkinnät"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "Verokannat"
 
 #. module: account
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
-#: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
 #: model:ir.actions.report.xml,name:account.account_general_ledger_landscape
@@ -6283,6 +6326,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
+"Valitse tämä valintalaatikko jos et ole varma tästä päiväkirjakirjauksesta "
+"ja haluat lähettää huomautuksen \"tarkastettava\" asiantuntijalle."
 
 #. module: account
 #: help:account.installer.modules,account_voucher:0
@@ -6314,7 +6359,7 @@ msgid "Total:"
 msgstr "Yhteensä:"
 
 #. module: account
-#: code:addons/account/account.py:2229
+#: code:addons/account/account.py:2304
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -6344,7 +6389,7 @@ msgid "Child Codes"
 msgstr "Alikoodit"
 
 #. module: account
-#: code:addons/account/account_invoice.py:495
+#: code:addons/account/account_invoice.py:504
 #: code:addons/account/wizard/account_invoice_refund.py:145
 #, python-format
 msgid "Data Insufficient !"
@@ -6354,7 +6399,7 @@ msgstr "Riittämätön data!"
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "Asiakas Laskutus"
+msgstr "Asiakaslaskut"
 
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
@@ -6383,7 +6428,7 @@ msgstr "Valmis"
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
 msgid "A statement with manual entries becomes a draft statement."
-msgstr ""
+msgstr "Manuaalisia kirjauksia sisältävä ote muutetaan tilaan \"Ehdotus\""
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -6398,6 +6443,7 @@ msgstr ""
 
 #. module: account
 #: field:account.invoice,origin:0
+#: field:account.invoice.line,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
 msgstr "Lähdedokumentti"
@@ -6414,11 +6460,11 @@ msgstr ""
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:56
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr "Täsmäyttämättömät viennit"
+msgstr "Täsmäyttämättömät kirjaukset"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_menu_Bank_process
@@ -6521,7 +6567,7 @@ msgstr "Tiliveron malli"
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr ""
+msgstr "Oletko varma, että haluat avata päiväkirjaan kirjatut viennit?"
 
 #. module: account
 #: view:account.state.open:0
@@ -6600,7 +6646,7 @@ msgstr "Asiakkaan kokonaisvelan määrä."
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -6608,7 +6654,6 @@ msgid "Icon"
 msgstr "Icon"
 
 #. module: account
-#: view:account.automatic.reconcile:0
 #: view:account.use.model:0
 msgid "Ok"
 msgstr "OK"
@@ -6621,11 +6666,11 @@ msgstr "Tuntematon kumppani"
 
 #. module: account
 #: view:account.bank.statement:0
-#: code:addons/account/account.py:420
-#: code:addons/account/account.py:432
+#: code:addons/account/account.py:422
+#: code:addons/account/account.py:434
 #, python-format
 msgid "Opening Balance"
-msgstr "Alkusaldo"
+msgstr "Avaava tase"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -6634,9 +6679,9 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
-"Valitse määrittääksesi että jokainen merkintä tähän päiväkirjaan ei luo "
-"uutta vastinetta vaan käyttää jaettua vastinetta. Tätä käytetään tilikauden "
-"päätökseen."
+"Valitse määrittääksesi, että yksikään kirjaus tähän päiväkirjaan, ei luo "
+"uutta vastapuolta vaan käyttävät yhteistä jaettua vastapuolta. Tätä "
+"käytetään tilikauden päätökseen."
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -6681,7 +6726,7 @@ msgstr ""
 "kehittäjien luoda tiettyjä veroja muokatulla toimialueella."
 
 #. module: account
-#: code:addons/account/account.py:1088
+#: code:addons/account/account.py:1095
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
 msgstr ""
@@ -6689,15 +6734,15 @@ msgstr ""
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
 msgid "Name of new entries"
-msgstr "Uusien merkintöjen nimi"
+msgstr "Uusien kirjausten nimi"
 
 #. module: account
 #: view:account.use.model:0
 msgid "Create Entries"
-msgstr "Luo merkinnät"
+msgstr "Luo kirjaukset"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_finance_reporting
+#: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
 msgstr "Raportointi"
 
@@ -6715,7 +6760,7 @@ msgstr "Kassakoneen sulkeminen"
 #: view:account.journal:0
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr "Tilipäiväkirja"
+msgstr "Päiväkirja"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -6852,6 +6897,7 @@ msgstr "Käyttäjä"
 
 #. module: account
 #: report:account.general.journal:0
+#: xsl:account.transfer:0
 msgid ":"
 msgstr ":"
 
@@ -6868,13 +6914,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1302
+#: code:addons/account/account_move_line.py:1317
 #, python-format
 msgid "Bad account !"
 msgstr "Virheellinen tili!"
 
 #. module: account
-#: code:addons/account/account.py:3108
+#: code:addons/account/account.py:3193
 #, python-format
 msgid "Sales Journal"
 msgstr "Myyntipäiväkirja"
@@ -6891,13 +6937,12 @@ msgid "Invoice Tax"
 msgstr "Laskuta vero"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1277
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid "No piece number !"
 msgstr "Ei osan numeroa!"
 
 #. module: account
-#: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
 msgstr "Myynnin ominaisuudet"
@@ -6905,7 +6950,7 @@ msgstr "Myynnin ominaisuudet"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr "Käsin tehty täsmäytys"
+msgstr "Manuaalinen täsmäytys"
 
 #. module: account
 #: report:account.overdue:0
@@ -6920,7 +6965,6 @@ msgstr "päättyen"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
-#: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to close"
 msgstr "Suljettava tilikausi"
 
@@ -6946,10 +6990,12 @@ msgstr "Toukokuu"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:299
+#: code:addons/account/report/account_partner_ledger.py:274
 #, python-format
 msgid "Payable Accounts"
-msgstr "Maksettavat tilit"
+msgstr "Ostovelat"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -6978,7 +7024,7 @@ msgstr "Myyntiverot"
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3003
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Cash"
 msgstr "Käteinen"
@@ -6997,11 +7043,9 @@ msgstr "Laskujen maksu"
 #. module: account
 #: field:account.bank.statement.line,sequence:0
 #: field:account.financial.report,sequence:0
+#: field:account.invoice.line,sequence:0
 #: field:account.invoice.tax,sequence:0
-#: view:account.journal:0
-#: field:account.journal.column,sequence:0
 #: field:account.model.line,sequence:0
-#: field:account.payment.term.line,sequence:0
 #: field:account.sequence.fiscalyear,sequence_id:0
 #: field:account.tax,sequence:0
 #: field:account.tax.code,sequence:0
@@ -7038,6 +7082,7 @@ msgid "Link to the automatically generated Journal Items."
 msgstr ""
 
 #. module: account
+#: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "Monthly"
 msgstr "Kuukausittain"
@@ -7071,7 +7116,7 @@ msgstr "Edistyminen"
 #: field:account.account,parent_id:0
 #: field:account.financial.report,parent_id:0
 msgid "Parent"
-msgstr "Ylempi tili"
+msgstr "Ylätaso"
 
 #. module: account
 #: field:account.installer.modules,account_analytic_plans:0
@@ -7106,9 +7151,10 @@ msgid ""
 "to the higher ones. The order is important if you have a tax with several "
 "tax children. In this case, the evaluation order is important."
 msgstr ""
-"Sekvenssikenttää käytetään verorivien tuomiseen alemmista sekvensseistä "
-"ylempiin. Tuominen on tärkeää jos käyttämälläsi verolla on useita alaveroja. "
-"Tässä tapauksessa arviointia on tärkeää."
+"Sarjanumerokenttää käytetään verorivien järjestämiseen alemmista "
+"sarjanumeroista ylempiin. Järjestys on tärkeä, jos on määritelty vero "
+"useilla alaveroilla.  Järjestys on tärkeä, jos verolla on useita alaveroja, "
+"jolloin käsittelyjärjestys on olennaisen tärkeä."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -7116,9 +7162,9 @@ msgid "CashBox Line"
 msgstr ""
 
 #. module: account
-#: view:account.partner.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
@@ -7136,18 +7182,10 @@ msgid "Fixed"
 msgstr "Kiinteä"
 
 #. module: account
-#: code:addons/account/account.py:629
-#: code:addons/account/account.py:642
-#: code:addons/account/account.py:645
-#: code:addons/account/account.py:664
-#: code:addons/account/account.py:787
-#: code:addons/account/account.py:1077
-#: code:addons/account/account_invoice.py:732
-#: code:addons/account/account_invoice.py:735
-#: code:addons/account/account_invoice.py:738
-#: code:addons/account/account_move_line.py:97
-#: code:addons/account/account_move_line.py:750
-#: code:addons/account/account_move_line.py:803
+#: code:addons/account/account.py:653
+#: code:addons/account/account.py:656
+#: code:addons/account/account.py:668
+#: code:addons/account/account.py:1031
 #, python-format
 msgid "Warning !"
 msgstr "Varoitus!"
@@ -7205,7 +7243,7 @@ msgid "Can not %s draft/proforma/cancel invoice."
 msgstr "Ei voi %s vedos/proforma/peruuttaa laskua"
 
 #. module: account
-#: code:addons/account/account_invoice.py:810
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "No Invoice Lines !"
 msgstr "Ei laskurivejä !"
@@ -7244,10 +7282,10 @@ msgid "Tax Use In"
 msgstr "Käytettävä vero"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:353
+#: code:addons/account/account_bank_statement.py:420
 #, python-format
 msgid "The account entries lines are not in valid state."
-msgstr "Tilin merkintärivit eivät ole hyväksytyssä tilassa."
+msgstr "Tilin vientirivit eivät ole hyväksytyssä tilassa."
 
 #. module: account
 #: field:account.account.type,close_method:0
@@ -7255,7 +7293,7 @@ msgid "Deferral Method"
 msgstr "Jaksotusmenetelmä"
 
 #. module: account
-#: code:addons/account/account_invoice.py:379
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Invoice '%s' is paid."
 msgstr "Lasku '%s' on maksettu."
@@ -7263,7 +7301,7 @@ msgstr "Lasku '%s' on maksettu."
 #. module: account
 #: model:process.node,note:account.process_node_electronicfile0
 msgid "Automatic entry"
-msgstr "Automaattinen vienti"
+msgstr "Automaattinen kirjaus"
 
 #. module: account
 #: constraint:account.tax.code.template:0
@@ -7294,7 +7332,7 @@ msgstr ""
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
 msgid "Inverted Analytic Balance -"
-msgstr "Käännetty analyyttinen saldo -"
+msgstr "Käänteinen analyyttinen saldo -"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -7318,13 +7356,12 @@ msgid "Associated Partner"
 msgstr "Yhteistyökumppani"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1332
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Sinun täytyy ensiksi valita yhteistyökumppani!"
 
 #. module: account
-#: view:account.invoice:0
 #: field:account.invoice,comment:0
 msgid "Additional Information"
 msgstr "Lisätietoja"
@@ -7335,8 +7372,8 @@ msgid "Bank and Cash Accounts"
 msgstr "Pankki ja käteistilit"
 
 #. module: account
-#: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
+#: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
 msgstr ""
 
@@ -7383,7 +7420,7 @@ msgid "Choose Fiscal Year"
 msgstr "Valitse tilikausi"
 
 #. module: account
-#: code:addons/account/account.py:3111
+#: code:addons/account/account.py:3196
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr ""
@@ -7473,7 +7510,7 @@ msgstr "Tulo kategoria tili"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "Talouskantojen mallit"
+msgstr "Verokantojen mallit"
 
 #. module: account
 #: view:account.entries.report:0
@@ -7523,6 +7560,7 @@ msgstr "Yritysvaluutta"
 #: field:account.common.journal.report,chart_account_id:0
 #: field:account.common.partner.report,chart_account_id:0
 #: field:account.common.report,chart_account_id:0
+#: view:account.config.settings:0
 #: field:account.general.journal,chart_account_id:0
 #: field:account.partner.balance,chart_account_id:0
 #: field:account.partner.ledger,chart_account_id:0
@@ -7563,7 +7601,7 @@ msgstr "Osittaissuoritus"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
 msgid "Account Analytic Inverted Balance"
-msgstr ""
+msgstr "Analyyttisen tilin käänteinen saldo"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -7573,7 +7611,7 @@ msgstr "Tilin yleisraportti"
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
 msgid "Automatic import of the bank sta"
-msgstr ""
+msgstr "Automaattinen pankin tiliotteen tuonti"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_view
@@ -7632,7 +7670,7 @@ msgstr "Kassakoneen saldo"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
 msgid "Fiscalyear Close state"
-msgstr "Kirjanpitovuoden sulkemisen tila"
+msgstr "Tilikauden sulkemisen tila"
 
 #. module: account
 #: field:account.invoice.refund,journal_id:0
@@ -7675,7 +7713,7 @@ msgstr "Kumppanitiliä käytetään tälle laskulle."
 #: view:account.tax.code.template:0
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr "Ylempi koodi"
+msgstr "Ylätason koodi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -7683,7 +7721,7 @@ msgid "Payment Term Line"
 msgstr "Maksuehtorivi"
 
 #. module: account
-#: code:addons/account/account.py:3109
+#: code:addons/account/account.py:3194
 #, python-format
 msgid "Purchase Journal"
 msgstr "Ostopäiväkirja"
@@ -7694,7 +7732,7 @@ msgid "Refund Invoice: Creates the refund invoice, ready for editing."
 msgstr ""
 
 #. module: account
-#: field:account.invoice.line,price_subtotal:0
+#: field:account.invoice,amount_untaxed:0
 msgid "Subtotal"
 msgstr "Välisumma"
 
@@ -7706,7 +7744,7 @@ msgstr "Tulosta veroilmoitus"
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr ""
+msgstr "Päiväkirjaviennin mallirivi"
 
 #. module: account
 #: view:account.invoice:0
@@ -7765,7 +7803,7 @@ msgstr "Mistä"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr "Kirjanpitovuoden sulkeminen"
+msgstr "Tilikauden sulkeminen"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -7797,6 +7835,7 @@ msgstr "Omaisuus"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.common.report:0
+#: view:account.invoice:0
 msgid "Print"
 msgstr "Tulostus"
 
@@ -7813,6 +7852,7 @@ msgid "Chart of Analytic Accounts"
 msgstr ""
 
 #. module: account
+#: view:account.journal:0
 #: model:ir.ui.menu,name:account.menu_configuration_misc
 msgid "Miscellaneous"
 msgstr "Sekalaiset"
@@ -7820,7 +7860,7 @@ msgstr "Sekalaiset"
 #. module: account
 #: help:res.partner,debit:0
 msgid "Total amount you have to pay to this supplier."
-msgstr "Kokonaismaksun määrä joka sinun täytyy maksaa toimittajalle"
+msgstr "Kokonaisarvo joka pitää maksaa toimittajalle."
 
 #. module: account
 #: model:process.node,name:account.process_node_analytic0
@@ -7850,8 +7890,8 @@ msgid ""
 msgstr "Kupongin määrä tulee olla sama kuin tiliotteen rivillä"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1155
-#: code:addons/account/account_move_line.py:1238
+#: code:addons/account/account_move_line.py:1170
+#: code:addons/account/account_move_line.py:1253
 #, python-format
 msgid "Bad account!"
 msgstr "Virheellinen tili!"
@@ -7859,10 +7899,10 @@ msgstr "Virheellinen tili!"
 #. module: account
 #: help:account.chart,fiscalyear:0
 msgid "Keep empty for all open fiscal years"
-msgstr "Jätä tyhjäksi niin käytetään kaikkia avoimia kirjanpitovuosia"
+msgstr "Jätä tyhjäksi kaikille avoimille tilikausille"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1105
+#: code:addons/account/account_move_line.py:1120
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
 msgstr ""
@@ -7873,11 +7913,10 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency "
 "entry."
 msgstr ""
-"Summa on ilmoitettu valinnaisessa toisessa valuutassa jos tämä on "
+"Summa on ilmoitettu valinnaisessa toisessa valuutassa, jos kyseessä on "
 "monivaluuttainen merkintä."
 
 #. module: account
-#: view:account.account:0
 #: report:account.analytic.account.journal:0
 #: field:account.bank.statement,currency:0
 #: report:account.central.journal:0
@@ -7903,6 +7942,7 @@ msgstr ""
 #: field:report.account_type.sales,currency_id:0
 #: field:report.invoice.created,currency_id:0
 #: field:res.partner.bank,currency_id:0
+#: field:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency"
 msgstr "Valuutta"
 
@@ -7915,7 +7955,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Accountant validates the accounting entries coming from the invoice."
-msgstr ""
+msgstr "Kirjanpitäjä vahvistaa laskulta tulevat laskutuskirjaukset."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
@@ -7933,7 +7973,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "Suoritetut merkinnät"
+msgstr "Täsmäytetyt kirjaukset"
 
 #. module: account
 #: field:account.invoice,address_contact_id:0
@@ -7961,7 +8001,7 @@ msgstr "Pakota jakso"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
-msgstr ""
+msgstr "Tulosta kumppanin tilin saldo"
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -7969,24 +8009,25 @@ msgid "Contracts"
 msgstr "Sopimukset"
 
 #. module: account
-#: field:account.cashbox.line,ending_id:0
-#: field:account.cashbox.line,starting_id:0
+#: field:account.cashbox.line,bank_statement_id:0
 #: field:account.entries.report,reconcile_id:0
 #: field:account.financial.report,balance:0
+#: field:account.financial.report,credit:0
+#: field:account.financial.report,debit:0
 msgid "unknown"
 msgstr "Tuntematon"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3113
+#: code:addons/account/account.py:3198
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "Avauspäiväkirja"
+msgstr "Avauskirjausten päiväkirja"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr "Luonnoslaskut on tarkistettu, hyväksytty ja tulostettu."
+msgstr "Laskuehdotukset on tarkistettu, vahvistettu ja tulostettu."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -8036,7 +8077,6 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 #: field:account.move.line,amount_residual:0
-#: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount"
 msgstr ""
 
@@ -8044,11 +8084,10 @@ msgstr ""
 #: field:account.invoice,move_lines:0
 #: field:account.move.reconcile,line_id:0
 msgid "Entry Lines"
-msgstr "Merkitärivit"
+msgstr "Kirjausrivit"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
-#: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Open Journal"
 msgstr "Avaa päiväkirja"
 
@@ -8065,10 +8104,10 @@ msgid "Period from"
 msgstr "Ajanjakso alkaen"
 
 #. module: account
-#: code:addons/account/account.py:3110
+#: code:addons/account/account.py:3195
 #, python-format
 msgid "Sales Refund Journal"
-msgstr ""
+msgstr "Myyntihyvitysten päiväkirja"
 
 #. module: account
 #: code:addons/account/account.py:927
@@ -8081,7 +8120,6 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
-#: view:account.payment.term:0
 msgid "Information"
 msgstr "Tieto"
 
@@ -8093,7 +8131,7 @@ msgstr "Rekisteröiy maksu"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr ""
+msgstr "Sulje tilikauden ja jaksojen tilat"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8120,7 +8158,7 @@ msgid "Purchase Tax(%)"
 msgstr "Oston vero (%9"
 
 #. module: account
-#: code:addons/account/account_invoice.py:810
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Ole hyvä ja luo laskurivejä"
@@ -8136,7 +8174,7 @@ msgid "Configure Your Accounting Application"
 msgstr "Konfiguroi kirjanpito-ohjelmistosi"
 
 #. module: account
-#: code:addons/account/account.py:3118
+#: code:addons/account/account.py:3203
 #, python-format
 msgid "SCNJ"
 msgstr ""
@@ -8213,25 +8251,23 @@ msgid "Companies that refers to partner"
 msgstr "Yritykset jotka viittaavat kumppaniin"
 
 #. module: account
-#: view:account.journal:0
 #: field:account.journal.column,view_id:0
 #: view:account.journal.view:0
 #: field:account.journal.view,name:0
+#: model:account.journal.view,name:account.account_journal_view
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
 msgstr "Päiväkirjanäkymä"
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1046
-#, python-format
 msgid "Total credit"
 msgstr "Kokonaisluotto"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
 msgid "Accountant validates the accounting entries coming from the invoice. "
-msgstr ""
+msgstr "Kirjanpitäjä vahvistaa laskulta tulevat laskutuskirjaukset. "
 
 #. module: account
 #: code:addons/account/invoice.py:1008
@@ -8268,26 +8304,24 @@ msgid "Current currency is not confirured properly !"
 msgstr "Nykyistä valuuttaa ei ole konfiguroitu kunnolla !"
 
 #. module: account
-#: code:addons/account/account.py:1088
-#: code:addons/account/account.py:1090
-#: code:addons/account/account.py:1321
-#: code:addons/account/account.py:1563
-#: code:addons/account/account.py:1567
-#: code:addons/account/account.py:3368
-#: code:addons/account/account_move_line.py:807
-#: code:addons/account/account_move_line.py:830
-#: code:addons/account/account_move_line.py:832
-#: code:addons/account/account_move_line.py:835
-#: code:addons/account/account_move_line.py:837
+#: code:addons/account/account.py:1095
+#: code:addons/account/account.py:1097
+#: code:addons/account/account.py:1329
+#: code:addons/account/account.py:1580
+#: code:addons/account/account.py:1584
+#: code:addons/account/account.py:3385
+#: code:addons/account/account_move_line.py:823
+#: code:addons/account/account_move_line.py:843
+#: code:addons/account/account_move_line.py:846
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
 #: code:addons/account/wizard/account_change_currency.py:64
 #: code:addons/account/wizard/account_change_currency.py:70
-#: code:addons/account/wizard/account_financial_report.py:69
+#: code:addons/account/wizard/account_financial_report.py:70
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
-#: code:addons/account/wizard/account_report_common.py:144
-#: code:addons/account/wizard/account_report_common.py:150
+#: code:addons/account/wizard/account_report_common.py:145
+#: code:addons/account/wizard/account_report_common.py:151
 #, python-format
 msgid "Error"
 msgstr "Virhe"
@@ -8303,7 +8337,6 @@ msgid "Profit & Loss (Income Accounts)"
 msgstr "Voitto ja tapiio (tulotilit)"
 
 #. module: account
-#: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
 msgstr "Jätä tyhjäksi käyttääksesi tulotiliä"
@@ -8373,7 +8406,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_payable
 #: selection:account.entries.report,type:0
 msgid "Payable"
-msgstr "Maksettavat"
+msgstr "Ostovelka"
 
 #. module: account
 #: view:report.account.sales:0
@@ -8410,7 +8443,7 @@ msgid "Cannot delete bank statement(s) which are already confirmed !"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/account_automatic_reconcile.py:152
+#: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile"
 msgstr "Valitse tilit suorituksille"
@@ -8423,7 +8456,7 @@ msgstr "Saldo tilityypeittäin"
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 msgid "Accounting entries are the first input of the reconciliation."
-msgstr ""
+msgstr "Kirjanpitoviennit ovat ensimmäinen syöte täsmäytyksessä."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_form
@@ -8446,20 +8479,21 @@ msgstr "Suotimet"
 #: model:process.node,note:account.process_node_manually0
 #: model:process.transition,name:account.process_transition_invoicemanually0
 msgid "Manual entry"
-msgstr "Käsin tehty vienti"
+msgstr "Manuaalikirjaus"
 
 #. module: account
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.line,move_id:0
+#: view:account.move:0
+#: view:account.move.line:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
 msgstr "Siirto"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
+#: code:addons/account/account_move_line.py:1168
 #, python-format
 msgid "You can not change the tax, you should remove and recreate lines !"
 msgstr ""
@@ -8507,13 +8541,12 @@ msgid "Common Report"
 msgstr "Yleisraportti"
 
 #. module: account
-#: view:account.account:0
 #: field:account.account,child_consol_ids:0
 msgid "Consolidated Children"
 msgstr "Yhdistetyt alatilit"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:87
+#: code:addons/account/wizard/account_fiscalyear_close.py:103
 #, python-format
 msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
@@ -8525,7 +8558,7 @@ msgstr ""
 #: model:process.transition,name:account.process_transition_paymentorderbank0
 #: model:process.transition,name:account.process_transition_paymentreconcile0
 msgid "Payment entries"
-msgstr "Maksuviennit"
+msgstr "Maksukirjaukset"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -8549,7 +8582,7 @@ msgstr "Ennakkomaksu"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr ""
+msgstr "Analyyttisen tilin saldo"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8609,6 +8642,7 @@ msgid "Standard entries"
 msgstr "Normikohdat"
 
 #. module: account
+#: view:account.subscription:0
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
 msgstr "Tilin ennakkomaksu"
@@ -8626,7 +8660,7 @@ msgstr ""
 #. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
-msgstr "Ennakkomaksun merkintä"
+msgstr "Kirjauksen merkintä"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8663,17 +8697,17 @@ msgstr "Aloituspäivämäärä"
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr "Luonnoslaskut"
+msgstr "Laskuehdotukset"
 
 #. module: account
 #: selection:account.account.type,close_method:0
 #: view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr "Suorittamaton"
+msgstr "Täsmäyttämätön"
 
 #. module: account
-#: code:addons/account/account_invoice.py:828
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid "Bad total !"
 msgstr "Epäkelpo loppusumma!"
@@ -8681,7 +8715,7 @@ msgstr "Epäkelpo loppusumma!"
 #. module: account
 #: field:account.journal,sequence_id:0
 msgid "Entry Sequence"
-msgstr "Merkinnän sarja"
+msgstr "Kirjaussarja"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -8732,7 +8766,7 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: account
-#: code:addons/account/account_invoice.py:372
+#: code:addons/account/account_invoice.py:381
 #, python-format
 msgid "Unknown Error"
 msgstr "Tuntematon virhe"
@@ -8752,12 +8786,12 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"Tätä tiliä käytetään oletustilin sijasta tämän kumppanin maksettaville."
+"Tätä tiliä käytetään oletustilin sijasta ostovelkoina tälle kumppanille."
 
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr "Avaava/Sulkeva Jakso"
+msgstr "Avaava/päättävä jakso"
 
 #. module: account
 #: field:account.account,currency_id:0
@@ -8804,7 +8838,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
 msgstr "Yleinen päiväkirja"
@@ -8812,7 +8845,7 @@ msgstr "Yleinen päiväkirja"
 #. module: account
 #: view:account.model:0
 msgid "Journal Entry Model"
-msgstr ""
+msgstr "Päiväkirjan kirjauksen malli"
 
 #. module: account
 #: code:addons/account/wizard/account_use_model.py:44
@@ -8824,7 +8857,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.cashbox.line,number:0
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
@@ -8848,7 +8880,7 @@ msgstr "Yleinen"
 #: selection:account.common.partner.report,filter:0
 #: view:account.common.report:0
 #: selection:account.common.report,filter:0
-#: view:account.fiscalyear:0
+#: field:account.config.settings,period:0
 #: field:account.fiscalyear,period_ids:0
 #: selection:account.general.journal,filter:0
 #: field:account.installer,period:0
@@ -8863,11 +8895,11 @@ msgstr "Yleinen"
 #: view:accounting.report:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
-#: model:ir.actions.act_window,name:account.action_account_period_form
-#: model:ir.ui.menu,name:account.menu_action_account_period_form
+#: model:ir.actions.act_window,name:account.action_account_period
+#: model:ir.ui.menu,name:account.menu_action_account_period
 #: model:ir.ui.menu,name:account.next_id_23
 msgid "Periods"
-msgstr "Jaksot"
+msgstr "Kaudet"
 
 #. module: account
 #: field:account.invoice.report,currency_rate:0
@@ -8896,7 +8928,7 @@ msgstr "Avaa täsmäytettäväksi"
 #. module: account
 #: field:account.account,parent_left:0
 msgid "Parent Left"
-msgstr "Ylävasen"
+msgstr "Ylätaso vasen"
 
 #. module: account
 #: help:account.invoice.refund,filter_refund:0
@@ -9001,7 +9033,6 @@ msgstr "Tässä kuussa"
 #: view:account.analytic.cost.ledger:0
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
-#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
 msgstr "Valitse kausi"
 
@@ -9012,7 +9043,7 @@ msgstr "Valitse kausi"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Posted"
-msgstr "Postitettu"
+msgstr "Kirjattu"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9044,6 +9075,7 @@ msgid "End Date"
 msgstr "Lopetuspäivämäärä"
 
 #. module: account
+#: view:account.open.closed.fiscalyear:0
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
@@ -9071,7 +9103,7 @@ msgstr "Nettovoitto"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequences"
-msgstr "Tilikausien sarjat"
+msgstr "Tilikauden numeroinnit"
 
 #. module: account
 #: help:account.model,name:0
@@ -9079,7 +9111,7 @@ msgid "This is a model for recurring accounting entries"
 msgstr "Tämä on malli toistuvasta kirjanpidon merkinnästä"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:102
+#: code:addons/account/account_analytic_line.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr "Tulotiliä ei ole määritelty tälle tuotteelle: \"%s\" (id:%d)"
@@ -9097,10 +9129,8 @@ msgid "  value amount: 0.02"
 msgstr "  arvo: 0.02"
 
 #. module: account
-#: view:account.fiscalyear:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: view:account.period:0
 msgid "States"
 msgstr "Tilat"
 
@@ -9109,7 +9139,6 @@ msgstr "Tilat"
 #: report:account.analytic.account.inverted.balance:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: view:account.analytic.line:0
-#: view:account.bank.statement:0
 #: field:account.invoice,amount_total:0
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
@@ -9118,13 +9147,14 @@ msgid "Total"
 msgstr "Yhteensä"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:97
+#: code:addons/account/wizard/account_move_journal.py:98
 #, python-format
 msgid "Journal: All"
 msgstr ""
 
 #. module: account
 #: field:account.account,company_id:0
+#: report:account.account.balance:0
 #: field:account.aged.trial.balance,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.balance.report,company_id:0
@@ -9135,20 +9165,23 @@ msgstr ""
 #: field:account.common.journal.report,company_id:0
 #: field:account.common.partner.report,company_id:0
 #: field:account.common.report,company_id:0
+#: field:account.config.settings,company_id:0
 #: view:account.entries.report:0
 #: field:account.entries.report,company_id:0
 #: field:account.fiscal.position,company_id:0
 #: field:account.fiscalyear,company_id:0
+#: report:account.general.journal:0
 #: field:account.general.journal,company_id:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,company_id:0
 #: field:account.invoice,company_id:0
 #: field:account.invoice.line,company_id:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,company_id:0
 #: field:account.invoice.tax,company_id:0
-#: view:account.journal:0
 #: field:account.journal,company_id:0
 #: field:account.journal.period,company_id:0
+#: report:account.journal.period.print:0
 #: field:account.model,company_id:0
 #: field:account.move,company_id:0
 #: field:account.move.line,company_id:0
@@ -9171,7 +9204,7 @@ msgstr "Yritys"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
 msgid "Define Recurring Entries"
-msgstr "Määrittele toistuvat viennit"
+msgstr "Määrittele toistuvat kirjaukset"
 
 #. module: account
 #: field:account.entries.report,date_maturity:0
@@ -9199,17 +9232,17 @@ msgstr "Luo kuukausijaksot"
 #. module: account
 #: field:account.tax.code.template,sign:0
 msgid "Sign For Parent"
-msgstr ""
+msgstr "Ylätason merkki"
 
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
 msgid "Trial Balance Report"
-msgstr ""
+msgstr "Koetaseraportti"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
 msgid "Draft statements"
-msgstr "Luonnostiliotteet"
+msgstr "Tiliote-ehdotukset"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_statemententries0
@@ -9228,13 +9261,9 @@ msgid "End period"
 msgstr "Lopeta jakso"
 
 #. module: account
-#: code:addons/account/account_move_line.py:759
-#: code:addons/account/account_move_line.py:842
-#: code:addons/account/wizard/account_invoice_state.py:44
-#: code:addons/account/wizard/account_invoice_state.py:68
-#: code:addons/account/wizard/account_state_open.py:37
-#: code:addons/account/wizard/account_validate_account_move.py:39
-#: code:addons/account/wizard/account_validate_account_move.py:61
+#. openerp-web
+#: code:addons/account/account_move_line.py:780
+#: code:addons/account/static/src/js/account_move_reconciliation.js:90
 #, python-format
 msgid "Warning"
 msgstr "Varoitus"
@@ -9266,7 +9295,7 @@ msgstr "Laskun tila on valmis"
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
 msgid "Report of the Sales by Account"
-msgstr ""
+msgstr "Myyntiraportti tileittäin"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
@@ -9278,8 +9307,10 @@ msgstr ""
 #: view:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1158
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Invoice"
 msgstr "Toimittajan lasku"
 
@@ -9308,6 +9339,7 @@ msgid "Debit"
 msgstr "Debet"
 
 #. module: account
+#: view:account.invoice:0
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
 msgstr "Laskurivit"
@@ -9323,7 +9355,7 @@ msgid "Recurring"
 msgstr "Toistuva"
 
 #. module: account
-#: code:addons/account/account_move_line.py:832
+#: code:addons/account/account_move_line.py:843
 #, python-format
 msgid "Entry is already reconciled"
 msgstr "Merkintä on jo suoritettu"
@@ -9336,7 +9368,7 @@ msgstr ""
 #. module: account
 #: selection:account.model.line,date_maturity:0
 msgid "Partner Payment Term"
-msgstr "Kumppani maksutermi"
+msgstr "Kumppanin maksuehto"
 
 #. module: account
 #: field:temp.range,name:0
@@ -9358,8 +9390,10 @@ msgstr ""
 "sarja manuaalisesti tälle osalle."
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With movements"
 msgstr "Siirtojen kanssa"
@@ -9403,12 +9437,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
-msgstr ""
+msgstr "Erääntynyt saatava"
 
 #. module: account
 #: field:account.tax,applicable_type:0
 msgid "Applicability"
-msgstr ""
+msgstr "Voimassaolo"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:165
@@ -9419,13 +9453,13 @@ msgstr "Tämä jakso on jo suljettu!"
 #. module: account
 #: help:account.move.line,currency_id:0
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Valinnainen toinen valuutta jos merkintä on monivaluuttainen."
+msgstr "Valinnainen toinen valuutta, jos merkintä on monivaluuttainen."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0
 msgid ""
 "Import of the statement in the system from a supplier or customer invoice"
-msgstr ""
+msgstr "Tuo toimittaja- tai asiakaslaskulta ilmoitus/tieto järjestelmään"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
@@ -9436,7 +9470,7 @@ msgstr "Laskutus"
 #: view:account.account:0
 #: view:account.analytic.account:0
 msgid "Parent Account"
-msgstr ""
+msgstr "Ylätason tili"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -9472,12 +9506,13 @@ msgid "Configuration Progress"
 msgstr "Konfiguraation eteneminen"
 
 #. module: account
+#: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
-msgstr "Tilien kartoitus"
+msgstr "Tileihin kohdistus"
 
 #. module: account
-#: code:addons/account/account_invoice.py:364
+#: code:addons/account/account_invoice.py:373
 #, python-format
 msgid "Invoice '%s' is waiting for validation."
 msgstr ""
@@ -9525,9 +9560,9 @@ msgstr "Hae laskua"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
-#: view:account.invoice.refund:0
 #: view:account.invoice.report:0
-#: model:ir.actions.act_window,name:account.action_account_invoice_refund
+#: code:addons/account/account_invoice.py:1159
+#, python-format
 msgid "Refund"
 msgstr "Hyvitys"
 
@@ -9542,9 +9577,6 @@ msgid "Total Receivable"
 msgstr "Saatavat yhteensä"
 
 #. module: account
-#: view:account.account:0
-#: view:account.account.template:0
-#: view:account.journal:0
 #: view:account.move.line:0
 msgid "General Information"
 msgstr "Yleistiedot"
@@ -9569,12 +9601,12 @@ msgstr "Kustannustilikirja (Vain määrät)"
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
 msgid "Invoice's state is Done."
-msgstr "Laskun tila on valmis"
+msgstr "Laskun tila on valmis."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_reconcilepaid0
 msgid "As soon as the reconciliation is done, the invoice can be paid."
-msgstr "Kun täsmäytys on tehty, lasku voidaan maksaa"
+msgstr "Kun täsmäytys on tehty, lasku voidaan maksaa."
 
 #. module: account
 #: view:account.account.template:0
@@ -9584,12 +9616,12 @@ msgstr "Hae tilipohjia"
 #. module: account
 #: view:account.invoice.tax:0
 msgid "Manual Invoice Taxes"
-msgstr "Laskuta verot manuaalisesti"
+msgstr "Manuaaliset laskun verot"
 
 #. module: account
 #: field:account.account,parent_right:0
 msgid "Parent Right"
-msgstr "Yläoikea"
+msgstr "Ylätaso oikea"
 
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
@@ -9608,9 +9640,9 @@ msgid "Partner's"
 msgstr "Kumppanin"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_fiscalyear_form
+#: model:ir.actions.act_window,name:account.action_account_fiscalyear
 #: view:ir.sequence:0
-#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear_form
+#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
 msgstr "Tilikaudet"
 
@@ -9620,6 +9652,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the analytic "
 "journal without removing it."
 msgstr ""
+"Jos aktiivinen kenttä on asetettu tilaan Epätosi, voit kätkeä analyyttisen "
+"päiväkirjan, kuitenkaan poistamatta sitä."
 
 #. module: account
 #: field:account.analytic.line,ref:0

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:20+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:30+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -59,6 +59,7 @@ msgstr "Черновик"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
 msgid "Supplier"
 msgstr "Поставщик"
 
@@ -89,12 +90,12 @@ msgstr "Дата запроса"
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr "Запрос на закупку"
+msgstr "Запрос закупки"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr "Позиция запроса на закупку"
+msgstr "Позиция запроса закупки"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -254,38 +255,37 @@ msgid ""
 "orders.On confirmation of a purchase order it does not cancel the remaining "
 "orders"
 msgstr ""
-"Запрос на закупку (исключительный): при подтверждении заказа на закупку, "
+"Запрос на закупку (исключительный): при подтверждении заказа закупки, "
 "дополнительные заказы отменяются.\n"
-"Запрос на закупку (несколько): позволяет иметь несколько заказов на закупку. "
-"При подтверждении заказа на закупку, дополнительные заказы не отменяются."
+"Запрос на закупку (несколько): позволяет иметь несколько заказов закупки. "
+"При подтверждении заказа закупки, дополнительные заказы не отменяются."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Cancel Purchase Order"
-msgstr "Отменить заказ на закупку"
+msgstr "Отмена заказа закупки"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 #: view:purchase.requisition:0
 msgid "Purchase Order"
-msgstr "Заказ на закупку"
+msgstr "Заказ закупки"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "Error!"
 msgstr "Ошибка !"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
 msgstr "Ед. изм. ТМЦ"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Products"
-msgstr "ТМЦ"
+msgstr "Продукция"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -325,7 +325,7 @@ msgstr "Закупка по запросам"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr "Заказы на закупку"
+msgstr "Заказы закупки"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -377,7 +377,7 @@ msgstr "Создать предложение цен"
 #. module: purchase_requisition
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Ошибка: Неправильный штрих-код"
+msgstr "Ошибка: Неверный штрих-код"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -393,10 +393,10 @@ msgstr "_Отмена"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Confirm Purchase Order"
-msgstr "Подтвердить заказ на закупку"
+msgstr "Подтвердить заказ закупки"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -423,4 +423,4 @@ msgstr "Запрос"
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
-msgstr "Заказы на закупку"
+msgstr "Заказы закупки"

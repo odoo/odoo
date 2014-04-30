@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:02+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:12+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -26,10 +26,11 @@ msgstr "خطة في التقدم"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
 msgid "Wait Previous Phases"
-msgstr "انتظر المشتريات السابقة"
+msgstr "انتظر المراحل السابقة"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: view:hr.evaluation.interview:0
+#: view:hr.evaluation.report:0
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "تجميع حسب..."
@@ -38,7 +39,7 @@ msgstr "تجميع حسب..."
 #: field:hr.evaluation.interview,request_id:0
 #: field:hr.evaluation.report,request_id:0
 msgid "Request_id"
-msgstr "طلب_التعريف"
+msgstr "Request_id"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,progress_bar:0
@@ -74,7 +75,8 @@ msgid "Delay to Start"
 msgstr "التأخر في البدء"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
+#: view:hr.evaluation.report:0
+#: field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
 msgstr "التقدير"
 
@@ -86,7 +88,8 @@ msgid "Warning !"
 msgstr "تحذير !"
 
 #. module: hr_evaluation
-#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
+#: view:hr_evaluation.plan:0
+#: field:hr_evaluation.plan,company_id:0
 #: field:hr_evaluation.plan.phase,company_id:0
 msgid "Company"
 msgstr "شركة"
@@ -103,7 +106,8 @@ msgid "Appraisal Form"
 msgstr "نموذج تقييمي"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
+#: view:hr.evaluation.report:0
+#: field:hr.evaluation.report,day:0
 msgid "Day"
 msgstr "يوم"
 
@@ -123,8 +127,8 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
-"وسيتم استخدام هذا العدد من أشهر لجدولة موعد التقييم الأول للموظف عند اختيار "
-"خطة التقييم. "
+"عدد الشهور هذا سيتم استخدامه لتحديد موعد أول تقييم للموظف عند اختيار خطة "
+"تقييم "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
@@ -145,7 +149,7 @@ msgstr "خطأ! لا يمكنك تحديد الادارة التي يديرها 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
-msgstr "هيئة لبريد"
+msgstr "هيئة البريد"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -172,10 +176,9 @@ msgid "Did not meet expectations"
 msgstr "لم تلب التوقعات"
 
 #. module: hr_evaluation
-#: view:hr.employee:0 view:hr_evaluation.evaluation:0
+#: view:hr_evaluation.evaluation:0
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
-#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisal"
 msgstr "تثمين"
 
@@ -208,7 +211,7 @@ msgid "First Evaluation in (months)"
 msgstr "اول تقييم في (الأشهر)"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:82
+#: code:addons/hr_evaluation/hr_evaluation.py:84
 #, python-format
 msgid ""
 "\n"
@@ -294,7 +297,7 @@ msgid "(date)s: Current Date"
 msgstr "(date)s: التاريخ الجاري"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:81
+#: code:addons/hr_evaluation/hr_evaluation.py:83
 #, python-format
 msgid "Regarding "
 msgstr "متعلق "
@@ -312,7 +315,8 @@ msgid "Evaluation Plan Phase"
 msgstr "مرحلة خطة التقييم"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr.evaluation.report,employee_id:0
+#: view:hr.evaluation.report:0
+#: field:hr.evaluation.report,employee_id:0
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,employee_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_employee
@@ -364,7 +368,7 @@ msgid "Evaluation Deadline"
 msgstr "اخر موعد التقييم"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+#: view:hr_evaluation.evaluation:0
 msgid "Print Interview"
 msgstr "اطبع المقابلة"
 
@@ -380,7 +384,8 @@ msgid "Meet expectations"
 msgstr "قابل التوقعات"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr.evaluation.report,nbr:0
+#: view:hr.evaluation.report:0
+#: field:hr.evaluation.report,nbr:0
 msgid "# of Requests"
 msgstr "# بشأن الطلبات"
 
@@ -453,7 +458,8 @@ msgid "December"
 msgstr "ديسمبر"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
+#: view:hr.evaluation.report:0
+#: field:hr.evaluation.report,month:0
 msgid "Month"
 msgstr "شهر"
 
@@ -577,8 +583,10 @@ msgid " (employee_name)s: Partner name"
 msgstr " (الموظفين_اسماء): اسم الشريك"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
-#: view:hr_evaluation.evaluation:0 field:hr_evaluation.evaluation,plan_id:0
+#: view:hr.evaluation.report:0
+#: field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:0
+#: field:hr_evaluation.evaluation,plan_id:0
 msgid "Plan"
 msgstr "خطّة"
 
@@ -655,7 +663,8 @@ msgid "Action"
 msgstr "إجراء"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
+#: view:hr.evaluation.report:0
+#: selection:hr.evaluation.report,state:0
 msgid "Final Validation"
 msgstr "الصلاحية النهائية"
 
@@ -680,7 +689,8 @@ msgid "Late"
 msgstr "متأخر"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+#: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interviewer"
 msgstr "المقابل"
 
@@ -715,8 +725,11 @@ msgid "Next Evaluation Date"
 msgstr "موعد التقييم القادم"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
-#: view:hr_evaluation.evaluation:0 selection:hr_evaluation.evaluation,state:0
+#: view:hr.evaluation.interview:0
+#: view:hr.evaluation.report:0
+#: selection:hr.evaluation.report,state:0
+#: view:hr_evaluation.evaluation:0
+#: selection:hr_evaluation.evaluation,state:0
 msgid "Done"
 msgstr "تم"
 
@@ -726,6 +739,7 @@ msgid "Evaluation Plan Phases"
 msgstr "مراحل خطة التقييم"
 
 #. module: hr_evaluation
+#: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Cancel"
 msgstr "إلغاء"
@@ -784,6 +798,7 @@ msgid "char"
 msgstr "حرف"
 
 #. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
 msgstr "نماذج التثمين"
@@ -892,7 +907,8 @@ msgid "Create Date"
 msgstr "إنشاء تاريخ"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
+#: view:hr.evaluation.report:0
+#: field:hr.evaluation.report,year:0
 msgid "Year"
 msgstr "سنة"
 

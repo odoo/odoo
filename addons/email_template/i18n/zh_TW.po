@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-31 05:08+0000\n"
-"X-Generator: Launchpad (build 15887)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:59+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -79,10 +79,8 @@ msgid ""
 msgstr ""
 
 #. module: email_template
+#: field:email.template,body_html:0
 #: field:email_template.preview,body_html:0
-#: field:email_template.preview,body_text:0
-#: field:email_template.send.wizard,body_html:0
-#: field:email_template.send.wizard,body_text:0
 msgid "Body"
 msgstr ""
 
@@ -277,7 +275,7 @@ msgid "From Email"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -795,6 +793,7 @@ msgstr ""
 
 #. module: email_template
 #: field:email.template,lang:0
+#: field:email_template.preview,lang:0
 msgid "Language"
 msgstr ""
 
@@ -837,7 +836,7 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:183
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "傳送郵件 (%s)"
@@ -865,7 +864,8 @@ msgid "History"
 msgstr ""
 
 #. module: email_template
-#: view:email.template:0
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
 msgid "Attachments"
 msgstr "附件"
 

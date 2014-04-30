@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:43+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
@@ -75,6 +75,7 @@ msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
+#: view:res.partner:0
 msgid "Group By..."
 msgstr "Grupper etter..."
 
@@ -93,8 +94,7 @@ msgstr ""
 "\n"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "Oppfølging"
 
@@ -108,11 +108,13 @@ msgstr "Firma"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:258
+#, python-format
 msgid "Invoice Date"
 msgstr "Fakturadato"
 
 #. module: account_followup
-#: field:account.followup.print.all,email_subject:0
+#: field:account_followup.print,email_subject:0
 msgid "Email Subject"
 msgstr "E-post Emne"
 
@@ -146,7 +148,7 @@ msgid "You can not create move line on closed account."
 msgstr ""
 
 #. module: account_followup
-#: field:account.followup.print,date:0
+#: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "Oppfølgings sendedato"
 
@@ -179,7 +181,7 @@ msgstr "Total debet"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr ""
+msgstr "% (posisjon) s: Flytt linje til topptekst"
 
 #. module: account_followup
 #: view:res.company:0
@@ -188,7 +190,9 @@ msgid "Follow-up Message"
 msgstr "Oppfølgings Beskjed"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
+#: view:res.partner:0
 msgid "Follow-up"
 msgstr "Oppfølging"
 
@@ -201,6 +205,7 @@ msgstr "MVA:"
 #: view:account_followup.stat:0
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "Partner"
 
@@ -210,12 +215,12 @@ msgid "Date :"
 msgstr "Dato :"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_ids:0
+#: field:account_followup.print,partner_ids:0
 msgid "Partners"
 msgstr "Partnere"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
 msgstr "Faktura påminnelse"
@@ -265,22 +270,22 @@ msgstr "Ref"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Gir rekkefølgen av når du viser en liste over oppfølging linjer."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,email_body:0
 msgid "Email body"
-msgstr ""
+msgstr "E-post kroppen"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "Oppfølgingsnivå"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "Siste oppfølging"
 
@@ -309,7 +314,7 @@ msgid ""
 msgstr ""
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_lang:0
+#: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "Send E-post på Partnerens språk"
 
@@ -406,7 +411,7 @@ msgid "Blocked"
 msgstr "Blokkert"
 
 #. module: account_followup
-#: help:account.followup.print,date:0
+#: help:account_followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
@@ -462,7 +467,7 @@ msgstr "Betalt"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(Brukers_signatur)s: bruker navn"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
@@ -497,7 +502,7 @@ msgstr "Feil! Dukan ikke opprette rekursive firmaer."
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr ""
+msgstr "% (Firma_navn) s: Brukerens Firmanavn"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
@@ -522,7 +527,7 @@ msgstr "Forfallsdato"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "% (Partner_Navn) s: Partner Navn"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -532,9 +537,10 @@ msgstr "Oppfølgings linjer"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr ""
+msgstr "% (Selskap_Valuta) s: Brukerens Selskap Valuta"
 
 #. module: account_followup
+#: field:account.move.line,result:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
@@ -569,8 +575,7 @@ msgid "Period"
 msgstr "Periode"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
+#: view:account_followup.print:0
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -592,12 +597,12 @@ msgstr "Maks Oppfølgings Nivå"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "leverandørgjeld elementer"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(followup_amount)s: Total Amount Due"
-msgstr ""
+msgstr "% (followup_Beløp) s: totalbeløpet"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -611,8 +616,10 @@ msgid "Followup Level"
 msgstr "Oppfølgings Nivå"
 
 #. module: account_followup
-#: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Description"
 msgstr "Beskrivelse"
 
@@ -627,7 +634,7 @@ msgid "Partner entries"
 msgstr "Partner oppføringer"
 
 #. module: account_followup
-#: help:account.followup.print.all,partner_lang:0
+#: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
@@ -638,18 +645,16 @@ msgstr ""
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr ""
+msgstr "Mottas elementer"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
 msgstr "Oppfølginger sendt"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
 msgid "Name"
 msgstr "Navn"
 
@@ -662,7 +667,7 @@ msgstr "Første bevegelse"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Li."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -692,11 +697,10 @@ msgstr "Dager forsinket"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr ""
+msgstr "Dokument: Kundens kontoutskrift"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
+#: field:account_followup.print,summary:0
 msgid "Summary"
 msgstr "Oppsummering"
 
@@ -718,7 +722,7 @@ msgstr "Sekvens"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(Firma_Navn)s : Brukerens firma navn"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-05 05:48+0000\n"
-"X-Generator: Launchpad (build 16335)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:31+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -43,6 +43,7 @@ msgstr "Pristatymo adresas einamiesiems pardavimams."
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
+#: field:sale.order.line,product_uom_qty:0
 msgid "Quantity"
 msgstr "Kiekis"
 
@@ -50,7 +51,7 @@ msgstr "Kiekis"
 #: view:sale.report:0
 #: field:sale.report,day:0
 msgid "Day"
-msgstr "Diena"
+msgstr "Data"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -96,7 +97,6 @@ msgid "All at Once"
 msgstr "Viskas iš karto"
 
 #. module: sale
-#: field:sale.order,project_id:0
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
@@ -121,6 +121,7 @@ msgid "Procurement Order"
 msgstr ""
 
 #. module: sale
+#: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
@@ -168,7 +169,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr "Numatytasis mokėjimo terminas"
+msgstr "Numatytosios mokėjimo sąlygos"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -196,8 +197,7 @@ msgstr "Paskyrimas"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
-"Pažymėkite žymės langelį, kad sugrupuoti tų pačių klientų sąskaitas faktūras"
+msgstr "Pažymėjus, pirkėjo sąskaitos faktūros bus sulietos į vieną S/F."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -218,7 +218,7 @@ msgstr "Atsargų judėjimas"
 #: field:sale.order,name:0
 #: field:sale.order.line,order_id:0
 msgid "Order Reference"
-msgstr "Užsakymo nuoroda"
+msgstr "Užsakymo numeris"
 
 #. module: sale
 #: view:sale.order:0
@@ -284,16 +284,16 @@ msgstr "Iš paravimo užsakymo"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr "Parduotuvės pavadinimas"
+msgstr "Skyriaus pavadinimas"
 
 #. module: sale
-#: code:addons/sale/sale.py:1017
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Nenurodytas klientas!"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree2
+#: model:ir.actions.act_window,name:sale.action_orders_exception
 msgid "Sales in Exception"
 msgstr "Pardavimų išimtys"
 
@@ -372,24 +372,28 @@ msgstr "Pardavimų užsakymų statistika"
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
 msgstr ""
+"Analitinė sąskaita, kurioje bus fiksuojamos pajamos gautos iš šio pardavimų "
+"užsakymo."
 
 #. module: sale
 #: selection:sale.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Spalis"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
+#: model:ir.actions.act_window,name:sale.action_quotations
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr "Pasiūlymai"
+msgstr "Komerciniai pasiūlymai"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
 msgstr ""
+"Kainoraštis, kuris bus naudojamas apskaičiuojant produktų, esančių pardavimų "
+"užsakyme, kainą."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -411,12 +415,12 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "Pasiūlymo data"
 
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Fiskalinė pozicija"
+msgstr "Mokestinė aplinka"
 
 #. module: sale
 #: view:sale.order:0
@@ -431,10 +435,9 @@ msgid "Number Packages"
 msgstr "Pakuočių skaičius"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "In Progress"
-msgstr "Vykdomas"
+msgstr "Vykdoma"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -486,7 +489,7 @@ msgstr "Pastabos"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "Iš pardavimų užsakymo sukurtos sąskaitos-faktūros adresas."
 
 #. module: sale
 #: view:sale.installer:0
@@ -494,10 +497,10 @@ msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0
+#: field:sale.order,invoice_exists:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "Išrašyta sąskaita faktūra"
+msgstr "Sąskaitos faktūros"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
@@ -512,7 +515,7 @@ msgstr "Patvirtinimo data"
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr "Važtaraščio eil. adresas"
+msgstr "Siuntos eil. adresas"
 
 #. module: sale
 #: sql_constraint:sale.order:0
@@ -522,17 +525,17 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Kovas"
 
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr "Bendra suma."
+msgstr "Bendra suma su mokesčiais"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr "Tarpinė suma"
+msgstr "Suma"
 
 #. module: sale
 #: report:sale.order:0
@@ -542,7 +545,7 @@ msgstr "Sąskaitos adresas :"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Matavimo vienetas "
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
@@ -577,7 +580,7 @@ msgstr "Pasiūlymas / Užsakymas"
 #: view:sale.report:0
 #: field:sale.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# eilučių"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
@@ -586,9 +589,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
-#: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Pardavimo užsakymo eilutė"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -606,6 +608,7 @@ msgid "Order N°"
 msgstr "Užsakymo Nr."
 
 #. module: sale
+#: view:sale.order:0
 #: field:sale.order,order_line:0
 msgid "Order Lines"
 msgstr "Užsakymo eilutės"
@@ -629,7 +632,7 @@ msgstr "Kiekis (Mat. vnt.)"
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Sukūrimo data"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -639,7 +642,7 @@ msgstr "Neužpajamuotos ir pristatymo eilutės"
 #. module: sale
 #: report:sale.order:0
 msgid "Total :"
-msgstr "Iš viso :"
+msgstr "Iš viso:"
 
 #. module: sale
 #: view:sale.report:0
@@ -665,18 +668,17 @@ msgstr "Kainoraštis"
 #: view:sale.report:0
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Kiekis"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Užsakymo data"
 
 #. module: sale
 #: view:sale.order.line:0
-#: field:sale.report,shipped:0
 msgid "Shipped"
-msgstr ""
+msgstr "Pristatyta"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree5
@@ -691,10 +693,10 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Rugsėjis"
 
 #. module: sale
-#: code:addons/sale/sale.py:1124
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -705,7 +707,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,categ_id:0
 msgid "Category of Product"
-msgstr ""
+msgstr "Produkto kategorija"
 
 #. module: sale
 #: report:sale.order:0
@@ -775,7 +777,7 @@ msgstr ""
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Išplėstiniai filtrai..."
 
 #. module: sale
 #: model:ir.module.module,description:sale.module_meta_information
@@ -808,7 +810,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sales Shop"
-msgstr ""
+msgstr "Pardavimų skyrius"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -818,7 +820,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Lapkritis"
 
 #. module: sale
 #: view:sale.order:0
@@ -841,7 +843,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr "Nuoroda"
+msgstr "Jūsų užsakymo numeris"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
@@ -856,7 +858,6 @@ msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Qty"
 msgstr "Kiekis"
@@ -868,11 +869,8 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Atšaukti"
@@ -885,16 +883,17 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr "Išimtis"
+msgstr "Neįvykdyta"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+#: field:sale.order,order_policy:0
 #: view:sale.order.line:0
 msgid "Create Invoice"
-msgstr "Sukurti sąskaitą faktūrą"
+msgstr "Išrašyti sąskaitą"
 
 #. module: sale
 #: field:sale.installer,sale_margin:0
@@ -934,9 +933,8 @@ msgstr ""
 
 #. module: sale
 #: report:sale.order:0
-#: view:sale.order.line:0
 msgid "Price"
-msgstr "Kaina"
+msgstr "Suma"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_installer
@@ -949,7 +947,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,price_total:0
 msgid "Total Price"
-msgstr "Bendra kaina"
+msgstr "Iš viso"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -974,7 +972,7 @@ msgstr "Pavadinimas"
 #. module: sale
 #: report:sale.order:0
 msgid "Shipping address :"
-msgstr "Pristatymo adresas :"
+msgstr "Pristatymo adresas:"
 
 #. module: sale
 #: view:board.board:0
@@ -1000,7 +998,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Iš viso, įskaitant mokesčius"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -1025,7 +1023,7 @@ msgstr "Patvirtinti pasiūlymą"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "Dokumento numeris, pagal kurį sugeneruotas šis pardavimų užsakymas."
 
 #. module: sale
 #: view:sale.order:0
@@ -1037,7 +1035,7 @@ msgstr "Grupuoti pagal..."
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Invoice"
-msgstr "Iš naujo sukurti sąskaitą faktūrą"
+msgstr "Iš naujo išrašyti sąskaitą"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
@@ -1054,7 +1052,7 @@ msgstr "Laukiantis"
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Užsakymo būdas"
 
 #. module: sale
 #: code:addons/sale/sale.py:1126
@@ -1099,7 +1097,6 @@ msgid "Create Procurement Order"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order,amount_tax:0
 #: field:sale.order.line,tax_id:0
 msgid "Taxes"
@@ -1124,7 +1121,7 @@ msgstr ""
 #: view:sale.make.invoice:0
 #: view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Sukurti sąskaitas faktūras"
 
 #. module: sale
 #: view:sale.order:0
@@ -1139,7 +1136,7 @@ msgstr "Faksas :"
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
 msgid "Advance Amount"
-msgstr ""
+msgstr "Avansinė suma"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -1173,7 +1170,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Liepa"
 
 #. module: sale
 #: field:sale.order.line,procurement_id:0
@@ -1189,7 +1186,7 @@ msgstr "Pristatymo klaida"
 #. module: sale
 #: field:sale.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr "Grupuoti sąskaitas faktūras"
+msgstr "Sulieti S/F"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1206,7 +1203,7 @@ msgstr ""
 #: view:sale.report:0
 #: field:sale.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mėnuo"
 
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
@@ -1258,7 +1255,7 @@ msgstr "Apmokėta"
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: view:sale.report:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Pardavimų analizė"
 
 #. module: sale
 #: field:sale.order.line,property_ids:0
@@ -1267,7 +1264,7 @@ msgstr "Ypatybės"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0
+#: view:sale.order:0
 #: selection:sale.report,state:0
 msgid "Quotation"
 msgstr "Pasiūlymas"
@@ -1287,8 +1284,10 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+#: model:ir.actions.act_window,name:sale.open_board_sales
+#: model:ir.ui.menu,name:sale.menu_dashboard_sales
 #: model:process.process,name:sale.process_process_salesprocess0
+#: view:res.partner:0
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Sales"
@@ -1298,9 +1297,10 @@ msgstr "Pardavimai"
 #: report:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "Vieneto kaina"
+msgstr "Kaina"
 
 #. module: sale
+#: view:sale.order:0
 #: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: selection:sale.order.line,state:0
@@ -1314,8 +1314,11 @@ msgid "sale.installer"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
+#: view:sale.order:0
+#, python-format
 msgid "Invoice"
 msgstr "Sąskaita faktūra"
 
@@ -1335,12 +1338,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Susijęs dokumentas"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "To Do"
-msgstr ""
+msgstr "Neatlikti"
 
 #. module: sale
 #: field:sale.order,picking_policy:0
@@ -1355,7 +1358,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "Bendra suma atėmus mokesčius"
 
 #. module: sale
 #: code:addons/sale/sale.py:574
@@ -1420,10 +1423,9 @@ msgstr "Užsakymo data"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr "Produktas"
+msgstr "Pardavimo matai"
 
 #. module: sale
-#: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Vykdomas"
@@ -1479,7 +1481,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Reference"
-msgstr ""
+msgstr "Pirkėjo identifikatorius"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -1510,15 +1512,14 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-#: view:sale.order:0
 msgid "Make Invoices"
-msgstr ""
+msgstr "Užpajamuoti"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Neužpajamuota"
 
 #. module: sale
 #: help:sale.order,date_confirm:0
@@ -1532,23 +1533,23 @@ msgstr ""
 #: field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Sąskaitos data"
 
 #. module: sale
 #: help:sale.advance.payment.inv,amount:0
 msgid "The amount to be invoiced in advance."
-msgstr ""
+msgstr "Užsakymo sumos dalis sumokama avansu."
 
 #. module: sale
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr "Sąskaitos faktūros klaida"
+msgstr "Sąskaitos faktūros išimtis"
 
 #. module: sale
 #: code:addons/sale/sale.py:1134
@@ -1580,7 +1581,7 @@ msgstr "Sukurti sąskaitas faktūras"
 #. module: sale
 #: report:sale.order:0
 msgid "Net Total :"
-msgstr "Neto iš viso:"
+msgstr "Suma be PVM:"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1591,12 +1592,11 @@ msgstr "Atšauktas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 #: view:sale.report:0
 #: field:sale.report,shop_id:0
 msgid "Shop"
-msgstr "Parduotuvė"
+msgstr "Pardavimų skyriai"
 
 #. module: sale
 #: view:sale.report:0
@@ -1632,19 +1632,23 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:287
+#: code:addons/sale/sale.py:584
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
+#: field:res.partner,sale_order_ids:0
 #: model:res.request.link,name:sale.req_link_sale_order
 #: view:sale.order:0
-#: field:stock.picking,sale_id:0
+#: selection:sale.order,state:0
+#, python-format
 msgid "Sales Order"
-msgstr ""
+msgstr "Pardavimo užsakymas"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr "Kiekis (Mat. vnt.)"
+msgstr "Kiekis (pardavimo matai)"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -1677,12 +1681,12 @@ msgid "Sales by Product's Category in last 90 days"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Sąskaitos eilutės"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
@@ -1722,7 +1726,7 @@ msgid "August"
 msgstr "Rugpjūtis"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_line_invoice.py:107
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -1737,8 +1741,6 @@ msgid "Weight"
 msgstr "Svoris"
 
 #. module: sale
-#: view:sale.open.invoice:0
-#: view:sale.order:0
 #: field:sale.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Sąskaitos faktūros"
@@ -1746,7 +1748,7 @@ msgstr "Sąskaitos faktūros"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Gruodis"
 
 #. module: sale
 #: field:sale.config.picking_policy,config_logo:0
@@ -1766,7 +1768,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order.line:0
 msgid "Uninvoiced"
-msgstr ""
+msgstr "Neužpajamuota"
 
 #. module: sale
 #: report:sale.order:0
@@ -1790,10 +1792,7 @@ msgid "Untaxed Amount"
 msgstr "Suma be mokesčių"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:163
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-#: view:sale.advance.payment.inv:0
-#: view:sale.order:0
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
 #, python-format
 msgid "Advance Invoice"
 msgstr "Avanso sąskaita faktūra"
@@ -1826,7 +1825,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr "Mokesčiai"
+msgstr "Bendra mokesčių suma"
 
 #. module: sale
 #: view:sale.order:0
@@ -1850,7 +1849,7 @@ msgid "Ordered Date"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: view:sale.order:0
 msgid "Sales Orders"
@@ -1891,7 +1890,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Sausis"
 
 #. module: sale
 #: view:sale.installer:0
@@ -1899,7 +1898,7 @@ msgid "Configure Your Sales Management Application"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree4
+#: model:ir.actions.act_window,name:sale.action_orders_in_progress
 msgid "Sales Order in Progress"
 msgstr "Vykdomi pardavimų užsakymai"
 
@@ -1918,7 +1917,7 @@ msgstr "Klaida"
 #: view:sale.report:0
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "Įvykdymo vėlavimas"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -1957,7 +1956,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr "Iš sandėlio"
+msgstr "Iš atsargų"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
@@ -2003,7 +2002,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "Tai parodo, kad susijusi sąskaita-faktūra buvo apmokėta."
 
 #. module: sale
 #: report:sale.order:0
@@ -2014,7 +2013,7 @@ msgstr "Aprašymas"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Gegužė"
 
 #. module: sale
 #: help:sale.installer,sale_order_dates:0
@@ -2026,7 +2025,7 @@ msgstr ""
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr "Klientas"
+msgstr "Pirkėjas"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2036,7 +2035,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Vasaris"
 
 #. module: sale
 #: help:sale.installer,sale_journal:0
@@ -2048,7 +2047,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Balandis"
 
 #. module: sale
 #: view:sale.shop:0
@@ -2075,7 +2074,7 @@ msgstr ""
 #: report:sale.order:0
 #: field:sale.order,payment_term:0
 msgid "Payment Term"
-msgstr "Mokėjimo terminas"
+msgstr "Mokėjimo sąlygos"
 
 #. module: sale
 #: help:sale.installer,sale_layout:0
@@ -2099,7 +2098,6 @@ msgid "Quotation N°"
 msgstr "Pasiūlymo Nr."
 
 #. module: sale
-#: field:sale.order,picked_rate:0
 #: view:sale.report:0
 msgid "Picked"
 msgstr "Pristatyta"
@@ -2108,7 +2106,7 @@ msgstr "Pristatyta"
 #: view:sale.report:0
 #: field:sale.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Metai"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0

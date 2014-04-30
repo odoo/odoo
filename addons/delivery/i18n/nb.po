@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:57+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -23,7 +23,7 @@ msgid "Order Ref."
 msgstr "Ordre ref."
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
 msgstr "Levering pr. post"
 
@@ -52,7 +52,7 @@ msgstr "Ingen pris tilgjengelig !"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Levering Rutenettlinje"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -64,6 +64,7 @@ msgstr "Delivery grids"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Mengde"
 
@@ -95,10 +96,9 @@ msgstr "Plukking klar for fakturering"
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Gir sekvensen ordre når du viser en liste over levering rutenett."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -122,6 +122,10 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"Leveransen prisliste kan du beregne kostnadene og salgsprisen for levering i "
+"henhold til vekten av produkter og andre kriterier. Du kan definere flere "
+"prislister for en leveringsmetode, per land eller en sone i et bestemt land "
+"definert av et postnummer rekkevidde."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -130,10 +134,6 @@ msgstr "Fast"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
@@ -152,11 +152,14 @@ msgstr "Ingen linjer på aktuell ordre passer valgt spedisjonsnettverk!"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Transportørs sporingsref."
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "Nettovekt"
 
@@ -203,7 +206,7 @@ msgstr "Salgsordre"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr ""
+msgstr "Levering Rutenett"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -247,6 +250,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Hvis det aktive feltet er satt til False, vil det tillate deg å skjule "
+"levering rutenettet uten å fjerne den."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -270,6 +275,7 @@ msgstr "Vekt"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Antall kolli"
 
@@ -277,8 +283,12 @@ msgstr "Antall kolli"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "Vekt"
 
@@ -288,12 +298,14 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Hvis det aktive feltet er satt til False, vil det tillate deg å skjule "
+"levering transportør uten å fjerne den."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Ingen rutenett tilgjengelig !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -301,8 +313,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Ordren har ikke utkast-status!"
@@ -357,7 +368,7 @@ msgstr "Variabel"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Denne leveringsmetoden vil bli brukt ved fakturering fra plukking."
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -379,6 +390,7 @@ msgstr "Start postnummer"
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Fullfør dette feltet hvis du har tenkt å fakturere frakt basert på plukking."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -430,7 +442,7 @@ msgid "Price"
 msgstr "Pris"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "No grid matching for this carrier !"
@@ -452,7 +464,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Transportøren %s (ID %d) har ingen leveringsnett!"
@@ -468,6 +480,7 @@ msgstr "Navn"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Transportør"
 
@@ -482,8 +495,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -510,7 +522,6 @@ msgid "Sale Price"
 msgstr "Salgspris"
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"

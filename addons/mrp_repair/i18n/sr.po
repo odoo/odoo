@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:11+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:22+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -150,7 +150,6 @@ msgstr "Adresa računa:"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-#: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
 msgstr "Garancija"
 
@@ -174,7 +173,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: view:mrp.repair:0
 #: field:mrp.repair,amount_tax:0
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
@@ -208,7 +206,7 @@ msgid "Move"
 msgstr "Pomeri"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:370
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "TRebas izabrati Partnerovu adresu fakture u formi za popravku!"
@@ -247,7 +245,7 @@ msgid "Draft"
 msgstr "Priprema"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:384
+#: code:addons/mrp_repair/mrp_repair.py:385
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "NIjedan nalog nije definisan kao partner \"%s\" ."
@@ -356,12 +354,14 @@ msgid "Pricelist"
 msgstr "Cenovnik"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
 msgstr "Kotacija napomene"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:435
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -396,6 +396,7 @@ msgstr "Metod Fakturisanja"
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0
+#: selection:mrp.repair,state:0
 msgid "Repaired"
 msgstr "Popravljeno"
 
@@ -437,6 +438,7 @@ msgid "Yes"
 msgstr "Da"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair,invoiced:0
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
@@ -475,6 +477,7 @@ msgstr "Reference Popravke"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
+#: view:mrp.repair:0
 msgid "Repair Order"
 msgstr "Zahtev za Popravku"
 
@@ -567,7 +570,9 @@ msgid "Quotations"
 msgstr "Upiti"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0
 #: report:repair.order:0
 msgid "Quantity"
 msgstr "Količina"
@@ -597,7 +602,6 @@ msgid "Unit Price"
 msgstr "Jedinična cijena"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Done"
 msgstr "Gotovo"
@@ -627,7 +631,7 @@ msgid "Fees"
 msgstr "Porezi"
 
 #. module: mrp_repair
-#: selection:mrp.repair,state:0
+#: view:mrp.repair.cancel:0
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Otkaži"
@@ -708,7 +712,6 @@ msgid "Deliver"
 msgstr "Isporuka"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
 #: field:mrp.repair,internal_notes:0
 msgid "Internal Notes"
 msgstr "Interne Napomene"
@@ -816,7 +819,7 @@ msgid "Ready to Repair"
 msgstr "Spremno za Popravku"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:370
+#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
 msgid "No partner !"
 msgstr "Nema partnera !"

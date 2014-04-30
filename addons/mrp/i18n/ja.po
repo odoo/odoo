@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:09+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:20+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -43,12 +43,12 @@ msgstr "システムが構成部品を探す場所"
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr "作業センタ活用"
+msgstr "作業区活用"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr "経路作業センタ"
+msgstr "工順作業区"
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
@@ -61,7 +61,9 @@ msgid "No. Of Cycles"
 msgstr "サイクル数"
 
 #. module: mrp
+#: field:mrp.production.workcenter.line,cycle:0
 #: field:mrp.routing.workcenter,cycle_nbr:0
+#: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
 msgstr "サイクル数"
 
@@ -104,12 +106,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "経路"
+msgstr "工順"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr "作業センタ製品"
+msgstr "作業区製品"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -131,12 +133,11 @@ msgstr "生産する"
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr "この作業センタは経路の特定の操作の中で反復回数実行される必要があります。"
+msgstr "この作業区は工順の特定の操作の中で反復回数実行される必要があります。"
 
 #. module: mrp
 #: view:mrp.bom:0
 #: field:mrp.bom,code:0
-#: view:mrp.production:0
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "参照"
@@ -144,7 +145,7 @@ msgstr "参照"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr "完成した製品"
+msgstr "完成品"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -209,9 +210,6 @@ msgstr "単位"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
-#: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "製品数量"
 
@@ -274,7 +272,7 @@ msgid "title"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: view:mrp.config.settings:0
 msgid "Master Data"
 msgstr "マスターデータ"
 
@@ -303,7 +301,7 @@ msgstr "予定済製品"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Sets / Phantom"
-msgstr "設定 / 模型"
+msgstr "セット / 仮想部品"
 
 #. module: mrp
 #: help:mrp.bom,position:0
@@ -359,7 +357,9 @@ msgstr "デフォルト単位"
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
 #: report:bom.structure:0
+#: view:mrp.bom:0
 #: field:mrp.product_price,number:0
+#: view:mrp.production:0
 #: report:mrp.production.order:0
 #, python-format
 msgid "Quantity"
@@ -418,12 +418,13 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
-#: field:mrp.production,date_planned_date:0
+#: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
 msgid "Scheduled Date"
 msgstr "予定日"
 
 #. module: mrp
+#: view:mrp.bom:0
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "部品表"
@@ -435,8 +436,8 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
-"完成した製品を必要とされる場所で製造する場合は空のままとして下さい。固定の場所で製造する場合は場所を設定して下さい。製造業務を外注する場合は、パートナの場"
-"所として下さい。"
+"完成品を必要とされる場所で製造する場合は空のままとして下さい。固定の場所で製造する場合は場所を設定して下さい。製造業務を外注する場合は、パートナの場所とし"
+"て下さい。"
 
 #. module: mrp
 #: view:board.board:0
@@ -499,7 +500,7 @@ msgstr "見積要求"
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
-msgstr "部品表は経路、すなわち作業センタの連携とリンクしています。"
+msgstr "部品表は工順（作業区間の連携を定義したもの）に紐付きます。"
 
 #. module: mrp
 #: constraint:product.product:0
@@ -583,26 +584,26 @@ msgstr "部品表ライン"
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr "製造前の時間"
+msgstr "生産前段取時間"
 
 #. module: mrp
 #: help:mrp.routing,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr "このアクティブ項目をFalseに設定すると、経路は削除することなく非表示にすることができます。"
+msgstr "このアクティブ項目をFalseに設定すると、工順は削除することなく非表示にすることができます。"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
-msgstr "材料の経路"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,move_lines2:0
 #: report:mrp.production.order:0
 msgid "Consumed Products"
-msgstr "消費製品"
+msgstr "消費構成品"
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -614,10 +615,10 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr "作業センタの負荷"
+msgstr "作業区負荷"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:43
+#: code:addons/mrp/procurement.py:55
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "この製品のための部品表が定義されていません。"
@@ -626,7 +627,7 @@ msgstr "この製品のための部品表が定義されていません。"
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Material Components"
-msgstr "構成部品の部品表"
+msgstr "部品表構成品"
 
 #. module: mrp
 #: field:mrp.production.order,nbr:0
@@ -635,6 +636,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
+#: view:mrp.config.settings:0
 msgid "Planning"
 msgstr "計画"
 
@@ -651,8 +653,8 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"完成した製品を製造するための操作のリスト（作業センタのリスト）。経路は操作の間の作業センタのコストを計算し、製造計画化を基本とする作業センタの将来の負荷を"
-"計画するために主に利用されます。"
+"完成品を製造するための操作のリスト（作業区のリスト）。工順は操作の間の作業区のコストを計算し、製造計画化を基本とする作業区の将来の負荷を計画するために主に"
+"利用されます。"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -798,8 +800,12 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
+#: view:mrp.config.settings:0
+#: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
+#: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
-msgstr "製造オーダー"
+msgstr "製造オーダ"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
@@ -846,7 +852,7 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:45
+#: code:addons/mrp/procurement.py:57
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -874,7 +880,7 @@ msgid "Companies"
 msgstr "会社"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:627
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -908,7 +914,7 @@ msgstr "在庫可能製品"
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Work Center name"
-msgstr "作業センタ名"
+msgstr "作業区名"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -927,7 +933,6 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.property:0
-#: view:mrp.property.group:0
 msgid "Property Group"
 msgstr "属性グループ"
 
@@ -956,9 +961,9 @@ msgstr ""
 
 #. module: mrp
 #: view:change.production.qty:0
+#: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
-#: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "キャンセル"
@@ -1045,6 +1050,7 @@ msgstr "製品の構成"
 #: field:mrp.bom,name:0
 #: report:mrp.production.order:0
 #: field:mrp.production.product.line,name:0
+#: view:mrp.property:0
 #: field:mrp.routing,name:0
 #: field:mrp.routing.workcenter,name:0
 msgid "Name"
@@ -1101,7 +1107,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr "製造オーダーは進行中です。"
+msgstr "製造オーダは進行中です。"
 
 #. module: mrp
 #: model:ir.module.module,description:mrp.module_meta_information
@@ -1145,7 +1151,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 msgid "Manufacturing Orders Waiting Products"
-msgstr "製造オーダー待ち製品"
+msgstr "製造オーダ待ち製品"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1170,7 +1176,7 @@ msgstr "サイクルの量"
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
 msgid "Finished Products Location"
-msgstr "完成した製品の場所"
+msgstr "完成品ロケーション"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
@@ -1183,11 +1189,9 @@ msgid "Analytic Journal"
 msgstr "分析仕訳帳"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr "作業センタ"
+msgstr "作業区"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1212,7 +1216,7 @@ msgstr "時間数"
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr "作業センタ操作"
+msgstr "作業区操作"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1235,12 +1239,12 @@ msgstr "時間の単位の選択"
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center load"
-msgstr "作業センタの負荷"
+msgstr "作業区の負荷"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "システムが完成した製品を在庫する場所です。"
+msgstr "システムが完成品を在庫するロケーション。"
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -1289,6 +1293,7 @@ msgstr "優先度"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
+#: field:mrp.production,picking_id:0
 msgid "Picking List"
 msgstr "集荷リスト"
 
@@ -1306,7 +1311,7 @@ msgstr "製造オーダー %s は %s に予定されています。"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr "製造オーダー番号："
+msgstr "製造オーダ番号"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:647
@@ -1385,7 +1390,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr "製造作業センタ"
+msgstr "製造作業区"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1448,7 +1453,7 @@ msgstr "調達製品"
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
-msgstr "作業センタの負荷"
+msgstr "作業区負荷"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1456,7 +1461,6 @@ msgstr "作業センタの負荷"
 #: view:mrp.bom:0
 #: field:mrp.bom,property_ids:0
 #: view:mrp.property:0
-#: view:procurement.order:0
 #: field:procurement.order,property_ids:0
 msgid "Properties"
 msgstr "属性"
@@ -1521,7 +1525,7 @@ msgstr ""
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
 msgid "Source Document"
-msgstr "基となるドキュメント"
+msgstr "参照元"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1538,7 +1542,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 msgid "Manufacturing Orders To Start"
-msgstr "製造オーダー開始"
+msgstr "製造オーダ開始"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:491
@@ -1547,13 +1551,15 @@ msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr "作業センタ"
+msgstr "作業区"
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
@@ -1604,7 +1610,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Consume Products"
-msgstr "消費製品"
+msgstr "消費済"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1676,8 +1682,8 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
-"完成した製品を製造するための操作のリスト（作業センタのリスト）。経路は操作の間の作業センタのコストを計算し、製造計画化を基本とする作業センタの将来の負荷を"
-"計画するために主に利用されます。"
+"完成品を製造するための操作のリスト（作業区のリスト）。工順は操作の間の作業区のコストを計算し、製造計画化を基本とする作業区の将来の負荷を計画するために主に"
+"利用されます。"
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -1715,10 +1721,9 @@ msgstr "製造製品の消費"
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
-msgstr "製造オーダー"
+msgstr "製造オーダ"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -1736,7 +1741,7 @@ msgstr ""
 #: view:mrp.production:0
 #: report:mrp.production.order:0
 msgid "Work Orders"
-msgstr "作業オーダー"
+msgstr "作業オーダ"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1785,16 +1790,15 @@ msgstr "会社"
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr "サイクル当りの時間（時）"
+msgstr "サイクルあたり待ち時間"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
-msgstr "製造オーダー"
+msgstr "製造オーダ"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
@@ -1846,7 +1850,6 @@ msgstr "製造リードタイム"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
-#: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
 msgstr "製品販売単位数量"
 
@@ -1889,7 +1892,7 @@ msgstr "製品の丸め"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "作業オーダー"
+msgstr "作業オーダ"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_mrp_production_order
@@ -1946,18 +1949,17 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Order"
-msgstr "注文中"
+msgstr "オーダ"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
-#: view:res.company:0
 msgid "Configuration"
 msgstr "設定"
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr "生産後の時間"
+msgstr "生産後片付け時間"
 
 #. module: mrp
 #: field:mrp.workcenter.load,time_unit:0
@@ -1970,7 +1972,9 @@ msgid "Total Qty"
 msgstr "合計数量"
 
 #. module: mrp
+#: field:mrp.production.workcenter.line,hour:0
 #: field:mrp.routing.workcenter,hour_nbr:0
+#: field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "時間数"
 
@@ -1997,7 +2001,7 @@ msgstr "製造または発注オーダーから割り当てます。"
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "親経路"
+msgstr "親工順"
 
 #. module: mrp
 #: view:mrp.installer:0
@@ -2020,7 +2024,6 @@ msgid "Image"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
 #: field:procurement.order,bom_id:0
 msgid "BoM"
 msgstr "部品表"
@@ -2061,6 +2064,7 @@ msgstr ""
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
+#: view:report.workcenter.load:0
 #: field:report.workcenter.load,name:0
 msgid "Week"
 msgstr "週"
@@ -2140,9 +2144,11 @@ msgid "Select Quantity"
 msgstr "数量選択"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
+#: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: view:mrp.bom:0
+#: view:product.product:0
 #: field:product.product,bom_ids:0
 msgid "Bill of Materials"
 msgstr "部品表"
@@ -2193,7 +2199,7 @@ msgstr ""
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
-msgstr "経路"
+msgstr "工順"
 
 #. module: mrp
 #: field:mrp.installer,mrp_operations:0
@@ -2221,6 +2227,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: view:mrp.production:0
 #: field:stock.move,production_id:0
 msgid "Production"
 msgstr "製造"
@@ -2262,14 +2269,8 @@ msgid "Change Product Qty"
 msgstr "製品数量変更"
 
 #. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
 #: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
 #: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "説明"
@@ -2303,7 +2304,10 @@ msgid "The way to procurement depends on the product type."
 msgstr "調達方法は製品タイプに依存します。"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.open_board_manufacturing
+#: model:ir.ui.menu,name:mrp.menu_board_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.menu,name:mrp.next_id_77
 msgid "Manufacturing"
 msgstr "製造"
 
@@ -2397,7 +2401,7 @@ msgstr "部品表のリストを表示する際には並び順を与えます。
 #: field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
 msgid "Products to Consume"
-msgstr "消費製品"
+msgstr "消費予定"
 
 #. module: mrp
 #: view:mrp.production.order:0

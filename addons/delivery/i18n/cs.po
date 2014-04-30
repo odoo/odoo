@@ -13,18 +13,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:57+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr "Odkaz objednávky"
+msgstr "Zn. objednávky"
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
-msgstr "Dodání podle zaslání"
+msgstr "Dodání poštou"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,18 +51,19 @@ msgstr "Žádná dostupná cena !"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Řádek dodací sítě"
+msgstr "Řádek cenové úrovně"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr "Dodací sítě"
+msgstr "Cenové úrovně"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Objem"
 
@@ -74,12 +75,12 @@ msgstr "Odkaz objednávky musí být jedinečný !"
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Řádek sítě"
+msgstr "Řádek cenové úrovně"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr "Objednávka doručení"
+msgstr "Příkaz dodání"
 
 #. module: delivery
 #: view:res.partner:0
@@ -89,15 +90,15 @@ msgstr "Vlastnosti doručení"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr "Navádění k fakturaci"
+msgstr "Dodání k fakturaci"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Dává pořadí posloupnosti, když zobrazuje seznam dodací sítě."
+msgstr ""
+"Udává pořadí posloupnosti při zobrazení seznamu cenových úrovní dopravy."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -106,7 +107,7 @@ msgstr "Země"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr "Objednávka doručení :"
+msgstr "Příkaz dodání:"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -133,10 +134,6 @@ msgstr "Pevné"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
@@ -145,7 +142,7 @@ msgstr "Způsob doručení"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Přesun zásob"
+msgstr "Pohyb zásob"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:215
@@ -156,11 +153,14 @@ msgstr ""
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr "Odkaz sledování přepravce"
+msgstr "Sledovací číslo přepravce"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "Čistá hmotnost"
 
@@ -185,7 +185,7 @@ msgstr "Varování"
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr "Určení sítě"
+msgstr "Definice cenových úrovní dopravy"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -210,7 +210,7 @@ msgstr "Prodejní objednávka"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "Dodací síť"
+msgstr "Cenové úrovně dopravy"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -220,7 +220,7 @@ msgstr "Fakturováno"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "Naváděcí seznam"
+msgstr "Dodací list"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
@@ -247,12 +247,12 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr "Řádky sítě"
+msgstr "Řádky cenové úrovně dopravy"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Síť"
+msgstr "Cen. úrovně"
 
 #. module: delivery
 #: help:delivery.grid,active:0
@@ -260,8 +260,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
-"Pokud je aktivní pole nastaveno na Nepravda, umožní vám to skrýt dodací síť "
-"bez jejího odebrání."
+"Pokud je aktivní pole nastaveno na nepravdu, můžete skrýt cenové úrovně "
+"dopravy bez jejich odebrání."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -276,7 +276,7 @@ msgstr "Datum objednání"
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Jméno sítě"
+msgstr "Název cenové úrovně"
 
 #. module: delivery
 #: view:stock.move:0
@@ -285,6 +285,7 @@ msgstr "Váhy"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Počet balíků"
 
@@ -292,10 +293,14 @@ msgstr "Počet balíků"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
-msgstr "Váha"
+msgstr "Hmotnost"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
@@ -307,10 +312,10 @@ msgstr ""
 "přepravce bez jeho odebrání."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr "Žádná dostupná síť !"
+msgstr "Žádné dostupné cenové úrovně"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -318,8 +323,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Objednávka není ve stavu koncept !"
@@ -332,7 +336,7 @@ msgstr "Chyba ! Nemůžete vytvořit rekurzivní asociované členy."
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr "Dávka"
+msgstr "Šarže"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -363,18 +367,18 @@ msgstr "Podmínka"
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr "Výrobní cena"
+msgstr "Nákladová cena"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr "Proměnné"
+msgstr "Proměnná"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "Dodací metoda bude použita při fakturaci z nasvádění."
+msgstr "Způsob dodání bude použit při fakturaci z naskladnění."
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -395,7 +399,8 @@ msgstr "Počáteční PSČ"
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr "Vyplňte toto pole, pokud plánujete fakturovat přepravu při navádění."
+msgstr ""
+"Vyplňte toto pole pokud plánujete fakturovat dopravu na základě naskladnění."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -437,7 +442,7 @@ msgstr "Popis"
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "Ceník dodání"
+msgstr "Ceník dopravy"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
@@ -447,15 +452,15 @@ msgid "Price"
 msgstr "Cena"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr "Žádná síť odpovídající tomuto přepravci !"
+msgstr "Žádná cenová úroveň pro tohoto přepravce!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Dodací"
+msgstr "Dodání"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -469,15 +474,15 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "Přepravce %s (id: %d) nemá dodací síť!"
+msgstr "Přepravce %s (id: %d) nemá cenové úrovně dopravy!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -485,6 +490,7 @@ msgstr "Jméno"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Přepravce"
 
@@ -499,8 +505,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "Stav objednávky musí být koncept pro přidání dodacích řádků."
@@ -513,7 +518,7 @@ msgstr "Přepravci a doručení"
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Dodací síť"
+msgstr "Cenové úrovně dopravy"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -526,7 +531,6 @@ msgid "Sale Price"
 msgstr "Prodejní cena"
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:27+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:35+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -45,7 +45,7 @@ msgstr "Eerste Datum"
 #. module: subscription
 #: field:subscription.document.fields,field:0
 msgid "Field"
-msgstr "Veldnaam"
+msgstr "Veld"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -104,7 +104,7 @@ msgstr "Stop"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Set to Draft"
-msgstr "Naar Concept"
+msgstr "Zet op concept"
 
 #. module: subscription
 #: model:ir.module.module,description:subscription.module_meta_information
@@ -118,7 +118,7 @@ msgstr ""
 #: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Running"
-msgstr "Loopt"
+msgstr "In behandeling"
 
 #. module: subscription
 #: view:subscription.subscription.history:0
@@ -211,6 +211,7 @@ msgstr "Cron opdracht"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:0
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
 msgstr "Abonnement"
@@ -299,7 +300,7 @@ msgid "Document Types"
 msgstr "Documentsoorten"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:109
+#: code:addons/subscription/subscription.py:120
 #, python-format
 msgid "Wrong Source Document !"
 msgstr "Fout brondocument !"
@@ -311,10 +312,9 @@ msgid "Subscription Document Fields"
 msgstr "Abonnement document velden"
 
 #. module: subscription
-#: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr "Gereed"
+msgstr "Verwerkt"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -322,7 +322,7 @@ msgid "Invoice"
 msgstr "Factuur"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:109
+#: code:addons/subscription/subscription.py:120
 #, python-format
 msgid ""
 "Please provide another source document.\n"

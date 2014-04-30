@@ -9,19 +9,19 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2012-01-03 14:20+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:51+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:49+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event starts"
-msgstr "Incepe evenimentul"
+msgstr "Începe evenimentul"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -36,12 +36,13 @@ msgstr "Obligatoriu sa participe"
 #. module: base_calendar
 #: help:calendar.event,exdate:0
 #: help:calendar.todo,exdate:0
+#: help:crm.meeting,exdate:0
 msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
 msgstr ""
-"Aceasta proprietate defineste lista exceptiilor datii/timpului pentru o "
-"componenta recurenta a calendarului."
+"Această proprietate definește lista excepțiilor datei/timpului pentru o "
+"componenta recurentă a calendarului."
 
 #. module: base_calendar
 #: constraint:res.users:0
@@ -73,8 +74,9 @@ msgstr "Invitatie"
 #. module: base_calendar
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
+#: help:crm.meeting,recurrency:0
 msgid "Recurrent Meeting"
-msgstr "Intalnire recurenta"
+msgstr "Întalnire recurentă"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -85,24 +87,25 @@ msgstr "Alarme"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Sunday"
-msgstr "Duminica"
+msgstr "Duminică"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,role:0
 msgid "Role"
 msgstr "Rol"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Invitation details"
-msgstr "Detalii invitatie"
+msgstr "Detalii invitație"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fourth"
 msgstr "Al patrulea (a patra)"
 
@@ -117,12 +120,15 @@ msgstr "Afiseaza ca"
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
 #: selection:calendar.todo,select1:0
+#: field:crm.meeting,day:0
+#: selection:crm.meeting,select1:0
 msgid "Date of month"
-msgstr "Data din luna"
+msgstr "Dată din lună"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Public"
 msgstr "Public"
 
@@ -134,6 +140,7 @@ msgstr " "
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "March"
 msgstr "Martie"
 
@@ -147,33 +154,36 @@ msgstr "Avertizare !"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Friday"
 msgstr "Vineri"
 
 #. module: base_calendar
 #: field:calendar.event,allday:0
 #: field:calendar.todo,allday:0
+#: field:crm.meeting,allday:0
 msgid "All Day"
-msgstr "Toata ziua"
+msgstr "Toată ziua"
 
 #. module: base_calendar
 #: field:calendar.event,select1:0
 #: field:calendar.todo,select1:0
+#: field:crm.meeting,select1:0
 msgid "Option"
-msgstr "Optiune"
+msgstr "Opțiune"
 
 #. module: base_calendar
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 msgid "Free"
-msgstr "Gratuit"
+msgstr "Liber"
 
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
 msgid "Indicats whether the favor of a reply is requested"
-msgstr "Indica daca este obligatoriu un raspuns"
+msgstr "Indică dacă este obligatoriu un raspuns"
 
 #. module: base_calendar
 #: field:calendar.alarm,alarm_id:0
@@ -183,7 +193,7 @@ msgstr "Alarma de baza"
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
 msgid "The users that the original request was delegated to"
-msgstr "Utilizatorii carora le-a fost delegata cererea originala"
+msgstr "Utilizatorii cărora le-a fost delegată cererea originală"
 
 #. module: base_calendar
 #: field:calendar.attendee,ref:0
@@ -193,6 +203,7 @@ msgstr "Ref eveniment"
 #. module: base_calendar
 #: field:calendar.event,we:0
 #: field:calendar.todo,we:0
+#: field:crm.meeting,we:0
 msgid "Wed"
 msgstr "Miercuri"
 
@@ -204,8 +215,9 @@ msgstr "Afiseaza ora ca"
 #. module: base_calendar
 #: field:calendar.event,tu:0
 #: field:calendar.todo,tu:0
+#: field:crm.meeting,tu:0
 msgid "Tue"
-msgstr "Marti"
+msgstr "Marți"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_attachment
@@ -221,6 +233,7 @@ msgstr "Anual"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Last"
 msgstr "Ultimul/a"
 
@@ -241,15 +254,12 @@ msgid "Days"
 msgstr "Zile"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Invitation Detail"
-msgstr "Detaliile invitatiei"
+msgstr "Detaliile invitației"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1194
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -257,7 +267,7 @@ msgstr "Eroare!"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Chair Person"
-msgstr "Presedinte"
+msgstr "Președinte"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -268,7 +278,7 @@ msgstr "Procedura"
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
 msgid "Cancelled"
-msgstr "Anulat(a)"
+msgstr "Anulat(ă)"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -279,7 +289,7 @@ msgstr "Minute"
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
 msgid "Display"
-msgstr "Afiseaza"
+msgstr "Afișează"
 
 #. module: base_calendar
 #: view:calendar.event.edit.all:0
@@ -300,13 +310,12 @@ msgstr "In al doilea rand"
 #: selection:calendar.alarm,trigger_related:0
 #: selection:res.alarm,trigger_related:0
 msgid "The event ends"
-msgstr "Evenimentul se incheie"
+msgstr "Evenimentul se încheie"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
-msgstr "Grupeaza dupa..."
+msgstr "Grupează după..."
 
 #. module: base_calendar
 #: help:base_calendar.invite.attendee,email:0
@@ -331,7 +340,7 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
 msgid "Specify the type of Invitation"
-msgstr "Specifica tipul Invitatiei"
+msgstr "Specifică tipul invitației"
 
 #. module: base_calendar
 #: selection:calendar.event,freq:0
@@ -343,12 +352,12 @@ msgstr "Ani"
 #: field:calendar.alarm,event_end_date:0
 #: field:calendar.attendee,event_end_date:0
 msgid "Event End Date"
-msgstr "Data de sfarsit a evenimentului"
+msgstr "Data de sfârșit a evenimentului"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
-msgstr "Participare Optionala"
+msgstr "Participare Opțională"
 
 #. module: base_calendar
 #: field:calendar.event,date_deadline:0
@@ -357,9 +366,11 @@ msgid "Deadline"
 msgstr "Termen limita"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:389
-#: code:addons/base_calendar/base_calendar.py:1004
-#: code:addons/base_calendar/base_calendar.py:1006
+#: code:addons/base_calendar/base_calendar.py:399
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "Avertizare!"
@@ -367,12 +378,13 @@ msgstr "Avertizare!"
 #. module: base_calendar
 #: help:calendar.event,active:0
 #: help:calendar.todo,active:0
+#: help:crm.meeting,active:0
 msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
 msgstr ""
-"Daca campul activ este setat pe adevarat, va va permite sa ascundeti "
-"informatia despre alarma evenimentului fara a o sterge."
+"Dacă câmpul activ este setat pe adevărat, vă va permite să ascundeți "
+"informația despre alarma evenimentului fără a o șterge."
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -384,20 +396,22 @@ msgstr "Functionalitatea de baza a calendarului"
 #: field:calendar.event,organizer_id:0
 #: field:calendar.todo,organizer:0
 #: field:calendar.todo,organizer_id:0
+#: field:crm.meeting,organizer:0
+#: field:crm.meeting,organizer_id:0
 msgid "Organizer"
 msgstr "Organizator"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
+#: field:crm.meeting,user_id:0
 msgid "Responsible"
 msgstr "Responsabil"
 
 #. module: base_calendar
 #: view:calendar.event:0
-#: model:res.request.link,name:base_calendar.request_link_meeting
+#: model:res.request.link,name:base_calendar.request_link_event
 msgid "Event"
 msgstr "Eveniment"
 
@@ -411,14 +425,16 @@ msgstr "Editare toate apariţiile întâlnirii recurente."
 #: selection:calendar.alarm,trigger_occurs:0
 #: selection:res.alarm,trigger_occurs:0
 msgid "Before"
-msgstr "Inainte"
+msgstr "Înainte"
 
 #. module: base_calendar
 #: view:calendar.event:0
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
+#: field:crm.meeting,date_open:0
+#: selection:crm.meeting,state:0
 msgid "Confirmed"
-msgstr "Confirmat(a)"
+msgstr "Confirmat(ă)"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_calendar_event_edit_all
@@ -428,30 +444,35 @@ msgstr "Editeaza toate evenimentele"
 #. module: base_calendar
 #: field:calendar.alarm,attendee_ids:0
 #: field:calendar.event,attendee_ids:0
+#: field:calendar.event,partner_ids:0
 #: field:calendar.todo,attendee_ids:0
+#: field:calendar.todo,partner_ids:0
+#: field:crm.meeting,attendee_ids:0
+#: field:crm.meeting,partner_ids:0
 msgid "Attendees"
-msgstr "Participanti"
+msgstr "Participanți"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirm"
-msgstr "Confirma"
+msgstr "Confirmă"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_todo
 msgid "Calendar Task"
-msgstr "Sarcina Calendar"
+msgstr "Sarcină Calendar"
 
 #. module: base_calendar
 #: field:calendar.event,su:0
 #: field:calendar.todo,su:0
+#: field:crm.meeting,su:0
 msgid "Sun"
-msgstr "Duminica"
+msgstr "Duminică"
 
 #. module: base_calendar
 #: field:calendar.attendee,cutype:0
 msgid "Invite Type"
-msgstr "Tip invitatie"
+msgstr "Tip invitație"
 
 #. module: base_calendar
 #: help:calendar.attendee,partner_id:0
@@ -471,15 +492,16 @@ msgstr "Delegat de la"
 #. module: base_calendar
 #: selection:calendar.event,select1:0
 #: selection:calendar.todo,select1:0
+#: selection:crm.meeting,select1:0
 msgid "Day of month"
 msgstr "Ziua din luna"
 
 #. module: base_calendar
-#: view:calendar.event:0
 #: field:calendar.event,location:0
 #: field:calendar.todo,location:0
+#: field:crm.meeting,location:0
 msgid "Location"
-msgstr "Locatie"
+msgstr "Locație"
 
 #. module: base_calendar
 #: field:base_calendar.invite.attendee,send_mail:0
@@ -487,7 +509,6 @@ msgid "Send mail?"
 msgstr "Trimiteti e-mail-ul?"
 
 #. module: base_calendar
-#: field:base_calendar.invite.attendee,email:0
 #: selection:calendar.alarm,action:0
 #: field:calendar.attendee,email:0
 msgid "Email"
@@ -501,13 +522,14 @@ msgstr "Detalii eveniment"
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Run"
-msgstr "Executa"
+msgstr "Execută"
 
 #. module: base_calendar
 #: field:calendar.event,exdate:0
 #: field:calendar.todo,exdate:0
+#: field:crm.meeting,exdate:0
 msgid "Exception Date/Times"
-msgstr "Exceptie Data/Ore"
+msgstr "Excepție Data/Ore"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
@@ -518,8 +540,9 @@ msgstr "Confidenţial"
 #. module: base_calendar
 #: field:calendar.event,end_date:0
 #: field:calendar.todo,end_date:0
+#: field:crm.meeting,end_date:0
 msgid "Repeat Until"
-msgstr "Repeta pana cand"
+msgstr "Repetă până cand"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
@@ -538,11 +561,12 @@ msgstr "Vizibilitate"
 #. module: base_calendar
 #: field:calendar.attendee,rsvp:0
 msgid "Required Reply?"
-msgstr "Necesita raspuns?"
+msgstr "Necesită răspuns?"
 
 #. module: base_calendar
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
+#: field:crm.meeting,base_calendar_url:0
 msgid "Caldav URL"
 msgstr "URL Caldav"
 
@@ -552,26 +576,28 @@ msgid "Select range to Exclude"
 msgstr "Selectare raza de Excludere"
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_uid:0
-#: field:calendar.todo,recurrent_uid:0
+#: field:calendar.event,recurrent_id:0
+#: field:calendar.todo,recurrent_id:0
+#: field:crm.meeting,recurrent_id:0
 msgid "Recurrent ID"
 msgstr "ID recurent"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "July"
 msgstr "Iulie"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Accepted"
-msgstr "Acceptat(a)"
+msgstr "Acceptat(ă)"
 
 #. module: base_calendar
 #: field:calendar.event,th:0
 #: field:calendar.todo,th:0
+#: field:crm.meeting,th:0
 msgid "Thu"
 msgstr "Joi"
 
@@ -594,7 +620,7 @@ msgstr "Permanent"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Participation required"
-msgstr "Este necesara participarea"
+msgstr "Este necesară participarea"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -605,7 +631,7 @@ msgstr "_Renunță"
 #: field:calendar.event,create_date:0
 #: field:calendar.todo,create_date:0
 msgid "Created"
-msgstr "Creat(a)"
+msgstr "Creat(ă)"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
@@ -615,6 +641,7 @@ msgstr "Setare raza de excludere"
 #. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
+#: selection:crm.meeting,class:0
 msgid "Private"
 msgstr "Privat"
 
@@ -637,16 +664,16 @@ msgid "Mark as"
 msgstr "Marcheaza ca"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: field:calendar.attendee,partner_address_id:0
+#: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr "Contact"
 
 #. module: base_calendar
 #: help:calendar.event,rrule_type:0
 #: help:calendar.todo,rrule_type:0
+#: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr "Permite repetarea automata a evenimentului in acel interval"
+msgstr "Permite repetarea automată a evenimentului în acel interval"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -675,39 +702,47 @@ msgstr "_Ok"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "First"
 msgstr "Primul/a"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,class:0
+#: field:calendar.todo,class:0
+#: field:crm.meeting,class:0
 msgid "Privacy"
-msgstr "Confidentialitate"
+msgstr "Confidențialitate"
 
 #. module: base_calendar
 #: field:calendar.event,vtimezone:0
 #: field:calendar.todo,vtimezone:0
+#: field:crm.meeting,vtimezone:0
 msgid "Timezone"
 msgstr "Fus orar"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Subject"
 msgstr "Subiect"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
 msgid "Needs Action"
-msgstr "Necesita actiune"
+msgstr "Necesită acțiune"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "September"
 msgstr "Septembrie"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "December"
 msgstr "Decembrie"
 
@@ -734,8 +769,9 @@ msgstr "Individual"
 #. module: base_calendar
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
+#: help:crm.meeting,count:0
 msgid "Repeat x times"
-msgstr "Repeta de x ori"
+msgstr "Repetă de x ori"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
@@ -750,7 +786,7 @@ msgstr "Informatii Delegatie"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Start Date"
-msgstr "Data de inceput"
+msgstr "Dată de început"
 
 #. module: base_calendar
 #: field:calendar.attendee,cn:0
@@ -758,10 +794,9 @@ msgid "Common name"
 msgstr "Nume comun"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Declined"
-msgstr "Refuzat(a)"
+msgstr "Refuzat(ă)"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -774,10 +809,10 @@ msgid "My Events"
 msgstr "Evenimentele mele"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Decline"
-msgstr "Refuza"
+msgstr "Refuză"
 
 #. module: base_calendar
 #: selection:calendar.event,freq:0
@@ -804,11 +839,12 @@ msgstr "Contacte"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_res_alarm
 msgid "Basic Alarm Information"
-msgstr "informatii de Baza Alarma"
+msgstr "informații de Baza Alarma"
 
 #. module: base_calendar
 #: field:calendar.event,fr:0
 #: field:calendar.todo,fr:0
+#: field:crm.meeting,fr:0
 msgid "Fri"
 msgstr "Vineri"
 
@@ -832,24 +868,26 @@ msgstr "Membru"
 #. module: base_calendar
 #: help:calendar.event,location:0
 #: help:calendar.todo,location:0
+#: help:crm.meeting,location:0
 msgid "Location of Event"
-msgstr "Locatia evenimentului"
+msgstr "Locația evenimentului"
 
 #. module: base_calendar
 #: field:calendar.event,rrule:0
 #: field:calendar.todo,rrule:0
+#: field:crm.meeting,rrule:0
 msgid "Recurrent Rule"
-msgstr "Regula Recurenta"
+msgstr "Regulă recurentă"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Draft"
-msgstr "Ciorna"
+msgstr "Ciornă"
 
 #. module: base_calendar
 #: field:calendar.alarm,attach:0
 msgid "Attachment"
-msgstr "Atasament"
+msgstr "Atașament"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -863,6 +901,9 @@ msgstr "Sfarsitul recurentei"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,alarm_id:0
+#: field:calendar.todo,alarm_id:0
+#: field:crm.meeting,alarm_id:0
 msgid "Reminder"
 msgstr "Memento"
 
@@ -894,9 +935,10 @@ msgstr "Email-ul Persoanei Invitate"
 #: field:calendar.alarm,repeat:0
 #: field:calendar.event,count:0
 #: field:calendar.todo,count:0
+#: field:crm.meeting,count:0
 #: field:res.alarm,repeat:0
 msgid "Repeat"
-msgstr "Repeta"
+msgstr "Repetă"
 
 #. module: base_calendar
 #: help:calendar.attendee,dir:0
@@ -910,24 +952,28 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "August"
 msgstr "August"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Monday"
 msgstr "Luni"
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Third"
 msgstr "Al treilea (a treia)"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "June"
 msgstr "Iunie"
 
@@ -940,11 +986,11 @@ msgstr "Data Evenimentului"
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "The"
 msgstr "-l"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_from:0
 msgid "Delegated From"
 msgstr "Delegat de la"
@@ -957,19 +1003,21 @@ msgstr "Utilizator"
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event,date:0
+#: field:crm.meeting,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "November"
 msgstr "Noiembrie"
 
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr "Indica grupurile de care apartine participantul"
+msgstr "Indică grupurile de care aparține participantul"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -979,6 +1027,7 @@ msgstr "Data"
 #. module: base_calendar
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
+#: field:crm.meeting,mo:0
 msgid "Mon"
 msgstr "Luni"
 
@@ -997,14 +1046,18 @@ msgstr "Fără repetare"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "October"
 msgstr "Octombrie"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
+#: selection:calendar.attendee,state:0
 #: view:calendar.event:0
+#: selection:calendar.event,state:0
+#: selection:calendar.todo,state:0
+#: view:crm.meeting:0
 msgid "Uncertain"
-msgstr "Nesigur(a)"
+msgstr "Nesigur(ă)"
 
 #. module: base_calendar
 #: field:calendar.attendee,language:0
@@ -1015,11 +1068,12 @@ msgstr "Limba"
 #: field:calendar.alarm,trigger_occurs:0
 #: field:res.alarm,trigger_occurs:0
 msgid "Triggers"
-msgstr "Declansatori"
+msgstr "Declanșatori"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "January"
 msgstr "Ianuarie"
 
@@ -1038,6 +1092,7 @@ msgstr "Interval"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Wednesday"
 msgstr "Miercuri"
 
@@ -1050,6 +1105,7 @@ msgstr "Intervalul nu poate fi Negativ"
 #. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
+#: field:crm.meeting,message_summary:0
 msgid "Summary"
 msgstr "Rezumat"
 
@@ -1057,19 +1113,20 @@ msgstr "Rezumat"
 #: field:calendar.alarm,active:0
 #: field:calendar.event,active:0
 #: field:calendar.todo,active:0
+#: field:crm.meeting,active:0
 #: field:res.alarm,active:0
 msgid "Active"
-msgstr "Activ(a)"
+msgstr "Activ(ă)"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr "Alegeti ziua din luna in care sa repetati intalnirea"
+msgstr "Alegeți ziua din luna în care să repetați întalnirea"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
 msgid "Action"
-msgstr "Actiune"
+msgstr "Acțiune"
 
 #. module: base_calendar
 #: help:base_calendar.invite.attendee,type:0
@@ -1083,8 +1140,8 @@ msgid ""
 "Duration' and 'Repeat' are both optional, but if one occurs, so MUST the "
 "other"
 msgstr ""
-"'Durata' si 'Repetare' sunt ambele optionale, dar daca una are loc, la fel "
-"TREBUIE si cealalta"
+"'Durata' și 'Repetare' sunt ambele opționale, dar dacă una este specificată "
+"TREBUIE și cealaltă"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event_edit_all
@@ -1097,7 +1154,6 @@ msgid "Participation role for the calendar user"
 msgstr "Rolul participarii pentru utilizatorul calendarului"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,delegated_to:0
 msgid "Delegated To"
 msgstr "Delegat la"
@@ -1106,23 +1162,24 @@ msgstr "Delegat la"
 #: help:calendar.alarm,action:0
 msgid "Defines the action to be invoked when an alarm is triggered"
 msgstr ""
-"Defineste actiunea care trebuie efectuata atunci cand este declansata alarma"
+"Definește acțiunea care trebuie efectuată atunci când este declanșată alarma"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
+#: selection:crm.meeting,end_type:0
 msgid "End date"
-msgstr "Data de sfarsit"
+msgstr "Data de sfârșit"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Search Events"
-msgstr "Cauta Evenimente"
+msgstr "Caută evenimente"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency Option"
-msgstr "Optiune Recurenta"
+msgstr "Opțiune Recurență"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -1141,8 +1198,9 @@ msgstr ""
 "informatiile despre alarma fara a le sterge."
 
 #. module: base_calendar
-#: field:calendar.event,recurrent_id:0
-#: field:calendar.todo,recurrent_id:0
+#: field:calendar.event,recurrent_id_date:0
+#: field:calendar.todo,recurrent_id_date:0
+#: field:crm.meeting,recurrent_id_date:0
 msgid "Recurrent ID date"
 msgstr "Data ID-ului recurent"
 
@@ -1186,12 +1244,12 @@ msgstr "Efectuat"
 #. module: base_calendar
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
+#: help:crm.meeting,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Repeta fiecare (Zile/Saptamana/Luna/An)"
+msgstr "Repetă fiecare (Zile/Săptămână/Lună/An)"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: field:base_calendar.invite.attendee,user_ids:0
+#: model:ir.model,name:base_calendar.model_res_users
 msgid "Users"
 msgstr "Utilizatori"
 
@@ -1201,7 +1259,6 @@ msgid "of"
 msgstr "din"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Cancel"
 msgstr "Anuleaza"
@@ -1214,8 +1271,9 @@ msgstr "res.utilizatori"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Tuesday"
-msgstr "Marti"
+msgstr "Marți"
 
 #. module: base_calendar
 #: help:calendar.alarm,description:0
@@ -1224,7 +1282,7 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
-"Ofera o descriere mai completa a componentei calendar decat cea oferita de "
+"Oferă o descriere mai completă a componentei calendar decât cea oferită de "
 "proprietatea \"REZUMAT\""
 
 #. module: base_calendar
@@ -1233,14 +1291,14 @@ msgid "Responsible User"
 msgstr "Utilizator responsabil"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1466
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
-#: selection:res.users,availability:0
+#: selection:crm.meeting,show_as:0
 #, python-format
 msgid "Busy"
-msgstr "Ocupat(a)"
+msgstr "Ocupat(ă)"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event
@@ -1269,14 +1327,16 @@ msgstr "Numar fix de dati"
 #. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
+#: field:crm.meeting,recurrency:0
 msgid "Recurrent"
 msgstr "Recurent"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
+#: field:crm.meeting,rrule_type:0
 msgid "Recurrency"
-msgstr "Recurenta"
+msgstr "Recurență"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_view_attendee_form
@@ -1287,14 +1347,16 @@ msgstr "Invitatii eveniment"
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Thursday"
 msgstr "Joi"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
 #: field:calendar.todo,exrule:0
+#: field:crm.meeting,exrule:0
 msgid "Exception Rule"
-msgstr "Regula exceptiei"
+msgstr "Regula excepției"
 
 #. module: base_calendar
 #: help:calendar.attendee,language:0
@@ -1312,16 +1374,18 @@ msgstr "Detalii"
 #. module: base_calendar
 #: help:calendar.event,exrule:0
 #: help:calendar.todo,exrule:0
+#: help:crm.meeting,exrule:0
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
 msgstr ""
-"Defineste o regula sau un tipar temporar care se repeta pentru a se exclude "
-"de la regula recurenta."
+"Definește o regulă sau un tipar temporar care se repetă pentru a se exclude "
+"de la regula recurentă."
 
 #. module: base_calendar
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
+#: field:crm.meeting,month_list:0
 msgid "Month"
 msgstr "Luna"
 
@@ -1347,7 +1411,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
 msgid "URI Reference"
-msgstr "Referinta URI"
+msgstr "Referința URI"
 
 #. module: base_calendar
 #: field:calendar.alarm,description:0
@@ -1356,12 +1420,14 @@ msgstr "Referinta URI"
 #: field:calendar.event,name:0
 #: field:calendar.todo,description:0
 #: field:calendar.todo,name:0
+#: field:crm.meeting,description:0
 msgid "Description"
 msgstr "Descriere"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "May"
 msgstr "Mai"
 
@@ -1380,12 +1446,12 @@ msgstr "Cauta Invitatii"
 #: selection:calendar.alarm,trigger_occurs:0
 #: selection:res.alarm,trigger_occurs:0
 msgid "After"
-msgstr "Dupa"
+msgstr "După"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Stop"
-msgstr "Opreste"
+msgstr "Oprește"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
@@ -1398,21 +1464,21 @@ msgid "Objects"
 msgstr "Obiecte"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Delegated"
-msgstr "Delegat(a)"
+msgstr "Delegat(ă)"
 
 #. module: base_calendar
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
+#: field:crm.meeting,sa:0
 msgid "Sat"
 msgstr "Sambata"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day where repeat the meeting"
-msgstr "Alegeti ziua in care sa repetati intalnirea"
+msgstr "Alegeți ziua în care să repetați întâlnirea"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -1427,12 +1493,16 @@ msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
+#: field:calendar.event,date_deadline:0
+#: field:calendar.todo,date_deadline:0
+#: field:crm.meeting,date_deadline:0
 msgid "End Date"
-msgstr "Data de sfarsit"
+msgstr "Dată de sfârșit"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "February"
 msgstr "Februarie"
 
@@ -1448,6 +1518,7 @@ msgid "Resource"
 msgstr "Resursa"
 
 #. module: base_calendar
+#: field:crm.meeting.type,name:0
 #: field:res.alarm,name:0
 msgid "Name"
 msgstr "Nume"
@@ -1455,7 +1526,7 @@ msgstr "Nume"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
 msgid "Event alarm information"
-msgstr "Informatii alarma eveniment"
+msgstr "Informații alarmă eveniment"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1467,10 +1538,9 @@ msgstr ""
 "contine textul care va fi folosit pentru afisare"
 
 #. module: base_calendar
-#: field:calendar.event,alarm_id:0
 #: field:calendar.event,base_calendar_alarm_id:0
-#: field:calendar.todo,alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
+#: field:crm.meeting,base_calendar_alarm_id:0
 msgid "Alarm"
 msgstr "Alarma"
 
@@ -1488,6 +1558,7 @@ msgstr "Trimis de catre Utilizator"
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
+#: selection:crm.meeting,month_list:0
 msgid "April"
 msgstr "Aprilie"
 
@@ -1499,14 +1570,16 @@ msgstr "Perioada recurenta"
 #. module: base_calendar
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
+#: field:crm.meeting,week_list:0
 msgid "Weekday"
-msgstr "Zi lucratoare"
+msgstr "Zi lucrătoare"
 
 #. module: base_calendar
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
+#: field:crm.meeting,byday:0
 msgid "By day"
-msgstr "Dupa zi"
+msgstr "După zi"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1521,13 +1594,14 @@ msgstr "Audio"
 #. module: base_calendar
 #: field:calendar.event,id:0
 #: field:calendar.todo,id:0
+#: field:crm.meeting,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "For information Purpose"
-msgstr "In scop informativ"
+msgstr "În scop informativ"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1537,7 +1611,7 @@ msgstr "Invita"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr "Informatii participant"
+msgstr "Informații participant"
 
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
@@ -1553,17 +1627,19 @@ msgstr "Nu s-a putut face Invitatia pentru ca nu este specificata data"
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0
 msgid "Sent By"
-msgstr "Trimis de catre"
+msgstr "Trimis de către"
 
 #. module: base_calendar
 #: field:calendar.event,sequence:0
 #: field:calendar.todo,sequence:0
+#: field:crm.meeting,sequence:0
 msgid "Sequence"
-msgstr "Secventa"
+msgstr "Secvență"
 
 #. module: base_calendar
 #: help:calendar.event,alarm_id:0
 #: help:calendar.todo,alarm_id:0
+#: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
 msgstr "Setati o alarma acum, inainte ca evenimentul sa aiba loc"
 
@@ -1573,16 +1649,17 @@ msgid "Internal User"
 msgstr "Utilizator intern"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: view:calendar.event:0
+#: view:crm.meeting:0
 msgid "Accept"
-msgstr "Accepta"
+msgstr "Acceptă"
 
 #. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
+#: selection:crm.meeting,week_list:0
 msgid "Saturday"
-msgstr "Sambata"
+msgstr "Sâmbătă"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1592,12 +1669,12 @@ msgstr "Invitatie la"
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Second"
 msgstr "Al doilea (a doua)"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr "Disponibil/ocupat"
 
@@ -1613,6 +1690,7 @@ msgstr "Modalitate de a opri recurenta"
 #: field:calendar.event,duration:0
 #: field:calendar.todo,date:0
 #: field:calendar.todo,duration:0
+#: field:crm.meeting,duration:0
 #: field:res.alarm,duration:0
 #: field:res.alarm,trigger_duration:0
 msgid "Duration"
@@ -1626,7 +1704,7 @@ msgstr "Email extern"
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
 msgid "Trigger Date"
-msgstr "Data Declansare"
+msgstr "Data declanșare"
 
 #. module: base_calendar
 #: help:calendar.alarm,attach:0
@@ -1648,5 +1726,6 @@ msgstr ""
 #. module: base_calendar
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
+#: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr "Al cincilea (a cincea)"

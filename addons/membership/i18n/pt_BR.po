@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:09+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:19+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -31,7 +31,7 @@ msgstr "Processo de Adesão"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
-msgstr "Estado pago"
+msgstr "Membro Pagante"
 
 #. module: membership
 #: view:report.membership:0
@@ -84,7 +84,7 @@ msgstr "Data até"
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
 msgid "Waiting to invoice"
-msgstr "Esperando pela fatura"
+msgstr "Esperando para faturar"
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -231,7 +231,6 @@ msgstr "Linha de Membro"
 
 #. module: membership
 #: help:report.membership,date_from:0
-#: field:res.partner,membership_start:0
 msgid "Start membership date"
 msgstr "Data de início da associação"
 
@@ -255,6 +254,7 @@ msgstr "# Aguardando"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
 #: view:res.partner:0
 msgid "Members"
 msgstr "Membros"
@@ -291,7 +291,7 @@ msgstr ""
 "estado do grupo do membro associado."
 
 #. module: membership
-#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
@@ -430,7 +430,7 @@ msgstr "Agrupar por..."
 #: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
-msgstr "Parceiro é um membro livre."
+msgstr "O Parceiro é um membro gratuíto"
 
 #. module: membership
 #: model:product.pricelist,name:membership.list1m
@@ -440,6 +440,7 @@ msgstr "Lista de preço de venda do membro"
 #. module: membership
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
+#: field:res.partner,associate_member:0
 msgid "Associate Member"
 msgstr "Associar Membro"
 
@@ -486,6 +487,7 @@ msgstr "Fatura"
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr "Membro Gratuito"
@@ -561,8 +563,8 @@ msgid "June"
 msgstr "Junho"
 
 #. module: membership
-#: model:ir.ui.menu,name:membership.menu_membership
 #: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
 #: view:product.product:0
 #: field:product.product,membership:0
 #: view:report.membership:0
@@ -626,6 +628,7 @@ msgid "January"
 msgstr "Janeiro"
 
 #. module: membership
+#: field:membership.membership_line,member_price:0
 #: view:product.product:0
 msgid "Membership Fee"
 msgstr "Taxa de Associação"
@@ -643,7 +646,7 @@ msgstr "O preço negociado pelo Parceiro"
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr "Composição Básica"
+msgstr "Associação Básica"
 
 #. module: membership
 #: help:product.product,membership:0
@@ -665,7 +668,6 @@ msgstr "Para"
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,membership_state:0
-#: field:res.partner,membership_state:0
 msgid "Current Membership State"
 msgstr "Estado atual da Associação"
 
@@ -731,9 +733,6 @@ msgstr "Fatura provisória para adesão."
 
 #. module: membership
 #: field:membership.invoice,member_price:0
-#: field:membership.membership_line,member_price:0
-#: model:product.price.type,name:membership.product_price_type_memberprice
-#: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Preço para membro"
 
@@ -832,7 +831,7 @@ msgid "Cancelled Member"
 msgstr "Membro cancelado"
 
 #. module: membership
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "Erro: Código EAN inválido"
 

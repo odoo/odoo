@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:37+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:34+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
 msgid "System payment"
-msgstr "Systém plateb"
+msgstr "Systémová platba"
 
 #. module: account
 #: view:account.journal:0
@@ -49,7 +49,6 @@ msgstr "Správa poukázek"
 #. module: account
 #: view:account.account:0
 #: view:account.bank.statement:0
-#: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Statistics"
 msgstr "Účetní statistiky"
@@ -111,8 +110,9 @@ msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Debit"
-msgstr "Celkový dluh"
+msgstr "Debet celkem"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -141,23 +141,27 @@ msgid "Origin"
 msgstr "Původ"
 
 #. module: account
-#: view:account.account:0
+#. openerp-web
 #: view:account.automatic.reconcile:0
 #: field:account.move.line,reconcile_id:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
+#: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
+#, python-format
 msgid "Reconcile"
-msgstr "Likvidace"
+msgstr "Vyrovnat"
 
 #. module: account
+#: field:account.bank.statement,name:0
 #: field:account.bank.statement.line,ref:0
 #: field:account.entries.report,ref:0
-#: view:account.invoice:0
 #: field:account.move,ref:0
 #: field:account.move.line,ref:0
 #: field:account.subscription,ref:0
+#: xsl:account.transfer:0
+#: field:cash.box.in,ref:0
 msgid "Reference"
-msgstr "Odkaz"
+msgstr "Variabilní symbol"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:0
@@ -174,7 +178,24 @@ msgstr ""
 "jeho odebrání."
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account.py:641
+#: code:addons/account/account.py:686
+#: code:addons/account/account.py:781
+#: code:addons/account/account.py:1058
+#: code:addons/account/account_invoice.py:820
+#: code:addons/account/account_invoice.py:823
+#: code:addons/account/account_invoice.py:826
+#: code:addons/account/account_invoice.py:1545
+#: code:addons/account/account_move_line.py:98
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
+#: code:addons/account/account_move_line.py:864
+#: code:addons/account/wizard/account_fiscalyear_close.py:62
+#: code:addons/account/wizard/account_invoice_state.py:44
+#: code:addons/account/wizard/account_invoice_state.py:68
+#: code:addons/account/wizard/account_state_open.py:37
+#: code:addons/account/wizard/account_validate_account_move.py:39
+#: code:addons/account/wizard/account_validate_account_move.py:61
 #, python-format
 msgid "Warning!"
 msgstr "Varování!"
@@ -201,7 +222,7 @@ msgid "Negative"
 msgstr "Záporné"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:95
+#: code:addons/account/wizard/account_move_journal.py:96
 #, python-format
 msgid "Journal: %s"
 msgstr "Kniha: %s"
@@ -263,7 +284,7 @@ msgstr ""
 "tomuto daňovému kódu žádné DPH"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1241
+#: code:addons/account/account_invoice.py:1254
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
 msgstr "Faktura '%s' je zaplacená částečně: %s%s z %s%s (zbývá %s%s)"
@@ -279,7 +300,7 @@ msgid "Belgian Reports"
 msgstr "Belgické výkazy"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1200
+#: code:addons/account/account_move_line.py:1215
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
 msgstr "Nemůžete přidávat/upravovat položky v uzavřené knize."
@@ -291,8 +312,6 @@ msgstr "Vypočtený zůstatek"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
-#: model:ir.actions.act_window,name:account.action_view_account_use_model
-#: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
 msgstr "Ruční opakování"
 
@@ -317,7 +336,7 @@ msgid "St."
 msgstr "Sv."
 
 #. module: account
-#: code:addons/account/account_invoice.py:551
+#: code:addons/account/account_invoice.py:560
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
 msgstr "Firma řádku faktury nesouhlasí s firmou faktury"
@@ -356,7 +375,6 @@ msgid "Account Unreconcile"
 msgstr "Zrušit likvidaci"
 
 #. module: account
-#: view:product.product:0
 #: view:product.template:0
 msgid "Purchase Properties"
 msgstr "Vlastnosti nákupu"
@@ -437,6 +455,7 @@ msgstr "Výchozí debetní účet"
 
 #. module: account
 #: view:account.move:0
+#: view:account.move.line:0
 msgid "Total Credit"
 msgstr "Celkový kredit"
 
@@ -492,6 +511,7 @@ msgstr ""
 #: field:account.automatic.reconcile,journal_id:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement,journal_id:0
+#: field:account.bank.statement.line,journal_id:0
 #: report:account.central.journal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,journal_id:0
@@ -499,6 +519,8 @@ msgstr ""
 #: field:account.invoice,journal_id:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,journal_id:0
+#: view:account.journal:0
+#: field:account.journal.cashbox.line,journal_id:0
 #: field:account.journal.period,journal_id:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
@@ -568,7 +590,7 @@ msgstr ""
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "Nezlikvidované transakce"
+msgstr "Nevyrovnané transakce"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:348
@@ -595,8 +617,10 @@ msgid "The accountant confirms the statement."
 msgstr "Účetní potvrzuje výpis."
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
@@ -609,6 +633,7 @@ msgid "Invoice Address Name"
 msgstr "Název příjemce faktury"
 
 #. module: account
+#: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "3 Monthly"
 msgstr "Kvartální"
@@ -633,6 +658,7 @@ msgid "Sequences"
 msgstr "Číselné řady"
 
 #. module: account
+#: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Taxes Mapping"
 msgstr "Mapování daní"
@@ -653,7 +679,7 @@ msgid "Tax Code Amount"
 msgstr "Částka kódu daně"
 
 #. module: account
-#: code:addons/account/account.py:3116
+#: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
 msgstr "KFV"
@@ -685,8 +711,8 @@ msgid "Journal Period"
 msgstr "Období knihy"
 
 #. module: account
-#: code:addons/account/account_move_line.py:750
-#: code:addons/account/account_move_line.py:803
+#: code:addons/account/account_move_line.py:766
+#: code:addons/account/account_move_line.py:819
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr "Při likvidaci záznamů by u všech měla být stejná firma"
@@ -697,8 +723,9 @@ msgstr "Při likvidaci záznamů by u všech měla být stejná firma"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
+#: code:addons/account/report/account_partner_ledger.py:272
 #, python-format
 msgid "Receivable Accounts"
 msgstr "Pohledávky"
@@ -719,6 +746,7 @@ msgid "Are you sure you want to create entries?"
 msgstr "Opravdu chcete vytvořit záznamy?"
 
 #. module: account
+#: model:account.account.type,name:account.conf_account_type_chk
 #: selection:account.bank.accounts.wizard,account_type:0
 msgid "Check"
 msgstr "Šekový"
@@ -726,7 +754,7 @@ msgstr "Šekový"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "Dnes likvidovaní partneři"
+msgstr "Dnes vyrovnaní partneři"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:306
@@ -759,6 +787,7 @@ msgid "You can only change currency for Draft Invoice !"
 msgstr "Měnu můžete změnit pouze u Návrhových faktůr !"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.analytic.journal:0
 #: field:account.analytic.journal,type:0
 #: field:account.bank.statement.line,type:0
@@ -769,6 +798,7 @@ msgstr "Měnu můžete změnit pouze u Návrhových faktůr !"
 #: view:account.journal:0
 #: field:account.journal,type:0
 #: field:account.move.reconcile,type:0
+#: xsl:account.transfer:0
 #: field:report.invoice.created,type:0
 msgid "Type"
 msgstr "Typ"
@@ -785,7 +815,6 @@ msgstr "Odkaz na partnera pro tuto fakturu."
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
-#: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
@@ -849,6 +878,7 @@ msgstr "Nové předplatné"
 
 #. module: account
 #: view:account.payment.term:0
+#: field:account.payment.term.line,value:0
 msgid "Computation"
 msgstr "Výpočet"
 
@@ -897,8 +927,6 @@ msgid "Total With Tax"
 msgstr "Celkem s daní"
 
 #. module: account
-#: view:account.invoice:0
-#: view:account.move:0
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Approve"
@@ -979,18 +1007,17 @@ msgid "Code"
 msgstr "Kód"
 
 #. module: account
-#: code:addons/account/account.py:2268
-#: code:addons/account/account_bank_statement.py:357
-#: code:addons/account/account_invoice.py:73
-#: code:addons/account/account_invoice.py:688
-#: code:addons/account/account_move_line.py:173
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_bank_statement.py:424
+#: code:addons/account/account_invoice.py:77
+#: code:addons/account/account_invoice.py:775
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Žádný analytický deník !"
 
 #. module: account
 #: report:account.partner.balance:0
-#: view:account.partner.balance:0
 #: model:ir.actions.act_window,name:account.action_account_partner_balance
 #: model:ir.actions.report.xml,name:account.account_3rdparty_account_balance
 #: model:ir.ui.menu,name:account.menu_account_partner_balance_report
@@ -1026,7 +1053,7 @@ msgstr "Faktury zákazníka k potvrzení"
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr "Vyberte finanční rok k uzavření"
+msgstr "Vyberte fiskální rok k uzavření"
 
 #. module: account
 #: help:account.account.template,user_type:0
@@ -1048,6 +1075,7 @@ msgid "In dispute"
 msgstr "Sporné"
 
 #. module: account
+#: view:account.journal:0
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
@@ -1079,7 +1107,7 @@ msgstr "Generovat položky před:"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3003
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Bank"
 msgstr "Banka"
@@ -1127,6 +1155,7 @@ msgstr "Nezlikvidované transakce"
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
 #: field:account.tax,description:0
+#: view:account.tax.code:0
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
@@ -1135,7 +1164,7 @@ msgstr "Kód daně"
 #. module: account
 #: field:account.account,currency_mode:0
 msgid "Outgoing Currencies Rate"
-msgstr "Odchozí měnový poměr"
+msgstr "Odchozí měnový kurz"
 
 #. module: account
 #: help:account.move.line,move_id:0
@@ -1156,7 +1185,7 @@ msgid "Entry Label"
 msgstr "Název položky"
 
 #. module: account
-#: code:addons/account/account.py:1129
+#: code:addons/account/account.py:1136
 #, python-format
 msgid "You can not modify/delete a journal with entries for this period !"
 msgstr "Nemůžete upravit/smazat deník s položkami pro toto období !"
@@ -1176,7 +1205,6 @@ msgstr "Jiné"
 #. module: account
 #: view:account.account:0
 #: report:account.account.balance:0
-#: view:account.analytic.line:0
 #: field:account.automatic.reconcile,writeoff_acc_id:0
 #: field:account.bank.statement.line,account_id:0
 #: view:account.entries.report:0
@@ -1205,7 +1233,7 @@ msgstr "Účet"
 #. module: account
 #: field:account.tax,include_base_amount:0
 msgid "Included in base amount"
-msgstr "Včetně základní částky"
+msgstr "Zahrnuto v základní částce"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1223,7 +1251,6 @@ msgstr "Úroveň"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
-#: view:account.invoice.line:0
 #: field:account.invoice.line,invoice_line_tax_id:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -1236,8 +1263,7 @@ msgid "Taxes"
 msgstr "Daně"
 
 #. module: account
-#: code:addons/account/wizard/account_financial_report.py:69
-#: code:addons/account/wizard/account_report_common.py:144
+#: code:addons/account/wizard/account_financial_report.py:70
 #, python-format
 msgid "Select a starting and an ending period"
 msgstr "Vyberte počáteční a koncové období"
@@ -1268,7 +1294,7 @@ msgstr "Položky vyrovnání"
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr "Zpožděné platby"
+msgstr "Platby po splatnosti"
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -1333,8 +1359,10 @@ msgid "You can not use this general account in this journal !"
 msgstr "Nemůžete použít tento obecný účet pro tento deník !"
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
@@ -1363,7 +1391,7 @@ msgstr "# z položek"
 #. module: account
 #: field:account.automatic.reconcile,max_amount:0
 msgid "Maximum write-off amount"
-msgstr "Max.množství odpisu"
+msgstr "Maximální hodnota odpisu"
 
 #. module: account
 #: view:account.invoice:0
@@ -1372,6 +1400,7 @@ msgstr "Spočítat daně"
 
 #. module: account
 #: field:account.chart.template,code_digits:0
+#: field:account.config.settings,code_digits:0
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
 msgstr "# cifer"
@@ -1384,6 +1413,7 @@ msgstr "Přeskočit stav 'Koncept' pro ruční záznamy"
 #. module: account
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total:0
+#: field:account.invoice.report,user_currency_price_total:0
 msgid "Total Without Tax"
 msgstr "Celkem bez daně"
 
@@ -1413,7 +1443,7 @@ msgstr "Dočasná tabulka použitá pro zobrazení nástěnky"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Dobropisy dodavatelů"
+msgstr "Dobropisy přijaté"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -1461,7 +1491,7 @@ msgstr "Test kódu daně"
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
-msgstr "Vyrovnávací transakce"
+msgstr "Vyrovnané transakce"
 
 #. module: account
 #: field:account.journal.view,columns_id:0
@@ -1484,10 +1514,9 @@ msgid "Groups"
 msgstr "Skupiny"
 
 #. module: account
-#: field:account.invoice,amount_untaxed:0
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
-msgstr "Nezdaněné"
+msgstr "Bez daně"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
@@ -1517,7 +1546,7 @@ msgstr "Účet závazků"
 #: field:account.tax,account_paid_id:0
 #: field:account.tax.template,account_paid_id:0
 msgid "Refund Tax Account"
-msgstr "Účet dobropisu daně"
+msgstr "Daňový účet dobropisů"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1562,8 +1591,10 @@ msgstr "Limit závazků"
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.move.line,invoice:0
+#: code:addons/account/account_invoice.py:1157
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
+#, python-format
 msgid "Invoice"
 msgstr "Faktura"
 
@@ -1584,17 +1615,19 @@ msgid "Separated Journal Sequences"
 msgstr ""
 
 #. module: account
+#: view:account.bank.statement:0
 #: view:account.invoice:0
 msgid "Responsible"
-msgstr "Odopovědné"
+msgstr "Zodpovídá"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Sub-Total :"
-msgstr "Mezivýsledek :"
+msgstr "Mezisoučet :"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
+#: view:report.account_type.sales:0
 msgid "Sales by Account Type"
 msgstr "Prodeje dle typu účtu"
 
@@ -1610,7 +1643,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr "Fakturování"
+msgstr "Fakturace"
 
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
@@ -1656,7 +1689,7 @@ msgid "The account is not defined to be reconciled !"
 msgstr "Účet není definován pro likvidaci !"
 
 #. module: account
-#: field:account.cashbox.line,pieces:0
+#: field:account.journal.cashbox.line,pieces:0
 msgid "Values"
 msgstr "Hodnoty"
 
@@ -1714,10 +1747,10 @@ msgstr "Moje položyk"
 #. module: account
 #: report:account.overdue:0
 msgid "Customer Ref:"
-msgstr "Odkaz zákazníka:"
+msgstr "Značka zákazníka:"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:292
+#: code:addons/account/account_cash_statement.py:293
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
 msgstr "U6ivatel %s nemá práva pro přístup k deníku %s !"
@@ -1725,7 +1758,7 @@ msgstr "U6ivatel %s nemá práva pro přístup k deníku %s !"
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr "Tyto období se mohou překrývat."
+msgstr "Tato období se mohou překrývat."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
@@ -1778,7 +1811,7 @@ msgstr "Chybná hodnota Má dáti nebo dal v účetním záznamu !"
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
-msgstr "Analýza faktůr"
+msgstr "Analýza faktur"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -1803,6 +1836,7 @@ msgstr "Kód A/c"
 #. module: account
 #: field:account.invoice,move_id:0
 #: field:account.invoice,move_name:0
+#: field:account.move.line,move_id:0
 msgid "Journal Entry"
 msgstr "Položka deníku"
 
@@ -1817,7 +1851,6 @@ msgid "Sub Total"
 msgstr "Mezivýsledek"
 
 #. module: account
-#: view:account.account:0
 #: view:account.treasury.report:0
 #: model:ir.actions.act_window,name:account.action_account_treasury_report_all
 #: model:ir.model,name:account.model_account_treasury_report
@@ -1832,18 +1865,18 @@ msgstr "Chyba! Nemůžete vytvářet rekurzivní společnosti."
 
 #. module: account
 #: view:account.analytic.account:0
+#: field:account.invoice.tax,account_analytic_id:0
 msgid "Analytic account"
 msgstr "Analytický účet"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:339
+#: code:addons/account/account_bank_statement.py:406
 #, python-format
 msgid "Please verify that an account is defined in the journal."
 msgstr "Prosíme ověřte, že je účet definován v deníku."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
-#: selection:account.move.line,state:0
 msgid "Valid"
 msgstr "Platné"
 
@@ -1924,7 +1957,7 @@ msgstr "Obrázek"
 #: view:account.invoice:0
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
-msgstr "Nezdaněná částka"
+msgstr "Částka bez daně"
 
 #. module: account
 #: help:account.tax,active:0
@@ -2023,7 +2056,7 @@ msgstr ""
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Pro-forma"
-msgstr "Pro-forma"
+msgstr "Proforma"
 
 #. module: account
 #: code:addons/account/installer.py:348
@@ -2032,7 +2065,7 @@ msgid " Journal"
 msgstr " Deník"
 
 #. module: account
-#: code:addons/account/account.py:1461
+#: code:addons/account/account.py:1478
 #, python-format
 msgid ""
 "There is no default default debit account defined \n"
@@ -2068,11 +2101,9 @@ msgstr ""
 #. module: account
 #: view:account.account.type:0
 #: field:account.account.type,note:0
-#: view:account.analytic.account:0
 #: report:account.invoice:0
 #: field:account.invoice,name:0
 #: field:account.invoice.line,name:0
-#: field:account.invoice.refund,description:0
 #: report:account.overdue:0
 #: field:account.payment.term,note:0
 #: view:account.tax.code:0
@@ -2085,7 +2116,7 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: account
-#: code:addons/account/account.py:3119
+#: code:addons/account/account.py:3204
 #, python-format
 msgid "ECNJ"
 msgstr "ECNJ"
@@ -2104,7 +2135,7 @@ msgid "Income Account"
 msgstr "Účet příjmů"
 
 #. module: account
-#: code:addons/account/account_invoice.py:370
+#: code:addons/account/account_invoice.py:379
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
 msgstr ""
@@ -2146,8 +2177,10 @@ msgstr "Šablona výrobku"
 #: field:account.common.journal.report,fiscalyear_id:0
 #: field:account.common.partner.report,fiscalyear_id:0
 #: field:account.common.report,fiscalyear_id:0
+#: view:account.config.settings:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
+#: view:account.fiscalyear:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
 #: field:account.general.journal,fiscalyear_id:0
@@ -2156,6 +2189,7 @@ msgstr "Šablona výrobku"
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
+#: field:account.open.closed.fiscalyear,fyear_id:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,fiscalyear_id:0
 #: field:account.partner.ledger,fiscalyear_id:0
@@ -2193,6 +2227,7 @@ msgid "Keep empty for all open fiscal year"
 msgstr "Pro vybrání všech účetních období nechte pole prázdné"
 
 #. module: account
+#: view:account.move:0
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Účetní záznam"
@@ -2203,14 +2238,12 @@ msgid "Main Sequence"
 msgstr "Hlavní číselná řada"
 
 #. module: account
-#: field:account.invoice,payment_term:0
 #: field:account.invoice.report,payment_term:0
 #: view:account.payment.term:0
 #: field:account.payment.term,name:0
 #: view:account.payment.term.line:0
 #: field:account.payment.term.line,payment_id:0
 #: model:ir.model,name:account.model_account_payment_term
-#: field:res.partner,property_payment_term:0
 msgid "Payment Term"
 msgstr "Platební období"
 
@@ -2231,25 +2264,23 @@ msgid "Filters"
 msgstr "Filtry"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.bank.statement:0
 #: selection:account.bank.statement,state:0
 #: view:account.fiscalyear:0
 #: selection:account.fiscalyear,state:0
 #: selection:account.invoice,state:0
 #: selection:account.invoice.report,state:0
-#: view:account.open.closed.fiscalyear:0
 #: selection:account.period,state:0
-#: code:addons/account/wizard/account_move_journal.py:106
 #: selection:report.invoice.created,state:0
-#, python-format
 msgid "Open"
-msgstr "Otevřít"
+msgstr "Otevřeno"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
-msgstr "Návrhový stav faktury"
+msgstr "Faktura ve stavu konceptu"
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -2269,7 +2300,7 @@ msgid "Account Tax Code"
 msgstr "Daňový kód účtu"
 
 #. module: account
-#: code:addons/account/account_invoice.py:572
+#: code:addons/account/account_invoice.py:581
 #, python-format
 msgid ""
 "Can't find any account journal of %s type for this company.\n"
@@ -2291,7 +2322,7 @@ msgstr "Základní kód"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr "Dává pořadí posloupnosti, když zobrazuje seznam daní faktury."
+msgstr "Udává pořadí poslupnosti při zobrazení seznamu daní faktury."
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -2343,7 +2374,7 @@ msgid "Account Model Entries"
 msgstr "Položky modelu účtu"
 
 #. module: account
-#: code:addons/account/account.py:3117
+#: code:addons/account/account.py:3202
 #, python-format
 msgid "EXJ"
 msgstr "EXJ"
@@ -2354,7 +2385,6 @@ msgid "Supplier Taxes"
 msgstr "Daně dodavatele"
 
 #. module: account
-#: help:account.invoice,date_due:0
 #: help:account.invoice,payment_term:0
 msgid ""
 "If you use payment terms, the due date will be computed automatically at the "
@@ -2397,15 +2427,19 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Chyba ! Nemůžete vytvořit rekurzivní kategorie."
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
+#: model:account.account.type,name:account.conf_account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
+#: report:account.journal.period.print.sale.purchase:0
 #: field:account.move.line,account_tax_id:0
+#: view:account.tax:0
+#: model:ir.model,name:account.model_account_tax
 msgid "Tax"
 msgstr "Daň"
 
 #. module: account
 #: view:account.analytic.account:0
+#: view:account.analytic.line:0
 #: field:account.bank.statement.line,analytic_account_id:0
 #: field:account.entries.report,analytic_account_id:0
 #: field:account.invoice.line,account_analytic_id:0
@@ -2429,13 +2463,21 @@ msgid "Accounts"
 msgstr "Účty"
 
 #. module: account
-#: code:addons/account/account_invoice.py:369
+#: code:addons/account/account.py:3541
+#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_invoice.py:507
+#: code:addons/account/account_invoice.py:609
+#: code:addons/account/account_invoice.py:624
+#: code:addons/account/account_invoice.py:632
+#: code:addons/account/account_invoice.py:657
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid "Configuration Error!"
 msgstr "Konfigurační chyba!"
 
 #. module: account
 #: field:account.invoice.report,price_average:0
+#: field:account.invoice.report,user_currency_price_average:0
 msgid "Average Price"
 msgstr "Průměrná cena"
 
@@ -2461,7 +2503,6 @@ msgid "Label"
 msgstr "Označení"
 
 #. module: account
-#: view:account.tax:0
 #: view:res.partner.bank:0
 msgid "Accounting Information"
 msgstr "Účetní informace"
@@ -2470,7 +2511,7 @@ msgstr "Účetní informace"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Special Computation"
-msgstr "Speciální výpočetní"
+msgstr "Zvláštní výpočet"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
@@ -2481,7 +2522,7 @@ msgstr "Bankovní vyrovnání"
 #. module: account
 #: report:account.invoice:0
 msgid "Disc.(%)"
-msgstr "Slev.(%)"
+msgstr "Sleva (%)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -2514,7 +2555,6 @@ msgid "Refund Base Code"
 msgstr "Základní kód dobropisu"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_bank_statement_periodic_tree
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Bank Statements"
@@ -2526,7 +2566,6 @@ msgid "True"
 msgstr "Pravda"
 
 #. module: account
-#: view:account.bank.statement:0
 #: view:account.common.report:0
 #: view:account.move:0
 #: view:account.move.line:0
@@ -2594,21 +2633,20 @@ msgid "This wizard will create recurring accounting entries"
 msgstr "Průvodce vytvoří opakující se účetní položky"
 
 #. module: account
-#: code:addons/account/account.py:1321
+#: code:addons/account/account.py:1329
 #, python-format
 msgid "No sequence defined on the journal !"
 msgstr "Pro deník není určena posloupnost !"
 
 #. module: account
-#: code:addons/account/account.py:2268
-#: code:addons/account/account_invoice.py:688
-#: code:addons/account/account_move_line.py:173
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_invoice.py:775
+#: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Vytvořili jste analytický deník na deníku '%s'!"
 
 #. module: account
-#: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
@@ -2649,7 +2687,7 @@ msgid "Payment entries are the second input of the reconciliation."
 msgstr "Platební položky jsou druhý vstup pro vyrovnání."
 
 #. module: account
-#: selection:account.print.journal,sort_selection:0
+#: report:account.journal.period.print:0
 msgid "Reference Number"
 msgstr "Referenční číslo"
 
@@ -2705,7 +2743,7 @@ msgstr "Částka základního kódu"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr "Výchozí prodejní daň"
+msgstr "Výchozí daň na výstupu"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -2769,7 +2807,7 @@ msgstr ""
 #: model:process.process,name:account.process_process_invoiceprocess0
 #: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr "Faktura zákazníka"
+msgstr "Faktura vydaná"
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -2875,8 +2913,8 @@ msgid "View"
 msgstr "Pohled"
 
 #. module: account
-#: code:addons/account/account.py:3363
-#: code:addons/account/account_bank.py:90
+#: code:addons/account/account.py:3460
+#: code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
 msgstr "BNK"
@@ -2917,9 +2955,10 @@ msgid "Gives the sequence order to journal column."
 msgstr "Dává pořadí do sloupce knihy."
 
 #. module: account
+#: report:account.journal.period.print.sale.purchase:0
 #: view:account.tax.template:0
 msgid "Tax Declaration"
-msgstr "Přiznání daně"
+msgstr "Přiznání k dani"
 
 #. module: account
 #: help:account.account,currency_id:0
@@ -2974,7 +3013,6 @@ msgid "No End of year journal defined for the fiscal year"
 msgstr "Není zadán konec roku knihy pro finanční rok"
 
 #. module: account
-#: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
 msgstr "Nechejte prázdné pro použití výdajového účtu"
@@ -3026,6 +3064,7 @@ msgstr "Řádky předplatného"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
 #: view:account.journal:0
 #: selection:account.journal,type:0
 #: view:account.model:0
@@ -3054,7 +3093,7 @@ msgid "Starting Balance"
 msgstr "Počáteční zůstatek"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1332
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "No Partner Defined !"
 msgstr "Nebyl definován partner !"
@@ -3111,7 +3150,7 @@ msgstr "Netisknutelné ve faktuře"
 #: report:account.vat.declaration:0
 #: field:account.vat.declaration,chart_tax_id:0
 msgid "Chart of Tax"
-msgstr "Graf daně"
+msgstr "Účet daní"
 
 #. module: account
 #: view:account.journal:0
@@ -3126,7 +3165,6 @@ msgstr "Čekající faktura"
 #. module: account
 #: view:account.invoice.report:0
 #: selection:account.subscription,period_type:0
-#: view:analytic.entries.report:0
 msgid "year"
 msgstr "rok"
 
@@ -3190,9 +3228,10 @@ msgstr "Jméno daňového případu"
 
 #. module: account
 #: report:account.invoice:0
+#: view:account.invoice:0
 #: model:process.node,name:account.process_node_draftinvoices0
 msgid "Draft Invoice"
-msgstr "Návrh faktury"
+msgstr "Koncept faktury"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -3270,9 +3309,13 @@ msgid "VAT :"
 msgstr "DPH :"
 
 #. module: account
+#: report:account.account.balance:0
 #: report:account.central.journal:0
+#: view:account.config.settings:0
+#: report:account.general.journal:0
 #: report:account.general.ledger:0
-#: field:account.installer,charts:0
+#: report:account.general.ledger_landscape:0
+#: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -3311,8 +3354,10 @@ msgstr ""
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
 #: report:account.analytic.account.journal:0
+#: view:account.analytic.line:0
 #: selection:account.balance.report,filter:0
 #: field:account.bank.statement,date:0
+#: field:account.bank.statement.line,date:0
 #: selection:account.central.journal,filter:0
 #: selection:account.common.account.report,filter:0
 #: selection:account.common.journal.report,filter:0
@@ -3323,6 +3368,7 @@ msgstr ""
 #: selection:account.general.journal,filter:0
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
+#: field:account.invoice.refund,date:0
 #: field:account.invoice.report,date:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
@@ -3336,10 +3382,10 @@ msgstr ""
 #: selection:account.print.journal,sort_selection:0
 #: selection:account.report.general.ledger,filter:0
 #: selection:account.report.general.ledger,sortby:0
-#: field:account.subscription.generate,date:0
 #: field:account.subscription.line,date:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: xsl:account.transfer:0
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
@@ -3354,7 +3400,7 @@ msgid "Unreconcile"
 msgstr "Nevyrovnaný"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:84
+#: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account"
 msgstr "Kniha musí mít výchozí účty Dal a Má dáti"
@@ -3365,7 +3411,7 @@ msgid "Chart of Accounts Template"
 msgstr "Šablona Účetní osnovy"
 
 #. module: account
-#: code:addons/account/account.py:2280
+#: code:addons/account/account.py:2358
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -3374,7 +3420,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:837
+#: code:addons/account/account_move_line.py:846
 #, python-format
 msgid "Some entries are already reconciled !"
 msgstr "Některé položky byly již zlikvidovány !"
@@ -3496,7 +3542,7 @@ msgstr "Zůstatek účtu"
 #: report:account.invoice:0
 #: field:account.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr "Cena za kus"
+msgstr "Jednotková cena"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
@@ -3504,7 +3550,7 @@ msgid "Analytic Items"
 msgstr "Analytické položky"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
+#: code:addons/account/account_move_line.py:1168
 #, python-format
 msgid "Unable to change tax !"
 msgstr "Nelze změnit daň !"
@@ -3515,7 +3561,7 @@ msgid "#Entries"
 msgstr "#Položky"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1429
+#: code:addons/account/account_invoice.py:1431
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
@@ -3548,7 +3594,6 @@ msgstr "Mapování"
 #: field:account.account,name:0
 #: field:account.account.template,name:0
 #: report:account.analytic.account.inverted.balance:0
-#: field:account.bank.statement,name:0
 #: field:account.chart.template,name:0
 #: field:account.model.line,name:0
 #: field:account.move.line,name:0
@@ -3565,7 +3610,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,date:0
 msgid "Effective date"
-msgstr "Efektivní datum"
+msgstr "Datum účinnosti"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -3579,8 +3624,11 @@ msgid "Journal for analytic entries"
 msgstr "Deník pro analytické položky"
 
 #. module: account
-#: model:ir.actions.todo.category,name:account.category_accounting_configuration
+#: model:ir.actions.act_window,name:account.open_board_account
+#: model:ir.ui.menu,name:account.menu_account_config
+#: model:ir.ui.menu,name:account.menu_board_account
 #: model:ir.ui.menu,name:account.menu_finance
+#: model:ir.ui.menu,name:account.menu_finance_reporting
 #: model:process.node,name:account.process_node_accountingentries0
 #: model:process.node,name:account.process_node_supplieraccountingentries0
 #: view:product.product:0
@@ -3620,13 +3668,11 @@ msgstr ""
 
 #. module: account
 #: view:account.installer:0
-#: view:wizard.multi.charts.accounts:0
 msgid "title"
 msgstr "nadpis"
 
 #. module: account
 #: view:account.invoice:0
-#: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
 msgstr "Nastavit na koncept"
@@ -3684,9 +3730,10 @@ msgstr "Počáteční perioda"
 #: field:account.tax.template,name:0
 #: report:account.vat.declaration:0
 msgid "Tax Name"
-msgstr "Jméno daně"
+msgstr "Název daně"
 
 #. module: account
+#: view:account.config.settings:0
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
 msgstr "Nastavení"
@@ -3753,7 +3800,6 @@ msgstr "Typ účtu"
 
 #. module: account
 #: report:account.account.balance:0
-#: view:account.balance.report:0
 #: model:ir.actions.act_window,name:account.action_account_balance_menu
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
@@ -3826,7 +3872,6 @@ msgid "Reference UoM"
 msgstr "Referenční MJ"
 
 #. module: account
-#: field:account.account,note:0
 #: field:account.account.template,note:0
 msgid "Note"
 msgstr "Poznámka"
@@ -3839,8 +3884,9 @@ msgstr "Účet zpožděných"
 #. module: account
 #: selection:account.invoice,state:0
 #: report:account.overdue:0
+#: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr "Placeno"
+msgstr "Uhrazeno"
 
 #. module: account
 #: field:account.invoice,tax_line:0
@@ -3865,7 +3911,7 @@ msgstr ""
 "jde pro vybrané knihy přeskakovat, takže založené záznamy se rovnou zaúčtují."
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:93
+#: code:addons/account/account_analytic_line.py:91
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Pro tento výrobek nebyl definován nákladový účet: \"%s\" (id:%d)"
@@ -3890,7 +3936,6 @@ msgstr "Popis daně"
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -3935,7 +3980,7 @@ msgid "Default taxes"
 msgstr "Výchozí daně"
 
 #. module: account
-#: code:addons/account/account_invoice.py:88
+#: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "Free Reference"
 msgstr ""
@@ -3994,10 +4039,10 @@ msgid "Bank statements are entered in the system."
 msgstr "Bankovní výpisy jsou zadány do systému."
 
 #. module: account
-#: code:addons/account/wizard/account_reconcile.py:133
+#: code:addons/account/wizard/account_reconcile.py:122
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr ""
+msgstr "Vyrovnat odpis"
 
 #. module: account
 #: report:account.overdue:0
@@ -4011,7 +4056,6 @@ msgstr "Účty podle typu"
 
 #. module: account
 #: view:account.bank.statement:0
-#: field:account.bank.statement,balance_end_cash:0
 msgid "Closing Balance"
 msgstr "Konečný zůstatek"
 
@@ -4105,7 +4149,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
-#: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Recurring Models"
 msgstr "Model opakování"
 
@@ -4115,20 +4158,20 @@ msgid "4"
 msgstr "4"
 
 #. module: account
-#: view:account.invoice:0
+#: xsl:account.transfer:0
 msgid "Change"
 msgstr "Změnit"
 
 #. module: account
-#: code:addons/account/account.py:1431
-#: code:addons/account/account.py:1460
-#: code:addons/account/account.py:1467
-#: code:addons/account/account_invoice.py:920
-#: code:addons/account/account_move_line.py:1104
-#: code:addons/account/wizard/account_automatic_reconcile.py:152
-#: code:addons/account/wizard/account_fiscalyear_close.py:73
-#: code:addons/account/wizard/account_fiscalyear_close.py:83
-#: code:addons/account/wizard/account_fiscalyear_close.py:86
+#: code:addons/account/account.py:1448
+#: code:addons/account/account.py:1477
+#: code:addons/account/account.py:1484
+#: code:addons/account/account_invoice.py:931
+#: code:addons/account/account_move_line.py:1119
+#: code:addons/account/wizard/account_automatic_reconcile.py:148
+#: code:addons/account/wizard/account_fiscalyear_close.py:88
+#: code:addons/account/wizard/account_fiscalyear_close.py:99
+#: code:addons/account/wizard/account_fiscalyear_close.py:102
 #: code:addons/account/wizard/account_move_journal.py:165
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -4152,6 +4195,7 @@ msgid "Consider reconciled entries"
 msgstr "Uvažte vyrovnané záznamy"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.actions.act_window,name:account.action_validate_account_move_line
 #: model:ir.ui.menu,name:account.menu_validate_account_moves
 #: view:validate.account.move:0
@@ -4198,9 +4242,10 @@ msgstr "Mapování účtů"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
+#: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:337
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Customer"
 msgstr "Zákazník"
@@ -4213,7 +4258,7 @@ msgstr "Potvrzeno"
 #. module: account
 #: report:account.invoice:0
 msgid "Cancelled Invoice"
-msgstr "Zrušené faktury"
+msgstr "Stornovaná faktura"
 
 #. module: account
 #: code:addons/account/account_invoice.py:71
@@ -4222,7 +4267,7 @@ msgid "You must define an analytic journal of type '%s' !"
 msgstr "Musíte definovat analytickou knihu typu '%s' !"
 
 #. module: account
-#: code:addons/account/account.py:1567
+#: code:addons/account/account.py:1584
 #, python-format
 msgid ""
 "Couldn't create move with currency different from the secondary currency of "
@@ -4254,8 +4299,7 @@ msgid "Account Balance -"
 msgstr "Zůstatek účtu -"
 
 #. module: account
-#: code:addons/account/invoice.py:997
-#, python-format
+#: view:account.invoice:0
 msgid "Invoice "
 msgstr "Faktura "
 
@@ -4282,6 +4326,7 @@ msgstr "Nový daňový rok"
 
 #. module: account
 #: view:account.invoice:0
+#: view:account.tax:0
 #: view:account.tax.template:0
 #: selection:account.vat.declaration,based_on:0
 #: model:ir.actions.act_window,name:account.act_res_partner_2_account_invoice_opened
@@ -4293,7 +4338,7 @@ msgid "Invoices"
 msgstr "Faktury"
 
 #. module: account
-#: code:addons/account/account_invoice.py:828
+#: code:addons/account/account_invoice.py:839
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -4328,7 +4373,7 @@ msgstr "Ne"
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
 msgid "The tax basis of the tax declaration."
-msgstr "Daňový základ pro deklaraci daně"
+msgstr "Základ pro přizání k dani."
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -4358,7 +4403,7 @@ msgstr "Bankovní výpis použitý pro likvidaci banky"
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
 msgid "Draft invoices are validated. "
-msgstr "Koncepty faktůr jsou ověřeny. "
+msgstr "Koncepty faktur jsou oveřeny. "
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4369,30 +4414,22 @@ msgstr "Spočítat"
 #. module: account
 #: field:account.tax,type_tax_use:0
 msgid "Tax Application"
-msgstr "Daňová aplikace"
+msgstr "Daňová žádost"
 
 #. module: account
+#: view:account.bank.statement:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: code:addons/account/wizard/account_move_journal.py:153
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
-#: model:ir.actions.act_window,name:account.action_account_manual_reconcile
+#: model:ir.actions.act_window,name:account.action_account_items
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
-#: model:ir.actions.act_window,name:account.action_account_moves_bank
-#: model:ir.actions.act_window,name:account.action_account_moves_purchase
-#: model:ir.actions.act_window,name:account.action_account_moves_sale
-#: model:ir.actions.act_window,name:account.action_move_line_search
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.actions.act_window,name:account.action_move_line_tree1
+#: model:ir.actions.act_window,name:account.action_tax_code_items
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
-#: model:ir.ui.menu,name:account.menu_action_account_moves_bank
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_purchase
-#: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
-#, python-format
 msgid "Journal Items"
 msgstr "Položky deníku"
 
@@ -4455,11 +4492,10 @@ msgstr "Generovat otvírající záznamy finančního roku"
 #. module: account
 #: field:account.journal,group_invoice_lines:0
 msgid "Group Invoice Lines"
-msgstr "Skupinové řádky faktury"
+msgstr "Seskupit řádky faktury"
 
 #. module: account
-#: view:account.invoice.cancel:0
-#: view:account.invoice.confirm:0
+#: view:account.automatic.reconcile:0
 msgid "Close"
 msgstr "Uzavřít"
 
@@ -4469,7 +4505,6 @@ msgid "Moves"
 msgstr "Pohyby"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
 msgstr ""
@@ -4485,7 +4520,7 @@ msgid "Check Date not in the Period"
 msgstr "Zkontrolovat zda datum není v období"
 
 #. module: account
-#: code:addons/account/account.py:1351
+#: code:addons/account/account.py:1361
 #, python-format
 msgid ""
 "You can not modify a posted entry of this journal !\n"
@@ -4507,7 +4542,7 @@ msgid "Child Tax Accounts"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1090
+#: code:addons/account/account.py:1097
 #, python-format
 msgid "Start period should be smaller then End period"
 msgstr ""
@@ -4539,7 +4574,6 @@ msgstr "Analytický zůstatek -"
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.journal,target_move:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
@@ -4582,6 +4616,7 @@ msgid "Python Code (reverse)"
 msgstr "Kód Pythonu (opačný)"
 
 #. module: account
+#: field:account.invoice,payment_term:0
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 msgid "Payment Terms"
@@ -4604,7 +4639,9 @@ msgstr ""
 #: field:account.invoice.report,year:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,year:0
+#: view:report.account.sales:0
 #: field:report.account.sales,name:0
+#: view:report.account_type.sales:0
 #: field:report.account_type.sales,name:0
 msgid "Year"
 msgstr "Rok"
@@ -4620,7 +4657,7 @@ msgid "Line 1:"
 msgstr "Řádek 1:"
 
 #. module: account
-#: code:addons/account/account.py:1307
+#: code:addons/account/account.py:1315
 #, python-format
 msgid "Integrity Error !"
 msgstr "Chyba integrity !"
@@ -4647,6 +4684,7 @@ msgid "Description on invoices"
 msgstr "Popis na fakturách"
 
 #. module: account
+#: view:account.move.line:0
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
 msgstr "Další partner k vyrovnání"
@@ -4664,6 +4702,7 @@ msgstr "Výsledek vyrovnání"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
+#: model:ir.actions.act_window,name:account.action_account_report_bs
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 msgid "Balance Sheet"
 msgstr "Rozvaha"
@@ -4676,7 +4715,6 @@ msgstr "Účetní výkazy"
 #. module: account
 #: field:account.move,line_id:0
 #: view:analytic.entries.report:0
-#: model:ir.actions.act_window,name:account.act_account_acount_move_line_open
 #: model:ir.actions.act_window,name:account.action_move_line_form
 msgid "Entries"
 msgstr "Položky"
@@ -4705,6 +4743,7 @@ msgstr "Vypočítat kód (pokud typ = kód)"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
+#: view:account.config.settings:0
 #: view:account.journal:0
 #: selection:account.journal,type:0
 #: view:account.model:0
@@ -4718,14 +4757,18 @@ msgstr "Obchod"
 #: view:account.analytic.line:0
 #: field:account.bank.statement.line,amount:0
 #: report:account.invoice:0
+#: field:account.invoice.line,price_subtotal:0
 #: field:account.invoice.tax,amount:0
 #: view:account.move:0
 #: field:account.move,amount:0
 #: view:account.move.line:0
 #: field:account.tax,amount:0
 #: field:account.tax.template,amount:0
+#: xsl:account.transfer:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,amount:0
+#: field:cash.box.in,amount:0
+#: field:cash.box.out,amount:0
 msgid "Amount"
 msgstr "Částka"
 
@@ -4756,7 +4799,7 @@ msgstr ""
 #: field:account.tax,child_depend:0
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr "Daň z dětí"
+msgstr "Podřízená daň"
 
 #. module: account
 #: code:addons/account/account.py:2067
@@ -4880,6 +4923,7 @@ msgid "Communication"
 msgstr "Komunikace"
 
 #. module: account
+#: view:account.config.settings:0
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analytické účetnictví"
@@ -4889,12 +4933,13 @@ msgstr "Analytické účetnictví"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr "Dobropis vystavený"
+msgstr "Vydaný dobropis"
 
 #. module: account
-#: view:account.account:0
 #: field:account.account,tax_ids:0
+#: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
+#: view:account.chart.template:0
 msgid "Default Taxes"
 msgstr "Výchozí daně"
 
@@ -4917,13 +4962,13 @@ msgid "End of Year Entries Journal"
 msgstr "Záznamy knihy konce roku"
 
 #. module: account
-#: code:addons/account/account.py:3446
+#: code:addons/account/account.py:3463
 #: code:addons/account/account_bank_statement.py:338
-#: code:addons/account/account_invoice.py:427
-#: code:addons/account/account_invoice.py:527
-#: code:addons/account/account_invoice.py:542
-#: code:addons/account/account_invoice.py:550
-#: code:addons/account/account_invoice.py:572
+#: code:addons/account/account_invoice.py:436
+#: code:addons/account/account_invoice.py:536
+#: code:addons/account/account_invoice.py:551
+#: code:addons/account/account_invoice.py:559
+#: code:addons/account/account_invoice.py:581
 #: code:addons/account/wizard/account_move_journal.py:63
 #, python-format
 msgid "Configuration Error !"
@@ -4972,7 +5017,7 @@ msgstr "Účetní položky."
 #. module: account
 #: view:account.invoice:0
 msgid "Payment Date"
-msgstr "Datum zaplacení"
+msgstr "Datum úhrady"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -5001,7 +5046,7 @@ msgid "Sort By"
 msgstr "Řadit podle"
 
 #. module: account
-#: code:addons/account/account.py:1468
+#: code:addons/account/account.py:1485
 #, python-format
 msgid ""
 "There is no default default credit account defined \n"
@@ -5108,12 +5153,12 @@ msgstr "S měnou"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Open CashBox"
-msgstr "Otevřít CashBox"
+msgstr "Otevřít pokladnu"
 
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconcile With Write-Off"
-msgstr ""
+msgstr "Vyrovnání s odpisem"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -5154,7 +5199,7 @@ msgid "Generate Opening Entries"
 msgstr "Generovat počáteční položky"
 
 #. module: account
-#: code:addons/account/account_move_line.py:759
+#: code:addons/account/account_move_line.py:775
 #, python-format
 msgid "Already Reconciled!"
 msgstr "Již vyrovnáno!"
@@ -5180,6 +5225,7 @@ msgstr "Datum vytvoření"
 
 #. module: account
 #: view:account.analytic.journal:0
+#: field:account.analytic.journal.report,analytic_account_journal_id:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
@@ -5192,7 +5238,7 @@ msgstr "Dětské účty"
 
 #. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:857
+#: code:addons/account/account_move_line.py:879
 #, python-format
 msgid "Write-Off"
 msgstr "Odpis"
@@ -5209,9 +5255,10 @@ msgstr "account.analytic.line.extended"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
+#: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:339
+#: code:addons/account/account_invoice.py:390
 #, python-format
 msgid "Supplier"
 msgstr "Dodavatel"
@@ -5227,6 +5274,7 @@ msgstr "Březen"
 
 #. module: account
 #: view:account.account.template:0
+#: view:account.chart.template:0
 msgid "Account Template"
 msgstr "Šablona účtu"
 
@@ -5252,7 +5300,9 @@ msgstr "Ohodnocení"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:301
+#: code:addons/account/report/account_partner_ledger.py:276
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "Účty závazků a pohledávek"
@@ -5274,9 +5324,10 @@ msgid "Max Qty:"
 msgstr "Max. množ.:"
 
 #. module: account
-#: view:account.invoice.refund:0
+#: view:account.invoice:0
+#: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund Invoice"
-msgstr "Úhradová faktura"
+msgstr "Dobropis"
 
 #. module: account
 #: field:account.invoice,address_invoice_id:0
@@ -5357,8 +5408,8 @@ msgid "Filter by"
 msgstr "Filtrovat podle"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1155
-#: code:addons/account/account_move_line.py:1238
+#: code:addons/account/account_move_line.py:1170
+#: code:addons/account/account_move_line.py:1253
 #, python-format
 msgid "You can not use an inactive account!"
 msgstr "Nemůžete použít neaktivní účet!"
@@ -5373,7 +5424,7 @@ msgstr "Záznamy nejsou ze stejného účtu nebo jsou již zlikvidovány ! "
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Účet daní faktůr"
+msgstr "Daňový účet faktur"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_journal
@@ -5411,15 +5462,15 @@ msgid "7"
 msgstr "7"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:402
-#: code:addons/account/account_invoice.py:392
+#: code:addons/account/account_bank_statement.py:403
+#: code:addons/account/account_invoice.py:401
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid action !"
 msgstr "Neplatná akce !"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:102
+#: code:addons/account/wizard/account_move_journal.py:103
 #, python-format
 msgid "Period: %s"
 msgstr "Období: %s"
@@ -5456,7 +5507,7 @@ msgstr "  365 dní  "
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Úhrada zákazníkovi"
+msgstr "Dobropisy vydané"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5474,7 +5525,7 @@ msgid "Multipication factor for Base code"
 msgstr "Násobek pro základní kód"
 
 #. module: account
-#: code:addons/account/wizard/account_report_common.py:150
+#: code:addons/account/wizard/account_report_common.py:151
 #, python-format
 msgid "not implemented"
 msgstr "nerealizováno"
@@ -5576,6 +5627,7 @@ msgid "Latest Reconciliation Date"
 msgstr "Poslední datum vyrovnání"
 
 #. module: account
+#: view:account.analytic.line:0
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "Analytický řádek"
@@ -5591,7 +5643,6 @@ msgid "Create an Account based on this template"
 msgstr "Vytvořit účet založený na šabloně"
 
 #. module: account
-#: view:account.account.type:0
 #: view:account.tax.code:0
 msgid "Reporting Configuration"
 msgstr "Nastavení vykazování"
@@ -5655,6 +5706,7 @@ msgstr "Informační dodatek"
 
 #. module: account
 #: field:account.chart,fiscalyear:0
+#: view:account.fiscalyear:0
 msgid "Fiscal year"
 msgstr "Daňový rok"
 
@@ -5664,7 +5716,6 @@ msgid "Partial Reconcile Entries"
 msgstr "Částečně vyrovnané položky"
 
 #. module: account
-#: view:account.addtmpl.wizard:0
 #: view:account.aged.trial.balance:0
 #: view:account.analytic.balance:0
 #: view:account.analytic.chart:0
@@ -5673,35 +5724,33 @@ msgstr "Částečně vyrovnané položky"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.automatic.reconcile:0
-#: view:account.bank.statement:0
 #: view:account.change.currency:0
 #: view:account.chart:0
 #: view:account.common.report:0
+#: view:account.config.settings:0
 #: view:account.fiscalyear.close:0
 #: view:account.fiscalyear.close.state:0
-#: view:account.invoice:0
+#: view:account.invoice.cancel:0
+#: view:account.invoice.confirm:0
 #: view:account.invoice.refund:0
 #: view:account.journal.select:0
-#: view:account.move:0
 #: view:account.move.bank.reconcile:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.select:0
 #: view:account.move.line.reconcile.writeoff:0
 #: view:account.move.line.unreconcile.select:0
-#: view:account.open.closed.fiscalyear:0
-#: view:account.partner.reconcile.process:0
 #: view:account.period.close:0
+#: view:account.state.open:0
 #: view:account.subscription.generate:0
 #: view:account.tax.chart:0
 #: view:account.unreconcile:0
-#: view:account.unreconcile.reconcile:0
 #: view:account.use.model:0
 #: view:account.vat.declaration:0
-#: code:addons/account/wizard/account_move_journal.py:105
+#: view:cash.box.in:0
+#: view:cash.box.out:0
 #: view:project.account.analytic.line:0
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
-#, python-format
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -5721,7 +5770,7 @@ msgstr "Pohledávky"
 #. module: account
 #: view:account.invoice:0
 msgid "Other Info"
-msgstr "Jiné info"
+msgstr "Další informace"
 
 #. module: account
 #: field:account.journal,default_credit_account_id:0
@@ -5749,7 +5798,7 @@ msgid "Current"
 msgstr "Aktuální"
 
 #. module: account
-#: view:account.bank.statement:0
+#: field:account.journal,cashbox_line_ids:0
 msgid "CashBox"
 msgstr "Pokladna"
 
@@ -5818,9 +5867,10 @@ msgid "Applicable Type"
 msgstr "Typ platnosti"
 
 #. module: account
+#: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
-msgstr "Reference faktury"
+msgstr "Značka faktury"
 
 #. module: account
 #: help:account.tax.template,sequence:0
@@ -5896,9 +5946,11 @@ msgstr "Zadejte počáteční datum !"
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1160
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Refund"
-msgstr "Dobropis dodavatele"
+msgstr "Přijatý dobropis"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_dashboard_acc
@@ -5954,9 +6006,11 @@ msgid "Account Profit And Loss Report"
 msgstr "Výkaz účtu zisku a ztrát"
 
 #. module: account
+#: field:account.analytic.line,product_uom_id:0
 #: field:account.invoice.line,uos_id:0
+#: field:account.move.line,product_uom_id:0
 msgid "Unit of Measure"
-msgstr "Jednotky měření"
+msgstr "Měrná jednotka"
 
 #. module: account
 #: constraint:account.payment.term.line:0
@@ -5978,6 +6032,7 @@ msgstr "account.sequence.fiscalyear"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.model,name:account.model_account_analytic_journal
+#: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Analytic Journal"
 msgstr "Analytický deník"
 
@@ -5990,7 +6045,7 @@ msgstr "Vyrovnán"
 #: report:account.invoice:0
 #: field:account.invoice.tax,base:0
 msgid "Base"
-msgstr "Základní"
+msgstr "Základ"
 
 #. module: account
 #: field:account.model,name:0
@@ -6014,15 +6069,12 @@ msgid "Invoice is already reconciled"
 msgstr "Faktura je již zlikvidována"
 
 #. module: account
-#: view:account.account:0
 #: view:account.account.template:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement.line,note:0
 #: view:account.fiscal.position:0
 #: field:account.fiscal.position,note:0
 #: field:account.fiscal.position.template,note:0
-#: view:account.invoice.line:0
-#: field:account.invoice.line,note:0
 msgid "Notes"
 msgstr "Poznámky"
 
@@ -6032,8 +6084,8 @@ msgid "Analytic Entries Statistics"
 msgstr "Statistika analytických účtů"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:145
-#: code:addons/account/account_move_line.py:933
+#: code:addons/account/account_analytic_line.py:142
+#: code:addons/account/account_move_line.py:955
 #, python-format
 msgid "Entries: "
 msgstr "Položky: "
@@ -6044,7 +6096,7 @@ msgid "Create manual recurring entries in a chosen journal."
 msgstr "Ručně vytvořit opakované záznamy ve vybrané knize."
 
 #. module: account
-#: code:addons/account/account.py:1563
+#: code:addons/account/account.py:1580
 #, python-format
 msgid "Couldn't create move between different companies"
 msgstr "Nelze vytvoit pohyb mezi různými společnostmi."
@@ -6078,13 +6130,11 @@ msgstr "Stav je koncept"
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1043
-#, python-format
 msgid "Total debit"
-msgstr "Celkový dluh"
+msgstr "Debet celkem"
 
 #. module: account
-#: code:addons/account/account_move_line.py:808
+#: code:addons/account/account_move_line.py:829
 #, python-format
 msgid "Entry \"%s\" is not valid !"
 msgstr "Položka \"%s\" není platná !"
@@ -6152,32 +6202,8 @@ msgid "  valuation: percent"
 msgstr "  ocenění: procenta"
 
 #. module: account
-#: code:addons/account/account.py:622
-#: code:addons/account/account.py:624
-#: code:addons/account/account.py:963
-#: code:addons/account/account.py:1052
-#: code:addons/account/account.py:1129
-#: code:addons/account/account.py:1344
-#: code:addons/account/account.py:1351
-#: code:addons/account/account.py:2280
-#: code:addons/account/account.py:2596
-#: code:addons/account/account_analytic_line.py:92
-#: code:addons/account/account_analytic_line.py:101
-#: code:addons/account/account_bank_statement.py:301
-#: code:addons/account/account_bank_statement.py:314
-#: code:addons/account/account_bank_statement.py:352
-#: code:addons/account/account_cash_statement.py:292
-#: code:addons/account/account_cash_statement.py:314
-#: code:addons/account/account_invoice.py:808
-#: code:addons/account/account_invoice.py:839
-#: code:addons/account/account_invoice.py:1030
-#: code:addons/account/account_move_line.py:1200
-#: code:addons/account/account_move_line.py:1216
-#: code:addons/account/account_move_line.py:1218
-#: code:addons/account/wizard/account_invoice_refund.py:108
-#: code:addons/account/wizard/account_invoice_refund.py:110
-#: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
-#: code:addons/account/wizard/account_use_model.py:44
+#: code:addons/account/account.py:1024
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "Error !"
 msgstr "Chyba !"
@@ -6268,7 +6294,6 @@ msgstr ""
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
-#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.print.journal,target_move:0
@@ -6311,7 +6336,6 @@ msgstr "Finanční pozice daně"
 #. module: account
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
-#: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
 #: model:ir.actions.report.xml,name:account.account_general_ledger_landscape
@@ -6366,10 +6390,10 @@ msgstr "Daňový rozvrh účtu"
 #: report:account.journal.period.print.sale.purchase:0
 #: report:account.partner.balance:0
 msgid "Total:"
-msgstr "Celkem:"
+msgstr "Celkem k úhradě:"
 
 #. module: account
-#: code:addons/account/account.py:2229
+#: code:addons/account/account.py:2304
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -6390,7 +6414,7 @@ msgstr "Příjmové účty"
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr "Odkaz na dokumenty, které generovaly tento výkaz faktury."
+msgstr "Značka dokumentu, který vytvořil tento výkaz faktury."
 
 #. module: account
 #: field:account.tax.code,child_ids:0
@@ -6399,7 +6423,7 @@ msgid "Child Codes"
 msgstr "Podřízené kódy"
 
 #. module: account
-#: code:addons/account/account_invoice.py:495
+#: code:addons/account/account_invoice.py:504
 #: code:addons/account/wizard/account_invoice_refund.py:145
 #, python-format
 msgid "Data Insufficient !"
@@ -6409,7 +6433,7 @@ msgstr "Nedostatečná data !"
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "Faktury zákazníků"
+msgstr "Faktury vydané"
 
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
@@ -6453,6 +6477,7 @@ msgstr ""
 
 #. module: account
 #: field:account.invoice,origin:0
+#: field:account.invoice.line,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
 msgstr "Zdrojový dokument"
@@ -6467,7 +6492,7 @@ msgstr ""
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:56
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
@@ -6647,7 +6672,7 @@ msgstr ""
 #: field:account.invoice,date_invoice:0
 #: field:report.invoice.created,date_invoice:0
 msgid "Invoice Date"
-msgstr "Datum faktury"
+msgstr "Datum vystavení faktury"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -6665,7 +6690,6 @@ msgid "Icon"
 msgstr "Ikona"
 
 #. module: account
-#: view:account.automatic.reconcile:0
 #: view:account.use.model:0
 msgid "Ok"
 msgstr "Ok"
@@ -6678,8 +6702,8 @@ msgstr "Neznámý partner"
 
 #. module: account
 #: view:account.bank.statement:0
-#: code:addons/account/account.py:420
-#: code:addons/account/account.py:432
+#: code:addons/account/account.py:422
+#: code:addons/account/account.py:434
 #, python-format
 msgid "Opening Balance"
 msgstr "Počáteční zůstatek"
@@ -6710,7 +6734,7 @@ msgstr "Konečný datum"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
 msgid "Default Purchase Tax"
-msgstr "Výchozí nákupní daň"
+msgstr "Výchozí daň na vstupu"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6735,7 +6759,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1088
+#: code:addons/account/account.py:1095
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
 msgstr "Měli byste vybrat období, které patří ke stejné společnosti"
@@ -6751,7 +6775,7 @@ msgid "Create Entries"
 msgstr "Vytvořit položky"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_finance_reporting
+#: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
 msgstr "Vykazování"
 
@@ -6785,8 +6809,8 @@ msgid ""
 "it have been reconciled."
 msgstr ""
 "Pole ukazuje dalšího partnera, který bude automaticky vybrán systémem pro "
-"průchod procesem likvidace, založeném na posledních dnech, kdy byl "
-"likvidován."
+"průchod procesem vyrovnání, založeném na posledních dnech, kdy byl "
+"vyrovnáván."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -6876,7 +6900,7 @@ msgstr ""
 #: report:account.invoice:0
 #: view:account.invoice:0
 msgid "PRO-FORMA"
-msgstr "PRO-FORMA"
+msgstr "PROFORMA"
 
 #. module: account
 #: help:account.installer.modules,account_followup:0
@@ -6914,6 +6938,7 @@ msgstr "Uživatel"
 
 #. module: account
 #: report:account.general.journal:0
+#: xsl:account.transfer:0
 msgid ":"
 msgstr ":"
 
@@ -6930,13 +6955,13 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1302
+#: code:addons/account/account_move_line.py:1317
 #, python-format
 msgid "Bad account !"
 msgstr "Chybný účet !"
 
 #. module: account
-#: code:addons/account/account.py:3108
+#: code:addons/account/account.py:3193
 #, python-format
 msgid "Sales Journal"
 msgstr "Deník tržeb"
@@ -6953,13 +6978,12 @@ msgid "Invoice Tax"
 msgstr "Daň faktury"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1277
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid "No piece number !"
 msgstr "Žádné číslo kusu !"
 
 #. module: account
-#: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
 msgstr "Vlastnosti obchodu"
@@ -6982,7 +7006,6 @@ msgstr "Do"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
-#: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to close"
 msgstr "Finanční rok k uzavření"
 
@@ -7008,7 +7031,9 @@ msgstr "Květen"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:299
+#: code:addons/account/report/account_partner_ledger.py:274
 #, python-format
 msgid "Payable Accounts"
 msgstr "Účty závazků"
@@ -7040,7 +7065,7 @@ msgstr "Obchodní daně"
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3003
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Cash"
 msgstr "Hotovost"
@@ -7054,16 +7079,14 @@ msgstr "Cíl účtu"
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaymentorder0
 msgid "Payment of invoices"
-msgstr "Placení faktůr"
+msgstr "Platby za faktury"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
 #: field:account.financial.report,sequence:0
+#: field:account.invoice.line,sequence:0
 #: field:account.invoice.tax,sequence:0
-#: view:account.journal:0
-#: field:account.journal.column,sequence:0
 #: field:account.model.line,sequence:0
-#: field:account.payment.term.line,sequence:0
 #: field:account.sequence.fiscalyear,sequence_id:0
 #: field:account.tax,sequence:0
 #: field:account.tax.code,sequence:0
@@ -7102,6 +7125,7 @@ msgid "Link to the automatically generated Journal Items."
 msgstr "Napojit na automaticky generované Položky deníku"
 
 #. module: account
+#: selection:account.config.settings,period:0
 #: selection:account.installer,period:0
 msgid "Monthly"
 msgstr "Měsíčně"
@@ -7177,9 +7201,9 @@ msgid "CashBox Line"
 msgstr "Řádek pokladny"
 
 #. module: account
-#: view:account.partner.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
@@ -7197,18 +7221,10 @@ msgid "Fixed"
 msgstr "Pevné"
 
 #. module: account
-#: code:addons/account/account.py:629
-#: code:addons/account/account.py:642
-#: code:addons/account/account.py:645
-#: code:addons/account/account.py:664
-#: code:addons/account/account.py:787
-#: code:addons/account/account.py:1077
-#: code:addons/account/account_invoice.py:732
-#: code:addons/account/account_invoice.py:735
-#: code:addons/account/account_invoice.py:738
-#: code:addons/account/account_move_line.py:97
-#: code:addons/account/account_move_line.py:750
-#: code:addons/account/account_move_line.py:803
+#: code:addons/account/account.py:653
+#: code:addons/account/account.py:656
+#: code:addons/account/account.py:668
+#: code:addons/account/account.py:1031
 #, python-format
 msgid "Warning !"
 msgstr "Varování !"
@@ -7221,7 +7237,7 @@ msgstr "Stav poybového řádku"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "Likvidace řádky pohybu účtu"
+msgstr "Vyrovnání řádku pohybu účtu"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -7266,7 +7282,7 @@ msgid "Can not %s draft/proforma/cancel invoice."
 msgstr "Fakturu nelze %s návrh/proforma/zrušit."
 
 #. module: account
-#: code:addons/account/account_invoice.py:810
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "No Invoice Lines !"
 msgstr "Žádné řádky faktury !"
@@ -7305,7 +7321,7 @@ msgid "Tax Use In"
 msgstr "Daň v použití"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:353
+#: code:addons/account/account_bank_statement.py:420
 #, python-format
 msgid "The account entries lines are not in valid state."
 msgstr "Poliožky řádků účtu nejsou v platném stavu."
@@ -7316,7 +7332,7 @@ msgid "Deferral Method"
 msgstr "Metoda zpoždění"
 
 #. module: account
-#: code:addons/account/account_invoice.py:379
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Invoice '%s' is paid."
 msgstr "Faktura '%s' je zaplacena."
@@ -7342,8 +7358,8 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
-"Pokud je políčko zaškrtnuto, systém se pokusí seskupit účetní řádky, když je "
-"generuje z faktůr."
+"Pokud je pole zaškrtnuto, systém se pokusí seskupit účetní řádky když je "
+"generuje z faktur."
 
 #. module: account
 #: help:account.period,state:0
@@ -7379,13 +7395,12 @@ msgid "Associated Partner"
 msgstr "Přidruženého partnera"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1332
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Musíte nejdříve vybrat partnera !"
 
 #. module: account
-#: view:account.invoice:0
 #: field:account.invoice,comment:0
 msgid "Additional Information"
 msgstr "Další informace"
@@ -7396,8 +7411,8 @@ msgid "Bank and Cash Accounts"
 msgstr "Bankovní a hotovostní účty"
 
 #. module: account
-#: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
+#: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
 msgstr "Celkem zbývající"
 
@@ -7447,7 +7462,7 @@ msgid "Choose Fiscal Year"
 msgstr "Vyberte daňový rok"
 
 #. module: account
-#: code:addons/account/account.py:3111
+#: code:addons/account/account.py:3196
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr "Deník nákupních dobropisů"
@@ -7502,7 +7517,7 @@ msgstr "Období"
 #. module: account
 #: report:account.invoice:0
 msgid "Net Total:"
-msgstr "Čistého celkem:"
+msgstr "Cena celkem:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
@@ -7545,7 +7560,7 @@ msgstr "Vnitř.typ"
 #. module: account
 #: field:account.move.line,tax_amount:0
 msgid "Tax/Base Amount"
-msgstr "Daňová/základní částka"
+msgstr "Daň/základ daně"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -7585,6 +7600,7 @@ msgstr "Měna společnosti"
 #: field:account.common.journal.report,chart_account_id:0
 #: field:account.common.partner.report,chart_account_id:0
 #: field:account.common.report,chart_account_id:0
+#: view:account.config.settings:0
 #: field:account.general.journal,chart_account_id:0
 #: field:account.partner.balance,chart_account_id:0
 #: field:account.partner.ledger,chart_account_id:0
@@ -7620,7 +7636,7 @@ msgstr ""
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:0
 msgid "Partial Reconcile"
-msgstr "Částečná likvidace"
+msgstr "Částečné vyrovnání"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
@@ -7745,7 +7761,7 @@ msgid "Payment Term Line"
 msgstr "Řádek platebního období"
 
 #. module: account
-#: code:addons/account/account.py:3109
+#: code:addons/account/account.py:3194
 #, python-format
 msgid "Purchase Journal"
 msgstr "Deník nákupů"
@@ -7757,9 +7773,9 @@ msgstr ""
 "Dobropisová faktura: Vytvoří dobropisovou fakturu, připravenou pro úpravu."
 
 #. module: account
-#: field:account.invoice.line,price_subtotal:0
+#: field:account.invoice,amount_untaxed:0
 msgid "Subtotal"
-msgstr "Mezivýsledek"
+msgstr "Mezisoučet"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -7778,7 +7794,7 @@ msgstr ""
 #: field:account.invoice.report,date_due:0
 #: field:report.invoice.created,date_due:0
 msgid "Due Date"
-msgstr "Do data"
+msgstr "Splatnost"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_supplier
@@ -7847,7 +7863,7 @@ msgstr "Nezaplacené faktury"
 #. module: account
 #: field:account.move.line.reconcile,debit:0
 msgid "Debit amount"
-msgstr "Částka dluhu"
+msgstr "Částka debetu"
 
 #. module: account
 #: view:board.board:0
@@ -7863,6 +7879,7 @@ msgstr "Pokladna"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.common.report:0
+#: view:account.invoice:0
 msgid "Print"
 msgstr "Tisk"
 
@@ -7879,6 +7896,7 @@ msgid "Chart of Analytic Accounts"
 msgstr "Rozvrh analytických účtů"
 
 #. module: account
+#: view:account.journal:0
 #: model:ir.ui.menu,name:account.menu_configuration_misc
 msgid "Miscellaneous"
 msgstr "Různé"
@@ -7917,8 +7935,8 @@ msgid ""
 msgstr "Částka na dokladu musí odpovídat částce v řádku výpisu"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1155
-#: code:addons/account/account_move_line.py:1238
+#: code:addons/account/account_move_line.py:1170
+#: code:addons/account/account_move_line.py:1253
 #, python-format
 msgid "Bad account!"
 msgstr "Nesprávný účet!"
@@ -7929,7 +7947,7 @@ msgid "Keep empty for all open fiscal years"
 msgstr "Nechejte prázdné pro všechny otevřené finanční roky"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1105
+#: code:addons/account/account_move_line.py:1120
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
 msgstr "Pohyb účtu (%s) pro centralizaci byl potvrzen!"
@@ -7943,7 +7961,6 @@ msgstr ""
 "Částka vyjádřena ve volitelné jiné měně, pokud je položka více-měnová."
 
 #. module: account
-#: view:account.account:0
 #: report:account.analytic.account.journal:0
 #: field:account.bank.statement,currency:0
 #: report:account.central.journal:0
@@ -7969,6 +7986,7 @@ msgstr ""
 #: field:report.account_type.sales,currency_id:0
 #: field:report.invoice.created,currency_id:0
 #: field:res.partner.bank,currency_id:0
+#: field:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency"
 msgstr "Měna"
 
@@ -7999,7 +8017,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "Položky vyrovnání"
+msgstr "Vyrovnané položky"
 
 #. module: account
 #: field:account.invoice,address_contact_id:0
@@ -8035,16 +8053,17 @@ msgid "Contracts"
 msgstr "Smlouvy"
 
 #. module: account
-#: field:account.cashbox.line,ending_id:0
-#: field:account.cashbox.line,starting_id:0
+#: field:account.cashbox.line,bank_statement_id:0
 #: field:account.entries.report,reconcile_id:0
 #: field:account.financial.report,balance:0
+#: field:account.financial.report,credit:0
+#: field:account.financial.report,debit:0
 msgid "unknown"
 msgstr "neznámé"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3113
+#: code:addons/account/account.py:3198
 #, python-format
 msgid "Opening Entries Journal"
 msgstr "Počáteční položky deníku"
@@ -8104,7 +8123,6 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 #: field:account.move.line,amount_residual:0
-#: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount"
 msgstr "Zbytková částka"
 
@@ -8116,7 +8134,6 @@ msgstr "Řádky položek"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
-#: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Open Journal"
 msgstr "Otevřít deník"
 
@@ -8133,7 +8150,7 @@ msgid "Period from"
 msgstr "Období od"
 
 #. module: account
-#: code:addons/account/account.py:3110
+#: code:addons/account/account.py:3195
 #, python-format
 msgid "Sales Refund Journal"
 msgstr "Kniha dobropisů prodeje"
@@ -8151,14 +8168,13 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
-#: view:account.payment.term:0
 msgid "Information"
 msgstr "Informace"
 
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
 msgid "Registered payment"
-msgstr "Registrované platby"
+msgstr "Zaznamenané platby"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -8187,10 +8203,10 @@ msgstr "Vytvořit fakturu"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax_rate:0
 msgid "Purchase Tax(%)"
-msgstr "Daň nákupu(%)"
+msgstr "Daň na vstupu (%)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:810
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Prosíme vytvořete nějaké řádky faktury."
@@ -8206,7 +8222,7 @@ msgid "Configure Your Accounting Application"
 msgstr "Nastavit vaši účetní aplikaci"
 
 #. module: account
-#: code:addons/account/account.py:3118
+#: code:addons/account/account.py:3203
 #, python-format
 msgid "SCNJ"
 msgstr "SCNJ"
@@ -8283,18 +8299,16 @@ msgid "Companies that refers to partner"
 msgstr "Společnosti, které odkazují na partnera"
 
 #. module: account
-#: view:account.journal:0
 #: field:account.journal.column,view_id:0
 #: view:account.journal.view:0
 #: field:account.journal.view,name:0
+#: model:account.journal.view,name:account.account_journal_view
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
 msgstr "Zobrazení deníku"
 
 #. module: account
 #: view:account.move.line:0
-#: code:addons/account/account_move_line.py:1046
-#, python-format
 msgid "Total credit"
 msgstr "Celkový úvěř"
 
@@ -8340,26 +8354,24 @@ msgid "Current currency is not confirured properly !"
 msgstr "Aktuální měna není správně nastavena !"
 
 #. module: account
-#: code:addons/account/account.py:1088
-#: code:addons/account/account.py:1090
-#: code:addons/account/account.py:1321
-#: code:addons/account/account.py:1563
-#: code:addons/account/account.py:1567
-#: code:addons/account/account.py:3368
-#: code:addons/account/account_move_line.py:807
-#: code:addons/account/account_move_line.py:830
-#: code:addons/account/account_move_line.py:832
-#: code:addons/account/account_move_line.py:835
-#: code:addons/account/account_move_line.py:837
+#: code:addons/account/account.py:1095
+#: code:addons/account/account.py:1097
+#: code:addons/account/account.py:1329
+#: code:addons/account/account.py:1580
+#: code:addons/account/account.py:1584
+#: code:addons/account/account.py:3385
+#: code:addons/account/account_move_line.py:823
+#: code:addons/account/account_move_line.py:843
+#: code:addons/account/account_move_line.py:846
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
 #: code:addons/account/wizard/account_change_currency.py:64
 #: code:addons/account/wizard/account_change_currency.py:70
-#: code:addons/account/wizard/account_financial_report.py:69
+#: code:addons/account/wizard/account_financial_report.py:70
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
-#: code:addons/account/wizard/account_report_common.py:144
-#: code:addons/account/wizard/account_report_common.py:150
+#: code:addons/account/wizard/account_report_common.py:145
+#: code:addons/account/wizard/account_report_common.py:151
 #, python-format
 msgid "Error"
 msgstr "Chyba"
@@ -8375,7 +8387,6 @@ msgid "Profit & Loss (Income Accounts)"
 msgstr "Zisk & Ztráty (Příjmové účty)"
 
 #. module: account
-#: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
 msgstr "Nechejte prázdné pro použití příjmového účtu"
@@ -8484,7 +8495,7 @@ msgid "Cannot delete bank statement(s) which are already confirmed !"
 msgstr "Nelze smazat bankovní výpis, který už byl potvrzen!"
 
 #. module: account
-#: code:addons/account/wizard/account_automatic_reconcile.py:152
+#: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile"
 msgstr "Musíte vybrat účet pro vyrovnání"
@@ -8527,13 +8538,14 @@ msgstr "Ruční položka"
 #: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.journal.period.print.sale.purchase:0
-#: field:account.move.line,move_id:0
+#: view:account.move:0
+#: view:account.move.line:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
 msgstr "Pohyb"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1153
+#: code:addons/account/account_move_line.py:1168
 #, python-format
 msgid "You can not change the tax, you should remove and recreate lines !"
 msgstr "Nemůžete změnit daň, měli byste odstranit a znovu vytvořit řádky !"
@@ -8580,13 +8592,12 @@ msgid "Common Report"
 msgstr "Běžný výkaz"
 
 #. module: account
-#: view:account.account:0
 #: field:account.account,child_consol_ids:0
 msgid "Consolidated Children"
 msgstr "Konsolidovaný potomek"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:87
+#: code:addons/account/wizard/account_fiscalyear_close.py:103
 #, python-format
 msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
@@ -8676,7 +8687,7 @@ msgstr "Diagram účtů"
 #. module: account
 #: field:account.move.line,date_maturity:0
 msgid "Due date"
-msgstr "Do data"
+msgstr "Splatnost"
 
 #. module: account
 #: view:account.move.journal:0
@@ -8684,6 +8695,7 @@ msgid "Standard entries"
 msgstr "Standartní položky"
 
 #. module: account
+#: view:account.subscription:0
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
 msgstr "Předplatné účtu"
@@ -8738,7 +8750,7 @@ msgstr "Počáteční datum"
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr "Návrhy faktůr"
+msgstr "Koncepty faktur"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -8748,7 +8760,7 @@ msgid "Unreconciled"
 msgstr "Nevyrovnaný"
 
 #. module: account
-#: code:addons/account/account_invoice.py:828
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid "Bad total !"
 msgstr "Špatný součet !"
@@ -8807,7 +8819,7 @@ msgid "Active"
 msgstr "Aktivní"
 
 #. module: account
-#: code:addons/account/account_invoice.py:372
+#: code:addons/account/account_invoice.py:381
 #, python-format
 msgid "Unknown Error"
 msgstr "Neznámá chyba"
@@ -8869,7 +8881,7 @@ msgstr "Ověřit pohyb účtu"
 #: report:account.vat.declaration:0
 #: field:report.account.receivable,credit:0
 msgid "Credit"
-msgstr "Úvěr"
+msgstr "Dal"
 
 #. module: account
 #: help:account.invoice.refund,journal_id:0
@@ -8883,7 +8895,6 @@ msgstr ""
 "aktuální faktury."
 
 #. module: account
-#: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
 msgstr "Obecné deníky"
@@ -8903,7 +8914,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.cashbox.line,number:0
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
@@ -8927,7 +8937,7 @@ msgstr "Obecný"
 #: selection:account.common.partner.report,filter:0
 #: view:account.common.report:0
 #: selection:account.common.report,filter:0
-#: view:account.fiscalyear:0
+#: field:account.config.settings,period:0
 #: field:account.fiscalyear,period_ids:0
 #: selection:account.general.journal,filter:0
 #: field:account.installer,period:0
@@ -8942,8 +8952,8 @@ msgstr "Obecný"
 #: view:accounting.report:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
-#: model:ir.actions.act_window,name:account.action_account_period_form
-#: model:ir.ui.menu,name:account.menu_action_account_period_form
+#: model:ir.actions.act_window,name:account.action_account_period
+#: model:ir.ui.menu,name:account.menu_action_account_period
 #: model:ir.ui.menu,name:account.next_id_23
 msgid "Periods"
 msgstr "Období"
@@ -9002,7 +9012,7 @@ msgstr "Prodejní daň(%)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
 msgid "Supplier Invoices"
-msgstr "Faktury dodavatele"
+msgstr "Faktury přijaté"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9085,7 +9095,6 @@ msgstr "Tento měsíc"
 #: view:account.analytic.cost.ledger:0
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
-#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
 msgstr "Vyberte období"
 
@@ -9128,6 +9137,7 @@ msgid "End Date"
 msgstr "Datum ukončení"
 
 #. module: account
+#: view:account.open.closed.fiscalyear:0
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
@@ -9163,7 +9173,7 @@ msgid "This is a model for recurring accounting entries"
 msgstr "Toto je model pro opakující se účetní položky"
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:102
+#: code:addons/account/account_analytic_line.py:100
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr "Pro tento výrobek není definován příjmový účet: \"%s\" (id: %d)"
@@ -9181,10 +9191,8 @@ msgid "  value amount: 0.02"
 msgstr "  částka hodnoty: 0.02"
 
 #. module: account
-#: view:account.fiscalyear:0
 #: view:account.move:0
 #: view:account.move.line:0
-#: view:account.period:0
 msgid "States"
 msgstr "Stavy"
 
@@ -9193,7 +9201,6 @@ msgstr "Stavy"
 #: report:account.analytic.account.inverted.balance:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: view:account.analytic.line:0
-#: view:account.bank.statement:0
 #: field:account.invoice,amount_total:0
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
@@ -9202,13 +9209,14 @@ msgid "Total"
 msgstr "Celkem"
 
 #. module: account
-#: code:addons/account/wizard/account_move_journal.py:97
+#: code:addons/account/wizard/account_move_journal.py:98
 #, python-format
 msgid "Journal: All"
 msgstr "Deník: Všechny"
 
 #. module: account
 #: field:account.account,company_id:0
+#: report:account.account.balance:0
 #: field:account.aged.trial.balance,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.balance.report,company_id:0
@@ -9219,20 +9227,23 @@ msgstr "Deník: Všechny"
 #: field:account.common.journal.report,company_id:0
 #: field:account.common.partner.report,company_id:0
 #: field:account.common.report,company_id:0
+#: field:account.config.settings,company_id:0
 #: view:account.entries.report:0
 #: field:account.entries.report,company_id:0
 #: field:account.fiscal.position,company_id:0
 #: field:account.fiscalyear,company_id:0
+#: report:account.general.journal:0
 #: field:account.general.journal,company_id:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,company_id:0
 #: field:account.invoice,company_id:0
 #: field:account.invoice.line,company_id:0
 #: view:account.invoice.report:0
 #: field:account.invoice.report,company_id:0
 #: field:account.invoice.tax,company_id:0
-#: view:account.journal:0
 #: field:account.journal,company_id:0
 #: field:account.journal.period,company_id:0
+#: report:account.journal.period.print:0
 #: field:account.model,company_id:0
 #: field:account.move,company_id:0
 #: field:account.move.line,company_id:0
@@ -9312,13 +9323,9 @@ msgid "End period"
 msgstr "Konec období"
 
 #. module: account
-#: code:addons/account/account_move_line.py:759
-#: code:addons/account/account_move_line.py:842
-#: code:addons/account/wizard/account_invoice_state.py:44
-#: code:addons/account/wizard/account_invoice_state.py:68
-#: code:addons/account/wizard/account_state_open.py:37
-#: code:addons/account/wizard/account_validate_account_move.py:39
-#: code:addons/account/wizard/account_validate_account_move.py:61
+#. openerp-web
+#: code:addons/account/account_move_line.py:780
+#: code:addons/account/static/src/js/account_move_reconciliation.js:90
 #, python-format
 msgid "Warning"
 msgstr "Varování"
@@ -9362,8 +9369,10 @@ msgstr "Finanční pozice účtu"
 #: view:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1158
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Invoice"
 msgstr "Faktura dodavatele"
 
@@ -9389,9 +9398,10 @@ msgstr "Faktura dodavatele"
 #: report:account.vat.declaration:0
 #: field:report.account.receivable,debit:0
 msgid "Debit"
-msgstr "Dluh"
+msgstr "Má dáti"
 
 #. module: account
+#: view:account.invoice:0
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
 msgstr "Řádky faktury"
@@ -9407,7 +9417,7 @@ msgid "Recurring"
 msgstr "Opakující se"
 
 #. module: account
-#: code:addons/account/account_move_line.py:832
+#: code:addons/account/account_move_line.py:843
 #, python-format
 msgid "Entry is already reconciled"
 msgstr "Položka již je srovnaná"
@@ -9438,8 +9448,10 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With movements"
 msgstr "S pohyby"
@@ -9552,12 +9564,13 @@ msgid "Configuration Progress"
 msgstr "Průběh nastavení"
 
 #. module: account
+#: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
 msgstr "Mapování účtů"
 
 #. module: account
-#: code:addons/account/account_invoice.py:364
+#: code:addons/account/account_invoice.py:373
 #, python-format
 msgid "Invoice '%s' is waiting for validation."
 msgstr "Faktura '%s' čeká na ověření."
@@ -9605,9 +9618,9 @@ msgstr "Hlead fakturu"
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
-#: view:account.invoice.refund:0
 #: view:account.invoice.report:0
-#: model:ir.actions.act_window,name:account.action_account_invoice_refund
+#: code:addons/account/account_invoice.py:1159
+#, python-format
 msgid "Refund"
 msgstr "Dobropis"
 
@@ -9622,9 +9635,6 @@ msgid "Total Receivable"
 msgstr "Pohledávky celkem"
 
 #. module: account
-#: view:account.account:0
-#: view:account.account.template:0
-#: view:account.journal:0
 #: view:account.move.line:0
 msgid "General Information"
 msgstr "Obecné informace"
@@ -9688,9 +9698,9 @@ msgid "Partner's"
 msgstr "Partneři"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_fiscalyear_form
+#: model:ir.actions.act_window,name:account.action_account_fiscalyear
 #: view:ir.sequence:0
-#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear_form
+#: model:ir.ui.menu,name:account.menu_action_account_fiscalyear
 msgid "Fiscal Years"
 msgstr "Daňový rok"
 
@@ -9814,7 +9824,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr "Majetky"
+msgstr "Majetek"
 
 #. module: account
 #: model:account.account.template,name:0

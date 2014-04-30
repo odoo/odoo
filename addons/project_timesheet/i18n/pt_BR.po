@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:19+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:29+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:55
@@ -66,7 +66,7 @@ msgstr "report.timesheet.task.user"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
-msgstr "Agrupado Por..."
+msgstr "Agrupar Por..."
 
 #. module: project_timesheet
 #: constraint:res.partner:0
@@ -87,7 +87,7 @@ msgstr "Ano"
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic account/project"
-msgstr "Conta Analítica/Projeto"
+msgstr "Conta analítica/projeto"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
@@ -167,6 +167,7 @@ msgid "Task"
 msgstr "Tarefa"
 
 #. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks Work"
 msgstr "Fatura de Tarefas em andamento"
@@ -183,6 +184,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr "Erro! Você não pode atribuir escalas para o mesmo projeto!"
 
 #. module: project_timesheet
+#: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
 msgstr "Data"
@@ -195,7 +197,7 @@ msgstr "Julho"
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
 msgid "Complete Your Timesheet."
-msgstr "Complete sua Planilha de Tempo"
+msgstr "Complete sua Planilha de Horas"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_working_hours
@@ -323,10 +325,10 @@ msgid "Timesheet/Task hours Report Per Month"
 msgstr "Planilha de Horas/Relatório de Horas de Tarefas por Mês"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:54
-#: code:addons/project_timesheet/project_timesheet.py:58
-#: code:addons/project_timesheet/project_timesheet.py:62
-#: code:addons/project_timesheet/project_timesheet.py:69
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
 #, python-format
 msgid "Bad Configuration !"
 msgstr "Mal configurado !"
@@ -359,7 +361,7 @@ msgstr "Dezembro"
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
 msgid "After task is completed, Create its invoice."
-msgstr "Depois da tarefa concluída, Criar sua nota fiscal"
+msgstr "Depois da tarefa concluída, Criar as faturas"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0

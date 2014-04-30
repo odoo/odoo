@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:17+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:27+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -61,7 +61,9 @@ msgid "Project's Tasks"
 msgstr "Taken van het project"
 
 #. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
 msgstr "Fases"
 
@@ -132,7 +134,7 @@ msgstr "Vorige fases"
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr "ME (Meeteenheid) is de eenheid voor de doorlooptijd"
+msgstr "Maateenheid is de eenheid voor de doorlooptijd"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
@@ -292,7 +294,7 @@ msgid "Starting Date"
 msgstr "Startdatum"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+#: view:project.phase:0
 msgid "Related Tasks"
 msgstr "Verbonden taken"
 
@@ -412,7 +414,7 @@ msgstr "Concept"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
-msgstr "Wachtend"
+msgstr "In afwachting"
 
 #. module: project_long_term
 #: field:project.resource.allocation,name:0
@@ -467,7 +469,8 @@ msgid "Done"
 msgstr "Gereed"
 
 #. module: project_long_term
-#: view:project.phase:0
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -475,7 +478,7 @@ msgstr "Annuleren"
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
-msgstr "Loopt"
+msgstr "In behandeling"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -530,6 +533,7 @@ msgid "Compute Scheduling of Task for specified project."
 msgstr "Taak planning berekenen voor opgegeven project."
 
 #. module: project_long_term
+#: view:project.project:0
 #: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Fase"
@@ -544,9 +548,9 @@ msgid ""
 " If the phase is over, the states is set to 'Done'."
 msgstr ""
 "Als de fase is gemaakt is de status 'Concept'.\n"
-" Als de fase is gestart, wordt de status 'Loopt'.\n"
-" Als opnieuw bekeken moet worden, wordt de fase status 'Wachtend'.           "
-"                       \n"
+" Als de fase is gestart, wordt de status 'In behandeling'.\n"
+" Als opnieuw bekeken moet worden, wordt de fase status 'In afwachting'.      "
+"                            \n"
 " Als de fase voorbij is, wordt de status op 'Voltooid' gezet."
 
 #. module: project_long_term
@@ -640,6 +644,7 @@ msgid "By default in days"
 msgstr "Standaard in dagen"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Tijdsduur"

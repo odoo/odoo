@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2012-02-24 19:41+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:14+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 07:25+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -55,13 +55,13 @@ msgid "Mainboard ASUStek A7V8X-X"
 msgstr "Placa de baza ASUStek A7V8X-X"
 
 #. module: product
-#: help:product.template,seller_qty:0
+#: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr ""
 "Aceasta este cantitatea minima de achizitionat de la Furnizorul principal."
 
 #. module: product
-#: model:product.uom,name:product.uom_day
+#: model:product.uom,name:product.product_uom_day
 msgid "Day"
 msgstr "Zi"
 
@@ -104,7 +104,7 @@ msgstr ""
 "la furnizor trebuie să fie din aceeași categorie."
 
 #. module: product
-#: field:product.template,seller_qty:0
+#: field:product.product,seller_qty:0
 msgid "Supplier Quantity"
 msgstr "Cantitate Furnizor"
 
@@ -122,14 +122,12 @@ msgstr "Avertizare !"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "Lista de preturi"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Base Prices"
 msgstr "Preturi de baza"
@@ -182,7 +180,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Average Price"
-msgstr "Pretul mediu"
+msgstr "Prețul mediu"
 
 #. module: product
 #: help:product.pricelist.item,name:0
@@ -208,7 +206,7 @@ msgstr "HDD la cerere"
 #. module: product
 #: field:product.price_list,price_list:0
 msgid "PriceList"
-msgstr "Lista de preturi"
+msgstr "Lista de prețuri"
 
 #. module: product
 #: view:product.template:0
@@ -247,7 +245,7 @@ msgstr "Versiune Publica a Listei Implicite de Preturi"
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
-msgstr "Pret Standard"
+msgstr "Preț Standard"
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
@@ -267,7 +265,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  exemplu: 1 * (aceasta unitate) = raport * (unitatea de referinta)"
 
 #. module: product
-#: code:addons/product/product.py:418
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Produse: "
@@ -275,7 +273,7 @@ msgstr "Produse: "
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "Categoria superioara"
+msgstr "Categoria superioară"
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -300,7 +298,7 @@ msgstr ""
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr "Numele furnizorului, pretul, codul produsului, ..."
+msgstr "Numele furnizorului, prețul, codul produsului, ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -313,7 +311,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: product
-#: field:product.template,seller_id:0
+#: field:product.product,seller_id:0
 msgid "Main Supplier"
 msgstr "Furnizorul principal"
 
@@ -330,6 +328,7 @@ msgstr "Ambalare"
 #. module: product
 #: view:product.product:0
 #: field:product.template,categ_id:0
+#: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Categorie"
 
@@ -376,7 +375,7 @@ msgstr "Selectati categoria pentru produsul curent"
 #. module: product
 #: field:product.product,outgoing_qty:0
 msgid "Outgoing"
-msgstr "Iesire"
+msgstr "Ieșire"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -387,7 +386,7 @@ msgstr "Unitatea de masura de referinta pentru aceasta categorie"
 #: model:product.price.type,name:product.list_price
 #: field:product.product,lst_price:0
 msgid "Public Price"
-msgstr "Pretul public"
+msgstr "Prețul public"
 
 #. module: product
 #: field:product.price_list,qty5:0
@@ -430,14 +429,13 @@ msgstr ""
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr "Cautati Pretul Produselor"
+msgstr "Căutați Prețul Produselor"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
-msgstr "Descriere Vanzare"
+msgstr "Descriere vânzare"
 
 #. module: product
 #: view:product.product:0
@@ -453,7 +451,7 @@ msgstr "Lungimea pachetului"
 #. module: product
 #: help:product.template,weight_net:0
 msgid "The net weight in Kg."
-msgstr "Masa neta in Kg."
+msgstr "Masa netă în Kg."
 
 #. module: product
 #: help:product.template,state:0
@@ -469,7 +467,7 @@ msgstr "Cantitate"
 #. module: product
 #: field:product.packaging,height:0
 msgid "Height"
-msgstr "Inaltime"
+msgstr "Înălțime"
 
 #. module: product
 #: help:product.pricelist.version,date_end:0
@@ -478,7 +476,7 @@ msgstr ""
 "Data pana la care este valabila aceasta versiune a listei de preturi."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.product_category_all
 msgid "All products"
 msgstr "Toate produsele"
 
@@ -519,7 +517,7 @@ msgstr "Cantitate-4"
 #. module: product
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Vanzari & Achizitii"
+msgstr "Vânzări & Achiziții"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
@@ -637,7 +635,6 @@ msgstr "Cheltuieli de restaurant"
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Eroare: Cod ean invalid"
 
@@ -689,6 +686,7 @@ msgstr "KIT raft de 100cm"
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Furnizor"
 
@@ -722,7 +720,6 @@ msgid "Price List"
 msgstr "Lista de preturi"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
 msgstr "Furnizori"
@@ -758,7 +755,7 @@ msgstr ""
 "sau, daca nu exista, pentru UdM implicita a produsului"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_7
 msgid "Accessories"
 msgstr "Accesorii"
 
@@ -807,6 +804,7 @@ msgstr "Tipariti"
 #. module: product
 #: view:product.product:0
 #: field:product.ul,type:0
+#: field:product.uom,uom_type:0
 msgid "Type"
 msgstr "Tip"
 
@@ -848,10 +846,9 @@ msgstr ""
 "Lasati necompletat pentru toate produsele"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr "Aprovizionare & Locatii"
+msgstr "Aprovizionare & Locaţii"
 
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
@@ -859,7 +856,7 @@ msgid "Kitchen Design Project"
 msgstr "Proiect plan bucatarie"
 
 #. module: product
-#: model:product.uom,name:product.uom_hour
+#: model:product.uom,name:product.product_uom_hour
 msgid "Hour"
 msgstr "Ora"
 
@@ -901,6 +898,7 @@ msgid "Supplier Information"
 msgstr "Informatii furnizor"
 
 #. module: product
+#: model:ir.model,name:product.model_res_currency
 #: field:product.price.type,currency_id:0
 #: report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
@@ -980,11 +978,10 @@ msgid "Extended Filters..."
 msgstr "Filtre extinse..."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_purchase:0
 msgid "Purchase Description"
-msgstr "Descriere achizitie"
+msgstr "Descriere achiziție"
 
 #. module: product
 #: constraint:product.pricelist.version:0
@@ -1124,11 +1121,8 @@ msgstr "Unitati logistice"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
-#: field:product.uom,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Nume"
@@ -1229,6 +1223,9 @@ msgstr "Campul asociat din formularul produsului."
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "Unitatea de masura"
 
@@ -1293,7 +1290,7 @@ msgstr ""
 "    "
 
 #. module: product
-#: help:product.template,seller_delay:0
+#: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
 "and the reception of goods for this product and for the default supplier. It "
@@ -1305,13 +1302,13 @@ msgstr ""
 "baza efectuarii din nou a comenzilor."
 
 #. module: product
-#: help:product.template,seller_id:0
+#: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
 "Furnizorul principal care are cea mai mare prioritate in Lista cu Furnizori."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_5
 #: view:product.product:0
 msgid "Services"
 msgstr "Servicii"
@@ -1430,6 +1427,7 @@ msgstr ""
 "gaseste un obiect care se potriveste."
 
 #. module: product
+#: view:product.product:0
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Consumabil"
@@ -1445,7 +1443,6 @@ msgid "The gross weight in Kg."
 msgstr "Greutatea bruta in kilograme."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
 msgstr "Aprovizionare"
@@ -1820,6 +1817,7 @@ msgid "Box 30x40x60"
 msgstr "Cutie 30x40x60"
 
 #. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
 #: selection:product.template,type:0
 msgid "Service"
 msgstr "Service"
@@ -1854,7 +1852,7 @@ msgstr ""
 "numit si pretul de catalog."
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Sectiunea partenerului din formularul produsului"
@@ -1885,7 +1883,7 @@ msgstr ""
 "sa faca parte din aceeasi categorie ca si unitatea de masura implicita."
 
 #. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
+#: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
 msgstr ""
 "Acest produs este configurat cu exemple de fluxuri de inaintare si de "
@@ -1913,7 +1911,7 @@ msgid "Pricelist Type"
 msgstr "Tipul Listei de preturi"
 
 #. module: product
-#: model:product.category,name:product.product_category_otherproducts0
+#: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Alte Produse"
 
@@ -1923,6 +1921,7 @@ msgid "Characteristics"
 msgstr "Caracteristici"
 
 #. module: product
+#: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "Poate fi vandut"
@@ -1943,7 +1942,7 @@ msgid "Based on"
 msgstr "Bazat pe"
 
 #. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
+#: model:product.category,name:product.product_category_10
 msgid "Raw Materials"
 msgstr "Materie prima"
 
@@ -2021,7 +2020,7 @@ msgstr ""
 "stergeti."
 
 #. module: product
-#: field:product.template,seller_delay:0
+#: field:product.product,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Timpul total de aprovizionare"
 
@@ -2113,7 +2112,6 @@ msgstr ""
 "pentru o UdM care nu mai poate fi divizata, cum ar fi o bucata."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Descriptions"
 msgstr "Descrieri"
@@ -2194,7 +2192,6 @@ msgstr "Poate fi inchiriat"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
 msgid "Cost Price"
 msgstr "Pretul de cost"
 
@@ -2261,7 +2258,6 @@ msgid "tonne"
 msgstr "tonă"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr "Intarzieri"
@@ -2287,7 +2283,6 @@ msgstr ""
 #: field:product.packaging,name:0
 #: report:product.pricelist:0
 #: view:product.product:0
-#: view:product.template:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "Descriere"
@@ -2323,6 +2318,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Volum"
 
@@ -2333,7 +2329,6 @@ msgstr "Caz"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Varianta produs"
 
@@ -2343,7 +2338,8 @@ msgid "Shelves"
 msgstr "Rafturi"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:379
+#: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
 msgstr "O alta lista de preturi"
@@ -2358,6 +2354,7 @@ msgstr "Sablon produs"
 
 #. module: product
 #: field:product.template,cost_method:0
+#: model:res.groups,name:product.group_costing_method
 msgid "Costing Method"
 msgstr "Metoda de calculare a costurilor"
 

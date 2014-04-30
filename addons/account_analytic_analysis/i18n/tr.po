@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 07:44+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2014-04-15 06:41+0000\n"
+"X-Generator: Launchpad (build 16976)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -78,12 +78,12 @@ msgstr "Hesaplamada kullanılan formül: Teorik Ciro - Toplam Maliyetler"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Gerçek Kar Oranı (%)"
+msgstr "Reel Kâr Oranı (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr "Teorik Ciro"
+msgstr "Teorik Gelir"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -91,8 +91,8 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Eğer fatura maliyetlerden çıkarılmışsa, bu en son işin yada faturalandırılan "
-"maliyetin tarihidir."
+"Eğer fatura maliyetlerden çıkarılmışsa, bu en son işin ya da "
+"faturalandırılan maliyetin tarihidir."
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
@@ -126,7 +126,7 @@ msgstr "Kalan Saat"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr "Kuramsal Sınır"
+msgstr "Teorik kâr"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -148,7 +148,7 @@ msgstr "Kullanıcı"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Faturasız Tutar"
+msgstr "Faturalanmamış Tutar"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -179,7 +179,7 @@ msgstr "Kullanıcıya göre Saatlik Özet"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Fatura Tutarı"
+msgstr "Faturalanmış Tutar"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:552
@@ -201,7 +201,7 @@ msgstr "Faturalanan Saat"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Gerçek Teminat"
+msgstr "Gerçek Kar"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
@@ -213,18 +213,18 @@ msgstr "Hata! Para birimi seçilen firmanın para birimiyle aynı olmalı"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Bu hesap için toplam müşteri faturası miktarı."
+msgstr "Bu hesap için toplam müşteriye faturalanmış tutar."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Aya göre saatlil özet"
+msgstr "Aya göre saatlik özet"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
 msgstr ""
-"Şu formülü kullanarak hesaplar: (Gerçek Teminat / Toplam Maliyet) * 100."
+"Şu formülü kullanarak hesaplanır: (Gerçek Kâr / Toplam Maliyet) * 100."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -243,7 +243,7 @@ msgstr "Analiz hesapları"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr "Kalan Ciro"
+msgstr "Kalan Gelir"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -265,7 +265,6 @@ msgid "Revenue per Hours (real)"
 msgstr "Saat başına ciro (gerçek)"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
@@ -278,7 +277,6 @@ msgid "Month"
 msgstr "Ay"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
