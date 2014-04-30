@@ -196,11 +196,18 @@ function openerp_picking_widgets(instance){
                 var lot_name = false;
                 self.$('.js_lot_scan').val('');
                 var $lot_modal = self.$el.siblings('#js_LotChooseModal');
+                //disconnect scanner to prevent scanning a product in the back while dialog is open
                 self.getParent().barcode_scanner.disconnect();
                 $lot_modal.modal()
                 //focus input
                 $lot_modal.on('shown.bs.modal', function(){
                     self.$('.js_lot_scan').focus();    
+                })
+                //reactivate scanner when dialog close
+                $lot_modal.on('hidden.bs.modal', function(){
+                    self.getParent().barcode_scanner.connect(function(ean){
+                        self.getParent().scan(ean);
+                    });
                 })
                 self.$('.js_lot_scan').focus();
                 //button action
@@ -210,10 +217,12 @@ function openerp_picking_widgets(instance){
                     if (name.length !== 0){
                         lot_name = name;
                     }
+                    $lot_modal.modal('hide');
+                    //we need this here since it is not sure the hide event
+                    //will be catch because we refresh the view after the create_lot call
                     self.getParent().barcode_scanner.connect(function(ean){
                         self.getParent().scan(ean);
                     });
-                    $lot_modal.modal('hide');
                     self.getParent().create_lot(op_id, lot_name);
                 });
             });
