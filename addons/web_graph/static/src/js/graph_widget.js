@@ -43,6 +43,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
 
+        // get search view
+        var parent = this.getParent();
+        while (!(parent instanceof openerp.web.ViewManager)) {
+            parent = parent.getParent();
+        }
+        this.search_view = parent.searchview;
+
         openerp.session.rpc('/web_graph/check_xlwt').then(function (result) {
             self.$('.graph_options_selection label').toggle(result);
         });
@@ -76,16 +83,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     // this method gets the fields that appear in the search view, under the 
     // 'Groupby' heading
     get_search_fields: function () {
-        var self = this,
-            parent = this.getParent();
+        var self = this;
 
-        while (!(parent instanceof openerp.web.ViewManager)) {
-            parent = parent.getParent();
-        }
-
-        var search_view = parent.searchview;
-
-        var groupbygroups = _(search_view.inputs).select(function (g) {
+        var groupbygroups = _(this.search_view.inputs).select(function (g) {
             return g instanceof openerp.web.search.GroupbyGroup;
         });
 
