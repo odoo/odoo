@@ -3356,13 +3356,16 @@ instance.web.form.CompletionFieldMixin = {
 instance.web.form.M2ODialog = instance.web.Dialog.extend({
     template: "M2ODialog",
     init: function(parent) {
+        this.name = parent.string;
         this._super(parent, {
-            title: _.str.sprintf(_t("Add %s"), parent.string),
+            title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
         });
     },
     start: function() {
         var self = this;
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
+        this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
