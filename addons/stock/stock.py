@@ -2822,6 +2822,9 @@ class stock_warehouse(osv.osv):
                 output_loc = wh.wh_output_stock_loc_id
                 if wh.delivery_steps == 'ship_only':
                     output_loc = wh.lot_stock_id
+                    # Create extra MTO rule
+                    mto_pull_vals = self._get_mto_pull_rule(cr, uid, wh, [(output_loc, transit_location, wh.out_type_id.id)], context=context)
+                    pull_obj.create(cr, uid, mto_pull_vals, context=context)
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
                 values = [(output_loc, transit_location, wh.out_type_id.id, wh), (transit_location, input_loc, warehouse.in_type_id.id, warehouse)]
@@ -2905,7 +2908,7 @@ class stock_warehouse(osv.osv):
                 'route_id': new_route_id,
                 'action': 'move',
                 'picking_type_id': pick_type_id,
-                'procure_method': 'make_to_order',
+                'procure_method': warehouse.lot_stock_id.id != from_loc.id and 'make_to_order' or 'make_to_stock', # Ship only is MTS
                 'warehouse_id': supplied_warehouse.id,
                 'propagate_warehouse_id': warehouse.id,
             })
@@ -2940,7 +2943,7 @@ class stock_warehouse(osv.osv):
             first_rule = False
         return push_rules_list, pull_rules_list
 
-    def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
+    def _get_mto_route(self, cr, uid, context=None):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
@@ -2950,7 +2953,21 @@ class stock_warehouse(osv.osv):
             mto_route_id = mto_route_id and mto_route_id[0] or False
         if not mto_route_id:
             raise osv.except_osv(_('Error!'), _('Can\'t find any generic Make To Order route.'))
+        return mto_route_id
 
+
+    def _check_remove_mto_resupply_rules(self, cr, uid, warehouse, context=None):
+        """
+        Checks that the moves from the different 
+        """
+        pull_obj = self.pool.get('procurement.rule')
+        mto_route_id = self._get_mto_route(cr, uid, context=context)
+        rules = pull_obj.search(cr, uid, ['&', ('location_src_id', '=', warehouse.lot_stock_id.id), ('location_id.usage', '=', 'transit')], context=context)
+        pull_obj.unlink(cr, uid, rules, context=context)
+        
+
+    def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
+        mto_route_id = self._get_mto_route(cr, uid, context=context)
         from_loc, dest_loc, pick_type_id = values[0]
         return {
             'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context) + _(' MTO'),
@@ -3006,6 +3023,7 @@ class stock_warehouse(osv.osv):
         #create MTO pull rule and link it to the generic MTO route
         mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, values, context=context)
         mto_pull_id = pull_obj.create(cr, uid, mto_pull_vals, context=context)
+        
 
         #create a route for cross dock operations, that can be set on products and product categories
         route_name, values = routes_dict['crossdock']
@@ -3311,6 +3329,7 @@ class stock_warehouse(osv.osv):
                         to_remove_route_ids = route_obj.search(cr, uid, [('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', list(to_remove_wh_ids))], context=context)
                         if to_remove_route_ids:
                             route_obj.unlink(cr, uid, to_remove_route_ids, context=context)
+                        
                 else:
                     #not implemented
                     pass

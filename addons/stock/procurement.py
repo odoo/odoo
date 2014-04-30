@@ -185,7 +185,7 @@ class procurement_order(osv.osv):
             'picking_type_id': procurement.rule_id.picking_type_id.id,
             'group_id': group_id,
             'route_ids': [(4, x.id) for x in procurement.route_ids],
-            'warehouse_id': procurement.rule_id.propagate_warehouse_id and procurement.rule_id.propagate_warehouse_id.id or procurement.rule_id.warehouse_id.id,
+            'warehouse_id': procurement.rule_id.propagate_warehouse_id.id or procurement.rule_id.warehouse_id.id,
             'date': newdate,
             'date_expected': newdate,
             'propagate': procurement.rule_id.propagate,
