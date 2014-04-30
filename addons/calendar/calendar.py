@@ -1629,10 +1629,10 @@ class calendar_event(osv.Model):
 
         for event_id in ids:
             if can_be_deleted and len(str(event_id).split('-')) == 1:  # if  ID REAL
-                if self.browse(cr, uid, event_id).recurrent_id:
+                if self.browse(cr, uid, int(event_id), context).recurrent_id:
                     ids_to_exclure.append(event_id)
                 else:
-                    ids_to_unlink.append(event_id)
+                    ids_to_unlink.append(int(event_id))
             else:
                 ids_to_exclure.append(event_id)
 
