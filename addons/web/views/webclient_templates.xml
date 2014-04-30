@@ -230,7 +230,7 @@
                     <script type="text/javascript" id="qunit_config">
                         QUnit.config.testTimeout = 5 * 60 * 1000;
                         QUnit.moduleDone(function(result) {
-                            console.log("%s (%s/%s passed tests)", result.name, result.passed, result.total);
+                            console.log(result.name + " (" + result.passed + "/" + result.total + " passed tests)");
                         });
                         QUnit.done(function(result) {
                             if (result.failed === 0) {
