@@ -319,6 +319,10 @@ class mail_mail(osv.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     self._postprocess_sent_message(cr, uid, mail, context=context)
+            except MemoryError:
+                # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
+                # instead of marking the mail as failed
+                raise
             except Exception:
                 _logger.exception('failed sending mail.mail %s', mail.id)
                 mail.write({'state': 'exception'})
