@@ -868,7 +868,8 @@ class view(osv.osv):
             values = dict()
         qcontext = dict(
             keep_query=keep_query,
-            request=request,
+            request=request, # might be unbound if we're not in an httprequest context
+            debug=request.debug if request else False,
             json=simplejson,
             quote_plus=werkzeug.url_quote_plus,
         )

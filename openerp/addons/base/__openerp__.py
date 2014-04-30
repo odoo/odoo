@@ -99,9 +99,5 @@ The kernel of OpenERP, needed for all installation.
     ],
     'installable': True,
     'auto_install': True,
-    'css': ['static/src/css/modules.css'],
-    'js': [
-        'static/src/js/apps.js',
-    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

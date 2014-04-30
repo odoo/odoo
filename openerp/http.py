@@ -559,7 +559,7 @@ class HttpRequest(WebRequest):
                 response.set_cookie(k, v)
         return response
 
-    def render(self, template, qcontext=None, **kw):
+    def render(self, template, qcontext=None, lazy=True, **kw):
         """ Lazy render of QWeb template.
 
         The actual rendering of the given template will occur at then end of
@@ -568,8 +568,12 @@ class HttpRequest(WebRequest):
 
         :param basestring template: template to render
         :param dict qcontext: Rendering context to use
+        :param dict lazy: Lazy rendering is processed later in wsgi response layer (default True)
         """
-        return Response(template=template, qcontext=qcontext, **kw)
+        response = Response(template=template, qcontext=qcontext, **kw)
+        if not lazy:
+            return response.render()
+        return response
 
     def not_found(self, description=None):
         """ Helper for 404 response, return its result from the method
