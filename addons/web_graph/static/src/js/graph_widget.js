@@ -260,20 +260,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     option_selection: function (event) {
         event.preventDefault();
         switch (event.currentTarget.getAttribute('data-choice')) {
-            case 'bar_grouped':
-                this.bar_ui = 'group';
-                if (this.mode === 'bar') {
-                    this.display_data();
-                }
-                break;
-            case 'bar_stacked':
-                this.bar_ui = 'stack';
-                if (this.mode === 'bar') {
-                    this.display_data();
-                }
-                break;
             case 'swap_axis':
                 this.swap_axis();
+                break;
+            case 'expand_all':
+                this.pivot.expand_all().then(this.proxy('display_data'));
                 break;
             case 'update_values':
                 this.pivot.update_data().then(this.proxy('display_data'));
