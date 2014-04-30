@@ -167,7 +167,7 @@ class procurement_order(osv.osv):
         qty_uos_left = max(procurement.product_uos_qty - already_done_qty_uos, 0)
         vals = {
             'name': procurement.name,
-            'company_id': procurement.company_id.id,
+            'company_id': procurement.rule_id.company_id.id or procurement.rule_id.location_src_id.company_id.id or procurement.rule_id.location_id.company_id.id or procurement.company_id.id,
             'product_id': procurement.product_id.id,
             'product_qty': qty_left,
             'product_uom': procurement.product_uom.id,
