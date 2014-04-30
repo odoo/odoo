@@ -18,13 +18,9 @@
             <script type="text/javascript" src="/web/static/lib/jquery.timeago/jquery.timeago.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
 
-            <!-- Obsolete ??? -->
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
-            <!-- Bootstrap -->
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
-            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
         </template>
 
         <template id="web.assets_backend">
@@ -60,6 +56,8 @@
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
 
+            <!-- Bootstrap must be loaded after jquery.ui until jquery.ui is removed -->
+            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
 
             <!-- Backbone -->
