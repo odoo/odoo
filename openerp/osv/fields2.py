@@ -472,47 +472,54 @@ class Field(object):
 
     def compute_value(self, records):
         """ Invoke the compute method on `records`. """
-        # mark the field failed in cache, so that access before computation
-        # raises an exception
+        # mark the computed fields failed in cache, so that access before
+        # computation raises an exception
         exc = Warning("Field %s is accessed before being computed." % self)
-        records._cache[self] = FailedValue(exc)
-
-        if self.compute:
-            self.compute(records)
-        else:
-            raise Warning("No way to compute field %s" % self)
+        for field in self.computed_fields:
+            records._cache[field] = FailedValue(exc)
+        self.compute(records)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
         env = record.env
-        if self.store and not (self.compute and env.draft):
-            # recompute field on record if required
-            recs_todo = record._recompute_check(self)
-            if recs_todo:
-                # mark all computed fields as done
-                map(recs_todo._recompute_done, self.computed_fields)
+        if self.depends:
+            # this is a computed field
+            if self.store and not env.draft:
+                # recompute field on record if required
+                recs_todo = record._recompute_check(self)
+                if recs_todo:
+                    # mark all computed fields as done
+                    map(recs_todo._recompute_done, self.computed_fields)
+                    recs = recs_todo.exists()
+                    # execute the compute method in DRAFT mode
+                    with env.do_in_draft():
+                        self.compute_value(recs)
+                    # save cached result in database
+                    for rec in recs:
+                        rec._write({
+                            f.name: f.convert_to_write(rec[f.name])
+                            for f in self.computed_fields
+                        })
+                    if self in record._cache:
+                        return
+
+                record._prefetch_field(self)
+            else:
                 # execute the compute method in DRAFT mode
                 with env.do_in_draft():
-                    recs = recs_todo.exists()
-                    self.compute_value(recs)
-                # save cached result in database
-                for rec in recs:
-                    rec._write({
-                        f.name: f.convert_to_write(rec[f.name])
-                        for f in self.computed_fields
-                    })
-                if self in record._cache:
-                    return
+                    if self.recursive:
+                        self.compute_value(record)
+                    else:
+                        recs = record._in_cache_without(self)
+                        self.compute_value(recs.exists())
+
+        elif self.store:
+            # this is a simple stored field
             record._prefetch_field(self)
+
         else:
-            # execute the compute method in DRAFT mode, so that assigned fields
-            # are not written to the database
-            with env.do_in_draft():
-                if self.recursive:
-                    self.compute_value(record)
-                else:
-                    recs = record._in_cache_without(self)
-                    self.compute_value(recs.exists())
+            # this is a non-stored non-computed field
+            record._cache[self] = self.null(env)
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
