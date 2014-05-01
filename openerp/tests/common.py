@@ -229,6 +229,7 @@ class HttpCase(TransactionCase):
             # kill phantomjs if phantom.exit() wasn't called in the test
             if phantom.poll() is None:
                 phantom.terminate()
+                phantom.wait()
             self._wait_remaining_requests()
             _logger.info("phantom_run execution finished")
 
