@@ -608,7 +608,7 @@ class Home(http.Controller):
 
         # TODO: check that we don't do weird lazy overriding of __call__ which break body-removal
         return make_conditional(
-            response, bundle.last_modified, bundle.checksum, max_age=60*5)
+            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
 
     @http.route('/web/css/<xmlid>', type='http', auth='public')
     def css_bundle(self, xmlid, **kw):
@@ -623,7 +623,7 @@ class Home(http.Controller):
             bundle.css(), [('Content-Type', 'text/css')])
 
         return make_conditional(
-            response, bundle.last_modified, bundle.checksum, max_age=60*5)
+            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
 
 class WebClient(http.Controller):
 
@@ -634,10 +634,6 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/jslist', type='json', auth="none")
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
-
-    @http.route('/web/webclient/qweblist', type='json', auth="none")
-    def qweblist(self, mods=None):
-        return manifest_list('qweb', mods=mods)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
