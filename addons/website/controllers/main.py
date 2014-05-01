@@ -331,16 +331,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
-        Resizing is bypassed if the object provides a $field_big, which will
-        be interpreted as a pre-resized version of the base field.
-
         If the record is not found or does not have the requested field,
         returns a placeholder image via :meth:`~.placeholder`.
 
         Sets and checks conditional response parameters:
         * :mailheader:`ETag` is always set (and checked)
         * :mailheader:`Last-Modified is set iif the record has a concurrency
-          field (``__last_update``)
+          field (``write_date``)
 
         The requested field is assumed to be base64-encoded image data in
         all cases.
@@ -379,19 +376,12 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         data = record[field].decode('base64')
         if (not max_width) and (not max_height):
-            response.set_data(data)
+            response.data = data
             return response
 
         image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 
-        # record provides a pre-resized version of the base field, use that
-        # directly
-        if record.get(presized):
-            response.data = data
-            return response
-
-        fit = int(max_width), int(max_height)
         w, h = image.size
         max_w, max_h = int(max_width), int(max_height)
         if w < max_w and h < max_h:
