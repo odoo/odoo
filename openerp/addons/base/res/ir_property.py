@@ -177,9 +177,4 @@ class ir_property(osv.osv):
                   '|', ('company_id', '=', cid), ('company_id', '=', False)]
         return domain
 
-ir_property()
-
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
