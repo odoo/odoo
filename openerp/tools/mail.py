@@ -45,7 +45,7 @@ tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "if
 tags_to_remove = ['html', 'body', 'font']
 
 # allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split())
+allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translate', 'data-oe-nodeid',
@@ -70,6 +70,8 @@ def html_sanitize(src, silent=True, strict=False):
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
+        'comments': False,
+        'processing_instructions' : False
     }
     if etree.LXML_VERSION >= (2, 3, 1):
         # kill_tags attribute has been added in version 2.3.1
@@ -339,6 +341,10 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
     overlength_section_count = 0
     cur_char_nbr = 0
     for node in root.iter():
+        # comments do not need processing
+        # note: bug in node.get(value, default) for HtmlComments, default never returned
+        if node.tag == etree.Comment:
+            continue
         # do not take into account multiple spaces that are displayed as max 1 space in html
         node_text = ' '.join((node.text and node.text.strip(' \t\r\n') or '').split())
 

@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import datetime
+import re
 
 from sys import maxint
 
@@ -101,7 +102,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'url': "/page/" + xml_id,
                     'parent_id': id,
                 }, context=request.context)
-        url = "/page/" + xml_id
+        # Reverse action in order to allow shortcut for /page/<website_xml_id>
+        url = "/page/" + re.sub(r"^website\.", '', xml_id)
+
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
@@ -381,10 +384,18 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
+
+        # record provides a pre-resized version of the base field, use that
+        # directly
+        if record.get(presized):
+            response.data = data
+            return response
+
+        fit = int(max_width), int(max_height)
         w, h = image.size
         max_w, max_h = int(max_width), int(max_height)
         if w < max_w and h < max_h:
-            response.set_data(data)
+            response.data = data
         else:
             image.thumbnail((max_w, max_h), Image.ANTIALIAS)
             image.save(response.stream, image.format)

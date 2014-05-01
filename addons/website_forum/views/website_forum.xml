@@ -82,7 +82,7 @@
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                         <div t-field="notification.body"/>
-                        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(user) }#badges" class="fa fa-arrow-right">View Your Badges</a>
+                        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right">View Your Badges</a>
                     </div>
                     <t t-raw="0"/>
                 </div>
@@ -416,7 +416,7 @@
             </div>
             <div style="margin-left: 95px;">
                 <h1 class="mt0">
-                    <span t-field="question.name"/>
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }" t-field="question.name"/>
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                 </h1>
@@ -517,7 +517,7 @@
                         </ul>
                         <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                         <div>
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }"
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                                 t-field="answer.create_uid"
                                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                                 style="display: inline-block;"/>

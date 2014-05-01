@@ -123,6 +123,8 @@ class account_invoice_line(osv.osv):
                             if a == line['account_id'] and i_line.product_id.id == line['product_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
+                                if inv.currency_id.id != company_currency:
+                                    standard_price = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, standard_price, context={'date': inv.date_invoice})
                                 if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                                     #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                                     stock_move_obj = self.pool.get('stock.move')

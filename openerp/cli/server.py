@@ -81,8 +81,11 @@ def report_configuration():
 
 def rm_pid_file():
     config = openerp.tools.config
-    if not openerp.evented and os.path.exists(config['pidfile']):
-        os.unlink(config['pidfile'])
+    if not openerp.evented and config['pidfile']:
+        try:
+            os.unlink(config['pidfile'])
+        except OSError:
+            pass
 
 def setup_pid_file():
     """ Create a file with the process id written in it.
