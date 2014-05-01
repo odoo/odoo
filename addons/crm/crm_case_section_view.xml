@@ -82,7 +82,7 @@
         <!-- Case Sections Salesteams kanban view -->
         <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
             <field name="name">crm.case.section.kanban</field>
-            <field name="model">crm.case.section.inherit</field>
+            <field name="model">crm.case.section</field>
             <field name="inherit_id" ref="sale_team.crm_case_section_salesteams_view_kanban"/>
             <field name="arch" type="xml">
                 <data>
@@ -163,7 +163,7 @@
 
     <record model="ir.ui.view" id="sale_team_form_view_in_crm">
             <field name="name">crm.case.section.form</field>
-            <field name="model">crm.case.section.inherit</field>
+            <field name="model">crm.case.section</field>
             <field name="inherit_id" ref="sale_team.crm_case_section_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
