@@ -1119,7 +1119,6 @@ class JavascriptAsset(WebAsset):
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
     rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
-    rx_comments = re.compile(r"""/\*.*\*/""", re.S)
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
 
     def _get_content(self):
@@ -1156,8 +1155,13 @@ class StylesheetAsset(WebAsset):
 
     def minify(self):
         # remove existing sourcemaps, make no sense after re-mini
-        return self.rx_sourceMap.sub('', self.content)
-        # return self.rx_comments.sub('', self.content)
+        content = self.rx_sourceMap.sub('', self.content)
+        # comments
+        content = re.sub(r'/\*.*?\*/', '', content, flags=re.S)
+        # space
+        content = re.sub(r'\s+', ' ', content)
+        content = re.sub(r' *([{}]) *', r'\1', content)
+        return content
 
 def rjsmin(script):
     """ Minify js with a clever regex.
