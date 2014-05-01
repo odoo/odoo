@@ -639,7 +639,8 @@ $sheet-padding: 16px
     // }}}
     // Notifications {{{
     .oe_notification
-        z-index: 1050
+        z-index: 1500
+        
     .oe_webclient_timezone_notification
         a
             color: white
@@ -2220,11 +2221,14 @@ $sheet-padding: 16px
                     padding: 3px 6px
                     white-space: pre-line
                 > td, > th
-                    > button.btn_img
+                    > button
                         border: none
                         background: transparent
                         padding: 0
-                        @include box-shadow(none)
+                    > button.btn_txt
+                        border: 1px solid rgba(0,0,0,0.4)
+                        background: #e3e3e3
+                        padding: 3px 12px
                 > td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
                     width: 17px
                     &:after
@@ -2735,6 +2739,9 @@ body.oe_single_form
         margin: 0 4px 0 0
     .oe_act_window.modal-body
         padding: 0
+
+.ui-datepicker
+    z-index: 1500 !important
 
 input[type="radio"], input[type="checkbox"]
     margin-right: 4px
