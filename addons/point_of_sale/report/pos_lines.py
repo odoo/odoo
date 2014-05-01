@@ -20,7 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 class pos_lines(report_sxw.rml_parse):
 
@@ -50,6 +52,11 @@ class pos_lines(report_sxw.rml_parse):
         res=self.cr.fetchone()[0]
         return res
 
-report_sxw.report_sxw('report.pos.lines', 'pos.order', 'addons/point_of_sale/report/pos_lines.rml', parser=pos_lines,header='internal')
+
+class report_pos_lines(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_saleslines'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_saleslines'
+    _wrapped_report_class = pos_lines
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

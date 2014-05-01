@@ -48,6 +48,8 @@ TODO:
     'data': [
         'l10n_fr_hr_payroll_view.xml',
         'l10n_fr_hr_payroll_data.xml',
+        'views/report_l10nfrfichepaye.xml',
+        'l10n_fr_hr_payroll_reports.xml',
     ],
     'installable': True
 }

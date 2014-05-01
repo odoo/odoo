@@ -39,11 +39,11 @@ Shows you a list of applications features to install from.
         'base_setup_views.xml',
         'res_config_view.xml',
         'res_partner_view.xml',
+        'views/base_setup.xml',
     ],
     'demo': [],
     'installable': True,
     'auto_install': False,
     'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
-    'css': ['static/src/css/base_setup.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -898,21 +898,22 @@ class crm_lead(format_address, osv.osv):
             'type': 'ir.actions.act_window',
         }
 
-    def action_makeMeeting(self, cr, uid, ids, context=None):
+    def action_schedule_meeting(self, cr, uid, ids, context=None):
         """
         Open meeting's calendar view to schedule meeting on current opportunity.
         :return dict: dictionary value for created Meeting view
         """
-        opportunity = self.browse(cr, uid, ids[0], context)
+        lead = self.browse(cr, uid, ids[0], context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+        partner_ids = [self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id.id]
+        if lead.partner_id:
+            partner_ids.append(lead.partner_id.id)
         res['context'] = {
-            'default_opportunity_id': opportunity.id,
-            'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
-            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
-            'default_user_id': uid,
-            'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
-            'default_email_from': opportunity.email_from,
-            'default_name': opportunity.name,
+            'default_opportunity_id': lead.type == 'opportunity' and lead.id or False,
+            'default_partner_id': lead.partner_id and lead.partner_id.id or False,
+            'default_partner_ids': partner_ids,
+            'default_section_id': lead.section_id and lead.section_id.id or False,
+            'default_name': lead.name,
         }
         return res
 

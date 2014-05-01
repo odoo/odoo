@@ -33,10 +33,6 @@
         'data/website_data.xml',
     ],
     'demo': ['website_partner_demo.xml'],
-    'css': [
-    ],
-    'js': [
-    ],
     'qweb': [
     ],
     'installable': True,

@@ -30,7 +30,7 @@ class followup(osv.osv):
     _columns = {
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'name': fields.related('company_id', 'name', string = "Name"),
+        'name': fields.related('company_id', 'name', string = "Name", readonly=True, type="char"),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -478,5 +478,21 @@ class res_partner(osv.osv):
                                                     multi="followup",
                                                     fnct_search=_payment_earliest_date_search),
         }
+
+
+class account_config_settings(osv.TransientModel):
+    _name = 'account.config.settings'
+    _inherit = 'account.config.settings'
+    
+    def open_followup_level_form(self, cr, uid, ids, context=None):
+        res_ids = self.pool.get('account_followup.followup').search(cr, uid, [], context=context)
+        
+        return {
+                 'type': 'ir.actions.act_window',
+                 'name': 'Payment Follow-ups',
+                 'res_model': 'account_followup.followup',
+                 'res_id': res_ids and res_ids[0] or False,
+                 'view_mode': 'form,tree',
+         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

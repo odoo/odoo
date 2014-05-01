@@ -20,13 +20,16 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
+
 
 def titlize(journal_name):
     words = journal_name.split()
     while words.pop() != 'journal':
         continue
     return ' '.join(words)
+
 
 class order(report_sxw.rml_parse):
 
@@ -71,6 +74,11 @@ class order(report_sxw.rml_parse):
         data = self.cr.dictfetchall()
         return data
 
-report_sxw.report_sxw('report.pos.receipt', 'pos.order', 'addons/point_of_sale/report/pos_receipt.rml', parser=order, header=False)
+
+class report_order_receipt(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_receipt'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_receipt'
+    _wrapped_report_class = order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

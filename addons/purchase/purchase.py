@@ -468,7 +468,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:
-                raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+                raise osv.except_osv(_('Error!'), _('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
             acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
@@ -494,6 +494,41 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
         }
 
+    def _prepare_invoice(self, cr, uid, order, line_ids, context=None):
+        """Prepare the dict of values to create the new invoice for a
+           purchase order. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+
+           :param browse_record order: purchase.order record to invoice
+           :param list(int) line_ids: list of invoice line IDs that must be
+                                      attached to the invoice
+           :return: dict of value to create() the invoice
+        """
+        journal_ids = self.pool['account.journal'].search(
+                            cr, uid, [('type', '=', 'purchase'),
+                                      ('company_id', '=', order.company_id.id)],
+                            limit=1)
+        if not journal_ids:
+            raise osv.except_osv(
+                _('Error!'),
+                _('Define purchase journal for this company: "%s" (id:%d).') % \
+                    (order.company_id.name, order.company_id.id))
+        return {
+            'name': order.partner_ref or order.name,
+            'reference': order.partner_ref or order.name,
+            'account_id': order.partner_id.property_account_payable.id,
+            'type': 'in_invoice',
+            'partner_id': order.partner_id.id,
+            'currency_id': order.currency_id.id,
+            'journal_id': len(journal_ids) and journal_ids[0] or False,
+            'invoice_line': [(6, 0, line_ids)],
+            'origin': order.name,
+            'fiscal_position': order.fiscal_position.id or False,
+            'payment_term': order.payment_term_id.id or False,
+            'company_id': order.company_id.id,
+        }
+
     def action_cancel_draft(self, cr, uid, ids, context=None):
         if not len(ids):
             return False
@@ -512,7 +547,7 @@ class purchase_order(osv.osv):
         """
         if context is None:
             context = {}
-        journal_obj = self.pool.get('account.journal')
+        
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
 
@@ -525,12 +560,7 @@ class purchase_order(osv.osv):
                 #then re-do a browse to read the property fields for the good company.
                 context['force_company'] = order.company_id.id
                 order = self.browse(cr, uid, order.id, context=context)
-            pay_acc_id = order.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=', 'purchase'), ('company_id', '=', order.company_id.id)], limit=1)
-            if not journal_ids:
-                raise osv.except_osv(_('Error!'),
-                    _('Define purchase journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
-
+            
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
@@ -538,24 +568,10 @@ class purchase_order(osv.osv):
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
-
                 po_line.write({'invoice_lines': [(4, inv_line_id)]}, context=context)
 
             # get invoice data and create invoice
-            inv_data = {
-                'name': order.partner_ref or order.name,
-                'reference': order.partner_ref or order.name,
-                'account_id': pay_acc_id,
-                'type': 'in_invoice',
-                'partner_id': order.partner_id.id,
-                'currency_id': order.currency_id.id,
-                'journal_id': len(journal_ids) and journal_ids[0] or False,
-                'invoice_line': [(6, 0, inv_lines)],
-                'origin': order.name,
-                'fiscal_position': order.fiscal_position.id or False,
-                'payment_term': order.payment_term_id.id or False,
-                'company_id': order.company_id.id,
-            }
+            inv_data = self._prepare_invoice(cr, uid, order, inv_lines, context=context)
             inv_id = inv_obj.create(cr, uid, inv_data, context=context)
 
             # compute the invoice
@@ -590,7 +606,7 @@ class purchase_order(osv.osv):
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
-                        _('You must first cancel all receptions related to this purchase order.'))
+                        _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
         self.write(cr,uid,ids,{'state':'cancel'})

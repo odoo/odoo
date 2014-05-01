@@ -20,10 +20,9 @@
 ##############################################################################
 
 import time
-
 from openerp.osv import osv
 from openerp.report import report_sxw
-from openerp.tools.translate import _
+
 
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -34,7 +33,6 @@ class product_pricelist(report_sxw.rml_parse):
             'time': time,
             'get_pricelist': self._get_pricelist,
             'get_currency': self._get_currency,
-            'get_currency_symbol': self._get_currency_symbol,  # TODO 7.0 - remove this - unused
             'get_categories': self._get_categories,
             'get_price': self._get_price,
             'get_titles': self._get_titles,
@@ -68,12 +66,6 @@ class product_pricelist(report_sxw.rml_parse):
     def _get_currency(self, pricelist_id):
         pricelist = self.pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'], context=self.localcontext)[0]
         return pricelist['currency_id'][1]
-
-    # TODO 7.0 - remove this method, its unused
-    def _get_currency_symbol(self, pricelist_id):
-        pricelist = self.pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'], context=self.localcontext)[0]
-        symbol = self.pool.get('res.currency').read(self.cr, self.uid, [pricelist['currency_id'][0]], ['symbol'], context=self.localcontext)[0]
-        return symbol['symbol'] or ''
 
     def _get_categories(self, products, form):
         cat_ids=[]
@@ -119,5 +111,12 @@ class product_pricelist(report_sxw.rml_parse):
             res = self.pool.get('product.product').read(self.cr, self.uid, [product_id])
             price =  self.formatLang(res[0]['list_price'], digits=sale_price_digits, currency_obj=pricelist.currency_id)
         return price
+
+
+class report_product_pricelist(osv.AbstractModel):
+    _name = 'report.product.report_pricelist'
+    _inherit = 'report.abstract_report'
+    _template = 'product.report_pricelist'
+    _wrapped_report_class = product_pricelist
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
