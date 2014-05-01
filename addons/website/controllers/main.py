@@ -324,7 +324,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image',
         '/website/image/<model>/<id>/<field>'
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
+    def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
 
@@ -342,26 +342,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         The requested field is assumed to be base64-encoded image data in
         all cases.
         """
-        Model = request.registry[model]
-
-        response = werkzeug.wrappers.Response()
-
         id = int(id)
-
-        ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context)
-        if not ids and 'website_published' in Model._all_columns:
-            ids = Model.search(request.cr, openerp.SUPERUSER_ID,
-                               [('id', '=', id), ('website_published', '=', True)], context=request.context)
-
-        if not ids:
-            return self.placeholder(response)
-
-        presized = '%s_big' % field
-        concurrency = '__last_update'
-        [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field, presized],
+        response = werkzeug.wrappers.Response()
+        concurrency = 'write_date'
+        try:
+            [record] = request.registry[model].read(request.cr, openerp.SUPERUSER_ID, [id],
+                              [concurrency, field],
                               context=request.context)
+        except:
+            return self.placeholder(response)
 
         if concurrency in record:
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -385,30 +374,21 @@ class Website(openerp.addons.web.controllers.main.Home):
         if response.status_code == 304:
             return response
 
-        data = (record.get(presized) or record[field]).decode('base64')
-
-        image = Image.open(cStringIO.StringIO(data))
-        response.mimetype = Image.MIME[image.format]
-
-        # record provides a pre-resized version of the base field, use that
-        # directly
-        if record.get(presized):
+        data = record[field].decode('base64')
+        if (not max_width) and (not max_height):
             response.set_data(data)
             return response
 
-        fit = int(max_width), int(max_height)
+        image = Image.open(cStringIO.StringIO(data))
+        response.mimetype = Image.MIME[image.format]
         w, h = image.size
-        max_w, max_h = fit
-
+        max_w, max_h = int(max_width), int(max_height)
         if w < max_w and h < max_h:
             response.set_data(data)
         else:
-            image.thumbnail(fit, Image.ANTIALIAS)
+            image.thumbnail((max_w, max_h), Image.ANTIALIAS)
             image.save(response.stream, image.format)
-            # invalidate content-length computed by make_conditional as
-            # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
-
         return response
 
     #------------------------------------------------------

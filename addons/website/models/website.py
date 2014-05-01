@@ -559,9 +559,7 @@ class ir_attachment(osv.osv):
                 result[attach.id] = urlplus('/website/image', {
                     'model': 'ir.attachment',
                     'field': 'datas',
-                    'id': attach.id,
-                    'max_width': 1024,
-                    'max_height': 768,
+                    'id': attach.id
                 })
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):
