@@ -90,7 +90,8 @@ class crm_case_stage(osv.osv):
 
 class crm_case_section(osv.Model):
     _inherit = 'crm.case.section'
-    _name = 'crm.case.section'
+    _inherits = {'mail.alias': 'alias_id'}
+
     def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
         """ Get opportunities-related data for salesteam kanban view
             monthly_open_leads: number of open lead during the last months
@@ -126,6 +127,7 @@ class crm_case_section(osv.Model):
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically ""create new leads assigned to the team."),
     }
 
     def _get_stage_common(self, cr, uid, context):
@@ -137,15 +139,6 @@ class crm_case_section(osv.Model):
         'use_leads': True,
     }
 
-class crm_case_section_inherit(osv.Model):
-    """ Model for sales teams. """
-    _inherit = 'crm.case.section'
-    _name = 'crm.case.section.inherit'
-    _description = "Sales Teams"
-    _inherits = {'mail.alias': 'alias_id'}
-    _columns = {
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically ""create new leads assigned to the team."),
-    }
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -162,6 +155,7 @@ class crm_case_section_inherit(osv.Model):
         res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
+
 class crm_case_categ(osv.osv):
     """ Category of Case """
     _name = "crm.case.categ"

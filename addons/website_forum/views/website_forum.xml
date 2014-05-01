@@ -5,7 +5,9 @@
 <!-- Editor custo -->
 <template id="editor_head" inherit_id="website.editor_head"
     name="Event Editor">
-    <xpath expr="//script[@id='website_tour_js']" position="after">
+    <xpath expr="." position="inside">
+        <link rel='stylesheet' href="/website_forum/static/src/css/website_forum.css"/>
+
         <script type="text/javascript" src="/website_forum/static/src/js/website.tour.forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
     </xpath>

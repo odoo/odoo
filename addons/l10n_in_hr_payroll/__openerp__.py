@@ -49,11 +49,14 @@ Indian Payroll Salary Rules.
          'security/ir.model.access.csv',
          'l10n_in_hr_payroll_report.xml',
          'l10n_in_hr_payroll_sequence.xml',
+         'views/report_payslipdetails.xml',
+         'views/report_hrsalarybymonth.xml',
          'wizard/hr_salary_employee_bymonth_view.xml',
          'wizard/hr_yearly_salary_detail_view.xml',
          'report/payment_advice_report_view.xml',
          'report/payslip_report_view.xml',
-
+         'views/report_hryearlysalary.xml',
+         'views/report_payrolladvice.xml',
      ],
     'test': [
         'test/payment_advice.yml',

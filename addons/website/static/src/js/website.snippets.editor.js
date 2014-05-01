@@ -362,7 +362,6 @@
         },
         clean_for_save: function () {
             var self = this;
-
             $("*[contentEditable], *[attributeEditable]")
                 .removeAttr('contentEditable')
                 .removeAttr('attributeEditable');
