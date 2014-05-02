@@ -22,11 +22,20 @@
 from openerp.osv import fields,osv
 
 class res_partner(osv.osv):
-
+    def _task_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                res[partner.id] = len(partner.task_ids)
+        except:
+            pass
+        return res
+    
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'
     _columns = {
         'task_ids': fields.one2many('project.task', 'partner_id', 'Tasks'),
+        'task_count': fields.function(_task_count, string='# Tasks', type='integer'),
     }
 
     def copy(self, cr, uid, record_id, default=None, context=None):

@@ -114,6 +114,19 @@ class sale_order_line(osv.osv):
             if rec:
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
         return create_ids
-
+class product_product(osv.Model):
+    _inherit = 'product.product'
+    def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for rule in self.browse(cr, uid, ids, context=context):
+                res[rule.id] = len(rule.rules_ids)
+        except:
+            pass
+        return res
+    _columns = {
+        'rules_ids': fields.one2many('account.analytic.default', 'product_id', 'Analytic Rules '),
+        'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

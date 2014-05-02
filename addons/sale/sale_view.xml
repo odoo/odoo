@@ -499,7 +499,10 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button string="Sales" name="%(action_order_line_product_tree)d" type="action" groups="base.group_sale_salesman"/>
+                    <button class="oe_inline oe_stat_button" name="%(action_order_line_product_tree)d" 
+                        type="action" groups="base.group_sale_salesman" icon="fa-strikethrough">
+                        <field string="Sales" name="sales_count" widget="statinfo" />
+                    </button>
                 </xpath>
             </field>
         </record>
