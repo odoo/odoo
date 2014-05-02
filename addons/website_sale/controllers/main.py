@@ -180,7 +180,7 @@ class Ecommerce(http.Controller):
         url = "/shop"
         if category:
             category_obj = request.registry.get('product.public.category')
-            url = "%scategory/%s" % (url, slug(category_obj.browse(request.cr, request.uid, int(category), context=request.context)))
+            url = "%s/category/%s" % (url, slug(category_obj.browse(request.cr, request.uid, int(category), context=request.context)))
         if filters:
             url = "%s?filters=%s" % (url, simplejson.dumps(filters))
         if post.get("search"):
@@ -406,14 +406,16 @@ class Ecommerce(http.Controller):
                 order.amount_total,
                 request.website._render("website_sale.total", {'website_sale_order': order})]
 
-    @http.route(['/shop/set_cart_json'], type='json', auth="public")
+    @http.route(['/shop/set_cart_json'], type='json', auth="public", website=True, multilang=True)
     def set_cart_json(self, path=None, product_id=None, order_line_id=None, set_number=0, json=None):
         quantity = request.registry['website']._ecommerce_add_product_to_cart(request.cr, request.uid,
             product_id=product_id, order_line_id=order_line_id, set_number=set_number,
             context=request.context)
         order = self.get_order()
         return [quantity,
-                order.get_number_of_products()]
+                order.get_number_of_products(),
+                order.amount_total,
+                request.website._render("website_sale.total", {'website_sale_order': order})]
     
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):

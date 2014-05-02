@@ -71,6 +71,7 @@ Dashboard / Reports for Project Management will include:
         'report/project_report_view.xml',
         'report/project_cumulative.xml',
         'res_config_view.xml',
+        'views/project.xml',
     ],
     'demo': ['project_demo.xml'],
     'test': [
@@ -78,7 +79,5 @@ Dashboard / Reports for Project Management will include:
     'installable': True,
     'auto_install': False,
     'application': True,
-    'css': ['static/src/css/project.css'],
-    'js': ['static/src/js/project.js'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

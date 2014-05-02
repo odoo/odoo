@@ -46,9 +46,6 @@ modules.
         'security/ir.model.access.csv',
         'report/sale_report_view.xml',
     ],
-    'js': [
-        'static/src/js/sale_crm.js',
-    ],
     'demo': ['sale_crm_demo.xml'],
     'test': ['test/sale_crm.yml'],
     'installable': True,

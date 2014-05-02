@@ -271,9 +271,9 @@ class MassMailing(osv.Model):
             date_begin_str = date_begin.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_end_str = date_end.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             domain = [('mass_mailing_id', '=', mailing.id), ('opened', '>=', date_begin_str), ('opened', '<=', date_end_str)]
-            res[mailing.id]['opened_dayly'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['opened'], 'opened_count', 'opened:day', date_begin, context=context))
+            res[mailing.id]['opened_daily'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['opened'], 'opened_count', 'opened:day', date_begin, context=context))
             domain = [('mass_mailing_id', '=', mailing.id), ('replied', '>=', date_begin_str), ('replied', '<=', date_end_str)]
-            res[mailing.id]['replied_dayly'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['replied'], 'replied_count', 'replied:day', date_begin, context=context))
+            res[mailing.id]['replied_daily'] = json.dumps(self.__get_bar_values(cr, uid, obj, domain, ['replied'], 'replied_count', 'replied:day', date_begin, context=context))
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
@@ -314,7 +314,7 @@ class MassMailing(osv.Model):
         'name': fields.char('Subject', required=True),
         'email_from': fields.char('From', required=True),
         'create_date': fields.datetime('Creation Date'),
-        'sent_date': fields.datetime('Sent Date'),
+        'sent_date': fields.datetime('Sent Date', oldname='date'),
         'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -340,7 +340,7 @@ class MassMailing(osv.Model):
         'reply_to': fields.char('Reply To', help='Preferred Reply-To Address'),
         # recipients
         'mailing_model': fields.selection(_mailing_model, string='Recipients Model', required=True),
-        'mailing_domain': fields.char('Domain'),
+        'mailing_domain': fields.char('Domain', oldname='domain'),
         'contact_list_ids': fields.many2many(
             'mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
             string='Mailing Lists',
@@ -398,16 +398,14 @@ class MassMailing(osv.Model):
             _get_statistics, string='Replied Ratio',
             type='integer', multi='_get_statistics',
         ),
-        # dayly ratio
-        'opened_dayly': fields.function(
+        # daily ratio
+        'opened_daily': fields.function(
             _get_daily_statistics, string='Opened',
             type='char', multi='_get_daily_statistics',
-            oldname='opened_monthly',
         ),
-        'replied_dayly': fields.function(
+        'replied_daily': fields.function(
             _get_daily_statistics, string='Replied',
             type='char', multi='_get_daily_statistics',
-            oldname='replied_monthly',
         )
     }
 

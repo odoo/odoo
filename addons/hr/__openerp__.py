@@ -58,6 +58,7 @@ You can manage:
         'res_config_view.xml',
         'mail_hr_view.xml',
         'res_users_view.xml',
+        'views/hr.xml',
     ],
     'demo': ['hr_demo.xml'],
     'test': [
@@ -68,8 +69,6 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'css': [ 'static/src/css/hr.css' ],
-    'js': [ 'static/src/js/suggestions.js' ],
     'qweb': [ 'static/src/xml/suggestions.xml' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,8 +2,14 @@
 <openerp>
 <data>
 
-<template id="editor_head" inherit_id="website.editor_head" name="Event Editor" groups="event.group_event_manager">
-    <xpath expr="//script[@id='website_tour_js']" position="after">
+<template id="event_script" inherit_id="website.assets_frontend" name="Country Events Snippet Script">
+    <xpath expr="/t" position="inside">
+        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+    </xpath>
+</template>
+
+<template id="editor_head" inherit_id="website.assets_editor" name="Event Editor" groups="event.group_event_manager">
+    <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
         <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
     </xpath>
@@ -353,12 +359,6 @@
     </t>
 </template>
 
-<template id="event_script" name="Country Events Snippet Script" inherit_id="website.layout">
-    <xpath expr="//head" position="inside">
-        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
-    </xpath>
-</template>
-
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
     <xpath expr="//div[@id='snippet_content']" position="inside">
         <div>
@@ -381,7 +381,7 @@
         </div>
     </xpath>
     <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='content'
+        <div data-snippet-option-id='country_events'
             data-selector=".oe_country_events"
             data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
             data-selector-children=".content"

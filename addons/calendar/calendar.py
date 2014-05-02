@@ -1067,7 +1067,6 @@ class calendar_event(osv.Model):
                 sort_fields[ord] = '%s-%s' % (browse_event[ord], r_date.strftime("%Y%m%d%H%M%S"))
             else:
                 sort_fields[ord] = browse_event[ord]
-                'If we sort on FK, we obtain a browse_record, so we need to sort on name_get'
                 if type(browse_event[ord]) is openerp.osv.orm.browse_record:
                     name_get = browse_event[ord].name_get()
                     if len(name_get) and len(name_get[0]) >= 2:

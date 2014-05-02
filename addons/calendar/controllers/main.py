@@ -39,8 +39,9 @@ class meeting_invitation(http.Controller):
 
         if attendee:
             attendee_data['current_attendee'] = attendee[0]
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list('js', db=db))
-        css = "\n       ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list('css', db=db))
+
+        css = '<link rel="stylesheet" href="/web/css/web.assets_backend"/>'
+        js = '<script type="text/javascript" src="/web/js/web.assets_backend"></script>'
 
         return webmain.html_template % {
             'js': js,
