@@ -228,7 +228,7 @@ class website_sale(http.Controller):
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
-    def cart_update(self, product_id, add_qty=0, set_qty=0, **kw):
+    def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         cr, uid, context = request.cr, request.uid, request.context
         request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
         return request.redirect("/shop/cart")
