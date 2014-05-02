@@ -260,10 +260,16 @@ class Report(osv.Model):
     def get_action(self, cr, uid, ids, report_name, data=None, context=None):
         """Return an action of type ir.actions.report.xml.
 
+        :param ids: Ids of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
         if context is None:
             context = {}
+
+        if ids:
+            if not isinstance(ids, list):
+                ids = [ids]
+            context['active_ids'] = ids
 
         report_obj = self.pool['ir.actions.report.xml']
         idreport = report_obj.search(cr, uid, [('report_name', '=', report_name)], context=context)
@@ -272,7 +278,7 @@ class Report(osv.Model):
         except IndexError:
             raise osv.except_osv(_('Bad Report'), _('This report is not loaded into the database.'))
 
-        action = {
+        return {
             'context': context,
             'data': data,
             'type': 'ir.actions.report.xml',
@@ -280,7 +286,6 @@ class Report(osv.Model):
             'report_type': report.report_type,
             'report_file': report.report_file,
         }
-        return action
 
     #--------------------------------------------------------------------------
     # Report generation helpers

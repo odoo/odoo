@@ -67,8 +67,8 @@ class account_print_journal(osv.osv_memory):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['sort_selection'], context=context)[0])
         if context.get('sale_purchase_only'):
-            return self.pool['report'].get_action(cr, uid, ids, 'account.report_salepurchasejournal', data=data, context=context)
+            return self.pool['report'].get_action(cr, uid, [], 'account.report_salepurchasejournal', data=data, context=context)
         else:
-            return self.pool['report'].get_action(cr, uid, ids, 'account.report_journal', data=data, context=context)
+            return self.pool['report'].get_action(cr, uid, [], 'account.report_journal', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -188,7 +188,7 @@ class res_partner(osv.osv):
              'model': 'account_followup.followup',
              'form': data
         }
-        return self.pool['report'].get_action(cr, uid, wizard_partner_ids, 'account_followup.report_followup', data=datas, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account_followup.report_followup', data=datas, context=context)
 
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
         if context is None:
