@@ -19,14 +19,14 @@
 #
 ##############################################################################
 {
-    'name' : 'Sale Team',
-    'version' : '1.0',
-    'author' : 'OpenERP SA',
-    'category': 'Sales Management',   
+    'name': 'Sale Team',
+    'version': '1.0',
+    'author': 'OpenERP SA',
+    'category': 'Sales Management',
     'summary': 'Sales Team',
     'description': """ """,
     'website': 'http://www.openerp.com',
-    'depends' : ['base','mail','web_kanban_sparkline',],
+    'depends': ['base','mail','web_kanban_sparkline',],
     'data': ['security/sale_team_security.xml',
              'security/ir.model.access.csv',
              'res_config_view.xml',

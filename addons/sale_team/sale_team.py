@@ -18,13 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import calendar
 from datetime import date, datetime
 from dateutil import relativedelta
 from openerp import tools
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp.osv import fields, osv
+
 
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
@@ -35,9 +33,8 @@ class crm_case_section(osv.osv):
 
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
-        
+
     def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
-        
         """ Generic method to generate data for bar chart values using SparklineBarWidget.
             This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
 
@@ -65,7 +62,7 @@ class crm_case_section(osv.osv):
             month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
             section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group.get(groupby_field, 0)}
         return section_result
-   
+
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
@@ -82,7 +79,7 @@ class crm_case_section(osv.osv):
         'working_hours': fields.float('Working Hours', digits=(16, 2)),
         'color': fields.integer('Color Index'),
            }
-   
+
     _defaults = {
         'active': 1,
     }
@@ -110,9 +107,15 @@ class crm_case_section(osv.osv):
                 name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
-    
 
-             
+
+class res_partner(osv.Model):
+    _inherit = 'res.partner'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+
 class res_users(osv.Model):
     _inherit = 'res.users'
     _columns = {
@@ -124,4 +127,4 @@ class res_users(osv.Model):
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
         self.SELF_WRITEABLE_FIELDS.extend(['default_section_id'])
-        return init_res      
+        return init_res

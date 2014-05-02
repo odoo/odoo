@@ -135,7 +135,7 @@ class mail_mail(osv.Model):
         :param browse_record mail: the mail that was just sent
         :return: True
         """
-        if mail.auto_delete:
+        if mail_sent and mail.auto_delete:
             # done with SUPERUSER_ID to avoid giving large unlink access rights
             self.unlink(cr, SUPERUSER_ID, [mail.id], context=context)
         return True

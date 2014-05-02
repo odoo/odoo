@@ -982,7 +982,7 @@ class crm_lead(format_address, osv.osv):
         if obj.type == 'opportunity':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
         else:
-            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, model=model, context=context)
+            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, model='crm.lead', context=context)
         return view_id
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

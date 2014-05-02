@@ -19,22 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from dateutil import relativedelta
-import random
-try:
-    import simplejson as json
-except ImportError:
-    import json
-import urllib
-import urlparse
-
-from openerp import tools
-from openerp.exceptions import Warning
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
 from openerp.osv import osv, fields
-
 
 class MailMailStats(osv.Model):
     """ MailMailStats models the statistics collected about emails. Those statistics
@@ -48,11 +33,7 @@ class MailMailStats(osv.Model):
     _order = 'message_id'
 
     _columns = {
-        'mail_mail_id': fields.integer(
-            'Mail ID',
-            help='ID of the related mail_mail. This field is an integer field because'
-                 'the related mail_mail can be deleted separately from its statistics.'
-        ),
+        'mail_mail_id': fields.many2one('mail.mail', 'Mail ID', ondelete='set null'),
         'message_id': fields.char('Message-ID'),
         'model': fields.char('Document model'),
         'res_id': fields.integer('Document ID'),
@@ -106,4 +87,3 @@ class MailMailStats(osv.Model):
         stat_ids = self._get_ids(cr, uid, ids, mail_mail_ids, mail_message_ids, [('bounced', '=', False)], context)
         self.write(cr, uid, stat_ids, {'bounced': fields.datetime.now()}, context=context)
         return stat_ids
-

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+
 
 class sala_team_configuration(osv.TransientModel):
     _name = 'sale.team.config.settings'

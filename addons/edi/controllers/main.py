@@ -13,8 +13,8 @@ class EDI(openerp.http.Controller):
         modules = webmain.module_boot(req) + ['edi']
         modules_str = ','.join(modules)
         modules_json = simplejson.dumps(modules)
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list(req, modules_str, 'js'))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list(req, modules_str, 'css'))
+        css = '<link rel="stylesheet" href="/web/css/web.assets_backend"/>'
+        js = '<script type="text/javascript" src="/web/js/web.assets_backend"></script>'
 
         # `url` may contain a full URL with a valid query string, we basically want to watch out for XML brackets and double-quotes 
         safe_url = werkzeug.url_quote_plus(url,':/?&;=')

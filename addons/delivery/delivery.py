@@ -194,9 +194,9 @@ class delivery_grid(osv.osv):
         for line in order.order_line:
             if not line.product_id or line.is_delivery:
                 continue
-            total += line.price_subtotal or 0.0
             weight += (line.product_id.weight or 0.0) * line.product_uom_qty
             volume += (line.product_id.volume or 0.0) * line.product_uom_qty
+        total = order.amount_total or 0.0
 
 
         return self.get_price_from_picking(cr, uid, id, total,weight, volume, context=context)

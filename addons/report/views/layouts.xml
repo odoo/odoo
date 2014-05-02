@@ -107,7 +107,7 @@
 <template id="external_layout_footer">
     <div class="footer">
         <div class="text-center" style="border-top: 1px solid black;">
-            <ul class="list-inline">
+            <ul t-if="not company.custom_footer" class="list-inline">
                 <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
 
                 <li t-if="company.fax and company.phone">&amp;bull;</li>
@@ -116,11 +116,15 @@
                 <li t-if="company.email">&amp;bull;</li>
                 <li t-if="company.email">Email: <span t-field="company.email"/></li>
 
-                <li t-if="website">&amp;bull;</li>
-                <li t-if="website">Website: <span t-esc="website.name"/></li>
-            <br/>
-                <li><span t-field="company.rml_footer"/></li>
-                <li t-if="company.rml_footer">|</li>
+                <li t-if="company.website">&amp;bull;</li>
+                <li t-if="company.website">Website: <span t-field="company.website"/></li>
+            </ul>
+
+            <t t-if="company.custom_footer">
+                <span t-raw="company.rml_footer"/>
+            </t>
+
+            <ul class="list-inline">
                 <li>Page:</li>
                 <li><span class="page"/></li>
                 <li>/</li>

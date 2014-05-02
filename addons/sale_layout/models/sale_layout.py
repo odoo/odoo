@@ -56,25 +56,6 @@ class SaleLayoutCategory(osv.Model):
         'sequence': 10
     }
 
-    # We want to forbid edit of a category if it is already linked to a report.
-    def _check(self, cr, uid, ids):
-        for cat in self.browse(cr, uid, ids):
-            invoice_obj = self.pool.get('account.invoice.line')
-            sale_obj = self.pool.get('sale.order.line')
-            ids = invoice_obj.search(cr, uid, [('sale_layout_cat_id', '=', cat.id)])
-            ids += sale_obj.search(cr, uid, [('sale_layout_cat_id', '=', cat.id)])
-
-            if len(ids) > 0:
-                return False
-
-        return True
-
-    _constraints = [(
-        _check,
-        'This category could not be modified nor deleted because it is still used in an invoice or'
-        ' a sale report.', ['name']
-    )]
-
 
 class AccountInvoice(osv.Model):
     _inherit = 'account.invoice'
@@ -98,7 +79,7 @@ class AccountInvoiceLine(osv.Model):
     _inherit = 'account.invoice.line'
     _columns = {
         'sale_layout_cat_id': fields.many2one('sale_layout.category',
-                                              'Layout Category'),
+                                              string='Section'),
         'categ_sequence': fields.related('sale_layout_cat_id',
                                          'sequence', type='integer',
                                          string='Layout Sequence', store=True)
@@ -128,7 +109,7 @@ class SaleOrderLine(osv.Model):
     _inherit = 'sale.order.line'
     _columns = {
         'sale_layout_cat_id': fields.many2one('sale_layout.category',
-                                              'Layout Category'),
+                                              string='Section'),
         'categ_sequence': fields.related('sale_layout_cat_id',
                                          'sequence', type='integer',
                                          string='Layout Sequence', store=True)
