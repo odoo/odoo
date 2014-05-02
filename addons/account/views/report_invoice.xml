@@ -47,7 +47,6 @@
                     <tr>
                         <th>Description</th>
                         <th>Quantity</th>
-                        <th groups="product.group_uom">Unit of measure</th>
                         <th class="text-right">Unit Price</th>
                         <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
                         <th class="text-right">Taxes</th>
@@ -57,8 +56,10 @@
                 <tbody class="invoice_tbody">
                     <tr t-foreach="o.invoice_line" t-as="l">
                         <td><span t-field="l.name"/></td>
-                        <td><span t-field="l.quantity"/></td>
-                        <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
+                        <td>
+                            <span t-field="l.quantity"/>
+                            <span t-field="l.uos_id"  groups="product.group_uom"/>
+                        </td>
                         <td class="text-right">
                             <span t-field="l.price_unit"/>
                         </td>
