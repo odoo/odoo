@@ -61,6 +61,6 @@ class account_vat_declaration(osv.osv_memory):
         taxcode = taxcode_obj.browse(cr, uid, [taxcode_id], context=context)[0]
         datas['form']['company_id'] = taxcode.company_id.id
 
-        return self.pool['report'].get_action(cr, uid, ids, 'account.report_vat', data=datas, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account.report_vat', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
