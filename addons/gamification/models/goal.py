@@ -282,7 +282,7 @@ class gamification_goal(osv.Model):
                         _logger.exception(_('Invalid return content from the evaluation of code for definition %s' % definition.name))
 
             else:  # count or sum
-                
+
                 obj = self.pool.get(definition.model_id.model)
                 field_date_name = definition.field_date_id and definition.field_date_id.name or False
 
@@ -349,7 +349,7 @@ class gamification_goal(osv.Model):
             if not value:
                 continue
             goal = all_goals[goal_id]
-            
+            #
             # check goal target reached
             if (goal.definition_condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
               or (goal.definition_condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
