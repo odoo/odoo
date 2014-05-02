@@ -730,8 +730,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         }
     },
-    on_button_save: function() {
+    on_button_save: function(e) {
         var self = this;
+        $(e.target).attr("disabled", true);
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.reload().then(function() {
@@ -741,6 +742,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     parent.menu.do_reload_needaction();
                 }
             });
+        }).always(function(){
+            $(e.target).attr("disabled", false);
         });
     },
     on_button_cancel: function(event) {
@@ -1835,7 +1838,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         this.$el.addClass(this.node.attrs["class"] || "");
     },
     destroy: function() {
-        $.fn.tipsy.clear();
+        $.fn.tooltip('destroy');
         this._super.apply(this, arguments);
     },
     /**
@@ -1866,10 +1869,25 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
         trigger = trigger || this.$el;
+        var container = 'body';
+        /*TODO: need to be refactor
+        in the case we can find the view form in the parent, 
+        attach the element to it (to prevent tooltip to keep showing
+        when switching view) or if we have a modal currently showing,
+        attach tooltip to the modal to prevent the tooltip to show in the body in the
+        case we close the modal too fast*/
+        if ($(trigger).parents('.oe_view_manager_view_form').length > 0){
+            container = $(trigger).parents('.oe_view_manager_view_form');
+        }
+        else {
+            if (window.$('.modal.in').length>0){
+                container = window.$('.modal.in:last()');
+            }
+        }
         options = _.extend({
-                delayIn: 500,
-                delayOut: 0,
-                fade: true,
+                delay: { show: 500, hide: 0 },
+                trigger: 'hover',
+                container: container,
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -1880,12 +1898,12 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                         widget: widget
                     });
                 },
-                gravity: $.fn.tipsy.autoBounds(50, 'nw'),
-                html: true,
-                opacity: 0.85,
-                trigger: 'hover'
             }, options || {});
-        $(trigger).tipsy(options);
+        //only show tooltip if we are in debug or if we have a help to show, otherwise it will display
+        //as empty
+        if (instance.session.debug || widget.node.attrs.help || (widget.field && widget.field.help)){
+            $(trigger).tooltip(options);
+        }
     },
     /**
      * Builds a new context usable for operations related to fields by merging
@@ -2122,8 +2140,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
         this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
+        this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (instance.session.debug) {
-            this.do_attach_tooltip(this, this.$label[0] || this.$el);
             this.$label.off('dblclick').on('dblclick', function() {
                 console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);
                 window.w = self;
@@ -3338,13 +3356,16 @@ instance.web.form.CompletionFieldMixin = {
 instance.web.form.M2ODialog = instance.web.Dialog.extend({
     template: "M2ODialog",
     init: function(parent) {
+        this.name = parent.string;
         this._super(parent, {
-            title: _.str.sprintf(_t("Add %s"), parent.string),
+            title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
         });
     },
     start: function() {
         var self = this;
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
+        this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
@@ -3468,7 +3489,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.display_value_backup = {};
                     self.render_value();
                     self.focus();
-                    self.view.do_onchange(self);
+                    self.trigger('changed_value');
                 });
             });
         });
@@ -3603,6 +3624,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 250
         });
+        // set position for list of suggestions box
+        this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {

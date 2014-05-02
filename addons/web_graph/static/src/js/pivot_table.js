@@ -14,6 +14,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 		this.cells = [];
 		this.domain = domain;
 		this.no_data = true;
+		this.updating = false;
 		this.model = model;
 		this.fields = fields;
         this.fields.__count = {type: 'integer', string:_t('Quantity')};
@@ -55,6 +56,13 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
 	},
 
     set: function (domain, row_groupby, col_groupby) {
+        var self = this;
+        if (this.updating) {
+            return this.updating.then(function () {
+                self.updating = false;
+                return self.set(domain, row_groupby,col_groupby);
+            });
+        }
         var row_gb_changed = !_.isEqual(row_groupby, this.rows.groupby),
             col_gb_changed = !_.isEqual(col_groupby, this.cols.groupby);
         
@@ -251,7 +259,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
     // to null before calling update_data.
     update_data: function () {
         var self = this;
-        return this.perform_requests().then (function () {
+        this.updating = this.perform_requests().then (function () {
             var data = Array.prototype.slice.call(arguments);
             self.no_data = !data[0].length;
             if (self.no_data) {
@@ -273,6 +281,7 @@ openerp.web_graph.PivotTable = openerp.web.Class.extend({
             self.set_headers(row_headers, self.rows);
             self.set_headers(col_headers, self.cols);
         });
+        return this.updating;
     },
 
     make_headers_and_cell: function (data_pts, row_headers, col_headers, index, prefix, expand) {

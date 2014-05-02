@@ -581,7 +581,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         this.$el.find('.oe_view_manager_switch a').click(function() {
             self.switch_mode($(this).data('view-type'));
-        }).tipsy();
+        }).tooltip();
         var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
@@ -1157,10 +1157,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.$('.oe_form_dropdown_section').each(function() {
             $(this).toggle(!!$(this).find('li').length);
         });
-
-        self.$("[title]").tipsy({
-            'html': true,
-            'delayIn': 500,
+        self.$("[title]").tooltip({
+            delay: { show: 500, hide: 0}
         });
     },
     /**
