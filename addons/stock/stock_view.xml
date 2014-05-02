@@ -1290,7 +1290,7 @@
                             <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                         </group>
                         <group string="Traceability"
-                            groups="stock.group_tracking_lot">
+                            groups="stock.group_tracking_lot,stock.group_production_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>
@@ -1577,11 +1577,11 @@
             <field name="model">stock.incoterms</field>
             <field name="arch" type="xml">
                 <form string="Incoterms" version="7.0">
-                    <group>
+                    <sheet>
                         <field name="name"/>
                         <field name="code"/>
                         <field name="active"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -1710,10 +1710,10 @@
             <field name="model">stock.journal</field>
             <field name="arch" type="xml">
                 <form string="Stock Journal" version="7.0">
-                    <group>
+                    <sheet>
                         <field name="name"/>
                         <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'stock.group_stock_manager']}"/>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>

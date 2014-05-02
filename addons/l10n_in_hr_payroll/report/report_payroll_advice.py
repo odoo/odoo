@@ -23,7 +23,7 @@
 
 import time
 from datetime import datetime
-
+from openerp.osv import osv
 from openerp.report import report_sxw
 from openerp.tools import amount_to_text_en
 
@@ -77,6 +77,10 @@ class payroll_advice_report(report_sxw.rml_parse):
             result.append(res) 
         return result
 
-report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'l10n_in_hr_payroll/report/report_payroll_advice.rml', parser=payroll_advice_report, header="external")
+class wrapped_report_payroll_advice(osv.AbstractModel):
+    _name = 'report.l10n_in_hr_payroll.report_payrolladvice'
+    _inherit = 'report.abstract_report'
+    _template = 'l10n_in_hr_payroll.report_payrolladvice'
+    _wrapped_report_class = payroll_advice_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

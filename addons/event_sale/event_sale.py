@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp.addons.event.event import event_event as Event
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -137,6 +138,17 @@ class event_event(osv.osv):
             pass
         return []
 
+    def _get_ticket_events(self, cr, uid, ids, context=None):
+        # `self` is the event.event.ticket model when called by ORM! 
+        return list(set(ticket.event_id.id
+                            for ticket in self.browse(cr, uid, ids, context)))
+
+    # proxy method, can't import parent method directly as unbound_method: it would receive
+    # an invalid `self` <event_registration> when called by ORM
+    def _events_from_registrations(self, cr, uid, ids, context=None):
+        # `self` is the event.registration model when called by ORM
+        return self.pool['event.event']._get_events_from_registrations(cr, uid, ids, context=context)
+
     _columns = {
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
         'seats_max': fields.function(_get_seats_max,
@@ -144,7 +156,15 @@ class event_event(osv.osv):
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
             type='integer',
-            readonly=True)
+            readonly=True),
+        'seats_available': fields.function(Event._get_seats, oldname='register_avail', string='Available Seats',
+                                           type='integer', multi='seats_reserved',
+                                           store={
+                                              'event.registration': (_events_from_registrations, ['state'], 10),
+                                              'event.event': (lambda self, cr, uid, ids, c = {}: ids,
+                                                              ['seats_max', 'registration_ids'], 20),
+                                              'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
+                                           }),
     }
     _defaults = {
         'event_ticket_ids': _get_tickets
@@ -167,12 +187,23 @@ class event_ticket(osv.osv):
                 if ticket.seats_max > 0 else None
         return res
 
+    def _is_expired(self, cr, uid, ids, field_name, args, context=None):
+        # FIXME: A ticket is considered expired when the deadline is passed. The deadline should
+        #        be considered in the timezone of the event, not the timezone of the user!
+        #        Until we add a TZ on the event we'll use the context's current date, more accurate
+        #        than using UTC all the time.
+        current_date = fields.date.context_today(self, cr, uid, context=context)
+        return {ticket.id: ticket.deadline and ticket.deadline < current_date
+                      for ticket in self.browse(cr, uid, ids, context=context)}
+        
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'event_id': fields.many2one('event.event', "Event", required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[("event_type_id", "!=", False)]),
         'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
         'deadline': fields.date("Sales End"),
+        'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),
         'price': fields.float('Price'),
         'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
         'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),

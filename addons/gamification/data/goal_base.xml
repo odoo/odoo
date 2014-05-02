@@ -90,10 +90,6 @@
             ]]></field>
         </record>
 
-    </data>
-
-    <data>
-
         <!-- goal definitions -->
         <record model="gamification.goal.definition" id="definition_base_timezone">
             <field name="name">Set your Timezone</field>
@@ -164,7 +160,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain">[('groups_id', 'in', ref('base.group_user'))]</field>
+            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_user'))]" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>
@@ -174,7 +170,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain">[('groups_id', 'in', ref('base.user_root'))]</field>
+            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_erp_manager'))]" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>

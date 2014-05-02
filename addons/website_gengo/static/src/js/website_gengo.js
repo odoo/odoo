@@ -1,6 +1,11 @@
 (function () {
     'use strict';
 
+    if (!openerp.website.translatable) {
+        // Temporary hack until the editor bar is moved to the web client
+        return;
+    }
+
     var website = openerp.website;
     website.add_template_file('/website_gengo/static/src/xml/website.gengo.xml');
 

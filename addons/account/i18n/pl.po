@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-12 07:16+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-04-22 06:39+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -184,6 +184,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Kliknij aby utworzyć okres rozliczeniowy.\n"
+"</p><p>\n"
+"Typowo, rozliczeniowym okresem księgowym jest miesiąc lub kwartał.\n"
+"On odpowiada okresom rozliczeń podatkowych.\n"
+"</p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -718,6 +725,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Faktura_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -1793,7 +1802,7 @@ msgstr "Konto podatku dla korekt"
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2356,7 +2365,7 @@ msgstr "Dobra robota!"
 #. module: account
 #: field:account.config.settings,module_account_asset:0
 msgid "Assets management"
-msgstr "Środku trwałe"
+msgstr "Środki trwałe"
 
 #. module: account
 #: view:account.account:0
@@ -7563,7 +7572,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,paypal_url:0
 msgid "Paypal Url"
-msgstr ""
+msgstr "Paypal Url"
 
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
@@ -8352,7 +8361,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_cash_box_in
 msgid "cash.box.in"
-msgstr ""
+msgstr "cash.box.in"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -8362,7 +8371,7 @@ msgstr "Połącz z automatycznie generowanymi pozycjami zapisów"
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -8677,7 +8686,7 @@ msgstr "Brak roku podatkowego dla firmy"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -8951,7 +8960,7 @@ msgstr "Typy kont"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktura (Odn. ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1210

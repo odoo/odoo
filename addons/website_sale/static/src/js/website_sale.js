@@ -20,18 +20,20 @@ $(document).ready(function () {
             .fadeIn(600);
     }
 
-    $(".oe_website_sale .oe_mycart input.js_quantity").change(function () {
+    $(".oe_website_sale .oe_mycart input.js_quantity").change(function (ev) {
         var $input = $(this);
+        var $link = $(ev.currentTarget);
         var value = parseInt($input.val(), 10);
         if (isNaN(value)) value = 0;
         openerp.jsonRpc("/shop/set_cart_json", 'call', {'order_line_id': $input.data('id'), 'set_number': value})
             .then(function (data) {
-                if (!data) {
+                if (!data[0]) {
                     location.reload();
                     return;
                 }
                 set_my_cart_quantity(data[1]);
-                $input.val(data[0]);
+                $link.parents(".input-group:first").find(".js_quantity").val(data[0]);
+                $('#mycart_total').replaceWith(data[3]);
             });
     });
 

@@ -49,7 +49,7 @@ for a particular financial year and for preparation of vouchers there is a modul
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi', 'report'],
+    'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -114,17 +114,12 @@ for a particular financial year and for preparation of vouchers there is a modul
         'partner_view.xml',
         'product_view.xml',
         'account_assert_test.xml',
-        'process/statement_process.xml',
-        'process/customer_invoice_process.xml',
-        'process/supplier_invoice_process.xml',
         'ir_sequence_view.xml',
         'company_view.xml',
-        'board_account_view.xml',
         'edi/invoice_action_data.xml',
         'account_bank_view.xml',
         'res_config_view.xml',
         'account_pre_install.yml',
-
         'views/report_vat.xml',
         'views/report_invoice.xml',
         'views/report_trialbalance.xml',
@@ -144,19 +139,11 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/views/report_analyticcostledgerquantity.xml',
         'project/views/report_analyticcostledger.xml',
         'project/views/report_invertedanalyticbalance.xml',
-    ],
-    'js': [
-        'static/src/js/account_move_reconciliation.js',
-        'static/src/js/account_move_line_quickadd.js',
+        'views/account.xml',
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
-    ],
-    'css':[
-        'static/src/css/account_move_reconciliation.css',
-        'static/src/css/account_move_line_quickadd.css',
-        'static/src/css/account_bank_and_cash.css',
     ],
     'demo': [
         'demo/account_demo.xml',

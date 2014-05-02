@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <template id="assets_backend" name="mass_mailing assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing.css"/>
+                <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
+                <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
+            </xpath>
+        </template>
 
         <!-- Marketing / Mass Mailing -->
         <menuitem name="Mass Mailing" id="mass_mailing_campaign"
@@ -208,11 +215,11 @@
                             </button>
                             <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button oe_inline">
-                                <field name="opened_dayly" string="Opened Daily" widget="barchart"/>
+                                <field name="opened_daily" string="Opened Daily" widget="barchart"/>
                             </button>
                             <button name="%(action_view_mass_mailing_contacts)d"
                                 type="action" class="oe_stat_button oe_inline">
-                                <field name="replied_dayly" string="Replied Daily" widget="barchart"/>
+                                <field name="replied_daily" string="Replied Daily" widget="barchart"/>
                             </button>
                         </div>
                         <button name="%(action_view_mass_mailing_contacts)d" type="action"

@@ -94,5 +94,17 @@ class res_partner(osv.osv):
             opportunity_ids[partner_id] = opportunity_id
         return opportunity_ids
 
+    def schedule_meeting(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        partner_ids = list(ids)
+        partner_ids.append(self.pool.get('res.users').browse(cr, uid, uid).partner_id.id)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'calendar', 'action_calendar_event', context)
+        res['context'] = {
+            'default_partner_id': ids and ids[0] or False,
+            'default_partner_ids': partner_ids,
+        }
+        return res
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
