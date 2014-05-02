@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{   
+
+{
     'name': 'Belgium - Accounting',
     'version': '1.1',
     'category': 'Localization/Account Charts',
@@ -72,12 +73,16 @@ Wizards provided by this module:
         'wizard/l10n_be_partner_vat_listing.xml',
         'wizard/account_wizard.xml',
         'l10n_be_sequence.xml',
+        'l10n_be_reports.xml',
         'fiscal_templates.xml',
         'account_fiscal_position_tax_template.xml',
         'security/ir.model.access.csv',
+        'views/report_vatintraprint.xml',
+        'views/report_vatpartnerlisting.xml',
     ],
     'demo': [],
     'installable': True,
     'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

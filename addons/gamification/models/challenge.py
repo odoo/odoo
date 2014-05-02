@@ -200,7 +200,6 @@ class gamification_challenge(osv.Model):
         'visibility_mode': 'personal',
         'report_message_frequency': 'never',
         'last_report_date': fields.date.today,
-        'start_date': fields.date.today,
         'manager_id': lambda s, cr, uid, c: uid,
         'category': 'hr',
         'reward_failure': False,
@@ -269,13 +268,15 @@ class gamification_challenge(osv.Model):
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
             ('start_date', '<=', fields.date.today())])
-        self.write(cr, uid, planned_challenge_ids, {'state': 'inprogress'}, context=context)
+        if planned_challenge_ids:
+            self.write(cr, uid, planned_challenge_ids, {'state': 'inprogress'}, context=context)
 
         # close scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'inprogress'),
             ('end_date', '>=', fields.date.today())])
-        self.write(cr, uid, planned_challenge_ids, {'state': 'done'}, context=context)
+        if planned_challenge_ids:
+            self.write(cr, uid, planned_challenge_ids, {'state': 'done'}, context=context)
 
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')], context=context)

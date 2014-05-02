@@ -48,12 +48,11 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'security/ir.model.access.csv',
         'data/goal_base.xml',
         'data/badge.xml',
+        'views/gamification.xml',
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
 
-    'css': ['static/src/css/gamification.css'],
-    'js': ['static/src/js/gamification.js',],
     'qweb': ['static/src/xml/gamification.xml'],
 }

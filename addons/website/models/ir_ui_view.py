@@ -140,6 +140,7 @@ class view(osv.osv):
                 slug=website.slug,
                 res_company=request.website.company_id,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
+                translatable=context.get('lang') != request.website.default_lang_code,
             )
 
             # add some values

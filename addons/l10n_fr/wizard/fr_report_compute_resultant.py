@@ -28,6 +28,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_cdr_report(osv.osv_memory):
     _name = 'account.cdr.report'
     _description = 'Account CDR Report'
@@ -50,7 +51,8 @@ class account_cdr_report(osv.osv_memory):
         data['form'] = {}
         data['ids'] = active_ids
         data['form']['fiscalyear_id'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
-        return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.compute_resultant', 'datas': data}
-
+        return self.pool['report'].get_action(
+            cr, uid, ids, 'l10n_fr.report_l10nfrresultat', data=data, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

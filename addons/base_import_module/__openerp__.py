@@ -14,8 +14,6 @@ for customization purpose.
     'installable': True,
     'auto_install': False,
     'data': [],
-    'css': [],
-    'js': [],
     'qweb': [],
     'test': [],
 }

@@ -39,6 +39,17 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_event_registration_ticket_form">
+            <field name="name">event.registration.ticket.form</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_form" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="event_sale_product_template_form">
              <field name="model">product.template</field>
              <field name="inherit_id" ref="product.product_template_form_view" />

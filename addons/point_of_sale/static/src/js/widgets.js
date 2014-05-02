@@ -693,7 +693,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             'open_cashbox',
             'print_receipt',
             'print_pdf_invoice',
-            'weighting_read_kg',
+            'scale_read',
             'payment_status',
         ],
         minimized: false,
@@ -811,12 +811,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             self.pos.proxy.add_notification('transaction_end',function(){
                 self.$('.status.transaction').removeClass('on');
             });
-            self.pos.proxy.add_notification('weighting_start',function(){
-                self.$('.status.weighting').addClass('on');
-            });
-            self.pos.proxy.add_notification('weighting_end',function(){
-                self.$('.status.weighting').removeClass('on');
-            });
         },
     });
 
@@ -874,6 +868,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         warning = true;
                         msg = msg ? msg + ' & ' : msg;
                         msg += _t('Printer');
+                    }
+                }
+                if( this.pos.config.iface_electronic_scale ){
+                    var scale = status.drivers.scale ? status.drivers.scale.status : false;
+                    if( scale != 'connected' && scale != 'connecting' ){
+                        warning = true;
+                        msg = msg ? msg + ' & ' : msg;
+                        msg += _t('Scale');
                     }
                 }
                 msg = msg ? msg + ' ' + _t('Offline') : msg;
