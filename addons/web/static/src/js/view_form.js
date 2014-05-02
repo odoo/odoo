@@ -1870,11 +1870,19 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         widget = widget || this;
         trigger = trigger || this.$el;
         var container = 'body';
-        //in the case we have a modal currently showing, attach tooltip
-        //to the modal to prevent the tooltip to show in the body in the
-        //case we close the modal too fast
-        if (window.$('.modal.in').length>0){
-            container = window.$('.modal.in:last()');
+        /*TODO: need to be refactor
+        in the case we can find the view form in the parent, 
+        attach the element to it (to prevent tooltip to keep showing
+        when switching view) or if we have a modal currently showing,
+        attach tooltip to the modal to prevent the tooltip to show in the body in the
+        case we close the modal too fast*/
+        if ($(trigger).parents('.oe_view_manager_view_form').length > 0){
+            container = $(trigger).parents('.oe_view_manager_view_form');
+        }
+        else {
+            if (window.$('.modal.in').length>0){
+                container = window.$('.modal.in:last()');
+            }
         }
         options = _.extend({
                 delay: { show: 500, hide: 0 },
@@ -3348,13 +3356,16 @@ instance.web.form.CompletionFieldMixin = {
 instance.web.form.M2ODialog = instance.web.Dialog.extend({
     template: "M2ODialog",
     init: function(parent) {
+        this.name = parent.string;
         this._super(parent, {
-            title: _.str.sprintf(_t("Add %s"), parent.string),
+            title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
         });
     },
     start: function() {
         var self = this;
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
+        this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
@@ -3478,7 +3489,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.display_value_backup = {};
                     self.render_value();
                     self.focus();
-                    self.view.do_onchange(self);
+                    self.trigger('changed_value');
                 });
             });
         });
@@ -3613,6 +3624,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 250
         });
+        // set position for list of suggestions box
+        this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {

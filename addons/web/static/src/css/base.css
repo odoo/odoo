@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -720,7 +720,7 @@
   border-bottom-left-radius: 8px;
 }
 .openerp .oe_notification {
-  z-index: 1050;
+  z-index: 1500;
 }
 .openerp .oe_webclient_timezone_notification a {
   color: white;
@@ -2742,13 +2742,15 @@
   padding: 3px 6px;
   white-space: pre-line;
 }
-.openerp .oe_list_content > tbody > tr > td > button.btn_img, .openerp .oe_list_content > tbody > tr > th > button.btn_img {
+.openerp .oe_list_content > tbody > tr > td > button, .openerp .oe_list_content > tbody > tr > th > button {
   border: none;
   background: transparent;
   padding: 0;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+}
+.openerp .oe_list_content > tbody > tr > td > button.btn_txt, .openerp .oe_list_content > tbody > tr > th > button.btn_txt {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background: #e3e3e3;
+  padding: 3px 12px;
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_checkbox:first-child, .openerp .oe_list_content > tbody > tr th.oe_list_checkbox:first-child {
   width: 17px;
@@ -3293,11 +3295,6 @@ body.oe_single_form .oe_single_form_container {
     overflow: hidden !important;
   }
 }
-.ui-icon {
-  width: 18px;
-  height: 18px;
-}
-
 .tooltip {
   padding: 0;
   margin: 0;
@@ -3307,8 +3304,6 @@ body.oe_single_form .oe_single_form_container {
   background: white;
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   background-color: transparent;
-  /*We need a greater z-index in order for tooltip to go over bootstrap modal z-index*/
-  z-index: 1500;
 }
 .tooltip .tooltip-inner {
   text-align: left !important;
@@ -3345,6 +3340,12 @@ body.oe_single_form .oe_single_form_container {
 .tooltip .tooltip-inner .oe_tooltip_message {
   max-width: 310px;
 }
+
+.ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
 .modal .modal-header button.close {
   border: none;
   background: none;
@@ -3355,12 +3356,17 @@ body.oe_single_form .oe_single_form_container {
 .modal .modal-footer {
   text-align: left;
 }
-.modal .oe_act_window.modal-body{
-  padding: 0;
-}
-.modal .oe_button{
+.modal .oe_button {
   margin: 0 4px 0 0;
 }
+.modal .oe_act_window.modal-body {
+  padding: 0;
+}
+
+.ui-datepicker {
+  z-index: 1500 !important;
+}
+
 input[type="radio"], input[type="checkbox"] {
   margin-right: 4px;
   margin-left: 4px;

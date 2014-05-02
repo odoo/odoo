@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="web_gantt assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/web_gantt/static/src/css/gantt.css"/>
+                <link rel="stylesheet" href="/web_gantt/static/lib/dhtmlxGantt/codebase/dhtmlxgantt.css"/>
+
+                <script type="text/javascript" src="/web_gantt/static/lib/dhtmlxGantt/sources/dhtmlxcommon.js"></script>
+                <script type="text/javascript" src="/web_gantt/static/lib/dhtmlxGantt/sources/dhtmlxgantt.js"></script>
+                <script type="text/javascript" src="/web_gantt/static/src/js/gantt.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>
