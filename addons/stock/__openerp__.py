@@ -51,7 +51,7 @@ Dashboard / Reports for Warehouse Management will include:
 * Moves Analysis
     """,
     'website': 'http://www.openerp.com',
-    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg', 'images/location.jpeg', 'images/moves_analysis.jpeg', 'images/physical_inventories.jpeg', 'images/warehouse_dashboard.jpeg'],
+    'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg'],
     'depends': ['product', 'procurement', 'board', 'web_kanban_gauge', 'web_kanban_sparkline'],
     'category': 'Warehouse Management',
     'sequence': 16,
@@ -83,11 +83,11 @@ Dashboard / Reports for Warehouse Management will include:
         'product_view.xml',
         'partner_view.xml',
         'report/report_stock_view.xml',
-        'board_warehouse_view.xml',
         'res_config_view.xml',
         'views/report_package_barcode.xml',
         'views/report_stockpicking.xml',
         'views/report_stockinventory.xml',
+        'views/stock.xml',
     ],
     'test': [
         'test/inventory.yml',
@@ -103,13 +103,6 @@ Dashboard / Reports for Warehouse Management will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'css': [
-        'static/src/css/stock.css',
-    ],
-    'js': [
-        'static/src/js/widgets.js',
-    ],
-    'qweb': ['static/src/xml/picking.xml'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

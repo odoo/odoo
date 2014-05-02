@@ -91,10 +91,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var $dialog = new instance.web.Dialog(this, {
                             title: _t("Edit Layout"),
                         }, QWeb.render('DashBoard.layouts', qdict)).open();
-        $dialog.find('li').click(function() {
+        $dialog.$el.find('li').click(function() {
             var layout = $(this).attr('data-layout');
-            $dialog.modal('hide'); 
             self.do_change_layout(layout);
+            $dialog.$dialog_box.modal('hide'); 
         });
     },
     do_change_layout: function(new_layout) {

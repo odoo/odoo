@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import datetime
+import re
 
 from sys import maxint
 
@@ -101,7 +102,9 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'url': "/page/" + xml_id,
                     'parent_id': id,
                 }, context=request.context)
-        url = "/page/" + xml_id
+        # Reverse action in order to allow shortcut for /page/<website_xml_id>
+        url = "/page/" + re.sub(r"^website\.", '', xml_id)
+
         if noredirect:
             return werkzeug.wrappers.Response(url, mimetype='text/plain')
         return werkzeug.utils.redirect(url)
@@ -324,12 +327,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         '/website/image',
         '/website/image/<model>/<id>/<field>'
         ], auth="public", website=True)
-    def website_image(self, model, id, field, max_width=maxint, max_height=maxint):
+    def website_image(self, model, id, field, max_width=None, max_height=None):
         """ Fetches the requested field and ensures it does not go above
         (max_width, max_height), resizing it if necessary.
-
-        Resizing is bypassed if the object provides a $field_big, which will
-        be interpreted as a pre-resized version of the base field.
 
         If the record is not found or does not have the requested field,
         returns a placeholder image via :meth:`~.placeholder`.
@@ -337,31 +337,20 @@ class Website(openerp.addons.web.controllers.main.Home):
         Sets and checks conditional response parameters:
         * :mailheader:`ETag` is always set (and checked)
         * :mailheader:`Last-Modified is set iif the record has a concurrency
-          field (``__last_update``)
+          field (``write_date``)
 
         The requested field is assumed to be base64-encoded image data in
         all cases.
         """
-        Model = request.registry[model]
-
-        response = werkzeug.wrappers.Response()
-
         id = int(id)
-
-        ids = Model.search(request.cr, request.uid,
-                           [('id', '=', id)], context=request.context)
-        if not ids and 'website_published' in Model._all_columns:
-            ids = Model.search(request.cr, openerp.SUPERUSER_ID,
-                               [('id', '=', id), ('website_published', '=', True)], context=request.context)
-
-        if not ids:
-            return self.placeholder(response)
-
-        presized = '%s_big' % field
-        concurrency = '__last_update'
-        [record] = Model.read(request.cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field, presized],
+        response = werkzeug.wrappers.Response()
+        concurrency = 'write_date'
+        try:
+            [record] = request.registry[model].read(request.cr, openerp.SUPERUSER_ID, [id],
+                              [concurrency, field],
                               context=request.context)
+        except:
+            return self.placeholder(response)
 
         if concurrency in record:
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -385,30 +374,22 @@ class Website(openerp.addons.web.controllers.main.Home):
         if response.status_code == 304:
             return response
 
-        data = (record.get(presized) or record[field]).decode('base64')
+        data = record[field].decode('base64')
+        if (not max_width) and (not max_height):
+            response.data = data
+            return response
 
         image = Image.open(cStringIO.StringIO(data))
         response.mimetype = Image.MIME[image.format]
 
-        # record provides a pre-resized version of the base field, use that
-        # directly
-        if record.get(presized):
-            response.set_data(data)
-            return response
-
-        fit = int(max_width), int(max_height)
         w, h = image.size
-        max_w, max_h = fit
-
+        max_w, max_h = int(max_width), int(max_height)
         if w < max_w and h < max_h:
-            response.set_data(data)
+            response.data = data
         else:
-            image.thumbnail(fit, Image.ANTIALIAS)
+            image.thumbnail((max_w, max_h), Image.ANTIALIAS)
             image.save(response.stream, image.format)
-            # invalidate content-length computed by make_conditional as
-            # writing to response.stream does not do it (as of werkzeug 0.9.3)
             del response.headers['Content-Length']
-
         return response
 
     #------------------------------------------------------

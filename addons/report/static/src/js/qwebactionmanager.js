@@ -78,8 +78,7 @@ openerp.report = function(instance) {
                             }
                             return trigger_download(self.session, response, c);
                         });
-                    }
-                    else if (action.report_type == 'controller') {
+                    } else if (action.report_type == 'controller') {
                         return trigger_download(self.session, response, c);
                     }
                 }                     

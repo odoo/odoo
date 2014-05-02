@@ -55,6 +55,9 @@ configuration of their taxes and fiscal positions manually.
 """,
     'depends': ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
     'data': [
+        'views/report_l10nfrbilan.xml',
+        'views/report_l10nfrresultat.xml',
+        'l10n_fr_reports.xml',
         'fr_report.xml',
         'plan_comptable_general.xml',
         'l10n_fr_view.xml',
@@ -72,5 +75,5 @@ configuration of their taxes and fiscal positions manually.
     'installable': True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

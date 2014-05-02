@@ -38,6 +38,6 @@
     import os
     import openerp.report
     from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('l10n_in_hr_payroll.payment_advice_1')], 'payroll.advice', {}, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('payment_advice_1')], 'l10n_in_hr_payroll.report_payrolladvice', {}, {})
     if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'l10n_in_hr_payroll_summary report'+format), 'wb+').write(data)
+        file(os.path.join(tools.config['test_report_directory'], 'l10n_in_hr_payroll_summary_report.'+format), 'wb+').write(data)

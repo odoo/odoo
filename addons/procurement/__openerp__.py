@@ -26,7 +26,7 @@
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com',
     'category' : 'Hidden/Dependency',
-    'depends' : ['base','process', 'product'],
+    'depends' : ['base', 'product'],
     'description': """
 This is the module for computing Procurements.
 ==============================================

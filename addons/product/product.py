@@ -876,9 +876,17 @@ class product_product(osv.osv):
             price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
 
         res = {}
+        # standard_price field can only be seen by users in base.group_user
+        # Thus, in order to compute the sale price from the cost price for users not in this group
+        # We fetch the standard price as the superuser
+        for product in products:
+            if ptype != 'standard_price':
+                res[product.id] = product[ptype] or 0.0
+            else: 
+                res[product.id] = self.read(cr, SUPERUSER_ID, product.id, [ptype], context=context)[ptype] or 0.0
+
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
-            res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
                 res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
                         product.price_extra

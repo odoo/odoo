@@ -312,5 +312,6 @@ class procurement_order(osv.osv):
                     cr.close()
                 except Exception:
                     pass
+
         return {}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

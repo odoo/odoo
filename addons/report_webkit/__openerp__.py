@@ -79,7 +79,7 @@ TODO:
     * Web client WYSIWYG
 """,
     'version': '0.9',
-    'depends': ['base'],
+    'depends': ['base','report'],
     'author': 'Camptocamp',
     'category': 'Reporting', # i.e a technical module, not shown in Application install menu
     'url': 'http://http://www.camptocamp.com/',

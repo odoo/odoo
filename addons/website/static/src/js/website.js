@@ -3,6 +3,7 @@
 
     var website = {};
     openerp.website = website;
+    openerp.website.translatable = !!$('html').data('translatable');
 
     /* ----------------------------------------------------
        Helpers

@@ -620,7 +620,6 @@ class pos_order(osv.osv):
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
-        tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
@@ -894,9 +893,7 @@ class pos_order(osv.osv):
                     'qty': -order_line.qty
                 }, context=context)
 
-        new_order = ','.join(map(str,clone_list))
         abs = {
-            #'domain': "[('id', 'in', ["+new_order+"])]",
             'name': _('Return Products'),
             'view_type': 'form',
             'view_mode': 'form',
@@ -958,8 +955,6 @@ class pos_order(osv.osv):
                                                                line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
-                if line.product_id.description_sale:
-                    inv_line['note'] = line.product_id.description_sale
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name

@@ -832,6 +832,7 @@ class stock_picking(osv.osv):
         context['active_ids'] = ids
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_picking', context=context)
 
+
     def action_confirm(self, cr, uid, ids, context=None):
         todo = []
         todo_force_assign = []
@@ -2000,6 +2001,7 @@ class stock_move(osv.osv):
         if not date_expected:
             date_expected = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return {'value': {'date': date_expected}}
+
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move or put it in waiting if it's linked to another move.
@@ -4144,6 +4146,5 @@ class stock_picking_type(osv.osv):
         'warehouse_id': _default_warehouse,
         'active': True,
     }
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

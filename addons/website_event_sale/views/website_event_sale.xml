@@ -40,8 +40,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr itemscope="itemscope" itemtype="http://data-vocabulary.org/Offer" t-foreach="event.event_ticket_ids" t-as="ticket">
-                        <td itemscope="itemscope" itemtype="http://data-vocabulary.org/Product">
+                    <t t-foreach="event.event_ticket_ids" t-as="ticket">
+                      <tr itemscope="itemscope" itemtype="http://data-vocabulary.org/Offer" t-if="not ticket.is_expired">
+                        <td itemscope="itemscope" itemtype="http://data-vocabulary.org/Product">                  
                             <div itemprop="name" t-field="ticket.name"/>
                             <div><small itemprop="description" t-field="ticket.product_id.description_sale"/></div>
                         </td>
@@ -69,7 +70,8 @@
                             </select>
                             <span t-if="not ticket.seats_available">Sold Out</span>
                         </td>
-                    </tr>
+                      </tr>
+                    </t>
                 </tbody>
             </table>
             <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event.seats_available">Order Now</button>

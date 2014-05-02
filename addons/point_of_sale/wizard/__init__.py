@@ -19,18 +19,12 @@
 #
 ##############################################################################
 
+import pos_box
 import pos_confirm
+import pos_details
 import pos_discount
 import pos_open_statement
-import pos_details
-import pos_sales_user
-import pos_sales_user_today
-import pos_receipt
-import pos_payment_report_user
-import pos_payment_report
 import pos_payment
 import pos_session_opening
-import pos_box
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
