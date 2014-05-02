@@ -40,40 +40,51 @@ class sale_order(osv.Model):
             'order': order
         }
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, context=None):
+    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None):
         for so in self.browse(cr, uid, ids, context=context):
-            line_id = None
-            line_ids = self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, [('order_id', '=', so.id), ('product_id', '=', product_id)], context=context)
-            if line_ids:
-                line_id = line_ids[0]
-            return line_id
+            order_line_id = None
+            domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
+            if line_id:
+                domain += [('id', '=', line_id)]
+            order_line_ids = self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
+            if order_line_ids:
+                order_line_id = order_line_ids[0]
+            return order_line_id
 
-    def _cart_update(self, cr, uid, ids, product_id=None, add_qty=0, set_qty=0, context=None):
+    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, line_id=None, context=None):
+        so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
+
+        values = self.pool.get('sale.order.line').product_id_change(cr, SUPERUSER_ID, [],
+            pricelist=so.pricelist_id.id,
+            product=product_id,
+            partner_id=so.partner_id.id,
+            context=context
+        )['value']
+
+        if line_id:
+            line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)
+            values['name'] = line.name
+        else:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            values['name'] = product.name_get()[0][1]
+
+        values['product_id'] = product_id
+        values['order_id'] = order_id
+        if values.get('tax_id') != None:
+            values['tax_id'] = [(6, 0, values['tax_id'])]
+        return values
+
+    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None):
         """ Add or set product quantity, add_qty can be negative """
         sol = self.pool.get('sale.order.line')
 
-        def product_id_change(so, product_id):
-            values = sol.product_id_change(cr, SUPERUSER_ID, [],
-                pricelist=so.pricelist_id.id,
-                product=product_id,
-                partner_id=so.partner_id.id,
-                context=context
-            )['value']
-            values['name'] = "%s: %s" % (product.name, product.variants) if product.variants else product.name
-            values['product_id'] = product_id
-            values['order_id'] = so.id
-            if values.get('tax_id') != None:
-                values['tax_id'] = [(6, 0, values['tax_id'])]
-            return values
-
         quantity = 0
         for so in self.browse(cr, uid, ids, context=context):
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            line_id = so._cart_find_product_line(product_id)
+            line_id = so._cart_find_product_line(product_id, line_id, context=context)
 
             # Create line if no line with product_id can be located
             if not line_id:
-                values = product_id_change(so, product_id)
+                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, context=context)
                 line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
 
             # compute new quantity
@@ -87,7 +98,7 @@ class sale_order(osv.Model):
                 sol.unlink(cr, SUPERUSER_ID, [line_id], context=context)
             else:
                 # update line
-                values = product_id_change(so, product_id)
+                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, line_id, context=context)
                 values['product_uom_qty'] = quantity
                 sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
 

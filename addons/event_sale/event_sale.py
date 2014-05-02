@@ -37,6 +37,9 @@ class product_template(osv.osv):
 
 class product(osv.osv):
     _inherit = 'product.product'
+    _columns = {
+        'event_ticket_ids': fields.one2many('event.event.ticket', 'product_id', 'Event Tickets'),
+    }
 
     def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
         # cannot directly forward to product.template as the ids are theoretically different

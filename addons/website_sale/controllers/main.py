@@ -234,9 +234,9 @@ class website_sale(http.Controller):
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, multilang=True)
-    def cart_update_json(self, product_id, add_qty=None, set_qty=None):
+    def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None):
         order = request.website.sale_get_order(force_create=1)
-        quantity = order._cart_update(product_id=product_id, add_qty=add_qty, set_qty=set_qty)
+        quantity = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         return {
             'quantity': quantity,
             'cart_quantity': order.cart_quantity,

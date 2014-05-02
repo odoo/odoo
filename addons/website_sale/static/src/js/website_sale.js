@@ -17,7 +17,8 @@ $(document).ready(function () {
         var value = parseInt($input.val(), 10);
         if (isNaN(value)) value = 0;
         openerp.jsonRpc("/shop/cart/update_json", 'call', {
-            'product_id': parseInt($input.data('id'),10),
+            'line_id': parseInt($input.data('line-id'),10),
+            'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
             .then(function (data) {
                 if (!data.quantity) {

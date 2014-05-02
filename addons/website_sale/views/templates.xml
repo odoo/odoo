@@ -547,7 +547,9 @@
                                           </a>
                                       </span>
                                       <input type="text" class="js_quantity form-control"
-                                          t-att-data-id="line.product_id.id" t-att-value="int(line.product_uom_qty)"/>
+                                          t-att-data-line-id="line.id" 
+                                          t-att-data-product-id="line.product_id.id"
+                                          t-att-value="int(line.product_uom_qty)"/>
                                       <span class="input-group-addon">
                                           <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
                                               <i class="fa fa-plus"></i>

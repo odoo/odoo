@@ -28,7 +28,7 @@
 
 <template id="event_description_full" inherit_id="website_event.event_description_full" inherit_option_id="website_event.event_description_full" name="Event's Ticket form">
     <xpath expr="//div[@t-field='event.description']" position="before">
-        <form t-attf-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
+        <form t-attf-action="/event/cart/update?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
             <table itemprop="offers" class="table table-striped">
                 <thead>
                     <tr>
