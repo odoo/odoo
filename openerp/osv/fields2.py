@@ -83,6 +83,8 @@ class Field(object):
     __metaclass__ = MetaField
 
     interface_for = None        # the column or field interfaced by self, if any
+    deprecated = None           # deprecation message
+    oldname = None              # former name of the field
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -351,6 +353,8 @@ class Field(object):
         for attr in dir(self):
             if attr.startswith('_column_'):
                 args[attr[8:]] = getattr(self, attr)
+        if self.oldname:
+            args['oldname'] = self.oldname
         return getattr(fields, self.type)(**args)
 
     # properties used by to_column() to create a column instance
@@ -361,6 +365,7 @@ class Field(object):
     _column_required = property(attrgetter('required'))
     _column_states = property(attrgetter('states'))
     _column_groups = property(attrgetter('groups'))
+    _column_deprecated = property(attrgetter('deprecated'))
 
     #
     # Conversion of values

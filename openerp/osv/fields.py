@@ -145,6 +145,8 @@ class _column(object):
             ('translate', self.translate),
             ('domain', self._domain),
             ('context', self._context),
+            ('deprecated', self.deprecated),
+            ('oldname', getattr(self, 'oldname', None)),
         ]
         return dict(item for item in items if items[1])
 
