@@ -23,9 +23,11 @@ import openerp.http
 import openerp.tools
 import openerp.tools.func
 import openerp.tools.lru
+from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -1048,7 +1050,7 @@ class AssetsBundle(object):
             self.cache[key] = content
         if self.debug:
             return "/*\n%s\n*/\n" % '\n'.join(
-                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
+                [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
         return self.cache[key]
 
     def css(self):
@@ -1068,49 +1070,54 @@ class AssetsBundle(object):
             self.cache[key] = content
         if self.debug:
             return "/*\n%s\n*/\n" % '\n'.join(
-                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
+                [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
         return self.cache[key]
 
 class WebAsset(object):
     def __init__(self, source=None, url=None):
         self.source = source
         self.url = url
-        self._filename = None
+        self._irattach = None
         self._content = None
-
-    @property
-    def filename(self):
-        if self._filename is None and self.url:
+        self.filename = None
+        self.last_modified = None
+        if source:
+            self.last_modified = datetime.datetime(1970, 1, 1)
+        if url:
             module = filter(None, self.url.split('/'))[0]
             try:
+                # Test url against modules static assets
                 mpath = openerp.http.addons_manifest[module]['addons_path']
+                self.filename = mpath + self.url.replace('/', os.path.sep)
+                self.last_modified = datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
             except Exception:
-                raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
-            self._filename = mpath + self.url.replace('/', os.path.sep)
-        return self._filename
+                try:
+                    # Test url against ir.attachments
+                    domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+                    attach = request.registry['ir.attachment'].search_read(request.cr, SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
+                    self._irattach = attach[0]
+                    server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+                    try:
+                        self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format + '.%f')
+                    except ValueError:
+                        self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format)
+                except Exception:
+                    raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
 
-    @property
+    @openerp.tools.func.lazy_property
     def content(self):
-        if self._content is None:
-            self._content = self.get_content()
-        return self._content
-
-    def get_content(self):
         if self.source:
             return self.source
+        if self._irattach:
+            return self._irattach['datas'].decode('base64')
+        return self.get_content()
 
+    def get_content(self):
         with open(self.filename, 'rb') as fp:
             return fp.read().decode('utf-8')
 
     def minify(self):
         return self.content
-
-    @property
-    def last_modified(self):
-        if self.source:
-            # TODO: return last_update of bundle's ir.ui.view
-            return datetime.datetime(1970, 1, 1)
-        return datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
 
 class JavascriptAsset(WebAsset):
     def minify(self):
@@ -1122,9 +1129,6 @@ class StylesheetAsset(WebAsset):
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
 
     def _get_content(self):
-        if self.source:
-            return self.source
-
         with open(self.filename, 'rb') as fp:
             firstline = fp.readline()
             m = re.match(r'@charset "([^"]+)";', firstline)
