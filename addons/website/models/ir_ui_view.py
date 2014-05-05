@@ -132,8 +132,7 @@ class view(osv.osv):
             if not context:
                 context = {}
 
-            qcontext = dict(editable=False)
-            qcontext.update(
+            qcontext = dict(
                 context.copy(),
                 website=request.website,
                 url_for=website.url_for,
@@ -141,6 +140,7 @@ class view(osv.osv):
                 res_company=request.website.company_id,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
                 translatable=context.get('lang') != request.website.default_lang_code,
+                editable=request.website.is_publisher(),
             )
 
             # add some values
