@@ -1056,6 +1056,7 @@
             this.trigger("saved");
         },
         cancel: function () {
+            this.trigger("cancel");
         },
         close: function () {
             this.$el.modal('hide');
