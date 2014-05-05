@@ -1974,7 +1974,7 @@ class stock_move(osv.osv):
                 'origin': move.origin,
                 'company_id': move.company_id and move.company_id.id or False,
                 'move_type': move.group_id and move.group_id.move_type or 'one',
-                'partner_id': move.group_id and move.group_id.partner_id and move.group_id.partner_id.id or False,
+                'partner_id': move.partner_id.id or False,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }
             pick = pick_obj.create(cr, uid, values, context=context)
@@ -2812,6 +2812,9 @@ class stock_warehouse(osv.osv):
                 output_loc = wh.wh_output_stock_loc_id
                 if wh.delivery_steps == 'ship_only':
                     output_loc = wh.lot_stock_id
+                    # Create extra MTO rule (only for 'ship only' because in the other cases MTO rules already exists)
+                    mto_pull_vals = self._get_mto_pull_rule(cr, uid, wh, [(output_loc, transit_location, wh.out_type_id.id)], context=context)
+                    pull_obj.create(cr, uid, mto_pull_vals, context=context)
                 inter_wh_route_vals = self._get_inter_wh_route(cr, uid, warehouse, wh, context=context)
                 inter_wh_route_id = route_obj.create(cr, uid, vals=inter_wh_route_vals, context=context)
                 values = [(output_loc, transit_location, wh.out_type_id.id, wh), (transit_location, input_loc, warehouse.in_type_id.id, warehouse)]
@@ -2895,7 +2898,7 @@ class stock_warehouse(osv.osv):
                 'route_id': new_route_id,
                 'action': 'move',
                 'picking_type_id': pick_type_id,
-                'procure_method': 'make_to_order',
+                'procure_method': warehouse.lot_stock_id.id != from_loc.id and 'make_to_order' or 'make_to_stock', # first part of the resuply route is MTS
                 'warehouse_id': supplied_warehouse.id,
                 'propagate_warehouse_id': warehouse.id,
             })
@@ -2930,7 +2933,7 @@ class stock_warehouse(osv.osv):
             first_rule = False
         return push_rules_list, pull_rules_list
 
-    def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
+    def _get_mto_route(self, cr, uid, context=None):
         route_obj = self.pool.get('stock.location.route')
         data_obj = self.pool.get('ir.model.data')
         try:
@@ -2940,7 +2943,17 @@ class stock_warehouse(osv.osv):
             mto_route_id = mto_route_id and mto_route_id[0] or False
         if not mto_route_id:
             raise osv.except_osv(_('Error!'), _('Can\'t find any generic Make To Order route.'))
+        return mto_route_id
 
+    def _check_remove_mto_resupply_rules(self, cr, uid, warehouse, context=None):
+        """ Checks that the moves from the different """
+        pull_obj = self.pool.get('procurement.rule')
+        mto_route_id = self._get_mto_route(cr, uid, context=context)
+        rules = pull_obj.search(cr, uid, ['&', ('location_src_id', '=', warehouse.lot_stock_id.id), ('location_id.usage', '=', 'transit')], context=context)
+        pull_obj.unlink(cr, uid, rules, context=context)
+
+    def _get_mto_pull_rule(self, cr, uid, warehouse, values, context=None):
+        mto_route_id = self._get_mto_route(cr, uid, context=context)
         from_loc, dest_loc, pick_type_id = values[0]
         return {
             'name': self._format_rulename(cr, uid, warehouse, from_loc, dest_loc, context=context) + _(' MTO'),
@@ -3258,6 +3271,61 @@ class stock_warehouse(osv.osv):
         #change the mto pull rule name
         pull_obj.write(cr, uid, warehouse.mto_pull_id.id, {'name': warehouse.mto_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
 
+    def _check_delivery_resupply(self, cr, uid, warehouse, new_location, change_to_multiple, context=None):
+        """ Will check if the resupply routes from this warehouse follow the changes of number of delivery steps """
+        #Check routes that are being delivered by this warehouse and change the rule going to transit location
+        route_obj = self.pool.get("stock.location.route")
+        pull_obj = self.pool.get("procurement.rule")
+        routes = route_obj.search(cr, uid, [('supplier_wh_id','=', warehouse.id)], context=context)
+        pulls= pull_obj.search(cr, uid, ['&', ('route_id', 'in', routes), ('location_id.usage', '=', 'transit')], context=context)
+        if pulls:
+            pull_obj.write(cr, uid, pulls, {'location_src_id': new_location, 'procure_method': change_to_multiple and "make_to_order" or "make_to_stock"}, context=context)
+        # Create or clean MTO rules
+        mto_route_id = self._get_mto_route(cr, uid, context=context)
+        if not change_to_multiple:
+            # If single delivery we should create the necessary MTO rules for the resupply 
+            # pulls = pull_obj.search(cr, uid, ['&', ('route_id', '=', mto_route_id), ('location_id.usage', '=', 'transit'), ('location_src_id', '=', warehouse.lot_stock_id.id)], context=context)
+            pull_recs = pull_obj.browse(cr, uid, pulls, context=context)
+            transfer_locs = list(set([x.location_id for x in pull_recs]))
+            vals = [(warehouse.lot_stock_id , x, warehouse.out_type_id.id) for x in transfer_locs]
+            mto_pull_vals = self._get_mto_pull_rule(cr, uid, warehouse, vals, context=context)
+            pull_obj.create(cr, uid, mto_pull_vals, context=context)
+        else:
+            # We need to delete all the MTO pull rules, otherwise they risk to be used in the system
+            pulls = pull_obj.search(cr, uid, ['&', ('route_id', '=', mto_route_id), ('location_id.usage', '=', 'transit'), ('location_src_id', '=', warehouse.lot_stock_id.id)], context=context)
+            if pulls:
+                pull_obj.unlink(cr, uid, pulls, context=context)
+
+    def _check_reception_resupply(self, cr, uid, warehouse, new_location, context=None):
+        """
+            Will check if the resupply routes to this warehouse follow the changes of number of reception steps
+        """
+        #Check routes that are being delivered by this warehouse and change the rule coming from transit location
+        route_obj = self.pool.get("stock.location.route")
+        pull_obj = self.pool.get("procurement.rule")
+        routes = route_obj.search(cr, uid, [('supplied_wh_id','=', warehouse.id)], context=context)
+        pulls= pull_obj.search(cr, uid, ['&', ('route_id', 'in', routes), ('location_src_id.usage', '=', 'transit')])
+        if pulls:
+            pull_obj.write(cr, uid, pulls, {'location_id': new_location}, context=context)
+
+    def _check_resupply(self, cr, uid, warehouse, reception_new, delivery_new, context=None):
+        if reception_new:
+            old_val = warehouse.reception_steps
+            new_val = reception_new
+            change_to_one = (old_val != 'one_step' and new_val == 'one_step')
+            change_to_multiple = (old_val == 'one_step' and new_val != 'one_step')
+            if change_to_one or change_to_multiple:
+                new_location = change_to_one and warehouse.lot_stock_id.id or warehouse.wh_input_stock_loc_id.id
+                self._check_reception_resupply(cr, uid, warehouse, new_location, context=context)
+        if delivery_new:
+            old_val = warehouse.delivery_steps
+            new_val = delivery_new
+            change_to_one = (old_val != 'ship_only' and new_val == 'ship_only')
+            change_to_multiple = (old_val == 'ship_only' and new_val != 'ship_only')
+            if change_to_one or change_to_multiple:
+                new_location = change_to_one and warehouse.lot_stock_id.id or warehouse.wh_output_stock_loc_id.id 
+                self._check_delivery_resupply(cr, uid, warehouse, new_location, change_to_multiple, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
@@ -3265,7 +3333,6 @@ class stock_warehouse(osv.osv):
             ids = [ids]
         seq_obj = self.pool.get('ir.sequence')
         route_obj = self.pool.get('stock.location.route')
-
         context_with_inactive = context.copy()
         context_with_inactive['active_test'] = False
         for warehouse in self.browse(cr, uid, ids, context=context_with_inactive):
@@ -3275,6 +3342,8 @@ class stock_warehouse(osv.osv):
                 self.switch_location(cr, uid, warehouse.id, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context)
                 # switch between route
                 self.change_route(cr, uid, ids, warehouse, vals.get('reception_steps', False), vals.get('delivery_steps', False), context=context_with_inactive)
+                # Check if we need to change something to resupply warehouses and associated MTO rules
+                self._check_resupply(cr, uid, warehouse, vals.get('reception_steps'), vals.get('delivery_steps'), context=context)
                 warehouse.refresh()
             if vals.get('code') or vals.get('name'):
                 name = warehouse.name
