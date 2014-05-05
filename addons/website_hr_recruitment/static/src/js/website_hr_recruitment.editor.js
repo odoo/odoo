@@ -3,7 +3,6 @@
     var website = openerp.website;
     website.add_template_file('/website_hr_recruitment/static/src/xml/website_hr_recruitment.xml');
 
-    website.is_editable = true;
     website.EditorBar.include({
         start: function() {
             website.is_editable_button = website.is_editable_button || !!$("#wrap.js_hr_recruitment").size();
