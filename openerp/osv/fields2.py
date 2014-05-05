@@ -430,7 +430,7 @@ class Field(object):
             self.determine_value(record[0])
         elif record:
             # new record -> compute default value for this field
-            record.add_default_value(self.name)
+            record.add_default_value(self)
         else:
             # null record -> return the null value for this field
             return self.null(record.env)
@@ -528,9 +528,10 @@ class Field(object):
 
     def determine_default(self, record):
         """ determine the default value of field `self` on `record` """
-        record._cache[self] = SpecialValue(self.null(record.env))
         if self.compute:
             self.compute_value(record)
+        else:
+            record._cache[self] = SpecialValue(self.null(record.env))
 
     def determine_inverse(self, records):
         """ Given the value of `self` on `records`, inverse the computation. """

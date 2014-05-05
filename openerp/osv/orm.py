@@ -1404,14 +1404,13 @@ class BaseModel(object):
         return self._convert_to_write(record._cache)
 
     @api.new
-    def add_default_value(self, name):
-        """ Set the default value of field `name` to the new record `self`.
-            The value must be assigned to `self` as ``self.field = value`` or
-            ``self[name] = value``.
+    def add_default_value(self, field):
+        """ Set the default value of `field` to the new record `self`.
+            The value must be assigned to `self`.
         """
         assert not self._id, "Expected new record: %s" % self
         cr, uid, context = self.env.args
-        field = self._fields[name]
+        name = field.name
 
         # 1. look up context
         key = 'default_' + name
