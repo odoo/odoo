@@ -21,7 +21,7 @@
 
 from datetime import timedelta
 
-from openerp import Model, constrains, depends, multi, one, _
+from openerp import Model, constrains, depends, onchange, multi, one, _
 from openerp import Boolean, Integer, Char, Html, Datetime, Selection, Many2one, One2many
 from openerp.exceptions import Warning
 
@@ -238,7 +238,8 @@ class event_event(Model):
         regs = self.sudo().registration_ids.filter(lambda reg: reg.user_id == user)
         regs.button_reg_cancel()
 
-    def onchange_type(self):
+    @onchange('type')
+    def _onchange_type(self):
         if self.type:
             self.reply_to = self.type.default_reply_to
             self.email_registration_id = self.type.default_email_registration
@@ -246,7 +247,8 @@ class event_event(Model):
             self.seats_min = self.type.default_registration_min
             self.seats_max = self.type.default_registration_max
 
-    def onchange_date_begin(self):
+    @onchange('date_begin')
+    def _onchange_date_begin(self):
         if self.date_begin and not self.date_end:
             date_begin = Datetime.from_string(self.date_begin)
             self.date_end = Datetime.to_string(date_begin + timedelta(hours=1))
@@ -344,8 +346,8 @@ class event_registration(Model):
         if template:
             mail_message = template.send_mail(self.id)
 
-    @one
-    def onchange_partner_id(self):
+    @onchange('partner_id')
+    def _onchange_partner(self):
         if self.partner_id:
             contact = self.partner_id.address_get().get('default', False)
             if contact:
