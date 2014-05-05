@@ -266,12 +266,17 @@ form: module.record_id""" % (xml_id,)
 
         if d_search:
             idref = _get_idref(self, cr, self.uid, d_model, context={}, idref={})
-            ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search, idref))
+            try:
+                ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search, idref))
+            except ValueError:
+                _logger.warning('Skipping deletion for failed search `%r`', d_search, exc_info=True)
+                pass
         if d_id:
             try:
                 ids.append(self.id_get(cr, d_id))
-            except:
+            except ValueError:
                 # d_id cannot be found. doesn't matter in this case
+                _logger.warning('Skipping deletion for missing XML ID `%r`', d_id, exc_info=True)
                 pass
         if ids:
             self.pool.get(d_model).unlink(cr, self.uid, ids)
