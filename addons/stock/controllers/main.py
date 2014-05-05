@@ -30,7 +30,7 @@ html_template = """<!DOCTYPE html>
         <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css" /> 
         <link rel="stylesheet" href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css" />
         <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css" />
-        %(js)s
+        <script type="text/javascript" src="/web/js/web.assets_backend"></script>
         <script type="text/javascript">
             $(function() {
                 var s = new openerp.init(%(modules)s);
