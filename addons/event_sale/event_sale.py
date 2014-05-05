@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import depends, one, Integer, One2many
 from openerp.addons.event.event import event_event as Event
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -120,55 +121,29 @@ class sale_order_line(osv.osv):
 class event_event(osv.osv):
     _inherit = 'event.event'
 
-    def _get_seats_max(self, cr, uid, ids, field_name, arg, context=None):
-        result = dict.fromkeys(ids, 0)
-        for rec in self.browse(cr, uid, ids, context=context):
-            result[rec.id] = sum([ticket.seats_max for ticket in rec.event_ticket_ids])
-        return result
+    event_ticket_ids = One2many('event.event.ticket', 'event_id', string='Event Ticket',
+        compute='_default_tickets')
+    seats_max = Integer(string='Maximum Available Seats',
+        help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
+            "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
+        store=True, readonly=True, compute='_compute_seats_max')
 
-    def _get_tickets(self, cr, uid, context={}):
+    @one
+    def _default_tickets(self):
         try:
-            product = self.pool.get('ir.model.data').get_object(cr, uid, 'event_sale', 'product_product_event')
-            return [{
+            product = self.env.ref('event_sale.product_product_event')
+            self.event_ticket_ids = self.env['event.event.ticket'].new({
                 'name': _('Subscription'),
                 'product_id': product.id,
                 'price': 0,
-            }]
+            })
         except ValueError:
-            pass
-        return []
+            self.event_ticket_ids = self.env['event.event.ticket']
 
-    def _get_ticket_events(self, cr, uid, ids, context=None):
-        # `self` is the event.event.ticket model when called by ORM! 
-        return list(set(ticket.event_id.id
-                            for ticket in self.browse(cr, uid, ids, context)))
-
-    # proxy method, can't import parent method directly as unbound_method: it would receive
-    # an invalid `self` <event_registration> when called by ORM
-    def _events_from_registrations(self, cr, uid, ids, context=None):
-        # `self` is the event.registration model when called by ORM
-        return self.pool['event.event']._get_events_from_registrations(cr, uid, ids, context=context)
-
-    _columns = {
-        'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
-        'seats_max': fields.function(_get_seats_max,
-            string='Maximum Avalaible Seats',
-            help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
-            "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
-            type='integer',
-            readonly=True),
-        'seats_available': fields.function(Event._get_seats, oldname='register_avail', string='Available Seats',
-                                           type='integer', multi='seats_reserved',
-                                           store={
-                                              'event.registration': (_events_from_registrations, ['state'], 10),
-                                              'event.event': (lambda self, cr, uid, ids, c = {}: ids,
-                                                              ['seats_max', 'registration_ids'], 20),
-                                              'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
-                                           }),
-    }
-    _defaults = {
-        'event_ticket_ids': _get_tickets
-    }
+    @one
+    @depends('event_ticket_ids.seats_max')
+    def _compute_seats_max(self):
+        self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
 
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'
