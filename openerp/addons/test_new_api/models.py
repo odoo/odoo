@@ -41,7 +41,8 @@ class res_partner(osv.Model):
 
 
 from openerp import Model, Integer, Float, Char, Text, Date, Selection, \
-    Reference, Many2one, One2many, Many2many, constrains, depends, model, one, _
+    Reference, Many2one, One2many, Many2many, constrains, onchange, depends, \
+    model, one, _
 
 
 class Category(Model):
@@ -87,7 +88,8 @@ class Discussion(Model):
     participants = Many2many('res.users')
     messages = One2many('test_new_api.message', 'discussion')
 
-    def onchange_moderator(self):
+    @onchange('moderator')
+    def _onchange_moderator(self):
         self.participants |= self.moderator
 
 

@@ -54,7 +54,7 @@ __all__ = [
     'model', 'multi', 'one',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
-    'constrains', 'depends', 'returns', 'propagate_returns',
+    'constrains', 'depends', 'onchange', 'returns', 'propagate_returns',
 ]
 
 from inspect import getargspec
@@ -113,6 +113,17 @@ def constrains(*args):
     """
     def decorate(method):
         method._constrains = args
+        return method
+
+    return decorate
+
+
+def onchange(*args):
+    """ Return a decorator to decorate an onchange method for given fields.
+        Each argument must be a field name.
+    """
+    def decorate(method):
+        method._onchange = args
         return method
 
     return decorate

@@ -792,11 +792,13 @@ class BaseModel(object):
         cls._init_function_fields(pool, cr)
         cls._init_manual_fields(pool, cr)
 
-        cls._init_constraints()
-
         # process _inherits
         cls._inherits_check()
         cls._inherits_reload()
+
+        # register constraints and onchange methods
+        cls._init_constraints()
+        cls._init_onchange_methods()
 
         # check defaults
         for k in cls._defaults:
@@ -919,7 +921,21 @@ class BaseModel(object):
         for attr in dir(cls):
             value = getattr(cls, attr)
             if callable(value) and hasattr(value, '_constrains'):
+                if not all(name in cls._fields for name in value._constrains):
+                    _logger.warning("@constrains parameters must be field names: %r", value._constrains)
                 cls._constraint_methods.append(value)
+
+    @classmethod
+    def _init_onchange_methods(cls):
+        # collect onchange methods
+        cls._onchange_methods = {}
+        for attr in dir(cls):
+            value = getattr(cls, attr)
+            if callable(value) and hasattr(value, '_onchange'):
+                if not all(name in cls._fields for name in value._onchange):
+                    _logger.warning("@onchange parameters must be field names: %r", value._onchange)
+                for name in value._onchange:
+                    cls._onchange_methods[name] = value
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
@@ -5542,7 +5558,7 @@ class BaseModel(object):
         """
         # test whether self has an onchange method for field, or field is a
         # dependency of any field in other_fields
-        return callable(getattr(self, 'onchange_' + field.name, None)) or \
+        return field.name in self._onchange_methods or \
             any(dep in other_fields for dep in field.dependents)
 
     @api.multi
@@ -5571,9 +5587,9 @@ class BaseModel(object):
             record[field_name] = field_value
 
             # invoke field-specific onchange method if present
-            try:
-                result = getattr(record, 'onchange_' + field_name)()
-            except (AttributeError, TypeError):
+            if field_name in self._onchange_methods:
+                result = self._onchange_methods[field_name](record)
+            else:
                 result = None
 
             # compute function fields on secondary records (one2many, many2many)
