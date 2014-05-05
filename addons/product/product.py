@@ -300,7 +300,6 @@ class produce_price_history(osv.osv):
         'product_template_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'datetime': fields.datetime('Historization Time'),
         'cost': fields.float('Historized Cost'),
-        'reason': fields.char('Reason'),
     }
 
     def _get_default_company(self, cr, uid, context=None):
@@ -400,6 +399,28 @@ class product_template(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+    def get_history_price(self, cr, uid, product_tmpl, company_id, date=None, context=None):
+        if context is None:
+            context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        price_history_obj = self.pool.get('product.price.history')
+        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product_tmpl.id), ('datetime', '<=', date)], limit=1)
+        if history_ids:
+            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
+        return 0.0
+
+    def _set_standard_price(self, cr, uid, product_tmpl_id, value, context=None):
+        ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
+        price_history_obj = self.pool['product.price.history']
+        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        company_id = context.get('force_company', user_company)
+        price_history_obj.create(cr, uid, {
+            'product_template_id': product_tmpl_id,
+            'cost': value,
+            'company_id': company_id,
+        }, context=context)
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
@@ -487,16 +508,13 @@ class product_template(osv.osv):
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
-        price_history_obj = self.pool['product.price.history']
-        price_history_obj.create(cr, uid, {
-            'product_template_id': product_template_id,
-            'cost': vals.get('standard_price', 0.0),
-            'reason': _('Product template created and standard price set'),
-        }, context=context)
+        self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
+        if isinstance(id, (int, long)):
+            ids = [ids]
         if 'uom_po_id' in vals:
             new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
             for product in self.browse(cr, uid, ids, context=context):
@@ -504,13 +522,8 @@ class product_template(osv.osv):
                 if old_uom.category_id.id != new_uom.category_id.id:
                     raise osv.except_osv(_('Unit of Measure categories Mismatch!'), _("New Unit of Measure '%s' must belong to same Unit of Measure category '%s' as of old Unit of Measure '%s'. If you need to change the unit of measure, you may deactivate this product from the 'Procurements' tab and create a new one.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
         if 'standard_price' in vals:
-            price_history_obj = self.pool['product.price.history']
             for prod_template_id in ids:
-                price_history_obj.create(cr, uid, {
-                    'product_template_id': prod_template_id,
-                    'cost': vals['standard_price'],
-                    'reason': _('standard price is changed.'),
-                }, context=context)
+                self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -574,18 +587,6 @@ class product_product(osv.osv):
             return _('Products: ') + self.pool.get('product.category').browse(cr, uid, context['categ_id'], context=context).name
         return res
 
-    def get_history_price(self, cr, uid, product_id, company_id, date=None, context=None):
-        if context is None:
-            context = {}
-        if date is None:
-            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        product = self.browse(cr, uid, product_id, context=context)
-        price_history_obj = self.pool.get('product.price.history')
-        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product.product_tmpl_id.id), ('datetime', '<=', date)], limit=1)
-        if history_ids:
-            return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
-        raise osv.except_osv(_('Error!'), _("No standard price associated for product %s for the given date" % (product.name)))
-
     def _product_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
         res = {}
@@ -641,7 +642,6 @@ class product_product(osv.osv):
         product = self.browse(cr, uid, product_id, context=context)
         list_price = (field_value - product.price_extra) / (product.price_margin or 1.0)
         return self.write(cr, uid, [product_id], {'list_price': list_price}, context=context)
-
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:

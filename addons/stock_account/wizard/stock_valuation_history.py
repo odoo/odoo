@@ -52,14 +52,14 @@ class stock_history(osv.osv):
                 if '__domain' in line:
                     lines = self.search(cr, uid, line['__domain'], context=context)
                     inv_value = 0.0
-                    product_obj = self.pool.get("product.product")
+                    product_tmpl_obj = self.pool.get("product.template")
                     lines_rec = self.browse(cr, uid, lines, context=context)
                     for line_rec in lines_rec:
                         if not line_rec.product_id.id in prod_dict:
                             if line_rec.product_id.cost_method == 'real':
                                 prod_dict[line_rec.product_id.id] = line_rec.price_unit_on_quant
                             else:
-                                prod_dict[line_rec.product_id.id] = product_obj.get_history_price(cr, uid, line_rec.product_id.id, line_rec.company_id.id, date=date, context=context)
+                                prod_dict[line_rec.product_id.id] = product_tmpl_obj.get_history_price(cr, uid, line_rec.product_id.product_tmpl_id.id, line_rec.company_id.id, date=date, context=context)
                         inv_value += prod_dict[line_rec.product_id.id] * line_rec.quantity
                     line['inventory_value'] = inv_value
         return res
@@ -68,13 +68,13 @@ class stock_history(osv.osv):
         if context is None:
             context = {}
         date = context.get('history_date')
-        product_obj = self.pool.get("product.product")
+        product_tmpl_obj = self.pool.get("product.template")
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.product_id.cost_method == 'real':
                 res[line.id] = line.quantity * line.price_unit_on_quant
             else:
-                res[line.id] = line.quantity * product_obj.get_history_price(cr, uid, line.product_id.id, line.company_id.id, date=date, context=context)
+                res[line.id] = line.quantity * product_tmpl_obj.get_history_price(cr, uid, line.product_id.product_tmpl_id.id, line.company_id.id, date=date, context=context)
         return res
 
     _columns = {
