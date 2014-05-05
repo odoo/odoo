@@ -1021,7 +1021,7 @@ class AssetsBundle(object):
         if self.stylesheets:
             response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
         if self.javascripts:
-            response.append('<script type="text/javascript" src="/web/js/%s" defer="defer"></script>' % self.xmlid)
+            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
         response.extend(self.remains)
 
         return sep.join(response)
