@@ -211,7 +211,13 @@ class hr_employee(osv.osv):
     }
 
     _order='name_related'
-
+    
+    def copy_data(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({'child_ids': False})
+        return super(hr_employee, self).copy_data(cr, uid, ids, default, context=context)
+        
     def create(self, cr, uid, data, context=None):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
         try:
@@ -291,17 +297,22 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
-    def copy(self, cr, uid, ids, default=None, context=None):
+    def copy_data(self, cr, uid, ids, default=None, context=None):
         if default is None:
             default = {}
-        default = default.copy()
         default['member_ids'] = []
-        return super(hr_department, self).copy(cr, uid, ids, default, context=context)
+        return super(hr_department, self).copy_data(cr, uid, ids, default, context=context)
 
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
 
+    def copy_data(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({'employee_ids': False})
+        return super(res_users, self).copy_data(cr, uid, ids, default, context=context)
+    
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
 
