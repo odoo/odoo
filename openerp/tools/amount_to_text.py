@@ -24,7 +24,7 @@
 #-------------------------------------------------------------
 
 
-to_19_fr = ( 'zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
+to_19_fr = ( u'zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
           'sept', 'huit', 'neuf', 'dix',   'onze', 'douze', 'treize',
           'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf' )
 tens_fr  = ( 'vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')

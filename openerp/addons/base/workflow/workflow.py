@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
+#    Copyright (C) 2004-2014 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -137,10 +137,12 @@ class wkf_instance(osv.osv):
     _rec_name = 'res_type'
     _log_access = False
     _columns = {
+        'uid': fields.integer('User'),      # FIXME no constraint??
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'res_id': fields.integer('Resource ID'),
         'res_type': fields.char('Resource Object', size=64),
         'state': fields.char('Status', size=32),
+        'transition_ids': fields.many2many('workflow.transition', 'wkf_witm_trans', 'inst_id', 'trans_id'),
     }
     def _auto_init(self, cr, context=None):
         super(wkf_instance, self)._auto_init(cr, context)

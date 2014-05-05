@@ -28,7 +28,7 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools
 import openerp.exceptions
-from openerp.osv import fields,osv
+from openerp.osv import fields,osv, expression
 from openerp.osv.orm import browse_record
 from openerp.tools.translate import _
 
@@ -56,13 +56,33 @@ class res_groups(osv.osv):
     def _search_group(self, cr, uid, obj, name, args, context=None):
         operand = args[0][2]
         operator = args[0][1]
-        values = operand.split('/')
-        group_name = values[0]
-        where = [('name', operator, group_name)]
-        if len(values) > 1:
-            application_name = values[0]
-            group_name = values[1]
-            where = ['|',('category_id.name', operator, application_name)] + where
+        lst = True
+        if isinstance(operand, bool):
+            domains = [[('name', operator, operand)], [('category_id.name', operator, operand)]]
+            if operator in expression.NEGATIVE_TERM_OPERATORS == (not operand):
+                return expression.AND(domains)
+            else:
+                return expression.OR(domains)
+        if isinstance(operand, basestring):
+            lst = False
+            operand = [operand]
+        where = []
+        for group in operand:
+            values = filter(bool, group.split('/'))
+            group_name = values.pop().strip()
+            category_name = values and '/'.join(values).strip() or group_name
+            group_domain = [('name', operator, lst and [group_name] or group_name)]
+            category_domain = [('category_id.name', operator, lst and [category_name] or category_name)]
+            if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
+                category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
+            if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
+                sub_where = expression.AND([group_domain, category_domain])
+            else:
+                sub_where = expression.OR([group_domain, category_domain])
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                where = expression.AND([where, sub_where])
+            else:
+                where = expression.OR([where, sub_where])
         return where
 
     _columns = {
@@ -154,8 +174,7 @@ class res_users(osv.osv):
                  "a change of password, the user has to login again."),
         'signature': fields.text('Signature'),
         'active': fields.boolean('Active'),
-        'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
-        'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
+        'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at log on for this user, in addition to the standard menu."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         # Special behavior for this field: res.company.search() will only return the companies
         # available to the current user (should be the user's companies?), when the user_preference
@@ -217,16 +236,6 @@ class res_users(osv.osv):
             return [c]
         return False
 
-    def _get_menu(self,cr, uid, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        try:
-            model, res_id = dataobj.get_object_reference(cr, uid, 'base', 'action_menu_admin')
-            if model != 'ir.actions.act_window':
-                return False
-            return res_id
-        except ValueError:
-            return False
-
     def _get_group(self,cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
         result = []
@@ -244,7 +253,6 @@ class res_users(osv.osv):
         'password': '',
         'active': True,
         'customer': False,
-        'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,

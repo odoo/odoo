@@ -93,15 +93,11 @@ The kernel of OpenERP, needed for all installation.
         'res/res_partner_image_demo.xml',
     ],
     'test': [
-        'test/base_test.yml',
-        'test/test_osv_expression.yml',
-        'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
+        'tests/base_test.yml',
+        'tests/test_osv_expression.yml',
+        'tests/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
     ],
     'installable': True,
     'auto_install': True,
-    'css': ['static/src/css/modules.css'],
-    'js': [
-        'static/src/js/apps.js',
-    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

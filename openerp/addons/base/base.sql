@@ -2,30 +2,20 @@
 -- Pure SQL
 -------------------------------------------------------------------------
 
--------------------------------------------------------------------------
--- IR dictionary
--------------------------------------------------------------------------
-
-create table ir_values
-(
-    id serial,
-    name varchar(128) not null,
-    key varchar(128) not null,
-    key2 varchar(256) not null,
-    model varchar(128) not null,
-    value text,
-    meta text default NULL,
-    res_id integer default null,
-    primary key (id)
+CREATE TABLE ir_actions (
+  id serial,
+  primary key(id)
 );
+CREATE TABLE ir_act_window (primary key(id)) INHERITS (ir_actions);
+CREATE TABLE ir_act_report_xml (primary key(id)) INHERITS (ir_actions);
+CREATE TABLE ir_act_url (primary key(id)) INHERITS (ir_actions);
+CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
+CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
 
--------------------------------------------------------------------------
--- Modules Description
--------------------------------------------------------------------------
 
 CREATE TABLE ir_model (
   id serial,
-  model varchar DEFAULT ''::varchar NOT NULL,
+  model varchar NOT NULL,
   name varchar,
   state varchar,
   info text,
@@ -34,102 +24,26 @@ CREATE TABLE ir_model (
 
 CREATE TABLE ir_model_fields (
   id serial,
-  model varchar DEFAULT ''::varchar NOT NULL,
-  model_id int references ir_model on delete cascade,
-  name varchar DEFAULT ''::varchar NOT NULL,
+  model varchar NOT NULL,
+  model_id integer references ir_model on delete cascade,
+  name varchar NOT NULL,
   relation varchar,
   select_level varchar,
   field_description varchar,
   ttype varchar,
   state varchar default 'base',
-  relate boolean default False,
   relation_field varchar,
   translate boolean default False,
+  serialization_field_id integer references ir_model_fields on delete cascade, 
   primary key(id)
 );
 
-ALTER TABLE ir_model_fields ADD column serialization_field_id int references ir_model_fields on delete cascade;
-
-
--------------------------------------------------------------------------
--- Actions
--------------------------------------------------------------------------
-
-CREATE TABLE ir_actions (
-    id serial NOT NULL,
-    name varchar(64) DEFAULT ''::varchar NOT NULL,
-    "type" varchar(32) NOT NULL,
-    usage varchar(32) DEFAULT null,
+CREATE TABLE res_lang (
+    id serial,
+    name VARCHAR(64) NOT NULL UNIQUE,
+    code VARCHAR(16) NOT NULL UNIQUE,
     primary key(id)
 );
-
-CREATE TABLE ir_act_window (
-    view_id integer,
-    res_model varchar(64),
-    view_type varchar(16),
-    "domain" varchar(250),
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_act_report_xml (
-    model varchar(64) NOT NULL,
-    report_name varchar(64) NOT NULL,
-    report_xsl varchar(256),
-    report_xml varchar(256),
-    auto boolean default true,
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-create table ir_act_report_custom (
-    report_id int,
---  report_id int references ir_report_custom
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_act_wizard (
-    wiz_name varchar(64) NOT NULL,
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_act_url (
-    url text NOT NULL,
-    target varchar(64) NOT NULL,
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_act_server (
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_act_client (
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_ui_menu (
-    id serial NOT NULL,
-    parent_id int references ir_ui_menu on delete set null,
-    name varchar(64) DEFAULT ''::varchar NOT NULL,
-    icon varchar(64) DEFAULT ''::varchar,
-    primary key (id)
-);
-
-select setval('ir_ui_menu_id_seq', 2);
-
----------------------------------
--- Res users
----------------------------------
-
--- level:
---   0  RESTRICT TO USER
---   1  RESTRICT TO GROUP
---   2  PUBLIC
 
 CREATE TABLE res_users (
     id serial NOT NULL,
@@ -138,146 +52,44 @@ CREATE TABLE res_users (
     password varchar(64) default null,
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
-    company_id int,
-    partner_id int,
-    primary key(id)
-);
-alter table res_users add constraint res_users_login_uniq unique (login);
-
-CREATE TABLE res_groups (
-    id serial NOT NULL,
-    name varchar(64) NOT NULL,
+    company_id integer, -- references res_company,
+    partner_id integer, -- references res_partner,
     primary key(id)
 );
 
-CREATE TABLE res_groups_users_rel (
-    uid integer NOT NULL references res_users on delete cascade,
-    gid integer NOT NULL references res_groups on delete cascade,
-    UNIQUE("uid","gid")
-);
-
-create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);
-create index res_groups_users_rel_gid_idx on res_groups_users_rel (gid);
-
-
----------------------------------
--- Workflows
----------------------------------
-
-create table wkf
-(
+create table wkf (
     id serial,
     name varchar(64),
     osv varchar(64),
-    on_create bool default False,
+    on_create bool default false,
     primary key(id)
 );
-
-create table wkf_activity
-(
-    id serial,
-    wkf_id int references wkf on delete cascade,
-    subflow_id int references wkf on delete set null,
-    split_mode varchar(3) default 'XOR',
-    join_mode varchar(3) default 'XOR',
-    kind varchar(16) not null default 'dummy',
-    name varchar(64),
-    signal_send varchar(32) default null,
-    flow_start boolean default False,
-    flow_stop boolean default False,
-    action text default null,
-    primary key(id)
-);
-
-create table wkf_transition
-(
-    id serial,
-    act_from int references wkf_activity on delete cascade,
-    act_to int references wkf_activity on delete cascade,
-    condition varchar(128) default NULL,
-
-    trigger_type varchar(128) default NULL,
-    trigger_expr_id varchar(128) default NULL,
-
-    signal varchar(64) default null,
-    group_id int references res_groups on delete set null,
-
-    primary key(id)
-);
-
-create table wkf_instance
-(
-    id serial,
-    wkf_id int references wkf on delete restrict,
-    uid int default null,
-    res_id int not null,
-    res_type varchar(64) not null,
-    state varchar(32) not null default 'active',
-    primary key(id)
-);
-
-create table wkf_workitem
-(
-    id serial,
-    act_id int not null references wkf_activity on delete cascade,
-    inst_id int not null references wkf_instance on delete cascade,
-    subflow_id int references wkf_instance on delete cascade,
-    state varchar(64) default 'blocked',
-    primary key(id)
-);
-
-create table wkf_witm_trans
-(
-    trans_id int not null references wkf_transition on delete cascade,
-    inst_id int not null references wkf_instance on delete cascade
-);
-
-create index wkf_witm_trans_inst_idx on wkf_witm_trans (inst_id);
-
-create table wkf_logs
-(
-    id serial,
-    res_type varchar(128) not null,
-    res_id int not null,
-    uid int references res_users on delete set null,
-    act_id int references wkf_activity on delete set null,
-    time time not null,
-    info varchar(128) default NULL,
-    primary key(id)
-);
-
----------------------------------
--- Modules
----------------------------------
 
 CREATE TABLE ir_module_category (
     id serial NOT NULL,
-    create_uid integer references res_users on delete set null,
+    create_uid integer, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
-    write_uid integer references res_users on delete set null,
+    write_uid integer, -- references res_users on delete set null,
     parent_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     name character varying(128) NOT NULL,
     primary key(id)
 );
 
-
 CREATE TABLE ir_module_module (
     id serial NOT NULL,
-    create_uid integer references res_users on delete set null,
+    create_uid integer, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
-    write_uid integer references res_users on delete set null,
+    write_uid integer, -- references res_users on delete set null,
     website character varying(256),
     summary character varying(256),
     name character varying(128) NOT NULL,
     author character varying(128),
-    url character varying(128),
     icon character varying(64),
     state character varying(16),
     latest_version character varying(64),
     shortdesc character varying(256),
-    complexity character varying(32),
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     description text,
     application boolean default False,
@@ -292,43 +104,13 @@ ALTER TABLE ir_module_module add constraint name_uniq unique (name);
 
 CREATE TABLE ir_module_module_dependency (
     id serial NOT NULL,
-    create_uid integer references res_users on delete set null,
+    create_uid integer, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
-    write_uid integer references res_users on delete set null,
+    write_uid integer, -- references res_users on delete set null,
     name character varying(128),
-    version_pattern character varying(128) default NULL,
     module_id integer REFERENCES ir_module_module ON DELETE cascade,
     primary key(id)
-);
-
-CREATE TABLE res_partner (
-    id serial NOT NULL,
-    name character varying(128),
-    lang varchar(64),
-    company_id int,
-    primary key(id)
-);
-
-
-CREATE TABLE res_currency (
-    id serial PRIMARY KEY,
-    name VARCHAR(32) NOT NULL
-);
-
-CREATE TABLE res_company (
-    id serial PRIMARY KEY,
-    name character varying(128) not null,
-    parent_id integer references res_company on delete set null,
-    partner_id integer not null references res_partner,
-    currency_id integer not null references res_currency
-    
-);
-
-CREATE TABLE res_lang (
-    id serial PRIMARY KEY,
-    name VARCHAR(64) NOT NULL UNIQUE,
-    code VARCHAR(16) NOT NULL UNIQUE
 );
 
 CREATE TABLE ir_model_data (
@@ -343,7 +125,8 @@ CREATE TABLE ir_model_data (
     date_update timestamp without time zone,
     module varchar NOT NULL,
     model varchar NOT NULL,
-    res_id integer, primary key(id)
+    res_id integer,
+    primary key(id)
 );
 
 -- Records foreign keys and constraints installed by a module (so they can be
@@ -352,49 +135,64 @@ CREATE TABLE ir_model_data (
 --   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
 CREATE TABLE ir_model_constraint (
     id serial NOT NULL,
-    create_uid integer,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
     type character varying(1) NOT NULL,
-    name varchar NOT NULL
+    name varchar NOT NULL,
+    primary key(id)
 );
 
 -- Records relation tables (i.e. implementing many2many) installed by a module
 -- (so they can be removed when the module is uninstalled).
 CREATE TABLE ir_model_relation (
     id serial NOT NULL,
-    create_uid integer,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
     model integer NOT NULL references ir_model on delete restrict,
-    name varchar NOT NULL
+    name varchar NOT NULL,
+    primary key(id)
 );  
 
----------------------------------
--- Users
----------------------------------
-insert into res_users (id,login,password,active,company_id,partner_id) VALUES (1,'admin','admin',true,1,1);
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('user_root','base','res.users',true,1);
+CREATE TABLE res_currency (
+    id serial,
+    name varchar NOT NULL,
+    primary key(id)
+);
 
-insert into res_partner (id, name, lang, company_id) VALUES (1, 'Your Company', 'en_US', 1);
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_partner','base','res.partner',true,1);
+CREATE TABLE res_company (
+    id serial,
+    name varchar NOT NULL,
+    partner_id integer,
+    currency_id integer,
+    primary key(id)
+);
 
+CREATE TABLE res_partner (
+    id serial,
+    name varchar,
+    company_id integer,
+    primary key(id)
+);
+
+
+---------------------------------
+-- Default data
+---------------------------------
 insert into res_currency (id, name) VALUES (1, 'EUR');
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('EUR','base','res.currency',true,1);
+insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('EUR', 'base', 'res.currency', true, 1);
+select setval('res_currency_id_seq', 2);
 
 insert into res_company (id, name, partner_id, currency_id) VALUES (1, 'Your Company', 1, 1);
-insert into ir_model_data (name,module,model,noupdate,res_id) VALUES ('main_company','base','res.company',true,1);
-
+insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_company', 'base', 'res.company', true, 1);
 select setval('res_company_id_seq', 2);
-select setval('res_users_id_seq', 2);
+
+insert into res_partner (id, name, company_id) VALUES (1, 'Your Company', 1);
+insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('main_partner', 'base', 'res.partner', true, 1);
 select setval('res_partner_id_seq', 2);
-select setval('res_currency_id_seq', 2);
+
+insert into res_users (id, login, password, active, partner_id, company_id) VALUES (1, 'admin', 'admin', true, 1, 1);
+insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
+select setval('res_users_id_seq', 2);

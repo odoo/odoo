@@ -559,7 +559,7 @@ class HttpRequest(WebRequest):
                 response.set_cookie(k, v)
         return response
 
-    def render(self, template, qcontext=None, **kw):
+    def render(self, template, qcontext=None, lazy=True, **kw):
         """ Lazy render of QWeb template.
 
         The actual rendering of the given template will occur at then end of
@@ -568,8 +568,12 @@ class HttpRequest(WebRequest):
 
         :param basestring template: template to render
         :param dict qcontext: Rendering context to use
+        :param dict lazy: Lazy rendering is processed later in wsgi response layer (default True)
         """
-        return Response(template=template, qcontext=qcontext, **kw)
+        response = Response(template=template, qcontext=qcontext, **kw)
+        if not lazy:
+            return response.render()
+        return response
 
     def not_found(self, description=None):
         """ Helper for 404 response, return its result from the method
@@ -601,6 +605,16 @@ class ControllerType(type):
         # flag old-style methods with req as first argument
         for k, v in attrs.items():
             if inspect.isfunction(v) and hasattr(v, 'original_func'):
+                # Set routing type on original functions
+                routing_type = v.routing.get('type')
+                parent = [claz for claz in bases if isinstance(claz, ControllerType) and hasattr(claz, k)]
+                parent_routing_type = getattr(parent[0], k).original_func.routing_type if parent else routing_type or 'http'
+                if routing_type is not None and routing_type is not parent_routing_type:
+                    routing_type = parent_routing_type
+                    _logger.warn("Subclass re-defines <function %s.%s.%s> with different type than original."
+                                    " Will use original type: %r" % (cls.__module__, cls.__name__, k, parent_routing_type))
+                v.original_func.routing_type = routing_type or parent_routing_type
+
                 spec = inspect.getargspec(v.original_func)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
                 if first_arg in ["req", "request"]:
@@ -660,15 +674,6 @@ def routing_map(modules, nodb_only, converters=None):
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
-                            fn_type = fn.routing.get('type')
-                            if not routing_type:
-                                routing_type = fn_type
-                            else:
-                                if fn_type and routing_type != fn_type:
-                                    _logger.warn("Subclass re-defines <function %s.%s> with different type than original."
-                                                    " Will use original type: %r", fn.__module__, fn.__name__, routing_type)
-                                fn.routing['type'] = routing_type
-                            fn.original_func.routing_type = routing_type
                             methods_done.append(fn)
                             routing.update(fn.routing)
                     if not nodb_only or nodb_only == (routing['auth'] == "none"):
@@ -1224,10 +1229,11 @@ class Root(object):
                     try:
                         with openerp.tools.mute_logger('openerp.sql_db'):
                             ir_http = request.registry['ir.http']
-                    except psycopg2.OperationalError:
-                        # psycopg2 error. At this point, that means the
-                        # database probably does not exists anymore. Log the
-                        # user out and fall back to nodb
+                    except (AttributeError, psycopg2.OperationalError):
+                        # psycopg2 error or attribute error while constructing
+                        # the registry. That means the database probably does
+                        # not exists anymore or the code doesnt match the db.
+                        # Log the user out and fall back to nodb
                         request.session.logout()
                         result = _dispatch_nodb()
                     else:
@@ -1294,6 +1300,11 @@ class CommonController(Controller):
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return dispatch_rpc(service, method, args)
+
+    @route('/gen_session_id', type='json', auth="none")
+    def gen_session_id(self):
+        nsession = root.session_store.new()
+        return nsession.sid
 
 # register main wsgi handler
 root = Root()
