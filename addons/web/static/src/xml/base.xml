@@ -40,7 +40,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     <h3 class="modal-title"><t t-raw="title"/></h3>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="overflow-y: auto;">
                 </div>
             </div>
         </div>
@@ -800,12 +800,11 @@
 </t>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled btn' : 'btn'">
-    <t t-esc="widget.string"/>
-</button>
+        t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
+        ><t t-esc="widget.string"/></button>
 <button t-name="ListView.row.button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
-        t-att-class="disabled ? 'oe_list_button_disabled btn_img' : 'btn_img'"
+        t-att-class="disabled ? 'oe_list_button_disabled' : ''"
         ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
         t-att-alt="widget.string"/></button>
 <t t-extend="ListView.row">
@@ -1409,7 +1408,7 @@
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-accesskey="widget.node.attrs.accesskey">
         <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <div t-if="widget.is_stat_button and widget.icon" class="stat_button_icon"><t t-raw="widget.icon"/></div>
+        <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
         <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
         <div t-if="widget.string and widget.is_stat_button"><t t-esc="widget.string"/></div>
     </button>
@@ -1948,13 +1947,14 @@
 </t>
 <t t-name="M2ODialog">
     <div>
+        <p class="oe_grey"/>
         Name: <input class="oe_form_m2o_input_name" type="text"/>
     </div>
 </t>
 <t t-name="M2ODialog.buttons">
-    <button class="oe_form_m2o_qc_button oe_button oe_highlight">Quick Add</button>
-    <button class="oe_form_m2o_sc_button oe_button">Add All Info...</button>
-    <button class="oe_form_m2o_cancel_button oe_button">Cancel</button>
+    <button class="oe_form_m2o_qc_button oe_button oe_highlight">Create</button>
+    <button class="oe_form_m2o_sc_button oe_button">Create and edit</button> or
+    <button class="oe_form_m2o_cancel_button oe_button oe_link"><span>Cancel</span></button>
 </t>
 <t t-name="FieldMonetary" t-extend="FieldChar">
     <t t-jquery="t:first" t-operation="before">
@@ -1985,6 +1985,5 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong>
-    <t t-esc="text"/></t>
+    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
 </templates>

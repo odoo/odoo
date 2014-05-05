@@ -1940,7 +1940,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
         this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
-        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + " fa-fw\"></span>";
+        this.icon_class = node.attrs.icon && "stat_button_icon fa " + node.attrs.icon + " fa-fw";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -3356,13 +3356,16 @@ instance.web.form.CompletionFieldMixin = {
 instance.web.form.M2ODialog = instance.web.Dialog.extend({
     template: "M2ODialog",
     init: function(parent) {
+        this.name = parent.string;
         this._super(parent, {
-            title: _.str.sprintf(_t("Add %s"), parent.string),
+            title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
         });
     },
     start: function() {
         var self = this;
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
+        this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
@@ -3486,7 +3489,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     self.display_value_backup = {};
                     self.render_value();
                     self.focus();
-                    self.view.do_onchange(self);
+                    self.trigger('changed_value');
                 });
             });
         });
@@ -3621,6 +3624,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 250
         });
+        // set position for list of suggestions box
+        this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
