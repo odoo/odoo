@@ -644,6 +644,7 @@ class sale_order(osv.osv):
                 if line[2].get('product_id'):
                     taxes_id = product_obj.browse(cr, uid, line[2]['product_id'], context=context).taxes_id
                 elif line[1]:
+                    # don't change taxes if they are no product defined
                     taxes_id = line_obj.browse(cr, uid, line[1], context=context).product_id.taxes_id
                 if taxes_id:
                     line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, taxes_id)]]
