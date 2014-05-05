@@ -32,9 +32,10 @@ Allow users to login through OpenID.
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web'],
-    'data': ['res_users.xml'],
-    'js': ['static/src/js/auth_openid.js'],
-    'css': ['static/src/css/openid.css'],
+    'data': [
+        'res_users.xml',
+        'views/auth_openid.xml',
+    ],
     'qweb': ['static/src/xml/auth_openid.xml'],
     'external_dependencies': {
         'python' : ['openid'],

@@ -25,8 +25,6 @@ OpenERP Website CMS
     'demo': [
         'data/website_demo.xml',
     ],
-    'js': ['static/src/js/website.backend.js'],
     'qweb': ['static/src/xml/website.backend.xml'],
-    'css': ['static/src/css/website.backend.css'],
     'application': True,
 }

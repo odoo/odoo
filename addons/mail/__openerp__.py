@@ -63,6 +63,7 @@ Main Features
         'security/ir.model.access.csv',
         'mail_alias_view.xml',
         'res_users_view.xml',
+        'views/mail.xml',
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -77,18 +78,6 @@ Main Features
         'images/email.jpeg',
         'images/join_a_group.jpeg',
         'images/share_a_message.jpeg',
-    ],
-    'css': [
-        'static/src/css/mail.css',
-        'static/src/css/mail_group.css',
-        'static/src/css/announcement.css',
-    ],
-    'js': [
-        'static/src/js/mail.js',
-        'static/src/js/mail_followers.js',
-        'static/src/js/many2many_tags_email.js',
-        'static/src/js/announcement.js',
-        'static/src/js/suggestions.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',

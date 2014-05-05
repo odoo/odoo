@@ -189,7 +189,7 @@ class account_voucher(osv.osv):
         if not ids:
             return []
         if context is None: context = {}
-        return [(r['id'], (str("%.2f" % r['amount']) or '')) for r in self.read(cr, uid, ids, ['amount'], context, load='_classic_write')]
+        return [(r['id'], (r['number'] or _('Voucher'))) for r in self.read(cr, uid, ids, ['number'], context, load='_classic_write')]
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
@@ -783,6 +783,7 @@ class account_voucher(osv.osv):
                 total_credit += line.credit and line.amount_currency or 0.0
                 total_debit += line.debit and line.amount_currency or 0.0
 
+        remaining_amount = price
         #voucher line creation
         for line in account_move_lines:
 
@@ -803,13 +804,13 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': (line.id in move_lines_found) and min(abs(price), amount_unreconciled) or 0.0,
+                'amount': (line.id in move_lines_found) and min(abs(remaining_amount), amount_unreconciled) or 0.0,
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
                 'currency_id': line_currency_id,
             }
-            price -= rs['amount']
+            remaining_amount -= rs['amount']
             #in case a corresponding move_line hasn't been found, we now try to assign the voucher amount
             #on existing invoices: we split voucher amount by most old first, but only for lines in the same currency
             if not move_lines_found:
@@ -937,19 +938,17 @@ class account_voucher(osv.osv):
     def cancel_voucher(self, cr, uid, ids, context=None):
         reconcile_pool = self.pool.get('account.move.reconcile')
         move_pool = self.pool.get('account.move')
-
+        move_line_pool = self.pool.get('account.move.line')
         for voucher in self.browse(cr, uid, ids, context=context):
             # refresh to make sure you don't unlink an already removed move
             voucher.refresh()
-            recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
-                    recs += [line.reconcile_id.id]
-                if line.reconcile_partial_id:
-                    recs += [line.reconcile_partial_id.id]
-
-            reconcile_pool.unlink(cr, uid, recs)
-
+                    move_lines = [move_line.id for move_line in line.reconcile_id.line_id]
+                    move_lines.remove(line.id)
+                    reconcile_pool.unlink(cr, uid, [line.reconcile_id.id])
+                    if len(move_lines) >= 2:
+                        move_line_pool.reconcile_partial(cr, uid, move_lines, 'auto',context=context)
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
                 move_pool.unlink(cr, uid, [voucher.move_id.id])

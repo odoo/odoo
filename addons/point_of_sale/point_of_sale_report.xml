@@ -1,86 +1,71 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <openerp>
     <data>
+        <report id="report_user_label"
+            model="res.users" 
+            name="point_of_sale.user.label"
+            string="User Labels"
+            xml="point_of_sale/report/user_label.xml"
+            xsl="point_of_sale/report/user_label.xsl"
+        />
 
         <report
             id="pos_invoice_report"
             string="Invoice"
             model="pos.order"
-            name="pos.invoice"
+            report_type="qweb-pdf"
+            name="point_of_sale.report_invoice"
+            file="point_of_sale.report_invoice"
+        />
+
+        <report
+            id="action_report_pos_receipt"
+            string="Receipt"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="point_of_sale.report_receipt"
+            file="point_of_sale.report_receipt"
+        />
+        <record id="action_report_pos_receipt" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="point_of_sale.paperformat_posreceipt"/>
+        </record>
+
+        <report
+            id="pos_lines_report"
+            string="Sales Lines"
+            model="pos.order"
+            report_type="qweb-pdf"
+            name="point_of_sale.report_saleslines"
+            file="point_of_sale.report_saleslines"
             auto="False"
-            multi="True"
-            rml="account/report/account_print_invoice.rml"
-             />
+         />
 
         <report
             id="pos_lines_detail"
             string="Details of Sales"
             model="pos.order"
-            name="pos.details"
-            auto="False"
-            multi="True"
+            report_type="qweb-pdf"
+            name="point_of_sale.report_detailsofsales"
+            file="point_of_sale.report_detailsofsales"
             menu="False"
-            rml="point_of_sale/report/pos_details.rml"
-             />
+         />
 
         <report
-            id="pos_details_summary"
-            string="Sales (summary)"
+            id="pos_payment_report"
+            string="Today's Payment"
             model="pos.order"
-            name="pos.details_summary"
-            auto="False"
-            multi="True"
-            rml="point_of_sale/report/pos_details_summary.rml"
-             />
+            report_type="qweb-pdf"
+            name="point_of_sale.report_payment"
+            file="point_of_sale.report_payment"
+         />
 
         <report
-            id="pos_lines_report"
-            string="Pos Lines"
-            model="pos.order"
-            name="pos.lines"
-            auto="False"
-            multi="True"
-            rml="point_of_sale/report/pos_lines.rml"
-             />
-
-        <report
-            id="pos_sales_user"
-            string="Sales Report"
-            model="pos.order"
-            name="pos.sales.user"
-            auto="False"
-            multi="True"
-            menu="False"
-            rml="point_of_sale/report/pos_sales_user.rml"
-             />
-
-        <report
-            id="pos_sales_user_today"
-            string="Today's Sales"
-            model="pos.order"
-            name="pos.sales.user.today"
-            auto="False"
-            multi="True"
-            menu="False"
-            rml="point_of_sale/report/pos_sales_user_today.rml"
-             />
-
-        <report
-            id="pos_payment_report_user"
-            string="Today's Payment By User"
-            model="pos.order"
-            name="pos.payment.report.user"
-            auto="False"
-            multi="True"
-            menu="False"
-            rml="point_of_sale/report/pos_payment_report_user.rml"
-             />
-
-         <report id="report_user_label"
-             model="res.users" 
-             name="point_of_sale.user.label"
-             string="User Labels"
-             xml="point_of_sale/report/user_label.xml"
-             xsl="point_of_sale/report/user_label.xsl"/>
+            id="action_report_pos_session_summary"
+            string="Session Summary"
+            model="pos.session"
+            report_type="qweb-pdf"
+            name="point_of_sale.report_sessionsummary"
+            file="point_of_sale.report_sessionsummary"
+         />
     </data>
 </openerp>

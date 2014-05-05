@@ -151,8 +151,10 @@
                     </group>
                     <separator string="Recurring Invoices" attrs="{'invisible': [('recurring_invoices','!=',True)]}"/>
                     <div>
-                        <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline"/>
-                        <label for="recurring_invoices" />
+                        <div attrs="{'invisible': [('type','!=', 'contract'), ('recurring_invoices', '=', False)]}">
+                            <field name="recurring_invoices" on_change="onchange_recurring_invoices(recurring_invoices, date_start)" class="oe_inline" />
+                            <label for="recurring_invoices" />
+                        </div>
                         <button class="oe_link" name="recurring_create_invoice" attrs="{'invisible': [('recurring_invoices','!=',True)]}" string="⇒ create invoices" type="object" groups="base.group_no_one"/>
                     </div>
                     <group attrs="{'invisible': [('recurring_invoices','!=',True)]}">

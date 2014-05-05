@@ -36,7 +36,7 @@ html_template = """<!DOCTYPE html>
         <link rel="stylesheet" href="/point_of_sale/static/src/fonts/font-awesome-4.0.3/css/font-awesome.min.css" /> 
         <link rel="stylesheet" href="/point_of_sale/static/src/css/pos.css" />
         <link rel="stylesheet" href="/point_of_sale/static/src/css/keyboard.css" />
-        %(js)s
+        <script type="text/javascript" src="/web/js/web.assets_backend"></script>
         <script type="text/javascript">
             $(function() {
                 var s = new openerp.init(%(modules)s);
@@ -61,14 +61,7 @@ class PosController(http.Controller):
         if not request.session.uid:
             return login_redirect()
 
-        js_list = manifest_list('js',db=request.db, debug=debug)
-        css_list =   manifest_list('css',db=request.db, debug=debug)
-        
-        js = "\n".join('<script type="text/javascript" src="%s"></script>' % i for i in js_list)
-        #css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in css_list)
         r = html_template % {
-            'js': js,
-         #   'css': css,
             'modules': simplejson.dumps(module_boot(request.db)),
             'init': """
                      var wc = new s.web.WebClient();

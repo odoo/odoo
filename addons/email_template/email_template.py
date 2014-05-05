@@ -431,7 +431,7 @@ class email_template(osv.osv):
                        is taken from template definition)
         :returns: a dict containing all relevant fields for creating a new
                   mail.mail entry, with one extra key ``attachments``, in the
-                  format expected by :py:meth:`mail_thread.message_post`.
+                  format [(report_name, data)] where data is base64 encoded.
         """
         if context is None:
             context = {}
@@ -492,7 +492,8 @@ class email_template(osv.osv):
                         result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'
                     else:
                         result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
-
+            
+            	    # TODO in trunk, change return format to binary to match message_post expected format
                     result = base64.b64encode(result)
                     if not report_name:
                         report_name = 'report.' + report_service

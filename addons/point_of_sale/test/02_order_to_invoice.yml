@@ -36,11 +36,16 @@
      - state == 'paid'
      - not invoice_id
 - 
-  I generate the invoice by pressing the Invoice button that calls the workflow
+  I set the order as invoiced
 -
   !workflow {model: pos.order, action: invoice, ref: pos_order_pos1}
 -
+  I generate an invoice from the order
+-
+  !python {model: pos.order}: |
+    invoice = self.action_invoice(cr, uid, [ref('pos_order_pos1')])
+-
   I test that the total of the attached invoice is correct
 -
-  !assert {model: pos.order, id: pos_order_pos1, string: Invoice not correct}:
-     - amount_total == (450*2 + 300*3*1.05)*0.95
+  !assert {model: pos.order, id: pos_order_pos1, string: Invoice inconsistent with its origin order}:
+     - invoice_id.amount_total == 1795.5

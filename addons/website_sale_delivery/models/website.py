@@ -17,4 +17,5 @@ class Website(orm.Model):
             product_id=product_id, order_line_id=order_line_id, number=number, set_number=set_number,
             context=context)
         order = self.ecommerce_get_current_order(cr, uid, context=context)
-        return self.pool['sale.order']._check_carrier_quotation(cr, uid, order, force_carrier_id=None, context=context) and quantity or None
+        self.pool['sale.order']._check_carrier_quotation(cr, uid, order, force_carrier_id=None, context=context) and quantity or None
+        return quantity

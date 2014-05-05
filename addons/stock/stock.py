@@ -636,7 +636,11 @@ class stock_picking(osv.osv):
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         return new_id
-
+    def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        claim = self.pool.get('crm.claim').search(cr, uid, [('ref', '=',('stock.picking.out,' + str(ids[0])))], context=context)
+        res[ids[0]] = len(claim)
+        return res
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
@@ -680,6 +684,7 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'claim_count': fields.function(_claim_count, string='Claims', type='integer'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -718,7 +723,6 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         picking_obj = self.browse(cr, uid, id, context=context)
-        move_obj = self.pool.get('stock.move')
         if ('name' not in default) or (picking_obj.name == '/'):
             seq_obj_name = 'stock.picking.' + picking_obj.type
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
@@ -727,10 +731,6 @@ class stock_picking(osv.osv):
         if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
             default['invoice_state'] = '2binvoiced'
         res = super(stock_picking, self).copy(cr, uid, id, default, context)
-        if res:
-            picking_obj = self.browse(cr, uid, res, context=context)
-            for move in picking_obj.move_lines:
-                move_obj.write(cr, uid, [move.id], {'tracking_id': False, 'prodlot_id': False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -1797,12 +1797,15 @@ class stock_move(osv.osv):
                                              _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
-        default.update({'move_history_ids2': [], 'move_history_ids': []})
-        return super(stock_move, self).copy(cr, uid, id, default, context=context)
+        default.setdefault('tracking_id', False)
+        default.setdefault('prodlot_id', False)
+        default.setdefault('move_history_ids', [])
+        default.setdefault('move_history_ids2', [])
+        return super(stock_move, self).copy_data(cr, uid, id, default, context=context)
 
     def _auto_init(self, cursor, context=None):
         res = super(stock_move, self)._auto_init(cursor, context=context)
@@ -2072,41 +2075,46 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         seq_obj = self.pool.get('ir.sequence')
-        for picking, todo in self._chain_compute(cr, uid, moves, context=context).items():
-            ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-            if picking:
-                # name of new picking according to its type
-                if ptype == 'internal':
-                    new_pick_name = seq_obj.get(cr, uid,'stock.picking')
-                else :
-                    new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
-                pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
-                # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
-                old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
-                if old_ptype != picking.type:
-                    old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
-            else:
-                pickid = False
-            for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
-                new_id = move_obj.copy(cr, uid, move.id, {
-                    'location_id': move.location_dest_id.id,
-                    'location_dest_id': loc.id,
-                    'date': time.strftime('%Y-%m-%d'),
-                    'picking_id': pickid,
-                    'state': 'waiting',
-                    'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
-                    'move_history_ids': [],
-                    'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
-                    'move_history_ids2': []}
-                )
-                move_obj.write(cr, uid, [move.id], {
-                    'move_dest_id': new_id,
-                    'move_history_ids': [(4, new_id)]
-                })
-                new_moves.append(self.browse(cr, uid, [new_id])[0])
-            if pickid:
-                self.pool.get('stock.picking').signal_button_confirm(cr, uid, [pickid])
+        for picking, chained_moves in self._chain_compute(cr, uid, moves, context=context).items():
+            # We group the moves by automatic move type, so it creates different pickings for different types
+            moves_by_type = {}
+            for move in chained_moves:
+                moves_by_type.setdefault(move[1][1], []).append(move)
+            for todo in moves_by_type.values():
+                ptype = todo[0][1][5] and todo[0][1][5] or location_obj.picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                if picking:
+                    # name of new picking according to its type
+                    if ptype == 'internal':
+                        new_pick_name = seq_obj.get(cr, uid,'stock.picking')
+                    else :
+                        new_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + ptype)
+                    pickid = self._create_chained_picking(cr, uid, new_pick_name, picking, ptype, todo, context=context)
+                    # Need to check name of old picking because it always considers picking as "OUT" when created from Sales Order
+                    old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
+                    if old_ptype != picking.type:
+                        old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
+                        self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
+                else:
+                    pickid = False
+                for move, (loc, dummy, delay, dummy, company_id, ptype, invoice_state) in todo:
+                    new_id = move_obj.copy(cr, uid, move.id, {
+                        'location_id': move.location_dest_id.id,
+                        'location_dest_id': loc.id,
+                        'date': time.strftime('%Y-%m-%d'),
+                        'picking_id': pickid,
+                        'state': 'waiting',
+                        'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
+                        'move_history_ids': [],
+                        'date_expected': (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
+                        'move_history_ids2': []}
+                    )
+                    move_obj.write(cr, uid, [move.id], {
+                        'move_dest_id': new_id,
+                        'move_history_ids': [(4, new_id)]
+                    })
+                    new_moves.append(self.browse(cr, uid, [new_id])[0])
+                if pickid:
+                    self.pool.get('stock.picking').signal_button_confirm(cr, uid, [pickid])
         if new_moves:
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves
@@ -2506,7 +2514,7 @@ class stock_move(osv.osv):
                 source_location = move.location_dest_id
             if source_location.usage != 'internal':
                 #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
-                raise osv.except_osv(_('Error!'), _('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
+                raise osv.except_osv(_('Error!'), _('Operation Forbidden! it is not allowed to scrap products from a virtual location: %s' %(move.location_id.complete_name)))
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
@@ -2996,6 +3004,9 @@ class stock_picking_in(osv.osv):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        return self.pool['stock.picking'].read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object
         return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
@@ -3076,6 +3087,9 @@ class stock_picking_out(osv.osv):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        return self.pool['stock.picking'].read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object
         return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
@@ -3122,7 +3136,9 @@ class stock_picking_out(osv.osv):
         out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
         defaults.update(out_defaults)
         return defaults
-
+    def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
+        return super(stock_picking_out, self)._claim_count(cr, uid, ids, field_name, arg, context=context)
+    
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
@@ -3139,6 +3155,7 @@ class stock_picking_out(osv.osv):
                  * Ready to Deliver: products reserved, simply waiting for confirmation.\n
                  * Delivered: has been processed, can't be modified or cancelled anymore\n
                  * Cancelled: has been cancelled, can't be confirmed anymore"""),
+        'claim_count': fields.function(_claim_count, string='Claims', type='integer'),
     }
     _defaults = {
         'type': 'out',
