@@ -261,7 +261,7 @@
   </xpath>
 </template>
 
-<template id="products_attributes" inherit_id="website_sale.products" inherit_option_id="website_sale.products" name="Product Attribute's Filters" groups="product.group_product_attributes">
+<template id="products_attributes" inherit_option_id="website_sale.products" name="Product Attribute's Filters" groups="product.group_product_attributes">
   <xpath expr="//div[@id='products_grid_before']" position="inside">
       <form t-att-action="keep('shop',attrib=0)" class="attributes" method="get">
           <ul class="nav nav-pills nav-stacked mt16">
