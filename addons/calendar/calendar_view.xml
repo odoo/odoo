@@ -58,17 +58,17 @@
                             </group>
                             <group>
                                 <group>
-                                    <field name="zstart" attrs="{'invisible': True}"/>
-                                    <field name="zstop" attrs="{'invisible': True}"/>
+                                    <field name="start" attrs="{'invisible': True}"/>
+                                    <field name="stop" attrs="{'invisible': True}"/>
 
-                                    <field name="zstart_date" string="Starting at" on_change="onchange_dates('start', zstart_date, zstop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
-                                    <field name="zstop_date" string="Ending at" on_change="onchange_dates('stop', zstart_date, zstop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
+                                    <field name="start_date" string="Starting at" on_change="onchange_dates('start', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
+                                    <field name="stop_date" string="Ending at" on_change="onchange_dates('stop', start_date, stop_date, allday, True)" attrs="{'invisible': [('allday','=',False)]}"/>
 
-                                    <field name="zstart_datetime" string="Starting at" on_change="onchange_dates('start', zstart_datetime, zstop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
-                                    <field name="zstop_datetime" string="Ending at" on_change="onchange_dates('stop', zstart_datetime, zstop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" on_change="onchange_dates('start', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop_datetime" string="Ending at" on_change="onchange_dates('stop', start_datetime, stop_datetime, allday, False)" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <label for="allday"/>
                                     <div>
-                                        <field name="allday"  class="oe_inline" on_change="onchange_allday(zstart, zstop, zstart_date, zstop_date, zstart_datetime, zstop_datetime, allday)"/>
+                                        <field name="allday"  class="oe_inline" on_change="onchange_allday(start, stop, start_date, stop_date, start_datetime, stop_datetime, allday)"/>
                                     </div>
                                     <field name="duration" widget="float_time" class="oe_inline" attrs="{ 'invisible': True }"/>
                                 </group>
@@ -98,7 +98,7 @@
                                         <div>
                                             <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
                                             <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="zfinal_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
+                                            <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
                                         </div>
                                         <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
                                         <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}" >
@@ -178,8 +178,8 @@
                 <field name="name"/>
                 <group>
                     <group>
-                        <field name="zstart_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
-                        <field name="zstart_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
+                        <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
+                        <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)]}"/>
         
                         <field name="duration" string="Duration" widget="float_time" attrs="{'invisible': [('allday','=',True)]}"/>
                         <field name="allday" class="oe_inline" attrs="{'invisible': [('allday','=',False)]}"/>
@@ -222,7 +222,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Meetings" date_start="zstart" date_stop="zstop" date_delay="duration" all_day="allday" 
+            <calendar string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday" 
                          display="[name]" color="color_partner_id" attendee="partner_ids" avatar_model="res.partner"
                          use_contacts="True" event_open_popup="%(calendar.view_calendar_event_form_popup)s">
             

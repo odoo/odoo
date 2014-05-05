@@ -367,8 +367,8 @@ class hr_holidays(osv.osv):
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
                     'user_id': record.user_id.id,
-                    'zstart': record.date_from,
-                    'zstop': record.date_to,
+                    'start': record.date_from,
+                    'stop': record.date_to,
                     'allday': False,
                     'state': 'open',            # to block that meeting date in the calendar
                     'class': 'confidential'

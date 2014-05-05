@@ -154,11 +154,11 @@ class calendar_attendee(osv.Model):
 
         cal = vobject.iCalendar()
         event = cal.add('vevent')
-        if not event_obj.zstart or not event_obj.zstop:
+        if not event_obj.start or not event_obj.stop:
             raise osv.except_osv(_('Warning!'), _("First you have to specify the date of the invitation."))
         event.add('created').value = ics_datetime(time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
-        event.add('dtstart').value = ics_datetime(event_obj.zstart, event_obj.allday)
-        event.add('dtend').value = ics_datetime(event_obj.zstop, event_obj.allday)
+        event.add('dtstart').value = ics_datetime(event_obj.start, event_obj.allday)
+        event.add('dtend').value = ics_datetime(event_obj.stop, event_obj.allday)
         event.add('summary').value = event_obj.name
         if event_obj.description:
             event.add('description').value = event_obj.description
@@ -340,15 +340,15 @@ class calendar_alarm_manager(osv.AbstractModel):
         base_request = """
                     SELECT
                         cal.id,
-                        cal.zstart - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
+                        cal.start - interval '1' minute  * calcul_delta.max_delta AS first_alarm,
                         CASE
-                            WHEN cal.recurrency THEN cal.zfinal_date - interval '1' minute  * calcul_delta.min_delta
-                            ELSE cal.zstop - interval '1' minute  * calcul_delta.min_delta
+                            WHEN cal.recurrency THEN cal.final_date - interval '1' minute  * calcul_delta.min_delta
+                            ELSE cal.stop - interval '1' minute  * calcul_delta.min_delta
                         END as last_alarm,
-                        cal.zstart as first_event_date,
+                        cal.start as first_event_date,
                         CASE
-                            WHEN cal.recurrency THEN cal.zfinal_date
-                            ELSE cal.zstop
+                            WHEN cal.recurrency THEN cal.final_date
+                            ELSE cal.stop
                         END as last_event_date,
                         calcul_delta.min_delta,
                         calcul_delta.max_delta,
@@ -472,7 +472,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                     if bFound and not LastFound:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
-                in_date_format = datetime.strptime(curEvent.zstart, DEFAULT_SERVER_DATETIME_FORMAT)
+                in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
                 LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
                 if LastFound:
                     for alert in LastFound:
@@ -505,7 +505,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                     if bFound and not LastFound:  # if the precedent event had alarm but not this one, we can stop the search fot this event
                         break
             else:
-                in_date_format = datetime.strptime(curEvent.zstart, DEFAULT_SERVER_DATETIME_FORMAT)
+                in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
                 LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, partner.calendar_last_notif_ack, mail=False, context=context)
                 if LastFound:
                     for alert in LastFound:
@@ -666,7 +666,7 @@ class calendar_event(osv.Model):
             return val.astimezone(timezone)
 
         timezone = pytz.timezone(context.get('tz') or 'UTC')
-        startdate = pytz.UTC.localize(datetime.strptime(event.zstart, DEFAULT_SERVER_DATETIME_FORMAT))  # Add "+hh:mm" timezone
+        startdate = pytz.UTC.localize(datetime.strptime(event.start, DEFAULT_SERVER_DATETIME_FORMAT))  # Add "+hh:mm" timezone
         if not startdate:
             startdate = datetime.now()
 
@@ -681,14 +681,14 @@ class calendar_event(osv.Model):
         return [d.astimezone(pytz.UTC) for d in rset1]
 
     def _get_recurrency_end_date(self, cr, uid, id, context=None):
-        data = self.read(cr, uid, id, ['zfinal_date', 'recurrency', 'rrule_type', 'count', 'end_type', 'zstop'], context=context)
+        data = self.read(cr, uid, id, ['final_date', 'recurrency', 'rrule_type', 'count', 'end_type', 'stop'], context=context)
 
         if not data.get('recurrency'):
             return False
 
         end_type = data.get('end_type')
-        final_date = data.get('zfinal_date')
-        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'zstop']):
+        final_date = data.get('final_date')
+        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'stop']):
             count = data['count'] + 1
             delay, mult = {
                 'daily': ('days', 1),
@@ -697,7 +697,7 @@ class calendar_event(osv.Model):
                 'yearly': ('years', 1),
             }[data['rrule_type']]
 
-            deadline = datetime.strptime(data['zstop'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            deadline = datetime.strptime(data['stop'], tools.DEFAULT_SERVER_DATETIME_FORMAT)
             return deadline + relativedelta(**{delay: count * mult})
         return final_date
 
@@ -728,9 +728,9 @@ class calendar_event(osv.Model):
         if tz:
             context["tz"] = tz
         ev = self.browse(cr, uid, ids, context=context)[0]
-        return self._get_display_time(cr, uid, ev.zstart, ev.zstop, ev.duration, ev.allday, context=context)
+        return self._get_display_time(cr, uid, ev.start, ev.stop, ev.duration, ev.allday, context=context)
 
-    def _get_display_time(self, cr, uid, zstart, zstop, zduration, zallday, context=None):
+    def _get_display_time(self, cr, uid, start, stop, zduration, zallday, context=None):
         """
             Return date and time (from to from) based on duration with timezone in string :
             eg.
@@ -746,8 +746,8 @@ class calendar_event(osv.Model):
             tz = context['tz']
 
         format_date, format_time = self.get_date_formats(cr, uid, context=context)
-        date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(zstart, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-        date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(zstop, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+        date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(start, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+        date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(stop, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
         event_date = date.strftime(format_date)
         display_time = date.strftime(format_time)
 
@@ -772,13 +772,13 @@ class calendar_event(osv.Model):
                 elif field == 'attendee_status':
                     res[meeting_id][field] = attendee.state if attendee else 'needsAction'
                 elif field == 'display_time':
-                    res[meeting_id][field] = self._get_display_time(cr, uid, meeting.zstart, meeting.zstop, meeting.duration, meeting.allday, context=context)
+                    res[meeting_id][field] = self._get_display_time(cr, uid, meeting.start, meeting.stop, meeting.duration, meeting.allday, context=context)
                 elif field == "display_start":
-                    res[meeting_id][field] = meeting.zstart_date if meeting.allday else meeting.zstart_datetime
-                elif field == 'zstart':
-                    res[meeting_id][field] = meeting.zstart_date if meeting.allday else meeting.zstart_datetime
-                elif field == 'zstop':
-                    res[meeting_id][field] = meeting.zstop_date if meeting.allday else meeting.zstop_datetime
+                    res[meeting_id][field] = meeting.start_date if meeting.allday else meeting.start_datetime
+                elif field == 'start':
+                    res[meeting_id][field] = meeting.start_date if meeting.allday else meeting.start_datetime
+                elif field == 'stop':
+                    res[meeting_id][field] = meeting.stop_date if meeting.allday else meeting.stop_datetime
 
         return res
 
@@ -800,7 +800,7 @@ class calendar_event(osv.Model):
             if data.count and data.count <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
 
-            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'month_list', 'zfinal_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
+            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'month_list', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
             event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
@@ -819,7 +819,7 @@ class calendar_event(osv.Model):
         if field_value:
             data['recurrency'] = True
             for event in self.browse(cr, uid, ids, context=context):
-                rdate = event.zstart
+                rdate = event.start
                 update_data = self._parse_rrule(field_value, dict(data), rdate)
                 data.update(update_data)
                 self.write(cr, uid, ids, data, context=context)
@@ -830,8 +830,8 @@ class calendar_event(osv.Model):
         if context is None:
             context = {}
 
-        if values.get('zstart_datetime') or values.get('zstart_date') or values.get('zstart') \
-                or values.get('zstop_datetime') or values.get('zstop_date') or values.get('zstop'):
+        if values.get('start_datetime') or values.get('start_date') or values.get('start') \
+                or values.get('stop_datetime') or values.get('stop_date') or values.get('stop'):
             allday = values.get("allday", None)
 
             if allday is None:
@@ -845,7 +845,7 @@ class calendar_event(osv.Model):
             key = "date" if allday else "datetime"
             notkey = "datetime" if allday else "date"
 
-            for fld in ('zstart', 'zstop'):
+            for fld in ('start', 'stop'):
                 if values.get('%s_%s' % (fld, key)) or values.get(fld):
                     values['%s_%s' % (fld, key)] = values.get('%s_%s' % (fld, key)) or values.get(fld)
                     values['%s_%s' % (fld, notkey)] = None
@@ -853,10 +853,10 @@ class calendar_event(osv.Model):
                         values[fld] = values['%s_%s' % (fld, key)]
 
             diff = False
-            if allday and values.get('zstop_date') and values.get('zstart_date'):
-                diff = datetime.strptime(values['zstop_date'].split(' ')[0], DEFAULT_SERVER_DATE_FORMAT) - datetime.strptime(values['zstart_date'].split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
-            elif values.get('zstop_datetime') and values.get('zstart_datetime'):
-                diff = datetime.strptime(values['zstop_datetime'].split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(values['zstart_datetime'].split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+            if allday and values.get('stop_date') and values.get('start_date'):
+                diff = datetime.strptime(values['stop_date'].split(' ')[0], DEFAULT_SERVER_DATE_FORMAT) - datetime.strptime(values['start_date'].split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
+            elif values.get('stop_datetime') and values.get('start_datetime'):
+                diff = datetime.strptime(values['stop_datetime'].split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(values['start_datetime'].split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
             if diff:
                 duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
                 values['duration'] = round(duration, 2)
@@ -865,7 +865,7 @@ class calendar_event(osv.Model):
         'location': {
             'calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
         },
-        'zstart': {
+        'start': {
             'calendar.subtype_invitation': lambda self, cr, uid, obj, ctx=None: True,
         },
     }
@@ -878,12 +878,12 @@ class calendar_event(osv.Model):
         'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
         'display_start': fields.function(_compute, string='Date', type="char", multi='display_start', store=True),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
-        'zstart': fields.function(_compute, string='Calculated start', type="datetime", multi='zstart', store=True, required=True),
-        'zstop': fields.function(_compute, string='Calculated stop', type="datetime", multi='zstop', store=True, required=True),
-        'zstart_date': fields.date('Start Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
-        'zstart_datetime': fields.datetime('Start DateTime', states={'done': [('readonly', True)]}, track_visibility='onchange'),
-        'zstop_date': fields.date('End Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
-        'zstop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
+        'start': fields.function(_compute, string='Calculated start', type="datetime", multi='start', store=True, required=True),
+        'stop': fields.function(_compute, string='Calculated stop', type="datetime", multi='stop', store=True, required=True),
+        'start_date': fields.date('Start Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
+        'start_datetime': fields.datetime('Start DateTime', states={'done': [('readonly', True)]}, track_visibility='onchange'),
+        'stop_date': fields.date('End Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
+        'stop_datetime': fields.datetime('End Datetime', states={'done': [('readonly', True)]}, track_visibility='onchange'),  # old date_deadline
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), ('confidential', 'Public for Employees')], 'Privacy', states={'done': [('readonly', True)]}),
@@ -910,7 +910,7 @@ class calendar_event(osv.Model):
         'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), ('WE', 'Wednesday'), ('TH', 'Thursday'), ('FR', 'Friday'), ('SA', 'Saturday'), ('SU', 'Sunday')], 'Weekday'),
         'byday': fields.selection([('1', 'First'), ('2', 'Second'), ('3', 'Third'), ('4', 'Fourth'), ('5', 'Fifth'), ('-1', 'Last')], 'By day'),
-        'zfinal_date': fields.date('Repeat Until'),  # The last event of a recurrence
+        'final_date': fields.date('Repeat Until'),  # The last event of a recurrence
 
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="colorize", store=False),  # Color of creator
@@ -937,12 +937,12 @@ class calendar_event(osv.Model):
 
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
-            if event.zstop < event.zstart:
+            if event.stop < event.start:
                 return False
         return True
 
     _constraints = [
-        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['zstart', 'zstop'])
+        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['start', 'stop'])
     ]
 
     def onchange_allday(self, cr, uid, ids, start=False, end=False, starttime=False, endtime=False, startdatetime=False, enddatetime=False, checkallday=False, context=None):
@@ -956,12 +956,12 @@ class calendar_event(osv.Model):
             startdatetime = startdatetime or start
             if startdatetime:
                 start = datetime.strptime(startdatetime, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['zstart_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
+                value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
 
             enddatetime = enddatetime or end
             if enddatetime:
                 end = datetime.strptime(enddatetime, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['zstop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
+                value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
         else:  # from date to datetime
             user = self.pool['res.users'].browse(cr, uid, uid, context)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
@@ -971,17 +971,17 @@ class calendar_event(osv.Model):
                 startdate = tz.localize(start)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
-                value['zstart_datetime'] = datetime.strftime(startdate, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['start_datetime'] = datetime.strftime(startdate, DEFAULT_SERVER_DATETIME_FORMAT)
             elif start:
-                value['zstart_datetime'] = start
+                value['start_datetime'] = start
 
             if endtime:
                 end = datetime.strptime(endtime.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
                 enddate = tz.localize(end).replace(hour=18).astimezone(pytz.utc)
 
-                value['zstop_datetime'] = datetime.strftime(enddate, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['stop_datetime'] = datetime.strftime(enddate, DEFAULT_SERVER_DATETIME_FORMAT)
             elif end:
-                value['zstop_datetime'] = end
+                value['stop_datetime'] = end
 
         return {'value': value}
 
@@ -1000,23 +1000,23 @@ class calendar_event(osv.Model):
         if allday:
             if fromtype == 'start':
                 start = datetime.strptime(start, DEFAULT_SERVER_DATE_FORMAT)
-                value['zstart_datetime'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['zstart'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['start_datetime'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
 
             if fromtype == 'stop':
                 end = datetime.strptime(end, DEFAULT_SERVER_DATE_FORMAT)
-                value['zstop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['zstop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['stop_datetime'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         else:
             if fromtype == 'start':
                 start = datetime.strptime(start, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['zstart_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
-                value['zstart'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
+                value['start'] = datetime.strftime(start, DEFAULT_SERVER_DATETIME_FORMAT)
             if fromtype == 'stop':
                 end = datetime.strptime(end, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['zstop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
-                value['zstop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
+                value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
+                value['stop'] = datetime.strftime(end, DEFAULT_SERVER_DATETIME_FORMAT)
 
         return {'value': value}
 
@@ -1136,7 +1136,7 @@ class calendar_event(osv.Model):
                 pile = []
                 ok = True
                 for arg in domain:
-                    if str(arg[0]) in ('zstart', 'zstop', 'zfinal_date'):
+                    if str(arg[0]) in ('start', 'stop', 'final_date'):
                         if (arg[1] == '='):
                             ok = r_date.strftime('%Y-%m-%d') == arg[2]
                         if (arg[1] == '>'):
@@ -1215,8 +1215,8 @@ class calendar_event(osv.Model):
             return ''
 
         def get_end_date(data):
-            if data.get('zfinal_date'):
-                data['end_date_new'] = ''.join((re.compile('\d')).findall(data.get('zfinal_date'))) + 'T235959Z'
+            if data.get('final_date'):
+                data['end_date_new'] = ''.join((re.compile('\d')).findall(data.get('final_date'))) + 'T235959Z'
 
             return (data.get('end_type') == 'count' and (';COUNT=' + str(data.get('count'))) or '') +\
                 ((data.get('end_date_new') and data.get('end_type') == 'end_date' and (';UNTIL=' + data.get('end_date_new'))) or '')
@@ -1233,7 +1233,7 @@ class calendar_event(osv.Model):
         return {
             'byday': False,
             'recurrency': False,
-            'zfinal_date': False,
+            'final_date': False,
             'rrule_type': False,
             'month_by': False,
             'interval': 0,
@@ -1259,7 +1259,7 @@ class calendar_event(osv.Model):
             data['rrule_type'] = rrule_type[r._freq]
         data['count'] = r._count
         data['interval'] = r._interval
-        data['zfinal_date'] = r._until and r._until.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        data['final_date'] = r._until and r._until.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         #repeat weekly
         if r._byweekday:
             for i in xrange(0, 7):
@@ -1285,12 +1285,12 @@ class calendar_event(osv.Model):
         #FIXEME handle forever case
         #end of recurrence
         #in case of repeat for ever that we do not support right now
-        if not (data.get('count') or data.get('zfinal_date')):
+        if not (data.get('count') or data.get('final_date')):
             data['count'] = 100
         if data.get('count'):
             data['end_type'] = 'count'
         else:
-            data['end_type'] = 'zfinal_date'
+            data['end_type'] = 'final_date'
         return data
 
     def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
@@ -1334,8 +1334,8 @@ class calendar_event(osv.Model):
     # shows events of the day for this user
     def _needaction_domain_get(self, cr, uid, context=None):
         return [
-            ('zstop', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')),
-            ('zstart', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 00:00:00')),
+            ('stop', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')),
+            ('start', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 00:00:00')),
             ('user_id', '=', uid),
         ]
 
@@ -1401,9 +1401,9 @@ class calendar_event(osv.Model):
         for arg in args:
             new_arg = arg
 
-            if arg[0] in ('zstart_date', 'zstart_datetime', 'zstart',) and arg[1] == ">=":
+            if arg[0] in ('start_date', 'start_datetime', 'start',) and arg[1] == ">=":
                 if context.get('virtual_id', True):
-                    new_args += ['|', '&', ('recurrency', '=', 1), ('zfinal_date', arg[1], arg[2])]
+                    new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
             elif arg[0] == "id":
                 new_id = get_real_ids(arg[2])
                 new_arg = (arg[0], arg[1], new_id)
@@ -1435,18 +1435,18 @@ class calendar_event(osv.Model):
 
     def _detach_one_event(self, cr, uid, id, values=dict(), context=None):
         real_event_id = calendar_id2real_id(id)
-        data = self.read(cr, uid, id, ['allday', 'zstart', 'zstop', 'rrule', 'duration'])
-        data['zstart_date' if data['allday'] else 'zstart_datetime'] = data['zstart']
-        data['zstop_date' if data['allday'] else 'zstop_datetime'] = data['zstop']
+        data = self.read(cr, uid, id, ['allday', 'start', 'stop', 'rrule', 'duration'])
+        data['start_date' if data['allday'] else 'start_datetime'] = data['start']
+        data['stop_date' if data['allday'] else 'stop_datetime'] = data['stop']
         if data.get('rrule'):
             data.update(
                 values,
                 recurrent_id=real_event_id,
-                recurrent_id_date=data.get('zstart'),
+                recurrent_id_date=data.get('start'),
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                zfinal_date=datetime.strptime(data.get('zstart'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=datetime.strptime(data.get('start'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
             )
 
             #do not copy the id
@@ -1481,7 +1481,7 @@ class calendar_event(osv.Model):
         def _only_changes_to_apply_on_real_ids(field_names):
             ''' return True if changes are only to be made on the real ids'''
             for field in field_names:
-                if field in ['zstart', 'zstart_date', 'zstart_datetime', 'zstop', 'zstop_date', 'zstop_datetime', 'active']:
+                if field in ['start', 'start_date', 'start_datetime', 'stop', 'stop_date', 'stop_datetime', 'active']:
                     return True
             return False
 
@@ -1516,7 +1516,7 @@ class calendar_event(osv.Model):
                 ids.append(real_event_id)
                 continue
             else:
-                data = self.read(cr, uid, event_id, ['zstart', 'zstop', 'rrule', 'duration'])
+                data = self.read(cr, uid, event_id, ['start', 'stop', 'rrule', 'duration'])
                 if data.get('rrule'):
                     new_id = self._detach_one_event(cr, uid, event_id, values, context=None)
 
@@ -1524,16 +1524,16 @@ class calendar_event(osv.Model):
 
         # set end_date for calendar searching
         if values.get('recurrency', True) and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                (values.get('rrule_type') or values.get('count') or values.get('zstart') or values.get('zstop')):
+                (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
             for id in ids:
                 final_date = self._get_recurrency_end_date(cr, uid, id, context=context)
-                super(calendar_event, self).write(cr, uid, [id], {'zfinal_date': final_date}, context=context)
+                super(calendar_event, self).write(cr, uid, [id], {'final_date': final_date}, context=context)
 
         attendees_create = False
         if values.get('partner_ids', False):
             attendees_create = self.create_attendees(cr, uid, ids, context)
 
-        if (values.get('zstart_date') or values.get('zstart_datetime', False)) and values.get('active', True):
+        if (values.get('start_date') or values.get('start_datetime', False)) and values.get('active', True):
             the_id = new_id or (ids and int(ids[0]))
 
             if attendees_create:
@@ -1559,7 +1559,7 @@ class calendar_event(osv.Model):
         res = super(calendar_event, self).create(cr, uid, vals, context=context)
 
         final_date = self._get_recurrency_end_date(cr, uid, res, context=context)
-        self.write(cr, uid, [res], {'zfinal_date': final_date}, context=context)
+        self.write(cr, uid, [res], {'final_date': final_date}, context=context)
 
         self.create_attendees(cr, uid, [res], context=context)
         return res
@@ -1585,7 +1585,7 @@ class calendar_event(osv.Model):
         if context is None:
             context = {}
         fields2 = fields and fields[:] or None
-        EXTRAFIELDS = ('class', 'user_id', 'duration', 'allday', 'zstart', 'zstart_date', 'zstart_datetime', 'rrule')
+        EXTRAFIELDS = ('class', 'user_id', 'duration', 'allday', 'start', 'start_date', 'start_datetime', 'rrule')
         for f in EXTRAFIELDS:
             if fields and (f not in fields):
                 fields2.append(f)
@@ -1602,15 +1602,15 @@ class calendar_event(osv.Model):
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
-                res['zstart'] = ls[1]
-                res['zstop'] = ls[2]
+                res['start'] = ls[1]
+                res['stop'] = ls[2]
 
                 if res['allday']:
-                    res['zstart_date'] = ls[1]
-                    res['zstop_date'] = ls[2]
+                    res['start_date'] = ls[1]
+                    res['stop_date'] = ls[2]
                 else:
-                    res['zstart_datetime'] = ls[1]
-                    res['zstop_datetime'] = ls[2]
+                    res['start_datetime'] = ls[1]
+                    res['stop_datetime'] = ls[2]
 
                 res['display_time'] = self._get_display_time(cr, uid, ls[1], ls[2], res['duration'], res['allday'], context=context)
 
@@ -1624,7 +1624,7 @@ class calendar_event(osv.Model):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
-                    if f not in ('id', 'allday', 'zstart', 'zstop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date'):
+                    if f not in ('id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date'):
                         if isinstance(r[f], list):
                             r[f] = []
                         else:

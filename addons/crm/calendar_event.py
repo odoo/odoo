@@ -36,7 +36,7 @@ class calendar_event(osv.Model):
         res = super(calendar_event, self).create(cr, uid, vals, context=context)
         obj = self.browse(cr, uid, res, context=context)
         if obj.opportunity_id:
-            self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.zstart, obj.duration, context=context)
+            self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.start, obj.duration, context=context)
         return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
