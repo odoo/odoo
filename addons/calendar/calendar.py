@@ -1386,7 +1386,7 @@ class calendar_event(osv.Model):
             res = date.strftime('%A')
         elif interval == 'time':
             dummy, format_time = self.get_date_formats(cr, uid, context=context)
-            res = date.strftime(format_time)
+            res = date.strftime(format_time + " %Z")
         return res
 
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
@@ -1446,7 +1446,7 @@ class calendar_event(osv.Model):
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                zfinal_date=datetime.strptime(values.get('zstart', False) or data.get('zstart'), DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                zfinal_date=datetime.strptime(data.get('zstart'), DEFAULT_SERVER_DATETIME_FORMAT if data['allday'] else DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(hours=values.get('duration', False) or data.get('duration'))
             )
 
             #do not copy the id
