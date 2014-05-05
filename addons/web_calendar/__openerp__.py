@@ -9,14 +9,8 @@ OpenERP Web Calendar view.
     'author': 'OpenERP SA, Valentino Lab (Kalysto)',
     'version': '2.0',
     'depends': ['web'],
-    'data' : [],
-    'js': [
-        'static/lib/fullcalendar/js/fullcalendar.js',
-        'static/src/js/*.js'
-    ],
-    'css': [
-        'static/lib/fullcalendar/css/*.css',
-        'static/src/css/*.css'
+    'data' : [
+        'views/web_calendar.xml',
     ],
     'qweb': [
         'static/src/xml/*.xml',
