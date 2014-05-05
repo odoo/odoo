@@ -5408,7 +5408,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
@@ -5426,6 +5426,9 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
     start: function() {
         this._super(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
+        this.on("change:effective_readonly", this, function () {
+            this.render_value();
+        });
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -5462,6 +5465,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
     },
     render_value: function () {
         var self = this;
+        this.$('.oe_add').css('visibility', this.get('effective_readonly') ? 'hidden': '');
         this.read_name_values().then(function (ids) {
             var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self, 'values': ids}));
             render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));

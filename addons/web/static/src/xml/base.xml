@@ -1336,7 +1336,7 @@
 <t t-name="FieldBinaryFileUploader">
     <div t-att-style="widget.node.attrs.style" t-attf-class="oe_fileupload #{widget.node.attrs.class ? widget.node.attrs.class :''}">
         <div class="oe_placeholder_files"/>
-        <div class="oe_add" t-if="!widget.get('effective_readonly')">
+        <div class="oe_add">
             <!-- uploader of file -->
             <button class="oe_attach"><span class="oe_e">'</span></button> 
             <span class='oe_attach_label'><t t-esc="widget.string"/></span>
