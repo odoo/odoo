@@ -18,8 +18,6 @@ Display best tweets
     ],
     'demo': [],
     'qweb': [],
-    'js': [],
-    'css': [],
     'installable': True,
     'application': True,
 }

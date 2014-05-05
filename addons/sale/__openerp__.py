@@ -73,7 +73,6 @@ The Dashboard for the Sales Manager will include
         'sale_view.xml',
         'res_partner_view.xml',
         'report/sale_report_view.xml',
-        'process/sale_process.xml',
         'edi/sale_order_action_data.xml',
         'res_config_view.xml',
         'views/report_saleorder.xml',

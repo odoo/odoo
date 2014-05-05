@@ -129,10 +129,15 @@ $(document).ready(function () {
                 cacheResults: true
             }
         });
-        // Note: Adding event handler of whitespaceKeyDown event.
-        $("input.load_tags").bind("whitespaceKeyDown",function () {
+        // Adds: create tags on space + blur
+        $("input.load_tags").on('whitespaceKeyDown blur', function () {
             $(this).textext()[0].tags().addTags([ $(this).val() ]);
             $(this).val("");
+        });
+        $("input.load_tags").on('isTagAllowed', function(e, data) {
+            if (_.indexOf($(this).textext()[0].tags()._formData, data.tag) != -1) {
+                data.result = false;
+            }
         });
     }
 

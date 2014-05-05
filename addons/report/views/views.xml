@@ -99,10 +99,8 @@
             <field name="model">res.company</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//group[@string='Footer Configuration']" position="after">
-                        <group string="QWeb PDF Configuration">
-                            <field name="paperformat_id" />
-                        </group>
+                    <xpath expr="//page[@string='Report Configuration']/group[@string='Configuration']" position="inside">
+                        <field name="paperformat_id" />
                     </xpath>
                 </data>
             </field>

@@ -74,13 +74,15 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
-                        string="Purchase Orders"
+                    <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}"
-                        groups="purchase.group_purchase_user"/>
-                    <button name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
-                        attrs="{'invisible': [('supplier', '=', False)]}"
-                        string="Supplier Invoices"/>
+                        groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                        <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
+                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Invoices">
+                        <field string="Supplier Inv." name="supplier_invoice_count" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>

@@ -16,7 +16,6 @@ _logger = logging.getLogger(__name__)
 
 from openerp import http
 from openerp.http import request
-from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
 
 # drivers modules must add to drivers an object with a get_status() method 

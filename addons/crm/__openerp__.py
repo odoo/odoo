@@ -51,7 +51,6 @@ Dashboard for CRM will include:
     'depends': [
         'base_action_rule',
         'base_setup',
-        'process',
         'mail',
         'email_template',
         'calendar',
@@ -87,14 +86,13 @@ Dashboard for CRM will include:
         'report/crm_lead_report_view.xml',
         'report/crm_phonecall_report_view.xml',
 
-        'process/crm_configuration_process.xml',
-
         'res_partner_view.xml',
 
         'res_config_view.xml',
         'base_partner_merge_view.xml',
 
         'crm_case_section_view.xml',
+        'views/crm.xml',
     ],
     'demo': [
         'crm_demo.xml',
@@ -115,12 +113,6 @@ Dashboard for CRM will include:
         'test/crm_lead_copy.yml',
         'test/crm_lead_unlink.yml',
         'test/crm_lead_find_stage.yml',
-    ],
-    'css': [
-        'static/src/css/crm.css'
-    ],
-    'js': [
-        'static/src/js/crm_case_section.js',
     ],
     'installable': True,
     'application': True,

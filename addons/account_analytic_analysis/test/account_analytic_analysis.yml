@@ -20,6 +20,7 @@
   !record {model: account.analytic.account, id: contract_main}:
     partner_id: base.main_partner
     template_id: account_analytic_analysis.contract_template
+    type: contract
 -
   I check that the contract inherited from data of the template
 -
@@ -32,7 +33,7 @@
   I generate all invoices from contracts having recurring invoicing
 -
   !python {model: account.analytic.account}: |
-    self.recurring_create_invoice(cr, uid)
+    self.recurring_create_invoice(cr, uid, [])
 -
   I test the generated invoice
 -

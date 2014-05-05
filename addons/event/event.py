@@ -102,6 +102,9 @@ class event_event(Model):
 
     registration_ids = One2many('event.registration', 'event_id', string='Registrations',
         readonly=False, states={'done': [('readonly', True)]})
+    count_registrations = Integer(string='Registrations',
+        store=False, readonly=True, compute='_count_registrations')
+
     date_begin = Datetime(string='Start Date', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
     date_end = Datetime(string='End Date', required=True,
@@ -135,6 +138,11 @@ class event_event(Model):
 
     is_subscribed = Boolean(string='Subscribed',
         store=False, readonly=True, compute='_compute_subscribe')
+
+    @one
+    @depends('registration_ids')
+    def _count_registrations(self):
+        self.count_registrations = len(self.registration_ids)
 
     @one
     @depends('registration_ids.user_id', 'registration_ids.state')
@@ -297,6 +305,7 @@ class event_registration(Model):
         self.event_id.message_post(
             body=_('New registration confirmed: %s.') % (self.name or ''),
             subtype="event.mt_event_registration")
+        self.message_post(body=_('Event Registration confirmed.'))
         self.state = 'open'
 
     @one
