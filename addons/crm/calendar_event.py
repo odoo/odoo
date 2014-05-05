@@ -36,21 +36,7 @@ class calendar_event(osv.Model):
         res = super(calendar_event, self).create(cr, uid, vals, context=context)
         obj = self.browse(cr, uid, res, context=context)
         if obj.opportunity_id:
-            self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.date, obj.duration, context=context)
+            self.pool.get('crm.lead').log_meeting(cr, uid, [obj.opportunity_id.id], obj.name, obj.start, obj.duration, context=context)
         return res
-
-
-class calendar_attendee(osv.osv):
-    """ Calendar Attendee """
-
-    _inherit = 'calendar.attendee'
-    _description = 'Calendar Attendee'
-
-    def _noop(self, cr, uid, ids, name, arg, context=None):
-        return dict.fromkeys(ids, False)
-
-    _columns = {
-        'categ_id': fields.function(_noop, string='Event Type', deprecated="Unused Field - TODO : Remove it in trunk", type="many2one", relation="crm.case.categ"),
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

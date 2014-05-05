@@ -142,12 +142,12 @@
                                 <table>
                                     <tr>
                                         <td>
-                                            <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;">${object.event_id.get_interval(object.event_id.date, 'dayname')}</div>
+                                            <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>
                                             <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;">
-                                                ${object.event_id.get_interval(object.event_id.date,'day')}
+                                                ${object.event_id.get_interval(object.event_id.start,'day')}
                                             </div>
-                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.date, 'month')}</div>
-                                            <div style="border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.date, 'time', tz=object.partner_id.tz) or ''}</div>
+                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>
+                                            <div style="border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>
                                         </td>
                                         <td>
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
@@ -269,18 +269,18 @@
                             <div style="height: 50px;text-align: left;font-size : 14px;border-collapse: separate;margin-top:10px">
                                 <strong style="margin-left:12px">Dear ${object.cn}</strong> ,<br/>
                                 <p style="margin-left:12px">The date of the meeting has been changed...<br/>
-                                The meeting created by ${object.event_id.user_id.partner_id.name} is now scheduled for : ${object.event_id.display_time}.</p>
+                                The meeting created by ${object.event_id.user_id.partner_id.name} is now scheduled for : ${object.event_id.get_display_time_tz(tz=object.partner_id.tz)}.</p>
                             </div>
                             <div style="height: auto;margin-left:12px;margin-top:30px;">
                                 <table>
                                     <tr>                                        
                                         <td>
-                                            <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;">${object.event_id.get_interval(object.event_id.date, 'dayname')}</div>
+                                            <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>
                                             <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;">
-                                                ${object.event_id.get_interval(object.event_id.date,'day')}
+                                                ${object.event_id.get_interval(object.event_id.start,'day')}
                                             </div>
-                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.date, 'month')}</div>
-                                            <div style="border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.date, 'time', tz=object.partner_id.tz) or ''}</div>
+                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>
+                                            <div style="border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>
                                         </td>
                                         <td>
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
@@ -407,12 +407,12 @@
                                 <table>
                                     <tr>
                                         <td>
-                                            <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;">${object.event_id.get_interval(object.event_id.date, 'dayname')}</div>
+                                            <div style="border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;border-color:#ffffff;background:#8a89ba;padding-top: 4px;">${object.event_id.get_interval(object.event_id.start, 'dayname')}</div>
                                             <div style="font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #E1E2F8;width: 130px;">
-                                                ${object.event_id.get_interval(object.event_id.date,'day')}
+                                                ${object.event_id.get_interval(object.event_id.start,'day')}
                                             </div>
-                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.date, 'month')}</div>
-                                            <div style="border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.date, 'time', tz=object.partner_id.tz) or ''}</div>
+                                            <div style='font-size:12px;text-align:center;font-weight:bold;color:#ffffff;background-color:#8a89ba'>${object.event_id.get_interval(object.event_id.start, 'month')}</div>
+                                            <div style="border-collapse:separate;color:#8a89ba;text-align:center;width: 128px;font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px solid;border-bottom-left-radius:3px;">${not object.event_id.allday and object.event_id.get_interval(object.event_id.start, 'time', tz=object.partner_id.tz) or ''}</div>
                                         </td>
                                         <td>
                                             <table cellspacing="0" cellpadding="0" border="0" style="margin-top: 15px; margin-left: 10px;font-size: 16px;">
