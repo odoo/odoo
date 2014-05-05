@@ -655,7 +655,6 @@ class account_analytic_account(osv.osv):
     def _prepare_invoice(self, cr, uid, contract, context=None):
         context = context or {}
 
-        inv_obj = self.pool.get('account.invoice')
         journal_obj = self.pool.get('account.journal')
         fpos_obj = self.pool.get('account.fiscal.position')
 
@@ -679,20 +678,19 @@ class account_analytic_account(osv.osv):
             currency_id = contract.company_id.currency_id.id
 
         inv_data = {
-           'reference': contract.code or False,
            'account_id': contract.partner_id.property_account_receivable.id,
            'type': 'out_invoice',
            'partner_id': contract.partner_id.id,
            'currency_id': currency_id,
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
-           'origin': contract.name,
+           'origin': contract.code,
            'fiscal_position': fpos and fpos.id,
            'payment_term': partner_payment_term,
            'company_id': contract.company_id.id or False,
         }
-        invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
 
+        invoice_line_vals = []
         for line in contract.recurring_invoice_line_ids:
 
             res = line.product_id
@@ -704,7 +702,7 @@ class account_analytic_account(osv.osv):
             taxes = res.taxes_id or False
             tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
-            invoice_line_vals = {
+            invoice_line_vals.append({
                 'name': line.name,
                 'account_id': account_id,
                 'account_analytic_id': contract.id,
@@ -712,13 +710,13 @@ class account_analytic_account(osv.osv):
                 'quantity': line.quantity,
                 'uos_id': line.uom_id.id or False,
                 'product_id': line.product_id.id or False,
-                'invoice_id' : invoice_id,
+                # 'invoice_id' : invoice_id,
                 'invoice_line_tax_id': [(6, 0, tax_id)],
-            }
-            self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+            })
 
-        inv_obj.button_compute(cr, uid, [invoice_id], context=context)
-        return invoice_id
+        inv_data['invoice_line'] = [(0, 0, line_vals) for line_vals in invoice_line_vals]
+
+        return inv_data
 
     def recurring_create_invoice(self, cr, uid, ids, context=None):
         return self._recurring_create_invoice(cr, uid, ids, context=context)
@@ -728,6 +726,7 @@ class account_analytic_account(osv.osv):
 
     def _recurring_create_invoice(self, cr, uid, ids, automatic=False, context=None):
         context = context or {}
+        invoice_ids = []
         current_date =  time.strftime('%Y-%m-%d')
         if ids:
             contract_ids = ids
@@ -735,8 +734,8 @@ class account_analytic_account(osv.osv):
             contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
         for contract in self.browse(cr, uid, contract_ids, context=context):
             try:
-                invoice_id = self._prepare_invoice(cr, uid, contract, context=context)
-
+                invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
+                invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
                 next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
                 interval = contract.recurring_interval
                 if contract.recurring_rule_type == 'daily':
@@ -754,7 +753,7 @@ class account_analytic_account(osv.osv):
                     _logger.error(traceback.format_exc())
                 else:
                     raise
-        return True
+        return invoice_ids
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
