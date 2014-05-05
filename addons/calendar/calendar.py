@@ -712,6 +712,24 @@ class calendar_event(osv.Model):
                     return attendee
         return False
 
+    def get_date_formats(self, cr, uid, context):
+        lang = context.get("lang")
+        res_lang = self.pool.get('res.lang')
+        lang_params = {}
+        if lang:
+            ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
+            if ids:
+                lang_params = res_lang.read(request.cr, uid, ids[0], ["date_format", "time_format"])
+        format_date = lang_params.get("date_format", '%B-%d-%Y')
+        format_time = lang_params.get("time_format", '%I-%M %p')
+        return (format_date, format_time)
+
+    def get_display_time_tz(self, cr, uid, ids, tz=False, context=None):
+        if tz:
+            context["tz"] = tz
+        ev = self.browse(cr, uid, ids, context=context)[0]
+        return self._get_display_time(cr, uid, ev.zstart, ev.zstop, ev.duration, ev.allday, context=context)
+
     def _get_display_time(self, cr, uid, zstart, zstop, zduration, zallday, context=None):
         """
             Return date and time (from to from) based on duration with timezone in string :
@@ -724,19 +742,22 @@ class calendar_event(osv.Model):
 
         tz = context.get('tz', False)
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
-            tz = pytz.timezone('UTC')
+            context['tz'] = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+            tz = context['tz']
 
+        format_date, format_time = self.get_date_formats(cr, uid, context=context)
         date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(zstart, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
         date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(zstop, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-        event_date = date.strftime('%B-%d-%Y')
-        display_time = date.strftime('%H-%M')
+        event_date = date.strftime(format_date)
+        display_time = date.strftime(format_time)
+
         if zallday:
             time = _("AllDay , %s") % (event_date)
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
-            time = ("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime('%H-%M'), tz)
+            time = ("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime(format_time), tz)
         else:
-            time = ("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime('%B-%d-%Y'), date_deadline.strftime('%H-%M'), tz)
+            time = ("%s at %s To\n %s at %s (%s)") % (event_date, display_time, date_deadline.strftime(format_date), date_deadline.strftime(format_time), tz)
         return time
 
     def _compute(self, cr, uid, ids, fields, arg, context=None):
@@ -1338,7 +1359,7 @@ class calendar_event(osv.Model):
         # Used for view in controller
         invitation = {'meeting': {}, 'attendee': []}
 
-        meeting = self.browse(cr, uid, int(meeting_id), context)
+        meeting = self.browse(cr, uid, int(meeting_id), context=context)
         invitation['meeting'] = {
             'event': meeting.name,
             'where': meeting.location,
@@ -1364,7 +1385,8 @@ class calendar_event(osv.Model):
         elif interval == 'dayname':
             res = date.strftime('%A')
         elif interval == 'time':
-            res = date.strftime('%I:%M %p')
+            dummy, format_time = self.get_date_formats(cr, uid, context=context)
+            res = date.strftime(format_time)
         return res
 
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
@@ -1711,6 +1733,7 @@ class ir_http(osv.AbstractModel):
 
         if error_message:
             raise BadRequest(error_message)
+
         return True
 
 
