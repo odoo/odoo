@@ -514,8 +514,8 @@ openerp.web_calendar = function(instance) {
                 date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop]) : null;
             }
             else {
-                date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'zstart');
-                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'zstart') : null; //.addSeconds(-1) : null;
+                date_start = instance.web.auto_str_to_date(evt[this.date_start].split(' ')[0],'start');
+                date_stop = this.date_stop ? instance.web.auto_str_to_date(evt[this.date_stop].split(' ')[0],'start') : null; //.addSeconds(-1) : null;
             }
 
             if (this.info_fields) {
