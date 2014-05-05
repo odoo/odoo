@@ -369,7 +369,7 @@ class website_sale(http.Controller):
 
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
-        order_line_obj = request.registry.get('sale.order')
+        order_obj = request.registry.get('sale.order')
 
         billing_info = self.checkout_parse('billing', checkout, True)
 
@@ -406,7 +406,7 @@ class website_sale(http.Controller):
         order_info.update(registry.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
         order_info.pop('user_id')
 
-        order_line_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
+        order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, multilang=True)
     def checkout(self, **post):
@@ -521,6 +521,8 @@ class website_sale(http.Controller):
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout")
 
+        assert order.partner_id.id != request.website.partner_id.id
+
         # find an already existing transaction
         tx = request.website.sale_get_transaction()
         if not tx:
@@ -530,6 +532,7 @@ class website_sale(http.Controller):
                 'amount': order.amount_total,
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
+                'partner_country_id': order.partner_id.country_id.id,
                 'reference': order.name,
                 'sale_order_id': order.id,
             }, context=context)

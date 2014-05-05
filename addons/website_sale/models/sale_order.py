@@ -169,7 +169,7 @@ class website(orm.Model):
                 request.session['sale_order_code_pricelist_id'] = False
 
             # check for change of partner_id ie after signup
-            if sale_order.partner_id.id !=  partner.id:
+            if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
                 flag_pricelist = False
                 pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
                 if pricelist_id != sale_order.pricelist_id.id:
@@ -186,6 +186,10 @@ class website(orm.Model):
 
                 if flag_pricelist or values.get('fiscal_position') != fiscal_position:
                     update_pricelist(pricelist_id)
+
+            # update browse record
+            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:
+                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
 
         return sale_order
 
