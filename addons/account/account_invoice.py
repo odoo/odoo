@@ -520,8 +520,8 @@ class account_invoice(osv.osv):
                 acc_id = p.property_account_payable.id
                 partner_payment_term = p.property_supplier_payment_term and p.property_supplier_payment_term.id or False
             fiscal_position = p.property_account_position and p.property_account_position.id or False
-            if p.bank_ids:
-                bank_id = p.bank_ids[0].id
+            if p.commercial_partner_id.bank_ids:
+                bank_id = p.commercial_partner_id.bank_ids[0].id
 
         result = {'value': {
             'account_id': acc_id,
