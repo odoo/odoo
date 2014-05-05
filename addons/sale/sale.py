@@ -626,6 +626,40 @@ class sale_order(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
+    def onchange_fiscal_position(self, cr, uid, ids, fiscal_position, order_lines, context=None):
+        order_line = []
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        product_obj = self.pool.get('product.product')
+        line_obj = self.pool.get('sale.order.line')
+
+        fpos = False
+        if fiscal_position:
+            fpos = fiscal_obj.browse(cr, uid, fiscal_position, context=context)
+        
+        for line in order_lines:
+            # create    (0, 0,  { fields })
+            # update    (1, ID, { fields })
+            if line[0] in [0, 1]:
+                taxes_id = None
+                if line[2].get('product_id'):
+                    taxes_id = product_obj.browse(cr, uid, line[2]['product_id'], context=context).taxes_id
+                elif line[1]:
+                    taxes_id = line_obj.browse(cr, uid, line[1], context=context).product_id.taxes_id
+                if taxes_id:
+                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, taxes_id)]]
+                order_line.append(line)
+
+            # link      (4, ID)
+            # link all  (6, 0, IDS)
+            elif line[0] in [4, 6]:
+                line_ids = line[0] == 4 and [line[1]] or line[2]
+                for line_id in line_ids:
+                    taxes_id = line_obj.browse(cr, uid, line_id, context=context).product_id.taxes_id
+                    order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, taxes_id)]]}])
+
+            else:
+                order_line.append(line)
+        return {'value': {'order_line': order_line}}
 
 
 # TODO add a field price_unit_uos

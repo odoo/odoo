@@ -206,7 +206,8 @@
                                 </group>
                                 <group name="sale_pay">
                                     <field name="payment_term" options="{'no_create': True}"/>
-                                    <field name="fiscal_position" options="{'no_create': True}"/>
+                                    <field name="fiscal_position" options="{'no_create': True}"
+                                        on_change="onchange_fiscal_position(fiscal_position, order_line, context)"/>
                                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                                 </group>
                                 <group>
