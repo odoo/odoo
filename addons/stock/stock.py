@@ -720,23 +720,11 @@ class stock_picking(osv.osv):
 
     def check_group_lot(self, cr, uid, context=None):
         """ This function will return true if we have the setting to use lots activated. """
-        settings_obj = self.pool.get('stock.config.settings')
-        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
-        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
-        if not config_ids:
-            return False
-        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
-        return stock_settings.group_stock_production_lot
+        return self.pool.get('res.users').has_group(cr, uid, 'stock.group_production_lot')
 
     def check_group_pack(self, cr, uid, context=None):
         """ This function will return true if we have the setting to use package activated. """
-        settings_obj = self.pool.get('stock.config.settings')
-        config_ids = settings_obj.search(cr, uid, [], limit=1, order='id DESC', context=context)
-        #If we don't have updated config until now, all fields are by default false and so should be not dipslayed
-        if not config_ids:
-            return False
-        stock_settings = settings_obj.browse(cr, uid, config_ids[0], context=context)
-        return stock_settings.group_stock_tracking_lot
+        return self.pool.get('res.users').has_group(cr, uid, 'stock.group_tracking_lot')
 
     def action_assign_owner(self, cr, uid, ids, context=None):
         for picking in self.browse(cr, uid, ids, context=context):
