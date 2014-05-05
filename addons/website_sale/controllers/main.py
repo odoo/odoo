@@ -5,6 +5,7 @@ from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
+from openerp.addons.website.models.website import slug
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -665,7 +666,7 @@ class website_sale(http.Controller):
         product_id = product_obj.create(cr, uid, { 'name': name, 'public_categ_id': category }, context=context)
         product = product_obj.browse(cr, uid, product_id, context=context)
 
-        return request.redirect("/shop/product/%s/?enable_editor=1" % product.product_tmpl_id.id)
+        return request.redirect("/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id))
 
     @http.route(['/shop/reorder'], type='json', auth="public")
     def reorder(self, product_id, operation):
