@@ -2,19 +2,27 @@
 import collections
 import cStringIO
 import datetime
+import hashlib
 import json
 import logging
 import math
+import os
 import re
 import sys
 import xml  # FIXME use lxml and etree
+import itertools
+import lxml.html
+from urlparse import urlparse
 
 import babel
 import babel.dates
-import werkzeug.utils
+import werkzeug
 from PIL import Image
 
+import openerp.http
 import openerp.tools
+import openerp.tools.func
+import openerp.tools.lru
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
@@ -395,6 +403,22 @@ class QWeb(orm.AbstractModel):
         except ValueError:
             pass
         return self.render(cr, uid, template, d)
+
+    def render_tag_call_assets(self, element, template_attributes, generated_attributes, qwebcontext):
+        """ This special 't-call' tag can be used in order to aggregate/minify javascript and css assets"""
+        name = template_attributes['call-assets']
+
+        # Backward compatibility hack for manifest usage
+        qwebcontext['manifest_list'] = openerp.addons.web.controllers.main.manifest_list
+
+        d = qwebcontext.copy()
+        d.context['inherit_branding'] = False
+        content = self.render_tag_call(
+            element, {'call': name}, generated_attributes, d)
+        if qwebcontext.get('debug'):
+            return content
+        bundle = AssetsBundle(name, html=content)
+        return bundle.to_html()
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -821,7 +845,6 @@ class RelativeDatetimeConverter(osv.AbstractModel):
         return babel.dates.format_timedelta(
             value - reference, add_direction=True, locale=locale)
 
-
 class Contact(orm.AbstractModel):
     _name = 'ir.qweb.field.contact'
     _inherit = 'ir.qweb.field.many2one'
@@ -836,7 +859,7 @@ class Contact(orm.AbstractModel):
 
         id = getattr(record, field_name).id
         field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
-        value = werkzeug.utils.escape( field_browse.name_get()[0][1] )
+        value = field_browse.name_get()[0][1]
 
         val = {
             'name': value.split("\n")[0],
@@ -950,5 +973,238 @@ def get_field_type(column, options):
     """ Gets a t-field's effective type from the field's column and its options
     """
     return options.get('widget', column._type)
+
+class AssetsBundle(object):
+    cache = openerp.tools.lru.LRU(32)
+    rx_css_import = re.compile("(@import[^;{]+;?)", re.M)
+
+    def __init__(self, xmlid, html=None, debug=False):
+        self.debug = debug
+        self.xmlid = xmlid
+        self.javascripts = []
+        self.stylesheets = []
+        self.remains = []
+        self._checksum = None
+        if html:
+            self.parse(html)
+
+    def parse(self, html):
+        fragments = lxml.html.fragments_fromstring(html)
+        for el in fragments:
+            if isinstance(el, basestring):
+                self.remains.append(el)
+            elif isinstance(el, lxml.html.HtmlElement):
+                src = el.get('src')
+                href = el.get('href')
+                if el.tag == 'style':
+                    self.stylesheets.append(StylesheetAsset(source=el.text))
+                elif el.tag == 'link' and el.get('rel') == 'stylesheet' and self.can_aggregate(href):
+                    self.stylesheets.append(StylesheetAsset(url=href))
+                elif el.tag == 'script' and not src:
+                    self.javascripts.append(JavascriptAsset(source=el.text))
+                elif el.tag == 'script' and self.can_aggregate(src):
+                    self.javascripts.append(JavascriptAsset(url=src))
+                else:
+                    self.remains.append(lxml.html.tostring(el))
+            else:
+                try:
+                    self.remains.append(lxml.html.tostring(el))
+                except Exception:
+                    # notYETimplementederror
+                    raise NotImplementedError
+
+    def can_aggregate(self, url):
+        return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
+
+    def to_html(self, sep='\n'):
+        response = []
+        if self.stylesheets:
+            response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+        if self.javascripts:
+            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        response.extend(self.remains)
+
+        return sep.join(response)
+
+    @openerp.tools.func.lazy_property
+    def last_modified(self):
+        return max(itertools.chain(
+            (asset.last_modified for asset in self.javascripts),
+            (asset.last_modified for asset in self.stylesheets),
+            [datetime.datetime(1970, 1, 1)],
+        ))
+
+    @openerp.tools.func.lazy_property
+    def checksum(self):
+        checksum = hashlib.new('sha1')
+        for asset in itertools.chain(self.javascripts, self.stylesheets):
+            checksum.update(asset.content.encode("utf-8"))
+        return checksum.hexdigest()
+
+    def js(self):
+        key = 'js_' + self.checksum
+        if key not in self.cache:
+            content =';\n'.join(asset.minify() for asset in self.javascripts)
+            self.cache[key] = content
+        if self.debug:
+            return "/*\n%s\n*/\n" % '\n'.join(
+                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
+        return self.cache[key]
+
+    def css(self):
+        key = 'css_' + self.checksum
+        if key not in self.cache:
+            content = '\n'.join(asset.minify() for asset in self.stylesheets)
+            # move up all @import rules to the top
+            matches = []
+            def push(matchobj):
+                matches.append(matchobj.group(0))
+                return ''
+
+            content = re.sub(self.rx_css_import, push, content)
+
+            matches.append(content)
+            content = u'\n'.join(matches)
+            self.cache[key] = content
+        if self.debug:
+            return "/*\n%s\n*/\n" % '\n'.join(
+                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
+        return self.cache[key]
+
+class WebAsset(object):
+    def __init__(self, source=None, url=None):
+        self.source = source
+        self.url = url
+        self._filename = None
+        self._content = None
+
+    @property
+    def filename(self):
+        if self._filename is None and self.url:
+            module = filter(None, self.url.split('/'))[0]
+            try:
+                mpath = openerp.http.addons_manifest[module]['addons_path']
+            except Exception:
+                raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
+            self._filename = mpath + self.url.replace('/', os.path.sep)
+        return self._filename
+
+    @property
+    def content(self):
+        if self._content is None:
+            self._content = self.get_content()
+        return self._content
+
+    def get_content(self):
+        if self.source:
+            return self.source
+
+        with open(self.filename, 'rb') as fp:
+            return fp.read().decode('utf-8')
+
+    def minify(self):
+        return self.content
+
+    @property
+    def last_modified(self):
+        if self.source:
+            # TODO: return last_update of bundle's ir.ui.view
+            return datetime.datetime(1970, 1, 1)
+        return datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
+
+class JavascriptAsset(WebAsset):
+    def minify(self):
+        return rjsmin(self.content)
+
+class StylesheetAsset(WebAsset):
+    rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
+    rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
+    rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
+
+    def _get_content(self):
+        if self.source:
+            return self.source
+
+        with open(self.filename, 'rb') as fp:
+            firstline = fp.readline()
+            m = re.match(r'@charset "([^"]+)";', firstline)
+            if m:
+                encoding = m.group(1)
+            else:
+                encoding = "utf-8"
+                # "reinject" first line as it's not @charset
+                fp.seek(0)
+
+            return fp.read().decode(encoding)
+
+    def get_content(self):
+        content = self._get_content()
+        if self.url:
+            web_dir = os.path.dirname(self.url)
+
+            content = self.rx_import.sub(
+                r"""@import \1%s/""" % (web_dir,),
+                content,
+            )
+
+            content = self.rx_url.sub(
+                r"url(\1%s/" % (web_dir,),
+                content,
+            )
+        return content
+
+    def minify(self):
+        # remove existing sourcemaps, make no sense after re-mini
+        content = self.rx_sourceMap.sub('', self.content)
+        # comments
+        content = re.sub(r'/\*.*?\*/', '', content, flags=re.S)
+        # space
+        content = re.sub(r'\s+', ' ', content)
+        content = re.sub(r' *([{}]) *', r'\1', content)
+        return content
+
+def rjsmin(script):
+    """ Minify js with a clever regex.
+    Taken from http://opensource.perlig.de/rjsmin
+    Apache License, Version 2.0 """
+    def subber(match):
+        """ Substitution callback """
+        groups = match.groups()
+        return (
+            groups[0] or
+            groups[1] or
+            groups[2] or
+            groups[3] or
+            (groups[4] and '\n') or
+            (groups[5] and ' ') or
+            (groups[6] and ' ') or
+            (groups[7] and ' ') or
+            ''
+        )
+
+    result = re.sub(
+        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
+        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
+        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
+        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
+        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
+        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
+        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
+        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
+        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
+        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
+        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
+        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
+        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
+        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
+        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
+        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
+        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+    ).strip()
+    return result
 
 # vim:et:

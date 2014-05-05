@@ -43,7 +43,7 @@ class WorkflowInstance(object):
         assert isinstance(workflow_id, (int, long))
 
         cr = session.cr
-        cr.execute('insert into wkf_instance (res_type,res_id,uid,wkf_id) values (%s,%s,%s,%s) RETURNING id', (record.model, record.id, session.uid, workflow_id))
+        cr.execute('insert into wkf_instance (res_type,res_id,uid,wkf_id,state) values (%s,%s,%s,%s,%s) RETURNING id', (record.model, record.id, session.uid, workflow_id, 'active'))
         instance_id = cr.fetchone()[0]
 
         cr.execute('select * from wkf_activity where flow_start=True and wkf_id=%s', (workflow_id,))

@@ -51,9 +51,6 @@ class Bank(osv.osv):
             result.append((bank.id, (bank.bic and (bank.bic + ' - ') or '') + bank.name))
         return result
 
-Bank()
-
-
 class res_partner_bank_type(osv.osv):
     _description='Bank Account Type'
     _name = 'res.partner.bank.type'
@@ -67,7 +64,6 @@ class res_partner_bank_type(osv.osv):
     _defaults = {
         'format_layout': lambda *args: "%(bank_name)s: %(acc_number)s"
     }
-res_partner_bank_type()
 
 class res_partner_bank_type_fields(osv.osv):
     _description='Bank type fields'
@@ -80,8 +76,6 @@ class res_partner_bank_type_fields(osv.osv):
         'readonly': fields.boolean('Readonly'),
         'size': fields.integer('Max. Size'),
     }
-res_partner_bank_type_fields()
-
 
 class res_partner_bank(osv.osv):
     '''Bank Accounts'''
@@ -233,7 +227,5 @@ class res_partner_bank(osv.osv):
             result['country_id'] =  part.country_id.id
             result['state_id'] = part.state_id.id
         return {'value': result}
-
-res_partner_bank()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

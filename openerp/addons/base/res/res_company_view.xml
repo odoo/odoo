@@ -80,33 +80,30 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Reports Configuration">
-                            <group string="Footer Configuration">
+                        <page string="Report Configuration">
+                            <group string="Configuration">
                                 <field name="custom_footer" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
                                 <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>
                                 <field name="rml_footer_readonly" attrs="{'invisible': [('custom_footer','=',True)]}"/>
                             </group>
-                            <group string="RML Configuration">
+
+                            <group string="Configuration (RML)" col="2" groups="base.group_no_one">
                                 <field name="rml_paper_format" on_change="onchange_rml_paper_format(rml_paper_format)"/>
-                            </group>
-                            <group>
+
                                 <label for="font" />
                                 <div>
-                                    <div>
-                                        <field name="font" class="oe_inline" colspan="2" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)" />
-                                        <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link" colspan="1"/>
-                                    </div>
+                                    <field name="font" class="oe_inline" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)" />
+                                    <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link" colspan="1"/>
                                 </div>
+                                <div class="oe_right oe_button_box" name="button_box" colspan="2">
+                                    <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
+                                </div>
+                                <group col="1" colspan="2">
+                                    <field name="rml_header"/>
+                                    <field name="rml_header2"/>
+                                    <field name="rml_header3"/>
+                                </group>
                             </group>
-                            <div class="oe_right oe_button_box" name="button_box" groups="base.group_no_one" >
-                                <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
-                            </div>
-                            <label for="rml_header" groups="base.group_no_one" />
-                            <field name="rml_header" groups="base.group_no_one" />
-                            <label for="rml_header2" groups="base.group_no_one" />
-                            <field name="rml_header2" groups="base.group_no_one" />
-                            <label for="rml_header3" groups="base.group_no_one" />
-                            <field name="rml_header3" groups="base.group_no_one" />
                         </page>
                     </notebook>
                     </sheet>
