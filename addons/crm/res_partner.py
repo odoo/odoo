@@ -25,7 +25,7 @@ class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
 
-    def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
+    def _opportunity_meeting_phonecall_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))
         # the user may not have access rights for opportunities or meetings
         try:
@@ -33,6 +33,7 @@ class res_partner(osv.osv):
                 res[partner.id] = {
                     'opportunity_count': len(partner.opportunity_ids),
                     'meeting_count': len(partner.meeting_ids),
+                    'phonecall_count': len(partner.meeting_ids),
                 }
         except:
             pass
@@ -42,12 +43,13 @@ class res_partner(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
             'Leads and Opportunities', domain=[('probability', 'not in', ['0', '100'])]),
-        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_partner_rel','partner_id', 'meeting_id',
+        'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
-        'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
-        'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
+        'opportunity_count': fields.function(_opportunity_meeting_phonecall_count, string="Opportunity", type='integer', multi='opp_meet'),
+        'meeting_count': fields.function(_opportunity_meeting_phonecall_count, string="# Meetings", type='integer', multi='opp_meet'),
+        'phonecall_count': fields.function(_opportunity_meeting_phonecall_count, string="Phonecalls", type="integer", multi='opp_meet'),
     }
 
     def copy(self, cr, uid, record_id, default=None, context=None):

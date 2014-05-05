@@ -843,8 +843,14 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened,closing_control"/>
-                            <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
+                            <button class="oe_stat_button" name="%(action_pos_box_in)d"
+                                type="action" states="opened,closing_control" icon="fa-level-down">
+                                <div>Put<br/>Money In</div>
+                            </button>
+                            <button class="oe_stat_button" name="%(action_pos_box_out)d"
+                                type="action" states="opened,closing_control" icon="fa-level-up">
+                                <div>Take<br/>Money Out</div>
+                            </button>
                         </div>
                         <h1 class="oe_title">
                             Session:

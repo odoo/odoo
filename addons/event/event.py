@@ -149,6 +149,12 @@ class event_event(osv.osv):
                         res[event.id]= True
                         continue
         return res
+    
+    def _count_registrations(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            event.id: len(event.registration_ids)
+            for event in self.browse(cr, uid, ids, context=context)
+        }
 
     _columns = {
         'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -191,6 +197,7 @@ class event_event(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
         'organizer_id': fields.many2one('res.partner', "Organizer"),
+        'count_registrations': fields.function(_count_registrations, type="integer", string="Registrations"),
     }
     _defaults = {
         'state': 'draft',

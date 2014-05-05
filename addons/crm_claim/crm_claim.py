@@ -190,8 +190,17 @@ class crm_claim(osv.osv):
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
+    def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for partner in self.browse(cr, uid, ids, context=context):
+                res[partner.id] = len(partner.claims_ids)
+        except:
+            pass
+        return res
     _columns = {
         'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
+        'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
