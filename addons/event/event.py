@@ -150,16 +150,11 @@ class event_event(osv.osv):
                         continue
         return res
     
-    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'count_registrations': 0, 'count_tracks': 0,}), ids))
-        try:
-            for data in self.browse(cr, uid, ids, context=context):
-                res[data.id] = {'count_registrations': len(data.registration_ids),
-                'count_tracks': len(data.track_ids),
-               }
-        except:
-            pass
-        return res
+    def _count_registrations(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            event.id: len(event.registration_ids)
+            for event in self.browse(cr, uid, ids, context=context)
+        }
 
     _columns = {
         'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -180,7 +175,6 @@ class event_event(osv.osv):
             store={'event.registration': (_get_events_from_registrations, ['state'], 10),
                    'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
-        'track_ids': fields.one2many('event.track', 'event_id', 'Tracks', readonly=False),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
@@ -203,8 +197,7 @@ class event_event(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
         'organizer_id': fields.many2one('res.partner', "Organizer"),
-        'count_registrations': fields.function(_count_all, type="integer", string="Registrations", multi=True),
-        'count_tracks': fields.function(_count_all, type='integer', string='Tracks', multi=True),
+        'count_registrations': fields.function(_count_registrations, type="integer", string="Registrations"),
     }
     _defaults = {
         'state': 'draft',
