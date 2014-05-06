@@ -113,11 +113,6 @@ class ir_property(osv.osv):
         values[field] = value
         return values
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        return [(rec.id, rec.name or rec.fields_id.field_description) for rec in self.browse(cr, uid, ids, context=context)]
-
     def write(self, cr, uid, ids, values, context=None):
         return super(ir_property, self).write(cr, uid, ids, self._update_values(cr, uid, ids, values), context=context)
 
