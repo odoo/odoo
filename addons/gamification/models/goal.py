@@ -138,7 +138,6 @@ class gamification_goal(osv.Model):
 
     _name = 'gamification.goal'
     _description = 'Gamification goal instance'
-    _inherit = 'mail.thread'
 
     def _get_completion(self, cr, uid, ids, field_name, arg, context=None):
         """Return the percentage of completeness of the goal, between 0 and 100"""
@@ -226,8 +225,7 @@ class gamification_goal(osv.Model):
                 temp_obj = self.pool.get('email.template')
                 template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_reminder', context)
                 body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal', goal.id, context=context)
-
-                self.message_post(cr, uid, goal.id, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
+                self.pool['mail.thread'].message_post(cr, uid, 0, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
                 return {'to_update': True}
         return {}
 
