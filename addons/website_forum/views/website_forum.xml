@@ -145,8 +145,11 @@
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
             </div>
-            <t t-foreach="question.tag_ids" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge pull-right" t-field="tag.name"/>
+            <t t-foreach="question.tag_ids" t-as="question_tag">
+                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
+                    <span t-attf-class="pull-right badge #{tag and tag.name == question_tag.name and 'badge-active' ''}" t-field="question_tag.name"
+                        style="margin-right: 4px;"/>
+                </a>
             </t>
             <div class="text-muted">
                 by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
@@ -216,7 +219,7 @@
                   <t t-if="filters == 'all'">All</t>
                   <t t-if="filters == 'unanswered'">Unanswered</t>
                   <t t-if="filters == 'followed'">Followed</t>
-                  <t t-if="filters == 'tag'">Tag</t>
+                  <t t-if="tag"><span t-field="tag.name"/></t>
                   <t t-if="sorting == 'date'"> by activity date</t>
                   <t t-if="sorting == 'answered'"> by most answered</t>
                   <t t-if="sorting == 'vote'"> by most voted</t>
