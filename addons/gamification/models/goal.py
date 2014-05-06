@@ -241,7 +241,6 @@ class gamification_goal(osv.Model):
             context = {}
 
         goals_by_definition = {}
-        goals_to_write = {}
         all_goals = {}
         for goal in self.browse(cr, uid, ids, context=context):
             if goal.state in ('draft', 'canceled'):
@@ -249,10 +248,10 @@ class gamification_goal(osv.Model):
                 continue
 
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
-            goals_to_write[goal.id] = {}
             all_goals[goal.id] = goal
 
         for definition, goals in goals_by_definition.items():
+            goals_to_write = dict((goal.id, {}) for goal in goals)
             if definition.computation_mode == 'manually':
                 for goal in goals:
                     goals_to_write[goal.id].update(self._check_remind_delay(cr, uid, goal, context))
@@ -343,22 +342,22 @@ class gamification_goal(osv.Model):
                         if new_value != goal.current:
                             goals_to_write[goal.id]['current'] = new_value
 
-        for goal_id, value in goals_to_write.items():
-            if not value:
-                continue
-            goal = all_goals[goal_id]
+            for goal_id, value in goals_to_write.items():
+                if not value:
+                    continue
+                goal = all_goals[goal_id]
 
-            # check goal target reached
-            if (goal.definition_condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
-              or (goal.definition_condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
-                value['state'] = 'reached'
+                # check goal target reached
+                if (goal.definition_condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
+                  or (goal.definition_condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
+                    value['state'] = 'reached'
 
-            # check goal failure
-            elif goal.end_date and fields.date.today() > goal.end_date:
-                value['state'] = 'failed'
-                value['closed'] = True
-            if value:
-                self.write(cr, uid, [goal.id], value, context=context)
+                # check goal failure
+                elif goal.end_date and fields.date.today() > goal.end_date:
+                    value['state'] = 'failed'
+                    value['closed'] = True
+                if value:
+                    self.write(cr, uid, [goal.id], value, context=context)
         return True
 
     def action_start(self, cr, uid, ids, context=None):
