@@ -1296,15 +1296,13 @@ class product_product(osv.Model):
     _inherit = 'product.product'
     
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for purchase in self.browse(cr, uid, ids, context=context):
-                res[purchase.id] = len(purchase.purchase_ids)
-        except:
-            pass
-        return res
+        Purchase = self.pool['purchase.order']
+        return {
+            product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
+            for product_id in ids
+        }
+
     _columns = {
-        'purchase_ids': fields.one2many('purchase.order', 'product_id', 'Purchases'),
         'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
 
