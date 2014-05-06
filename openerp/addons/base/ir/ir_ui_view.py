@@ -882,6 +882,11 @@ class view(osv.osv):
         )
         qcontext.update(values)
 
+        # TODO: remove this as soon as the following branch is merged
+        #       lp:~openerp-dev/openerp-web/trunk-module-closure-style-msh
+        from openerp.addons.web.controllers.main import module_boot
+        qcontext['modules'] = simplejson.dumps(module_boot())
+
         def loader(name):
             return self.read_template(cr, uid, name, context=context)
 
