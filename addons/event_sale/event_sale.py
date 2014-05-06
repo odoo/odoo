@@ -132,11 +132,11 @@ class event_event(osv.osv):
     def _default_tickets(self):
         try:
             product = self.env.ref('event_sale.product_product_event')
-            self.event_ticket_ids = self.env['event.event.ticket'].new({
+            self.event_ticket_ids = [{
                 'name': _('Subscription'),
                 'product_id': product.id,
                 'price': 0,
-            })
+            }]
         except ValueError:
             self.event_ticket_ids = self.env['event.event.ticket']
 
