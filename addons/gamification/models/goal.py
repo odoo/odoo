@@ -239,6 +239,7 @@ class gamification_goal(osv.Model):
         the target value being reached, the goal is set as failed."""
         if context is None:
             context = {}
+        commit = context.get('commit_gamification', False)
 
         goals_by_definition = {}
         all_goals = {}
@@ -358,6 +359,8 @@ class gamification_goal(osv.Model):
                     value['closed'] = True
                 if value:
                     self.write(cr, uid, [goal.id], value, context=context)
+            if commit:
+                cr.commit()
         return True
 
     def action_start(self, cr, uid, ids, context=None):

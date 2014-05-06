@@ -264,6 +264,9 @@ class gamification_challenge(osv.Model):
         - Create the missing goals (eg: modified the challenge to add lines)
         - Update every running challenge
         """
+        if context is None:
+            context = {}
+
         # start scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
@@ -281,6 +284,9 @@ class gamification_challenge(osv.Model):
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')], context=context)
 
+        # in cron mode, will do intermediate commits
+        # TODO in trunk: replace by parameter
+        context.update({'commit_gamification': True})
         return self._update_all(cr, uid, ids, context=context)
 
     def _update_all(self, cr, uid, ids, context=None):
