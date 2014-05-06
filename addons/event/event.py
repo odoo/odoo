@@ -79,7 +79,7 @@ class event_event(Model):
         for event in self:
             event.seats_unconfirmed = event.seats_reserved = event.seats_used = 0
         # aggregate registrations by event and by state
-        if self.unbrowse():
+        if self.ids:
             state_field = {
                 'draft': 'seats_unconfirmed',
                 'open':'seats_reserved',
@@ -90,7 +90,7 @@ class event_event(Model):
                         WHERE event_id IN %s AND state IN ('draft', 'open', 'done')
                         GROUP BY event_id, state
                     """
-            self._cr.execute(query, (tuple(self.unbrowse()),))
+            self._cr.execute(query, (tuple(self.ids),))
             for event_id, state, num in self._cr.fetchall():
                 event = self.browse(event_id)
                 event[state_field[state]] += num
