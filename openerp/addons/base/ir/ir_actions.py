@@ -1058,8 +1058,6 @@ Launch Manually Once: after having been launched manually, it sets automatically
     _order="sequence,id"
 
     def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
         return [(rec.id, rec.action_id.name) for rec in self.browse(cr, uid, ids, context=context)]
 
     def action_launch(self, cr, uid, ids, context=None):

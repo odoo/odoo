@@ -69,8 +69,6 @@ class view_custom(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
         return [(rec.id, rec.user_id.name) for rec in self.browse(cr, uid, ids, context=context)]
 
     def _auto_init(self, cr, context=None):
