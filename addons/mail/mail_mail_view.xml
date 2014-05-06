@@ -17,7 +17,7 @@
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
                         <div style="vertical-align: top;">
-                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
+                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                 context="{'default_composition_mode':'reply', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
                         </div>
