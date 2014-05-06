@@ -124,6 +124,7 @@ class WebsiteForum(http.Controller):
         values.update({
             'main_object': tag or forum,
             'question_ids': question_ids,
+            'question_count': question_count,
             'pager': pager,
             'tag': tag,
             'filters': filters,
@@ -134,7 +135,7 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/<model("forum.forum"):forum>/faq'], type='http', auth="public", website=True, multilang=True)
     def forum_faq(self, forum, **post):
-        values = self._prepare_forum_values(forum=forum, searches=dict(), **post)
+        values = self._prepare_forum_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
         return request.website.render("website_forum.faq", values)
 
     @http.route('/forum/get_tags', type='http', auth="public", multilang=True, methods=['GET'], website=True)
@@ -147,7 +148,7 @@ class WebsiteForum(http.Controller):
     def tags(self, forum, page=1, **post):
         cr, uid, context = request.cr, request.uid, request.context
         Tag = request.registry['forum.tag']
-        obj_ids = Tag.search(cr, uid, [('forum_id', '=', forum.id)], limit=None, context=context)
+        obj_ids = Tag.search(cr, uid, [('forum_id', '=', forum.id), ('posts_count', '>', 0)], limit=None, order='posts_count DESC', context=context)
         tags = Tag.browse(cr, uid, obj_ids, context=context)
         values = self._prepare_forum_values(forum=forum, searches={'tags': True}, **post)
         values.update({
@@ -426,7 +427,7 @@ class WebsiteForum(http.Controller):
         tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], count=True, context=context)
         pager = request.website.pager(url="/forum/users", total=tag_count, page=page, step=step, scope=30)
 
-        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], limit=step, offset=pager['offset'], context=context)
+        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
         users = User.browse(cr, SUPERUSER_ID, obj_ids, context=context)
         searches['users'] = 'True'
 
@@ -590,12 +591,13 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="public", multilang=True, website=True)
     def convert_comment_to_answer(self, forum, post, comment, **kwarg):
-        values = {
-            'content': comment.body,
-        }
+        body = comment.body
         request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
         question = post.parent_id if post.parent_id else post
-        return self.post_new(forum, question, **values)
+        for answer in question.child_ids:
+            if answer.create_uid.id == request.uid:
+                return self.post_comment(forum, answer, comment=html2plaintext(body))
+        return self.post_new(forum, question, content=body)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", multilang=True, website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
