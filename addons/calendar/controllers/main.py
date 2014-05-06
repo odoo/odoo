@@ -48,15 +48,8 @@ class meeting_invitation(http.Controller):
         if attendee:
             attendee_data['current_attendee'] = attendee[0]
 
-        css = '<link rel="stylesheet" href="/web/css/web.assets_backend"/>'
-        js = '<script type="text/javascript" src="/web/js/web.assets_backend"></script>'
-
-        return webmain.html_template % {
-            'js': js,
-            'css': css,
-            'modules': simplejson.dumps(webmain.module_boot(db)),
-            'init': "s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)),
-        }
+        values = dict(init="s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)))
+        return request.render('web.webclient_bootstrap', values)
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="none")
