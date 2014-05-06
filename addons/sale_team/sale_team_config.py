@@ -22,8 +22,8 @@
 from openerp.osv import fields, osv
 
 
-class sala_team_configuration(osv.TransientModel):
-    _name = 'sale.team.config.settings'
+class sale_team_configuration(osv.TransientModel):
+    _name = 'sale.config.settings'
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     def set_group_multi_salesteams(self, cr, uid, ids, context=None):
