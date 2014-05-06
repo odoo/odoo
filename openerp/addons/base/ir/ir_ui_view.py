@@ -71,6 +71,16 @@ class view_custom(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         return [(rec.id, rec.user_id.name) for rec in self.browse(cr, uid, ids, context=context)]
 
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('user_id', operator, name)] + args, limit=limit)
+        else:
+            ids = self.search(cr, user, args, context=context, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
+
     def _auto_init(self, cr, context=None):
         super(view_custom, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
