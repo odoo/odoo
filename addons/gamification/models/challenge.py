@@ -366,13 +366,12 @@ class gamification_challenge(osv.Model):
                 if write_op:
                     self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)
 
+                # TODO for trunk: use proper parameter
                 if challenge.report_message_frequency != 'never':
                     if to_remove_ids:
                         self.message_unsubscribe_users(cr, uid, [challenge.id], to_remove_ids, context=context)
                     if to_add_ids:
                         self.message_subscribe_users(cr, uid, [challenge.id], to_add_ids, context=context)
-                else:
-                    self.message_unsubscribe_users(cr, uid, [challenge.id], old_user_ids, context=context)
 
         return True
 
