@@ -136,13 +136,21 @@ class mail_alias(osv.Model):
         """
         res = []
         for record in self.browse(cr, uid, ids, context=context):
-            if record.alias_name and record.alias_domain:
+            if record.alias_name or record.alias_domain:
                 res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
-            elif record.alias_name:
-                res.append((record['id'], "%s" % (record.alias_name)))
             else:
-                res.append((record['id'], _("New Alias")))
+                res.append((record['id'], _("Inactive Alias")))
         return res
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        ids = []
+        if name:
+            ids = self.search(cr, user, ['|',('alias_name', operator, name),('alias_domain', operator, name)] + args, limit=limit)
+        else:
+            ids = self.search(cr, user, args, context=context, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
 
     def _find_unique(self, cr, uid, name, context=None):
         """Find a unique alias name similar to ``name``. If ``name`` is
