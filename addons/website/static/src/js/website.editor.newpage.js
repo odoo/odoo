@@ -3,9 +3,8 @@
 
     var website = openerp.website;
     var _t = openerp._t;
-    website.is_editable = true;
     website.is_editable_button = true;
-    
+
     website.EditorBar.include({
         start: function() {
             var res = this._super();

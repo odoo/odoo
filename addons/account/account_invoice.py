@@ -1780,7 +1780,7 @@ class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
     _inherit = 'res.partner'
     _columns = {
-        'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
+        'invoice_ids': fields.one2many('account.invoice', 'partner_id', 'Invoices', readonly=True),
     }
 
     def _find_accounting_partner(self, partner):

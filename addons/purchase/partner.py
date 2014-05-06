@@ -26,15 +26,14 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def _purchase_order_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        # this user may not have access to user rights
-        try:
-            for partner in self.browse(cr, uid, ids, context=context):
-                res[partner.id] = len(partner.purchase_order_ids)
-        except:
-            pass
+        res = dict(map(lambda x: (x,{'purchase_order_count': 0, 'supplier_invoice_count': 0}), ids))
+        invoice_ids = self.pool.get('account.invoice').search(cr,uid, [('type', '=', 'in_invoice'), ('partner_id', '=', ids[0])])
+        for partner in self.browse(cr, uid, ids, context=context):
+            res[partner.id] = {
+                    'purchase_order_count': len(partner.purchase_order_ids),
+                    'supplier_invoice_count': len(invoice_ids),
+                }
         return res
-
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -53,8 +52,10 @@ class res_partner(osv.osv):
           domain=[('type','=','purchase')],
           string="Purchase Pricelist", 
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),
-        'purchase_order_count': fields.function(_purchase_order_count, string='# of Purchase Order', type='integer'),
-        'purchase_order_ids': fields.one2many('purchase.order','partner_id','Purchase Order')
+        'purchase_order_count': fields.function(_purchase_order_count, string='# of Purchase Order', type='integer', multi="count"),
+        'purchase_order_ids': fields.one2many('purchase.order','partner_id','Purchase Order'),
+        'invoice_ids': fields.one2many('account.invoice','partner_id','Supplier Invoices'),
+        'supplier_invoice_count': fields.function(_purchase_order_count, string='# Supplier Invoices', type='integer', multi="count"),
     }
 
 

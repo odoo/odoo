@@ -204,17 +204,12 @@ class website(osv.osv):
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
     def preprocess_request(self, cr, uid, ids, request, context=None):
-        # TODO FP: is_website_publisher and editable in context should be removed
-        # for performance reasons (1 query per image to load) but also to be cleaner
-        # I propose to replace this by a group 'base.group_website_publisher' on the
-        # view that requires it.
-        Access = request.registry['ir.model.access']
-        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
+        pass
 
-        request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
-        request.context.update(
-            editable=is_website_publisher,
-        )
+    def is_publisher(self, cr, uid, ids, context=None):
+        Access = self.pool['ir.model.access']
+        is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
+        return is_website_publisher
 
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):

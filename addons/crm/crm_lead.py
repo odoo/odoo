@@ -215,7 +215,14 @@ class crm_lead(format_address, osv.osv):
                         duration =  len(no_days)
                 res[lead.id][field] = abs(int(duration))
         return res
-
+    def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for meeting in self.browse(cr, uid, ids, context=context):
+                res[meeting.id] = len(meeting.meeting_ids)
+        except:
+            pass
+        return res
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', track_visibility='onchange',
             select=True, help="Linked partner (optional). Usually created when converting the lead."),
@@ -290,6 +297,8 @@ class crm_lead(format_address, osv.osv):
         'payment_mode': fields.many2one('crm.payment.mode', 'Payment Mode', \
                             domain="[('section_id','=',section_id)]"),
         'planned_cost': fields.float('Planned Costs'),
+        'meeting_ids': fields.one2many('calendar.event', 'opportunity_id', 'Opportunities'),
+        'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
     }
 
     _defaults = {

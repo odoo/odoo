@@ -147,6 +147,17 @@ class purchase_order(osv.osv):
                                                 limit=1)
         return res and res[0] or False  
 
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'shipment_count': 0, 'invoice_count': 0,}), ids))
+        try:
+            for data in self.browse(cr, uid, ids, context=context):
+                res[data.id] = {'shipment_count': len(data.picking_ids),
+                'invoice_count': len(data.invoice_ids),
+                }
+        except:
+            pass
+        return res
+
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
@@ -223,6 +234,8 @@ class purchase_order(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
+        'shipment_count': fields.function(_count_all, type='integer', string='Incoming Shipments', multi=True),
+        'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True)
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -1270,12 +1283,31 @@ class mail_mail(osv.Model):
 class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
+    
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
     }
     _defaults = {
         'purchase_ok': 1,
     }
+
+class product_product(osv.Model):
+    _name = 'product.product'
+    _inherit = 'product.product'
+    
+    def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for purchase in self.browse(cr, uid, ids, context=context):
+                res[purchase.id] = len(purchase.purchase_ids)
+        except:
+            pass
+        return res
+    _columns = {
+        'purchase_ids': fields.one2many('purchase.order', 'product_id', 'Purchases'),
+        'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
+    }
+
 
 
 class mail_compose_message(osv.Model):

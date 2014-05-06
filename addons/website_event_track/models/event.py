@@ -124,6 +124,12 @@ class event_event(osv.osv):
         # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
         return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
+    def _count_tracks(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            event.id: len(event.track_ids)
+            for event in self.browse(cr, uid, ids, context=context)
+        }
+
     def _get_tracks_tag_ids(self, cr, uid, ids, field_names, arg=None, context=None):
         res = dict.fromkeys(ids, [])
         for event in self.browse(cr, uid, ids, context=context):
@@ -131,6 +137,7 @@ class event_event(osv.osv):
                 res[event.id] += [tag.id for tag in track.tag_ids]
             res[event.id] = list(set(res[event.id]))
         return res
+
     _columns = {
         'tag_ids': fields.many2many('event.tag', string='Tags'),
         'track_ids': fields.one2many('event.track', 'event_id', 'Tracks'),
@@ -139,16 +146,19 @@ class event_event(osv.osv):
         'show_track_proposal': fields.boolean('Talks Proposals'),
         'show_tracks': fields.boolean('Multiple Tracks'),
         'show_blog': fields.boolean('News'),
+        'count_tracks': fields.function(_count_tracks, type='integer', string='Tracks'),
         'tracks_tag_ids': fields.function(_get_tracks_tag_ids, type='one2many', relation='event.track.tag', string='Tags of Tracks'),
         'allowed_track_tag_ids': fields.many2many('event.track.tag', string='Accepted Tags', help="List of available tags for track proposals."),
         'timezone_of_event': fields.selection(_tz_get, 'Event Timezone', size=64),
     }
+
     _defaults = {
         'show_track_proposal': False,
         'show_tracks': False,
         'show_blog': False,
         'timezone_of_event':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).tz,
     }
+
     def _get_new_menu_pages(self, cr, uid, event, context=None):
         context = context or {}
         result = super(event_event, self)._get_new_menu_pages(cr, uid, event, context=context)

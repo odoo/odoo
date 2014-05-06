@@ -38,6 +38,15 @@ class hr_employee(osv.osv):
                 res[emp.id] = False
         return res
 
+    def _contracts_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for employee in self.browse(cr, uid, ids, context=context):
+                res[employee.id] = len(employee.contract_ids)
+        except:
+            pass
+        return res
+
     _columns = {
         'manager': fields.boolean('Is a Manager'),
         'medic_exam': fields.date('Medical Examination Date'),
@@ -47,6 +56,7 @@ class hr_employee(osv.osv):
         'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
         'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
     }
 
 

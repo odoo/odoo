@@ -1093,4 +1093,18 @@ class crm_case_section(osv.osv):
     def action_forecast(self, cr, uid, id, value, context=None):
         return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
 
+class product_product(osv.Model):
+    _inherit = 'product.product'
+    def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for sale in self.browse(cr, uid, ids, context=context):
+                res[sale.id] = len(sale.sales_ids)
+        except:
+            pass
+        return res
+    _columns = {
+        'sales_ids': fields.one2many('sale.order.line', 'product_id', 'Sales '),
+        'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

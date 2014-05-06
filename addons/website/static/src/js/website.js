@@ -3,7 +3,9 @@
 
     var website = {};
     openerp.website = website;
-    openerp.website.translatable = !!$('html').data('translatable');
+
+    website.translatable = !!$('html').data('translatable');
+    website.is_editable = !!$('html').data('editable');
 
     /* ----------------------------------------------------
        Helpers
@@ -244,11 +246,13 @@
             return def;
         });
     };
-    website.add_template_file('/website/static/src/xml/website.xml');
+
+    if (website.is_editable) {
+        website.add_template_file('/website/static/src/xml/website.xml');
+    }
 
     website.dom_ready = $.Deferred();
     $(document).ready(function () {
-        website.is_editable = website.is_editable || $('html').data('editable');
         website.is_editable_button= website.is_editable_button || $('html').data('editable');
         website.dom_ready.resolve();
         // fix for ie

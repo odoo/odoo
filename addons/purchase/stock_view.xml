@@ -47,9 +47,17 @@
                     <div class="oe_right oe_button_box" name="buttons">
                         <button type="object"
                             name="view_picking"
-                            string="Incoming Shipments" states="approved"/>
+                            class="oe_stat_button"
+                            icon="fa-truck"
+                            states="approved">
+                            <field name="shipment_count" widget="statinfo" string="In Shipments" help="Incoming Shipments"/>
+                        </button>
                         <button type="object"  name="invoice_open"
-                            string="Invoices" attrs="{'invisible': [('state', 'in', ['draft','sent'])]}"/> 
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible': [('state', 'in', ['draft','sent'])]}">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button> 
                     </div>
                 </xpath>
             </field>
