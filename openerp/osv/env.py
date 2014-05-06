@@ -167,7 +167,7 @@ class Environment(object):
             records = self[field.model_name].browse(ids)
             for record in records:
                 try:
-                    cached = field_dump[record._id]
+                    cached = field_dump[record.id]
                     fetched = record[field.name]
                     if fetched != cached:
                         info = {'cached': cached, 'fetched': fetched}

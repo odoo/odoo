@@ -197,7 +197,7 @@ class document(object):
                     if 'ids' in attrs:
                         ids = self.eval(browser, attrs['ids'])
                     else:
-                        ids = browse.unbrowse()
+                        ids = browse.ids
 
                     # call the method itself
                     newdatas = getattr(obj, attrs['name'])(self.cr, self.uid, ids, *args)

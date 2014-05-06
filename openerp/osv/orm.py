@@ -1345,7 +1345,7 @@ class BaseModel(object):
         # old-style constraint methods
         trans = self.env['ir.translation']
         cr, uid, context = self.env.args
-        ids = self.unbrowse()
+        ids = self.ids
         errors = []
         for fun, msg, names in self._constraints:
             try:
@@ -1408,7 +1408,7 @@ class BaseModel(object):
         """ Set the default value of `field` to the new record `self`.
             The value must be assigned to `self`.
         """
-        assert not self._id, "Expected new record: %s" % self
+        assert not self.id, "Expected new record: %s" % self
         cr, uid, context = self.env.args
         name = field.name
 
@@ -3277,7 +3277,7 @@ class BaseModel(object):
                 }
 
         result = []
-        for sub_ids in cr.split_for_in_conditions(self.unbrowse()):
+        for sub_ids in cr.split_for_in_conditions(self.ids):
             cr.execute(query, [tuple(sub_ids)] + rule_params)
             result.extend(cr.dictfetchall())
 
@@ -5150,9 +5150,9 @@ class BaseModel(object):
     #
 
     @property
-    def _id(self):
-        """ Return the 'id' of record `self` or ``False``. """
-        return bool(self._ids) and self._ids[0]
+    def ids(self):
+        """ Return the list of non-false record ids of this instance. """
+        return filter(None, list(self._ids))
 
     # backward-compatibility with former browse records
     _cr = property(lambda self: self.env.cr)
@@ -5192,10 +5192,6 @@ class BaseModel(object):
         if (cr, user, context) == (None, None, None) and not kwargs:
             user = SUPERUSER_ID
         return self._attach_env(self.env(cr, user, context, **kwargs))
-
-    def unbrowse(self):
-        """ Return the list of record ids of this instance. """
-        return filter(None, list(self._ids))
 
     def _convert_to_cache(self, values):
         """ Convert the `values` dictionary into cached values. """
@@ -5260,7 +5256,7 @@ class BaseModel(object):
         if isinstance(func, basestring):
             name = func
             func = lambda rec: filter(None, rec.map(name))
-        return self.browse([rec._id for rec in self if func(rec)])
+        return self.browse([rec.id for rec in self if func(rec)])
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
@@ -5337,7 +5333,7 @@ class BaseModel(object):
             raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
         if isinstance(item, basestring):
             return item in self._fields
-        return item in self.unbrowse()
+        return item in self.ids
 
     def __add__(self, other):
         """ Return the concatenation of two instances. """
@@ -5395,7 +5391,7 @@ class BaseModel(object):
         return set(self._ids) >= set(other._ids)
 
     def __int__(self):
-        return self._id
+        return self.id
 
     def __str__(self):
         return "%s%s" % (self._name, getattr(self, '_ids', ""))
@@ -5626,13 +5622,13 @@ class RecordCache(MutableMapping):
         """ Return whether `records[0]` has a value for `field` in cache. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        return self._recs._id in self._recs.env.cache[field]
+        return self._recs.id in self._recs.env.cache[field]
 
     def __getitem__(self, field):
         """ Return the cached value of `field` for `records[0]`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
-        value = self._recs.env.cache[field][self._recs._id]
+        value = self._recs.env.cache[field][self._recs.id]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def __setitem__(self, field, value):
@@ -5664,7 +5660,7 @@ class RecordCache(MutableMapping):
 
     def __iter__(self):
         """ Iterate over the field names with a regular value in cache. """
-        cache, id = self._recs.env.cache, self._recs._id
+        cache, id = self._recs.env.cache, self._recs.id
         dummy = SpecialValue(None)
         for name, field in self._recs._fields.iteritems():
             if name not in MAGIC_COLUMNS and \

@@ -1412,7 +1412,7 @@ class related(function):
 
         elif self._type in ('one2many', 'many2many'):
             # res[id] is a recordset; convert it to a list of ids
-            res = dict((id, value.unbrowse()) for id, value in res.iteritems())
+            res = dict((id, value.ids) for id, value in res.iteritems())
 
         return res
 

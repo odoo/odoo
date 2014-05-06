@@ -425,7 +425,7 @@ class Field(object):
             pass
 
         # cache miss, retrieve value
-        if record._id:
+        if record.id:
             # normal record -> read or compute value for this field
             self.determine_value(record[0])
         elif record:
@@ -450,7 +450,7 @@ class Field(object):
         # adapt value to the cache level
         value = self.convert_to_cache(value, env)
 
-        if env.draft or not record._id:
+        if env.draft or not record.id:
             # determine dependent fields
             spec = self.modified_draft(record)
 
@@ -1011,7 +1011,7 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_read(self, value, use_name_get=True):
-        return value.unbrowse()
+        return value.ids
 
     def convert_to_write(self, value, target=None, fnames=None):
         # remove/delete former records
@@ -1019,7 +1019,7 @@ class _RelationalMulti(_Relational):
             result = [(5,)]
         else:
             tag = 2 if self.type == 'one2many' else 3
-            result = [(tag, record._id) for record in target[self.name] - value]
+            result = [(tag, record.id) for record in target[self.name] - value]
 
         if fnames is None:
             # take all fields in cache, except the inverse of self
@@ -1029,15 +1029,15 @@ class _RelationalMulti(_Relational):
 
         # add new and existing records
         for record in value:
-            if not record._id or record._dirty:
+            if not record.id or record._dirty:
                 values = dict((k, v) for k, v in record._cache.iteritems() if k in fnames)
                 values = record._convert_to_write(values)
-                if not record._id:
+                if not record.id:
                     result.append((0, 0, values))
                 else:
-                    result.append((1, record._id, values))
+                    result.append((1, record.id, values))
             else:
-                result.append((4, record._id))
+                result.append((4, record.id))
 
         return result
 
@@ -1119,7 +1119,7 @@ class Id(Field):
     def __get__(self, instance, owner):
         if instance is None:
             return self         # the field is accessed through the class owner
-        return instance._id
+        return bool(instance._ids) and instance._ids[0]
 
     def __set__(self, instance, value):
         raise NotImplementedError()

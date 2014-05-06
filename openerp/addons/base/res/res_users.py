@@ -306,7 +306,7 @@ class res_users(osv.osv):
             else:
                 if 'company_id' in values:
                     user = self.browse(cr, SUPERUSER_ID, uid, context=context)
-                    if not (values['company_id'] in user.company_ids.unbrowse()):
+                    if not (values['company_id'] in user.company_ids.ids):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 

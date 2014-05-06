@@ -226,7 +226,7 @@ def get_downgrade(method):
     spec = get_returns(method)
     if spec:
         model, downgrade = spec
-        return downgrade or (lambda value: value.unbrowse())
+        return downgrade or (lambda value: value.ids)
     else:
         return lambda value: value
 
@@ -449,7 +449,7 @@ def cr_uid_id(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
-        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
+        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
         return upgrade(self, result)
 
     return make_wrapper(method, method, new_api)
@@ -476,7 +476,7 @@ def cr_uid_id_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
         kwargs['context'] = context
-        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.unbrowse()]
+        result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
         return upgrade(self, result)
 
     return make_wrapper(method, method, new_api)
@@ -492,7 +492,7 @@ def cr_uid_ids(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
-        result = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
+        result = method(self._model, cr, uid, self.ids, *args, **kwargs)
         return upgrade(self, result)
 
     return make_wrapper(method, method, new_api)
@@ -521,7 +521,7 @@ def cr_uid_ids_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = self.env.args
         kwargs['context'] = context
-        result = method(self._model, cr, uid, self.unbrowse(), *args, **kwargs)
+        result = method(self._model, cr, uid, self.ids, *args, **kwargs)
         return upgrade(self, result)
 
     return make_wrapper(method, method, new_api)
