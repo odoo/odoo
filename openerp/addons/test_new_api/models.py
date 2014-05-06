@@ -105,6 +105,8 @@ class Message(Model):
         compute='_compute_display_name')
     size = Integer(store=False, readonly=True,
         compute='_compute_size', search='_search_size')
+    double_size = Integer(store=False, readonly=True,
+        compute='_compute_double_size')
     discussion_name = Char(related='discussion.name', store=False)
 
     @one
@@ -138,6 +140,18 @@ class Message(Model):
         self.env.cr.execute(query, (value,))
         ids = [t[0] for t in self.env.cr.fetchall()]
         return [('id', 'in', ids)]
+
+    @one
+    @depends('size')
+    def _compute_double_size(self):
+        # This illustrates a subtle situation: self.double_size depends on
+        # self.size. When size is computed, self.size is assigned, which should
+        # normally invalidate self.double_size. However, this may not happen
+        # while self.double_size is being computed: the last statement below
+        # would fail, because self.double_size would be undefined.
+        self.double_size = 0
+        size = self.size
+        self.double_size = self.double_size + size
 
 
 class Talk(Model):

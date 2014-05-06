@@ -69,10 +69,11 @@ class Environment(object):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = RegistryManager.get(cr.dbname)
-        self.cache = defaultdict(dict)      # cache[field] = {id: value, ...}
-        self.prefetch = defaultdict(set)    # prefetch[model_name] = set(ids)
-        self.dirty = set()                  # set of dirty records
-        self.todo = {}                      # todo[field] = recs to recompute
+        self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
+        self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
+        self.computed = defaultdict(set)    # {field: set(id), ...}
+        self.dirty = set()                  # set(record)
+        self.todo = {}                      # {field: records, ...}
         self.draft = env.draft if env else Draft()
         self.all = envs
         envs.add(self)
@@ -147,6 +148,7 @@ class Environment(object):
         for env in list(self.all):
             env.cache.clear()
             env.prefetch.clear()
+            env.computed.clear()
             env.dirty.clear()
 
     def check_cache(self):

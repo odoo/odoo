@@ -482,7 +482,10 @@ class Field(object):
         exc = Warning("Field %s is accessed before being computed." % self)
         for field in self.computed_fields:
             records._cache[field] = FailedValue(exc)
+            records.env.computed[field].update(records._ids)
         self.compute(records)
+        for field in self.computed_fields:
+            records.env.computed[field].difference_update(records._ids)
 
     def determine_value(self, record):
         """ Determine the value of `self` for `record`. """
@@ -573,14 +576,16 @@ class Field(object):
         """ Same as :meth:`modified`, but in draft mode. """
         env = records.env
 
-        # invalidate the fields on the records in cache that depend on `records`
+        # invalidate the fields on the records in cache that depend on
+        # `records`, except fields currently being computed
         spec = []
         for field, path in self._triggers:
+            target = env[field.model_name]
+            computed = target.browse(env.computed[field])
             if path == 'id':
-                target = records
+                target = records - computed
             else:
-                target = env[field.model_name]
-                for record in target.browse(env.cache[field]):
+                for record in target.browse(env.cache[field]) - computed:
                     if record.map_cache(path) & records:
                         target += record
             if target:

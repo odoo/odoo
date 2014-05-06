@@ -88,6 +88,13 @@ class TestNewFields(common.TransactionCase):
         cath.parent = finn
         self.assertEqual(ewan.display_name, "Gabriel / Finnley / Catherine / Ewan")
 
+    def test_12_cascade(self):
+        """ test computed field depending on computed field """
+        message = self.env.ref('test_new_api.message_0_0')
+        message.invalidate_cache()
+        double_size = message.double_size
+        self.assertEqual(double_size, message.size)
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
