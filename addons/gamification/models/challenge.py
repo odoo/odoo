@@ -396,9 +396,9 @@ class gamification_challenge(osv.Model):
         :param list(int) ids: the list of challenge concerned"""
 
         goal_obj = self.pool.get('gamification.goal')
-        to_update = []
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period)
+            to_update = []
 
             # if no periodicity, use challenge dates
             if not start_date and challenge.start_date:
