@@ -497,50 +497,6 @@ def content_disposition(filename):
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
-
-# TODO: to remove once the database manager has been migrated server side
-#       and `edi` + `pos` addons has been adapted to use render_bootstrap_template()
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body>
-        <!--[if lte IE 8]>
-        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-        <script>CFInstall.check({mode: "overlay"});</script>
-        <![endif]-->
-    </body>
-</html>
-"""
-
-def render_bootstrap_template(template, values=None, **kw):
-    if values is None:
-        values = dict()
-    try:
-        values['databases'] = http.db_list()
-    except openerp.exceptions.AccessDenied:
-        values['databases'] = None
-
-    if 'modules' not in values:
-        values['modules'] = module_boot()
-    values['modules'] = simplejson.dumps(values['modules'])
-
-    return request.render(template, values, **kw)
-
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
@@ -554,12 +510,7 @@ class Home(http.Controller):
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
-
-            headers = {
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'text/html; charset=utf-8',
-            }
-            return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
+            return request.render('web.webclient_bootstrap')
         else:
             return login_redirect()
 
@@ -577,6 +528,12 @@ class Home(http.Controller):
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
         values['redirect'] = redirect
+
+        try:
+            values['databases'] = http.db_list()
+        except openerp.exceptions.AccessDenied:
+            values['databases'] = None
+
         if request.httprequest.method == 'POST':
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
@@ -584,7 +541,7 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template('web.login', values)
+        return request.render('web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
