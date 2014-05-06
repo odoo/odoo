@@ -451,6 +451,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_client: function (action, options) {
         var self = this;
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
+        if (!ClientWidget) {
+            return self.do_warn("Action Error", "Could not find client action '" + action.tag + "'.");
+        }
 
         if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
             var next;
