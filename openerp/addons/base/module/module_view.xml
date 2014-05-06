@@ -115,7 +115,7 @@
                             <p class="oe_grey" attrs="{'invisible': ['|',('views_by_module','not in',[None,False]),('state','!=','installed')]}"> -This module does not create views.</p>
                             <field name="views_by_module"/>
                             <group string="Dependencies"/>
-                            <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not create dependencies.</p>
+                            <p class="oe_grey" attrs="{'invisible': [('dependencies_id','not in',[None,False])]}"> -This module does not depends on any other module.</p>
                             <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
