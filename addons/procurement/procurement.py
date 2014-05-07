@@ -158,11 +158,9 @@ class procurement_order(osv.osv):
         This function returns an action that display existing procurement orders
         of same procurement group of given ids.
         '''
-        mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj.get_object_reference(cr, uid, 'procurement', 'do_view_procurements')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        action_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'procurement.do_view_procurements', raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [action_id], context=context)[0]
         group_ids = set([proc.group_id.id for proc in self.browse(cr, uid, ids, context=context) if proc.group_id])
         result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
         return result

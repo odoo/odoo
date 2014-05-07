@@ -23,6 +23,5 @@ import stock_move
 import stock_return_picking
 import stock_change_product_qty
 import make_procurement_product
-import mrp_procurement
 import orderpoint_procurement
 
