@@ -85,7 +85,7 @@ class StockMove(osv.osv):
                     'picking_id': move.picking_id.id if move.picking_id else False,
                     'product_id': line['product_id'],
                     'product_uom': line['product_uom'],
-                    'product_qty': line['product_qty'],
+                    'product_uom_qty': line['product_qty'],
                     'product_uos': line['product_uos'],
                     'product_uos_qty': line['product_uos_qty'],
                     'state': state,
