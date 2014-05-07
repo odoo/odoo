@@ -1026,7 +1026,7 @@ class account_move_line(osv.osv):
             if opening_reconciliation:
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
-            if all_moves:
+            if len(all_moves) >= 2:
                 obj_move_line.reconcile_partial(cr, uid, all_moves, 'auto',context=context)
         return True
 
