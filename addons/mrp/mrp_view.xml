@@ -1052,9 +1052,18 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button string="Bill of Materials" name="%(product_open_bom)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                    <button string="BoM Structure" name="%(act_product_mrp_bom_open)d" type="action" groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}"/>
-                    <button string="Manufacturing Orders" name="%(act_product_mrp_production)d" type="action" groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}"/>
+                    <button class="oe_inline oe_stat_button" name="%(product_open_bom)d" type="action" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        <field string="Bill of Materials" name="bom_count" widget="statinfo" />
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="%(act_product_mrp_bom_open)d" type="action" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        <field string="BoM Structure" name="bom_strct" widget="statinfo" />
+                    </button>
+                    <button class="oe_inline oe_stat_button" name="%(act_product_mrp_production)d" type="action" 
+                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        <field string="Manufacturing" name="mo_count" widget="statinfo" />
+                    </button>
                 </xpath>
             </field>
         </record>

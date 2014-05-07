@@ -10,7 +10,7 @@ import werkzeug.routing
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, url_for
 from openerp.http import request
 from openerp.osv import orm
 
@@ -32,6 +32,13 @@ class ir_http(orm.AbstractModel):
             page=PageConverter,
         )
 
+    def _auth_method_public(self):
+        # TODO: select user_id from matching website
+        if not request.session.uid:
+            request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base.public_user')
+        else:
+            request.uid = request.session.uid
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -49,11 +56,11 @@ class ir_http(orm.AbstractModel):
                 self._authenticate(func.routing['auth'])
             else:
                 self._auth_method_public()
+            request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             if first_pass:
                 request.lang = request.website.default_lang_code
             request.context['lang'] = request.lang
-            request.website.preprocess_request(request)
             if not func:
                 path = request.httprequest.path.split('/')
                 langs = [lg[0] for lg in request.website.get_languages()]

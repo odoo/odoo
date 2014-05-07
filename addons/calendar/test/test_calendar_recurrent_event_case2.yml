@@ -5,8 +5,8 @@
 - 
   !record {model: calendar.event, id: calendar_event_testmeeting0}:
     count: 5
-    date: '2011-04-13 11:04:00'
-    date_deadline: '2011-04-13 12:04:00'
+    start: '2011-04-13 11:04:00'
+    stop: '2011-04-13 12:04:00'
     day: 0.0
     duration: 1.0
     name: Test Meeting
@@ -17,17 +17,17 @@
   I search for all the recurrent meetings.
 -
   !python {model: calendar.event}: |
-     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_testmeeting0')]),('date','>=','2011-03-13'), ('date_deadline', '<=', '2011-05-13')], context={'virtual_id': True})
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_testmeeting0')]),('start','>=','2011-03-13'), ('stop', '<=', '2011-05-13')], context={'virtual_id': True})
      assert len(meeting_ids) == 5, 'Recurrent daily meetings are not created !'
 -
   I create a weekly meeting till a particular end date.
 -
   !record {model: calendar.event, id: calendar_event_reviewcodewithprogrammer0}:
-    date: '2011-04-18 11:47:00'
-    date_deadline: '2011-04-18 12:47:00'
+    start: '2011-04-18 11:47:00'
+    stop: '2011-04-18 12:47:00'
     day: 0.0
     duration: 1.0
-    end_date: '2011-04-30'
+    final_date: '2011-04-30'
     end_type: end_date
     fr: true
     mo: true
@@ -36,21 +36,21 @@
     we: true
     name: Review code with programmer
     recurrency: true
-    recurrent_id: 0.0
+    recurrent_id: 0
     rrule_type: weekly
 -
   I search for all the recurrent weekly meetings.
 -
   !python {model: calendar.event}: |
-     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_reviewcodewithprogrammer0')]),('date','>=','2011-03-13'), ('date_deadline', '<=', '2011-05-13')], context={'virtual_id': True})
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_reviewcodewithprogrammer0')]),('start','>=','2011-03-13'), ('stop', '<=', '2011-05-13')], context={'virtual_id': True})
      assert len(meeting_ids) == 10, 'Recurrent weekly meetings are not created !'
 -
   I want to schedule a meeting every month for Sprint review.
 - 
   !record {model: calendar.event, id: calendar_event_sprintreview0}:
     count: 12
-    date: '2011-04-01 12:01:00'
-    date_deadline: '2011-04-01 13:01:00'
+    start: '2011-04-01 12:01:00'
+    stop: '2011-04-01 13:01:00'
     day: 1
     duration: 1.0
     name: Sprint Review
@@ -61,7 +61,7 @@
   I search for all the recurrent monthly meetings.
 -
   !python {model: calendar.event}: |
-     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_sprintreview0')]),('date','>=','2011-03-01'), ('date_deadline', '<=', '2012-05-13')], context={'virtual_id': True})
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_sprintreview0')]),('start','>=','2011-03-01'), ('stop', '<=', '2012-05-13')], context={'virtual_id': True})
      assert len(meeting_ids) == 12, 'Recurrent monthly meetings are not created !'
 -
   I change name of my monthly Sprint Review meeting.
@@ -73,7 +73,7 @@
   I check whether all the records are edited or not.
 -
   !python {model: calendar.event}: |
-     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_sprintreview0')]),('date','>=','2011-03-01'), ('date_deadline', '<=', '2012-05-13')], context={'virtual_id': True})
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('calendar_event_sprintreview0')]),('start','>=','2011-03-01'), ('stop', '<=', '2012-05-13')], context={'virtual_id': True})
      meetings = self.browse(cr, uid, meeting_ids, context)
      for meeting in meetings:
         assert meeting.name == 'Sprint Review for google modules', 'Name not changed for id: %s' %meeting.id

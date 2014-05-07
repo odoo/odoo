@@ -34,6 +34,7 @@ import time
 from dateutil.relativedelta import relativedelta
 from openerp import tools
 import werkzeug.urls
+from openerp.addons.website.models.website import slug
 
 try:
     import GeoIP
@@ -211,7 +212,8 @@ class website_event(http.Controller):
             'date_end': (date_begin + timedelta(days=(1))).strftime('%Y-%m-%d'),
         }
         event_id = Event.create(request.cr, request.uid, vals, context=context)
-        return request.redirect("/event/%s?enable_editor=1" % event_id)
+        event = Event.browse(request.cr, request.uid, event_id, context=context)
+        return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
 
     def get_visitors_country(self):
         GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)

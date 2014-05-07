@@ -195,7 +195,7 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -1815,7 +1815,10 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button string="Current Stock" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
-                   <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
+                   <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest">
+                       <field string="Order Points" name="orderpoint_count" widget="statinfo" />
+                   </button>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">

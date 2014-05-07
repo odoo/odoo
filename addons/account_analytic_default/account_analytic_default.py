@@ -114,6 +114,16 @@ class sale_order_line(osv.osv):
             if rec:
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
         return create_ids
-
+class product_product(osv.Model):
+    _inherit = 'product.product'
+    def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
+        Analytic = self.pool['account.analytic.default']
+        return {
+            product_id: Analytic.search_count(cr, uid, [('product_id', '=', product_id)], context=context)
+            for product_id in ids
+        }
+    _columns = {
+        'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

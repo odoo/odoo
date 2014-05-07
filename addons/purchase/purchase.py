@@ -166,6 +166,15 @@ class purchase_order(osv.osv):
             res[po_id].append(pick_id)
         return res
 
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            purchase.id: {
+                'shipment_count': len(purchase.picking_ids),
+                'invoice_count': len(purchase.invoice_ids),                
+            }
+            for purchase in self.browse(cr, uid, ids, context=context)
+        }
+
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ'),
@@ -248,6 +257,8 @@ class purchase_order(osv.osv):
         'picking_type_id': fields.many2one('stock.picking.type', 'Deliver To', help="This will determine picking type of incoming shipment", required=True,
                                            states={'confirmed': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}),
         'related_location_id': fields.related('picking_type_id', 'default_location_dest_id', type='many2one', relation='stock.location', string="Related location", store=True),        
+        'shipment_count': fields.function(_count_all, type='integer', string='Incoming Shipments', multi=True),
+        'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True)
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -1346,12 +1357,29 @@ class mail_mail(osv.Model):
 class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
+    
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
     }
     _defaults = {
         'purchase_ok': 1,
     }
+
+class product_product(osv.Model):
+    _name = 'product.product'
+    _inherit = 'product.product'
+    
+    def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
+        Purchase = self.pool['purchase.order']
+        return {
+            product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
+            for product_id in ids
+        }
+
+    _columns = {
+        'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
+    }
+
 
 
 class mail_compose_message(osv.Model):

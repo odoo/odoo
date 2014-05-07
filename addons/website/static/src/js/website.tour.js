@@ -104,11 +104,11 @@ var T = website.Tour = {
         if (tour.path && !window.location.href.match(new RegExp("("+T.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = "/"+T.getLang()+tour.path;
             console.log("Tour Begin from run method (redirection to "+href+")");
-            T.saveState(tour.id, mode || tour.mode, -1);
+            T.saveState(tour.id, mode || tour.mode, -1, 0);
             window.location.href = href;
         } else {
             console.log("Tour Begin from run method");
-            T.saveState(tour.id, mode || tour.mode, 0);
+            T.saveState(tour.id, mode || tour.mode, 0, 0);
             T.running();
         }
     },
@@ -311,7 +311,7 @@ var T = website.Tour = {
             };
             window.location.hash = "";
             console.log("Tour Begin from url hash");
-            T.saveState(state.id, state.mode, state.step_id);
+            T.saveState(state.id, state.mode, state.step_id, 0);
         }
         if (!state.id) {
             return;
@@ -341,8 +341,8 @@ var T = website.Tour = {
         }
         return tour_ids;
     },
-    saveState: function (tour_id, mode, step_id) {
-        localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0, "time": this.time}));
+    saveState: function (tour_id, mode, step_id, number) {
+        localStorage.setItem("tour", JSON.stringify({"id":tour_id, "mode":mode, "step_id":step_id || 0, "time": this.time, "number": number+1}));
     },
     reset: function () {
         var state = T.getState();
@@ -402,6 +402,7 @@ var T = website.Tour = {
             if (T.check(next)) {
                 clearTimeout(T.currentTimer);
                 // use an other timeout for cke dom loading
+                T.saveState(state.id, state.mode, state.step.id, 0);
                 setTimeout(function () {
                     T.nextStep(next);
                 }, T.defaultDelay);
@@ -421,7 +422,13 @@ var T = website.Tour = {
         }
 
         step = step || state.step;
-        T.saveState(state.id, state.mode, step.id);
+        var next = state.tour.steps[step.id+1];
+
+        if (state.number > 3) {
+            T.error(next, "Cycling. Can't reach the next step");
+        }
+        
+        T.saveState(state.id, state.mode, step.id, state.number);
 
         if (step.id !== state.step_id) {
             console.log("Tour Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
@@ -433,7 +440,6 @@ var T = website.Tour = {
             step.onload();
         }
 
-        var next = state.tour.steps[step.id+1];
         if (next) {
             setTimeout(function () {
                     T.waitNextStep();

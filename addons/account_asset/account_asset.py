@@ -237,9 +237,15 @@ class account_asset_asset(osv.osv):
             if salvage_value:
                 val['value_residual'] = purchase_value - salvage_value
         return {'value': val}    
-
+    def _entry_count(self, cr, uid, ids, field_name, arg, context=None):
+        MoveLine = self.pool('account.move.line')
+        return {
+            asset_id: MoveLine.search_count(cr, uid, [('asset_id', '=', asset_id)], context=context)
+            for asset_id in ids
+        }
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
+        'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),
         'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
         'purchase_value': fields.float('Gross Value', required=True, readonly=True, states={'draft':[('readonly',False)]}),

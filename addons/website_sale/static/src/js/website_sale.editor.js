@@ -5,7 +5,6 @@
     var _t = openerp._t;
     website.add_template_file('/website_sale/static/src/xml/website_sale.xml');
 
-    website.is_editable = true;
     website.EditorBar.include({
         start: function() {
             website.is_editable_button = website.is_editable_button || !!$("#wrap.js_sale").size();

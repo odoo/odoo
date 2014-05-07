@@ -64,15 +64,20 @@
                     <field name="state" nolabel="1" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Phone Call">
-                    <div class="oe_right">
-                        <button string="Convert to Opportunity"
-                            type="object"
-                            name="action_button_convert2opportunity"
-                            attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"/>
-                        <button string="Schedule Other Call"
-                                name="%(phonecall_to_phonecall_act)d"
-                                type="action"/>
-                        <button string="Schedule a Meeting" name="action_make_meeting" type="object"/>
+                    <div class="oe_right oe_button_box">
+                        <button class="oe_inline oe_stat_button" type="object" name="action_button_convert2opportunity" 
+                            icon="fa-star" attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"
+                            help="Convert To Opportunity">
+                            <div>Convert To<br/>Opportunity</div>
+                        </button>
+
+                        <button class="oe_inline oe_stat_button" type="action" 
+                            name="%(phonecall_to_phonecall_act)d" icon="fa-phone">
+                            <div>Schedule<br/>Other Call</div>
+                        </button>
+                        <button class="oe_inline oe_stat_button" name="action_make_meeting" type="object" icon="fa-calendar fa-fw">
+                            <div>Schedule<br/>A Meeting</div>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <div class="oe_edit_only">

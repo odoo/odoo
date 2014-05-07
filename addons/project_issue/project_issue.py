@@ -229,7 +229,6 @@ class project_issue(osv.Model):
             if work.task_id:
                 issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
         return issues
-
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Issue', size=128, required=True),
@@ -491,21 +490,16 @@ class project(osv.Model):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        """ :deprecated: this method will be removed with OpenERP v8. Use issue_ids
-                         fields instead. """
-        res = dict.fromkeys(ids, 0)
-        issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
-        for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            if issue.stage_id and not issue.stage_id.fold:
-                res[issue.project_id.id] += 1
-        return res
-
+        Issue = self.pool['project.issue']
+        return {
+            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
+            for project_id in ids
+        }
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
-        'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues",
-                                       deprecated="This field will be removed in OpenERP v8. Use issue_ids one2many field instead."),
+        'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id',
                                      domain=[('stage_id.fold', '=', False)])
     }
@@ -575,5 +569,17 @@ class project_project(osv.Model):
         self._check_create_write_values(cr, uid, vals, context=context)
         return super(project_project, self).write(cr, uid, ids, vals, context=context)
 
-
+class res_partner(osv.osv):
+    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
+        Issue = self.pool['project.issue']
+        return {
+            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
+            for partner_id in ids
+        }
+    
+    """ Inherits partner and adds Issue information in the partner form """
+    _inherit = 'res.partner'
+    _columns = {
+        'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

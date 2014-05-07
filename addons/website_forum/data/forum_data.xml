@@ -13,10 +13,7 @@
             <field name="sequence" type="int">35</field>
         </record>
 
-        <record id="default_allow_auth_signup" model="ir.config_parameter"> 
-            <field name="key">auth_signup.allow_uninvited</field>
-            <field name="value" eval="True"/>
-        </record>
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.allow_uninvited', True)" />
 
         <!-- JUMP TO FORUM AT INSTALL -->
         <record id="action_open_forum" model="ir.actions.act_url">
