@@ -172,18 +172,15 @@ class res_partner(osv.osv):
         return result
 
     def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'journal_item_count': 0, 'contracts_count': 0 }), ids))
-
-        # the user may not have access rights 
-        try:
-            for partner in self.browse(cr, uid, ids, context=context):
-                res[partner.id] = {
-                    'journal_item_count': len(partner.journal_item_ids),
-                    'contracts_count': len(partner.contract_ids)
-                }
-        except:
-            pass
-        return res
+        MoveLine = self.pool('account.move.line')
+        AnalyticAccount = self.pool('account.analytic.account')
+        return {
+            partner_id: {
+                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
+                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+            }
+            for partner_id in ids
+        }
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
@@ -215,7 +212,6 @@ class res_partner(osv.osv):
         'debit_limit': fields.float('Payable Limit'),
         'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float'),
         'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
-        'journal_item_ids': fields.one2many('account.move.line', 'partner_id', 'Journal Items'),
         'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
             type='many2one',
