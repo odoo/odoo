@@ -636,11 +636,7 @@ class stock_picking(osv.osv):
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         return new_id
-    def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        claim = self.pool.get('crm.claim').search(cr, uid, [('ref', '=',('stock.picking.out,' + str(ids[0])))], context=context)
-        res[ids[0]] = len(claim)
-        return res
+
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
@@ -684,7 +680,6 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'claim_count': fields.function(_claim_count, string='Claims', type='integer'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -3138,8 +3133,6 @@ class stock_picking_out(osv.osv):
         out_defaults = super(stock_picking_out, self).default_get(cr, uid, fields_list, context=context)
         defaults.update(out_defaults)
         return defaults
-    def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        return super(stock_picking_out, self)._claim_count(cr, uid, ids, field_name, arg, context=context)
     
     _columns = {
         'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
@@ -3157,7 +3150,6 @@ class stock_picking_out(osv.osv):
                  * Ready to Deliver: products reserved, simply waiting for confirmation.\n
                  * Delivered: has been processed, can't be modified or cancelled anymore\n
                  * Cancelled: has been cancelled, can't be confirmed anymore"""),
-        'claim_count': fields.function(_claim_count, string='Claims', type='integer'),
     }
     _defaults = {
         'type': 'out',
