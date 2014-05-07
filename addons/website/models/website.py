@@ -198,9 +198,6 @@ class website(osv.osv):
         # TODO: Select website, currently hard coded
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
-    def preprocess_request(self, cr, uid, ids, request, context=None):
-        pass
-
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
         is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
