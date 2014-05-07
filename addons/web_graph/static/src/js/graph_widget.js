@@ -42,7 +42,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             this.$('.graph_main_content').addClass('graph_pivot_mode');
         }
 
-        return this.model.call('fields_get', []).then(function (f) {
+        return this.model.call('fields_get', {
+                context: self.graph_view.dataset.context
+            }).then(function (f) {
             self.fields = f;
             self.fields.__count = {field:'__count', type: 'integer', string:_t('Quantity')};
             self.important_fields = self.get_search_fields();
