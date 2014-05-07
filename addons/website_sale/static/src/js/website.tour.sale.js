@@ -20,31 +20,32 @@
             {
                 title:     "click on add to cart",
                 waitFor:   'input[name="product_id"]:eq(1)[checked]',
-                element:   'form[action="/shop/add_cart"] .btn',
+                element:   'form[action="/shop/cart/update"] .btn',
             },
             {
                 title:     "add suggested",
-                element:   'form[action="/shop/add_cart"] .btn-link:contains("Add to Cart")',
+                waitNot:   '#cart_products:contains("[A8767] Apple In-Ear Headphones")',
+                element:   'form[action="/shop/cart/update"] .btn-link:contains("Add to Cart")',
             },
             {
                 title:     "add one more iPod",
                 waitFor:   '.my_cart_quantity:contains(2)',
-                element:   '#mycart_products tr:contains("iPod: 32 Gb") a.js_add_cart_json:eq(1)',
+                element:   '#cart_products tr:contains("iPod - 32 Gb") a.js_add_cart_json:eq(1)',
             },
             {
                 title:     "remove Headphones",
-                waitFor:   '#mycart_products tr:contains("iPod: 32 Gb") input.js_quantity[value=2]',
-                element:   '#mycart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
+                waitFor:   '#cart_products tr:contains("iPod - 32 Gb") input.js_quantity[value=2]',
+                element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
             },
             {
                 title:     "set one iPod",
-                waitNot:   '#mycart_products tr:contains("Apple In-Ear Headphones")',
-                element:   '#mycart_products input.js_quantity',
+                waitNot:   '#cart_products tr:contains("Apple In-Ear Headphones")',
+                element:   '#cart_products input.js_quantity',
                 sampleText: '1',
             },
             {
                 title:     "go to checkout",
-                waitFor:   '#mycart_products input.js_quantity[value=1]',
+                waitFor:   '#cart_products input.js_quantity[value=1]',
                 element:   'a[href="/shop/checkout"]',
             },
             {
