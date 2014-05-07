@@ -217,15 +217,7 @@ class gamification_challenge(osv.Model):
                 vals['user_ids'] = []
             vals['user_ids'] += [(4, user_id) for user_id in user_ids]
 
-        create_res = super(gamification_challenge, self).create(cr, uid, vals, context=context)
-
-        # subscribe new users to the challenge
-        if vals.get('user_ids'):
-            # done with browse after super to be sure catch all after orm process
-            challenge = self.browse(cr, uid, create_res, context=context)
-            self.message_subscribe_users(cr, uid, [challenge.id], [user.id for user in challenge.user_ids], context=context)
-
-        return create_res
+        return super(gamification_challenge, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int,long)):
@@ -239,6 +231,11 @@ class gamification_challenge(osv.Model):
             vals['user_ids'] += [(4, user_id) for user_id in user_ids]
 
         write_res = super(gamification_challenge, self).write(cr, uid, ids, vals, context=context)
+
+        if vals.get('report_message_frequency', 'never') != 'never':
+            # _recompute_challenge_users do not set users for challenges with no reports, subscribing them now
+            for challenge in self.browse(cr, uid, ids, context=context):
+                self.message_subscribe(cr, uid, [challenge.id], [user.partner_id.id for user in challenge.user_ids], context=context)
 
         if vals.get('state') == 'inprogress':
             self._recompute_challenge_users(cr, uid, ids, context=context)
@@ -264,6 +261,9 @@ class gamification_challenge(osv.Model):
         - Create the missing goals (eg: modified the challenge to add lines)
         - Update every running challenge
         """
+        if context is None:
+            context = {}
+
         # start scheduled challenges
         planned_challenge_ids = self.search(cr, uid, [
             ('state', '=', 'draft'),
@@ -281,6 +281,9 @@ class gamification_challenge(osv.Model):
         if not ids:
             ids = self.search(cr, uid, [('state', '=', 'inprogress')], context=context)
 
+        # in cron mode, will do intermediate commits
+        # TODO in trunk: replace by parameter
+        context.update({'commit_gamification': True})
         return self._update_all(cr, uid, ids, context=context)
 
     def _update_all(self, cr, uid, ids, context=None):
@@ -355,11 +358,6 @@ class gamification_challenge(osv.Model):
                 if write_op:
                     self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)
 
-                if to_remove_ids:
-                    self.message_unsubscribe_users(cr, uid, [challenge.id], to_remove_ids, context=None)
-                if to_add_ids:
-                    self.message_subscribe_users(cr, uid, [challenge.id], to_add_ids, context=context)
-
         return True
 
 
@@ -393,9 +391,9 @@ class gamification_challenge(osv.Model):
         :param list(int) ids: the list of challenge concerned"""
 
         goal_obj = self.pool.get('gamification.goal')
-        to_update = []
         for challenge in self.browse(cr, uid, ids, context=context):
             (start_date, end_date) = start_end_date_for_period(challenge.period)
+            to_update = []
 
             # if no periodicity, use challenge dates
             if not start_date and challenge.start_date:
@@ -426,7 +424,15 @@ class gamification_challenge(osv.Model):
 
                 cr.execute(query, query_params)
                 user_with_goal_ids = cr.dictfetchall()
-                user_without_goal_ids = list(set([user.id for user in challenge.user_ids]) - set([user['user_id'] for user in user_with_goal_ids]))
+
+                participant_user_ids = [user.id for user in challenge.user_ids]
+                user_without_goal_ids = list(set(participant_user_ids) - set([user['user_id'] for user in user_with_goal_ids]))
+                user_squating_challenge_ids = list(set([user['user_id'] for user in user_with_goal_ids]) - set(participant_user_ids))
+                if user_squating_challenge_ids:
+                    # users that used to match the challenge 
+                    goal_to_remove_ids = goal_obj.search(cr, uid, [('challenge_id', '=', challenge.id), ('user_id', 'in', user_squating_challenge_ids)], context=context)
+                    goal_obj.unlink(cr, uid, goal_to_remove_ids, context=context)
+
 
                 values = {
                     'definition_id': line.definition_id.id,
@@ -614,9 +620,10 @@ class gamification_challenge(osv.Model):
             ctx.update({'challenge_lines': lines_boards})
             body_html = temp_obj.render_template(cr, uid, challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
 
-            # send to every follower of the challenge
+            # send to every follower and participant of the challenge
             self.message_post(cr, uid, challenge.id,
                 body=body_html,
+                partner_ids=[user.partner_id.id for user in challenge.user_ids],
                 context=context,
                 subtype='mail.mt_comment')
             if challenge.report_message_group_id:
@@ -698,34 +705,35 @@ class gamification_challenge(osv.Model):
             rewarded_users = []
             challenge_ended = end_date == yesterday.strftime(DF) or force
             if challenge.reward_id and challenge_ended or challenge.reward_realtime:
-                for user in challenge.user_ids:
-                    reached_goal_ids = self.pool.get('gamification.goal').search(cr, uid, [
-                        ('challenge_id', '=', challenge.id),
-                        ('user_id', '=', user.id),
-                        ('start_date', '=', start_date),
-                        ('end_date', '=', end_date),
-                        ('state', '=', 'reached')
-                    ], context=context)
-                    if len(reached_goal_ids) == len(challenge.line_ids):
+                # not using start_date as intemportal goals have a start date but no end_date
+                reached_goals = self.pool.get('gamification.goal').read_group(cr, uid, [
+                    ('challenge_id', '=', challenge.id),
+                    ('end_date', '=', end_date),
+                    ('state', '=', 'reached')
+                ], fields=['user_id'], groupby=['user_id'], context=context)
+                for reach_goals_user in reached_goals:
+                    if reach_goals_user['user_id_count'] == len(challenge.line_ids):
                         # the user has succeeded every assigned goal
+                        user_id = reach_goals_user['user_id'][0]
                         if challenge.reward_realtime:
                             badges = self.pool['gamification.badge.user'].search(cr, uid, [
                                 ('challenge_id', '=', challenge.id),
                                 ('badge_id', '=', challenge.reward_id.id),
-                                ('user_id', '=', user.id),
+                                ('user_id', '=', user_id),
                             ], count=True, context=context)
                             if badges > 0:
                                 # has already recieved the badge for this challenge
                                 continue
-                        self.reward_user(cr, uid, user.id, challenge.reward_id.id, challenge.id, context=context)
-                        rewarded_users.append(user)
+                        self.reward_user(cr, uid, user_id, challenge.reward_id.id, challenge.id, context=context)
+                        rewarded_users.append(user_id)
 
             if challenge_ended:
                 # open chatter message
                 message_body = _("The challenge %s is finished." % challenge.name)
 
                 if rewarded_users:
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([user.name for user in rewarded_users])))
+                    user_names = self.pool['res.users'].name_get(cr, uid, rewarded_users, context=context)
+                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (challenge.reward_id.name, ", ".join([name for (user_id, name) in user_names])))
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
 
@@ -746,7 +754,10 @@ class gamification_challenge(osv.Model):
                         self.reward_user(cr, uid, third_user.id, challenge.reward_second_id.id, challenge.id, context=context)
                         message_body += "<br/> 3. %s - %s" % (third_user.name, challenge.reward_third_id.name)
 
-                self.message_post(cr, uid, challenge.id, body=message_body, context=context)
+                self.message_post(cr, uid, challenge.id,
+                    partner_ids=[user.partner_id.id for user in challenge.user_ids],
+                    body=message_body,
+                    context=context)
 
         return True
 

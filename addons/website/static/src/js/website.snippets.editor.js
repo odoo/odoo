@@ -879,20 +879,29 @@
             this._super(np);
             if (np.$next) {
                 if (np.$next.hasClass("oe_custom_bg")) {
-                    var editor = new website.editor.ImageDialog();
-                    editor.on('start', self, function (o) {o.url = np.$prev && np.$prev.data("src") || np.$next && np.$next.data("src") || "";});
-                    editor.on('save', self, function (o) {
-                        self._set_bg(o.url);
-                        np.$next.data("src", o.url);
+                    var $image = $('<img class="hidden"/>');
+                    $image.attr("src", np.$prev ? np.$prev.data("src") : '');
+                    $image.appendTo(self.$target);
+
+                    self.element = new CKEDITOR.dom.element($image[0]);
+                    var editor = new website.editor.MediaDialog(self, self.element);
+                    editor.appendTo(document.body);
+                    editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+
+                    $image.on('saved', self, function (o) {
+                        var src = $image.attr("src");
+                        self._set_bg(src);
+                        np.$next.data("src", src);
                         self.$target.trigger("snippet-style-change", [self, np]);
+                        $image.remove();
                     });
                     editor.on('cancel', self, function () {
                         if (!np.$prev || np.$prev.data("src") === "") {
                             self.$target.removeClass(np.$next.data("value"));
                             self.$target.trigger("snippet-style-change", [self, np]);
                         }
+                        $image.remove();
                     });
-                    editor.appendTo($('body'));
                 } else {
                     this._set_bg(np.$next.data("src"));
                 }

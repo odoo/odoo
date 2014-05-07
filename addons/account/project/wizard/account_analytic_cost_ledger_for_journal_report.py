@@ -49,6 +49,6 @@ class account_analytic_cost_ledger_journal_report(osv.osv_memory):
         }
 
         datas['form']['active_ids'] = context.get('active_ids', False)
-        return self.pool['report'].get_action(cr, uid, ids, 'account.report_analyticcostledgerquantity', data=datas, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account.report_analyticcostledgerquantity', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
