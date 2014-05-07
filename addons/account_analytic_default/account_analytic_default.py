@@ -117,15 +117,12 @@ class sale_order_line(osv.osv):
 class product_product(osv.Model):
     _inherit = 'product.product'
     def _rules_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for rule in self.browse(cr, uid, ids, context=context):
-                res[rule.id] = len(rule.rules_ids)
-        except:
-            pass
-        return res
+        Analytic = self.pool['account.analytic.default']
+        return {
+            product_id: Analytic.search_count(cr, uid, [('product_id', '=', product_id)], context=context)
+            for product_id in ids
+        }
     _columns = {
-        'rules_ids': fields.one2many('account.analytic.default', 'product_id', 'Analytic Rules '),
         'rules_count': fields.function(_rules_count, string='# Analytic Rules', type='integer'),
     }
 

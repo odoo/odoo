@@ -39,13 +39,11 @@ class hr_employee(osv.osv):
         return res
 
     def _contracts_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for employee in self.browse(cr, uid, ids, context=context):
-                res[employee.id] = len(employee.contract_ids)
-        except:
-            pass
-        return res
+        Contract = self.pool['hr.contract']
+        return {
+            employee_id: Contract.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
 
     _columns = {
         'manager': fields.boolean('Is a Manager'),

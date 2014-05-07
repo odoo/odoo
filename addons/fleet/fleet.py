@@ -315,18 +315,21 @@ class fleet_vehicle(osv.Model):
         return model_id
     
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'odometer_count': 0, 'fuel_logs_count': 0, 'service_count': 0, 'contract_count': 0, 'cost_count': 0,}), ids))
-        try:
-            for costs in self.browse(cr, uid, ids, context=context):
-                res[costs.id] = {'odometer_count': len(costs.odometer_ids),
-                'fuel_logs_count': len(costs.log_fuel),
-                'service_count': len(costs.log_services),
-                'contract_count': len(costs.log_contracts),
-                'cost_count': len(costs.costs_ids)
-                }
-        except:
-            pass
-        return res
+        Odometer = self.pool['fleet.vehicle.odometer']
+        LogFuel = self.pool['fleet.vehicle.log.fuel']
+        LogService = self.pool['fleet.vehicle.log.services']
+        LogContract = self.pool['fleet.vehicle.log.contract']
+        Cost = self.pool['fleet.vehicle.cost']
+        return {
+            vehicle_id: {
+                'odometer_count': Odometer.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'fuel_logs_count': LogFuel.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'service_count': LogService.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'contract_count': LogContract.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'cost_count': Cost.search_count(cr, uid, [('vehicle_id', '=', vehicle_id), ('parent_id', '=', False)], context=context)
+            }
+            for vehicle_id in ids
+        }
 
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
@@ -341,8 +344,6 @@ class fleet_vehicle(osv.Model):
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
-        'costs_ids': fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs'),
-        'odometer_ids': fields.one2many('fleet.vehicle.odometer', 'vehicle_id', 'Odometer'),
         'cost_count': fields.function(_count_all, type='integer', string="Costs" , multi=True),
         'contract_count': fields.function(_count_all, type='integer', string='Contracts', multi=True),
         'service_count': fields.function(_count_all, type='integer', string='Services', multi=True),

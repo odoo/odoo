@@ -134,15 +134,15 @@ class hr_timesheet_sheet(osv.osv):
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
     
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'timesheet_activity_count': 0, 'attendance_count': 0,}), ids))
-        try:
-           for datas in self.browse(cr, uid, ids, context=context):
-                res[datas.id] = {'timesheet_activity_count': len(datas.timesheet_activity_ids),
-                'attendance_count': len(datas.attendances_ids),
-                }
-        except:
-            pass
-        return res
+        Timesheet = self.pool['hr.analytic.timesheet']
+        Attendance = self.pool['hr.attendance']
+        return {
+            sheet_id: {
+                'timesheet_activity_count': Timesheet.search_count(cr,uid, [('sheet_id','=', sheet_id)], context=context),
+                'attendance_count': Attendance.search_count(cr,uid, [('sheed_id', '=', sheet_id)], context=context)
+            }
+            for sheet_id in ids
+        }
 
     _columns = {
         'name': fields.char('Note', size=64, select=1,
@@ -174,7 +174,6 @@ class hr_timesheet_sheet(osv.osv):
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'department_id':fields.many2one('hr.department','Department'),
-        'timesheet_activity_ids': fields.one2many('hr.analytic.timesheet', 'sheet_id', 'Timesheet Activities'),
         'timesheet_activity_count': fields.function(_count_all, type='integer', string='Timesheet Activities', multi=True),
         'attendance_count': fields.function(_count_all, type='integer', string="Attendances", multi=True),
     }
@@ -610,17 +609,14 @@ class hr_employee(osv.osv):
     _description = 'Employee'
 
     def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for employee in self.browse(cr, uid, ids, context=context):
-                res[employee.id] = len(employee.timesheet_ids)
-        except:
-            pass
-        return res
+        Sheet = self.pool['hr_timesheet_sheet.sheet']
+        return {
+            employee_id: Sheet.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
 
     _columns = {
-        'timesheet_ids': fields.one2many('hr_timesheet_sheet.sheet', 'employee_id', 'Timesheets'),
-        'timesheet_count': fields.function(_timesheet_count, type='integer', string='Timsheets'),
+        'timesheet_count': fields.function(_timesheet_count, type='integer', string='Timesheets'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

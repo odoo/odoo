@@ -1027,15 +1027,12 @@ class account_invoice(osv.Model):
 class product_product(osv.Model):
     _inherit = 'product.product'
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for sale in self.browse(cr, uid, ids, context=context):
-                res[sale.id] = len(sale.sales_ids)
-        except:
-            pass
-        return res
+        SaleOrderLine = self.pool['sale.order.line']
+        return {
+            product_id: SaleOrderLine.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
+            for product_id in ids
+        }
     _columns = {
-        'sales_ids': fields.one2many('sale.order.line', 'product_id', 'Sales '),
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
