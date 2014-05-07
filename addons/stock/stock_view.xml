@@ -1386,9 +1386,6 @@
                     <field name="count_picking_waiting"/>
                     <field name="count_picking_late"/>
                     <field name="count_picking_backorders"/>
-                    <field name="latest_picking_late"/>
-                    <field name="latest_picking_waiting"/>
-                    <field name="latest_picking_backorders"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_stock_picking_type">

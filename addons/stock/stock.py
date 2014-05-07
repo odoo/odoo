@@ -4092,23 +4092,6 @@ class stock_picking_type(osv.osv):
                 result[tid]['rate_picking_backorders'] = 0
         return result
 
-    def _get_picking_history(self, cr, uid, ids, field_names, arg, context=None):
-        obj = self.pool.get('stock.picking')
-        result = {}
-        for id in ids:
-            result[id] = {
-                'latest_picking_late': [],
-                'latest_picking_backorders': [],
-                'latest_picking_waiting': []
-            }
-        for type_id in ids:
-            pick_ids = obj.search(cr, uid, [('state', '=','done'), ('picking_type_id','=',type_id)], limit=12, order="date desc", context=context)
-            for pick in obj.browse(cr, uid, pick_ids, context=context):
-                result[type_id]['latest_picking_late'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
-                result[type_id]['latest_picking_backorders'] = bool(pick.backorder_id)
-                result[type_id]['latest_picking_waiting'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
-        return result
-
     def onchange_picking_code(self, cr, uid, ids, picking_code=False):
         if not picking_code:
             return False
@@ -4173,7 +4156,7 @@ class stock_picking_type(osv.osv):
 
         # Statistics for the kanban view
         'last_done_picking': fields.function(_get_tristate_values,
-            type='string',
+            type='char',
             string='Last 10 Done Pickings'),
 
         'count_picking_draft': fields.function(_get_picking_count,
@@ -4193,13 +4176,6 @@ class stock_picking_type(osv.osv):
             type='integer', multi='_get_picking_count'),
         'rate_picking_backorders': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
-
-        'latest_picking_late': fields.function(_get_picking_history,
-            type='string', multi='_get_picking_history'),
-        'latest_picking_backorders': fields.function(_get_picking_history,
-            type='string', multi='_get_picking_history'),
-        'latest_picking_waiting': fields.function(_get_picking_history,
-            type='string', multi='_get_picking_history'),
 
     }
     _defaults = {
