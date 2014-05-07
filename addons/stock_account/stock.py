@@ -210,10 +210,10 @@ class stock_picking(osv.osv):
                         todo[key].append(move)
         invoices = []
         for moves in todo.values():
-            invoices = self.__invoice_create_line(cr, uid, moves, journal_id, type, context=context)
+            invoices = self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
         return invoices
 
-    def __invoice_create_line(self, cr, uid, moves, journal_id=False, inv_type='out_invoice', context=None):
+    def _invoice_create_line(self, cr, uid, moves, journal_id=False, inv_type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         move_obj = self.pool.get('stock.move')
         invoices = {}
