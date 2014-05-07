@@ -166,7 +166,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         $dialog_content.openerpClass();
 
         this.$dialog_box.on('hidden.bs.modal', this, function(){
-            self.trigger("closing");
+            self.close();
         });
         this.$dialog_box.modal('show');
 
@@ -178,8 +178,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
     close: function(reason) {
-        if (this.dialog_inited && this.$el.is(":data(bs.modal)")) {
-            this.$el.parents('.modal').modal('hide');
+        if (this.dialog_inited) {
+            this.trigger("closing", reason);
+            if (this.$el.is(":data(bs.modal)")) {     // may have been destroyed by closing signal
+		this.$el.parents('.modal').modal('hide');
+            }
         }
     },
     _closing: function() {
@@ -209,8 +212,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             //we need this to put the instruction to remove modal from DOM at the end
             //of the queue, otherwise it might already have been removed before the modal-backdrop
             //is removed when pressing escape key
+            var $parent = this.$el.parents('.modal');
             setTimeout(function () {
-                self.$el.parents('.modal').remove();
+                $parent.remove();
             },0);
         }
         this._super();
@@ -1074,8 +1078,8 @@ instance.web.Client = instance.web.Widget.extend({
     },
     bind_events: function() {
         var self = this;
-        this.$el.on('mouseenter', '.oe_systray > div:not([data-tipsy=true])', function() {
-            $(this).attr('data-tipsy', 'true').tipsy().trigger('mouseenter');
+        this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
+            $(this).attr('data-toggle', 'tooltip').tooltip().trigger('mouseenter');
         });
         this.$el.on('click', '.oe_dropdown_toggle', function(ev) {
             ev.preventDefault();
@@ -1099,7 +1103,7 @@ instance.web.Client = instance.web.Widget.extend({
             }, 0);
         });
         instance.web.bus.on('click', this, function(ev) {
-            $.fn.tipsy.clear();
+            $.fn.tooltip('destroy');
             if (!$(ev.target).is('input[type=file]')) {
                 self.$el.find('.oe_dropdown_menu.oe_opened, .oe_dropdown_toggle.oe_opened').removeClass('oe_opened');
             }
@@ -1453,7 +1457,7 @@ instance.web.embed = function (origin, dbname, login, key, action, options) {
     $('head').append($('<link>', {
         'rel': 'stylesheet',
         'type': 'text/css',
-        'href': origin +'/web/webclient/css'
+        'href': origin +'/web/css/web.assets_webclient'
     }));
     var currentScript = document.currentScript;
     if (!currentScript) {

@@ -32,7 +32,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         var self = this;
         var options = {
             buttons: [
-                {text: _t("Close"), click: function () { self.close(); }},
+                {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
                 {text: _t("Export To File"), click: function () { self.on_click_export_data(); }}
             ],
             close: function () { self.close();}

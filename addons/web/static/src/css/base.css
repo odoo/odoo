@@ -79,7 +79,7 @@
   vertical-align: top;
 }
 .openerp .oe_title {
-  width: 50%;
+  width: 38%;
   float: left;
 }
 .openerp .oe_title:after {
@@ -314,47 +314,57 @@
 .openerp .oe_form_dirty button.oe_highlight_on_dirty:hover {
   background: #ed6f6a;
 }
-.openerp .oe_button_box {
-  width: 400px;
-  text-align: left;
-}
-.openerp .oe_button_box .oe_stat_button:hover {
-  background: #7c7bad;
-  color: white;
-}
-.openerp .oe_button_box .oe_stat_button:hover .fa {
-  color: white;
-}
-.openerp .oe_button_box .oe_stat_button {
+.openerp .oe_stat_button {
   font-weight: normal;
-  display: inline-table;
-  width: 33% !important;
-  height: 42px;
+  width: 132px !important;
+  height: 40px;
+  color: #666666;
   margin: 0px -1px -1px 0px;
   padding: 0;
-  color: #666666;
   border: 1px solid #dddddd;
   border-radius: 0;
   box-shadow: none;
   background: white;
 }
-.openerp .oe_button_box .oe_stat_button > div {
+.openerp .oe_stat_button > div {
   display: table-cell;
   vertical-align: middle;
   text-align: left;
   padding: 0;
   line-height: 120%;
 }
-.openerp .oe_button_box .oe_stat_button .stat_button_icon {
+.openerp .oe_stat_button .stat_button_icon {
   color: #7c7bad;
   font-size: 24px;
   padding: 0px 3px;
   width: 37px;
   text-align: center;
 }
-.openerp .oe_button_box .oe_stat_button svg {
+.openerp .oe_stat_button .oe_form_field_percent_pie {
+  width: 42px;
+}
+.openerp .oe_stat_button .oe_form_field_bar_chart {
+  width: 42px;
+}
+.openerp .oe_stat_button svg {
   width: 38px;
   height: 38px;
+  display: inline;
+  vertical-align: middle;
+}
+.openerp .oe_stat_button:hover {
+  background: #7c7bad;
+  color: white;
+}
+.openerp .oe_stat_button:hover .fa {
+  color: white;
+}
+.openerp .oe_button_box {
+  width: 400px;
+  text-align: right;
+}
+.openerp .oe_button_box .oe_stat_button {
+  display: inline-table;
 }
 .openerp .oe_avatar > img {
   max-height: 90px;
@@ -470,7 +480,7 @@
   display: inline-block;
   height: 12px;
   width: 12px;
-  vertical-align: bottom;
+  vertical-align: top;
   border-radius: 10px;
   margin: 1px 0;
 }
@@ -495,40 +505,6 @@
 .openerp .oe_tags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
   font-style: italic;
   text-decoration: none;
-}
-.openerp.oe_tooltip {
-  font-size: 12px;
-}
-.openerp.oe_tooltip .oe_tooltip_string {
-  color: #ffdd55;
-  font-weight: bold;
-  font-size: 13px;
-}
-.openerp.oe_tooltip .oe_tooltip_help {
-  white-space: pre-wrap;
-}
-.openerp.oe_tooltip .oe_tooltip_technical {
-  padding: 0 0 4px 0;
-  margin: 5px 0 0 15px;
-}
-.openerp.oe_tooltip .oe_tooltip_technical li {
-  list-style: circle;
-}
-.openerp.oe_tooltip .oe_tooltip_technical_title {
-  font-weight: bold;
-}
-.openerp.oe_tooltip .oe_tooltip_close {
-  margin: -5px 0 0 2px;
-  cursor: default;
-  float: right;
-  color: white;
-}
-.openerp.oe_tooltip .oe_tooltip_close:hover {
-  color: #999999;
-  cursor: pointer;
-}
-.openerp.oe_tooltip .oe_tooltip_message {
-  max-width: 310px;
 }
 .openerp .oe_notebook {
   margin: 8px 0;
@@ -746,7 +722,7 @@
   border-bottom-left-radius: 8px;
 }
 .openerp .oe_notification {
-  z-index: 1050;
+  z-index: 1500;
 }
 .openerp .oe_webclient_timezone_notification a {
   color: white;
@@ -1916,7 +1892,7 @@
 .openerp .oe_form > :not(.oe_form_nosheet) header {
   padding-left: 2px;
 }
-.openerp .oe_form > :not(.oe_form_nosheet) header ul {
+.openerp .oe_form > :not(.oe_form_nosheet) header ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu) {
   display: inline-block;
   float: right;
 }
@@ -2772,9 +2748,11 @@
   border: none;
   background: transparent;
   padding: 0;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+}
+.openerp .oe_list_content > tbody > tr > td > button.btn_txt, .openerp .oe_list_content > tbody > tr > th > button.btn_txt {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background: #e3e3e3;
+  padding: 3px 12px;
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_checkbox:first-child, .openerp .oe_list_content > tbody > tr th.oe_list_checkbox:first-child {
   width: 17px;
@@ -3319,6 +3297,88 @@ body.oe_single_form .oe_single_form_container {
     overflow: hidden !important;
   }
 }
+.tooltip {
+  padding: 0;
+  margin: 0;
+  font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+  color: #4c4c4c;
+  font-size: 12px;
+  background: white;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+}
+.tooltip .tooltip-inner {
+  text-align: left !important;
+  max-width: 350px;
+}
+.tooltip .tooltip-inner .oe_tooltip_string {
+  color: #ffdd55;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.tooltip .tooltip-inner .oe_tooltip_help {
+  white-space: pre-wrap;
+}
+.tooltip .tooltip-inner .oe_tooltip_technical {
+  padding: 0 0 4px 0;
+  margin: 5px 0 0 15px;
+}
+.tooltip .tooltip-inner .oe_tooltip_technical li {
+  list-style: circle;
+}
+.tooltip .tooltip-inner .oe_tooltip_technical_title {
+  font-weight: bold;
+}
+.tooltip .tooltip-inner .oe_tooltip_close {
+  margin: -5px 0 0 2px;
+  cursor: default;
+  float: right;
+  color: white;
+}
+.tooltip .tooltip-inner .oe_tooltip_close:hover {
+  color: #999999;
+  cursor: pointer;
+}
+.tooltip .tooltip-inner .oe_tooltip_message {
+  max-width: 310px;
+}
+
+.ui-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.modal .modal-header button.close {
+  border: none;
+  background: none;
+  padding: 1px;
+  height: 18px;
+  font-size: 20px;
+}
+.modal .modal-footer {
+  text-align: left;
+}
+.modal .oe_button {
+  margin: 0 4px 0 0;
+}
+.modal .oe_act_window.modal-body {
+  padding: 0;
+}
+
+.ui-datepicker {
+  z-index: 1500 !important;
+}
+
+input[type="radio"], input[type="checkbox"] {
+  margin-right: 4px;
+  margin-left: 4px;
+}
+
+.blockUI.blockOverlay {
+  background-color: black;
+  opacity: 0.6;
+}
 .openerp .dropdown-menu.state {
   background: white;
   background: white !important;
@@ -3330,7 +3390,6 @@ body.oe_single_form .oe_single_form_container {
   color: #333333;
   padding-left: 5px;
   padding-right: 0px;
-  font-size: 13px;
 }
 .openerp .btn-group.state {
   padding-top: 3px;
@@ -3378,31 +3437,4 @@ body.oe_single_form .oe_single_form_container {
 .openerp .oe_star_left {
   float: left;
   margin-right: 8px;
-}
-
-.ui-icon {
-  width: 18px;
-  height: 18px;
-}
-.modal .modal-header button.close {
-  border: none;
-  background: none;
-  padding: 1px;
-  height: 18px;
-  font-size: 20px;
-}
-.modal .modal-footer {
-  text-align: left;
-}
-.modal .oe_act_window.modal-body{
-  padding: 0;
-}
-input[type="radio"], input[type="checkbox"] {
-  margin-right: 4px;
-  margin-left: 4px;
-}
-
-.blockUI.blockOverlay {
-  background-color: black;
-  opacity: 0.6;
 }

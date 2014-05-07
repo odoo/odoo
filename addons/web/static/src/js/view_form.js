@@ -631,6 +631,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         });
                     }
                     return $.when();
+                }).fail(function() {
+                    self.save_list.pop();
+                    return $.when();
                 });
             }
             return iterate();
@@ -727,8 +730,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         }
     },
-    on_button_save: function() {
+    on_button_save: function(e) {
         var self = this;
+        $(e.target).attr("disabled", true);
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.reload().then(function() {
@@ -738,6 +742,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     parent.menu.do_reload_needaction();
                 }
             });
+        }).always(function(){
+            $(e.target).attr("disabled", false);
         });
     },
     on_button_cancel: function(event) {
@@ -1832,7 +1838,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         this.$el.addClass(this.node.attrs["class"] || "");
     },
     destroy: function() {
-        $.fn.tipsy.clear();
+        $.fn.tooltip('destroy');
         this._super.apply(this, arguments);
     },
     /**
@@ -1863,10 +1869,25 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
     do_attach_tooltip: function(widget, trigger, options) {
         widget = widget || this;
         trigger = trigger || this.$el;
+        var container = 'body';
+        /*TODO: need to be refactor
+        in the case we can find the view form in the parent, 
+        attach the element to it (to prevent tooltip to keep showing
+        when switching view) or if we have a modal currently showing,
+        attach tooltip to the modal to prevent the tooltip to show in the body in the
+        case we close the modal too fast*/
+        if ($(trigger).parents('.oe_view_manager_view_form').length > 0){
+            container = $(trigger).parents('.oe_view_manager_view_form');
+        }
+        else {
+            if (window.$('.modal.in').length>0){
+                container = window.$('.modal.in:last()');
+            }
+        }
         options = _.extend({
-                delayIn: 500,
-                delayOut: 0,
-                fade: true,
+                delay: { show: 500, hide: 0 },
+                trigger: 'hover',
+                container: container,
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -1877,12 +1898,12 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                         widget: widget
                     });
                 },
-                gravity: $.fn.tipsy.autoBounds(50, 'nw'),
-                html: true,
-                opacity: 0.85,
-                trigger: 'hover'
             }, options || {});
-        $(trigger).tipsy(options);
+        //only show tooltip if we are in debug or if we have a help to show, otherwise it will display
+        //as empty
+        if (instance.session.debug || widget.node.attrs.help || (widget.field && widget.field.help)){
+            $(trigger).tooltip(options);
+        }
     },
     /**
      * Builds a new context usable for operations related to fields by merging
@@ -1919,7 +1940,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
         this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
-        this.icon = node.attrs.icon && "<span class=\"fa " + node.attrs.icon + " fa-fw\"></span>";
+        this.icon_class = node.attrs.icon && "stat_button_icon fa " + node.attrs.icon + " fa-fw";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -1955,7 +1976,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = instance.web.Dialog(this, {
+                var dialog = new instance.web.Dialog(this, {
                     title: _t('Confirm'),
                     buttons: [
                         {text: _t("Cancel"), click: function() {
@@ -2119,8 +2140,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
         this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
+        this.do_attach_tooltip(this, this.$label[0] || this.$el);
         if (instance.session.debug) {
-            this.do_attach_tooltip(this, this.$label[0] || this.$el);
             this.$label.off('dblclick').on('dblclick', function() {
                 console.log("Field '%s' of type '%s' in View: %o", self.name, (self.node.attrs.widget || self.field.type), self.view);
                 window.w = self;
@@ -2535,6 +2556,76 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     }
 });
 
+instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+    init: function(field_manager, node) {
+        this._super.apply(this, arguments);
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.on("change:effective_readonly", this, function () {
+            this.display_field();
+            this.render_value();
+        });
+        this.display_field();
+        return this._super();
+    },
+    render_value: function() {
+        this.$('button.select_records').css('visibility', this.get('effective_readonly') ? 'hidden': '');
+    },
+    set_value: function(value_) {
+        var self = this;
+        this.set('value', value_ || false);
+        this.display_field();
+     },
+    display_field: function() {
+        var self = this;
+        this.$el.html(instance.web.qweb.render("FieldCharDomain", {widget: this}));
+        if (this.get('value')) {
+            var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
+            var domain = instance.web.pyeval.eval('domain', this.get('value'));
+            var ds = new instance.web.DataSetStatic(self, model, self.build_context());
+            ds.call('search_count', [domain]).then(function (results) {
+                $('.oe_domain_count', self.$el).text(results + ' records selected');
+                $('button span', self.$el).text(' Change selection');
+            });
+        } else {
+            $('.oe_domain_count', this.$el).text('0 record selected');
+            $('button span', this.$el).text(' Select records');
+        };
+        this.$('.select_records').on('click', self.on_click);
+    },
+    on_click: function(ev) {
+        var self = this;
+        var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
+        this.pop = new instance.web.form.SelectCreatePopup(this);
+        this.pop.select_element(
+            model, {title: 'Select records...'},
+            [], this.build_context());
+        this.pop.on("elements_selected", self, function(element_ids) {
+            if (this.pop.$('input.oe_list_record_selector').prop('checked')) {
+                var search_data = this.pop.searchview.build_search_data();
+                var domain_done = instance.web.pyeval.eval_domains_and_contexts({
+                    domains: search_data.domains,
+                    contexts: search_data.contexts,
+                    group_by_seq: search_data.groupbys || []
+                }).then(function (results) {
+                    return results.domain;
+                });
+            }
+            else {
+                var domain = ["id", "in", element_ids];
+                var domain_done = $.Deferred().resolve(domain);
+            }
+            $.when(domain_done).then(function (domain) {
+                var domain = self.pop.dataset.domain.concat(domain || []);
+                self.set_value(JSON.stringify(domain))
+            });
+        });
+        event.preventDefault();
+    },
+});
+
 instance.web.DateTimeWidget = instance.web.Widget.extend({
     template: "web.datepicker",
     jqueryui_object: 'datetimepicker',
@@ -2930,10 +3021,10 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
 
         svg.innerHTML = "";
         nv.addGraph(function() {
-            var size=43;
+            var width = 42, height = 42;
             var chart = nv.models.pieChart()
-                .width(size)
-                .height(size)
+                .width(width)
+                .height(height)
                 .margin({top: 0, right: 0, bottom: 0, left: 0})
                 .donut(true) 
                 .showLegend(false)
@@ -2946,11 +3037,11 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
                 .datum([{'x': 'value', 'y': value}, {'x': 'complement', 'y': 100 - value}])
                 .transition()
                 .call(chart)
-                .attr({width:size, height:size});
+                .attr('style', 'width: ' + width + 'px; height:' + height + 'px;');
 
             d3.select(svg)
                 .append("text")
-                .attr({x: size/2, y: size/2 + 3, 'text-anchor': 'middle'})
+                .attr({x: width/2, y: height/2 + 3, 'text-anchor': 'middle'})
                 .style({"font-size": "10px", "font-weight": "bold"})
                 .text(formatted_value);
 
@@ -2960,6 +3051,43 @@ instance.web.form.FieldPercentPie = instance.web.form.AbstractField.extend({
     }
 });
 
+/**
+    The FieldBarChart expectsa list of values (indeed)
+*/
+instance.web.form.FieldBarChart = instance.web.form.AbstractField.extend({
+    template: 'FieldBarChart',
+
+    render_value: function() {
+        var value = JSON.parse(this.get('value'));
+        var svg = this.$('svg')[0];
+        svg.innerHTML = "";
+        nv.addGraph(function() {
+            var width = 34, height = 34;
+            var chart = nv.models.discreteBarChart()
+                .x(function (d) { return d.tooltip })
+                .y(function (d) { return d.value })
+                .width(width)
+                .height(height)
+                .margin({top: 0, right: 0, bottom: 0, left: 0})
+                .tooltips(false)
+                .showValues(false)
+                .transitionDuration(350)
+                .showXAxis(false)
+                .showYAxis(false);
+   
+            d3.select(svg)
+                .datum([{key: 'values', values: value}])
+                .transition()
+                .call(chart)
+                .attr('style', 'width: ' + (width + 4) + 'px; height: ' + (height + 8) + 'px;');
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+        });
+   
+    }
+});
 
 
 instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
@@ -3328,13 +3456,16 @@ instance.web.form.CompletionFieldMixin = {
 instance.web.form.M2ODialog = instance.web.Dialog.extend({
     template: "M2ODialog",
     init: function(parent) {
+        this.name = parent.string;
         this._super(parent, {
-            title: _.str.sprintf(_t("Add %s"), parent.string),
+            title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
         });
     },
     start: function() {
         var self = this;
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
+        this.$("p").text( text );
         this.$buttons.html(QWeb.render("M2ODialog.buttons"));
         this.$("input").val(this.getParent().last_query);
         this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
@@ -3441,20 +3572,25 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 return;
             }
             var pop = new instance.web.form.FormOpenPopup(self);
-            pop.show_element(
-                self.field.relation,
-                self.get("value"),
-                self.build_context(),
-                {
-                    title: _t("Open: ") + self.string
-                }
-            );
-            pop.on('write_completed', self, function(){
-                self.display_value = {};
-                self.display_value_backup = {};
-                self.render_value();
-                self.focus();
-                self.view.do_onchange(self);
+            var context = self.build_context().eval();
+            var model_obj = new instance.web.Model(self.field.relation);
+            model_obj.call('get_formview_id', [self.get("value"), context]).then(function(view_id){
+                pop.show_element(
+                    self.field.relation,
+                    self.get("value"),
+                    self.build_context(),
+                    {
+                        title: _t("Open: ") + self.string,
+                        view_id: view_id
+                    }
+                );
+                pop.on('write_completed', self, function(){
+                    self.display_value = {};
+                    self.display_value_backup = {};
+                    self.render_value();
+                    self.focus();
+                    self.trigger('changed_value');
+                });
             });
         });
 
@@ -3516,7 +3652,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_ed) {
+            if (used && self.get("value") === false && ! self.no_ed && (self.options.no_create === false || self.options.no_create === undefined)) {
                 self.ed_def.reject();
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
@@ -3588,6 +3724,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 250
         });
+        // set position for list of suggestions box
+        this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
@@ -3650,13 +3788,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                  .html(link);
             if (! this.options.no_open)
                 $link.click(function () {
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        res_model: self.field.relation,
-                        res_id: self.get("value"),
-                        views: [[false, 'form']],
-                        target: 'current',
-                        context: self.build_context().eval(),
+                    var context = self.build_context().eval();
+                    var model_obj = new instance.web.Model(self.field.relation);
+                    model_obj.call('get_formview_action', [self.get("value"), context]).then(function(action){
+                        self.do_action(action);
                     });
                     return false;
                  });
@@ -6016,19 +6151,29 @@ instance.web.form.X2ManyCounter = instance.web.form.AbstractField.extend(instanc
     display a simple string "<value of field> <label of the field>"
 */
 instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
+    is_field_number: true,
     init: function() {
         this._super.apply(this, arguments);
-        this.set("value", 0);
+        this.internal_set_value(0);
+    },
+    set_value: function(value_) {
+        if (value_ === false || value_ === undefined) {
+            value_ = 0;
+        }
+        this._super.apply(this, [value_]);
     },
     render_value: function() {
         var options = {
             value: this.get("value") || 0,
-            text: this.string,
         };
+        if (! this.node.attrs.nolabel) {
+            options.text = this.string
+        }
         this.$el.html(QWeb.render("StatInfo", options));
     },
 
 });
+
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -6043,6 +6188,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'url' : 'instance.web.form.FieldUrl',
     'text' : 'instance.web.form.FieldText',
     'html' : 'instance.web.form.FieldTextHtml',
+    'char_domain': 'instance.web.form.FieldCharDomain',
     'date' : 'instance.web.form.FieldDate',
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
@@ -6058,6 +6204,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'boolean' : 'instance.web.form.FieldBoolean',
     'float' : 'instance.web.form.FieldFloat',
     'percentpie': 'instance.web.form.FieldPercentPie',
+    'barchart': 'instance.web.form.FieldBarChart',
     'integer': 'instance.web.form.FieldFloat',
     'float_time': 'instance.web.form.FieldFloat',
     'progressbar': 'instance.web.form.FieldProgressBar',

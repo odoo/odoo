@@ -190,7 +190,7 @@ $sheet-padding: 16px
     td
         vertical-align: top
     .oe_title
-        width: 50%
+        width: 38%
         float: left    
     .oe_title:after
         content: "."
@@ -330,41 +330,48 @@ $sheet-padding: 16px
             @include box-shadow(none)
             &:hover
                 background: #ED6F6A
+    .oe_stat_button
+        font-weight: normal
+        width: 132px !important
+        height: 40px
+        color: #666
+        margin: 0px -1px -1px 0px
+        padding: 0
+        border: 1px solid #dddddd
+        border-radius: 0
+        box-shadow: none
+        background: white
+        > div
+            display: table-cell
+            vertical-align: middle
+            text-align: left
+            padding: 0
+            line-height: 120%
+        .stat_button_icon
+            color: #7C7BAD
+            font-size: 24px
+            padding: 0px 3px
+            width: 37px
+            text-align: center
+        .oe_form_field_percent_pie
+            width: 42px
+        .oe_form_field_bar_chart
+            width: 42px
+        svg
+            width: 38px
+            height: 38px
+            display: inline
+            vertical-align: middle
+    .oe_stat_button:hover
+        background: #7c7bad
+        color: white
+        .fa
+            color: white
     .oe_button_box
         width: 400px
-        text-align: left
-        .oe_stat_button:hover
-            background: #7c7bad
-            color: white
-            .fa
-                color: white
+        text-align: right
         .oe_stat_button
-            font-weight: normal
             display: inline-table
-            width: 33% !important
-            height: 42px
-            margin: 0px -1px -1px 0px
-            padding: 0
-            color: #666
-            border: 1px solid #dddddd
-            border-radius: 0
-            box-shadow: none
-            background: white
-            > div
-                display: table-cell
-                vertical-align: middle
-                text-align: left
-                padding: 0
-                line-height: 120%
-            .stat_button_icon
-                color: #7C7BAD
-                font-size: 24px
-                padding: 0px 3px
-                width: 37px
-                text-align: center
-            svg
-                width: 38px
-                height: 38px
     .oe_avatar
         > img
             max-height: 90px
@@ -446,7 +453,7 @@ $sheet-padding: 16px
                 display: inline-block
                 height: 12px
                 width: 12px
-                vertical-align: bottom
+                vertical-align: top
                 border-radius: 10px
                 margin: 1px 0
             &.oe_form_invalid
@@ -465,33 +472,6 @@ $sheet-padding: 16px
                 font-style: italic
                 text-decoration: none
         margin-bottom: 1px
-    // }}}
-    // Tooltips {{{
-    &.oe_tooltip
-        font-size: 12px
-        .oe_tooltip_string
-            color: #FD5
-            font-weight: bold
-            font-size: 13px
-        .oe_tooltip_help
-            white-space: pre-wrap
-        .oe_tooltip_technical
-            padding: 0 0 4px 0
-            margin: 5px 0 0 15px
-            li
-                list-style: circle
-        .oe_tooltip_technical_title
-            font-weight: bold
-        .oe_tooltip_close
-            margin: -5px 0 0 2px
-            cursor: default
-            float: right
-            color: white
-            &:hover
-                color: #999
-                cursor: pointer
-        .oe_tooltip_message
-            max-width: 310px
     // }}}
     // Notebook {{{
     .oe_notebook
@@ -660,7 +640,8 @@ $sheet-padding: 16px
     // }}}
     // Notifications {{{
     .oe_notification
-        z-index: 1050
+        z-index: 1500
+        
     .oe_webclient_timezone_notification
         a
             color: white
@@ -1571,7 +1552,7 @@ $sheet-padding: 16px
     // FormView.header {{{
     .oe_form > :not(.oe_form_nosheet) header
         padding-left: 2px
-        ul
+        ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu)
             display: inline-block
             float: right
         .oe_button
@@ -2245,7 +2226,10 @@ $sheet-padding: 16px
                         border: none
                         background: transparent
                         padding: 0
-                        @include box-shadow(none)
+                    > button.btn_txt
+                        border: 1px solid rgba(0,0,0,0.4)
+                        background: #e3e3e3
+                        padding: 3px 12px
                 > td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
                     width: 17px
                     &:after
@@ -2697,6 +2681,76 @@ body.oe_single_form
             overflow: hidden !important
 // }}}
 
+// End of customize
+
+// Customize bootstrap3 for tooltip
+.tooltip
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 12px
+    background: white
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+    background-color: transparent
+    .tooltip-inner
+        text-align: left !important
+        max-width: 350px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
+
+// Hack for ui icon {{{
+.ui-icon
+    width: 18px
+    height: 18px
+// End hack}}}
+
+// Customized modal according bootstrap3
+.modal
+    .modal-header button.close
+        border: none
+        background: none
+        padding: 1px
+        height: 18px
+        font-size: 20px
+    .modal-footer
+        text-align: left
+    .oe_button
+        margin: 0 4px 0 0
+    .oe_act_window.modal-body
+        padding: 0
+
+.ui-datepicker
+    z-index: 1500 !important
+
+input[type="radio"], input[type="checkbox"]
+    margin-right: 4px
+    margin-left: 4px
+
+.blockUI.blockOverlay
+    background-color: black
+    opacity: 0.6000000238418579
 .openerp
     .dropdown-menu.state
         background: white
@@ -2751,34 +2805,5 @@ body.oe_single_form
     .oe_star_left
         float: left
         margin-right: 8px
-// End hack }}}
-
-// Hack for ui icon {{{
-.ui-icon
-    width: 18px
-    height: 18px
-// End hack}}}
-
-// Customized modal according bootstrap3
-.modal
-    .modal-header button.close
-        border: none
-        background: none
-        padding: 1px
-        height: 18px
-        font-size: 20px
-    .modal-footer
-        text-align: left
-    .oe_act_window.modal-body
-        padding: 0
-
-input[type="radio"], input[type="checkbox"]
-    margin-right: 4px
-    margin-left: 4px
-
-.blockUI.blockOverlay
-    background-color: black
-    opacity: 0.6000000238418579
-
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

@@ -31,6 +31,7 @@ except ImportError:
 
 import openerp
 import openerp.modules.registry
+from openerp.addons.base.ir.ir_qweb import AssetsBundle, QWebTemplateNotFound
 from openerp.tools.translate import _
 from openerp import http
 
@@ -51,50 +52,6 @@ env.filters["json"] = simplejson.dumps
 #----------------------------------------------------------
 # OpenERP Web helpers
 #----------------------------------------------------------
-
-def rjsmin(script):
-    """ Minify js with a clever regex.
-    Taken from http://opensource.perlig.de/rjsmin
-    Apache License, Version 2.0 """
-    def subber(match):
-        """ Substitution callback """
-        groups = match.groups()
-        return (
-            groups[0] or
-            groups[1] or
-            groups[2] or
-            groups[3] or
-            (groups[4] and '\n') or
-            (groups[5] and ' ') or
-            (groups[6] and ' ') or
-            (groups[7] and ' ') or
-            ''
-        )
-
-    result = re.sub(
-        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
-        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
-        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
-        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
-        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
-        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
-        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
-        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
-        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
-        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
-        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
-        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
-        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
-        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
-        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
-        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
-        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
-        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
-        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
-        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
-        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
-    ).strip()
-    return result
 
 db_list = http.db_list
 
@@ -309,45 +266,6 @@ def concat_xml(file_list):
             root.append(child)
     return ElementTree.tostring(root, 'utf-8'), checksum.hexdigest()
 
-def concat_files(file_list, reader=None, intersperse=""):
-    """ Concatenates contents of all provided files
-
-    :param list(str) file_list: list of files to check
-    :param function reader: reading procedure for each file
-    :param str intersperse: string to intersperse between file contents
-    :returns: (concatenation_result, checksum)
-    :rtype: (str, str)
-    """
-    checksum = hashlib.new('sha1')
-    if not file_list:
-        return '', checksum.hexdigest()
-
-    if reader is None:
-        def reader(f):
-            import codecs
-            with codecs.open(f, 'rb', "utf-8-sig") as fp:
-                return fp.read().encode("utf-8")
-
-    files_content = []
-    for fname in file_list:
-        contents = reader(fname)
-        checksum.update(contents)
-        files_content.append(contents)
-
-    files_concat = intersperse.join(files_content)
-    return files_concat, checksum.hexdigest()
-
-concat_js_cache = {}
-
-def concat_js(file_list):
-    content, checksum = concat_files(file_list, intersperse=';')
-    if checksum in concat_js_cache:
-        content = concat_js_cache[checksum]
-    else:
-        content = rjsmin(content)
-        concat_js_cache[checksum] = content
-    return content, checksum
-
 def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
@@ -371,30 +289,17 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((None, pattern))
             else:
                 for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                    # Hack for IE, who limit 288Ko, 4095 rules, 31 sheets
-                    # http://support.microsoft.com/kb/262161/en
-                    if pattern == "static/lib/bootstrap/css/bootstrap.css":
-                        if include_remotes:
-                            r.insert(0, (None, fs2web(path[len(addons_path):])))
-                    else:
-                        r.append((path, fs2web(path[len(addons_path):])))
+                    r.append((path, fs2web(path[len(addons_path):])))
     return r
 
-def manifest_list(extension, mods=None, db=None, debug=False):
+def manifest_list(extension, mods=None, db=None, debug=None):
     """ list ressources to load specifying either:
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """
+    if debug is not None:
+        _logger.warning("openerp.addons.web.main.manifest_list(): debug parameter is deprecated")
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    if not debug:
-        path = '/web/webclient/' + extension
-        if mods is not None:
-            path += '?' + werkzeug.url_encode({'mods': mods})
-        elif db:
-            path += '?' + werkzeug.url_encode({'db': db})
-
-        remotes = [wp for fp, wp in files if fp is None]
-        return [path] + remotes
     return [wp for _fp, wp in files]
 
 def get_last_modified(files):
@@ -411,7 +316,7 @@ def get_last_modified(files):
                    for f in files)
     return datetime.datetime(1970, 1, 1)
 
-def make_conditional(response, last_modified=None, etag=None):
+def make_conditional(response, last_modified=None, etag=None, max_age=0):
     """ Makes the provided response conditional based upon the request,
     and mandates revalidation from clients
 
@@ -426,7 +331,7 @@ def make_conditional(response, last_modified=None, etag=None):
     :rtype: werkzeug.wrappers.Response
     """
     response.cache_control.must_revalidate = True
-    response.cache_control.max_age = 0
+    response.cache_control.max_age = max_age
     if last_modified:
         response.last_modified = last_modified
     if etag:
@@ -592,59 +497,6 @@ def content_disposition(filename):
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
-
-# TODO: to remove once the database manager has been migrated server side
-#       and `edi` + `pos` addons has been adapted to use render_bootstrap_template()
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body>
-        <!--[if lte IE 8]>
-        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-        <script>CFInstall.check({mode: "overlay"});</script>
-        <![endif]-->
-    </body>
-</html>
-"""
-
-def render_bootstrap_template(template, values=None, debug=False, db=None, **kw):
-    if not db:
-        db = request.db
-    if request.debug:
-        debug = True
-    if values is None:
-        values = {}
-    values['debug'] = debug
-    values['current_db'] = db
-    try:
-        values['databases'] = http.db_list()
-    except openerp.exceptions.AccessDenied:
-        values['databases'] = None
-
-    for res in ['js', 'css']:
-        if res not in values:
-            values[res] = manifest_list(res, db=db, debug=debug)
-
-    if 'modules' not in values:
-        values['modules'] = module_boot(db=db)
-    values['modules'] = simplejson.dumps(values['modules'])
-
-    return request.render(template, values, **kw)
-
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
@@ -658,12 +510,7 @@ class Home(http.Controller):
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
-
-            headers = {
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'text/html; charset=utf-8',
-            }
-            return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
+            return request.render('web.webclient_bootstrap')
         else:
             return login_redirect()
 
@@ -681,16 +528,56 @@ class Home(http.Controller):
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
         values['redirect'] = redirect
+
+        try:
+            values['databases'] = http.db_list()
+        except openerp.exceptions.AccessDenied:
+            values['databases'] = None
+
         if request.httprequest.method == 'POST':
+            old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
                 return http.redirect_with_hash(redirect)
+            request.uid = old_uid
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template('web.login', values)
+        return request.render('web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
         return login_and_redirect(db, login, key, redirect_url=redirect)
+
+    @http.route('/web/js/<xmlid>', type='http', auth="public")
+    def js_bundle(self, xmlid, **kw):
+        # manifest backward compatible mode, to be removed
+        values = {'manifest_list': manifest_list}
+        try:
+            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        except QWebTemplateNotFound:
+            return request.not_found()
+        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
+
+        response = request.make_response(
+            bundle.js(), [('Content-Type', 'application/javascript')])
+
+        # TODO: check that we don't do weird lazy overriding of __call__ which break body-removal
+        return make_conditional(
+            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
+
+    @http.route('/web/css/<xmlid>', type='http', auth='public')
+    def css_bundle(self, xmlid, **kw):
+        values = {'manifest_list': manifest_list} # manifest backward compatible mode, to be removed
+        try:
+            assets_html = request.render(xmlid, lazy=False, qcontext=values)
+        except QWebTemplateNotFound:
+            return request.not_found()
+        bundle = AssetsBundle(xmlid, assets_html, debug=request.debug)
+
+        response = request.make_response(
+            bundle.css(), [('Content-Type', 'text/css')])
+
+        return make_conditional(
+            response, bundle.last_modified, bundle.checksum, max_age=60*60*24)
 
 class WebClient(http.Controller):
 
@@ -701,74 +588,6 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/jslist', type='json', auth="none")
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
-
-    @http.route('/web/webclient/qweblist', type='json', auth="none")
-    def qweblist(self, mods=None):
-        return manifest_list('qweb', mods=mods)
-
-    @http.route('/web/webclient/css', type='http', auth="none")
-    def css(self, mods=None, db=None):
-        files = list(manifest_glob('css', addons=mods, db=db))
-        last_modified = get_last_modified(f[0] for f in files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        file_map = dict(files)
-
-        rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
-        rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
-
-        def reader(f):
-            """read the a css file and absolutify all relative uris"""
-            with open(f, 'rb') as fp:
-                data = fp.read().decode('utf-8')
-
-            path = file_map[f]
-            web_dir = os.path.dirname(path)
-
-            data = re.sub(
-                rx_import,
-                r"""@import \1%s/""" % (web_dir,),
-                data,
-            )
-
-            data = re.sub(
-                rx_url,
-                r"url(\1%s/" % (web_dir,),
-                data,
-            )
-            return data.encode('utf-8')
-
-        content, checksum = concat_files((f[0] for f in files), reader)
-
-        # move up all @import and @charset rules to the top
-        matches = []
-        def push(matchobj):
-            matches.append(matchobj.group(0))
-            return ''
-
-        content = re.sub(re.compile("(@charset.+;$)", re.M), push, content)
-        content = re.sub(re.compile("(@import.+;$)", re.M), push, content)
-
-        matches.append(content)
-        content = '\n'.join(matches)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'text/css')]),
-            last_modified, checksum)
-
-    @http.route('/web/webclient/js', type='http', auth="none")
-    def js(self, mods=None, db=None):
-        files = [f[0] for f in manifest_glob('js', addons=mods, db=db)]
-        last_modified = get_last_modified(files)
-        if request.httprequest.if_modified_since and request.httprequest.if_modified_since >= last_modified:
-            return werkzeug.wrappers.Response(status=304)
-
-        content, checksum = concat_js(files)
-
-        return make_conditional(
-            request.make_response(content, [('Content-Type', 'application/javascript')]),
-            last_modified, checksum)
 
     @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
@@ -843,6 +662,10 @@ class WebClient(http.Controller):
     def version_info(self):
         return openerp.service.common.exp_version()
 
+    @http.route('/web/tests', type='http', auth="none")
+    def index(self, mod=None, **kwargs):
+        return request.render('web.qunit_suite')
+
 class Proxy(http.Controller):
 
     @http.route('/web/proxy/load', type='json', auth="none")
@@ -879,19 +702,9 @@ class Database(http.Controller):
     def manager(self, **kw):
         # TODO: migrate the webclient's database manager to server side views
         request.session.logout()
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', debug=request.debug))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', debug=request.debug))
-
-        r = html_template % {
-            'js': js,
-            'css': css,
+        return env.get_template("database_manager.html").render({
             'modules': simplejson.dumps(module_boot()),
-            'init': """
-                var wc = new s.web.WebClient(null, { action: 'database_manager' });
-                wc.appendTo($(document.body));
-            """
-        }
-        return r
+        })
 
     @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):
@@ -1088,16 +901,7 @@ class Menu(http.Controller):
         """
         s = request.session
         Menus = s.model('ir.ui.menu')
-        # If a menu action is defined use its domain to get the root menu items
-        user_menu_id = s.model('res.users').read([s.uid], ['menu_id'],
-                                                 request.context)[0]['menu_id']
-
         menu_domain = [('parent_id', '=', False)]
-        if user_menu_id:
-            domain_string = s.model('ir.actions.act_window').read(
-                [user_menu_id[0]], ['domain'],request.context)[0]['domain']
-            if domain_string:
-                menu_domain = ast.literal_eval(domain_string)
 
         return Menus.search(menu_domain, 0, False, False, request.context)
 
@@ -1225,7 +1029,7 @@ class DataSet(http.Controller):
                 records = getattr(request.session.model(model), method)(*args, **kwargs)
                 for record in records:
                     record['display_name'] = \
-                        names.get(record['id']) or "%s#%d" % (model, (record['id']))
+                        names.get(record['id']) or "{0}#{1}".format(model, (record['id']))
                 return records
 
         if method.startswith('_'):

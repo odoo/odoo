@@ -933,6 +933,46 @@ openerp.jsonpRpc = function(url, fct_name, params, settings) {
     });
 };
 
+openerp.loadCSS = function (url) {
+    if (!$('link[href="' + url + '"]').length) {
+        $('head').append($('<link>', {
+            'href': url,
+            'rel': 'stylesheet',
+            'type': 'text/css'
+        }));
+    }
+};
+openerp.loadJS = function (url) {
+    var def = $.Deferred();
+    if ($('script[src="' + url + '"]').length) {
+        def.resolve();
+    } else {
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+        script.onload = script.onreadystatechange = function() {
+            if ((script.readyState && script.readyState != "loaded" && script.readyState != "complete") || script.onload_done) {
+                return;
+            }
+            script.onload_done = true;
+            def.resolve(url);
+        };
+        script.onerror = function () {
+            console.error("Error loading file", script.src);
+            def.reject(url);
+        };
+        var head = document.head || document.getElementsByTagName('head')[0];
+        head.appendChild(script);
+    }
+    return def;
+};
+openerp.loadBundle = function (name) {
+    return $.when(
+        openerp.loadCSS('/web/css/' + name),
+        openerp.loadJS('/web/js/' + name)
+    );
+};
+
 var realSetTimeout = function(fct, millis) {
     var finished = new Date().getTime() + millis;
     var wait = function() {
