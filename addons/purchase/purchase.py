@@ -148,15 +148,13 @@ class purchase_order(osv.osv):
         return res and res[0] or False  
 
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'shipment_count': 0, 'invoice_count': 0,}), ids))
-        try:
-            for data in self.browse(cr, uid, ids, context=context):
-                res[data.id] = {'shipment_count': len(data.picking_ids),
-                'invoice_count': len(data.invoice_ids),
-                }
-        except:
-            pass
-        return res
+        return {
+            purchase.id: {
+                'shipment_count': len(purchase.picking_ids),
+                'invoice_count': len(purchase.invoice_ids),                
+            }
+            for purchase in self.browse(cr, uid, ids, context=context)
+        }
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
