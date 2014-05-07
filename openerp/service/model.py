@@ -54,7 +54,8 @@ def check(f):
                 if args and isinstance(args[-1], dict):
                     ctx = args[-1]
             elif isinstance(kwargs, dict):
-                ctx = kwargs.get('context', {})
+                # kwargception because call_kw set its context in kwargs['kwargs']
+                ctx = kwargs.get('context', kwargs.get('kwargs', {}).get('context', {}))
 
             uid = 1
             if args and isinstance(args[0], (long, int)):
