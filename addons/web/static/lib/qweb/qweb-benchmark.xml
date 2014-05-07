@@ -29,7 +29,7 @@
     <div t-if="testing || true" t-att-class="novar || 'yes'" style="display: none">
         <t t-set="novar"></t>
         <t t-set="style">height: 200px; border: 1px solid red;</t>
-        <div t-att="{ 'style' : style, 'disabled' : 'false', 'readonly' : novar or undefined }" t-opentag="true"/>
+        <div t-att="{ 'style' : style, 'disabled' : 'false', 'readonly' : novar or undefined }"/>
         <t t-foreach="{'my': 'first', 'my2': 'second' }" t-as="v">
             * <t t-esc="v"/> : <t t-esc="v_value"/>
         </t>
