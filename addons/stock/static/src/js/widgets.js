@@ -627,7 +627,7 @@ function openerp_picking_widgets(instance){
             // if we have a specified picking id, we load that one, and we load the picking of the same type as the active list
             if( picking_id ){
                 var loaded_picking = new instance.web.Model('stock.picking')
-                    .call('read',[[picking_id], [], new instance.web.CompoundContext()])
+                    .call('read',[[parseInt(picking_id)], [], new instance.web.CompoundContext()])
                     .then(function(picking){
                         self.picking = picking[0];
 
