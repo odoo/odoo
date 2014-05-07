@@ -21,13 +21,13 @@ _logger = logging.getLogger(__name__)
 class AcquirerAdyen(osv.Model):
     _inherit = 'payment.acquirer'
 
-    def _get_adyen_urls(self, cr, uid, env, context=None):
+    def _get_adyen_urls(self, cr, uid, environment, context=None):
         """ Adyen URLs
 
          - yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple
         """
         return {
-            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % env,
+            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % environment,
         }
 
     def _get_providers(self, cr, uid, context=None):
@@ -97,7 +97,7 @@ class AcquirerAdyen(osv.Model):
 
     def adyen_get_form_action_url(self, cr, uid, id, context=None):
         acquirer = self.browse(cr, uid, id, context=context)
-        return self._get_adyen_urls(cr, uid, acquirer.env, context=context)['adyen_form_url']
+        return self._get_adyen_urls(cr, uid, acquirer.environment, context=context)['adyen_form_url']
 
 
 class TxAdyen(osv.Model):

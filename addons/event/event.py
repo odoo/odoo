@@ -131,7 +131,7 @@ class event_event(osv.osv):
         @return: Dictionary of function field values.
         """
         event_ids=set()
-        for registration in self.browse(cr, uid, ids, context=context):
+        for registration in self.pool['event.registration'].browse(cr, uid, ids, context=context):
             event_ids.add(registration.event_id.id)
         return list(event_ids)
 
@@ -149,6 +149,12 @@ class event_event(osv.osv):
                         res[event.id]= True
                         continue
         return res
+    
+    def _count_registrations(self, cr, uid, ids, field_name, arg, context=None):
+        return {
+            event.id: len(event.registration_ids)
+            for event in self.browse(cr, uid, ids, context=context)
+        }
 
     _columns = {
         'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
@@ -191,6 +197,7 @@ class event_event(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
         'organizer_id': fields.many2one('res.partner', "Organizer"),
+        'count_registrations': fields.function(_count_registrations, type="integer", string="Registrations"),
     }
     _defaults = {
         'state': 'draft',
@@ -317,6 +324,7 @@ class event_registration(osv.osv):
     def confirm_registration(self, cr, uid, ids, context=None):
         for reg in self.browse(cr, uid, ids, context=context or {}):
             self.pool.get('event.event').message_post(cr, uid, [reg.event_id.id], body=_('New registration confirmed: %s.') % (reg.name or '', ),subtype="event.mt_event_registration", context=context)
+            self.message_post(cr, uid, reg.id, body=_('Event Registration confirmed.'), context=context)
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def registration_open(self, cr, uid, ids, context=None):

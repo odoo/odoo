@@ -9,58 +9,50 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
-                            <label for="model_id"/><field name="model_id" required="1" on_change="onchange_model_id(model_id)" class="oe_inline"/>
-                            <field name="model" invisible="1"/>
+                            <group>
+                                <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
+                                <field name="model" invisible="1"/>
+                            </group>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                             <field name="ref_ir_act_window" invisible="1"/>
-                            <button name="create_action" string="Add context action" type="object"
-                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}"
-                                    help="Display an option on related documents to open a composition wizard with this template"/>
-                            <button name="unlink_action" string="Remove context action" type="object" 
+                            <button class="oe_inline oe_stat_button" name="create_action" type="object"
+                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
+                                    help="Display an option on related documents to open a composition wizard with this template">
+                                <div>Add<br/>Context Action</div>
+                            </button>
+                            <button name="unlink_action" type="object" 
+                                    class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
-                                    help="Remove the contextual action to use this template on related documents"/>
-                            <button name="%(wizard_email_template_preview)d" string="Preview"
+                                    help="Remove the contextual action to use this template on related documents" widget="statinfo">
+                                <div>Remove<br/>Context Action</div>
+                            </button>
+                            <button class="oe_inline oe_stat_button" name="%(wizard_email_template_preview)d" icon="fa-search-plus" string="Preview"
                                     type="action" target="new"
                                     context="{'template_id':active_id}"/>
                         </div>
                         <notebook>
-                            <page string="Mailing Template">
-                                <group>
-                                    <group>
-                                        <field name="email_from"
-                                                placeholder="Override author's email"/>
-                                        <field name="email_to"
-                                                placeholder="Comma-separated recipient addresses"/>
-                                        <field name="partner_to"
-                                                placeholder="Comma-separated ids of recipient partners"/>
-                                        <field name="email_cc"
-                                                placeholder="Comma-separated carbon copy recipients addresses"/>
-                                        <field name="reply_to"
-                                                placeholder="Preferred reply address"/>
-                                        <field name="subject"
-                                                placeholder="Subject (placeholders may be used here)"/>
-                                        <field name="user_signature" string="Author Signature (mass mail only)"/>
-                                    </group>
-                                    <group class="oe_edit_only">
-                                        <h3 colspan="2">Dynamic placeholder generator</h3>
-                                        <field name="model_object_field"
-                                                domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                                on_change="onchange_sub_model_object_value_field(model_object_field)"/>
-                                        <field name="sub_object" readonly="1"/>
-                                        <field name="sub_model_object_field"
-                                                domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                                attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
-                                                on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
-                                        <field name="null_value"
-                                                on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
-                                        <field name="copyvalue"/>
-                                    </group>
-                                </group>
-                                <h3>Body</h3>
-                                <field name="body_html" width="250" height="450"
-                                        placeholder="Rich-text/HTML content of the message (placeholders may be used here)"/>
+                            <page string="Content">
+                                <label for="subject"/>
+                                <h2 style="display: inline-block;"><field name="subject" placeholder="Subject (placeholders may be used here)"/></h2>
+                                <field name="body_html"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
+                            </page>
+                            <page string="Email Configuration">
+                                <group>
+                                    <field name="email_from"
+                                            placeholder="Override author's email"/>
+                                    <field name="use_default_to"/>
+                                    <field name="email_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                            placeholder="Comma-separated recipient addresses"/>
+                                    <field name="partner_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                            placeholder="Comma-separated ids of recipient partners"/>
+                                    <field name="email_cc" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                            placeholder="Comma-separated carbon copy recipients addresses"/>
+                                    <field name="reply_to"
+                                            placeholder="Preferred reply address"/>
+                                    <field name="user_signature" string="Author Signature (mass mail only)"/>
+                                </group>
                             </page>
                             <page string="Advanced Settings">
                                 <group>
@@ -70,6 +62,21 @@
                                     <field name="report_template" domain="[('model','=',model)]"/>
                                     <field name="report_name" class="oe_inline"
                                            attrs="{'invisible':[('report_template','=',False)]}"/>
+                                </group>
+                            </page>
+                            <page string="Dynamic Placeholder Generator">
+                                <group>
+                                    <field name="model_object_field"
+                                            domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                            on_change="onchange_sub_model_object_value_field(model_object_field)"/>
+                                    <field name="sub_object" readonly="1"/>
+                                    <field name="sub_model_object_field"
+                                            domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
+                                            attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
+                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
+                                    <field name="null_value"
+                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
+                                    <field name="copyvalue"/>
                                 </group>
                             </page>
                         </notebook>

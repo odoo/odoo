@@ -133,10 +133,7 @@ class purchase_order(osv.osv):
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
-            invoiced = False
-            if purchase.invoiced_rate == 100.00:
-                invoiced = True
-            res[purchase.id] = invoiced
+            res[purchase.id] = all(line.invoiced for line in purchase.order_line)
         return res
     
     def _get_journal(self, cr, uid, context=None):
@@ -149,6 +146,17 @@ class purchase_order(osv.osv):
                                             ('company_id', '=', company_id)],
                                                 limit=1)
         return res and res[0] or False  
+
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,{'shipment_count': 0, 'invoice_count': 0,}), ids))
+        try:
+            for data in self.browse(cr, uid, ids, context=context):
+                res[data.id] = {'shipment_count': len(data.picking_ids),
+                'invoice_count': len(data.invoice_ids),
+                }
+        except:
+            pass
+        return res
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
@@ -226,6 +234,8 @@ class purchase_order(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
+        'shipment_count': fields.function(_count_all, type='integer', string='Incoming Shipments', multi=True),
+        'invoice_count': fields.function(_count_all, type='integer', string='Invoices', multi=True)
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -471,7 +481,7 @@ class purchase_order(osv.osv):
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
             if not acc_id:
-                raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+                raise osv.except_osv(_('Error!'), _('Define an expense account for this product: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
         else:
             acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context=context).id
         fpos = po_line.order_id.fiscal_position or False
@@ -497,6 +507,41 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
         }
 
+    def _prepare_invoice(self, cr, uid, order, line_ids, context=None):
+        """Prepare the dict of values to create the new invoice for a
+           purchase order. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+
+           :param browse_record order: purchase.order record to invoice
+           :param list(int) line_ids: list of invoice line IDs that must be
+                                      attached to the invoice
+           :return: dict of value to create() the invoice
+        """
+        journal_ids = self.pool['account.journal'].search(
+                            cr, uid, [('type', '=', 'purchase'),
+                                      ('company_id', '=', order.company_id.id)],
+                            limit=1)
+        if not journal_ids:
+            raise osv.except_osv(
+                _('Error!'),
+                _('Define purchase journal for this company: "%s" (id:%d).') % \
+                    (order.company_id.name, order.company_id.id))
+        return {
+            'name': order.partner_ref or order.name,
+            'reference': order.partner_ref or order.name,
+            'account_id': order.partner_id.property_account_payable.id,
+            'type': 'in_invoice',
+            'partner_id': order.partner_id.id,
+            'currency_id': order.currency_id.id,
+            'journal_id': len(journal_ids) and journal_ids[0] or False,
+            'invoice_line': [(6, 0, line_ids)],
+            'origin': order.name,
+            'fiscal_position': order.fiscal_position.id or False,
+            'payment_term': order.payment_term_id.id or False,
+            'company_id': order.company_id.id,
+        }
+
     def action_cancel_draft(self, cr, uid, ids, context=None):
         if not len(ids):
             return False
@@ -515,7 +560,7 @@ class purchase_order(osv.osv):
         """
         if context is None:
             context = {}
-        journal_obj = self.pool.get('account.journal')
+        
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
 
@@ -528,12 +573,7 @@ class purchase_order(osv.osv):
                 #then re-do a browse to read the property fields for the good company.
                 context['force_company'] = order.company_id.id
                 order = self.browse(cr, uid, order.id, context=context)
-            pay_acc_id = order.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=', 'purchase'), ('company_id', '=', order.company_id.id)], limit=1)
-            if not journal_ids:
-                raise osv.except_osv(_('Error!'),
-                    _('Define purchase journal for this company: "%s" (id:%d).') % (order.company_id.name, order.company_id.id))
-
+            
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
@@ -541,24 +581,10 @@ class purchase_order(osv.osv):
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
-
-                po_line.write({'invoiced': True, 'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoice_lines': [(4, inv_line_id)]}, context=context)
 
             # get invoice data and create invoice
-            inv_data = {
-                'name': order.partner_ref or order.name,
-                'reference': order.partner_ref or order.name,
-                'account_id': pay_acc_id,
-                'type': 'in_invoice',
-                'partner_id': order.partner_id.id,
-                'currency_id': order.currency_id.id,
-                'journal_id': len(journal_ids) and journal_ids[0] or False,
-                'invoice_line': [(6, 0, inv_lines)],
-                'origin': order.name,
-                'fiscal_position': order.fiscal_position.id or False,
-                'payment_term': order.payment_term_id.id or False,
-                'company_id': order.company_id.id,
-            }
+            inv_data = self._prepare_invoice(cr, uid, order, inv_lines, context=context)
             inv_id = inv_obj.create(cr, uid, inv_data, context=context)
 
             # compute the invoice
@@ -593,7 +619,7 @@ class purchase_order(osv.osv):
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
                         _('Unable to cancel this purchase order.'),
-                        _('You must first cancel all receptions related to this purchase order.'))
+                        _('You must first cancel all invoices related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
         self.write(cr,uid,ids,{'state':'cancel'})
@@ -1248,21 +1274,40 @@ class mail_mail(osv.Model):
     _name = 'mail.mail'
     _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.model == 'purchase.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent and mail.model == 'purchase.order':
             self.pool.get('purchase.order').signal_send_rfq(cr, uid, [mail.res_id])
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)
 
 
 class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
+    
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
     }
     _defaults = {
         'purchase_ok': 1,
     }
+
+class product_product(osv.Model):
+    _name = 'product.product'
+    _inherit = 'product.product'
+    
+    def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for purchase in self.browse(cr, uid, ids, context=context):
+                res[purchase.id] = len(purchase.purchase_ids)
+        except:
+            pass
+        return res
+    _columns = {
+        'purchase_ids': fields.one2many('purchase.order', 'product_id', 'Purchases'),
+        'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
+    }
+
 
 
 class mail_compose_message(osv.Model):
@@ -1290,9 +1335,15 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for po_id in po_ids:
-            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
-            workflow.trg_write(uid, 'purchase.order', po_id, cr)
+        for order in purchase_order_obj.browse(cr, uid, po_ids, context=context):
+            purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
+            invoiced = []
+            for po_line in order.order_line:
+                if any(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                    invoiced.append(po_line.id)
+            if invoiced:
+                self.pool['purchase.order.line'].write(cr, uid, invoiced, {'invoiced': True})
+            workflow.trg_write(uid, 'purchase.order', order.id, cr)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

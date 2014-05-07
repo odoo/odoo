@@ -739,12 +739,10 @@
                         </field>
                         <group string="Features" >
                             <group>
-                                <field name="iface_cashdrawer" />
+                                <field name="iface_vkeyboard" />
                                 <field name="iface_invoicing" />
-                                <field name="iface_electronic_scale" />
                             </group>
                             <group>
-                                <field name="iface_vkeyboard" />
                                 <field name="iface_big_scrollbars" />
                             </group>
                         </group>
@@ -752,6 +750,8 @@
                             <field name="proxy_ip" />
                             <field name="iface_print_via_proxy" />
                             <field name="iface_scan_via_proxy" />
+                            <field name="iface_electronic_scale" />
+                            <field name="iface_cashdrawer" />
                         </group>
                         <group string="Receipt" >
                             <field name="receipt_header" placeholder="A custom receipt header message"/>
@@ -843,8 +843,14 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="%(action_pos_box_in)d" string="Put Money In" type="action" states="opened,closing_control"/>
-                            <button name="%(action_pos_box_out)d" string="Take Money Out" type="action" states="opened,closing_control"/>
+                            <button class="oe_stat_button" name="%(action_pos_box_in)d"
+                                type="action" states="opened,closing_control" icon="fa-level-down">
+                                <div>Put<br/>Money In</div>
+                            </button>
+                            <button class="oe_stat_button" name="%(action_pos_box_out)d"
+                                type="action" states="opened,closing_control" icon="fa-level-up">
+                                <div>Take<br/>Money Out</div>
+                            </button>
                         </div>
                         <h1 class="oe_title">
                             Session:

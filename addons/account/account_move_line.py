@@ -430,6 +430,19 @@ class account_move_line(osv.osv):
             elif line.reconcile_partial_id:
                 res[line.id] = str(line.reconcile_partial_id.name)
         return res
+        
+    def _get_move_from_reconcile(self, cr, uid, ids, context=None):
+        move = {}
+        for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids, context=context):
+            for line in r.line_partial_ids:
+                move[line.move_id.id] = True
+            for line in r.line_id:
+                move[line.move_id.id] = True
+        move_line_ids = []
+        if move:
+            move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('journal_id','in',move.keys())], context=context)
+        return move_line_ids
+
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -445,7 +458,8 @@ class account_move_line(osv.osv):
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
-        'reconcile': fields.function(_get_reconcile, type='char', string='Reconcile Ref'),
+        'reconcile': fields.function(_get_reconcile, type='char', string='Reconcile Ref', store={
+                    'account.move.line': (lambda self, cr, uid, ids, c={}: ids, ['reconcile_id','reconcile_partial_id'], 50),'account.move.reconcile': (_get_move_from_reconcile, None, 50)}),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'amount_residual_currency': fields.function(_amount_residual, string='Residual Amount in Currency', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
         'amount_residual': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in the company currency."),
@@ -628,7 +642,7 @@ class account_move_line(osv.osv):
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
         (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
         (_check_currency_and_amount, "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field.", ['currency_id','amount_currency']),
-        (_check_currency_amount, 'The amount expressed in the secondary currency must be positive when the journal item is a debit and negative when if it is a credit.', ['amount_currency']),
+        (_check_currency_amount, 'The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.', ['amount_currency']),
         (_check_currency_company, "You cannot provide a secondary currency if it is the same than the company one." , ['currency_id']),
     ]
 
@@ -1020,10 +1034,14 @@ class account_move_line(osv.osv):
         part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
+        all_moves = obj_move_line.search(cr, uid, ['|',('reconcile_id', 'in', unlink_ids),('reconcile_partial_id', 'in', unlink_ids)])
+        all_moves = list(set(all_moves) - set(move_ids))
         if unlink_ids:
             if opening_reconciliation:
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
+            if all_moves:
+                obj_move_line.reconcile_partial(cr, uid, all_moves, 'auto',context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None, check=True):

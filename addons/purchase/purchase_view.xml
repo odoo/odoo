@@ -191,7 +191,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1,'default_supplier':1,'default_customer':0}" domain="[('supplier','=',True)]"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
                             <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist" on_change="onchange_pricelist(pricelist_id, context)"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
@@ -273,7 +273,7 @@
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase order which are in the exception state"/>
                     <separator/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
-                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
                     <group expand="0" string="Group By...">
@@ -300,7 +300,7 @@
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
-                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" operator="child_of"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
                     <group expand="0" string="Group By...">
@@ -631,7 +631,10 @@
             <field name="inherit_id" ref="account.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Purchases" name="%(action_purchase_line_product_tree)d" type="action" groups="purchase.group_purchase_user"/>
+                   <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
+                       groups="purchase.group_purchase_user" icon="fa-shopping-cart">
+                       <field string="Purchases" name="purchase_count" widget="statinfo" />
+                   </button>
                 </xpath>
                 <field name="property_account_expense" position="replace" >
                      <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>

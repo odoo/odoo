@@ -204,27 +204,21 @@ class website(osv.osv):
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
     def preprocess_request(self, cr, uid, ids, request, context=None):
-        # TODO FP: is_website_publisher and editable in context should be removed
-        # for performance reasons (1 query per image to load) but also to be cleaner
-        # I propose to replace this by a group 'base.group_website_publisher' on the
-        # view that requires it.
-        Access = request.registry['ir.model.access']
+        pass
+
+    def is_publisher(self, cr, uid, ids, context=None):
+        Access = self.pool['ir.model.access']
         is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
-
-        lang = request.context['lang']
-        is_master_lang = lang == request.website.default_lang_code
-
-        request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
-        request.context.update(
-            editable=is_website_publisher,
-            translatable=not is_master_lang,
-        )
+        return is_website_publisher
 
     def get_template(self, cr, uid, ids, template, context=None):
-        if '.' not in template:
-            template = 'website.%s' % template
-        module, xmlid = template.split('.', 1)
-        model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
+        if isinstance(template, (int, long)):
+            view_id = template
+        else:
+            if '.' not in template:
+                template = 'website.%s' % template
+            module, xmlid = template.split('.', 1)
+            model, view_id = request.registry["ir.model.data"].get_object_reference(cr, uid, module, xmlid)
         return self.pool["ir.ui.view"].browse(cr, uid, view_id, context=context)
 
     def _render(self, cr, uid, ids, template, values=None, context=None):
@@ -560,9 +554,7 @@ class ir_attachment(osv.osv):
                 result[attach.id] = urlplus('/website/image', {
                     'model': 'ir.attachment',
                     'field': 'datas',
-                    'id': attach.id,
-                    'max_width': 1024,
-                    'max_height': 768,
+                    'id': attach.id
                 })
         return result
     def _datas_checksum(self, cr, uid, ids, name, arg, context=None):

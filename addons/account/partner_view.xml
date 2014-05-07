@@ -64,12 +64,21 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button type="action" string="Invoices" 
+                    <button type="action" 
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
                         name="%(account.action_invoice_tree)d" 
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice"/>
-                    <button type="action" string="Journal Items" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user"/>
-                    <button type="action" string="Contracts" name="%(account.action_open_partner_analytic_accounts)d"
-                            groups="analytic.group_analytic_accounting"/>
+                        attrs="{'invisible': [('customer', '=', False)]}" 
+                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice">
+                        <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
+                    </button>
+                    <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user" icon="fa-list">
+                        <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
+                    </button>
+                    <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d" 
+                        icon="fa-book" groups="analytic.group_analytic_accounting">
+                        <field string="Contracts" name="contracts_count" widget="statinfo"/>
+                    </button>
                 </xpath>
             </field>
         </record>
@@ -97,7 +106,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page name="sales_purchases" position="after" version="7.0">
-                <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice">
                     <group>
                         <group>
                             <field name="property_account_position" widget="selection"/>
@@ -127,7 +136,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}" groups="account.group_account_invoice">
                     <div>
                         <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
                     </div>

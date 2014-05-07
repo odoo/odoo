@@ -65,12 +65,18 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box" groups="base.group_user">
-                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registrations" help="Register with this event"/>
-                        </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
+                        </div>
+                        <div class="oe_right oe_button_box" groups="base.group_user">
+                            <button name="%(event.act_event_list_register_event)d" 
+                                type="action" 
+                                class="oe_stat_button oe_inline" 
+                                icon="fa-github" 
+                                help="Register with this event">
+                                <field name="count_registrations" widget="statinfo" string="Registrations"/>
+                            </button>
                         </div>
                         <group name="main_field_group">
                             <group>
@@ -105,9 +111,9 @@
                                         <field name="phone"/>
                                         <field name="nb_register" />
                                         <field name="state"/>
-                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object"/>
-                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object"/>
-                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                                        <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                        <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </tree>
                                     <form string="Registration">
                                         <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
@@ -125,9 +131,9 @@
                                                 <separator string="" colspan="4"/>
                                                 <newline/>
                                                 <field name="state" colspan="2"/>
-                                                <button name="registration_open" string="Confirm Registration" states="draft" type="object"/>
-                                                <button name="button_reg_close" string="Attended the Event" states="open" type="object"/>
-                                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                                                <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                                <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                             </group>
                                     </form>
                                 </field>
@@ -333,9 +339,9 @@
                     <field name="origin"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
-                    <button name="registration_open" string="Confirm Registration" states="draft" type="object"/>
-                    <button name="button_reg_close" string="Attended the Event" states="open" type="object"/>
-                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                    <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                    <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
+                    <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -367,7 +373,7 @@
                                     <field name="email" class="oe_inline"/>
                                     <button class="oe_inline oe_right" string="Send Email"
                                         name="%(mail.action_email_compose_message_wizard)d"
-                                        context= '{"default_email_to":email}' type="action"/>
+                                        icon="terp-mail-message-new" context= '{"default_email_to":email}' type="action"/>
                                 </div>
                             </group>
                             <group>
@@ -434,6 +440,8 @@
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Registration Day" domain="[]" context="{'group_by': 'create_date:day'}"/>
+                        <filter string="Registration Month" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
                 </search>
             </field>

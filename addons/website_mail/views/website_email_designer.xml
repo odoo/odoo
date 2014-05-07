@@ -1,53 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
 
-<!-- Email Designer main page -->
-<template id="designer_index" name="Email Designer">
+<!-- Template Choice page -->
+<template id="email_designer" name="Email Designer">
     <t t-call="website.layout">
         <t t-set="head">
             <script type="text/javascript" src="/website_mail/static/src/js/website_email_designer.js"></script>
         </t>
-        <div id="wrap">
-            <div class="container">
+        <div id="wrap" class="container" t-ignore="True">
+            <div id="email_template" class="mb32" t-att-style="mode != 'email_template' and 'display: none' or ''">
+                <a class="mt16 btn btn-default pull-right" 
+                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
+                    Back
+                </a>
+                <h1 class="page-header mt16">
+                    Choose an Email Template
+                </h1>
                 <div class="row">
-                    <div class="col-md-8">
-                        <a class="pull-right mt32"
-                                t-att-href="'/web#return_label=Website&amp;action=email_template.action_email_template_tree_all&amp;view_type=form&amp;id=%d' % template.id">
-                            <button class="btn btn-primary">Back to Template Form</button>
-                        </a>
-                        <h1 t-field="template.name"/>
-                        <div class="row" style="width: 600px;">
-                            <div class="row">
-                                <div class="col-lg-3"><b>Email From</b></div>
-                                <div class="col-lg-9"><span t-field="template.email_from"/></div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-3"><b>To (Email)</b></div>
-                                <div class="col-lg-9"><span t-field="template.email_to"/></div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-3"><b>To (Partners)</b></div>
-                                <div class="col-lg-9"><span t-field="template.partner_to"/></div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-3"><b>Reply To</b></div>
-                                <div class="col-lg-9"><span t-field="template.reply_to"/></div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-3"><b>Subject</b></div>
-                                <div class="col-lg-9"><span t-field="template.subject"/></div>
-                            </div>
-
-                            <div class="row well">
-                                <div t-field="template.body_html" style="position: relative;"/>
-                            </div>
+                    <div class="col-md-3 col-sm-4 text-center img-border">
+                        <div class="email_preview_border">
+                            <div class="email_preview js_content"/>
                         </div>
+                        <h4>New Template</h4>
+                        <button class="btn btn-primary js_template_set">Select</button>
                     </div>
+                    <div t-foreach="templates" t-as="template" class="col-md-3 col-sm-4 text-center">
+                        <div class="email_preview_border">
+                            <div t-field="template.body_html" class="email_preview js_content"/>
+                        </div>
+                        <h4 t-field="template.name"/>
+                        <button class="btn btn-primary js_template_set">Select</button>
+                    </div>
+                </div>
+            </div>
+            <div id="email_designer" class="mb32" t-att-style="mode != 'email_designer' and 'display: none' or ''">
+                <a class="mt16 btn btn-primary pull-right" 
+                  t-attf-href="/web#return_label=Website&amp;model=#{model}&amp;id=#{res_id}&amp;view_type=form">
+                    Save and Continue
+                </a>
+                <h1 class="page-header mt16">
+                    Design Your Email
+                </h1>
+                <div class="form-horizontal">
+                    <!-- email_from fields-->
+                    <div class="form-group" t-if="email_from_field == 'email_from'">
+                        <label class="col-sm-2 control-label">From:</label>
+                        <div class="col-sm-7"><span t-field="record.email_from" class="form-control"/></div>
+                    </div>
+                    <div class="form-group" t-if="email_from_field == 'email'">
+                        <label class="col-sm-2 control-label">From:</label>
+                        <div class="col-sm-7"><span t-field="record.email" class="form-control"/></div>
+                    </div>
+                    <!-- email_from fields-->
+                    <div class="form-group" t-if="subject_field == 'subject'">
+                        <label class="col-sm-2 control-label">Subject:</label>
+                        <div class="col-sm-7"><span t-field="record.subject" class="form-control"/></div>
+                    </div>
+                    <div class="form-group" t-if="subject_field == 'name'">
+                        <label class="col-sm-2 control-label">Subject:</label>
+                        <div class="col-sm-7"><span t-field="record.name" class="form-control"/></div>
+                    </div>
+                </div>
+                <hr/>
+                <!-- body fields -->
+                <div t-if="body_field == 'body_html'">
+                    <div t-field="record.body_html" id="email_body_html"/>
+                </div>
+                <div t-if="body_field == 'body'">
+                    <div t-field="record.body" id="email_body"/>
                 </div>
             </div>
         </div>
@@ -55,7 +76,7 @@
     <t t-set="website.footer"></t>
 </template>
 
-</data>
+    </data>
 </openerp>
 
 

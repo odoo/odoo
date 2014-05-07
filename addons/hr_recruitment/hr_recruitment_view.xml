@@ -74,16 +74,33 @@
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
-                    <button name="action_makeMeeting" type="object"
-                        string="Schedule Meeting" help="Schedule interview with this applicant"/>
-                    <button name="action_start_survey" type="object"
-                        string="Start Interview" help="Answer related job question"
+                    <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
+                         help="Schedule interview with this applicant">
+                         <div>Schedule<br/>Meeting</div>
+                    </button>
+                    <button name="action_start_survey" 
+                        class="oe_stat_button"
+                        icon="fa-user" 
+                        type="object"
+                        help="Answer related job question"
                         context="{'survey_id': survey}"
-                        attrs="{'invisible':[('survey','=',False)]}"/>
-                    <button name="action_print_survey" type="object"
-                        string="Print Interview" help="Print interview report"
-                        attrs="{'invisible':[('survey','=',False)]}"/>
-                    <button name="action_get_attachment_tree_view" string="Documents" type="object"/>
+                        attrs="{'invisible':[('survey','=',False)]}">
+                        <div>Start<br/>Interview</div>
+                    </button>
+                    <button name="action_print_survey" 
+                        class="oe_stat_button"
+                        icon="fa-print"
+                        type="object"
+                        help="Print interview report"
+                        attrs="{'invisible':[('survey','=',False)]}">
+                        <div>Print<br/>Interview</div>
+                    </button>
+                    <button name="action_get_attachment_tree_view" 
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        type="object">
+                        <field name="attachment_number" widget="statinfo" string="Documents"/>
+                    </button>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -362,10 +379,23 @@
             <xpath expr="//field[@name='department_id']" position="after">
                 <field name="user_id" class="oe_inline"/>
             </xpath>
-            <div name="buttons" position="inside">
-                <button string="Applications" name="%(action_hr_job_applications)d" context="{'default_user_id': user_id}" type="action"/>
-                <button string="Documents" name="action_get_attachment_tree_view" type="object"/>
-            </div>
+            <xpath expr="//div[@name='buttons']" position="inside">
+                <div class="oe_button_box" >
+                    <button class="oe_stat_button" 
+                        icon="fa-file-o"
+                        name="%(action_hr_job_applications)d" 
+                        context="{'default_user_id': user_id}" 
+                        type="action">
+                        <field name="application_count" widget="statinfo" string="Applications"/>
+                    </button>
+                    <button class="oe_stat_button"
+                        icon="fa-book"
+                        name="action_get_attachment_tree_view" 
+                        type="object">
+                        <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </div>
+            </xpath>
         </field>
     </record>
 

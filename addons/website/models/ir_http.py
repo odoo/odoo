@@ -10,7 +10,7 @@ import werkzeug.routing
 import openerp
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug
+from openerp.addons.website.models.website import slug, url_for
 from openerp.http import request
 from openerp.osv import orm
 
@@ -49,6 +49,7 @@ class ir_http(orm.AbstractModel):
                 self._authenticate(func.routing['auth'])
             else:
                 self._auth_method_public()
+            request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
             request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
             if first_pass:
                 request.lang = request.website.default_lang_code
@@ -93,12 +94,13 @@ class ir_http(orm.AbstractModel):
         except Exception:
             return self._handle_exception(werkzeug.exceptions.NotFound())
 
-        generated_path = werkzeug.url_unquote_plus(path)
-        current_path = werkzeug.url_unquote_plus(request.httprequest.path)
-        if generated_path != current_path:
-            if request.lang != request.website.default_lang_code:
-                path = '/' + request.lang + path
-            return werkzeug.utils.redirect(path)
+        if request.httprequest.method in ('GET', 'HEAD'):
+            generated_path = werkzeug.url_unquote_plus(path)
+            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            if generated_path != current_path:
+                if request.lang != request.website.default_lang_code:
+                    path = '/' + request.lang + path
+                return werkzeug.utils.redirect(path)
 
     def _serve_attachment(self):
         domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
@@ -121,7 +123,7 @@ class ir_http(orm.AbstractModel):
                 return response
 
             response.mimetype = attach[0]['mimetype']
-            response.set_data(datas.decode('base64'))
+            response.data = datas.decode('base64')
             return response
 
     def _handle_exception(self, exception=None, code=500):

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-14 10:12+0000\n"
-"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
+"PO-Revision-Date: 2014-05-06 17:09+0000\n"
+"Last-Translator: Daniel Reis <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-12 07:00+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-05-07 06:26+0000\n"
+"X-Generator: Launchpad (build 16996)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -89,7 +89,7 @@ msgstr "Tempo para fechar"
 #: view:crm.case.stage:0
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
-msgstr "Nome do Estágio"
+msgstr "Nome da Etapa"
 
 #. module: crm
 #: view:crm.lead:0
@@ -269,6 +269,8 @@ msgstr "Análise de Prospectos"
 #, python-format
 msgid "<b>%s a call</b> for the <em>%s</em>."
 msgstr ""
+"Copy text \t\r\n"
+"<b>%s uma chamada</b> para <em>%s</em>"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
@@ -354,6 +356,7 @@ msgstr "Contato"
 msgid ""
 "When escalating to this team override the salesman with the team leader."
 msgstr ""
+"Ao escalar para esta equipa, colocar o chefe de equipa como vendedor."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
@@ -543,7 +546,7 @@ msgstr "Mailings"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Estado alterado"
+msgstr "Etapa mudou"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -857,6 +860,8 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Ligação entre as etapas e as equipas de vendas. Ao definir, a etapa atual só "
+"se aplica à equipa de vendas selecionada."
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1106,7 +1111,7 @@ msgstr "Ano da Chamada"
 #: view:crm.lead.report:0
 #: field:crm.lead.report,stage_id:0
 msgid "Stage"
-msgstr "Estágio"
+msgstr "Etapa"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1131,7 +1136,7 @@ msgstr "As chamadas telefônicas que estão em estado pendente"
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
 msgid "Stages"
-msgstr "Estágios"
+msgstr "Etapas"
 
 #. module: crm
 #: help:sale.config.settings,module_crm_helpdesk:0
@@ -1191,8 +1196,8 @@ msgid ""
 "Setting this stage will change the probability automatically on the "
 "opportunity."
 msgstr ""
-"A definição dessa fase vai mudar a probabilidade da oportunidade "
-"automaticamente."
+"Passar para esta Etapa irá vai mudar automaticamente a probabilidade da "
+"oportunidade."
 
 #. module: crm
 #: view:crm.lead:0
@@ -1249,9 +1254,8 @@ msgid ""
 "This field is used to distinguish stages related to Leads from stages "
 "related to Opportunities, or to specify stages available for both types."
 msgstr ""
-"Este campo é usado para distinguir estágios dos Prospectos dos estágios das "
-"Oportunidades, ou para especificar estágios disponíveis simultaneamente para "
-"Prospecto e Oportunidades."
+"Este campo é usado para distinguir as etapas dos Prospectos das etapas das "
+"Oportunidades, e as etapas que podem ser comuns a ambos."
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -1374,7 +1378,7 @@ msgstr "Descrição da Segmentação"
 #. module: crm
 #: view:crm.lead:0
 msgid "Lead Description"
-msgstr ""
+msgstr "Descrição do Prospecto"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1430,7 +1434,7 @@ msgstr "Cancelar"
 #. module: crm
 #: view:crm.lead:0
 msgid "Opportunities Assigned to Me or My Team(s)"
-msgstr ""
+msgstr "Oportunidades atribuídas a mim ou à minha equipa"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
@@ -1479,7 +1483,7 @@ msgstr "Fundir prospectos/oportunidades"
 #. module: crm
 #: help:crm.case.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Usado para ordenar etapas. Menor surge primeiro."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
@@ -1499,7 +1503,7 @@ msgstr "Utilizadores"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Estágio Alterado"
+msgstr "Etapa mudou"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -1649,10 +1653,9 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
-"O estado do seu documento irá mudar automaticamente em função do estágio "
-"seleccionado. Por exemplo, se um estágio está relacionado com o estado "
-"'Fechado', quando o seu documento alcançar este estágio, o mesmo será "
-"automaticamente fechado."
+"O estado do seu documento irá mudar automaticamente em função da etapda "
+"selecionada. Por exemplo, se a uma Etapa corresponde o Estado 'Fechado', "
+"quando o seu documento alcançar essa Etapa será automaticamente fechado."
 
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
@@ -1730,12 +1733,12 @@ msgstr "Responder Para"
 #. module: crm
 #: view:crm.lead:0
 msgid "Display"
-msgstr ""
+msgstr "Mostrar"
 
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr "Oportunidades por estágio"
+msgstr "Oportunidades por Etapa"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadpartner0
@@ -1781,7 +1784,7 @@ msgstr "Google Adwords"
 #. module: crm
 #: view:crm.case.section:0
 msgid "Select Stages for this Sales Team"
-msgstr "Seleccionar estágios desta Equipa de Vendas"
+msgstr "Selecionar etapas da Equipa de Vendas"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1848,7 +1851,7 @@ msgstr "Televendas"
 #. module: crm
 #: view:crm.lead:0
 msgid "Leads Assigned to Me or My Team(s)"
-msgstr ""
+msgstr "Prospectos atribuídos a mim ou à minha equipa"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
@@ -1909,7 +1912,7 @@ msgstr "Equipas de vendas"
 #. module: crm
 #: field:crm.case.stage,case_default:0
 msgid "Default to New Sales Team"
-msgstr ""
+msgstr "Predefinido para novas equipas"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2292,8 +2295,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
-"Este estágio não é visível, por exemplo na barra de estado ou na vista "
-"kanban, quando não existirem registos a exibir naquele estado."
+"Esta Etapa não é visível, por exemplo na barra de estado ou na vista kanban, "
+"quando não existirem registos a exibir nessa Etapa."
 
 #. module: crm
 #: field:crm.lead.report,nbr:0
@@ -2364,7 +2367,7 @@ msgstr "Chamadas telefónicas atribuídas a mim ou minha(s) equipa(s)"
 #. module: crm
 #: view:crm.lead:0
 msgid "Reset"
-msgstr ""
+msgstr "Reiniciar"
 
 #. module: crm
 #: view:sale.config.settings:0
@@ -2419,7 +2422,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.stage,fold:0
 msgid "Fold by Default"
-msgstr ""
+msgstr "Ver pregado"
 
 #. module: crm
 #: field:crm.case.stage,state:0
@@ -2460,7 +2463,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_oppor_stage_user
 msgid "Planned Revenue By User and Stage"
-msgstr "Rendimento planeado pelo utilizador e fase"
+msgstr "Vendas previstas por utilizador e etapa"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2737,7 +2740,7 @@ msgstr "Chamadas Registadas"
 #: model:mail.message.subtype,name:crm.mt_lead_won
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
 msgid "Opportunity Won"
-msgstr ""
+msgstr "Oportunidade ganha"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
@@ -2760,7 +2763,7 @@ msgstr "Categoria do caso"
 #. module: crm
 #: view:board.board:0
 msgid "Planned Revenue by Stage and User"
-msgstr "Rendimento planeado por utilizador e estágio"
+msgstr "Vendas previstas por utilizador e etapa"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2802,7 +2805,7 @@ msgstr "Novembro"
 #: view:crm.lead.report:0
 #: model:ir.actions.act_window,name:crm.act_opportunity_stage
 msgid "Opportunities By Stage"
-msgstr "Oportunidade por estágio"
+msgstr "Oportunidades por etapa"
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -2844,7 +2847,7 @@ msgstr "Ano de encerramento esperado"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr "Estágio do caso"
+msgstr "Etapa do caso"
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
@@ -2886,7 +2889,7 @@ msgstr "Criar Data"
 #. module: crm
 #: view:crm.lead:0
 msgid "at"
-msgstr ""
+msgstr "em"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
@@ -3112,7 +3115,7 @@ msgstr "Notícias"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
 msgid "Opportunity Stage Changed"
-msgstr ""
+msgstr "Etapa da oportunidade mudou"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_lead_stage_act
@@ -3126,6 +3129,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Clique para definir uma nova etapa no seu funil de vendas.\n"
+"</p><p>\n"
+"As etapas permitem os comerciais perceber em que ponto do ciclo de venda "
+"está cada oportunidade.\n"
+"</p>\n"
+"            "
 
 #~ msgid "State of Mind Computation"
 #~ msgstr "Processamento do estado da mente"

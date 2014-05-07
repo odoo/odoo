@@ -214,6 +214,24 @@ class WebsiteSurvey(http.Controller):
                     _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
         return json.dumps(ret)
 
+    # AJAX scores loading for quiz correction mode
+    @http.route(['/survey/scores/<model("survey.survey"):survey>/<string:token>'],
+                type='http', auth='public', multilang=True, website=True)
+    def get_scores(self, survey, token, page=None, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        user_input_line_obj = request.registry['survey.user_input_line']
+        ret = {}
+
+        # Fetch answers
+        ids = user_input_line_obj.search(cr, uid, [('user_input_id.token', '=', token)], context=context)
+        previous_answers = user_input_line_obj.browse(cr, uid, ids, context=context)
+
+        # Compute score for each question
+        for answer in previous_answers:
+            tmp_score = ret.get(answer.question_id.id, 0.0)
+            ret.update({answer.question_id.id: tmp_score + answer.quizz_mark})
+        return json.dumps(ret)
+
     # AJAX submission of a page
     @http.route(['/survey/submit/<model("survey.survey"):survey>'],
                 type='http', auth='public', multilang=True, website=True)
@@ -266,14 +284,15 @@ class WebsiteSurvey(http.Controller):
     # Printing routes
     @http.route(['/survey/print/<model("survey.survey"):survey>',
                  '/survey/print/<model("survey.survey"):survey>/<string:token>'],
-                type='http', auth='user', multilang=True, website=True)
+                type='http', auth='public', multilang=True, website=True)
     def print_survey(self, survey, token=None, **post):
         '''Display an survey in printable view; if <token> is set, it will
         grab the answers of the user_input_id that has <token>.'''
         return request.website.render('survey.survey_print',
                                       {'survey': survey,
                                        'token': token,
-                                       'page_nr': 0})
+                                       'page_nr': 0,
+                                       'quizz_correction': True if survey.quizz_mode and token else False})
 
     @http.route(['/survey/results/<model("survey.survey"):survey>'],
                 type='http', auth='user', multilang=True, website=True)

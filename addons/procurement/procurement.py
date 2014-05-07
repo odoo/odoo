@@ -558,14 +558,14 @@ class stock_warehouse_orderpoint(osv.osv):
     ]
 
     def default_get(self, cr, uid, fields, context=None):
+        warehouse_obj = self.pool.get('stock.warehouse')
         res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
         # default 'warehouse_id' and 'location_id'
         if 'warehouse_id' not in res:
-            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0', context)
-            res['warehouse_id'] = warehouse.id
+            warehouse_ids = res.get('company_id') and warehouse_obj.search(cr, uid, [('company_id', '=', res['company_id'])], limit=1, context=context) or []
+            res['warehouse_id'] = warehouse_ids and warehouse_ids[0] or False
         if 'location_id' not in res:
-            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context)
-            res['location_id'] = warehouse.lot_stock_id.id
+            res['location_id'] = res.get('warehouse_id') and warehouse_obj.browse(cr, uid, res['warehouse_id'], context).lot_stock_id.id or False
         return res
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
@@ -614,8 +614,17 @@ class product_template(osv.osv):
 
 class product_product(osv.osv):
     _inherit="product.product"
+    def _orderpoint_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict(map(lambda x: (x,0), ids))
+        try:
+            for orderpoint in self.browse(cr, uid, ids, context=context):
+                res[orderpoint.id] = len(orderpoint.orderpoint_ids)
+        except:
+            pass
+        return res
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
+        'orderpoint_count': fields.function(_orderpoint_count, string='# Orderpoints', type='integer'),
     }
 
 

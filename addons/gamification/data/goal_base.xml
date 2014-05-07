@@ -2,7 +2,7 @@
 <openerp>
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
-    <data noupdate="0">
+    <data noupdate="1">
         <!--Email template -->
         
         <record id="email_template_goal_reminder" model="email.template">
@@ -90,10 +90,6 @@
             ]]></field>
         </record>
 
-    </data>
-
-    <data>
-
         <!-- goal definitions -->
         <record model="gamification.goal.definition" id="definition_base_timezone">
             <field name="name">Set your Timezone</field>
@@ -164,7 +160,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="autojoin_group_id" eval="ref('base.group_user')" />
+            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_user'))]" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>
@@ -174,7 +170,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_ids" eval="[(4, ref('base.user_root'))]" />
+            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_erp_manager'))]" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>

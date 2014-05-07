@@ -628,13 +628,13 @@ class google_calendar(osv.AbstractModel):
                                 else:
                                     if event_to_synchronize[base_event][0][1].OE.event_id:
                                         parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
-                                        calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), unlink_level=1, context=context)
+                                        calendar_event.unlink(cr, uid, "%s-%s" % (parent_oe_id, new_google_event_id), can_be_deleted=True, context=context)
 
                 elif isinstance(actToDo, Delete):
                     if actSrc == 'GG':
                         self.delete_an_event(cr, uid, current_event[0], context=context)
                     elif actSrc == 'OE':
-                        calendar_event.unlink(cr, uid, event.OE.event_id, unlink_level=0, context=context)
+                        calendar_event.unlink(cr, uid, event.OE.event_id, can_be_deleted=False, context=context)
         return True
 
     def check_and_sync(self, cr, uid, oe_event, google_event, context):
@@ -749,6 +749,9 @@ class calendar_event(osv.Model):
         else:
             default['oe_update_date'] = False
         return super(calendar_event, self).copy(cr, uid, id, default, context)
+
+    def unlink(self, cr, uid, ids, can_be_deleted=False, context=None):
+        return super(calendar_event, self).unlink(cr, uid, ids, can_be_deleted=can_be_deleted, context=context)
 
     _columns = {
         'oe_update_date': fields.datetime('OpenERP Update Date'),

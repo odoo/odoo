@@ -141,7 +141,7 @@
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
-                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" operator="child_of"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
                     <separator/>
@@ -296,7 +296,10 @@
                     <label for="use_issues"/>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
-                    <button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
+                    <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_issues','=', 0)]}" 
+                        name="%(act_project_project_2_project_issue_all)d" icon="fa-bug">
+                        <field string="Issues" name="issue_count" widget="statinfo"/>
+                    </button>
                 </xpath>
                 <xpath expr='//page[@name="project_stages"]' position="attributes">
                     <attribute name="attrs">{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}</attribute>
@@ -365,11 +368,14 @@
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button class="oe_inline" type="action" string="Issues"
-                        attrs="{'invisible': [('customer', '=', False)]}"
-                        name="%(action_view_issues)d"
+                    <button class="oe_inline oe_stat_button" type="action" name="%(action_view_issues)d" 
                         context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
-                        groups="project.group_project_user"/>
+                        attrs="{'invisible': [('customer', '=', False)]}"
+                        icon="fa-bug" groups="project.group_project_user">
+                        <field  string="Issues" name="issue_count" widget="statinfo"/>
+                    </button>  
+                        
+                        
                 </xpath>
             </field>
         </record>

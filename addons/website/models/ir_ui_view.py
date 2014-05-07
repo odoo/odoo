@@ -128,20 +128,19 @@ class view(osv.osv):
 
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
-            if isinstance(id_or_xml_id, (int, long)):
-                id_or_xml_id = self.get_view_xmlid(cr, uid, id_or_xml_id)
 
             if not context:
                 context = {}
 
-            qcontext = dict(editable=False)
-            qcontext.update(
+            qcontext = dict(
                 context.copy(),
                 website=request.website,
                 url_for=website.url_for,
                 slug=website.slug,
                 res_company=request.website.company_id,
                 user_id=self.pool.get("res.users").browse(cr, uid, uid),
+                translatable=context.get('lang') != request.website.default_lang_code,
+                editable=request.website.is_publisher(),
             )
 
             # add some values

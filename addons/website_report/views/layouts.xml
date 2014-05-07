@@ -38,7 +38,6 @@
     <xpath expr='//t[@name="layout_head"]' position="before">
         <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
         <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-        <link rel='stylesheet' href='/website/static/lib/bootstrap-tour/bootstrap-tour.css'/>
 
 
         <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
@@ -47,10 +46,9 @@
 
         <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         <script type="text/javascript" src="/web/static/lib/ckeditor/ckeditor.js"></script>
-        <script t-if="not translatable" type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
+        <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
         <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
         <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
-        <script type="text/javascript" src="/website/static/lib/bootstrap-tour/bootstrap-tour.js"></script>
         <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
         <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
         <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
@@ -60,15 +58,16 @@
         <script type="text/javascript" src="/website/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
 
         <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js" groups="base.group_website_designer"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.menu.js" groups="base.group_website_designer"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js"></script> <!-- groups="base.group_website_designer" -->
+        <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script> <!-- groups="base.group_website_designer" -->
         <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-        <script type="text/javascript" id="website_tour_js" src="/website/static/src/js/website.tour.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js" groups="base.group_website_designer"></script>
-        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-        <script t-if="not translatable" type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-        <script t-if="translatable" type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script> <!-- groups="base.group_website_designer" -->
+        <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
     </xpath>
 
     <xpath expr='//body[@class="container"]/div[@id="wrapwrap"]' position="before">

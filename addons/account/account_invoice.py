@@ -409,9 +409,7 @@ class account_invoice(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.write(cr, uid, ids, {'sent': True}, context=context)
-        context2 = context.copy()
-        context2['active_ids'] = ids
-        return self.pool['report'].get_action(cr, uid, [], 'account.report_invoice', context=context2)
+        return self.pool['report'].get_action(cr, uid, [], 'account.report_invoice', context=context)
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
@@ -672,25 +670,14 @@ class account_invoice(osv.osv):
         self.create_workflow(cr, uid, ids)
         return True
 
-    # ----------------------------------------
-    # Mail related methods
-    # ----------------------------------------
-
-    def _get_formview_action(self, cr, uid, id, context=None):
+    def get_formview_id(self, cr, uid, id, context=None):
         """ Update form view id of action to open the invoice """
-        action = super(account_invoice, self)._get_formview_action(cr, uid, id, context=context)
         obj = self.browse(cr, uid, id, context=context)
         if obj.type == 'in_invoice':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
         else:
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
-            action.update({
-                'views': [(view_id, 'form')],
-                })
-        return action
+        return view_id
 
     # Workflow stuff
     #################
@@ -1793,7 +1780,7 @@ class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
     _inherit = 'res.partner'
     _columns = {
-        'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
+        'invoice_ids': fields.one2many('account.invoice', 'partner_id', 'Invoices', readonly=True),
     }
 
     def _find_accounting_partner(self, partner):
