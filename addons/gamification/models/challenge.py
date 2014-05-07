@@ -217,15 +217,7 @@ class gamification_challenge(osv.Model):
                 vals['user_ids'] = []
             vals['user_ids'] += [(4, user_id) for user_id in user_ids]
 
-        create_res = super(gamification_challenge, self).create(cr, uid, vals, context=context)
-
-        # subscribe new users to the challenge
-        if vals.get('user_ids'):
-            # done with browse after super to be sure catch all after orm process
-            challenge = self.browse(cr, uid, create_res, context=context)
-            self.message_subscribe_users(cr, uid, [challenge.id], [user.id for user in challenge.user_ids], context=context)
-
-        return create_res
+        return super(gamification_challenge, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int,long)):
@@ -366,13 +358,6 @@ class gamification_challenge(osv.Model):
                 if write_op:
                     self.write(cr, uid, [challenge.id], {'user_ids': write_op}, context=context)
 
-                # TODO for trunk: use proper parameter
-                if challenge.report_message_frequency != 'never':
-                    if to_remove_ids:
-                        self.message_unsubscribe_users(cr, uid, [challenge.id], to_remove_ids, context=context)
-                    if to_add_ids:
-                        self.message_subscribe_users(cr, uid, [challenge.id], to_add_ids, context=context)
-
         return True
 
 
@@ -439,7 +424,15 @@ class gamification_challenge(osv.Model):
 
                 cr.execute(query, query_params)
                 user_with_goal_ids = cr.dictfetchall()
-                user_without_goal_ids = list(set([user.id for user in challenge.user_ids]) - set([user['user_id'] for user in user_with_goal_ids]))
+
+                participant_user_ids = [user.id for user in challenge.user_ids]
+                user_without_goal_ids = list(set(participant_user_ids) - set([user['user_id'] for user in user_with_goal_ids]))
+                user_squating_challenge_ids = list(set([user['user_id'] for user in user_with_goal_ids]) - set(participant_user_ids))
+                if user_squating_challenge_ids:
+                    # users that used to match the challenge 
+                    goal_to_remove_ids = goal_obj.search(cr, uid, [('challenge_id', '=', challenge.id), ('user_id', 'in', user_squating_challenge_ids)], context=context)
+                    goal_obj.unlink(cr, uid, goal_to_remove_ids, context=context)
+
 
                 values = {
                     'definition_id': line.definition_id.id,
@@ -627,9 +620,10 @@ class gamification_challenge(osv.Model):
             ctx.update({'challenge_lines': lines_boards})
             body_html = temp_obj.render_template(cr, uid, challenge.report_template_id.body_html, 'gamification.challenge', challenge.id, context=ctx)
 
-            # send to every follower of the challenge
+            # send to every follower and participant of the challenge
             self.message_post(cr, uid, challenge.id,
                 body=body_html,
+                partner_ids=[user.partner_id.id for user in challenge.user_ids],
                 context=context,
                 subtype='mail.mt_comment')
             if challenge.report_message_group_id:
@@ -760,7 +754,10 @@ class gamification_challenge(osv.Model):
                         self.reward_user(cr, uid, third_user.id, challenge.reward_second_id.id, challenge.id, context=context)
                         message_body += "<br/> 3. %s - %s" % (third_user.name, challenge.reward_third_id.name)
 
-                self.message_post(cr, uid, challenge.id, body=message_body, context=context)
+                self.message_post(cr, uid, challenge.id,
+                    partner_ids=[user.partner_id.id for user in challenge.user_ids],
+                    body=message_body,
+                    context=context)
 
         return True
 
