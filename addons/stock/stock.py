@@ -2496,7 +2496,7 @@ class stock_inventory(osv.osv):
         """
         for inv in self.browse(cr, uid, ids, context=context):
             for inventory_line in inv.line_ids:
-                if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.th_qty:
+                if inventory_line.product_qty < 0 and inventory_line.product_qty != inventory_line.theoretical_qty:
                     raise osv.except_osv(_('Warning'), _('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s' % (inventory_line.product_id.name, inventory_line.product_qty)))
             self.action_check(cr, uid, [inv.id], context=context)
             inv.refresh()
@@ -2608,7 +2608,7 @@ class stock_inventory(osv.osv):
                 if not value:
                     product_line[key] = False
             product_line['inventory_id'] = inventory.id
-            product_line['th_qty'] = product_line['product_qty']
+            product_line['theoretical_qty'] = product_line['product_qty']
             if product_line['product_id']:
                 product = product_obj.browse(cr, uid, product_line['product_id'], context=context)
                 product_line['product_uom_id'] = product.uom_id.id
@@ -2640,7 +2640,7 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
-        'th_qty': fields.float('Theoretical Quantity', readonly=True),
+        'theoretical_qty': fields.float('Theoretical Quantity', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Owner'),
         'product_name': fields.related('product_id', 'name', type='char', string='Product Name', store={
                                                                                             'product.product': (_get_product_name_change, ['name', 'default_code'], 20),
@@ -2662,7 +2662,7 @@ class stock_inventory_line(osv.osv):
 
     def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
         stock_move_obj = self.pool.get('stock.move')
-        diff = inventory_line.th_qty - inventory_line.product_qty
+        diff = inventory_line.theoretical_qty - inventory_line.product_qty
         if not diff:
             return
         #each theorical_lines where difference between theoretical and checked quantities is not 0 is a line for which we need to create a stock move
@@ -2690,8 +2690,8 @@ class stock_inventory_line(osv.osv):
             vals['product_uom_qty'] = diff
         return stock_move_obj.create(cr, uid, vals, context=context)
 
-    def restrict_change(self, cr, uid, ids, th_qty, context=None):
-        if ids and th_qty:
+    def restrict_change(self, cr, uid, ids, theoretical_qty, context=None):
+        if ids and theoretical_qty:
             #if the user try to modify a line prepared by openerp, reject the change and display an error message explaining how he should do
             old_value = self.browse(cr, uid, ids[0], context=context)
             return {
@@ -2710,15 +2710,15 @@ class stock_inventory_line(osv.osv):
             }
         return {}
 
-    def on_change_product_id(self, cr, uid, ids, product, uom, th_qty, context=None):
+    def on_change_product_id(self, cr, uid, ids, product, uom, theoretical_qty, context=None):
         """ Changes UoM
         @param location_id: Location id
         @param product: Changed product_id
         @param uom: UoM product
         @return:  Dictionary of changed values
         """
-        if ids and th_qty:
-            return self.restrict_change(cr, uid, ids, th_qty, context=context)
+        if ids and theoretical_qty:
+            return self.restrict_change(cr, uid, ids, theoretical_qty, context=context)
         if not product:
             return {'value': {'product_uom_id': False}}
         obj_product = self.pool.get('product.product').browse(cr, uid, product, context=context)
