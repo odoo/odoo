@@ -1121,7 +1121,7 @@ class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
 
     def _get_action(self, cr, uid, context=None):
-        return [('buy', 'Buy')] + super(procurement_rule, self)._get_action(cr, uid, context=context)
+        return [('buy', _('Buy'))] + super(procurement_rule, self)._get_action(cr, uid, context=context)
 
 
 class procurement_order(osv.osv):

@@ -29,7 +29,7 @@ class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
 
     def _get_action(self, cr, uid, context=None):
-        return [('manufacture', 'Manufacture')] + super(procurement_rule, self)._get_action(cr, uid, context=context)
+        return [('manufacture', _('Manufacture'))] + super(procurement_rule, self)._get_action(cr, uid, context=context)
 
 
 class procurement_order(osv.osv):

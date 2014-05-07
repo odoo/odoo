@@ -39,7 +39,7 @@ class procurement_rule(osv.osv):
 
     def _get_action(self, cr, uid, context=None):
         result = super(procurement_rule, self)._get_action(cr, uid, context=context)
-        return result + [('move', 'Move From Another Location')]
+        return result + [('move', _('Move From Another Location'))]
 
     def _get_rules(self, cr, uid, ids, context=None):
         res = []
