@@ -24,6 +24,7 @@
 #----------------------------------------------------------
 
 import sale
+import crm_case_section
 import res_partner
 import wizard
 import report

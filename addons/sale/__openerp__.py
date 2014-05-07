@@ -71,6 +71,7 @@ The Dashboard for the Sales Manager will include
         'sale_report.xml',
         'sale_data.xml',
         'sale_view.xml',
+        'crm_case_section_view.xml',
         'res_partner_view.xml',
         'report/sale_report_view.xml',
         'edi/sale_order_action_data.xml',
