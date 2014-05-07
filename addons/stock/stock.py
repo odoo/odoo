@@ -4098,20 +4098,17 @@ class stock_picking_type(osv.osv):
             return False
         
         obj_data = self.pool.get('ir.model.data')
-        stock_loc = obj_data.get_object_reference(cr, uid, 'stock','stock_location_stock')[1]
+        stock_loc = obj_data.xmlid_to_res_id(cr, uid, 'stock.stock_location_stock')
         
         result = {
             'default_location_src_id': stock_loc,
             'default_location_dest_id': stock_loc,
         }
         if picking_code == 'incoming':
-            result['default_location_src_id'] = obj_data.get_object_reference(cr, uid, 'stock','stock_location_suppliers')[1]
-            return {'value': result}
-        if picking_code == 'outgoing':
-            result['default_location_dest_id'] = obj_data.get_object_reference(cr, uid, 'stock','stock_location_customers')[1]
-            return {'value': result}
-        else:
-            return {'value': result}
+            result['default_location_src_id'] = obj_data.xmlid_to_res_id(cr, uid, 'stock.stock_location_suppliers')
+        elif picking_code == 'outgoing':
+            result['default_location_dest_id'] = obj_data.xmlid_to_res_id(cr, uid, 'stock.stock_location_customers')
+        return {'value': result}
 
     def _get_name(self, cr, uid, ids, field_names, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))

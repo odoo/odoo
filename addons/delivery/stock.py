@@ -67,7 +67,7 @@ class stock_picking(osv.osv):
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of measurement for Weight",),
-        }
+    }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
         """Prepare the invoice line to add to the shipping costs to the shipping's
@@ -119,8 +119,6 @@ class stock_picking(osv.osv):
         }
 
     def _create_invoice_from_picking(self, cr, uid, picking, vals, context=None):
-        ''' This function simply creates the invoice from the given values. It is overriden in delivery module to add the delivery costs. picking is a browse_record
-        '''
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
         invoice = self.browse(cr, uid, invoice_id, context=context)
@@ -129,11 +127,12 @@ class stock_picking(osv.osv):
             invoice_line_obj.create(cr, uid, invoice_line)
         return invoice_id
 
-    def _get_default_uom(self, cr, uid, c):
-        uom_categ, uom_categ_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_categ_kgm')
+    def _get_default_uom(self, cr, uid, context=None):
+        uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
         return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id), ('factor', '=', 1)])[0]
+
     _defaults = {
-        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c)
+        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
     }
 
 
@@ -173,11 +172,13 @@ class stock_move(osv.osv):
                  }),
         'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
-    def _get_default_uom(self,cr,uid,c):
-        uom_categ, uom_categ_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'product_uom_categ_kgm')
+
+    def _get_default_uom(self, cr, uid, context=None):
+        uom_categ_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'product.product_uom_categ_kgm')
         return self.pool.get('product.uom').search(cr, uid, [('category_id', '=', uom_categ_id),('factor','=',1)])[0]
+
     _defaults = {
-        'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
+        'weight_uom_id': lambda self, cr, uid, c: self._get_default_uom(cr, uid, c),
     }
 
 

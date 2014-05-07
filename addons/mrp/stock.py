@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
+import time
+
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-import time
 
 class StockMove(osv.osv):
     _inherit = 'stock.move'
@@ -69,8 +70,6 @@ class StockMove(osv.osv):
         """
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
-        procurement_obj = self.pool.get('procurement.order')
-        product_obj = self.pool.get('product.product')
         to_explode_again_ids = []
         processed_ids = []
         bis = self._check_phantom_bom(cr, uid, move, context=context)
@@ -140,9 +139,9 @@ class StockMove(osv.osv):
         ids2 = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'draft':
-               ids2.extend(self.action_confirm(cr, uid, [move.id], context=context))
+                ids2.extend(self.action_confirm(cr, uid, [move.id], context=context))
             else:
-               ids2.append(move.id)
+                ids2.append(move.id)
 
         for move in self.browse(cr, uid, ids2, context=context):
             move_qty = move.product_qty

@@ -28,12 +28,12 @@ class mrp_product_produce_line(osv.osv_memory):
     _description = "Product Produce Consume lines"
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product'), 
-        'product_qty': fields.float('Quantity (in default UoM)'), 
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'), 
-        'produce_id': fields.many2one('mrp.product.produce'), 
-        'track_production': fields.related('product_id', 'track_production', type='boolean')
-        }
+        'product_id': fields.many2one('product.product', 'Product'),
+        'product_qty': fields.float('Quantity (in default UoM)'),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
+        'produce_id': fields.many2one('mrp.product.produce'),
+        'track_production': fields.related('product_id', 'track_production', type='boolean'),
+    }
 
 class mrp_product_produce(osv.osv_memory):
     _name = "mrp.product.produce"

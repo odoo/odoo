@@ -101,7 +101,7 @@
                 UPS Express, UPS Standard) with a set of pricing rules attached
                 to each method.
               </p><p>
-                These methods allows to automaticaly compute the delivery price
+                These methods allow to automatically compute the delivery price
                 according to your settings; on the sales order (based on the
                 quotation) or the invoice (based on the delivery orders).
               </p>
@@ -224,7 +224,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
-                <separator string="Carrier Informations"/>
+                <separator string="Carrier Information"/>
                 <group>
                     <group>
                         <field name="carrier_id"/>

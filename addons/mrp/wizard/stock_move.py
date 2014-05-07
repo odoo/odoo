@@ -37,14 +37,6 @@ class stock_move_consume(osv.osv_memory):
 
     #TOFIX: product_uom should not have different category of default UOM of product. Qty should be convert into UOM of original move line before going in consume and scrap
     def default_get(self, cr, uid, fields, context=None):
-        """ Get default values
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for default value
-        @param context: A standard dictionary
-        @return: default values of fields
-        """
         if context is None:
             context = {}
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)
@@ -62,14 +54,6 @@ class stock_move_consume(osv.osv_memory):
 
 
     def do_move_consume(self, cr, uid, ids, context=None):
-        """ To move consumed products
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return:
-        """
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
@@ -79,6 +63,4 @@ class stock_move_consume(osv.osv_memory):
                              data.product_qty, data.location_id.id, restrict_lot_id=data.restrict_lot_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-
 
