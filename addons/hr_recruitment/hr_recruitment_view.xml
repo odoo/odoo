@@ -294,16 +294,10 @@
                                 </div>
                                 <div style="width:240px"><field name="categ_ids"/></div>
                                 <div class="oe_kanban_right">
-                                     <table>
-                                        <tr>
-                                            <td groups="base.group_user">
-                                                <field name="priority" widget="priority"/>
-                                            </td>
-                                            <td>
-                                                <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="pull-left">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
