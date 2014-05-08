@@ -859,8 +859,9 @@ instance.web.Menu =  instance.web.Widget.extend({
                 $clicked_menu.parent().addClass('active');
             }
         }
+        // add a tooltip to cropped menu items
         this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
-            $(this).tooltip(this.scrollWidth > this.clientWidth? {title: $(this).text().trim()} :'destroy');
+            $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'auto right'} :'destroy');
        });
     },
     /**
