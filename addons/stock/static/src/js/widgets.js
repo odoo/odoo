@@ -237,7 +237,7 @@ function openerp_picking_widgets(instance){
             });
             this.$('.js_submit_value').submit(function(event){
                 var op_id = $(this).parents("[data-id]:first").data('id');
-                var value = parseInt($("input", this).val());
+                var value = parseFloat($("input", this).val());
                 if (value>=0){
                     self.getParent().set_operation_quantity(value, op_id);
                 }
