@@ -543,14 +543,12 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var content = $('<span>').addClass('web_graph_click')
                                  .attr('href','#')
                                  .text(' ' + (header.title || _t('Undefined')))
+                                 .css('margin-left', header.indent*30 + 'px')
                                  .attr('data-id', header.id);
         if (_.has(header, 'expanded')) {
             content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
         } else {
             content.css('font-weight', 'bold');
-        }
-        if (_.has(header, 'indent')) {
-            for (var i = 0; i < header.indent; i++) { cell.prepend($('<span>', {class:'web_graph_indent'})); }
         }
         return cell.append(content);
     },
