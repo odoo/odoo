@@ -19,6 +19,12 @@
             <field name="kind">function</field>
             <field name="action">write({'state':'sent'})</field>
         </record>
+        <record id="act_bid" model="workflow.activity">
+            <field name="wkf_id" ref="purchase_order"/>
+            <field name="name">bid</field>
+            <field name="kind">function</field>
+            <field name="action">wkf_bid_received()</field>
+        </record>
         <record id="act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">confirmed</field>
@@ -31,7 +37,7 @@
             <field name="name">cancel</field>
             <field name="kind">function</field>
             <field name="flow_stop">True</field>
-            <field name="action">write({'state':'cancel'})</field>
+            <field name="action">action_cancel()</field>
         </record>
         <record id="act_except_invoice" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
@@ -73,21 +79,22 @@
         <record id="act_picking" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','stock.picking')]"/>
+            <field name="kind">function</field>
             <field name="action">action_picking_create()</field>
         </record>
+        
+        
+        
         <record id="act_picking_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking_done</field>
             <field name="action">picking_done()</field>
             <field name="kind">function</field>
-            <field name="signal_send">subflow.delivery_done</field>
         </record>
         <record id="act_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">done</field>
-            <field name="action">write({'state':'done'})</field>
+            <field name="action">wkf_po_done()</field>
             <field name="kind">function</field>
             <field name="flow_stop">True</field>
             <field name="join_mode">AND</field>
@@ -103,13 +110,23 @@
             <field name="act_to" ref="act_sent"/>
             <field name="signal">send_rfq</field>
         </record>
-        <record id="trans_sent_confirmed" model="workflow.transition">
-            <field name="act_from" ref="act_sent"/>
+        <record id="trans_bid_confirmed" model="workflow.transition">
+            <field name="act_from" ref="act_bid"/>
             <field name="act_to" ref="act_confirmed"/>
             <field name="signal">purchase_confirm</field>
         </record>
+        <record id="trans_sent_bid" model="workflow.transition">
+            <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_bid"/>
+            <field name="signal">bid_received</field>
+        </record>
         <record id="trans_sent_cancel" model="workflow.transition">
             <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+        </record>
+        <record id="trans_bid_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_bid"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">purchase_cancel</field>
         </record>
@@ -172,7 +189,7 @@
         <record id="trans_picking_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_except_picking"/>
-            <field name="signal">subflow.cancel</field>
+            <field name="signal">picking_cancel</field>
         </record>
         <record id="trans_invoice_except_invoice" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
@@ -182,7 +199,8 @@
         <record id="trans_picking_picking_done" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_picking_done"/>
-            <field name="signal">subflow.done</field>
+            <field name="signal">picking_done</field>
+            
         </record>
         <record id="trans_invoice_invoice_done" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
@@ -201,33 +219,6 @@
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
             <field name="condition">invoiced</field>
-        </record>
-
-    <!-- Procurement -->
-        <record id="act_buy" model="workflow.activity">
-            <field name="wkf_id" ref="procurement.wkf_procurement"/>
-            <field name="name">buy</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','purchase.order')]"/>
-            <field name="action">action_po_assign()</field>
-        </record>
-
-        <record id="trans_confirm_mto_purchase" model="workflow.transition">
-            <field name="act_from" ref="procurement.act_confirm_mto"/>
-            <field name="act_to" ref="act_buy"/>
-            <field name="condition">check_buy() and check_supplier_info()</field>
-        </record>
-
-        <record id="trans_buy_make_done" model="workflow.transition">
-            <field name="act_from" ref="act_buy"/>
-            <field name="act_to" ref="procurement.act_make_done"/>
-            <field name="signal">subflow.delivery_done</field>
-        </record>
-
-        <record id="trans_buy_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_buy"/>
-            <field name="act_to" ref="procurement.act_cancel"/>
-            <field name="signal">subflow.cancel</field>
         </record>
 
     </data>

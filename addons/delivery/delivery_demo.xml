@@ -22,7 +22,6 @@
             <field name="default_code">Delivery</field>
             <field name="type">service</field>
             <field name="categ_id" ref="product.product_category_3"/>
-            <field name="procure_method">make_to_order</field>
             <field name="standard_price">10.0</field>
             <field name="list_price">10.0</field>
             <field name="image" type="base64" file="delivery/static/img/product_product_delivery-image.jpg"/>
@@ -52,12 +51,6 @@
             <field name="normal_price">10</field>
             <field name="partner_id" ref="res_partner_23"/>
             <field name="product_id" ref="product_product_delivery"/>
-        </record>
-        <record id="sale.sale_order_6" model="sale.order">
-            <field name="carrier_id" ref="normal_delivery_carrier"/>
-        </record>
-        <record id="sale.sale_order_2" model="sale.order">
-            <field name="carrier_id" ref="free_delivery_carrier"/>
         </record>
 
         <!-- Carrier Grids -->
@@ -93,6 +86,12 @@
             <field name="type">price</field>
             <field eval="0" name="list_price"/>
             <field eval="0" name="standard_price"/>
+        </record>
+
+        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
+            <field name="name">property_delivery_carrier</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier')]"/>
+            <field name="value" eval="'delivery.carrier,'+str(ref('normal_delivery_carrier'))"/>
         </record>
     </data>
 </openerp>

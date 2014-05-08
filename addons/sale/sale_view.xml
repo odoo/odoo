@@ -149,7 +149,6 @@
                                         </group>
                                         <group>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <field name="type"/>
                                             <field name="th_weight"/>
                                             <!-- we should put a config wizard for these two fields -->
                                             <field name="address_allotment_id"/>
@@ -507,8 +506,6 @@
                 </xpath>
             </field>
         </record>
-        <menuitem id="base.menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"/>
-        <menuitem id="menu_invoicing_sales_order_lines" parent="base.menu_invoiced" action="action_order_line_tree2" sequence="10" groups="sale.group_invoice_so_lines"/>
 
         <record model="ir.ui.view" id="view_company_inherit_form2">
             <field name="name">res.company.form.inherit</field>

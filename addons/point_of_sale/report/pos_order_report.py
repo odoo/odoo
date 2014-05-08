@@ -36,7 +36,7 @@ class pos_order_report(osv.osv):
         'price_total':fields.float('Total Price', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),
         'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
-        'warehouse_id':fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
+        'location_id':fields.many2one('stock.location', 'Location', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'product_qty':fields.integer('# of Qty', readonly=True),
@@ -61,7 +61,7 @@ class pos_order_report(osv.osv):
                     s.partner_id as partner_id,
                     s.state as state,
                     s.user_id as user_id,
-                    s.warehouse_id as warehouse_id,
+                    s.location_id as location_id,
                     s.company_id as company_id,
                     s.sale_journal as journal_id,
                     l.product_id as product_id
@@ -71,7 +71,7 @@ class pos_order_report(osv.osv):
                     left join product_uom u on (u.id=pt.uom_id)
                 group by
                     s.date_order, s.partner_id,s.state,
-                    s.user_id,s.warehouse_id,s.company_id,s.sale_journal,l.product_id,s.create_date
+                    s.user_id,s.location_id,s.company_id,s.sale_journal,l.product_id,s.create_date
                 having
                     sum(l.qty * u.factor) != 0)""")
 

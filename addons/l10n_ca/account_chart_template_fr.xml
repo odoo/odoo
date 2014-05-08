@@ -16,11 +16,13 @@
 	</record>
 
         <record id="stock.property_stock_account_input_categ" model="ir.property">
+                <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_account_input_categ')]"/>
                 <field eval="'account.account,'+str(ref('chart2171_fr'))" model="account.account" name="value"/>
                 <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
-	</record>
+        </record>
 
         <record id="stock.property_stock_account_output_categ" model="ir.property">
+                <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_account_output_categ')]"/>
                 <field eval="'account.account,'+str(ref('chart1145_fr'))" model="account.account" name="value"/>
                 <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
         </record>
