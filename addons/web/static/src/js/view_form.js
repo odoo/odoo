@@ -2420,28 +2420,27 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
         this._super(field_manager, node);
     },
     prepare_priority: function() {
-        var data = [];
+        var self = this;
         var selection = this.field.selection || [];
-        _.map(selection, function(res) {
-            value = {
-                'name': res[0],
-                'legend_name': res[1]
+        var init_value = selection && selection[0][0] || 0;
+        var data = _.map(selection.slice(1), function(element, index) {
+            var value = {
+                'value': element[0],
+                'name': element[1],
+                'click_value': element[0],
             }
-            if (res[0] == '0') {
-                value['legend']= '<span class="oe_e oe_star_off">7</span>';
-            } else {
-                value['legend']= '<span class="oe_e oe_star_on">7</span>';
+            if (index == 0 && self.get('value') == element[0]) {
+                value['click_value'] = init_value;
             }
-            data.push(value)
+            return value;
         });
         return data;
     },
     render_value: function() {
         var self = this;
-        var data = {'widget': self }
-        self.record_id =  self.view.datarecord.id;
-        data['legends'] = self.prepare_priority();
-        this.$el.html(QWeb.render("Priority", data));
+        this.record_id = self.view.datarecord.id;
+        this.priorities = self.prepare_priority();
+        this.$el.html(QWeb.render("Priority", {'widget': this}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e) {
@@ -2449,14 +2448,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
-            if (self.val == li.data('value') && self.check_star) {
-                value[self.name] = String(li.data('value') - 1);
-                self.check_star = false
-            } else {
-                value[self.name] = String(li.data('value'));
-                self.check_star = true;
-            }
-            self.val = li.data('value')
+            value[self.name] = String(li.data('value'));
             if (self.record_id) {
                 return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
             } else {

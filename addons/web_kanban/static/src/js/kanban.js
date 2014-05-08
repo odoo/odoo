@@ -1266,28 +1266,27 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         this.parent = parent;
     },
     prepare_priority: function() {
-        var data = [];
+        var self = this;
         var selection = this.field.selection || [];
-        _.map(selection, function(res) {  
-            value = {
-                'name': res[0],
-                'legend_name': res[1]
+        var init_value = selection && selection[0][0] || 0;
+        var data = _.map(selection.slice(1), function(element, index) {
+            var value = {
+                'value': element[0],
+                'name': element[1],
+                'click_value': element[0],
             }
-            if (res[0] == '0') {
-                value['legend'] = '<span class="oe_e oe_star_off">7</span>';
-            } else {
-                value['legend'] = '<span class="oe_e oe_star_on">7</span>';
+            if (index == 0 && self.get('value') == element[0]) {
+                value['click_value'] = init_value;
             }
-            data.push(value)
+            return value;
         });
         return data;
     },
     renderElement: function() {
         var self = this;
-        self.record_id = self.parent.id;
-        var data = {'widget': self }
-        data['legends'] = self.prepare_priority();
-        this.$el = $(QWeb.render("Priority", data));
+        this.record_id = self.parent.id;
+        this.priorities = self.prepare_priority();
+        this.$el = $(QWeb.render("Priority", {'widget': this}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e) {
@@ -1295,14 +1294,7 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
         var li = $(e.target).closest( "li" );
         if (li.length) {
             var value = {};
-            if (self.parent.val == li.data('value') && self.parent.check_star) {
-                value[self.name] = String(li.data('value') - 1);
-                self.parent.check_star = false
-            } else {
-                value[self.name] = String(li.data('value'));
-                self.parent.check_star = true;
-            }
-            self.parent.val = li.data('value')
+            value[self.name] = String(li.data('value'));
             return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
         }
     },
