@@ -493,7 +493,7 @@ class mrp_repair(osv.osv):
                 'name': repair.name,
                 'product_id': repair.product_id.id,
                 'product_uom': repair.product_uom.id or repair.product_id.uom_id.id,
-                'product_qty': repair.product_qty,
+                'product_uom_qty': repair.product_qty,
                 'partner_id': repair.address_id and repair.address_id.id or False,
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_dest_id.id,
