@@ -83,8 +83,7 @@ class Field(object):
     __metaclass__ = MetaField
 
     interface_for = None        # the column or field interfaced by self, if any
-    deprecated = None           # deprecation message
-    oldname = None              # former name of the field
+    _free_attrs = None          # collection of semantic-free attribute names
 
     name = None                 # name of the field
     type = None                 # type of the field (string)
@@ -110,15 +109,21 @@ class Field(object):
     groups = False              # csv list of group xml ids
 
     def __init__(self, string=None, **kwargs):
+        self._free_attrs = []
         kwargs['string'] = string
         for attr, value in kwargs.iteritems():
+            if not hasattr(self, attr):
+                self._free_attrs.append(attr)
             setattr(self, attr, value)
         self.reset()
 
     def copy(self, **kwargs):
         """ make a copy of `self`, possibly modified with parameters `kwargs` """
         field = copy(self)
+        field._free_attrs = list(self._free_attrs)
         for attr, value in kwargs.iteritems():
+            if not hasattr(self, attr):
+                self._free_attrs.append(attr)
             setattr(field, attr, value)
         field.reset()
         return field
@@ -353,8 +358,8 @@ class Field(object):
         for attr in dir(self):
             if attr.startswith('_column_'):
                 args[attr[8:]] = getattr(self, attr)
-        if self.oldname:
-            args['oldname'] = self.oldname
+            elif attr in self._free_attrs:
+                args[attr] = getattr(self, attr)
         return getattr(fields, self.type)(**args)
 
     # properties used by to_column() to create a column instance
@@ -365,7 +370,6 @@ class Field(object):
     _column_required = property(attrgetter('required'))
     _column_states = property(attrgetter('states'))
     _column_groups = property(attrgetter('groups'))
-    _column_deprecated = property(attrgetter('deprecated'))
 
     #
     # Conversion of values
