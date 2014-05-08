@@ -728,11 +728,7 @@ class product_product(osv.osv):
         if not default:
             default = {}
 
-        # Craft our own `<name> (copy)` in en_US (self.copy_translation()
-        # will do the other languages).
-        context_wo_lang = context.copy()
-        context_wo_lang.pop('lang', None)
-        product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
+        product = self.read(cr, uid, id, ['name'], context=context)
         default = default.copy()
         default.update(name=_("%s (copy)") % (product['name']))
 
