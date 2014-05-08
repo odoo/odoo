@@ -57,7 +57,7 @@ class project_issue(osv.Model):
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
-            'project_issue.mt_issue_done': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
+            'project_issue.mt_issue_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
         },
     }
 
@@ -305,11 +305,6 @@ class project_issue(osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
-    def set_priority(self, cr, uid, ids, priority, *args):
-        """Set lead priority
-        """
-        return self.write(cr, uid, ids, {'priority' : str(priority)})
 
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)

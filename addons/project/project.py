@@ -565,7 +565,7 @@ class task(osv.osv):
         },
         'kanban_state': {
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
-            'project.mt_task_done': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
+            'project.mt_task_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
         },
     }
 

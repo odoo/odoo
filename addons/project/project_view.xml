@@ -443,7 +443,7 @@
                         </page>
                         <page string="Extra Info">
                             <group col="4">
-                                 <field name="priority" groups="base.group_user" widget="priority"/>
+                                <field name="priority" groups="base.group_user" widget="priority"/>
                                 <field name="sequence"/>
                                 <field name="partner_id"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -524,21 +524,13 @@
                                     <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
                                 </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <table>
-                                        <tr>
-                                            <td groups="base.group_user">
-                                                <field name="kanban_state" widget="dropdown_selection"/>
-                                            </td>
-                                            <td groups="base.group_user">
-                                                <field name="priority" widget="priority"/>
-                                            </td>
-                                            <td>
-                                                <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <div class="pull-left" groups="base.group_user">
+                                            <field name="kanban_state" widget="dropdown_selection"/>
+                                            <field name="priority" widget="priority"/>
+                                        </div>
+                                    </div>
                             </div>
                             <div class="oe_clear"></div>
                         </div>
