@@ -294,7 +294,11 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             self = this;
 
         if (header.expanded) {
-            this.fold(header);
+            if (header.root === this.pivot.rows) {
+                this.fold_row(header, event);
+            } else {
+                this.fold_col(header);
+            }
             return;
         }
         if (header.path.length < header.root.groupby.length) {
@@ -353,9 +357,27 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
 
     },
 
-    fold: function (header) {
-        var update_groupby = this.pivot.fold(header);
+    fold_row: function (header, event) {
+        var rows_before = this.pivot.rows.headers.length,
+            update_groupby = this.pivot.fold(header),
+            rows_after = this.pivot.rows.headers.length,
+            rows_removed = rows_before - rows_after;
 
+        if (rows_after === 1) {
+            // probably faster to redraw the unique row instead of removing everything
+            this.display_data();
+        } else {
+            var $row = $(event.target).parent().parent();
+            $row.nextAll().slice(0,rows_removed).remove();
+        }
+        if (update_groupby && this.graph_view) {
+            this.graph_view.register_groupby(this.pivot.rows.groupby, this.pivot.cols.groupby);
+        }
+    },
+
+    fold_col: function (header) {
+        var update_groupby = this.pivot.fold(header);
+        
         this.display_data();
         if (update_groupby && this.graph_view) {
             this.graph_view.register_groupby(this.pivot.rows.groupby, this.pivot.cols.groupby);
