@@ -2365,6 +2365,106 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     }
 });
 
+instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+    },
+    prepare_dropdown_selection: function() {
+        var self = this;
+        var data = [];
+        var selection = self.field.selection || [];
+        _.map(selection, function(res) {
+            var value = {
+                'name': res[0],
+                'tooltip': res[1],
+                'state_name': res[1],
+            }
+            if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
+            else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
+            else { value['state_class'] = 'oe_kanban_status oe_kanban_status_red'; }
+            data.push(value);
+        });
+        return data;
+    },
+    render_value: function() {
+        var self = this;
+        this.record_id = self.view.datarecord.id;
+        this.states = self.prepare_dropdown_selection();;
+        this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e) {
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length) {
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            if (self.record_id) {
+                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+            } else {
+                return self.view.on_button_save().done(function(result) {
+                    if (result) {
+                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+                    }
+                });
+            }
+        }
+    },
+    reload_record: function() {
+        this.view.reload();
+    },
+});
+
+instance.web.form.Priority = instance.web.form.FieldChar.extend({
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+    },
+    prepare_priority: function() {
+        var self = this;
+        var selection = this.field.selection || [];
+        var init_value = selection && selection[0][0] || 0;
+        var data = _.map(selection.slice(1), function(element, index) {
+            var value = {
+                'value': element[0],
+                'name': element[1],
+                'click_value': element[0],
+            }
+            if (index == 0 && self.get('value') == element[0]) {
+                value['click_value'] = init_value;
+            }
+            return value;
+        });
+        return data;
+    },
+    render_value: function() {
+        var self = this;
+        this.record_id = self.view.datarecord.id;
+        this.priorities = self.prepare_priority();
+        this.$el.html(QWeb.render("Priority", {'widget': this}));
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e) {
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length) {
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            if (self.record_id) {
+                return self.view.dataset._model.call('write', [[self.record_id], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+            } else {
+                return self.view.on_button_save().done(function(result) {
+                    if (result) {
+                        self.view.dataset._model.call('write', [[result], value, self.view.dataset.get_context()]).done(self.reload_record.bind(self));
+                    }
+                });
+            }
+        }
+    },
+    reload_record: function() {
+        this.view.reload();
+    },
+});
+
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
     process_modifiers: function () {
         this._super();
@@ -6115,6 +6215,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'monetary': 'instance.web.form.FieldMonetary',
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
+    'priority':'instance.web.form.Priority',
+    'kanban_state_selection':'instance.web.form.KanbanSelection',
     'statinfo': 'instance.web.form.StatInfo',
 });
 
