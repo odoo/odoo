@@ -591,8 +591,13 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             rows_length, cells_length;
         
         rows_length = rows.length;
+
+        var $tbody = $('<tbody>');
+        doc_fragment.append($tbody);
         for (i = 0; i < rows_length; i++) {
-            $row = $('<tr>').append(make_cell(rows[i]));
+            $row = $('<tr>')
+                .attr('data-indent', rows[i].indent)
+                .append(make_cell(rows[i]));
             cells_length = rows[i].cells.length;
             cells_list = [];
 
@@ -609,7 +614,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 cells_list[j] = hcell;
             }
             $row.append(cells_list.join(''));
-            doc_fragment.append($('<tbody>').append($row));
+            $tbody.append($row);
         }
     },
 
