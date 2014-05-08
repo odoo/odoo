@@ -1765,7 +1765,7 @@
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">
             <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
-            <field name="name">Orderpoints</field>
+            <field name="name">Reordering Rules</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
@@ -1816,9 +1816,7 @@
                    <button string="Current Stock" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest">
-                       <field string="Order Points" name="orderpoint_count" widget="statinfo" />
-                   </button>
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest" string="Reordering Rules"/>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
