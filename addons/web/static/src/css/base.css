@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -449,6 +449,51 @@
   border-style: inset;
   border-width: 1px;
 }
+.openerp .oe_kanban_status {
+  position: relative;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  background-position: center center;
+  background-image: -webkit-radial-gradient(circle, #eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: -moz-radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: -ms-radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+  background-image: radial-gradient(#eeeeee 0%, #cccccc 40%, #bbbbbb 100%);
+}
+.openerp .oe_kanban_status_green {
+  background: green;
+  background-position: center center;
+  background-image: -webkit-radial-gradient(circle, #55dd55 0%, #44aa44 40%, #339933 100%);
+  background-image: -moz-radial-gradient(#55dd55 0%, #44aa44 40%, #339933 100%);
+  background-image: -ms-radial-gradient(#55dd55 0%, #44aa44 40%, #339933 100%);
+  background-image: radial-gradient(#55dd55 0%, #44aa44 40%, #339933 100%);
+}
+.openerp .oe_kanban_status_red {
+  background: red;
+  background-position: center center;
+  background-image: -webkit-radial-gradient(circle, #ee7777 0%, #cc3333 40%, #bb0808 100%);
+  background-image: -moz-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
+  background-image: -ms-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
+  background-image: radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
+}
+.openerp .btn-group.kanban_state {
+  padding-top: 8px;
+  margin-right: 4px !important;
+}
+.openerp .btn-group.kanban_state .dropdown-menu {
+  min-width: 100%;
+  padding-right: 10px !important;
+}
+.openerp .btn-group.kanban_state .dropdown-menu li a, .openerp .btn-group.kanban_state .dropdown-menu li a:hover, .openerp .btn-group.kanban_state .dropdown-menu li a:focus {
+  padding-left: 5px;
+  padding-right: 0px;
+}
+.openerp .btn-group.kanban_state a {
+  color: #333333;
+}
 .openerp .oe_tag {
   border: 1px solid #afafb6;
   font-size: 11px;
@@ -777,7 +822,7 @@
   background-image: -moz-linear-gradient(top, #fc8787, maroon);
   background-image: -ms-linear-gradient(top, #fc8787, maroon);
   background-image: -o-linear-gradient(top, #fc8787, maroon);
-  background-image: linear-gradient(to bottom, #fc8787, #800000);
+  background-image: linear-gradient(to bottom, #fc8787, maroon);
 }
 .openerp .navbar .oe_topbar_anonymous_login a {
   display: block;
@@ -3377,48 +3422,4 @@ input[type="radio"], input[type="checkbox"] {
 .blockUI.blockOverlay {
   background-color: black;
   opacity: 0.6;
-}
-.openerp .dropdown-menu.state {
-  min-width: 100%;
-  padding-right: 10px !important;
-}
-.openerp .dropdown-menu.state li a, .openerp .dropdown-menu.state li a:hover, .openerp .dropdown-menu.state li a:focus {
-  padding-left: 5px;
-  padding-right: 0px;
-}
-.openerp .btn-group.state {
-  padding-top: 8px;
-}
-.openerp .btn-group.state a {
-  color: #333333;
-}
-.openerp .status {
-  display: inline-block;
-  position: relative;
-  height: 12px;
-  width: 12px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  border-radius: 6px;
-  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  -box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  background-position: center center;
-  background-image: radial-gradient(#dddddd 0%, #aaaaaa 40%, #999999 100%);
-  background-image: -moz-radial-gradient(#dddddd 0%, #aaaaaa 40%, #999999 100%);
-  background-image: -webkit-radial-gradient(circle, #dddddd 0%, #aaaaaa 40%, #999999 100%);
-}
-.openerp .status.error {
-  background: #cc3333;
-  background-position: center center;
-  background-image: radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
-  background-image: -moz-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%);
-  background-image: -webkit-radial-gradient(circle, #ee7777 0%, #cc3333 40%, #bb0808 100%);
-}
-.openerp .status.ok {
-  background: #44dd44;
-  background-position: center center;
-  background-image: radial-gradient(#55dd55 0%, #44cc44 40%, #33bb33 100%);
-  background-image: -moz-radial-gradient(#55dd55 0%, #44cc44 40%, #33bb33 100%);
-  background-image: -webkit-radial-gradient(circle, #55dd55 0%, #44cc44 40%, #33bb33 100%);
 }

@@ -1029,26 +1029,29 @@
         </t>
     </span>
 </t>
-
 <t t-name="DropdownSelection">
-    <span class="btn-group state">
-        <t t-foreach="states" t-as="rec">
-            <a>
+    <div class="btn-group kanban_state">
+        <t t-foreach="widget.states" t-as="rec">
+            <a t-if="widget.get('value') === rec.name">
                 <a class="oe_legend dropdown-toggle" data-toggle="dropdown">
-                <span t-att-class="rec.state_class" t-if="widget.get('value') === rec.name" t-att-title="rec.tooltip" ></span>
-                <span class="sr-only">Toggle Dropdown</span></a>
+                    <!-- <img height="16" width="16" t-att-src="'/web/static/src/img/icons/' + rec.icon_name"/> -->
+                    <span t-att-class="rec.state_class" t-if="widget.get('value') === rec.name" t-att-title="rec.tooltip"/>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </a>
             </a>
         </t>
         <ul class="dropdown-menu state" role="menu">
-            <t t-foreach="states" t-as="rec">
+            <t t-foreach="widget.states" t-as="rec">
                 <t t-if="widget.get('value') !== rec.name">
                     <li class="oe_legend" t-att-data-value="rec.name" ><a href="#">
-                        <span t-att-class="rec.state_class"/> <t t-raw="rec.state_name" /></a>
+                        <span t-att-class="rec.state_class" t-att-title="rec.tooltip"/>
+                        <!-- <img height="16" width="16" t-att-src="'/web/static/src/img/icons/' + rec.icon_name"/> -->
+                        <t t-raw="rec.state_name" /></a>
                     </li>
                 </t>
             </t>
         </ul>
-    </span>
+    </div>
 </t>
 <t t-name="Priority">
     <ul style="list-style: none; padding-left: 2px;">

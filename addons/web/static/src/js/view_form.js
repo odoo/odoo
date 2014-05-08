@@ -2374,29 +2374,23 @@ instance.web.form.DropdownSelection = instance.web.form.FieldChar.extend({
         var data = [];
         var selection = self.field.selection || [];
         _.map(selection, function(res) {
-            var state_class;
-            if (res[0] == 'normal')
-                state_class = 'status'
-            else if(res[0] == 'done')
-                state_class = 'status ok'
-            else
-                state_class = 'status error'
-            value = {
+            var value = {
                 'name': res[0],
                 'tooltip': res[1],
                 'state_name': res[1],
-                'state_class': state_class
             }
-            data.push(value)
+            if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
+            else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
+            else { value['state_class'] = 'oe_kanban_status oe_kanban_status_red'; }
+            data.push(value);
         });
         return data;
     },
     render_value: function() {
         var self = this;
-        var data = {'widget': self }
-        self.record_id = self.view.datarecord.id;
-        data['states'] = self.prepare_dropdown_selection();
-        this.$el.html(QWeb.render("DropdownSelection", data));
+        this.record_id = self.view.datarecord.id;
+        this.states = self.prepare_dropdown_selection();;
+        this.$el.html(QWeb.render("DropdownSelection", {'widget': self}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e) {

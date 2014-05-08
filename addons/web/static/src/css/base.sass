@@ -424,7 +424,33 @@ $sheet-padding: 16px
             border-style: inset
             border-width: 1px
     // }}}
-
+    // Kanban state (used in form and kanban) {{{
+    .oe_kanban_status
+        position: relative
+        display: inline-block
+        height: 12px
+        width: 12px
+        @include radius(6px)
+        @include radial-gradient((#eee 0%, #ccc 40%, #bbb 100%))
+        // +background-image(radial-gradient(45px 45px, #0ff 10px, #1e90ff 30px))
+    .oe_kanban_status_green
+        background: green
+        @include radial-gradient((#55dd55 0%, #44aa44 40%, #339933 100%))
+    .oe_kanban_status_red
+        background: red
+        @include radial-gradient((#ee7777 0%, #cc3333 40%, #bb0808 100%))
+    .btn-group.kanban_state
+        padding-top: 8px
+        margin-right: 4px !important
+        .dropdown-menu
+            min-width: 100%
+            padding-right: 10px !important
+        .dropdown-menu li a, .dropdown-menu li a:hover, .dropdown-menu li a:focus
+            padding-left: 5px
+            padding-right: 0px
+        a
+            color: #333333
+    // }}}
     // Tags (for many2many tags, among others) {{{
     .oe_tag
         border: 1px solid $tag-border
@@ -2751,45 +2777,7 @@ input[type="radio"], input[type="checkbox"]
 .blockUI.blockOverlay
     background-color: black
     opacity: 0.6000000238418579
-.openerp
-    .dropdown-menu.state
-        min-width: 100%
-        padding-right: 10px !important
-    .dropdown-menu.state li a, .dropdown-menu.state li a:hover, .dropdown-menu.state li a:focus
-        padding-left: 5px
-        padding-right: 0px
-    .btn-group.state
-        padding-top: 8px
-    .btn-group.state a
-        color: #333333
-    .status
-        display: inline-block
-        position: relative
-        height: 12px
-        width: 12px
-        -moz-border-radius: 6px
-        -webkit-border-radius: 6px
-        border-radius: 6px
-        -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)
-        -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)
-        -box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6)
-        background-position: center center
-        background-image: radial-gradient(#dddddd 0%, #aaaaaa 40%, #999999 100%)
-        background-image: -moz-radial-gradient(#dddddd 0%, #aaaaaa 40%, #999999 100%)
-        background-image: -webkit-radial-gradient(circle, #dddddd 0%, #aaaaaa 40%, #999999 100%)
 
-    .status.error
-        background: #cc3333
-        background-position: center center
-        background-image: radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%)
-        background-image: -moz-radial-gradient(#ee7777 0%, #cc3333 40%, #bb0808 100%)
-        background-image: -webkit-radial-gradient(circle, #ee7777 0%, #cc3333 40%, #bb0808 100%)
 
-    .status.ok
-        background: #44dd44
-        background-position: center center
-        background-image: radial-gradient(#55dd55 0%, #44cc44 40%, #33bb33 100%)
-        background-image: -moz-radial-gradient(#55dd55 0%, #44cc44 40%, #33bb33 100%)
-        background-image: -webkit-radial-gradient(circle, #55dd55 0%, #44cc44 40%, #33bb33 100%)
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

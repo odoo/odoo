@@ -1318,33 +1318,25 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
         this.parent = parent;
     },
     prepare_dropdown_selection: function() {
-        var self = this;
         var data = [];
-        var selection = self.field.selection || [];
-        _.map(selection, function(res) {
-            var state_class;
-            if (res[0] == 'normal')
-                state_class = 'status'
-            else if(res[0] == 'done')
-                state_class = 'status ok'
-            else
-                state_class = 'status error'
-            value = {
+        _.map(this.field.selection || [], function(res) {
+            var value = {
                 'name': res[0],
                 'tooltip': res[1],
                 'state_name': res[1],
-                'state_class': state_class
             }
-            data.push(value)
+            if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
+            else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
+            else { value['state_class'] = 'oe_kanban_status oe_kanban_status_red'; }
+            data.push(value);
         });
         return data;
     },
     renderElement: function() {
         var self = this;
-        self.record_id = self.parent.id;
-        var data = {'widget': self }
-        data['states'] = self.prepare_dropdown_selection();
-        this.$el = $(QWeb.render("DropdownSelection", data));
+        this.record_id = self.parent.id;
+        this.states = self.prepare_dropdown_selection();;
+        this.$el = $(QWeb.render("DropdownSelection", {'widget': self}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e) {
