@@ -332,7 +332,7 @@ class res_config_installer(osv.osv_memory, res_config_module_installation_mixin)
                    for installer in self.read(cr, uid, ids, context=context)
                    for module_name, to_install in installer.iteritems()
                    if module_name != 'id'
-                   if type(self._columns[module_name]) is fields.boolean
+                   if type(self._columns.get(module_name)) is fields.boolean
                    if to_install)
 
         hooks_results = set()
