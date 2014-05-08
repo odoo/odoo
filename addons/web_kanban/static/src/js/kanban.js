@@ -1274,9 +1274,9 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
                 'legend_name': res[1]
             }
             if (res[0] == '0') {
-                value['legend'] = '<img src="/web/static/src/img/icons/star-off.png"/>';
+                value['legend'] = '<span class="oe_e oe_star_off">7</span>';
             } else {
-                value['legend'] = '<img src="/web/static/src/img/icons/star-on.png"/>';
+                value['legend'] = '<span class="oe_e oe_star_on">7</span>';
             }
             data.push(value)
         });
@@ -1318,9 +1318,26 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
         this.parent = parent;
     },
     prepare_dropdown_selection: function() {
-        return [{ 'name': 'normal', 'state_name': ' In Progress', 'state_icon': 'status' },
-                { 'name': 'blocked', 'state_name': ' Blocked', 'state_icon': 'status error' },
-                { 'name': 'done', 'state_name': ' Ready', 'state_icon': 'status ok' }]
+        var self = this;
+        var data = [];
+        var selection = self.field.selection || [];
+        _.map(selection, function(res) {
+            var state_class;
+            if (res[0] == 'normal')
+                state_class = 'status'
+            else if(res[0] == 'done')
+                state_class = 'status ok'
+            else
+                state_class = 'status error'
+            value = {
+                'name': res[0],
+                'tooltip': res[1],
+                'state_name': res[1],
+                'state_class': state_class
+            }
+            data.push(value)
+        });
+        return data;
     },
     renderElement: function() {
         var self = this;
@@ -1329,9 +1346,6 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
         data['states'] = self.prepare_dropdown_selection();
         this.$el = $(QWeb.render("DropdownSelection", data));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
-        this.$el.on('mouseenter mouseleave', function(e) {
-            self.$el.find('.caret').toggleClass('hidden', e.type == 'mouseleave');
-        });
     },
     do_action: function(e) {
         var self = this;

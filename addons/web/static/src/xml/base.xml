@@ -1035,7 +1035,7 @@
         <t t-foreach="states" t-as="rec">
             <a>
                 <a class="oe_legend dropdown-toggle" data-toggle="dropdown">
-                <span t-att-class="rec.state_icon" t-if="widget.get('value') === rec.name" t-att-title="rec.state_name"></span>
+                <span t-att-class="rec.state_class" t-if="widget.get('value') === rec.name" t-att-title="rec.tooltip" ></span>
                 <span class="sr-only">Toggle Dropdown</span></a>
             </a>
         </t>
@@ -1043,7 +1043,7 @@
             <t t-foreach="states" t-as="rec">
                 <t t-if="widget.get('value') !== rec.name">
                     <li class="oe_legend" t-att-data-value="rec.name" ><a href="#">
-                        <span t-att-class="rec.state_icon"/> <t t-raw="rec.state_name" /></a>
+                        <span t-att-class="rec.state_class"/> <t t-raw="rec.state_name" /></a>
                     </li>
                 </t>
             </t>
@@ -1054,12 +1054,12 @@
     <ul style="list-style: none; padding-left: 2px;">
         <t t-foreach="legends" t-as="rec" >
             <t t-if="widget.get('value') gte rec.name and !rec_first">
-                <li t-att-data-value="rec.name" class="oe_star_left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="rec.legend"/></a></li>
+                <li t-att-data-value="rec.name" class="pull-left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="rec.legend"/></a></li>
             </t>
         </t>
         <t t-foreach="legends" t-as="rec" >
             <t t-if="widget.get('value') lt rec.name">
-                <li t-att-data-value="rec.name" class="oe_star_left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="legends[0].legend"/></a></li>
+                <li t-att-data-value="rec.name" class="pull-left oe_legend"><a href="#" t-att-title="rec.legend_name"><t t-raw="legends[0].legend"/></a></li>
             </t>
         </t>
     </ul>
