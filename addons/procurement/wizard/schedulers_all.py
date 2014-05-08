@@ -21,14 +21,11 @@
 
 import threading
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'
     _description = 'Compute all schedulers'
-
-    _columns = {
-    }
 
     def _procure_calculation_all(self, cr, uid, ids, context=None):
         """

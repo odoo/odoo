@@ -707,11 +707,8 @@ class pos_order(osv.osv):
         return False
 
     def _get_out_picking_type(self, cr, uid, context=None):
-        try:
-            picking_type = self.pool.get('ir.model.data').get_object(cr, uid, 'point_of_sale', 'picking_type_posout', context=context).id
-        except:
-            picking_type = False
-        return picking_type
+        return self.pool.get('ir.model.data').xmlid_to_res_id(
+                    cr, uid, 'point_of_sale.picking_type_posout', context=context)
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,

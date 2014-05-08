@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2014 OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,31 +20,36 @@
 ##############################################################################
 
 {
-    'name': 'Dropshipping Module',
+    'name': 'Drop Shipping',
     'version': '1.0',
     'category': 'Warehouse Management',
-    'summary': 'Dropshipping',
+    'summary': 'Drop Shipping',
     'description': """
-Manage sales quotations and stock locations
-==========================================
+Manage drop shipping orders
+===========================
 
-This adds the route to make dropshipping sales orders in which the product sold are directly transfered from the reseller to the customer (direct delivery) without creating any internal document for the transfer.
+This module adds a pre-configured Drop Shipping picking type
+as well as a procurement route that allow configuring Drop
+Shipping products and orders.
+
+When drop shipping is used the goods are directly transferred
+from suppliers to customers (direct delivery) without
+going through the retailer's warehouse. In this case no
+internal transfer document is needed.
 
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': [],
     'depends': ['purchase', 'sale_stock'],
-    'init_xml': [],
     'data': ['stock_dropshipping.xml'],
-    'demo_xml': [],
     'test': [
         'test/cancellation_propagated.yml',
         'test/crossdock.yml',
         'test/dropship.yml',
         'test/procurementexception.yml',
         'test/lifo_price.yml'
-        ],
+    ],
     'installable': True,
     'auto_install': False,
 }
