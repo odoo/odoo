@@ -2365,7 +2365,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     }
 });
 
-instance.web.form.DropdownSelection = instance.web.form.FieldChar.extend({
+instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
     init: function (field_manager, node) {
         this._super(field_manager, node);
     },
@@ -2390,7 +2390,7 @@ instance.web.form.DropdownSelection = instance.web.form.FieldChar.extend({
         var self = this;
         this.record_id = self.view.datarecord.id;
         this.states = self.prepare_dropdown_selection();;
-        this.$el.html(QWeb.render("DropdownSelection", {'widget': self}));
+        this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e) {
@@ -6216,7 +6216,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2many_checkboxes': 'instance.web.form.FieldMany2ManyCheckBoxes',
     'x2many_counter': 'instance.web.form.X2ManyCounter',
     'priority':'instance.web.form.Priority',
-    'dropdown_selection':'instance.web.form.DropdownSelection',
+    'kanban_state_selection':'instance.web.form.KanbanSelection',
     'statinfo': 'instance.web.form.StatInfo',
 });
 

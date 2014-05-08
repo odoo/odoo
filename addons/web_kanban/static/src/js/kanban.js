@@ -1303,7 +1303,7 @@ instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
     },
 });
 
-instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend({
+instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
     init: function(parent, field, $node) {
         this._super.apply(this, arguments);
         this.name = $node.attr('name')
@@ -1328,7 +1328,7 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
         var self = this;
         this.record_id = self.parent.id;
         this.states = self.prepare_dropdown_selection();;
-        this.$el = $(QWeb.render("DropdownSelection", {'widget': self}));
+        this.$el = $(QWeb.render("KanbanSelection", {'widget': self}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
     },
     do_action: function(e) {
@@ -1347,7 +1347,7 @@ instance.web_kanban.DropdownSelection = instance.web_kanban.AbstractField.extend
 
 instance.web_kanban.fields_registry = new instance.web.Registry({});
 instance.web_kanban.fields_registry.add('priority','instance.web_kanban.Priority');
-instance.web_kanban.fields_registry.add('dropdown_selection','instance.web_kanban.DropdownSelection');
+instance.web_kanban.fields_registry.add('kanban_state_selection','instance.web_kanban.KanbanSelection');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
