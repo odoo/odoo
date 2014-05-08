@@ -24,7 +24,9 @@
     'author': 'OpenERP SA',
     'category': 'Sales Management',
     'summary': 'Sales Team',
-    'description': """ """,
+    'description': """
+Using this application you can manage Sales Team  with CRM and/or Sales 
+ """,
     'website': 'http://www.openerp.com',
     'depends': ['base','mail','web_kanban_sparkline',],
     'data': ['security/sale_team_security.xml',
