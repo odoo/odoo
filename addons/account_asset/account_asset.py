@@ -238,13 +238,11 @@ class account_asset_asset(osv.osv):
                 val['value_residual'] = purchase_value - salvage_value
         return {'value': val}    
     def _entry_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for entry in self.browse(cr, uid, ids, context=context):
-                res[entry.id] = len(entry.account_move_line_ids)
-        except:
-            pass
-        return res
+        MoveLine = self.pool('account.move.line')
+        return {
+            asset_id: MoveLine.search_count(cr, uid, [('asset_id', '=', asset_id)], context=context)
+            for asset_id in ids
+        }
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),

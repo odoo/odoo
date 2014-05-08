@@ -490,10 +490,11 @@ class project(osv.Model):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
 
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
-        for issues in self.browse(cr, uid, ids, context):
-            res[issues.id] = len(issues.issue_ids)
-        return res
+        Issue = self.pool['project.issue']
+        return {
+            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
+            for project_id in ids
+        }
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
@@ -570,18 +571,15 @@ class project_project(osv.Model):
 
 class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for partner in self.browse(cr, uid, ids, context=context):
-                res[partner.id] = len(partner.issue_ids)
-        except:
-            pass
-        return res
+        Issue = self.pool['project.issue']
+        return {
+            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
+            for partner_id in ids
+        }
     
     """ Inherits partner and adds Issue information in the partner form """
     _inherit = 'res.partner'
     _columns = {
-        'issue_ids': fields.one2many('project.issue', 'partner_id', 'Issues'),
         'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

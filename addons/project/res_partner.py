@@ -23,13 +23,11 @@ from openerp.osv import fields,osv
 
 class res_partner(osv.osv):
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for partner in self.browse(cr, uid, ids, context):
-                res[partner.id] = len(partner.task_ids)
-        except:
-            pass
-        return res
+        Task = self.pool['project.task']
+        return {
+            partner_id: Task.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+            for partner_id in ids
+        }
     
     """ Inherits partner and adds Tasks information in the partner form """
     _inherit = 'res.partner'
@@ -45,7 +43,5 @@ class res_partner(osv.osv):
         default['task_ids'] = []
         return super(res_partner, self).copy(
                 cr, uid, record_id, default=default, context=context)
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
