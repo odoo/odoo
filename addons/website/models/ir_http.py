@@ -32,6 +32,13 @@ class ir_http(orm.AbstractModel):
             page=PageConverter,
         )
 
+    def _auth_method_public(self):
+        # TODO: select user_id from matching website
+        if not request.session.uid:
+            request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base.public_user')
+        else:
+            request.uid = request.session.uid
+
     def _dispatch(self):
         first_pass = not hasattr(request, 'website')
         request.website = None
@@ -54,7 +61,6 @@ class ir_http(orm.AbstractModel):
             if first_pass:
                 request.lang = request.website.default_lang_code
             request.context['lang'] = request.lang
-            request.website.preprocess_request(request)
             if not func:
                 path = request.httprequest.path.split('/')
                 langs = [lg[0] for lg in request.website.get_languages()]

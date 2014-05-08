@@ -626,6 +626,48 @@ class sale_order(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
+    def onchange_fiscal_position(self, cr, uid, ids, fiscal_position, order_lines, context=None):
+        '''Update taxes of order lines for each line where a product is defined
+
+        :param list ids: not used
+        :param int fiscal_position: sale order fiscal position
+        :param list order_lines: command list for one2many write method
+        '''
+        order_line = []
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        product_obj = self.pool.get('product.product')
+        line_obj = self.pool.get('sale.order.line')
+
+        fpos = False
+        if fiscal_position:
+            fpos = fiscal_obj.browse(cr, uid, fiscal_position, context=context)
+        
+        for line in order_lines:
+            # create    (0, 0,  { fields })
+            # update    (1, ID, { fields })
+            if line[0] in [0, 1]:
+                prod = None
+                if line[2].get('product_id'):
+                    prod = product_obj.browse(cr, uid, line[2]['product_id'], context=context)
+                elif line[1]:
+                    prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
+                if prod and prod.taxes_id:
+                    line[2]['tax_id'] = [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]
+                order_line.append(line)
+
+            # link      (4, ID)
+            # link all  (6, 0, IDS)
+            elif line[0] in [4, 6]:
+                line_ids = line[0] == 4 and [line[1]] or line[2]
+                for line_id in line_ids:
+                    prod = line_obj.browse(cr, uid, line_id, context=context).product_id
+                    if prod and prod.taxes_id:
+                        order_line.append([1, line_id, {'tax_id': [[6, 0, fiscal_obj.map_tax(cr, uid, fpos, prod.taxes_id)]]}])
+                    else:
+                        order_line.append([4, line_id])
+            else:
+                order_line.append(line)
+        return {'value': {'order_line': order_line}}
 
 
 # TODO add a field price_unit_uos
@@ -862,15 +904,15 @@ class sale_order_line(osv.osv):
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         context = context or {}
         lang = lang or context.get('lang',False)
-        if not  partner_id:
+        if not partner_id:
             raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
         context = {'lang': lang, 'partner_id': partner_id}
-        if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
+        partner = partner_obj.browse(cr, uid, partner_id)
+        lang = partner.lang
         context_partner = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
@@ -896,7 +938,12 @@ class sale_order_line(osv.osv):
                     uos = False
             else:
                 uos = False
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
+
+        fpos = False
+        if not fiscal_position:
+            fpos = partner.property_account_position or False
+        else:
+            fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
         if update_tax: #The quantity only have changed
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
 
@@ -1027,15 +1074,12 @@ class account_invoice(osv.Model):
 class product_product(osv.Model):
     _inherit = 'product.product'
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for sale in self.browse(cr, uid, ids, context=context):
-                res[sale.id] = len(sale.sales_ids)
-        except:
-            pass
-        return res
+        SaleOrderLine = self.pool['sale.order.line']
+        return {
+            product_id: SaleOrderLine.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
+            for product_id in ids
+        }
     _columns = {
-        'sales_ids': fields.one2many('sale.order.line', 'product_id', 'Sales '),
         'sales_count': fields.function(_sales_count, string='# Sales', type='integer'),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

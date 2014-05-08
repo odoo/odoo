@@ -191,15 +191,13 @@ class crm_claim(osv.osv):
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for partner in self.browse(cr, uid, ids, context=context):
-                res[partner.id] = len(partner.claims_ids)
-        except:
-            pass
-        return res
+        Claim = self.pool['crm.claim']
+        return {
+            partner_id: Claim.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)  
+            for partner_id in ids
+        }
+
     _columns = {
-        'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
         'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),
     }
 

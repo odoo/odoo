@@ -514,15 +514,14 @@ class hr_job(osv.osv):
         return res
 
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'documents_count': 0, 'application_count': 0,}), ids))
-        try:
-            for job in self.browse(cr, uid, ids, context=context):
-                res[job.id] = {'documents_count': len(job.document_ids),
-                'application_count': len(job.applicant_ids),
-                }
-        except:
-            pass
-        return res
+        Applicant = self.pool['hr.applicant']
+        return {
+            job_id: {
+                'application_count': Applicant.search_count(cr,uid, [('job_id', '=', job_id)], context=context),
+                'documents_count': len(self._get_attached_docs(cr, uid, [job_id], field_name, arg, context=context)[job_id])
+            }
+            for job_id in ids
+        }
 
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),

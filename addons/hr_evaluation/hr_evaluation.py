@@ -104,19 +104,15 @@ class hr_employee(osv.Model):
     _inherit="hr.employee"
     
     def _appraisal_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for employee in self.browse(cr, uid, ids, context=context):
-                res[employee.id] = len(employee.appraisal_ids)
-        except:
-            pass
-        return res
-
+        Evaluation = self.pool['hr.evaluation.interview']
+        return {
+            employee_id: Evaluation.search_count(cr, uid, [('user_to_review_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
 
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
-        'appraisal_ids': fields.one2many('hr.evaluation.interview', 'user_to_review_id', 'Appraisal Interviews'),
         'appraisal_count': fields.function(_appraisal_count, type='integer', string='Appraisal Interviews'),
     }
 

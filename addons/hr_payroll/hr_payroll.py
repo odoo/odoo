@@ -261,11 +261,8 @@ class hr_payslip(osv.osv):
     
     def _count_detail_payslip(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        try:
-            for details in self.browse(cr, uid, ids, context=context):
-                res[details.id] = len(details.line_ids)
-        except:
-            pass
+        for details in self.browse(cr, uid, ids, context=context):
+            res[details.id] = len(details.line_ids)
         return res
 
     _columns = {
@@ -285,7 +282,6 @@ class hr_payslip(osv.osv):
             \n* If the payslip is under verification, the status is \'Waiting\'. \
             \n* If the payslip is confirmed then status is set to \'Done\'.\
             \n* When user cancel payslip the status is \'Rejected\'.'),
-#        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'worked_days_line_ids': fields.one2many('hr.payslip.worked_days', 'payslip_id', 'Payslip Worked Days', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -983,19 +979,16 @@ class hr_employee(osv.osv):
         return res
 
     def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for employee in self.browse(cr, uid, ids, context=context):
-                res[employee.id] = len(employee.payslip_ids)
-        except:
-            pass
-        return res
+        Payslip = self.pool['hr.payslip']
+        return {
+            employee_id: Payslip.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
 
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
         'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
-        'payslip_ids': fields.one2many('hr.payslip', 'employee_id', 'Payslips'),
     }
 
 

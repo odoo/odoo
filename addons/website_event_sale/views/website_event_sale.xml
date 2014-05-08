@@ -20,7 +20,7 @@
     </xpath>
 </template>
 
-<template id="mycart" inherit_id="website_sale.mycart" name="My Cart Event's Price">
+<template id="cart" inherit_id="website_sale.cart" name="My Cart Event's Price">
     <xpath expr="//td[@name='price']/t" position="attributes">
         <attribute name="t-if">abs(line.product_id.lst_price - line.price_unit) &gt; 0.2 and not line.product_id.event_ok</attribute>
     </xpath>
@@ -28,7 +28,7 @@
 
 <template id="event_description_full" inherit_id="website_event.event_description_full" inherit_option_id="website_event.event_description_full" name="Event's Ticket form">
     <xpath expr="//div[@t-field='event.description']" position="before">
-        <form t-attf-action="/event/add_cart?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
+        <form t-attf-action="/event/cart/update?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
             <table itemprop="offers" class="table table-striped">
                 <thead>
                     <tr>
