@@ -169,7 +169,6 @@ class procurement_order(osv.osv):
             'name': procurement.name,
             'company_id': procurement.rule_id.company_id.id or procurement.rule_id.location_src_id.company_id.id or procurement.rule_id.location_id.company_id.id or procurement.company_id.id,
             'product_id': procurement.product_id.id,
-            'product_qty': qty_left,
             'product_uom': procurement.product_uom.id,
             'product_uom_qty': qty_left,
             'product_uos_qty': (procurement.product_uos and qty_uos_left) or qty_left,
