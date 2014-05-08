@@ -12,15 +12,15 @@ class stock_picking(osv.osv):
         }
 
     _columns = {
-        'claim_count': fields.function(_claim_count, string='Claims', type='integer'),    
+        'claim_count_out': fields.function(_claim_count, string='Claims', type='integer'),    
     }
 
 class stock_picking_out(osv.osv):
     _inherit = 'stock.picking.out'
 
     def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        return super(stock_picking_out, self)._claim_count(cr, uid, ids, field_name, arg, context=context)
+        pass
 
     _columns = {
-        'claim_count': fields.function(_claim_count, string='Claims', type='integer'),    
+        'claim_count_out': fields.function(_claim_count, string='Claims', type='integer'),    
     }
