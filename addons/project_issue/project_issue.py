@@ -57,6 +57,7 @@ class project_issue(osv.Model):
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
+            'project_issue.mt_issue_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
         },
     }
 
@@ -250,7 +251,7 @@ class project_issue(osv.Model):
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this issue\n"
                                               " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
-                                         readonly=True, required=False),
+                                         required=False),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
@@ -260,7 +261,7 @@ class project_issue(osv.Model):
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange', select=True,
@@ -295,7 +296,7 @@ class project_issue(osv.Model):
         'active': 1,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'kanban_state': 'normal',
         'date_last_stage_update': fields.datetime.now,
         'user_id': lambda obj, cr, uid, context: uid,
@@ -304,19 +305,6 @@ class project_issue(osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
-    def set_priority(self, cr, uid, ids, priority, *args):
-        return self.write(cr, uid, ids, {'priority' : priority})
-
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set lead priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1')
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set lead priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3')
 
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)
@@ -374,15 +362,6 @@ class project_issue(osv.Model):
     # -------------------------------------------------------
     # Stage management
     # -------------------------------------------------------
-
-    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-
-    def set_kanban_state_normal(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-
-    def set_kanban_state_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method

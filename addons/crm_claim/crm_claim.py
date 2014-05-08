@@ -88,7 +88,7 @@ class crm_claim(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'user_fault': fields.char('Trouble Responsible', size=64),
@@ -111,7 +111,7 @@ class crm_claim(osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'active': lambda *a: 1,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c)
     }

@@ -25,12 +25,11 @@ from openerp.tools.translate import _
 
 
 AVAILABLE_PRIORITIES = [
-    ('', ''),
-    ('5', 'Not Good'),
-    ('4', 'On Average'),
+    ('0', 'Bad'),
+    ('1', 'Below Average'),
+    ('2', 'Average'),
     ('3', 'Good'),
-    ('2', 'Very Good'),
-    ('1', 'Excellent')
+    ('4', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
@@ -488,21 +487,6 @@ class hr_applicant(osv.Model):
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
-
-    def set_priority(self, cr, uid, ids, priority, *args):
-        """Set applicant priority
-        """
-        return self.write(cr, uid, ids, {'priority': priority})
-
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set applicant priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1')
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set applicant priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3')
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'hr.job'
