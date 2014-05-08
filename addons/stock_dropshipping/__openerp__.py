@@ -22,7 +22,7 @@
 {
     'name': 'Dropshipping Module',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Warehouse Management',
     'summary': 'Dropshipping',
     'description': """
 Manage sales quotations and stock locations
