@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
@@ -37,8 +37,7 @@ class sale_order_dates(osv.osv):
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         """Compute the expected date from the requested date, not the order date"""
         if order and order.requested_date:
-            planned_str = fields.date.date_to_datetime(self, cr, uid, order.requested_date, context)
-            date_planned = datetime.strptime(planned_str, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_planned = datetime.strptime(order.requested_date, DEFAULT_SERVER_DATETIME_FORMAT)
             date_planned -= timedelta(days=order.company_id.security_lead)
             return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return super(sale_order_dates, self)._get_date_planned(
@@ -68,7 +67,7 @@ class sale_order_dates(osv.osv):
             order_datetime = datetime.strptime(order.date_order, DEFAULT_SERVER_DATETIME_FORMAT)
             for line in order.order_line:
                 dt = order_datetime + timedelta(days=line.delay or 0.0)
-                dt_s = dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
                 res[order.id] = min(dates_list)
@@ -77,8 +76,7 @@ class sale_order_dates(osv.osv):
     def onchange_requested_date(self, cr, uid, ids, requested_date,
                                 commitment_date, context=None):
         """Warn if the requested dates is sooner than the commitment date"""
-        if (requested_date and commitment_date
-                           and requested_date < commitment_date):
+        if (requested_date and commitment_date and requested_date < commitment_date):
             return {'warning': {
                 'title': _('Requested date is too soon!'),
                 'message': _("The date requested by the customer is "
@@ -90,11 +88,11 @@ class sale_order_dates(osv.osv):
 
     _columns = {
         'commitment_date': fields.function(_get_commitment_date, store=True,
-            type='date', string='Commitment Date',
+            type='datetime', string='Commitment Date',
             help="Date by which the products are sure to be delivered. This is "
                  "a date that you can promise to the customer, based on the "
                  "Product Lead Times."),
-        'requested_date': fields.date('Requested Date',
+        'requested_date': fields.datetime('Requested Date',
             readonly=True, states={'draft': [('readonly', False)]},
             help="Date by which the customer has requested the items to be "
                  "delivered.\n"
