@@ -1581,6 +1581,14 @@ class stock_move(osv.osv):
             return self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', ids)], context=context)
         return []
 
+    def _set_product_qty(self, cr, uid, id, field, value, arg, context=None):
+        """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
+            in the default product UoM. This code has been added to raise an error if a write is made given a value
+            for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
+            detect errors.
+        """
+        raise osv.except_osv(_('Programming Error!'), _('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1588,7 +1596,7 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type', '<>', 'service')], states={'done': [('readonly', True)]}),
-        'product_qty': fields.function(_quantity_normalize, type='float', store={
+        'product_qty': fields.function(_quantity_normalize, fnct_inv=_set_product_qty, _type='float', store={
                 'stock.move': (lambda self, cr, uid, ids, ctx: ids, ['product_id', 'product_uom_qty', 'product_uom'], 20),
                 'product.product': (_get_moves_from_prod, ['uom_id'], 20),
             }, string='Quantity',
