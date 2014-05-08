@@ -417,10 +417,10 @@ class QWeb(orm.AbstractModel):
         d.context['inherit_branding'] = False
         content = self.render_tag_call(
             element, {'call': name}, generated_attributes, d)
-        if qwebcontext.get('debug'):
-            return content
         bundle = AssetsBundle(name, html=content)
-        return bundle.to_html()
+        css = self.get_attr_bool(template_attributes.get('css'), default=True)
+        js = self.get_attr_bool(template_attributes.get('js'), default=True)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -457,6 +457,15 @@ class QWeb(orm.AbstractModel):
 
     def get_widget_for(self, widget):
         return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
+
+    def get_attr_bool(self, attr, default=False):
+        if attr:
+            attr = attr.lower()
+            if attr in ('false', '0'):
+                return False
+            elif attr in ('true', '1'):
+                return True
+        return default
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -1018,15 +1027,22 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, sep='\n'):
+    def to_html(self, sep='\n            ', css=True, js=True, debug=False):
         response = []
-        if self.stylesheets:
-            response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
-        if self.javascripts:
-            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        if debug:
+            if css:
+                for style in self.stylesheets:
+                    response.append(style.to_html())
+            if js:
+                for jscript in self.javascripts:
+                    response.append(jscript.to_html())
+        else:
+            if css and self.stylesheets:
+                response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+            if js and self.javascripts:
+                response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
         response.extend(self.remains)
-
-        return sep.join(response)
+        return sep + sep.join(response)
 
     @openerp.tools.func.lazy_property
     def last_modified(self):
@@ -1123,6 +1139,12 @@ class JavascriptAsset(WebAsset):
     def minify(self):
         return rjsmin(self.content)
 
+    def to_html(self):
+        if self.url:
+            return '<script type="text/javascript" src="%s"></script>' % self.url
+        else:
+            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.source
+
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
     rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://|data:)""", re.U)
@@ -1166,6 +1188,12 @@ class StylesheetAsset(WebAsset):
         content = re.sub(r'\s+', ' ', content)
         content = re.sub(r' *([{}]) *', r'\1', content)
         return content
+
+    def to_html(self):
+        if self.url:
+            return '<link rel="stylesheet" href="%s" type="text/css"/>' % self.url
+        else:
+            return '<style type="text/css">%s</style>' % self.source
 
 def rjsmin(script):
     """ Minify js with a clever regex.
