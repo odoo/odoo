@@ -134,7 +134,7 @@ class wkf_transition(osv.osv):
         if name:
             ids = self.search(cr, user, ['|',('act_from', operator, name),('act_to', operator, name)] + args, limit=limit)
         else:
-            ids = self.search(cr, user, args, context=context, limit=limit)
+            super(wkf_transition, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
 wkf_transition()

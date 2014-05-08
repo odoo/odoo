@@ -1067,7 +1067,7 @@ Launch Manually Once: after having been launched manually, it sets automatically
         if name:
             ids = self.search(cr, user, [('action_id', operator, name)] + args, limit=limit)
         else:
-            ids = self.search(cr, user, args, context=context, limit=limit)
+            super(ir_actions_todo, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
     def action_launch(self, cr, uid, ids, context=None):

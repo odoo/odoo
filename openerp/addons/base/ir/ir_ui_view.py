@@ -78,7 +78,7 @@ class view_custom(osv.osv):
         if name:
             ids = self.search(cr, user, [('user_id', operator, name)] + args, limit=limit)
         else:
-            ids = self.search(cr, user, args, context=context, limit=limit)
+            super(view_custom, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
     def _auto_init(self, cr, context=None):
