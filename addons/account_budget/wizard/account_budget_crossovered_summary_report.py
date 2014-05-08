@@ -49,6 +49,6 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
         }
         datas['form']['ids'] = datas['ids']
         datas['form']['report'] = 'analytic-one'
-        return self.pool['report'].get_action(cr, uid, ids, 'account_budget.report_crossoveredbudget', data=datas, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account_budget.report_crossoveredbudget', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

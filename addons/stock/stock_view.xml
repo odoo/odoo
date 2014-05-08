@@ -239,12 +239,23 @@
                             <field name="date"/>
                             <field name="active"/>
                         </group>
-                        <group groups="stock.group_tracking_lot" string="Traceability">
-                            <button name="action_traceability" string="Upstream Traceability" type="object"
-                                 colspan="2"/>
-                            <button name="action_traceability" string="Downstream Traceability" type="object"
-                                context="{'type': 'move_history_ids'}" colspan="2"/>
-                        </group>
+                        <group  class="oe_right" groups="stock.group_tracking_lot" string="Traceability">
+                            <div class="oe_right oe_button_box">
+                                <button name="action_traceability" 
+                                    string="Upstream"
+                                    help="Upstream Traceability"
+                                    class="oe_stat_button"
+                                    icon="fa-arrow-up" 
+                                    type="object" colspan="2"/>
+                                <button name="action_traceability" 
+                                    string="Downstream"
+                                    help="Downstream Traceability"
+                                    class="oe_stat_button"
+                                    icon="fa-arrow-down" 
+                                    type="object"
+                                    context="{'type': 'move_history_ids'}" colspan="2"/>
+                            </div>
+                        </group>                            
                     </group>
                     <field name="move_ids"/>
                 </form>
@@ -344,8 +355,16 @@
             <field name="arch" type="xml">
                 <form string="Serial Number" version="7.0">
                     <div class="oe_button_box oe_right">
-                        <button name="action_traceability" string="Upstream Traceability" type="object" context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
-                        <button name="action_traceability" string="Downstream Traceability" type="object" context="{'type': 'move_history_ids', 'field': 'prodlot_id'}"/>
+                        <button name="action_traceability" 
+                            string="Upstream" class="oe_stat_button" 
+                            help="Upstream Traceability"
+                            icon="fa-arrow-up" type="object" 
+                            context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
+                        <button name="action_traceability" 
+                            string="Downstream" class="oe_stat_button"
+                            icon="fa-arrow-down" type="object" 
+                            help="Downstream Traceability"
+                            context="{'type': 'move_history_ids', 'field': 'prodlot_id'}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -792,7 +811,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'picking_type': 'internal'}" options='{"reload_on_button": true}'/>
+                            <field name="move_lines" string="Stock Move" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'picking_type': 'internal'}" options='{"reload_on_button": true}'/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
@@ -926,7 +945,7 @@
                     <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Customer" domain="[('customer','=',True)]" />
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
+                    <field name="move_lines" string="Stock Move" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
                 </xpath>
                 <xpath expr="/form/sheet" position="after">
                     <div class="oe_chatter">
@@ -1053,7 +1072,7 @@
                     <field name="partner_id" on_change="onchange_partner_in(partner_id)" string="Supplier" domain="[('supplier','=',True)]" context="{'default_supplier':1,'default_customer':0}"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
+                    <field name="move_lines" string="Stock Move" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}" options='{"reload_on_button": true}'/>
                 </xpath>
                 <xpath expr="/form/sheet" position="after">
                     <div class="oe_chatter">
@@ -1340,7 +1359,7 @@
 
                             <group string="Locations" groups="stock.group_locations">
                                 <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
+                                <field name="location_dest_id" domain="[('usage','in', ['internal', 'supplier', 'customer'])]" groups="stock.group_locations"/>
                             </group>
 
                             <group groups="stock.group_tracking_lot" string="Traceability">

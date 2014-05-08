@@ -313,6 +313,23 @@ class fleet_vehicle(osv.Model):
         except ValueError:
             model_id = False
         return model_id
+    
+    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
+        Odometer = self.pool['fleet.vehicle.odometer']
+        LogFuel = self.pool['fleet.vehicle.log.fuel']
+        LogService = self.pool['fleet.vehicle.log.services']
+        LogContract = self.pool['fleet.vehicle.log.contract']
+        Cost = self.pool['fleet.vehicle.cost']
+        return {
+            vehicle_id: {
+                'odometer_count': Odometer.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'fuel_logs_count': LogFuel.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'service_count': LogService.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'contract_count': LogContract.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
+                'cost_count': Cost.search_count(cr, uid, [('vehicle_id', '=', vehicle_id), ('parent_id', '=', False)], context=context)
+            }
+            for vehicle_id in ids
+        }
 
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
@@ -327,6 +344,11 @@ class fleet_vehicle(osv.Model):
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
+        'cost_count': fields.function(_count_all, type='integer', string="Costs" , multi=True),
+        'contract_count': fields.function(_count_all, type='integer', string='Contracts', multi=True),
+        'service_count': fields.function(_count_all, type='integer', string='Services', multi=True),
+        'fuel_logs_count': fields.function(_count_all, type='integer', string='Fuel Logs', multi=True),
+        'odometer_count': fields.function(_count_all, type='integer', string='Odometer', multi=True),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color': fields.char('Color', size=32, help='Color of the vehicle'),
         'state_id': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),

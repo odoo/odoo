@@ -62,7 +62,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.website.get_template(page)
         except ValueError, e:
             # page not found
-            if request.context['editable']:
+            if request.website.is_publisher():
                 page = 'website.page_404'
             else:
                 return request.registry['ir.http']._handle_exception(e, 404)

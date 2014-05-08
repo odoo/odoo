@@ -94,7 +94,8 @@
                         </div>
                         <div class="panel-body">
                             <t t-raw="forum.description"/><br/>
-                            <a t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
+                            <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
+                            <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="fa fa-arrow-right"> Back to <span t-field="forum.name"/></a>
                         </div>
                     </div>
                     <div t-if="header.get('question_data')">
@@ -146,8 +147,11 @@
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
             </div>
-            <t t-foreach="question.tag_ids" t-as="tag">
-                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge pull-right" t-field="tag.name"/>
+            <t t-foreach="question.tag_ids" t-as="question_tag">
+                <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
+                    <span t-attf-class="pull-right badge #{tag and tag.name == question_tag.name and 'badge-active' ''}" t-field="question_tag.name"
+                        style="margin-right: 4px;"/>
+                </a>
             </t>
             <div class="text-muted">
                 by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
@@ -210,14 +214,14 @@
 <template id="forum_index" name="Forum">
     <t t-call="website_forum.header">
         <h1 class="page-header mt0">
-            <t t-esc="len(question_ids)"/> <span>Questions</span>
+            <t t-esc="question_count"/> <span>Questions</span>
             <t t-esc="search"/>
             <small class="dropdown" t-if="filters in ('all', 'unanswered','followed', 'tag')">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <t t-if="filters == 'all'">All</t>
                   <t t-if="filters == 'unanswered'">Unanswered</t>
                   <t t-if="filters == 'followed'">Followed</t>
-                  <t t-if="filters == 'tag'">Tag</t>
+                  <t t-if="tag"><span t-field="tag.name"/></t>
                   <t t-if="sorting == 'date'"> by activity date</t>
                   <t t-if="sorting == 'answered'"> by most answered</t>
                   <t t-if="sorting == 'vote'"> by most voted</t>
@@ -334,12 +338,12 @@
             users having a high karma can see closed questions to moderate
             them.
         </p>
-        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(post)}/close" method="post" role="form" class="form-horizontal mt32 mb64">
+        <form t-attf-action="/forum/#{ slug(forum) }/question/#{slug(question)}/close" method="post" role="form" class="form-horizontal mt32 mb64">
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="form-group">
                 <label class="col-md-3 control-label" for="reason">Question:</label>
                 <div class="col-md-8 mt8">
-                    <span t-field="post.name"/>
+                    <span t-field="question.name"/>
                 </div>
             </div>
             <div class="form-group">
@@ -356,7 +360,7 @@
                 <div class="col-md-offset-3 col-md-8">
                     <button class="btn btn-primary">Close question</button>
                     <span class="text-muted">or</span>
-                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">back to question</a>
+                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">back to question</a>
                 </div>
             </div>
         </form>
@@ -453,7 +457,7 @@
                                 <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
                             </li>
                             <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
-                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)/reopen"> Reopen</a>
+                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"> Reopen</a>
                             </li>
                             <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
@@ -469,7 +473,7 @@
                     <div>
                         <span t-field="question.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
                         <div>
-                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }"
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
                                 t-field="question.create_uid"
                                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                                 style="display: inline-block;"/>

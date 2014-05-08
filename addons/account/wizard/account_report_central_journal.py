@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 
+
 class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
     _description = 'Account Central Journal'
@@ -32,6 +33,6 @@ class account_central_journal(osv.osv_memory):
 
     def _print_report(self, cr, uid, ids, data, context=None):
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        return self.pool['report'].get_action(cr, uid, ids, 'account.report_centraljournal', data=data, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account.report_centraljournal', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

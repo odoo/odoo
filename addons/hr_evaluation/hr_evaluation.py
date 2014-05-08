@@ -101,11 +101,19 @@ Thanks,
 
 class hr_employee(osv.Model):
     _name = "hr.employee"
-    _inherit = "hr.employee"
+    _inherit="hr.employee"
+    
+    def _appraisal_count(self, cr, uid, ids, field_name, arg, context=None):
+        Evaluation = self.pool['hr.evaluation.interview']
+        return {
+            employee_id: Evaluation.search_count(cr, uid, [('user_to_review_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
 
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
+        'appraisal_count': fields.function(_appraisal_count, type='integer', string='Appraisal Interviews'),
     }
 
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):  # cronjob

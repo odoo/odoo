@@ -162,6 +162,26 @@ class res_partner(osv.osv):
     def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
+    def _invoice_total(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        account_invoice_report = self.pool.get('account.invoice.report')
+        for partner in self.browse(cr, uid, ids, context=context):
+            invoice_ids = account_invoice_report.search(cr, uid, [('partner_id','child_of',partner.id)], context=context)
+            invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
+            result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
+        return result
+
+    def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
+        MoveLine = self.pool('account.move.line')
+        AnalyticAccount = self.pool('account.analytic.account')
+        return {
+            partner_id: {
+                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
+                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+            }
+            for partner_id in ids
+        }
+
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
         at least a debit, a credit and a line older than the last reconciliation date of the partner
@@ -190,6 +210,9 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
+        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float'),
+        'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
+        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
             type='many2one',
             relation='account.account',

@@ -105,7 +105,9 @@ class product_product(osv.osv):
                     'compute_child': False
                 })
 
-                qty = product.qty_available
+                # qty_available depends of the location in the context
+                qty = self.read(cr, uid, [product.id], ['qty_available'], context=c)[0]['qty_available']
+
                 diff = product.standard_price - new_price
                 if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
                 if qty:
@@ -352,7 +354,12 @@ class product_product(osv.osv):
             for id in ids:
                 res[id][f] = stock.get(id, 0.0)
         return res
-
+    def _move_count(self, cr, uid, ids, field_name, arg, context=None):
+        Move = self.pool['stock.move']
+        return {
+            product_id: Move.search_count(cr, uid, [('product_id', '=', product_id)], context=context)
+            for product_id in ids
+        }
     _columns = {
         'reception_count': fields.function(_stock_move_count, string="Reception", type='integer', multi='pickings'),
         'delivery_count': fields.function(_stock_move_count, string="Delivery", type='integer', multi='pickings'),
@@ -413,6 +420,7 @@ class product_product(osv.osv):
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),
+        'move_count': fields.function(_move_count, string='# Moves', type='integer'),
     }
 
     _defaults = {

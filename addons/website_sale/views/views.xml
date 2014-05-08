@@ -29,6 +29,7 @@
 
             <group name="sale" position="inside">
                 <group name="website" string="Website">
+                    <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
                     <field name="website_sequence"/>
@@ -61,15 +62,13 @@
             </xpath>
             <xpath expr="//field[@name='description']" position="before">
                 <group colspan="4" string="Website Options">
+                    <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags"/>
                     <field colspan="4" name="attribute_lines" nolabel="1" groups="product.group_product_attributes">
                         <tree string="Product attributes" editable="bottom">
                             <field name="attribute_id" on_change="onchange_attribute_id(attribute_id)"/>
-                            <field name="type" invisible="1"/>
-                            <field name="value" attrs="{'required': [('type','=','float')]}"/>
                             <field name="value_id"
-                                attrs="{'required': [('type','=','distinct')]}"
                                 context="{'default_attribute_id': attribute_id}"
                                 domain="[('attribute_id', '=', attribute_id)]"/>
                         </tree>
@@ -87,8 +86,6 @@
         <form string="Product attributes" version="7.0">
           <group>
             <field name="name"/>
-            <field name="type"/>
-            <field name="visible"/>
           </group>
         </form>
       </field>
@@ -168,5 +165,5 @@
             action="action_shopping_cart_quotations" parent="base.menu_sales"
             sequence="5"/>
 
- </data>
+</data>
 </openerp>

@@ -31,6 +31,7 @@ class crm_phonecall(osv.osv):
     _description = "Phonecall"
     _order = "id desc"
     _inherit = ['mail.thread']
+    
     _columns = {
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),

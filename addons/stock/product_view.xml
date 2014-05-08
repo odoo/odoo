@@ -73,8 +73,14 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
-                   <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
+                   <button class="oe_inline oe_stat_button" 
+                       name="%(action_product_location_tree)d" type="action"  
+                       attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations" icon="fa-files-o" string="Inventory" />
+                   <button class="oe_inline oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" 
+                       attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-exchange">
+                       <field  string="Moves"  name="move_count" widget="statinfo"/>
+                   </button>  
+
                 </xpath>
                 <group name="procurement_uom" position="before">
                     <group name="delay" string="Delays">

@@ -211,11 +211,46 @@
                             <field name="tag_ids" widget="many2many_tags" />
                         </div>
                         <div class="oe_right oe_button_box">
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_contract_act'}" string="Contracts" help="show the contract for this vehicle" />
-                            <button name="act_show_log_cost" type="object" string="Costs" help="show all the costs for this vehicle" groups="fleet.group_fleet_manager"/>
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_services_act'}" string="Services" help="show the services logs for this vehicle" />
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_fuel_act'}" string="Fuel Logs" help="show the fuel logs for this vehicle" />
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_odometer_act'}" string="Odometer Logs" help="show the odometer logs for this vehicle" />
+                            <button name="return_action_to_open" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book" 
+                                context="{'xml_id':'fleet_vehicle_log_contract_act'}" 
+                                help="show the contract for this vehicle">
+                                <field name="contract_count" widget="statinfo" string="Contracts"/>
+                            </button>
+                            <button name="act_show_log_cost" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-usd" 
+                                help="show all the costs for this vehicle" 
+                                groups="fleet.group_fleet_manager">
+                                <field name="cost_count" widget="statinfo" string="Costs"/>
+                            </button>
+                            <button name="return_action_to_open" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-wrench" 
+                                context="{'xml_id':'fleet_vehicle_log_services_act'}" 
+                                help="show the services logs for this vehicle" >
+                                <field name="service_count" widget="statinfo" string="Services"/>
+                            </button>
+                            <button name="return_action_to_open" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-flask" 
+                                context="{'xml_id':'fleet_vehicle_log_fuel_act'}" 
+                                help="show the fuel logs for this vehicle" >
+                                <field name="fuel_logs_count" widget="statinfo" string="Fuel"/>
+                            </button>
+                            <button name="return_action_to_open" 
+                                type="object" 
+                                class="oe_stat_button"
+                                icon="fa-tachometer"
+                                context="{'xml_id':'fleet_vehicle_odometer_act'}" 
+                                help="show the odometer logs for this vehicle" >
+                                <field name="odometer_count" widget="statinfo" string="Odometer"/>
+                            </button>
                         </div> 
                         <group col="2" string="General Properties">
                             <group >

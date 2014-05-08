@@ -367,9 +367,9 @@ class hr_holidays(osv.osv):
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
                     'user_id': record.user_id.id,
-                    'date': record.date_from,
-                    'end_date': record.date_to,
-                    'date_deadline': record.date_to,
+                    'start': record.date_from,
+                    'stop': record.date_to,
+                    'allday': False,
                     'state': 'open',            # to block that meeting date in the calendar
                     'class': 'confidential'
                 }   
@@ -549,6 +549,13 @@ class hr_employee(osv.osv):
             result[holiday.employee_id.id]['current_leave_id'] = holiday.holiday_status_id.id
         return result
 
+    def _leaves_count(self, cr, uid, ids, field_name, arg, context=None):
+        Holidays = self.pool['hr.holidays']
+        return {
+            employee_id: Holidays.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context) 
+            for employee_id in ids
+        }
+
     _columns = {
         'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. Total based on all the leave types without overriding limit.'),
         'current_leave_state': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Status", type="selection",
@@ -557,6 +564,8 @@ class hr_employee(osv.osv):
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
         'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
+        'leaves_count': fields.function(_leaves_count, type='integer', string='Leaves'),
+
     }
 
 
