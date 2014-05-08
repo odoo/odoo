@@ -1052,9 +1052,9 @@
     </div>
 </t>
 <t t-name="Priority">
-    <ul style="list-style: none; padding-left: 2px;">
+    <ul style="list-style: none; padding-left: 2px; display: inline-block;">
         <t t-foreach="widget.priorities" t-as="rec" >
-            <li t-att-data-value="rec.click_value" class="pull-left oe_legend">
+            <li t-att-data-value="rec.click_value" class="oe_legend" style="display: inline-block;">
                 <a href="#" t-att-title="rec.name">
                     <span t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
                 </a>
