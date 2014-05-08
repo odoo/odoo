@@ -82,7 +82,7 @@ class Field(object):
     """ Base class of all fields. """
     __metaclass__ = MetaField
 
-    interface_for = None        # the column or field interfaced by self, if any
+    _origin = None              # the column or field interfaced by self, if any
     _free_attrs = None          # collection of semantic-free attribute names
 
     name = None                 # name of the field
@@ -349,9 +349,9 @@ class Field(object):
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
         assert self.store
-        if self.interface_for:
-            assert isinstance(self.interface_for, fields._column)
-            return self.interface_for
+        if self._origin:
+            assert isinstance(self._origin, fields._column)
+            return self._origin
 
         _logger.debug("Create fields._column for Field %s", self)
         args = {}

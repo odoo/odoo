@@ -782,7 +782,7 @@ class BaseModel(object):
         cls._fields = {}
         for attr in dir(cls):
             field = getattr(cls, attr)
-            if isinstance(field, Field) and not field.interface_for:
+            if isinstance(field, Field) and not field._origin:
                 cls._add_field(attr, field.copy())
 
         # introduce magic fields
@@ -3017,7 +3017,7 @@ class BaseModel(object):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
                     new_field = field.copy(related=(parent_field, attr),
-                                           store=False, interface_for=field)
+                                           store=False, _origin=field)
                     cls._add_field(attr, new_field)
 
         cls._inherits_reload_src()
