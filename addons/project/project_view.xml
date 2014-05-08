@@ -377,12 +377,12 @@
                             options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
-                    <h1>
-                        <field name="name" placeholder="Task summary..." class="oe_inline"/>
-                    </h1>
                     <div class="oe_right"> 
                         <field name="kanban_state" class="oe_inline" widget="dropdown_selection"/>
                     </div>
+                    <h1>
+                        <field name="name" placeholder="Task summary..." class="oe_inline"/>
+                    </h1>
                     <group>
                         <group>
                             <field name="project_id" domain="[('state', '!=', 'close')]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
