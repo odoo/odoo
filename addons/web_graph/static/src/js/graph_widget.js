@@ -540,51 +540,51 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                         .addClass('graph_border')
                         .attr('rowspan', header.height)
                         .attr('colspan', header.width);
-        var content = $('<span>').addClass('web_graph_click')
+        var $content = $('<span>').addClass('web_graph_click')
                                  .attr('href','#')
                                  .text(' ' + (header.title || _t('Undefined')))
                                  .css('margin-left', header.indent*30 + 'px')
                                  .attr('data-id', header.id);
         if (_.has(header, 'expanded')) {
-            content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
+            $content.addClass(header.expanded ? 'fa fa-minus-square' : 'fa fa-plus-square');
         } else {
-            content.css('font-weight', 'bold');
+            $content.css('font-weight', 'bold');
         }
-        return cell.append(content);
+        return cell.append($content);
     },
 
     draw_headers: function (headers, doc_fragment) {
         var make_cell = this.make_header_cell,
-            empty_cell = $('<th>').attr('rowspan', headers.length),
-            thead = $('<thead>');
+            $empty_cell = $('<th>').attr('rowspan', headers.length),
+            $thead = $('<thead>');
 
         _.each(headers, function (row) {
-            var html_row = $('<tr>');
+            var $row = $('<tr>');
             _.each(row, function (header) {
-                html_row.append(make_cell(header));
+                $row.append(make_cell(header));
             });
-            thead.append(html_row);
+            $thead.append($row);
         });
-        thead.children(':first').prepend(empty_cell);
-        doc_fragment.append(thead);
-        this.thead = thead;
+        $thead.children(':first').prepend($empty_cell);
+        doc_fragment.append($thead);
+        this.$thead = $thead;
     },
     
     draw_measure_row: function (measure_row, doc_fragment) {
         if (this.pivot.measures.length === 1) { return; }
-        var html_row = $('<tr>').append('<th>');
+        var $row = $('<tr>').append('<th>');
         _.each(measure_row, function (cell) {
-            var measure_cell = $('<th>').addClass('measure_row').text(cell.text);
-            if (cell.is_bold) {measure_cell.css('font-weight', 'bold');}
-            html_row.append(measure_cell);
+            var $cell = $('<th>').addClass('measure_row').text(cell.text);
+            if (cell.is_bold) {$cell.css('font-weight', 'bold');}
+            $row.append($cell);
         });
-        this.thead.append(html_row);
+        this.$thead.append($row);
     },
     
     draw_rows: function (rows, doc_fragment) {
         var make_cell = this.make_header_cell,
             cell,
-            html_row, i, j;
+            $row, i, j;
 
         var cells_list,
             hcell,
@@ -592,7 +592,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         
         rows_length = rows.length;
         for (i = 0; i < rows_length; i++) {
-            html_row = $('<tr>').append(make_cell(rows[i]));
+            $row = $('<tr>').append(make_cell(rows[i]));
             cells_length = rows[i].cells.length;
             cells_list = [];
 
@@ -608,8 +608,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 hcell += '>' + cell.value + '</td>';
                 cells_list[j] = hcell;
             }
-            html_row.append(cells_list.join(''));
-            doc_fragment.append($('<tbody>').append(html_row));
+            $row.append(cells_list.join(''));
+            doc_fragment.append($('<tbody>').append($row));
         }
     },
 
