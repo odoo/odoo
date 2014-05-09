@@ -57,17 +57,21 @@ def url_for(path_or_uri, lang=None):
 
     return location.decode('utf-8')
 
-def is_multilang_url(path, langs=None):
+def is_multilang_url(local_url, langs=None):
     if not langs:
         langs = [lg[0] for lg in request.website.get_languages()]
-    spath = path.split('/')
+    spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in langs:
         spath.pop(1)
-        path = '/'.join(spath)
+        local_url = '/'.join(spath)
     try:
+        # Try to match an endpoint in werkzeug's routing table
+        url = local_url.split('?')
+        path = url[0]
+        query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        func = router.match(path)[0]
+        func = router.match(path, query_args=query_string)[0]
         return func.routing.get('multilang', False)
     except Exception:
         return False
