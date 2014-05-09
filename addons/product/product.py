@@ -405,7 +405,7 @@ class product_template(osv.osv):
         if date is None:
             date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         price_history_obj = self.pool.get('product.price.history')
-        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product_tmpl.id), ('datetime', '<=', date)], limit=1)
+        history_ids = price_history_obj.search(cr, uid, [('company_id', '=', company_id), ('product_template_id', '=', product_tmpl), ('datetime', '<=', date)], limit=1)
         if history_ids:
             return price_history_obj.read(cr, uid, history_ids[0], ['cost'], context=context)['cost']
         return 0.0
