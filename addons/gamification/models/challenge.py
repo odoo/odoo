@@ -422,6 +422,12 @@ class gamification_challenge(osv.Model):
                     if end_date:
                         values['end_date'] = end_date
 
+                    # the goal is initialised over the limit to make sure we will compute it at least once
+                    if line.condition == 'higher':
+                        values['current'] = line.target_goal - 1
+                    else:
+                        values['current'] = line.target_goal + 1
+
                     if challenge.remind_update_delay:
                         values['remind_update_delay'] = challenge.remind_update_delay
 
