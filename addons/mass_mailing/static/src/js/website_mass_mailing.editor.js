@@ -10,7 +10,7 @@
             return website.prompt({
                 id: "editor_new_mailing_list_subscribe_button",
                 window_title: _t("Add a Newsletter Subscribe Button"),
-                select: _t("Mailing List"),
+                select: _t("Newsletter"),
                 init: function (field) {
                     return website.session.model('mail.mass_mailing.list')
                             .call('name_search', ['', []], { context: website.get_context() });
