@@ -205,10 +205,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-        form.on("on_button_cancel", am.dialog, am.dialog.close);
+        form.on("on_button_cancel", am.dialog, function() { return am.dialog.$dialog_box.modal('hide'); });
         form.on('record_created', self, function(r) {
             (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).done(function(new_record) {
-                am.dialog.close();
+                am.dialog.$dialog_box.modal('hide');
                 var domain = self.dataset.domain.slice(0);
                 domain.push([self.group_by, '=', new_record[0][0]]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model, self.dataset.get_context(), domain);
