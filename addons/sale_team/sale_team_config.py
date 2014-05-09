@@ -58,3 +58,12 @@ class sale_team_configuration(osv.TransientModel):
             implied_group='base.group_multi_salesteams',
             help="""Allows you to use Sales Teams to manage your leads and opportunities."""),
     }
+
+    def _get_group_multi_salesteams(self, cr, uid, ids, context=None):
+        pass
+        # Todo: return the current state for the group_multi_salesteams field
+
+    _defaults = {
+        'group_multi_salesteams': _get_group_multi_salesteams
+    }
+
