@@ -24,8 +24,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span t-esc="o.employee_id.name or '_'"/>
-                                        <span t-esc="display_address(o.employee_id.address_home_id) or '_' "/>
+                                        <div t-field="o.employee_id.address_home_id"
+                                          t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                                     </td>
                                 </tr>
                             </table>
@@ -79,19 +79,20 @@
                                     <span t-esc="p.name or ''"/>
                                 </td>
                                 <td>
-                                    <span t-esc="((p.amount_select== 'percentage') or removeParentNode('span')) and ''"/>
-                                    <span t-esc="p.amount or ''"/>
-                                    <span t-esc="((p.amount_select== 'fix') or removeParentNode('span')) and ''"/>
-                                    <span t-esc="p.quantity or ''"/>
-                                    <span t-esc="((p.amount_select&lt;&gt; 'fix' and p.amount_select&lt;&gt; 'percentage') or removeParentNode('span')) and ''"/>
+                                    <t t-if="p.amount_select== 'percentage'">
+                                        <span t-esc="p.amount or ''"/>
+                                    </t> 
+                                    <t t-if="p.amount_select== 'fix'">
+                                        <span t-esc="p.quantity or ''"/>
+                                    </t>
                                 </td>
                                 <td>
-                                    <span t-esc="((p.amount_select == 'percentage') or removeParentNode('span')) and ''"/>
-                                    <span t-esc="p.rate or ''"/>
-                                    <span t-esc="((p.amount_select &lt;&gt; 'percentage') or removeParentNode('span')) and ''"/>
+                                    <t t-if="p.amount_select == 'percentage'">
+                                        <span t-esc="p.rate or ''"/>
+                                    </t>
                                 </td>
                                 <td>
-                                    <span t-esc="p.total or '"/>
+                                    <span t-esc="p.total or ''"/>
                                 </td>
                                 <td>
                                     <span t-esc="get_employer_line(o, p) and get_employer_line(o, p).rate or ''"/>
