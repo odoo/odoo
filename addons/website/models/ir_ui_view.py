@@ -198,6 +198,6 @@ class view(osv.osv):
             'arch': self._pretty_arch(arch)
         }, context=context)
 
-        view = self.browse(cr, uid, res_id, context=context)
+        view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
-            self.pool.get('ir.model.data').write(cr, SUPERUSER_ID, view.model_data_id.id, {'noupdate': True})
+            view.model_data_id.write({'noupdate': True})
