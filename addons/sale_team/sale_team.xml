@@ -77,12 +77,12 @@
             <field name="model">crm.case.section</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
+                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
                     <field name="name"/>
                     <field name="parent_id"/>
                     <field name="user_id"/>
                     <field name="note"/>
                     <field name="code"/>
-                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Parent Sales Teams" domain="[]" context="{'group_by':'parent_id'}"/>
