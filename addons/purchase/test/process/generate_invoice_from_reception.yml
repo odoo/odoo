@@ -16,9 +16,9 @@
 -
   Now I create an invoice for order on reception.
 -
-  !python {model: stock.picking}: |
-    pick_ids = self.search(cr, uid, [('purchase_id','=',ref('purchase_order_2'))])
-    self.action_invoice_create(cr, uid, pick_ids, ref('account.expenses_journal'))
+  !python {model: purchase.order}: |
+    pick_ids = [self.browse(cr, uid, ref("purchase_order_2")).id]
+    self.action_invoice_create(cr, uid, pick_ids)
 -
  I check that the invoice of order.
 -

@@ -565,6 +565,7 @@ class task(osv.osv):
         },
         'kanban_state': {
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
+            'project.mt_task_ready': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'done',
         },
     }
 
@@ -740,18 +741,18 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]"),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this task\n"
                                               " * Ready for next stage indicates the task is ready to be pulled to the next stage",
-                                         readonly=True, required=False),
+                                         required=False),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date',select=True),
@@ -799,7 +800,7 @@ class task(osv.osv):
         'project_id': _get_default_project_id,
         'date_last_stage_update': fields.datetime.now,
         'kanban_state': 'normal',
-        'priority': '2',
+        'priority': '1',
         'progress': 0,
         'sequence': 10,
         'active': True,
@@ -808,17 +809,7 @@ class task(osv.osv):
         'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
     _order = "priority, sequence, date_start, name, id"
-
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set task priority to high
-        """
-        return self.write(cr, uid, ids, {'priority' : '0'})
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set task priority to normal
-        """
-        return self.write(cr, uid, ids, {'priority' : '2'})
-
+    
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
             visited_branch = set()
@@ -1002,16 +993,6 @@ class task(osv.osv):
 
     def set_remaining_time_10(self, cr, uid, ids, context=None):
         return self.set_remaining_time(cr, uid, ids, 10.0, context)
-
-    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
-
-    def set_kanban_state_normal(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-
-    def set_kanban_state_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-        return False
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):

@@ -97,7 +97,7 @@ class mrp_production_workcenter_line(osv.osv):
        'delay': fields.float('Working Hours',help="The elapsed time between operation start and stop in this Work Center",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
-            selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
+            selection=[('draft','Draft'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
             string='Production Status', readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
@@ -279,7 +279,8 @@ class mrp_production(osv.osv):
                     i = self.pool.get('resource.calendar').interval_get(
                         cr,
                         uid,
-                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or False,
+                        #passing False makes resource_resource._schedule_hours run 1000 iterations doing nothing
+                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or None,
                         dt,
                         wc.hour or 0.0
                     )

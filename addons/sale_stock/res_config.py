@@ -51,6 +51,9 @@ class sale_configuration(osv.osv_memory):
             help="Allows you to tag sales order lines with properties."),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
+        'group_route_so_lines': fields.boolean('Choose MTO, drop shipping,... on sales order lines',
+            implied_group='sale_stock.group_route_so_lines',
+            help="Allows you to choose a delivery route on sales order lines"),
     }
 
     _defaults = {
@@ -80,7 +83,7 @@ class sale_configuration(osv.osv_memory):
         ir_values.set_default(cr, SUPERUSER_ID, 'sale.order', 'picking_policy', default_picking_policy)
         res = super(sale_configuration, self).set_sale_defaults(cr, uid, ids, context)
         return res
-    
+
     def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, group_invoice_deli_orders, context=None):
         if not group_invoice_deli_orders:
             return {'value': {'default_order_policy': 'manual'}}

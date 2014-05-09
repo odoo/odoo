@@ -41,6 +41,7 @@ class mail_mail(osv.Model):
     _description = 'Outgoing Mails'
     _inherits = {'mail.message': 'mail_message_id'}
     _order = 'id desc'
+    _rec_name = 'subject'
 
     _columns = {
         'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record forcecreate="True" id="property_stock_valuation_account_id" model="ir.property">
+            <field name="name">property_stock_valuation_account_id</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
+            <field eval="'account.account,'+str(ref('account.stk'))" model="account.account" name="value"/>
+             <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</openerp>
+
