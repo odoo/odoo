@@ -1057,6 +1057,18 @@ Launch Manually Once: after having been launched manually, it sets automatically
     }
     _order="sequence,id"
 
+    def name_get(self, cr, uid, ids, context=None):
+        return [(rec.id, rec.action_id.name) for rec in self.browse(cr, uid, ids, context=context)]
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if args is None:
+            args = []
+        if name:
+            ids = self.search(cr, user, [('action_id', operator, name)] + args, limit=limit)
+            return self.name_get(cr, user, ids, context=context)
+        return super(ir_actions_todo, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
+
+
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
         wizard_id = ids and ids[0] or False

@@ -31,12 +31,14 @@
                         <field name="type"/>
                         <field name="res_id"/>
                     </group>
-                    <field name="value_integer" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}"/>
-                    <field name="value_float"  attrs="{'invisible' : [('type', '!=', 'float')]}"/>
-                    <field name="value_datetime"  attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}"/>
-                    <field name="value_text"  attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}"/>
-                    <field name="value_reference"  attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
-                    <field name="value_binary"  attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
+                    <group>
+	                    <field name="value_integer" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}"/>
+	                    <field name="value_float"  attrs="{'invisible' : [('type', '!=', 'float')]}"/>
+	                    <field name="value_datetime"  attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}"/>
+	                    <field name="value_text"  attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}"/>
+	                    <field name="value_reference"  attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
+	                    <field name="value_binary"  attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
+                    </group>
                   </sheet>
                 </form>
             </field>
