@@ -22,9 +22,11 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
+import pytz
 
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.translate import _
 
 class hr_timesheet_sheet(osv.osv):
@@ -397,22 +399,56 @@ class hr_attendance(osv.osv):
             attendance_ids.extend([row[0] for row in cr.fetchall()])
         return attendance_ids
 
-    def _get_current_sheet(self, cr, uid, employee_id, date=False, context=None):
+    def _get_attendance_employee_tz(self, cr, uid, employee_id, date, context=None):
+        """ Simulate timesheet in employee timezone
+
+        Return the attendance date in string format in the employee
+        tz converted from utc timezone as we consider date of employee
+        timesheet is in employee timezone
+        """
+        employee_obj = self.pool['hr.employee']
+
+        tz = False
+        if employee_id:
+            employee = employee_obj.browse(cr, uid, employee_id, context=context)
+            tz = employee.user_id.partner_id.tz
+
         if not date:
             date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        # ending date with no time to avoid timesheet with early date_to
-        date_to = date[0:10]+' 00:00:00'
-        # limit=1 because only one sheet possible for an employee between 2 dates
-        sheet_ids = self.pool.get('hr_timesheet_sheet.sheet').search(cr, uid, [
-            ('date_to', '>=', date_to), ('date_from', '<=', date),
-            ('employee_id', '=', employee_id)
-        ], limit=1, context=context)
+
+        att_tz = timezone(tz or 'utc')
+
+        attendance_dt = datetime.strptime(date, DEFAULT_SERVER_DATETIME_FORMAT)
+        att_tz_dt = pytz.utc.localize(attendance_dt)
+        att_tz_dt = att_tz_dt.astimezone(att_tz)
+        # We take only the date omiting the hours as we compare with timesheet
+        # date_from which is a date format thus using hours would lead to
+        # be out of scope of timesheet
+        att_tz_date_str = datetime.strftime(att_tz_dt, DEFAULT_SERVER_DATE_FORMAT)
+        return att_tz_date_str
+
+    def _get_current_sheet(self, cr, uid, employee_id, date=False, context=None):
+
+        sheet_obj = self.pool['hr_timesheet_sheet.sheet']
+        if not date:
+            date = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+        att_tz_date_str = self._get_attendance_employee_tz(
+                cr, uid, employee_id,
+                date=date, context=context)
+        sheet_ids = sheet_obj.search(cr, uid,
+            [('date_from', '<=', att_tz_date_str),
+             ('date_to', '>=', att_tz_date_str),
+             ('employee_id', '=', employee_id)],
+            limit=1, context=context)
         return sheet_ids and sheet_ids[0] or False
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         res = {}.fromkeys(ids, False)
         for attendance in self.browse(cursor, user, ids, context=context):
-            res[attendance.id] = self._get_current_sheet(cursor, user, attendance.employee_id.id, attendance.name, context=context)
+            res[attendance.id] = self._get_current_sheet(
+                    cursor, user, attendance.employee_id.id, attendance.name,
+                    context=context)
         return res
 
     _columns = {
@@ -434,10 +470,13 @@ class hr_attendance(osv.osv):
 
         sheet_id = context.get('sheet_id') or self._get_current_sheet(cr, uid, vals.get('employee_id'), vals.get('name'), context=context)
         if sheet_id:
+            att_tz_date_str = self._get_attendance_employee_tz(
+                    cr, uid, vals.get('employee_id'),
+                   date=vals.get('name'), context=context)
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, sheet_id, context=context)
             if ts.state not in ('draft', 'new'):
                 raise osv.except_osv(_('Error!'), _('You can not enter an attendance in a submitted timesheet. Ask your manager to reset it before adding attendance.'))
-            elif ts.date_from > vals.get('name') or ts.date_to < vals.get('name'):
+            elif ts.date_from > att_tz_date_str or ts.date_to < att_tz_date_str:
                 raise osv.except_osv(_('User Error!'), _('You can not enter an attendance date outside the current timesheet dates.'))
         return super(hr_attendance,self).create(cr, uid, vals, context=context)
 
@@ -589,4 +628,3 @@ class res_company(osv.osv):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

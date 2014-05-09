@@ -105,7 +105,9 @@ class product_product(osv.osv):
                     'compute_child': False
                 })
 
-                qty = product.qty_available
+                # qty_available depends of the location in the context
+                qty = self.read(cr, uid, [product.id], ['qty_available'], context=c)[0]['qty_available']
+
                 diff = product.standard_price - new_price
                 if not diff: raise osv.except_osv(_('Error!'), _("No difference between standard price and new price!"))
                 if qty:
