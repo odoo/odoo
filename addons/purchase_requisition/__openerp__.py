@@ -33,11 +33,9 @@ related requisition. This new object will regroup and will allow you to easily
 keep track and order all your purchase orders.
 """,
     'depends' : ['purchase'],
-    'js': [
-        'static/src/js/web_addons.js',
-    ],
     'demo': ['purchase_requisition_demo.xml'],
-    'data': ['security/purchase_tender.xml',
+    'data': ['views/purchase_requisition.xml',
+              'security/purchase_tender.xml',
               'wizard/purchase_requisition_partner_view.xml',
               'wizard/bid_line_qty_view.xml',
               'purchase_requisition_data.xml',
