@@ -155,15 +155,13 @@ class event_event(osv.osv):
         if context is None:
             context = {}
         res = {}
-
-        print ids
         for event in self.browse(cr, uid, ids, context=context):
-            res[event.id] = {}
-            context['tz'] = event.date_tz or 'UTC'
+            ctx = dict(context, tz=(event.date_tz or 'UTC'))
             if fld == 'date_begin_located':
-                res[event.id] = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.date_begin, DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+                date_to_convert = event.date_begin
             elif fld == 'date_end_located':
-                res[event.id] = fields.datetime.context_timestamp(cr, uid, datetime.strptime(event.date_end, DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+                date_to_convert = event.date_end
+            res[event.id] = fields.datetime.context_timestamp(cr, uid, datetime.strptime(date_to_convert, DEFAULT_SERVER_DATETIME_FORMAT), context=ctx)
         return res
 
     def _tz_get(self, cr, uid, context=None):
