@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
       <!-- TODO: Apply group for the sales team where you find section_id fields in any view
-        <!--
             CRM CASE STAGE
         -->
-
         <!-- Stage Search view -->
         <record id="crm_lead_stage_search" model="ir.ui.view">
             <field name="name">Stage - Search</field>
@@ -570,7 +567,7 @@
                             help="Opportunities that are assigned to me"/>
                     <filter string="My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to any sales teams I am member of"/>
+                            help="Opportunities that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <group expand="0" string="Group By..." colspan="16">
