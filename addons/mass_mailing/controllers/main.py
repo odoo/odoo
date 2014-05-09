@@ -40,3 +40,35 @@ class MassMailController(http.Controller):
             if 'opt_out' in request.registry[mailing.mailing_model]._all_columns:
                 request.registry[mailing.mailing_model].write(cr, SUPERUSER_ID, record_ids, {'opt_out': True}, context=context)
         return 'OK'
+
+    @http.route(['/website_mass_mailing/is_subscriber'], type='json', auth="public", website=True)
+    def is_subscriber(self, list_id, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        Contacts = request.registry['mail.mass_mailing.contact']
+        Users = request.registry['res.users']
+
+        public_id = request.registry['website'].get_public_user(cr, uid, context)
+        is_subscriber = False
+        email = None
+        if uid != public_id:
+            email = Users.browse(cr, SUPERUSER_ID, uid, context).email
+        elif request.session.get('mass_mailing_email'):
+            email = request.session['mass_mailing_email']
+
+        if email:
+            contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
+            is_subscriber = len(contact_ids) > 0
+
+        return {'is_subscriber': is_subscriber, 'email': email}
+
+    @http.route(['/website_mass_mailing/subscribe'], type='json', auth="public", website=True)
+    def subscribe(self, list_id, email, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        Contacts = request.registry['mail.mass_mailing.contact']
+
+        contact_ids = Contacts.search(cr, SUPERUSER_ID, [('list_id', '=', int(list_id)), ('email', '=', email)], context=context)
+        if not contact_ids:
+            Contacts.name_create(cr, SUPERUSER_ID, email, context=context)
+        # add email to session
+        request.session['mass_mailing_email'] = email
+        return True

@@ -20,8 +20,8 @@
 ##############################################################################
 
 from openerp.tools.translate import _
-
 from openerp.osv import fields, osv
+
 
 class account_check_write(osv.osv_memory):
     _name = 'account.check.write'
@@ -64,23 +64,11 @@ class account_check_write(osv.osv_memory):
         ir_sequence_obj.write(cr, uid, sequence_id, {'number_next': new_value})
 
         #print the checks
-        check_layout_report = {
-            'top' : 'account.print.check.top',
-            'middle' : 'account.print.check.middle',
-            'bottom' : 'account.print.check.bottom',
+        data = {
+            'id': voucher_ids and voucher_ids[0],
+            'ids': voucher_ids,
         }
-        check_layout = voucher_obj.browse(cr, uid, voucher_ids[0], context=context).company_id.check_layout
-        if not check_layout:
-            check_layout = 'top'
-        return {
-            'type': 'ir.actions.report.xml', 
-            'report_name':check_layout_report[check_layout],
-            'datas': {
-                'model':'account.voucher',
-                'ids': voucher_ids,
-                'report_type': 'pdf'
-                },
-            'nodestroy': True
-            }
 
-
+        return self.pool['report'].get_action(
+            cr, uid, [], 'account_check_writing.report_check', data=data, context=context
+        )

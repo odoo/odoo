@@ -139,9 +139,15 @@ class event_event(osv.osv):
         return []
 
     def _get_ticket_events(self, cr, uid, ids, context=None):
-        # `self` is the event.event.ticket model here! 
+        # `self` is the event.event.ticket model when called by ORM! 
         return list(set(ticket.event_id.id
                             for ticket in self.browse(cr, uid, ids, context)))
+
+    # proxy method, can't import parent method directly as unbound_method: it would receive
+    # an invalid `self` <event_registration> when called by ORM
+    def _events_from_registrations(self, cr, uid, ids, context=None):
+        # `self` is the event.registration model when called by ORM
+        return self.pool['event.event']._get_events_from_registrations(cr, uid, ids, context=context)
 
     _columns = {
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
@@ -154,7 +160,7 @@ class event_event(osv.osv):
         'seats_available': fields.function(Event._get_seats, oldname='register_avail', string='Available Seats',
                                            type='integer', multi='seats_reserved',
                                            store={
-                                              'event.registration': (Event._get_events_from_registrations, ['state'], 10),
+                                              'event.registration': (_events_from_registrations, ['state'], 10),
                                               'event.event': (lambda self, cr, uid, ids, c = {}: ids,
                                                               ['seats_max', 'registration_ids'], 20),
                                               'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),

@@ -409,9 +409,7 @@ class account_invoice(osv.osv):
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.write(cr, uid, ids, {'sent': True}, context=context)
-        context2 = context.copy()
-        context2['active_ids'] = ids
-        return self.pool['report'].get_action(cr, uid, [], 'account.report_invoice', context=context2)
+        return self.pool['report'].get_action(cr, uid, ids, 'account.report_invoice', context=context)
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
         '''
