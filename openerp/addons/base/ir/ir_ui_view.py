@@ -204,13 +204,6 @@ class view(osv.osv):
 
         self.read_template.clear_cache(self)
         ret = super(view, self).write(cr, uid, ids, vals, context)
-
-        # if arch is modified views become noupdatable
-        if 'arch' in vals and not context.get('install_mode', False):
-            # TODO: should be doable in a read and a write
-            for view_ in self.browse(cr, uid, ids, context=context):
-                if view_.model_data_id:
-                    self.pool.get('ir.model.data').write(cr, openerp.SUPERUSER_ID, view_.model_data_id.id, {'noupdate': True})
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):
