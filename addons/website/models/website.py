@@ -283,44 +283,23 @@ class website(osv.osv):
         endpoint = rule.endpoint
         methods = rule.methods or ['GET']
         converters = rule._converters.values()
-
-        return (
-            'GET' in methods
+        if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
             and endpoint.routing.get('website', False)
-            # preclude combinatorial explosion by only allowing a single converter
-            and len(converters) <= 1
-            # ensure all converters on the rule are able to generate values for
-            # themselves
             and all(hasattr(converter, 'generate') for converter in converters)
-        ) and self.endpoint_is_enumerable(rule)
-
-    def endpoint_is_enumerable(self, rule):
-        """ Verifies that it's possible to generate a valid url for the rule's
-        endpoint
-
-        :type rule: werkzeug.routing.Rule
-        :rtype: bool
-        """
-        spec = inspect.getargspec(rule.endpoint.method)
-
-        # if *args bail the fuck out, only dragons can live there
-        if spec.varargs:
+            and endpoint.routing.get('website')):
             return False
 
-        # remove all arguments with a default value from the list
-        defaults_count = len(spec.defaults or []) # spec.defaults can be None
-        # a[:-0] ~ a[:0] ~ [] -> replace defaults_count == 0 by None to get
-        # a[:None] ~ a
-        args = spec.args[:(-defaults_count or None)]
+        # dont't list routes without argument having no default value or converter
+        spec = inspect.getargspec(endpoint.method.original_func)
 
-        # params with defaults were removed, leftover allowed are:
-        # * self (technically should be first-parameter-of-instance-method but whatever)
-        # * any parameter mapping to a converter
-        return all(
-            (arg == 'self' or arg in rule._converters)
-            for arg in args)
+        # remove self and arguments having a default value
+        defaults_count = len(spec.defaults or [])
+        args = spec.args[1:(-defaults_count or None)]
+
+        # check that all args have a converter
+        return all( (arg in rule._converters) for arg in args)
 
     def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
@@ -344,27 +323,30 @@ class website(osv.osv):
             if not self.rule_is_enumerable(rule):
                 continue
 
-            converters = rule._converters
-            filtered = bool(converters)
-            if converters:
-                # allow single converter as decided by fp, checked by
-                # rule_is_enumerable
-                [(name, converter)] = converters.items()
-                converter_values = converter.generate(
-                    request.cr, uid, query=query_string, context=context)
-                generated = ({k: v} for k, v in itertools.izip(
-                    itertools.repeat(name), converter_values))
-            else:
-                # force single iteration for literal urls
-                generated = [{}]
+            converters = rule._converters or {}
+            values = [{}]
+            for (name, converter) in converters.items():
+                newval = []
+                for val in values:
+                    for v in converter.generate(request.cr, uid, query=query_string, args=val, context=context):
+                        newval.append( val.copy() )
+                        v[name] = v['loc']
+                        del v['loc']
+                        newval[-1].update(v)
+                values = newval
 
-            for values in generated:
-                domain_part, url = rule.build(values, append_unknown=False)
-                page = {'name': url, 'url': url}
+            for value in values:
+                domain_part, url = rule.build(value, append_unknown=False)
+                page = {'loc': url}
+                for key,val in value.items():
+                    if key.startswith('__'):
+                        page[key[2:]] = val
+                if url in ('/sitemap.xml',):
+                    continue
                 if url in url_list:
                     continue
                 url_list.append(url)
-                if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
+                if query_string and not self.page_matches(cr, uid, page, query_string, context=context):
                     continue
                 yield page
 
