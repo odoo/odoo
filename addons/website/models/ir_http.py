@@ -193,10 +193,13 @@ class ModelConverter(ir.ir_http.ModelConverter):
             request.cr, _uid, int(m.group(1)), context=request.context)
 
     def generate(self, cr, uid, query=None, args=None, context=None):
-        for record in request.registry[self.model].name_search(
-            cr, uid, name=query or '', args=eval( self.domain, (args or {}).copy()),
-            context=context):
-            yield {'loc': record}
+        obj = request.registry[self.model]
+        domain = eval( self.domain, (args or {}).copy())
+        if query:
+            domain.append((obj._rec_name, 'ilike', '%'+query+'%'))
+        for record in obj.search_read(cr, uid, domain=domain, fields=['write_date',obj._rec_name], context=context):
+            if record.get(obj._rec_name, False):
+                yield {'loc': (record['id'], record[obj._rec_name])}
 
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """

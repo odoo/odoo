@@ -325,7 +325,11 @@ class website(osv.osv):
 
             converters = rule._converters or {}
             values = [{}]
-            for (name, converter) in converters.items():
+            convitems = converters.items()
+            # converters with a domain are processed after the other ones
+            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain <> '[]')
+            convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
+            for (name, converter) in convitems:
                 newval = []
                 for val in values:
                     for v in converter.generate(request.cr, uid, query=query_string, args=val, context=context):

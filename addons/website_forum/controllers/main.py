@@ -576,7 +576,7 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.badge", values)
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge", "[('challenge_ids.category', '=', 'forum')]"):badge>'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'''], type='http', auth="public", website=True, multilang=True)
     def badge_users(self, forum, badge, **kwargs):
         user_ids = [badge_user.user_id.id for badge_user in badge.owner_ids]
         users = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, user_ids, context=request.context)
