@@ -2453,6 +2453,7 @@ class stock_move(osv.osv):
         debit_line_vals = {
                     'name': move.name,
                     'product_id': move.product_id and move.product_id.id or False,
+                    'product_uom_id': move.product_uom and move.product_uom.id or False,
                     'quantity': move.product_qty,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
@@ -2463,6 +2464,7 @@ class stock_move(osv.osv):
         credit_line_vals = {
                     'name': move.name,
                     'product_id': move.product_id and move.product_id.id or False,
+                    'product_uom_id': move.product_uom and move.product_uom.id or False,
                     'quantity': move.product_qty,
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
