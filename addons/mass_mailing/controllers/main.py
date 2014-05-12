@@ -47,10 +47,9 @@ class MassMailController(http.Controller):
         Contacts = request.registry['mail.mass_mailing.contact']
         Users = request.registry['res.users']
 
-        public_id = request.registry['website'].get_public_user(cr, uid, context)
         is_subscriber = False
         email = None
-        if uid != public_id:
+        if uid != request.website.user_id.id:
             email = Users.browse(cr, SUPERUSER_ID, uid, context).email
         elif request.session.get('mass_mailing_email'):
             email = request.session['mass_mailing_email']
