@@ -91,7 +91,7 @@ Dashboard for CRM will include:
         'res_config_view.xml',
         'base_partner_merge_view.xml',
 
-        'crm_case_section_view.xml',
+        'sales_team_view.xml',
         'views/crm.xml',
     ],
     'demo': [

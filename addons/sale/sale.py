@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import calendar
-from openerp import tools
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from dateutil import relativedelta
+from datetime import datetime, timedelta
 import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -166,11 +162,28 @@ class sale_order(osv.osv):
         if not company_id:
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id
-    
+
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
-        section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
         return section_id
+
+    def _resolve_section_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of section based on the value of 'section_id'
+            context key, or None if it cannot be resolved to a single
+            Sales Team.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_section_id')) in (int, long):
+            return context.get('default_section_id')
+        if isinstance(context.get('default_section_id'), basestring):
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
+            if len(section_ids) == 1:
+                return int(section_ids[0][0])
+        return None
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
@@ -252,7 +265,6 @@ class sale_order(osv.osv):
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
         'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note,
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
-        
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -1199,13 +1211,40 @@ class mail_compose_message(osv.Model):
             self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
+
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
-    
+
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
+
+    def _resolve_section_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of section based on the value of 'section_id'
+            context key, or None if it cannot be resolved to a single
+            Sales Team.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_section_id')) in (int, long):
+            return context.get('default_section_id')
+        if isinstance(context.get('default_section_id'), basestring):
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
+            if len(section_ids) == 1:
+                return int(section_ids[0][0])
+        return None
+
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-    
+
+    _defaults = {
+        'section_id': lambda self, cr, uid, c=None: self._get_default_section_id(cr, uid, context=c)
+    }
+
     def confirm_paid(self, cr, uid, ids, context=None):
         sale_order_obj = self.pool.get('sale.order')
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
@@ -1224,10 +1263,6 @@ class account_invoice(osv.Model):
             for id in ids:
                 workflow.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
-        
-    _defaults = {
-       'section_id': lambda self, cr, uid, c=None: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
-    }
 
 
 class procurement_order(osv.osv):
