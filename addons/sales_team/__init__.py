@@ -19,6 +19,6 @@
 #
 ##############################################################################
 import sales_team
-import sales_team_config
+import res_config
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,7 +22,7 @@
 import crm
 import crm_segmentation
 import crm_lead
-import crm_case_section
+import sales_team
 import calendar_event
 import crm_phonecall
 import report

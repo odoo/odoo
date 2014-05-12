@@ -78,4 +78,3 @@ class crm_case_section(osv.Model):
         res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
-

@@ -79,7 +79,6 @@
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
-        <!-- Case Sections Salesteams kanban view -->
         <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
@@ -94,15 +93,6 @@
                             <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                         </div>
                     </xpath>
-                </data>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
-            <field name="name">crm.case.section.kanban</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
-            <field name="arch" type="xml">
-                <data>
                     <xpath expr="//field[@name='name']" position="after">
                         <field name="use_leads"/>
                         <field name="monthly_open_leads"/>
@@ -130,8 +120,41 @@
             </field>
         </record>
 
-        <!-- Case Sections Action -->
+        <record model="ir.ui.view" id="sales_team_form_view_in_crm">
+                <field name="name">crm.case.section.form</field>
+                <field name="model">crm.case.section</field>
+                <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='name']" position="after">
+                        <h6><field name="use_leads"/><label for="use_leads" string="Leads"/></h6>
+                    </xpath>
+                    <xpath expr="//group/field[@name='active']" position="inside">
+                        <group>
+                            <label for="alias_name" string="Email Alias"
+                                    attrs="p'invisible': [('alias_domain', '=', False)]}"/>
+                            <div name="alias_def"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="alias_id" class="oe_read_only oe_inline"
+                                        string="Email Alias" required="0"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                            </div>
+                            <field name="alias_contact" class="oe_inline"
+                                    string="Accept Emails From"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                        </group>
+                    </xpath>
+                    <xpath expr="//page[@string='Team Members']" position="after">
+                        <page string="Stages">
+                            <separator string="Select Stages for this Sales Team"/>
+                                <field name="stage_ids"/>
+                        </page>
+                   </xpath>
+                </field>
+            </record>
 
+        <!-- Case Sections Action -->
         <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
@@ -159,40 +182,6 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_case_section_view_tree"/>
-        </record>
-
-    <record model="ir.ui.view" id="sales_team_form_view_in_crm">
-            <field name="name">crm.case.section.form</field>
-            <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='name']" position="after">
-                    <h6><field name="use_leads"/><label for="use_leads" string="Leads"/></h6>
-                </xpath>
-                <xpath expr="//group/field[@name='active']" position="inside">
-                    <group>
-                        <label for="alias_name" string="Email Alias"
-                                attrs="p'invisible': [('alias_domain', '=', False)]}"/>
-                        <div name="alias_def"
-                                attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <field name="alias_id" class="oe_read_only oe_inline"
-                                    string="Email Alias" required="0"/>
-                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </div>
-                        </div>
-                        <field name="alias_contact" class="oe_inline"
-                                string="Accept Emails From"
-                                attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                    </group>
-                </xpath>
-                <xpath expr="//page[@string='Team Members']" position="after">
-                    <page string="Stages">
-                        <separator string="Select Stages for this Sales Team"/>
-                            <field name="stage_ids"/>
-                    </page>
-               </xpath>
-            </field>
         </record>
   </data>
 </openerp>
