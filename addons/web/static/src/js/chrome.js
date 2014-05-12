@@ -46,6 +46,8 @@ instance.web.Notification =  instance.web.Widget.extend({
     }
 });
 
+var opened_modal = [];
+
 instance.web.action_notify = function(element, action) {
     element.do_notify(action.params.title, action.params.text, action.params.sticky);
 };
@@ -113,6 +115,8 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.init_dialog();
         }
         this.$buttons.insertAfter(this.$dialog_box.find(".modal-body"));
+        //add to list of currently opened modal
+        opened_modal.push(this.$dialog_box);
         return this;
     },
     _add_buttons: function(buttons) {
@@ -212,9 +216,13 @@ instance.web.Dialog = instance.web.Widget.extend({
             //we need this to put the instruction to remove modal from DOM at the end
             //of the queue, otherwise it might already have been removed before the modal-backdrop
             //is removed when pressing escape key
-            var $parent = this.$el.parents('.modal');
             setTimeout(function () {
-                $parent.remove();
+                //remove last modal from list of opened modal since we just destroy it
+                opened_modal.pop().remove();
+                if (opened_modal.length > 0){
+                    //we still have other opened modal so we should focus it
+                    opened_modal[opened_modal.length-1].focus()
+                }
             },0);
         }
         this._super();
