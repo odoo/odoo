@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import openerp
-from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
@@ -19,14 +18,13 @@ class WebsiteCustomer(http.Controller):
         '/customers/country/<int:country_id>/page/<int:page>',
         '/customers/country/<country_name>-<int:country_id>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
-    def customers(self, country_id=0, page=0, **post):
+    def customers(self, country_id=0, page=0, country_name='', **post):
         cr, uid, context = request.cr, request.uid, request.context
         country_obj = request.registry['res.country']
         partner_obj = request.registry['res.partner']
         partner_name = post.get('search', '')
 
-        base_domain = [('website_published','=',True)]
-        domain = list(base_domain)
+        domain = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
         if partner_name:
             domain += [
                 '|',
@@ -57,25 +55,24 @@ class WebsiteCustomer(http.Controller):
         })
 
         # search customers to display
-        partner_ids = partner_obj.search(cr, openerp.SUPERUSER_ID, domain, context=request.context)
-        google_map_partner_ids = ",".join([str(p) for p in partner_ids])
+        partner_count = partner_obj.search_count(cr, openerp.SUPERUSER_ID, domain, context=request.context)
 
         # pager
         pager = request.website.pager(
-            url="/customers", total=len(partner_ids), page=page, step=self._references_per_page,
+            url="/customers", total=partner_count, page=page, step=self._references_per_page,
             scope=7, url_args=post
         )
 
-        # browse page of customers to display
-        partner_ids = partner_obj.search(
-            cr, openerp.SUPERUSER_ID, domain,
-            limit=self._references_per_page, offset=pager['offset'], context=context)
-        partners_data = partner_obj.read(
-            request.cr, openerp.SUPERUSER_ID, partner_ids, request.website.get_partner_white_list_fields(), context=request.context)
+        partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, domain,
+                                         offset=pager['offset'], limit=self._references_per_page,
+                                         context=request.context)
+        google_map_partner_ids = ','.join(map(str, partner_ids))
+        partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
+
         values = {
             'countries': countries,
             'current_country_id': country_id or 0,
-            'partners_data': partners_data,
+            'partners': partners,
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
@@ -84,25 +81,10 @@ class WebsiteCustomer(http.Controller):
         return request.website.render("website_customer.index", values)
 
     @http.route(['/customers/<int:partner_id>', '/customers/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
-    def customer(self, partner_id, **post):
-        partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-        values = website_partner.get_partner_template_value(partner)
+    def customer(self, partner_id, partner_name='', **post):
+        values = website_partner.get_partner_template_value(partner_id)
         if not values:
             return self.customers(**post)
-
-        partner_obj = request.registry['res.partner']
-        if values['partner_data'].get('assigned_partner_id', None):
-            values['assigned_partner_data'] = partner_obj.read(
-                request.cr, openerp.SUPERUSER_ID, [values['partner_data']['assigned_partner_id'][0]],
-                request.website.get_partner_white_list_fields(), context=request.context)[0]
-        if values['partner_data'].get('implemented_partner_ids', None):
-            implemented_partners_data = partner_obj.read(
-                request.cr, openerp.SUPERUSER_ID, values['partner_data']['implemented_partner_ids'],
-                request.website.get_partner_white_list_fields(), context=request.context)
-            values['implemented_partners_data'] = []
-            for data in implemented_partners_data:
-                if data.get('website_published'):
-                    values['implemented_partners_data'].append(data)
 
         values['main_object'] = values['partner']
         return request.website.render("website_customer.details", values)
