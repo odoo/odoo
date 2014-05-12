@@ -16,5 +16,5 @@ Delivery Costs
     ],
     'demo': [],
     'qweb': [],
-    'installable': True,
+    'installable': False,
 }

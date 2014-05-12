@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp.addons.website_sale.controllers.main import Ecommerce
+import openerp
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp import SUPERUSER_ID
 
-
-class Ecommerce(Ecommerce):
+class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True, multilang=True)
     def payment(self, **post):
@@ -19,5 +18,5 @@ class Ecommerce(Ecommerce):
             if carrier_id:
                 return request.redirect("/shop/payment")
 
-        res = super(Ecommerce, self).payment(**post)
+        res = super(website_sale, self).payment(**post)
         return res

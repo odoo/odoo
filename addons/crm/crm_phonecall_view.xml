@@ -103,7 +103,7 @@
                         <field name="categ_id" widget="selection"
                             domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                         <field name="partner_mobile"/>
-                        <field name="priority"/>
+                        <field name="priority" widget="priority"/>
                         <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)"/>
                     </group>
                     <field name="description" placeholder="Description..."/>

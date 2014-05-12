@@ -88,7 +88,7 @@ class crm_claim(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'user_fault': fields.char('Trouble Responsible', size=64),
@@ -111,7 +111,7 @@ class crm_claim(osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'active': lambda *a: 1,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c)
     }
@@ -191,15 +191,13 @@ class crm_claim(osv.osv):
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for partner in self.browse(cr, uid, ids, context=context):
-                res[partner.id] = len(partner.claims_ids)
-        except:
-            pass
-        return res
+        Claim = self.pool['crm.claim']
+        return {
+            partner_id: Claim.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)  
+            for partner_id in ids
+        }
+
     _columns = {
-        'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
         'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),
     }
 

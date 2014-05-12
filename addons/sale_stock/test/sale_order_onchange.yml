@@ -9,7 +9,6 @@
   !record {model: product.product, id: product_onchange1}:
     name: 'Devil Worship Book'
     list_price: 66.6
-    procure_method: 'make_to_order'
 -
   In sale order to test process of onchange of Sale Order with access rights of saleman.
 -
@@ -29,4 +28,3 @@
   !assert {model: sale.order, id: sale_order_onchange1, string: The onchange function of product was not correctly triggered}:
     - order_line[0].name == u'Devil Worship Book'
     - order_line[0].price_unit == 66.6
-    - order_line[0].type == 'make_to_order'

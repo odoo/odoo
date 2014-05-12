@@ -59,7 +59,7 @@ class sale_quote(http.Controller):
         return request.website.render('website_quote.so_quotation', values)
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
-    def accept(self, order_id=None, token=None, signer=None, sign=None, **post):
+    def accept(self, order_id, token=None, signer=None, sign=None, **post):
         order_obj = request.registry.get('sale.order')
         order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
         if token != order.access_token:
@@ -111,7 +111,7 @@ class sale_quote(http.Controller):
         return True
 
     @http.route(['/quote/update_line'], type='json', auth="public", website=True)
-    def update(self, line_id=None, remove=False, unlink=False, order_id=None, token=None, **post):
+    def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):
         order = request.registry.get('sale.order').browse(request.cr, SUPERUSER_ID, int(order_id))
         if token != order.access_token:
             return request.website.render('website.404')

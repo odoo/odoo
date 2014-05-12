@@ -33,10 +33,11 @@ class res_partner(osv.osv):
                 res[partner.id] = {
                     'opportunity_count': len(partner.opportunity_ids),
                     'meeting_count': len(partner.meeting_ids),
-                    'phonecall_count': len(partner.meeting_ids),
                 }
         except:
             pass
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id]['phonecall_count'] = len(partner.phonecall_ids)
         return res
 
     _columns = {

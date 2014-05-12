@@ -34,15 +34,7 @@
             <field name="location_id" ref="stock_location_customers"/>
             <field name="usage">customer</field>
         </record>
-        <record id="stock_location_14" model="stock.location">
-            <field name="name">Shelf 2</field>
-            <field name="location_id" ref="stock_location_stock"/>
-        </record>
-        <record id="stock_location_components" model="stock.location">
-            <field name="name">Shelf 1</field>
-            <field name="location_id" ref="stock_location_stock"/>
-        </record>
-
+        
 
         <!-- Resource: stock.inventory -->
 
@@ -53,123 +45,111 @@
 
         <!-- Resource: stock.inventory.line -->
 
-        <record id="stock_inventory_line_0" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_3"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_0"/>
-            <field name="product_qty">14.0</field>
-            <field name="location_id" ref="stock_location_14"/>
-        </record>
-
         <record id="stock_inventory_line_1" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_24"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">16.0</field>
             <field name="location_id" ref="stock_location_14"/>
         </record>
-        <record model="stock.inventory.line">
+        <record id="stock_inventory_line_14" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_25"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">16.0</field>
             <field name="location_id" ref="stock_location_14"/>
         </record>
-        <record model="stock.inventory.line">
+        <record id="stock_inventory_line_15" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_5"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">8.0</field>
             <field name="location_id" ref="stock_location_14"/>
         </record>
         <record id="stock_inventory_line_2" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_7"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">18.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_3" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_6"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">10.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_4" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_9"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">22.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_5" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_10"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">8.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_6" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_11"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">26.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_7" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_14"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">32.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_8" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_15"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">37.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_9" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_17"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">39.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_10" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_18"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">45.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_11" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_12"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">10.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_12" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_13"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">2.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_13" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_27"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">80.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
-
-        <function model="stock.inventory" name="action_confirm">
-            <function eval="[[('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
-        </function>
 
         <function model="stock.inventory" name="action_done">
             <function eval="[[('id', '=', ref('stock_inventory_0'))]]" model="stock.inventory" name="search"/>
@@ -205,86 +185,14 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">Your Company</field>
-        </record>
-
-        <!--        Child Company 2-->
-        <record id="res_partner_company_2" model="res.partner">
-            <field name="name">Your Company, Birmingham shop</field>
-            <field eval="1" name="customer"/>
-            <field eval="1" name="supplier"/>
-            <field eval="1" name="active"/>
-            <field name="is_company">1</field>
-            <field name="street">82-85 Academy Avenue</field>
-            <field name="city">Birmingham</field>
-            <field name="zip">B46 3AG</field>
-            <field model="res.country" name="country_id" search="[('code','ilike','gb')]"/>
-            <field name="phone">+44 121 690 4596</field>
-            <field name="email">birmingham@yourcompany.com</field>
-            <field name="website">www.yourcompany.com</field>
-        </record>
-
-        <record id="res_partner_address_40" model="res.partner">
-            <field name="name">Donald Thompson</field>
-            <field name="parent_id" ref="res_partner_company_2"/>
-            <field name="use_parent_address" eval="1"/>
-        </record>
-
-        <record id="res_company_2" model="res.company">
-            <field name="currency_id" ref="base.GBP"/>
-            <field name="partner_id" ref="res_partner_company_2"/>
-            <field name="parent_id" ref="base.main_company"/>
-            <field name="name">Your Company, Birmingham shop</field>
-        </record>
-
-        <!--TOCHECK-->
-        <record id="stock_location_shop0" model="stock.location">
-            <field model="res.partner" name="partner_id" search="[('name','=','Fabien')]"/>
-            <field name="location_id" ref="stock.stock_location_locations"/>
-            <field name="company_id" ref="res_company_1"/>
-            <field name="usage">internal</field>
-            <field name="chained_location_type">none</field>
-            <field eval="1" name="active"/>
             <field name="name">Your Company, Chicago</field>
-            <field name="chained_auto_packing">manual</field>
-        </record>
-        <record id="stock_location_shop1" model="stock.location">
-            <field model="res.partner" name="partner_id" search="[('name','=','Eric')]"/>
-            <field name="company_id" ref="res_company_1"/>
-            <field name="location_id" ref="stock.stock_location_locations"/>
-            <field name="usage">internal</field>
-            <field eval="1" name="active"/>
-            <field name="name">Your Company, Birmingham shop</field>
-        </record>
-        <record id="stock_location_intermediatelocation0" model="stock.location">
-            <field name="partner_id" ref="base.main_partner"/>
-            <field name="location_id" ref="stock.stock_location_locations_partner"/>
-            <field name="usage">procurement</field>
-            <field name="name">Internal Shippings</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">
-            <field name="lot_output_id" ref="stock.stock_location_output"/>
             <field name="name">Chicago Warehouse</field>
-            <field name="lot_stock_id" ref="stock_location_shop0"/>
             <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
-            <field name="lot_input_id" ref="stock_location_shop0"/>
-        </record>
-        <record id="stock_warehouse_shop1" model="stock.warehouse">
-            <field name="lot_output_id" ref="stock.stock_location_output"/>
-            <field name="name">Birmingham Warehouse</field>
-            <field name="lot_stock_id" ref="stock_location_shop1"/>
-            <field name="partner_id" ref="res_partner_address_40"/>
-            <field name="company_id" ref="res_company_1"/>
-            <field name="lot_input_id" ref="stock_location_shop1"/>
-        </record>
-
-        <record forcecreate="True" id="property_stock_valuation_account_id" model="ir.property">
-            <field name="name">property_stock_valuation_account_id</field>
-            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
-            <field eval="'account.account,'+str(ref('account.stk'))" model="account.account" name="value"/>
-             <field name="company_id" ref="base.main_company"/>
+            <field name="code">Chic</field>
         </record>
 
     </data>

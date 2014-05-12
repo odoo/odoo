@@ -10,13 +10,14 @@
                         <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
                         <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
                         <button name="cancel" string="Cancel" type="object" states='outgoing'/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
                     </header>
                     <sheet>
                         <field name="mail_message_id" required="0" invisible="1"/>
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
                         <div style="vertical-align: top;">
-                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
+                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
                                 context="{'default_composition_mode':'reply', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
                         </div>
@@ -38,7 +39,6 @@
                                             <field name="auto_delete"/>
                                             <field name="notification"/>
                                             <field name="type"/>
-                                            <field name="state"/>
                                             <field name="mail_server_id"/>
                                             <field name="model"/>
                                             <field name="res_id"/>

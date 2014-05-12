@@ -44,6 +44,6 @@ class account_partner_balance(osv.osv_memory):
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['display_partner'])[0])
-        return self.pool['report'].get_action(cr, uid, ids, 'account.report_partnerbalance', data=data, context=context)
+        return self.pool['report'].get_action(cr, uid, [], 'account.report_partnerbalance', data=data, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

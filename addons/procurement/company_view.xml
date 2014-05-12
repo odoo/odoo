@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
                     <group name="logistics_grp" string="Logistics">
-                        <field name="schedule_range"/>
+                        <!-- This group will be filled by other modules like sale_stock, mrp, purchase... -->
                     </group>
                 </xpath>
             </field>

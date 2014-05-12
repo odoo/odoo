@@ -64,11 +64,13 @@ class report_stock(report_int):
         for name in names:
             names[name] = names[name].encode('utf8')
         products = {}
-        prods = registry['stock.location']._product_all_get(cr, uid, location_id, product_ids)
+        ctx = context.copy()
+        ctx['location_id'] = loc_ids
+        prods = registry['product.product']._product_available(cr, uid, product_ids, context=ctx)
+        for prod in prods.keys():
+            products[prod] = [(now, prods[prod]['qty_available'])]
+            prods[prod] = 0
 
-        for p in prods:
-            products[p] = [(now,prods[p])]
-            prods[p] = 0
 
         if not loc_ids or not product_ids:
             return (False, 'pdf')

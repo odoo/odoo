@@ -59,7 +59,7 @@ class crm_helpdesk(osv.osv):
             'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
-            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+            'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
             'probability': fields.float('Probability (%)'),
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
@@ -83,7 +83,7 @@ class crm_helpdesk(osv.osv):
         'state': lambda *a: 'draft',
         'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
     }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):

@@ -9,7 +9,6 @@
             <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
                 <field name="name" />
                 <field name="product_id" />
-                <field name="move_id"/>
                 <field name="partner_id"/>
                 <field name="address_id"/>
                 <field name="location_id" groups="stock.group_locations"/>
@@ -45,22 +44,25 @@
                     <group>
                         <group>
                             <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
+                            <label for="product_qty"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline"/> 
+                                <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(product_id, product_uom)" class="oe_inline"/>
+                            </div>
+                            <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id" groups="sale.group_delivery_invoice_address"/>
-                            <field name="move_id" on_change="onchange_move_id(product_id, move_id)" context="{'default_product_id':product_id}"/>
-                            <field name="location_id" attrs="{'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
-                            <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)" groups="stock.group_production_lot" string="Serial Number"/>
                         </group>
                         <group>
+                            <field name="location_id" on_change="onchange_location_id(location_id)" groups="stock.group_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="location_dest_id" groups="stock.group_locations" domain="[('usage', 'in', ('internal', 'customer'))]"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="guarantee_limit"/>
-                            <field name="deliver_bool"/>
-                            <field name="repaired" groups="base.group_no_one"/>
-                            <field name="invoiced" groups="base.group_no_one"/>
                         </group>
                     </group>
                 <notebook>
                     <page string="Operations">
-                        <field name="operations">
+                        <field name="operations" context="{'default_product_uom_qty': product_qty}">
                             <form string="Operations" version="7.0">
                                 <notebook>
                                     <page string="Repair Line">
@@ -78,7 +80,6 @@
                                             <field name="to_invoice"/>
                                             <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <field name="invoiced"/>
-                                            <field name='prodlot_id' groups="stock.group_production_lot" string="Serial Number"/>
                                             <field name="location_id" groups="stock.group_locations"/>
                                             <field name="location_dest_id" groups="stock.group_locations"/>
                                         </group>
@@ -95,7 +96,7 @@
                                 <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                 <field name='name'/>
-                                <field name="prodlot_id" groups="stock.group_production_lot" string="Serial Number"/>
+                                <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="location_dest_id" groups="stock.group_locations"/>
                                 <field name="product_uom_qty" string="Quantity"/>
@@ -121,13 +122,15 @@
                     <page string="Invoicing">
                         <group col="4">
                             <field name="invoice_method"/>
+                            <field name="invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
                             <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                             <field
                                 name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}"
                                 attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         </group>
                         <!-- <field name="invoice_id"/> -->
-                        <field name="fees_lines">
+                        <separator string="Fees"/>
+                        <field name="fees_lines" attrs="{'readonly': [('invoice_method','=', 'none')]}">
                             <form string="Fees" version="7.0">
                                 <label for="name" class="oe_edit_only"/>
                                 <h2>
@@ -169,15 +172,14 @@
                             </tree>
                         </field>
                     </page>
-                    <page string="Extra Info">
+                    <page string="Extra Info" groups="base.group_no_one">
                         <group>
                             <group>
-                                <field name="picking_id"/>
-                                <field name="invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="move_id"/>
                             </group>
                             <group>
-                                <field name="location_dest_id" attrs="{'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
+                                <field name="repaired"/>
+                                <field name="invoiced"/>
                             </group>
                         </group>
                     </page>

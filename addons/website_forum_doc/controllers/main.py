@@ -26,7 +26,7 @@ class WebsiteDoc(http.Controller):
         }
         return request.website.render("website_forum_doc.documentation", value)
 
-    @http.route(['/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post"):post>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post", "[('documentation_toc_id','=',toc)]"):post>'''], type='http', auth="public", website=True, multilang=True)
     def post(self, toc, post, **kwargs):
         # TODO: implement a redirect instead of crash
         assert post.documentation_toc_id.id == toc.id, "Wrong post!"
@@ -42,7 +42,7 @@ class WebsiteDoc(http.Controller):
     def post_toc(self, forum, post, **kwargs):
         cr, uid, context, toc_id = request.cr, request.uid, request.context, False
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        assert user.karma >= 200, 'Not enough karma'
+        assert user.karma >= 200, 'You need 200 karma to promote a post to the documentation'
         toc_obj = request.registry['forum.documentation.toc']
         obj_ids = toc_obj.search(cr, uid, [], context=context)
         tocs = toc_obj.browse(cr, uid, obj_ids, context=context)
@@ -57,7 +57,7 @@ class WebsiteDoc(http.Controller):
     def post_toc_ok(self, forum, post_id, toc_id, **kwargs):
         cr, uid, context = request.cr, request.uid, request.context
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
-        assert user.karma >= 200, 'Not enough karma'
+        assert user.karma >= 200, 'Not enough karma, you need 200 to promote a documentation.'
 
         toc_obj = request.registry['forum.documentation.toc']
         stage_ids = toc_obj.search(cr, uid, [], limit=1, context=context)

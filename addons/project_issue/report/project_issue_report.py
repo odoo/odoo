@@ -47,7 +47,7 @@ class project_issue_report(osv.osv):
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
         'company_id' : fields.many2one('res.company', 'Company'),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),

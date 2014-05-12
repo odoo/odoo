@@ -57,17 +57,21 @@ def url_for(path_or_uri, lang=None):
 
     return location.decode('utf-8')
 
-def is_multilang_url(path, langs=None):
+def is_multilang_url(local_url, langs=None):
     if not langs:
         langs = [lg[0] for lg in request.website.get_languages()]
-    spath = path.split('/')
+    spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in langs:
         spath.pop(1)
-        path = '/'.join(spath)
+        local_url = '/'.join(spath)
     try:
+        # Try to match an endpoint in werkzeug's routing table
+        url = local_url.split('?')
+        path = url[0]
+        query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
-        func = router.match(path)[0]
+        func = router.match(path, query_args=query_string)[0]
         return func.routing.get('multilang', False)
     except Exception:
         return False
@@ -109,10 +113,6 @@ class website(osv.osv):
         menu = menus and menus[0] or False
         return dict( map(lambda x: (x, menu), ids) )
 
-    def _get_public_user(self, cr, uid, ids, name='public_user', arg=(), context=None):
-        ref = self.get_public_user(cr, uid, context=context)
-        return dict( map(lambda x: (x, ref), ids) )
-
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {
@@ -129,13 +129,17 @@ class website(osv.osv):
         'social_googleplus': fields.char('Google+ Account'),
         'google_analytics_key': fields.char('Google Analytics Key'),
         'user_id': fields.many2one('res.users', string='Public User'),
-        'public_user': fields.function(_get_public_user, relation='res.users', type='many2one', string='Public User'),
+        'partner_id': fields.related('user_id','partner_id', type='many2one', relation='res.partner', string='Public Partner'),
         'menu_id': fields.function(_get_menu, relation='website.menu', type='many2one', string='Main Menu',
             store= {
                 'website.menu': (_get_menu_website, ['sequence','parent_id','website_id'], 10)
             })
     }
 
+    _defaults = {
+        'company_id': lambda self,cr,uid,c: self.pool['ir.model.data'].xmlid_to_res_id(cr, openerp.SUPERUSER_ID, 'base.public_user'),
+    }
+    
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
         pass
@@ -186,11 +190,6 @@ class website(osv.osv):
         except:
             return False
 
-    def get_public_user(self, cr, uid, context=None):
-        uid = openerp.SUPERUSER_ID
-        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'public_user')
-        return res and res[1] or False
-
     @openerp.tools.ormcache(skiparg=3)
     def _get_languages(self, cr, uid, id, context=None):
         website = self.browse(cr, uid, id)
@@ -203,18 +202,10 @@ class website(osv.osv):
         # TODO: Select website, currently hard coded
         return self.pool['website'].browse(cr, uid, 1, context=context)
 
-    def preprocess_request(self, cr, uid, ids, request, context=None):
-        # TODO FP: is_website_publisher and editable in context should be removed
-        # for performance reasons (1 query per image to load) but also to be cleaner
-        # I propose to replace this by a group 'base.group_website_publisher' on the
-        # view that requires it.
-        Access = request.registry['ir.model.access']
+    def is_publisher(self, cr, uid, ids, context=None):
+        Access = self.pool['ir.model.access']
         is_website_publisher = Access.check(cr, uid, 'ir.ui.view', 'write', False, context)
-
-        request.redirect = lambda url: werkzeug.utils.redirect(url_for(url))
-        request.context.update(
-            editable=is_website_publisher,
-        )
+        return is_website_publisher
 
     def get_template(self, cr, uid, ids, template, context=None):
         if isinstance(template, (int, long)):
@@ -292,44 +283,23 @@ class website(osv.osv):
         endpoint = rule.endpoint
         methods = rule.methods or ['GET']
         converters = rule._converters.values()
-
-        return (
-            'GET' in methods
+        if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
             and endpoint.routing.get('website', False)
-            # preclude combinatorial explosion by only allowing a single converter
-            and len(converters) <= 1
-            # ensure all converters on the rule are able to generate values for
-            # themselves
             and all(hasattr(converter, 'generate') for converter in converters)
-        ) and self.endpoint_is_enumerable(rule)
-
-    def endpoint_is_enumerable(self, rule):
-        """ Verifies that it's possible to generate a valid url for the rule's
-        endpoint
-
-        :type rule: werkzeug.routing.Rule
-        :rtype: bool
-        """
-        spec = inspect.getargspec(rule.endpoint.method)
-
-        # if *args bail the fuck out, only dragons can live there
-        if spec.varargs:
+            and endpoint.routing.get('website')):
             return False
 
-        # remove all arguments with a default value from the list
-        defaults_count = len(spec.defaults or []) # spec.defaults can be None
-        # a[:-0] ~ a[:0] ~ [] -> replace defaults_count == 0 by None to get
-        # a[:None] ~ a
-        args = spec.args[:(-defaults_count or None)]
+        # dont't list routes without argument having no default value or converter
+        spec = inspect.getargspec(endpoint.method.original_func)
 
-        # params with defaults were removed, leftover allowed are:
-        # * self (technically should be first-parameter-of-instance-method but whatever)
-        # * any parameter mapping to a converter
-        return all(
-            (arg == 'self' or arg in rule._converters)
-            for arg in args)
+        # remove self and arguments having a default value
+        defaults_count = len(spec.defaults or [])
+        args = spec.args[1:(-defaults_count or None)]
+
+        # check that all args have a converter
+        return all( (arg in rule._converters) for arg in args)
 
     def enumerate_pages(self, cr, uid, ids, query_string=None, context=None):
         """ Available pages in the website/CMS. This is mostly used for links
@@ -347,33 +317,40 @@ class website(osv.osv):
         """
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
-        uid = self.get_public_user(cr, uid, context=context)
+        uid = request.website.user_id.id
         url_list = []
         for rule in router.iter_rules():
             if not self.rule_is_enumerable(rule):
                 continue
 
-            converters = rule._converters
-            filtered = bool(converters)
-            if converters:
-                # allow single converter as decided by fp, checked by
-                # rule_is_enumerable
-                [(name, converter)] = converters.items()
-                converter_values = converter.generate(
-                    request.cr, uid, query=query_string, context=context)
-                generated = ({k: v} for k, v in itertools.izip(
-                    itertools.repeat(name), converter_values))
-            else:
-                # force single iteration for literal urls
-                generated = [{}]
+            converters = rule._converters or {}
+            values = [{}]
+            convitems = converters.items()
+            # converters with a domain are processed after the other ones
+            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain <> '[]')
+            convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
+            for (name, converter) in convitems:
+                newval = []
+                for val in values:
+                    for v in converter.generate(request.cr, uid, query=query_string, args=val, context=context):
+                        newval.append( val.copy() )
+                        v[name] = v['loc']
+                        del v['loc']
+                        newval[-1].update(v)
+                values = newval
 
-            for values in generated:
-                domain_part, url = rule.build(values, append_unknown=False)
-                page = {'name': url, 'url': url}
+            for value in values:
+                domain_part, url = rule.build(value, append_unknown=False)
+                page = {'loc': url}
+                for key,val in value.items():
+                    if key.startswith('__'):
+                        page[key[2:]] = val
+                if url in ('/sitemap.xml',):
+                    continue
                 if url in url_list:
                     continue
                 url_list.append(url)
-                if not filtered and query_string and not self.page_matches(cr, uid, page, query_string, context=context):
+                if query_string and not self.page_matches(cr, uid, page, query_string, context=context):
                     continue
                 yield page
 

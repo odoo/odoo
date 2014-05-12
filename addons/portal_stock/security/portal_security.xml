@@ -9,13 +9,5 @@
             <field name="domain_force">[('message_follower_ids','in',[user.partner_id.id])]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
-
-        <record id="portal_stock_picking_out_user_rule" model="ir.rule">
-            <field name="name">Portal Personal Out Pickings</field>
-            <field name="model_id" ref="stock.model_stock_picking_out"/>
-            <field name="domain_force">[('message_follower_ids','in',[user.partner_id.id])]</field>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-        </record>
-
     </data>
 </openerp>

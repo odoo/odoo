@@ -32,14 +32,6 @@ class crm_phonecall(osv.osv):
     _order = "id desc"
     _inherit = ['mail.thread']
     
-    def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,0), ids))
-        try:
-            for meeting in self.browse(cr, uid, ids, context=context):
-                res[meeting.id] = len(meeting.meeting_ids)
-        except:
-            pass
-        return res
     _columns = {
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -70,12 +62,10 @@ class crm_phonecall(osv.osv):
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
-        'meeting_ids': fields.one2many('calendar.event', 'phonecall_id', 'Phonecalls'),
-        'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
     }
 
     def _get_default_state(self, cr, uid, context=None):
@@ -85,7 +75,7 @@ class crm_phonecall(osv.osv):
 
     _defaults = {
         'date': fields.datetime.now,
-        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'state':  _get_default_state,
         'user_id': lambda self, cr, uid, ctx: uid,
         'active': 1

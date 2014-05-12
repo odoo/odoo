@@ -59,7 +59,7 @@
         <record id="res_company_oerp_us" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_us"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
-            <field name="currency_id" ref="base.EUR"/>
+            <field name="currency_id" ref="base.USD"/>
             <field name="name">OpenERP US</field>
         </record>
         <record id="res_company_oerp_be" model="res.company">
@@ -100,7 +100,6 @@
         </record>
         <record id="product_product_odoo1" model="product.product">
             <field name="default_code">ODOO</field>
-            <field name="supply_method">produce</field>
             <field name="list_price">35.0</field>
             <field name="standard_price">10.0</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
@@ -400,7 +399,7 @@
         </record>
         <record id="project.project_project_3" model="project.project">
         <field name="company_id" ref="res_company_oerp_us"/>
-        <field name="currency_id" ref="base.EUR"/>
+        <field name="currency_id" ref="base.USD"/>
         </record>
         <record id="project.project_project_4" model="project.project">
         <field name="company_id" ref="res_company_oerp_be"/>

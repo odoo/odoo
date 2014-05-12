@@ -25,12 +25,11 @@ from openerp.tools.translate import _
 
 
 AVAILABLE_PRIORITIES = [
-    ('', ''),
-    ('5', 'Not Good'),
-    ('4', 'On Average'),
+    ('0', 'Bad'),
+    ('1', 'Below Average'),
+    ('2', 'Average'),
     ('3', 'Good'),
-    ('2', 'Very Good'),
-    ('1', 'Excellent')
+    ('4', 'Excellent')
 ]
 
 class hr_recruitment_source(osv.osv):
@@ -489,21 +488,6 @@ class hr_applicant(osv.Model):
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
-    def set_priority(self, cr, uid, ids, priority, *args):
-        """Set applicant priority
-        """
-        return self.write(cr, uid, ids, {'priority': priority})
-
-    def set_high_priority(self, cr, uid, ids, *args):
-        """Set applicant priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1')
-
-    def set_normal_priority(self, cr, uid, ids, *args):
-        """Set applicant priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3')
-
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'hr.job'
         context['empty_list_help_id'] = context.get('default_job_id', None)
@@ -530,15 +514,14 @@ class hr_job(osv.osv):
         return res
 
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict(map(lambda x: (x,{'documents_count': 0, 'application_count': 0,}), ids))
-        try:
-            for job in self.browse(cr, uid, ids, context=context):
-                res[job.id] = {'documents_count': len(job.document_ids),
-                'application_count': len(job.applicant_ids),
-                }
-        except:
-            pass
-        return res
+        Applicant = self.pool['hr.applicant']
+        return {
+            job_id: {
+                'application_count': Applicant.search_count(cr,uid, [('job_id', '=', job_id)], context=context),
+                'documents_count': len(self._get_attached_docs(cr, uid, [job_id], field_name, arg, context=context)[job_id])
+            }
+            for job_id in ids
+        }
 
     _columns = {
         'survey_id': fields.many2one('survey.survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
