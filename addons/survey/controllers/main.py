@@ -45,7 +45,7 @@ class WebsiteSurvey(http.Controller):
             return werkzeug.utils.redirect("/survey/")
 
         # In case of auth required, block public user
-        if survey.auth_required and uid == request.registry['website'].get_public_user(cr, uid, context):
+        if survey.auth_required and uid == request.website.user_id.id:
             return request.website.render("website.403")
 
         # In case of non open surveys

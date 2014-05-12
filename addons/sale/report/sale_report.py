@@ -29,7 +29,7 @@ class sale_report(osv.osv):
     _rec_name = 'date'
 
     _columns = {
-        'date': fields.date('Date Order', readonly=True),
+        'date': fields.datetime('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),

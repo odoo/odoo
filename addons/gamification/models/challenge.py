@@ -129,7 +129,7 @@ class gamification_challenge(osv.Model):
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
 
-        'user_ids': fields.many2many('res.users', 'user_ids',
+        'user_ids': fields.many2many('res.users', 'gamification_challenge_users_rel',
             string='Users',
             help="List of users participating to the challenge"),
         'user_domain': fields.char('User domain', help="Alternative to a list of users"),
@@ -149,7 +149,7 @@ class gamification_challenge(osv.Model):
         'end_date': fields.date('End Date',
             help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
-        'invited_user_ids': fields.many2many('res.users', 'invited_user_ids',
+        'invited_user_ids': fields.many2many('res.users', 'gamification_invited_user_ids_rel',
             string="Suggest to users"),
 
         'line_ids': fields.one2many('gamification.challenge.line', 'challenge_id',
