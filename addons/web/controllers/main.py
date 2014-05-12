@@ -497,50 +497,6 @@ def content_disposition(filename):
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
-
-# TODO: to remove once the database manager has been migrated server side
-#       and `edi` + `pos` addons has been adapted to use render_bootstrap_template()
-html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        <link rel="stylesheet" href="/web/static/src/css/full.css" />
-
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                var s = new openerp.init(%(modules)s);
-                %(init)s
-            });
-        </script>
-    </head>
-    <body>
-        <!--[if lte IE 8]>
-        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
-        <script>CFInstall.check({mode: "overlay"});</script>
-        <![endif]-->
-    </body>
-</html>
-"""
-
-def render_bootstrap_template(template, values=None, **kw):
-    if values is None:
-        values = dict()
-    try:
-        values['databases'] = http.db_list()
-    except openerp.exceptions.AccessDenied:
-        values['databases'] = None
-
-    if 'modules' not in values:
-        values['modules'] = module_boot()
-    values['modules'] = simplejson.dumps(values['modules'])
-
-    return request.render(template, values, **kw)
-
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
@@ -554,12 +510,7 @@ class Home(http.Controller):
         if request.session.uid:
             if kw.get('redirect'):
                 return werkzeug.utils.redirect(kw.get('redirect'), 303)
-
-            headers = {
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'text/html; charset=utf-8',
-            }
-            return render_bootstrap_template("web.webclient_bootstrap", headers=headers)
+            return request.render('web.webclient_bootstrap')
         else:
             return login_redirect()
 
@@ -577,6 +528,12 @@ class Home(http.Controller):
         if not redirect:
             redirect = '/web?' + request.httprequest.query_string
         values['redirect'] = redirect
+
+        try:
+            values['databases'] = http.db_list()
+        except openerp.exceptions.AccessDenied:
+            values['databases'] = None
+
         if request.httprequest.method == 'POST':
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
@@ -584,7 +541,7 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
-        return render_bootstrap_template('web.login', values)
+        return request.render('web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
@@ -745,75 +702,9 @@ class Database(http.Controller):
     def manager(self, **kw):
         # TODO: migrate the webclient's database manager to server side views
         request.session.logout()
-        css = """
-            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-            <link href="/web/static/lib/cleditor/jquery.cleditor.css" rel="stylesheet"/>
-            <link href="/web/static/lib/jquery.textext/jquery.textext.css" rel="stylesheet"/>
-            <link href="/web/static/lib/select2/select2.css" rel="stylesheet"/>
-            <link href="/web/static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css" rel="stylesheet"/>
-            <link href="/web/static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css" rel="stylesheet"/>
-            <link href="/web/static/lib/jquery.ui.notify/css/ui.notify.css" rel="stylesheet"/>
-            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-            <link href="/web/static/src/css/base.css" rel="stylesheet"/>
-            <link href="/web/static/src/css/data_export.css" rel="stylesheet"/>
-            <link href="/base/static/src/css/modules.css" rel="stylesheet"/>"""
-        js = """
-            <script src="/web/static/lib/es5-shim/es5-shim.min.js" type="text/javascript"></script>
-            <script src="/web/static/lib/underscore/underscore.js" type="text/javascript"></script>
-            <script src="/web/static/lib/underscore.string/lib/underscore.string.js" type="text/javascript"></script>
-            <script src="/web/static/lib/datejs/globalization/en-US.js" type="text/javascript"></script>
-            <script src="/web/static/lib/spinjs/spin.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.blockUI/jquery.blockUI.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.placeholder/jquery.placeholder.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.timeago/jquery.timeago.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.form/jquery.form.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js" type="text/javascript"></script>
-            <script src="/web/static/lib/datejs/core.js" type="text/javascript"></script>
-            <script src="/web/static/lib/datejs/parser.js" type="text/javascript"></script>
-            <script src="/web/static/lib/datejs/sugarpak.js" type="text/javascript"></script>
-            <script src="/web/static/lib/datejs/extras.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.validate/jquery.validate.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.autosize/jquery.autosize.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.scrollTo/jquery.scrollTo-min.js" type="text/javascript"></script>
-            <script src="/web/static/lib/cleditor/jquery.cleditor.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.textext/jquery.textext.js" type="text/javascript"></script>
-            <script src="/web/static/lib/select2/select2.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
-            <script src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js" type="text/javascript"></script>
-            <script src="/web/static/lib/bootstrap/js/bootstrap.js" type="text/javascript"></script>
-            <script src="/web/static/lib/backbone/backbone.js" type="text/javascript"></script>
-            <script src="/web/static/lib/qweb/qweb2.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/openerpframework.js" type="text/javascript"></script>
-            <script src="/web/static/lib/py.js/lib/py.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/boot.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/testing.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/pyeval.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/core.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/formats.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/chrome.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/views.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/data.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/data_export.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/search.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/view_list.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/view_form.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/view_list_editable.js" type="text/javascript"></script>
-            <script src="/web/static/src/js/view_tree.js" type="text/javascript"></script>
-            <script src="/base/static/src/js/apps.js" type="text/javascript"></script>"""
-
-        r = html_template % {
-            'js': js,
-            'css': css,
+        return env.get_template("database_manager.html").render({
             'modules': simplejson.dumps(module_boot()),
-            'init': """
-                var wc = new s.web.WebClient(null, { action: 'database_manager' });
-                wc.appendTo($(document.body));
-            """
-        }
-        return r
+        })
 
     @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):

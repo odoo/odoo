@@ -1259,7 +1259,95 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
     },
 });
 
+instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.name = $node.attr('name')
+        this.parent = parent;
+    },
+    prepare_priority: function() {
+        var self = this;
+        var selection = this.field.selection || [];
+        var init_value = selection && selection[0][0] || 0;
+        var data = _.map(selection.slice(1), function(element, index) {
+            var value = {
+                'value': element[0],
+                'name': element[1],
+                'click_value': element[0],
+            }
+            if (index == 0 && self.get('value') == element[0]) {
+                value['click_value'] = init_value;
+            }
+            return value;
+        });
+        return data;
+    },
+    renderElement: function() {
+        var self = this;
+        this.record_id = self.parent.id;
+        this.priorities = self.prepare_priority();
+        this.$el = $(QWeb.render("Priority", {'widget': this}));
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e) {
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length) {
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
+        }
+    },
+    reload_record: function() {
+        this.do_reload();
+    },
+});
+
+instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.name = $node.attr('name')
+        this.parent = parent;
+    },
+    prepare_dropdown_selection: function() {
+        var data = [];
+        _.map(this.field.selection || [], function(res) {
+            var value = {
+                'name': res[0],
+                'tooltip': res[1],
+                'state_name': res[1],
+            }
+            if (res[0] == 'normal') { value['state_class'] = 'oe_kanban_status'; }
+            else if (res[0] == 'done') { value['state_class'] = 'oe_kanban_status oe_kanban_status_green'; }
+            else { value['state_class'] = 'oe_kanban_status oe_kanban_status_red'; }
+            data.push(value);
+        });
+        return data;
+    },
+    renderElement: function() {
+        var self = this;
+        this.record_id = self.parent.id;
+        this.states = self.prepare_dropdown_selection();;
+        this.$el = $(QWeb.render("KanbanSelection", {'widget': self}));
+        this.$el.find('.oe_legend').click(self.do_action.bind(self));
+    },
+    do_action: function(e) {
+        var self = this;
+        var li = $(e.target).closest( "li" );
+        if (li.length) {
+            var value = {};
+            value[self.name] = String(li.data('value'));
+            return self.parent.view.dataset._model.call('write', [[self.record_id], value, self.parent.view.dataset.get_context()]).done(self.reload_record.bind(self.parent));
+        }
+    },
+    reload_record: function() {
+        this.do_reload();
+    },
+});
+
 instance.web_kanban.fields_registry = new instance.web.Registry({});
+instance.web_kanban.fields_registry.add('priority','instance.web_kanban.Priority');
+instance.web_kanban.fields_registry.add('kanban_state_selection','instance.web_kanban.KanbanSelection');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

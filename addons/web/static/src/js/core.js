@@ -345,31 +345,16 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
     load_css: function (files) {
         var self = this;
         _.each(files, function (file) {
-            $('head').append($('<link>', {
-                'href': self.url(file, null),
-                'rel': 'stylesheet',
-                'type': 'text/css'
-            }));
+            openerp.loadCSS(self.url(file, null));
         });
     },
     load_js: function(files) {
         var self = this;
         var d = $.Deferred();
-        if(files.length !== 0) {
+        if (files.length !== 0) {
             var file = files.shift();
-            var tag = document.createElement('script');
-            tag.type = 'text/javascript';
-            tag.src = self.url(file, null);
-            tag.onload = tag.onreadystatechange = function() {
-                if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
-                    return;
-                tag.onload_done = true;
-                self.load_js(files).done(function () {
-                    d.resolve();
-                });
-            };
-            var head = document.head || document.getElementsByTagName('head')[0];
-            head.appendChild(tag);
+            var url = self.url(file, null);
+            openerp.loadJS(url).done(d.resolve);
         } else {
             d.resolve();
         }
