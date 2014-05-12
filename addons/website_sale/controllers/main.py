@@ -253,14 +253,14 @@ class website_sale(http.Controller):
     def checkout_redirection(self, order):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        # must have a shopping_cart state of sale order with lines at this point, otherwise reset
-        if not order or order.state != 'shopping_cart':
+        # must have a draft state of sale order with lines at this point, otherwise reset
+        if not order or order.state != 'draft':
             request.website_sale_reset(cr, uid, context=context)
             return request.redirect('/shop')
 
         # if transaction pending / done: redirect to confirmation
         tx = context.get('website_sale_transaction')
-        if tx and tx.state != 'shopping_cart':
+        if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
     def checkout_values(self, data=None):
@@ -454,9 +454,9 @@ class website_sale(http.Controller):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
 
-         - a shopping_cart state sale order with lines; otherwise, clean context / session and
+         - a draft state sale order with lines; otherwise, clean context / session and
            back to the shop
-         - no transaction in context / session, or only a shopping_cart one, if the customer
+         - no transaction in context / session, or only a draft one, if the customer
            did go to a payment.acquirer website but closed the tab without
            paying / canceling
         """
@@ -518,6 +518,7 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
+        sale_order_obj = request.registry['sale.order']
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
@@ -539,10 +540,19 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
-        elif tx and tx.state == 'shopping_cart':  # button cliked but no more info -> rewrite on tx or create a new one ?
+        elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
             tx.write({
                 'acquirer_id': acquirer_id,
             })
+
+        # update quotation
+        sale_order_obj.write(
+            cr, SUPERUSER_ID, [order.id], {
+                'payment_acquirer_id': acquirer_id,
+                'payment_tx_id': request.session['sale_transaction_id']
+            }, context=context)
+        # confirm the quotation
+        sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, werkzeug.url_encode(post))
@@ -622,9 +632,7 @@ class website_sale(http.Controller):
         if not tx or not order:
             return request.redirect('/shop')
 
-        if not order.amount_total or tx.state == 'done':
-            # confirm the quotation
-            sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+        if not order.amount_total or tx.state in ['pending', 'done']:
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'cancel':

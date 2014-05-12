@@ -4,9 +4,7 @@ import random
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
-from openerp.addons.sale import sale
 
-sale.AVAILABLE_STATES.insert(1,('shopping_cart', 'Shopping Cart'))
 
 class payment_transaction(orm.Model):
     _inherit = 'payment.transaction'
@@ -20,7 +18,7 @@ class sale_order(osv.Model):
     _inherit = "sale.order"
 
     def _cart_qty(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict();
+        res = dict()
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = int(sum(l.product_uom_qty for l in (order.website_order_line or [])))
         return res
@@ -31,8 +29,9 @@ class sale_order(osv.Model):
             string='Order Lines displayed on Website', readonly=True,
             help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
         ),
-        'cart_quantity': fields.function(_cart_qty, type='integer', string='Main Menu'),
-        'state': fields.selection(sale.AVAILABLE_STATES, 'Status'),
+        'cart_quantity': fields.function(_cart_qty, type='integer', string='Cart Quantity'),
+        'payment_acquirer_id': fields.many2one('payment.acquirer', 'Payment Provider', on_delete='set null'),
+        'payment_tx_id': fields.many2one('payment.transaction', 'Payment Tx', on_delete='set null'),
     }
 
     def _get_errors(self, cr, uid, order, context=None):
@@ -142,8 +141,7 @@ class website(orm.Model):
                     'user_id': w.user_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': partner.property_product_pricelist.id,
-                    'state': 'shopping_cart',
-                    'section_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_sale', 'crm_case_section_shopping_cart')[1],
+                    'section_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website_sale', 'salesteam_website_sales')[1],
                 }
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']

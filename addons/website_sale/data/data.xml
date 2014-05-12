@@ -32,10 +32,12 @@
             <field name="html_class">oe_image_full</field>
         </record>
 
-        <record model="crm.case.section" id="crm_case_section_shopping_cart">
-            <field name="name">Shopping Cart</field>
-            <field name="code">SPC</field>
+        <record model="crm.case.section" id="salesteam_website_sales">
+            <field name="name">Website Sales</field>
+            <field name="code">WS</field>
             <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
+            <field name="use_opportunities" eval="False"/>
+            <field name="use_quotations" eval="False"/>
         </record>
 
     </data>

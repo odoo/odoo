@@ -27,18 +27,6 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FO
 import openerp.addons.decimal_precision as dp
 from openerp import workflow
 
-AVAILABLE_STATES = [
-    ('draft', 'Draft Quotation'),
-    ('sent', 'Quotation Sent'),
-    ('cancel', 'Cancelled'),
-    ('waiting_date', 'Waiting Schedule'),
-    ('progress', 'Sales Order'),
-    ('manual', 'Sale to Invoice'),
-    ('shipping_except', 'Shipping Exception'),
-    ('invoice_except', 'Invoice Exception'),
-    ('done', 'Done'),
-]
-
 class sale_order(osv.osv):
     _name = "sale.order"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
@@ -180,7 +168,17 @@ class sale_order(osv.osv):
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this sales order request."),
         'client_order_ref': fields.char('Reference/Description', size=64),
-        'state': fields.selection(AVAILABLE_STATES , 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
+        'state': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),

@@ -176,7 +176,7 @@ class crm_case_section(osv.osv):
         'color': fields.integer('Color Index'),
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
-
+        'use_opportunities': fields.boolean('Opportunities', help="Check this box to manage opportunities in this sales team."),
         'monthly_open_leads': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Open Leads per Month'),
@@ -193,6 +193,7 @@ class crm_case_section(osv.osv):
         'active': 1,
         'stage_ids': _get_stage_common,
         'use_leads': True,
+        'use_opportunities': True,
     }
 
     _sql_constraints = [

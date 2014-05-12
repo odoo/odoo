@@ -87,6 +87,7 @@
             <field name="arch" type="xml">
                 <kanban version="7.0" class="oe_background_grey">
                     <field name="use_leads"/>
+                    <field name="use_opportunities"/>
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="member_ids"/>
@@ -119,7 +120,7 @@
                                                     options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
                                             </a>
                                         </div>
-                                        <div class="oe_salesteams_opportunities">
+                                        <div class="oe_salesteams_opportunities" t-if="record.use_opportunities.raw_value">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
                                             <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
                                                 <field name="monthly_planned_revenue" widget="sparkline_bar"
@@ -197,6 +198,7 @@
                             </h1>
                             <div name="options_active">
                                 <field name="use_leads" class="oe_inline"/><label for="use_leads"/>
+                                <field name="use_opportunities" class="oe_inline"/><label for="use_opportunities"/>
                             </div>
                         </div>
                         <group>
