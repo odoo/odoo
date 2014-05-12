@@ -2,7 +2,7 @@
 
 import calendar
 from datetime import date
-from dateutil.relativedelta import relativedelta
+from dateutil import relativedelta
 
 from openerp import tools
 from openerp.osv import fields, osv
