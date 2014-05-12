@@ -205,7 +205,8 @@ def propagate_returns(from_method, to_method):
 def make_wrapper(method, old_api, new_api):
     """ Return a wrapper method for `method`. """
     def wrapper(self, *args, **kwargs):
-        if hasattr(self, '_ids'):
+        # avoid hasattr(self, '_ids') because __getattr__() is overridden
+        if '_ids' in self.__dict__:
             return new_api(self, *args, **kwargs)
         else:
             return old_api(self, *args, **kwargs)
