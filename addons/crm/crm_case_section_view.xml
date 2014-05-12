@@ -83,7 +83,7 @@
         <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sale_team.crm_case_section_salesteams_view_kanban"/>
+            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='name']" position="after">
@@ -100,7 +100,7 @@
         <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
             <field name="name">crm.case.section.kanban</field>
             <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sale_team.crm_case_section_salesteams_view_kanban"/>
+            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='name']" position="after">
@@ -158,13 +158,13 @@
             <field name="res_model">crm.case.section</field>
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
-            <field name="view_id" ref="sale_team.crm_case_section_view_tree"/>
+            <field name="view_id" ref="sales_team.crm_case_section_view_tree"/>
         </record>
 
-    <record model="ir.ui.view" id="sale_team_form_view_in_crm">
+    <record model="ir.ui.view" id="sales_team_form_view_in_crm">
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
-            <field name="inherit_id" ref="sale_team.crm_case_section_view_form"/>
+            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
                     <h6><field name="use_leads"/><label for="use_leads" string="Leads"/></h6>

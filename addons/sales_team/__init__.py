@@ -18,26 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Sale Team',
-    'version': '1.0',
-    'author': 'OpenERP SA',
-    'category': 'Sales Management',
-    'summary': 'Sales Team',
-    'description': """
-Using this application you can manage Sales Team  with CRM and/or Sales 
-=======================================================================
- """,
-    'website': 'http://www.openerp.com',
-    'depends': ['base','mail','web_kanban_sparkline',],
-    'data': ['security/sale_team_security.xml',
-             'security/ir.model.access.csv',
-             'res_config_view.xml',
-             'sale_team_data.xml',
-             'sale_team.xml',],
-    'demo': ['sale_team_demo.xml'],
-    'css': ['static/src/css/sale_team.css'],
-    'installable': True,
-    'auto_install': True,
-}
+import sales_team
+import sales_team_config
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

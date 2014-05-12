@@ -26,7 +26,7 @@
             <field name="name">Email</field>
         </record>
 
-        <record model="crm.case.section" id="sale_team.section_sales_department">
+        <record model="crm.case.section" id="sales_team.section_sales_department">
             <field name="use_leads">True</field>
             <field name="alias_name">sales</field>
         </record>
@@ -35,22 +35,22 @@
 
         <record model="crm.payment.mode" id="payment_mode_1">
             <field name="name">Cash</field>
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
 
         <record model="crm.payment.mode" id="payment_mode_2">
             <field name="name">Check</field>
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
 
         <record model="crm.payment.mode" id="payment_mode_3">
             <field name="name">Credit Card</field>
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
 
         <record model="crm.payment.mode" id="payment_mode_4">
             <field name="name">Demand Draft</field>
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
 
         <!--default alias for leads-->

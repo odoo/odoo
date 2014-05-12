@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 
 
-class sale_team_configuration(osv.TransientModel):
+class sales_team_configuration(osv.TransientModel):
     _name = 'sale.config.settings'
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 

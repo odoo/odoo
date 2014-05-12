@@ -2,12 +2,12 @@
 <openerp>
     <data>
 
-        <record model="crm.case.section" id="sale_team.section_sales_department">
+        <record model="crm.case.section" id="sales_team.section_sales_department">
             <field name="invoiced_forecast">52700</field>
             <field name="invoiced_target">60000</field>
         </record>
         
-        <record model="crm.case.section" id="sale_team.crm_case_section_1">
+        <record model="crm.case.section" id="sales_team.crm_case_section_1">
             <field name="name">Indirect Sales</field>
             <field name="code">IM</field>
             <field name="invoiced_forecast">36000</field>
@@ -21,7 +21,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="journal_id" ref="account.sales_journal"/>
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="state">draft</field>
             <field name="type">in_invoice</field>
             <field name="account_id" ref="account.a_recv"/>
@@ -69,7 +69,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="journal_id" ref="account.sales_journal"/>
-            <field name="section_id" ref="sale_team.crm_case_section_1"/>
+            <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="account.a_recv"/>
@@ -98,32 +98,32 @@
 
 
         <record id="sale.sale_order_1" model="sale.order">
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="sale.sale_order_2" model="sale.order">
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="sale.sale_order_3" model="sale.order">
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
         <record id="sale.sale_order_4" model="sale.order">
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
         </record>
         <record id="sale.sale_order_5" model="sale.order">
-            <field name="section_id" ref="sale_team.crm_case_section_1"/>
+            <field name="section_id" ref="sales_team.crm_case_section_1"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="sale.sale_order_6" model="sale.order">
-            <field name="section_id" ref="sale_team.crm_case_section_1"/>
+            <field name="section_id" ref="sales_team.crm_case_section_1"/>
         </record>
         <record id="sale.sale_order_7" model="sale.order">
-            <field name="section_id" ref="sale_team.section_sales_department"/>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
             <field name="date_confirm" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="sale.sale_order_8" model="sale.order">
-            <field name="section_id" ref="sale_team.crm_case_section_1"/>
+            <field name="section_id" ref="sales_team.crm_case_section_1"/>
         </record>
 
     </data>
