@@ -4,19 +4,19 @@
     var website = openerp.website;
     var _t = openerp._t;
 
-    website.snippet.options.subscribe = website.snippet.Option.extend({
+    website.snippet.options.mailing_list_subscribe = website.snippet.Option.extend({
         on_prompt: function () {
             var self = this;
             return website.prompt({
-                id: "editor_new_subscribe_button",
-                window_title: _t("Add a Subscribe Button"),
-                select: _t("Discussion List"),
+                id: "editor_new_mailing_list_subscribe_button",
+                window_title: _t("Add a Newsletter Subscribe Button"),
+                select: _t("Newsletter"),
                 init: function (field) {
-                    return website.session.model('mail.group')
-                            .call('name_search', ['', [['public','=','public']]], { context: website.get_context() });
+                    return website.session.model('mail.mass_mailing.list')
+                            .call('name_search', ['', []], { context: website.get_context() });
                 },
-            }).then(function (mail_group_id) {
-                self.$target.attr("data-id", mail_group_id);
+            }).then(function (mailing_list_id) {
+                self.$target.attr("data-list-id", mailing_list_id);
             });
         },
         drop_and_build_snippet: function() {
