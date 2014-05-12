@@ -260,7 +260,7 @@ class website_sale(http.Controller):
 
         # if transaction pending / done: redirect to confirmation
         tx = context.get('website_sale_transaction')
-        if tx.state != 'shopping_cart':
+        if tx and tx.state != 'shopping_cart':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
     def checkout_values(self, data=None):
@@ -537,7 +537,7 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
-        elif tx.state == 'shopping_cart':  # button cliked but no more info -> rewrite on tx or create a new one ?
+        elif tx and tx.state == 'shopping_cart':  # button cliked but no more info -> rewrite on tx or create a new one ?
             tx.write({
                 'acquirer_id': acquirer_id,
             })
