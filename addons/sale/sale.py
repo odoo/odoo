@@ -34,6 +34,7 @@ AVAILABLE_STATES = [
     ('waiting_date', 'Waiting Schedule'),
     ('progress', 'Sales Order'),
     ('manual', 'Sale to Invoice'),
+    ('shipping_except', 'Shipping Exception'),
     ('invoice_except', 'Invoice Exception'),
     ('done', 'Done'),
 ]
