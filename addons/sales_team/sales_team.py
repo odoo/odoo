@@ -78,7 +78,7 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16, 2)),
         'color': fields.integer('Color Index'),
-           }
+    }
 
     _defaults = {
         'active': 1,
