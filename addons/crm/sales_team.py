@@ -45,7 +45,7 @@ class crm_case_section(osv.Model):
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
             type="string", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically ""create new leads assigned to the team."),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically create new leads assigned to the team."),
     }
 
     def _auto_init(self, cr, context=None):
