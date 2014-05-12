@@ -68,6 +68,18 @@ class view_custom(osv.osv):
         'arch': fields.text('View Architecture', required=True),
     }
 
+    def name_get(self, cr, uid, ids, context=None):
+        return [(rec.id, rec.user_id.name) for rec in self.browse(cr, uid, ids, context=context)]
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if args is None:
+            args = []
+        if name:
+            ids = self.search(cr, user, [('user_id', operator, name)] + args, limit=limit)
+            return self.name_get(cr, user, ids, context=context)
+        return super(view_custom, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
+
+
     def _auto_init(self, cr, context=None):
         super(view_custom, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
@@ -117,6 +129,8 @@ class view(osv.osv):
         'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
             string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
         'model_ids': fields.one2many('ir.model.data', 'res_id', domain=[('model','=','ir.ui.view')], auto_join=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'write_date': fields.datetime('Last Modification Date', readonly=True),
     }
     _defaults = {
         'priority': 16,
@@ -913,6 +927,11 @@ class view(osv.osv):
             relativedelta=relativedelta,
         )
         qcontext.update(values)
+
+        # TODO: remove this as soon as the following branch is merged
+        #       lp:~openerp-dev/openerp-web/trunk-module-closure-style-msh
+        from openerp.addons.web.controllers.main import module_boot
+        qcontext['modules'] = simplejson.dumps(module_boot()) if request else None
 
         def loader(name):
             return self.read_template(cr, uid, name, context=context)

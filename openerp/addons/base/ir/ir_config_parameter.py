@@ -42,6 +42,7 @@ class ir_config_parameter(osv.osv):
     """Per-database storage of configuration key-value pairs."""
 
     _name = 'ir.config_parameter'
+    _rec_name = 'key'
 
     _columns = {
         'key': fields.char('Key', size=256, required=True, select=1),

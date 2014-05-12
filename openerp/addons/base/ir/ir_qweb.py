@@ -23,9 +23,11 @@ import openerp.http
 import openerp.tools
 import openerp.tools.func
 import openerp.tools.lru
+from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import osv, orm, fields
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -415,10 +417,10 @@ class QWeb(orm.AbstractModel):
         d.context['inherit_branding'] = False
         content = self.render_tag_call(
             element, {'call': name}, generated_attributes, d)
-        if qwebcontext.get('debug'):
-            return content
         bundle = AssetsBundle(name, html=content)
-        return bundle.to_html()
+        css = self.get_attr_bool(template_attributes.get('css'), default=True)
+        js = self.get_attr_bool(template_attributes.get('js'), default=True)
+        return bundle.to_html(css=css, js=js, debug=bool(qwebcontext.get('debug')))
 
     def render_tag_set(self, element, template_attributes, generated_attributes, qwebcontext):
         if "value" in template_attributes:
@@ -455,6 +457,15 @@ class QWeb(orm.AbstractModel):
 
     def get_widget_for(self, widget):
         return self.pool.get('ir.qweb.widget.' + widget, self.pool['ir.qweb.widget'])
+
+    def get_attr_bool(self, attr, default=False):
+        if attr:
+            attr = attr.lower()
+            if attr in ('false', '0'):
+                return False
+            elif attr in ('true', '1'):
+                return True
+        return default
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -1016,15 +1027,22 @@ class AssetsBundle(object):
     def can_aggregate(self, url):
         return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
 
-    def to_html(self, sep='\n'):
+    def to_html(self, sep='\n            ', css=True, js=True, debug=False):
         response = []
-        if self.stylesheets:
-            response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
-        if self.javascripts:
-            response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
+        if debug:
+            if css:
+                for style in self.stylesheets:
+                    response.append(style.to_html())
+            if js:
+                for jscript in self.javascripts:
+                    response.append(jscript.to_html())
+        else:
+            if css and self.stylesheets:
+                response.append('<link href="/web/css/%s" rel="stylesheet"/>' % self.xmlid)
+            if js and self.javascripts:
+                response.append('<script type="text/javascript" src="/web/js/%s"></script>' % self.xmlid)
         response.extend(self.remains)
-
-        return sep.join(response)
+        return sep + sep.join(response)
 
     @openerp.tools.func.lazy_property
     def last_modified(self):
@@ -1048,7 +1066,7 @@ class AssetsBundle(object):
             self.cache[key] = content
         if self.debug:
             return "/*\n%s\n*/\n" % '\n'.join(
-                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
+                [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
         return self.cache[key]
 
     def css(self):
@@ -1068,53 +1086,64 @@ class AssetsBundle(object):
             self.cache[key] = content
         if self.debug:
             return "/*\n%s\n*/\n" % '\n'.join(
-                [asset.filename for asset in self.javascripts if asset.filename]) + self.cache[key]
+                [asset.url for asset in self.javascripts if asset.url]) + self.cache[key]
         return self.cache[key]
 
 class WebAsset(object):
     def __init__(self, source=None, url=None):
         self.source = source
         self.url = url
-        self._filename = None
+        self._irattach = None
         self._content = None
-
-    @property
-    def filename(self):
-        if self._filename is None and self.url:
+        self.filename = None
+        self.last_modified = None
+        if source:
+            self.last_modified = datetime.datetime(1970, 1, 1)
+        if url:
             module = filter(None, self.url.split('/'))[0]
             try:
+                # Test url against modules static assets
                 mpath = openerp.http.addons_manifest[module]['addons_path']
+                self.filename = mpath + self.url.replace('/', os.path.sep)
+                self.last_modified = datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
             except Exception:
-                raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
-            self._filename = mpath + self.url.replace('/', os.path.sep)
-        return self._filename
+                try:
+                    # Test url against ir.attachments
+                    domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+                    attach = request.registry['ir.attachment'].search_read(request.cr, SUPERUSER_ID, domain, ['__last_update', 'datas', 'mimetype'], context=request.context)
+                    self._irattach = attach[0]
+                    server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+                    try:
+                        self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format + '.%f')
+                    except ValueError:
+                        self.last_modified =  datetime.datetime.strptime(attach[0]['__last_update'], server_format)
+                except Exception:
+                    raise KeyError("Could not find asset '%s' for '%s' addon" % (self.url, module))
 
-    @property
+    @openerp.tools.func.lazy_property
     def content(self):
-        if self._content is None:
-            self._content = self.get_content()
-        return self._content
-
-    def get_content(self):
         if self.source:
             return self.source
+        if self._irattach:
+            return self._irattach['datas'].decode('base64')
+        return self.get_content()
 
+    def get_content(self):
         with open(self.filename, 'rb') as fp:
             return fp.read().decode('utf-8')
 
     def minify(self):
         return self.content
 
-    @property
-    def last_modified(self):
-        if self.source:
-            # TODO: return last_update of bundle's ir.ui.view
-            return datetime.datetime(1970, 1, 1)
-        return datetime.datetime.fromtimestamp(os.path.getmtime(self.filename))
-
 class JavascriptAsset(WebAsset):
     def minify(self):
         return rjsmin(self.content)
+
+    def to_html(self):
+        if self.url:
+            return '<script type="text/javascript" src="%s"></script>' % self.url
+        else:
+            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.source
 
 class StylesheetAsset(WebAsset):
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
@@ -1122,9 +1151,6 @@ class StylesheetAsset(WebAsset):
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
 
     def _get_content(self):
-        if self.source:
-            return self.source
-
         with open(self.filename, 'rb') as fp:
             firstline = fp.readline()
             m = re.match(r'@charset "([^"]+)";', firstline)
@@ -1162,6 +1188,12 @@ class StylesheetAsset(WebAsset):
         content = re.sub(r'\s+', ' ', content)
         content = re.sub(r' *([{}]) *', r'\1', content)
         return content
+
+    def to_html(self):
+        if self.url:
+            return '<link rel="stylesheet" href="%s" type="text/css"/>' % self.url
+        else:
+            return '<style type="text/css">%s</style>' % self.source
 
 def rjsmin(script):
     """ Minify js with a clever regex.

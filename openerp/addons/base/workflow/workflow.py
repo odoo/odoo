@@ -123,6 +123,19 @@ class wkf_transition(osv.osv):
     _defaults = {
         'condition': lambda *a: 'True',
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [(line.id, (line.act_from.name) + '+' + (line.act_to.name)) if line.signal == False else (line.id, line.signal) for line in self.browse(cr, uid, ids, context=context)]
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if args is None:
+            args = []
+        if name:
+            ids = self.search(cr, user, ['|',('act_from', operator, name),('act_to', operator, name)] + args, limit=limit)
+            return self.name_get(cr, user, ids, context=context)
+        return super(wkf_transition, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
+
+
 wkf_transition()
 
 class wkf_instance(osv.osv):
