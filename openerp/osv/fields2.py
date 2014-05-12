@@ -205,7 +205,7 @@ class Field(object):
         self.inverse = self._inverse_related
         self.search = self._search_related
 
-        # copy attributes from field to self (readonly, required, etc.)
+        # copy attributes from field to self (string, help, etc.)
         for attr in dir(self):
             if attr.startswith('_related_'):
                 if not getattr(self, attr[9:]):
@@ -240,8 +240,6 @@ class Field(object):
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_readonly = property(attrgetter('readonly'))
-    _related_required = property(attrgetter('required'))
-    _related_states = property(attrgetter('states'))
     _related_groups = property(attrgetter('groups'))
 
     def _setup_regular(self, env):
