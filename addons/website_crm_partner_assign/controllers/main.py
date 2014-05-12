@@ -110,6 +110,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
         }
         return request.website.render("website_crm_partner_assign.index", values)
 
+    # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<int:partner_id>', '/partners/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
     def partners_ref(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)

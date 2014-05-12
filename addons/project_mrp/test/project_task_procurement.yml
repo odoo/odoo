@@ -1,18 +1,43 @@
+- 
+  Update product to automatically create tasks 
+- 
+  !record {model: product.product, id: auto_task_service}: 
+    auto_create_task: True
+    name: Advanced auto task Service
+    type: service
+    list_price: 150.0
+    standard_price: 100.0
+    uom_id: product.product_uom_day
+    uom_po_id: product.product_uom_day
+- 
+  Create a new sales order with a service product
+- 
+  !record {model: sale.order, id: sale_order_service}:
+    partner_id: base.res_partner_2
+    pricelist_id: product.list0
+- 
+  Associate a sale order line
+- 
+  !record {model: sale.order.line, id: service_line}:
+    product_id: auto_task_service
+    product_uom_qty: 50.0
+    name: Fixing the bugs
+    order_id: sale_order_service
 -
   In order to test process to generate task automatic from procurement, I confirm sale order to sale service product.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_3}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_service}
 -
   I run the scheduler.
 -
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
 -
-  Now I check that task details after run procurement
+  Now I check the details of the generated task
 -
   !python {model: procurement.order}: |
     from datetime import datetime
-    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('service_line'))])
     assert procurement_ids, "Procurement is not generated for Service Order Line."
     procurement = self.browse(cr, uid, procurement_ids[0], context=context)
     assert procurement.state != 'done' , "Procurement should not be closed."
@@ -34,14 +59,14 @@
   I close that task.
 -
   !python {model: project.task}: |
-    task_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    task_ids = self.search(cr, uid, [('sale_line_id', '=', ref('service_line'))])
     assert task_ids, "Task is not generated for Service Order Line."
     self.write(cr, uid, task_ids, {'stage_id': ref('project.project_tt_deployment')}, context=context)
 -
   I check procurement of Service Order Line after closed task.
 -
   !python {model: procurement.order}: |
-    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('line_services'))])
+    procurement_ids = self.search(cr, uid, [('sale_line_id', '=', ref('service_line'))])
     assert procurement_ids, "Procurement is not generated for Service Order Line."
     procurement = self.browse(cr, uid, procurement_ids[0], context=context)
     assert procurement.state == 'done' , "Procurement should be closed."

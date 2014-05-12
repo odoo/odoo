@@ -455,21 +455,6 @@ class crm_lead(format_address, osv.osv):
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
-    def set_priority(self, cr, uid, ids, priority, context=None):
-        """ Set lead priority
-        """
-        return self.write(cr, uid, ids, {'priority': priority}, context=context)
-
-    def set_high_priority(self, cr, uid, ids, context=None):
-        """ Set lead priority to high
-        """
-        return self.set_priority(cr, uid, ids, '1', context=context)
-
-    def set_normal_priority(self, cr, uid, ids, context=None):
-        """ Set lead priority to normal
-        """
-        return self.set_priority(cr, uid, ids, '3', context=context)
-
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
         Define the type of the result of the merge.  If at least one of the

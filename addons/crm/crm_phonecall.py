@@ -62,7 +62,7 @@ class crm_phonecall(osv.osv):
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'),
@@ -75,7 +75,7 @@ class crm_phonecall(osv.osv):
 
     _defaults = {
         'date': fields.datetime.now,
-        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
         'state':  _get_default_state,
         'user_id': lambda self, cr, uid, ctx: uid,
         'active': 1

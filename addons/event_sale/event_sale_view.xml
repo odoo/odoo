@@ -10,10 +10,10 @@
                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                     <label for="event_ok"/>
                 </div>
-                <div name='ean' position="after">
+                <field name='type' position="after">
                     <field name="event_type_id" attrs="{'invisible': [('event_ok', '=', False)],
                                                         'readonly': [('is_only_child', '=', False)]}"/>
-                </div>
+                </field>
              </field>
         </record>
 
