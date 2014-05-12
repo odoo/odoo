@@ -53,6 +53,15 @@
 
             <div class="oe_import_with_file oe_padding">
                 <h2>Map your data to OpenERP</h2>
+                <div title="If the model uses openchatter, history tracking
+                            will set up subscriptions and send notifications
+                            during the import, but lead to a slower import.">
+                    <input type="checkbox" id="oe_import_tracking"
+                           checked="checked"/>
+                    <label for="oe_import_tracking">
+                        Track history during import
+                    </label>
+                </div>
                 <input type="checkbox" class="oe_import_has_header"
                        id="oe_import_has_header" checked="checked"/>
                 <label for="oe_import_has_header">The first row of the
