@@ -155,7 +155,7 @@ class WebsiteBlog(http.Controller):
         return response
 
     @http.route([
-        '/blog/<model("blog.blog"):blog>/post/<model("blog.post"):blog_post>',
+            '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
     ], type='http', auth="public", website=True, multilang=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -294,7 +294,7 @@ class WebsiteBlog(http.Controller):
         return values
 
     @http.route(['/blogpost/post_discussion'], type='json', auth="public", website=True)
-    def post_discussion(self, blog_post_id=0, **post):
+    def post_discussion(self, blog_post_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         publish = request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher')
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)

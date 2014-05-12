@@ -427,6 +427,8 @@ class website_sale(http.Controller):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
         order = request.website.sale_get_order(context=context)
+        if not order:
+            return request.redirect("/shop")
 
         redirection = self.checkout_redirection(order)
         if redirection:

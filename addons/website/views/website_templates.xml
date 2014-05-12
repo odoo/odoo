@@ -39,7 +39,7 @@
         ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
          request.httprequest.path == submenu.url) and 'active'
         ">
-        <a t-att-href="submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
+        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
@@ -470,7 +470,6 @@
             <div class="well mt32">
                 <p>This page does not exists, but you can create it as you are administrator of this site.</p>
                 <a class="btn btn-primary" t-attf-href="/website/add/#{ path }">Create Page</a>
-                <span class="text-muted">or</span> <a href="/sitemap">Search a Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>
@@ -706,34 +705,33 @@
 </template>
 
 <template id="robots">
-# robotstxt.org/
 User-agent: *
 Sitemap: <t t-esc="url_root"/>sitemap.xml
 </template>
 
-<template id="sitemap" name="Site Map">
-    <t t-call="website.layout">
-        <ul>
-            <li t-foreach="pages" t-as="page">
-                <a t-att-href="page['url']"><t t-esc="page['name']"/></a>
-            </li>
-        </ul>
-    </t>
+<template id="sitemap_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url t-foreach="pages" t-as="page">
+    <loc><t t-esc="url_root"/><t t-esc="page['loc']"/></loc><t t-if="page.get('lastmod', False)">
+    <lastmod t-esc="page['lastmod']"/></t><t t-if="page.get('priority', False)">
+    <priority t-esc="page['priority']"/></t><t t-if="page.get('changefreq', False)">
+    <changefreq t-esc="page['changefreq']"/></t>
+  </url>
+</urlset>
 </template>
 
-<template id="sitemap_xml">
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        <t t-foreach="pages" t-as="page">
-            <url>
-                <loc><t t-esc="page['url']"/></loc>
-            </url>
-        </t>
-    </urlset>
+<template id="sitemap_index_xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap t-foreach="pages" t-as="page">
+    <loc><t t-esc="url_root"/>sitemap-<t t-esc="page"/>.xml</loc>
+  </sitemap>
+</sitemapindex>
 </template>
+
 
 <!-- Actual pages -->
 
-<template id="homepage" name="Homepage" page="True">
+<template id="homepage" name="Homepage" page="True" priority="29">
     <t t-call="website.layout">
       <div id="wrap" class="oe_structure oe_empty"></div>
     </t>
@@ -741,7 +739,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
-    	<!-- TODO widget contact must add itemprop attributes -->
+        <!-- TODO widget contact must add itemprop attributes -->
         <div t-field="res_company.partner_id" t-field-options='{
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
