@@ -99,7 +99,7 @@
             <field name="domain" eval="[('model', '=', 'forum.post'), ('subtype_id', 'in', [ref('website_forum.mt_answer_edit'), ref('website_forum.mt_question_edit')])]"/>
             <field name="batch_mode">True</field>
             <field name="batch_distinctive_field" eval="ref('mail.field_mail_message_author_id')" />
-            <field name="batch_user_expression">user.id</field>
+            <field name="batch_user_expression">user.partner_id.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_editor">
             <field name="name">Editor</field>

@@ -359,6 +359,10 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
+        if context.get('tracking_disable'):
+            return super(mail_thread, self).create(
+                cr, uid, values, context=context)
+
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
@@ -394,6 +398,9 @@ class mail_thread(osv.AbstractModel):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if context.get('tracking_disable'):
+            return super(mail_thread, self).write(
+                cr, uid, ids, values, context=context)
         # Track initial values of tracked fields
         track_ctx = dict(context)
         if 'lang' not in track_ctx:

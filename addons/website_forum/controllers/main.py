@@ -34,8 +34,8 @@ class WebsiteForum(http.Controller):
     def _prepare_forum_values(self, forum=None, **kwargs):
         Forum = request.registry['forum.forum']
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, context=request.context)
-        public_uid = request.registry['website'].get_public_user(request.cr, request.uid, request.context)
-        values = {'user': user, 'is_public_user': user.id == public_uid,
+        values = {'user': user,
+                  'is_public_user': user.id == request.website.user_id.id,
                   'notifications': self._get_notifications(),
                   'header': kwargs.get('header', dict()),
                   'searches': kwargs.get('searches', dict()),

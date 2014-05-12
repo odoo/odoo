@@ -244,10 +244,8 @@ class WebsiteBlog(http.Controller):
         blog_post = request.registry['blog.post']
         partner_obj = request.registry['res.partner']
         thread_obj = request.registry['mail.thread']
-        website = request.registry['website']
 
-        public_id = website.get_public_user(cr, uid, context)
-        if uid != public_id:
+        if uid != request.website.user_id.id:
             partner_ids = [user.partner_id.id]
         else:
             partner_ids = blog_post._find_partner_from_emails(
