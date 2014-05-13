@@ -51,6 +51,8 @@ class ir_http(orm.AbstractModel):
             # in all cases, website processes them
             request.website_enabled = True
 
+        request.website_multilang = request.website_enabled and func.routing.get('multilang', True)
+
         if request.website_enabled:
             if func:
                 self._authenticate(func.routing['auth'])
