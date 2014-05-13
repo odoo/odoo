@@ -69,6 +69,10 @@ class ir_http(orm.AbstractModel):
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
+                    if request.lang == request.website.default_lang_code:
+                        # If language is in the url and it is the default language, redirect
+                        # to url without language so google doesn't see duplicate content
+                        return request.redirect(path + request.httprequest.query_string)
                     return self.reroute(path)
                 return self._handle_exception(code=404)
         return super(ir_http, self)._dispatch()
