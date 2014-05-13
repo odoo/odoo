@@ -77,7 +77,7 @@ class MailGroup(http.Controller):
         return request.website.render('website_mail_group.group_messages', values)
 
     @http.route([
-        "/groups/<model('mail.group'):group>/<model('mail.message'):message>",
+        '''/groups/<model('mail.group'):group>/<model('mail.message', "[('model','=','mail.group'), ('res_id','=',group[0])]"):message>''',
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
