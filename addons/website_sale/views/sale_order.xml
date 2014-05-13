@@ -8,8 +8,8 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='amount_total']" position="after">
-                    <field name="payment_acquirer_id"/>
-                    <field name="payment_tx_id"/>
+                    <field name="payment_acquirer_id" attrs="{'invisible': [('payment_acquirer_id', '=', False)]}"/>
+                    <field name="payment_tx_id" attrs="{'invisible': [('payment_acquirer_id', '=', False)]}"/>
                 </xpath>
             </field>
         </record>
