@@ -81,27 +81,28 @@
                     </div>
                 </div>
                 <div>
-                    <t t-if="not partners_data">
-                        <p>No result found.</p>
-                    </t>
-                    <t t-foreach="partners_data" t-as="partner_data">
-                        <t t-if="internal_gid != partner_data['grade_id'][1]">
+                    <p t-if="not partners">No result found</p>
+                    <t t-foreach="partners" t-as="partner">
+                        <t t-if="last_grade != partner.grade_id.id">
                             <h3 class="text-center">
-                                <span t-esc="partner_data['grade_id'][1]"/> Partners
-                                <t t-if="current_country"> in <t t-esc="current_country.name"/></t>
+                                <span t-field="partner.grade_id"/> Partners
                             </h3>
-                            <t t-set="internal_gid" t-value="partner_data['grade_id'][1]"/>
+                            <t t-set="last_grade" t-value="partner.grade_id.id"/>
                         </t>
                         <div class="media">
-                            <a class="pull-left" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
-                                <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data['image_small']}"/>
-                            </a>
+                            <a class="pull-left" t-attf-href="/partners/#{slug(partner)}"
+                               t-field="partner.image_small"
+                               t-field-options='{"widget": "image", "class": "media-object"}'
+                            ></a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/partners/#{ slug([partner_data.get('id'), partner_data.get('name')]) }"><t t-if="partner_data['parent_id']"><span t-esc="partner_data['parent_id'][1]"/></t> <span t-esc="partner_data['name']"/></a> - <span t-esc="partner_data['grade_id'][1]"/>
-                                <div t-esc="partner_data['website_short_description']"/>
+                                <a class="media-heading" t-attf-href="/partners/#{slug(partner)}">
+                                    <span t-field="partner.display_name"/>
+                                </a>
+                                <div t-field="partner.website_short_description"/>
                             </div>
                         </div>
                     </t>
+
                 </div>
             </div>
         </t>
@@ -124,6 +125,13 @@
             <t t-call="website_partner.partner_detail"/>
         </t>
     </t>
+</template>
+
+<template id="grade_in_detail" inherit_id="website_partner.partner_detail">
+  <xpath expr="//*[@id='partner_name']" position="after">
+    <h3 class="col-md-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
+      <span t-field="partner.grade_id"/> Partner</h3>
+  </xpath>
 </template>
 
 </data>

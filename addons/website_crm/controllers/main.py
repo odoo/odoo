@@ -23,37 +23,28 @@ class contactus(http.Controller):
             if kwargs.get(field):
                 values[field] = kwargs.pop(field)
         values.update(kwargs=kwargs.items())
-        print values
         return request.website.render("website.contactus", values)
 
     @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
     def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None, **kwargs):
-        post = {}
-        post['description'] = description
-        post['partner_name'] = partner_name
-        post['phone'] = phone
-        post['contact_name'] = contact_name
-        post['email_from'] = email_from
-        post['name'] = name
-
-        required_fields = ['contact_name', 'email_from', 'description']
-        error = set()
-        values = dict((key, post.get(key)) for key in post)
-        values['error'] = error
+        post = {
+            'description': description,
+            'partner_name': partner_name,
+            'phone': phone,
+            'contact_name': contact_name,
+            'email_from': email_from,
+            'name': name or contact_name,
+            'user_id': False,
+        }
 
         # fields validation
-        for field in required_fields:
-            if not post.get(field):
-                error.add(field)
+        error = set(field for field in ['contact_name', 'email_from', 'description']
+                    if not post.get(field))
+
+        values = dict(post, error=error)
         if error:
             values.update(kwargs=kwargs.items())
             return request.website.render("website.contactus", values)
-
-        # if not given: subject is contact name
-        if not post.get('name'):
-            post['name'] = post.get('contact_name')
-            
-        post['user_id'] = False
 
         try:
             post['channel_id'] = request.registry['ir.model.data'].get_object_reference(request.cr, SUPERUSER_ID, 'crm', 'crm_case_channel_website')[1]
