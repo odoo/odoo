@@ -737,7 +737,7 @@
                     <select class="form-control" name="country">
                         <option value="">Country...</option>
                         <t t-foreach="countries or []" t-as="country">
-                            <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country.id"><t t-esc="country.name"/></option>
+                            <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
                         </t>
                      </select>
                 </div>
