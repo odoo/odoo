@@ -46,12 +46,10 @@ class ir_http(orm.AbstractModel):
         try:
             func, arguments = self._find_handler()
             request.website_enabled = func.routing.get('website', False)
-            request.website_multilang = func.routing.get('multilang', False)
         except werkzeug.exceptions.NotFound:
             # either we have a language prefixed route, either a real 404
             # in all cases, website processes them
             request.website_enabled = True
-            request.website_multilang = True
 
         if request.website_enabled:
             if func:

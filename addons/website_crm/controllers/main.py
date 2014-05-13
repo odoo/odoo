@@ -16,7 +16,7 @@ class contactus(http.Controller):
         )
         return url
 
-    @http.route(['/page/website.contactus'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/page/website.contactus'], type='http', auth="public", website=True)
     def contact(self, **kwargs):
         values = {}
         for field in ['description', 'partner_name', 'phone', 'contact_name', 'email_from', 'name']:
@@ -26,7 +26,7 @@ class contactus(http.Controller):
         print values
         return request.website.render("website.contactus", values)
 
-    @http.route(['/crm/contactus'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/crm/contactus'], type='http', auth="public", website=True)
     def contactus(self, description=None, partner_name=None, phone=None, contact_name=None, email_from=None, name=None, **kwargs):
         post = {}
         post['description'] = description

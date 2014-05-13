@@ -72,7 +72,7 @@ def is_multilang_url(local_url, langs=None):
         query_string = url[1] if len(url) > 1 else None
         router = request.httprequest.app.get_db_router(request.db).bind('')
         func = router.match(path, query_args=query_string)[0]
-        return func.routing.get('multilang', False)
+        return func.routing.get('website', False) and func.routing.get('multilang', True)
     except Exception:
         return False
 
