@@ -26,7 +26,7 @@ class WebsiteDoc(http.Controller):
         }
         return request.website.render("website_forum_doc.documentation", value)
 
-    @http.route(['''/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post", "[('documentation_toc_id','=',toc)]"):post>'''], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/how-to/<model("forum.documentation.toc"):toc>/<model("forum.post", "[('documentation_toc_id','=',toc[0])]"):post>'''], type='http', auth="public", website=True, multilang=True)
     def post(self, toc, post, **kwargs):
         # TODO: implement a redirect instead of crash
         assert post.documentation_toc_id.id == toc.id, "Wrong post!"
