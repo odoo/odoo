@@ -22,7 +22,7 @@
         // this unique id will be replaced by hostname_databasename by
         // openerp.web.Session on the first connection
         _session_id: "instance0",
-        _modules: ['web'],
+        _modules: openerp._modules || ['web'],
         web_mobile: {},
         /**
          * OpenERP instance constructor
@@ -30,8 +30,8 @@
          * @param {Array|String} modules list of modules to initialize
          */
         init: function(modules) {
-            if (modules === null) {
-                modules = [];
+            if (modules === undefined) {
+                modules = openerp._modules;
             }
             modules = _.without(modules, "web");
             if (inited)

@@ -20,6 +20,12 @@
 
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" charset="utf-8">
+                openerp._modules = <t t-raw="modules"/>;
+            </script>
+
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         </template>
 
@@ -83,8 +89,6 @@
             <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
             <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
 
-            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
             <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
             <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
             <script type="text/javascript" src="/web/static/src/js/testing.js"></script>
@@ -136,7 +140,7 @@
                     <t t-call-assets="web.assets_backend"/>
                     <script type="text/javascript">
                         $(function() {
-                            var s = new openerp.init(<t t-raw="modules"/>);
+                            var s = new openerp.init();
                             <t t-if="init">
                                 <t t-raw="init"/>
                             </t>
