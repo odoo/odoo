@@ -16,8 +16,6 @@
     <t t-call="website.theme"/>
 
     <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
-    <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
-    <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
 
     <script type="text/javascript" src="/website/static/src/js/website.js"></script>
 
@@ -83,10 +81,12 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
 
-            <t t-set="languages" t-value="website.get_languages()"/>
-            <t t-foreach="languages" t-as="lg">
-                <t t-set="force_lang" t-value="lg[0] if lg[0] != website.default_lang_code else None"/>
-                <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
+            <t t-if="request.website_multilang">
+                <t t-set="languages" t-value="website.get_languages()"/>
+                <t t-foreach="languages" t-as="lg">
+                    <t t-set="force_lang" t-value="lg[0] if lg[0] != website.default_lang_code else None"/>
+                    <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
+                </t>
             </t>
 
             <t t-call-assets="website.assets_frontend"/>
@@ -177,7 +177,7 @@
                                         their performance.
                                     </p>
                                 </div>
-                                <ul class="list-inline js_language_selector mt16" t-if="(len(languages) &gt; 1 or editable)">
+                                <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
                                     <li t-foreach="languages" t-as="lg">
                                         <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
                                            t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
