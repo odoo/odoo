@@ -20,6 +20,14 @@
     </xpath>
 </template>
 
+<!-- helper -->
+<template id="muted_button">
+    <form method="POST" t-att-action="url">
+        <button t-attf-class="text-muted fa btn-link #{classes}">
+            <t t-esc="label"/></button>
+    </form>
+</template>
+
 <!-- Page Index -->
 <template id="header" name="Forum Index">
     <t t-call="website.layout">
@@ -387,10 +395,10 @@
 <template id="vote">
     <div t-attf-class="box oe_grey">
         <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''}" 
-            t-attf-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
+            t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
         <span id="vote_count" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
-            t-attf-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
+            t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
         <div t-if="vote_count &gt; 1" class="subtitle">
             votes
         </div>
@@ -412,7 +420,7 @@
                     <span t-field="question.views"/> Views
                 </div>
                 <div class="mt4">
-                    <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
+                    <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                         t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                 </div>
             </div>
@@ -495,7 +503,7 @@
                     </t>
                     <div class="text-muted mt8">
                         <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'}"
-                            t-attf-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
+                            t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                     </div>
                 </div>
                 <div style="margin-left: 95px;" class="clearfix">
@@ -511,10 +519,18 @@
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit"> Edit</a>
                             </li>
                             <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"> Delete</a>
+                                <t t-call="website_forum.muted_button">
+                                    <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"/></t>
+                                    <t t-set="label"> Delete</t>
+                                    <t t-set="classes">fa-trash-o</t>
+                                </t>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
-                                <a class="text-muted fa fa-magic" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment"> Convert as a comment</a>
+                                <t t-call="website_forum.muted_button">
+                                    <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment"/></t>
+                                    <t t-set="label">Convert as a comment</t>
+                                    <t t-set="classes">fa-magic</t>
+                                </t>
                             </li>
                         </ul>
                         <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
@@ -550,15 +566,19 @@
             <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey">
                 <small class="text-muted">
                     <button type="button" t-if="user.partner_id.id == message.author_id.id and user.karma&gt;=750"
-                        t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete" 
+                        t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete"
                         class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
                     <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
                         t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
                     on <span t-field="message.date" t-field-options='{"format":"short"}'/>
-                    <a class="fa fa-magic text-muted pull-right"
-                        t-attf-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/convert_to_answer">Convert as an answer</a>
+
+                    <t t-call="website_forum.muted_button">
+                        <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/convert_to_answer"/></t>
+                        <t t-set="label"> Convert as an answer</t>
+                        <t t-set="classes">fa-magic pull-right</t>
+                    </t>
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
