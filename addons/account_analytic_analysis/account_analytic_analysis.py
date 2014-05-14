@@ -62,22 +62,22 @@ class account_analytic_invoice_line(osv.osv):
         context = context or {}
         uom_obj = self.pool.get('product.uom')
         company_id = company_id or False
-        context.update({'company_id': company_id, 'force_company': company_id, 'pricelist_id': pricelist_id})
+        local_context = dict(context, company_id=company_id, force_company=company_id, pricelist=pricelist_id)
 
         if not product:
             return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
             if part.lang:
                 context.update({'lang': part.lang})
 
         result = {}
-        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price_unit if price_unit is not False else (res.list_price or 0.0)})
+        res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
+        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price_unit if price_unit is not False else (res.price or res.list_price)})
 
         res_final = {'value':result}
         if result['uom_id'] != res.uom_id.id:
-            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=context)
+            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=local_context)
             new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
             res_final['value']['price_unit'] = new_price
         return res_final
