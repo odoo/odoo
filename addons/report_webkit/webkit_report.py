@@ -105,10 +105,9 @@ class WebKitParser(report_sxw):
         """Call webkit in order to generate pdf"""
         if not webkit_header:
             webkit_header = report_xml.webkit_header
-        out_filename = tempfile.NamedTemporaryFile(suffix=".pdf",
-                                                   prefix="webkit.tmp.",
-                                                   delete=False)
-        file_to_del = [out_filename.name]
+        fd, out_filename = tempfile.mkstemp(suffix=".pdf",
+                                            prefix="webkit.tmp.")
+        file_to_del = [out_filename]
         if comm_path:
             command = [comm_path]
         else:
@@ -150,7 +149,7 @@ class WebKitParser(report_sxw):
                 html_file.write(self._sanitize_html(html))
             file_to_del.append(html_file.name)
             command.append(html_file.name)
-        command.append(out_filename.name)
+        command.append(out_filename)
         stderr_fd, stderr_path = tempfile.mkstemp(text=True)
         file_to_del.append(stderr_path)
         try:
@@ -167,8 +166,9 @@ class WebKitParser(report_sxw):
             if status :
                 raise except_osv(_('Webkit error' ),
                                  _("The command 'wkhtmltopdf' failed with error code = %s. Message: %s") % (status, error_message))
-            with out_filename as pdf_file:
+            with open(out_filename, 'rb') as pdf_file:
                 pdf = pdf_file.read()
+            os.close(fd)
         finally:
             if stderr_fd is not None:
                 os.close(stderr_fd)
