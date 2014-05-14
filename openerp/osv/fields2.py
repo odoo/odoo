@@ -1018,7 +1018,7 @@ class _RelationalMulti(_Relational):
     def convert_to_write(self, value, target=None, fnames=None):
         # remove/delete former records
         if target is None:
-            result = [(5,)]
+            result = [(6, 0, [])]
         else:
             tag = 2 if self.type == 'one2many' else 3
             result = [(tag, record.id) for record in target[self.name] - value]
