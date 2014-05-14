@@ -18,34 +18,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
-    'name': 'Opportunity to Quotation',
+    'name': 'Sale Team',
     'version': '1.0',
-    'category': 'Hidden',
-    'description': """
-This module adds a shortcut on one or several opportunity cases in the CRM.
-===========================================================================
-
-This shortcut allows you to generate a sales order based on the selected case.
-If different cases are open (a list), it generates one sale order by case.
-The case is then closed and linked to the generated sales order.
-
-We suggest you to install this module, if you installed both the sale and the crm
-modules.
-    """,
     'author': 'OpenERP SA',
+    'category': 'Sales Management',
+    'summary': 'Sales Team',
+    'description': """
+Using this application you can manage Sales Team  with CRM and/or Sales 
+=======================================================================
+ """,
     'website': 'http://www.openerp.com',
-    'images': ['images/crm_statistics_dashboard.jpeg', 'images/opportunity_to_quote.jpeg'],
-    'depends': ['sale', 'crm', 'web_kanban_gauge'],
-    'data': [
-        'wizard/crm_make_sale_view.xml',
-        'sale_crm_view.xml',
-        'security/sale_crm_security.xml',
-        'security/ir.model.access.csv',
-    ],
-    'demo': [],
-    'test': ['test/sale_crm.yml'],
+    'depends': ['base','mail','web_kanban_sparkline',],
+    'data': ['security/sales_team_security.xml',
+             'security/ir.model.access.csv',
+             'res_config_view.xml',
+             'sales_team_data.xml',
+             'sales_team.xml',],
+    'demo': ['sales_team_demo.xml'],
+    'css': ['static/src/css/sales_team.css'],
     'installable': True,
     'auto_install': True,
 }
