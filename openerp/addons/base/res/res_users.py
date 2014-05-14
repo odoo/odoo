@@ -673,6 +673,21 @@ def partition(f, xs):
         (yes if f(x) else nos).append(x)
     return yes, nos
 
+def parse_m2m(commands):
+    "return a list of ids corresponding to a many2many value"
+    ids = []
+    for command in commands:
+        if isinstance(command, (tuple, list)):
+            if command[0] in (1, 4):
+                ids.append(command[2])
+            elif command[0] == 5:
+                ids = []
+            elif command[0] == 6:
+                ids = list(command[2])
+        else:
+            ids.append(command)
+    return ids
+
 
 class groups_view(osv.osv):
     _inherit = 'res.groups'
@@ -844,7 +859,7 @@ class users_view(osv.osv):
 
     def _get_reified_groups(self, fields, values):
         """ compute the given reified group fields from values['groups_id'] """
-        gids = set(values.get('groups_id') or [])
+        gids = set(parse_m2m(values.get('groups_id') or []))
         for f in fields:
             if is_boolean_group(f):
                 values[f] = get_boolean_group(f) in gids
