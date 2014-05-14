@@ -138,6 +138,12 @@ class res_currency(osv.osv):
         reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name'])) for x in reads]
 
+    @api.new
+    def round(self, amount):
+        """ Return `amount` rounded according to currency `self`. """
+        return float_round(amount, precision_rounding=self.rounding)
+
+    @round.old
     def round(self, cr, uid, currency, amount):
         """Return ``amount`` rounded  according to ``currency``'s
            rounding rules.
@@ -148,6 +154,22 @@ class res_currency(osv.osv):
         """
         return float_round(amount, precision_rounding=currency.rounding)
 
+    @api.new
+    def compare_amounts(self, amount1, amount2):
+        """ Compare `amount1` and `amount2` after rounding them according to
+            `self`'s precision. An amount is considered lower/greater than
+            another amount if their rounded value is different. This is not the
+            same as having a non-zero difference!
+
+            For example 1.432 and 1.431 are equal at 2 digits precision, so this
+            method would return 0. However 0.006 and 0.002 are considered
+            different (returns 1) because they respectively round to 0.01 and
+            0.0, even though 0.006-0.002 = 0.004 which would be considered zero
+            at 2 digits precision.
+        """
+        return float_compare(amount1, amount2, precision_rounding=self.rounding)
+
+    @compare_amounts.old
     def compare_amounts(self, cr, uid, currency, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -169,6 +191,19 @@ class res_currency(osv.osv):
         """
         return float_compare(amount1, amount2, precision_rounding=currency.rounding)
 
+    @api.new
+    def is_zero(self, amount):
+        """ Return true if `amount` is small enough to be treated as zero
+            according to currency `self`'s rounding rules.
+
+            Warning: ``is_zero(amount1-amount2)`` is not always equivalent to 
+            ``compare_amounts(amount1,amount2) == 0``, as the former will round
+            after computing the difference, while the latter will round before,
+            giving different results, e.g., 0.006 and 0.002 at 2 digits precision.
+        """
+        return float_is_zero(amount, precision_rounding=self.rounding)
+
+    @is_zero.old
     def is_zero(self, cr, uid, currency, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to ``currency``'s rounding rules.
@@ -204,6 +239,20 @@ class res_currency(osv.osv):
                     'at the date: %s') % (currency_symbol, date))
         return to_currency.rate/from_currency.rate
 
+    @api.new
+    def compute(self, from_amount, to_currency, round=True):
+        """ Convert `from_amount` from currency `self` to `to_currency`. """
+        assert self, "compute from unknown currency"
+        assert to_currency, "compute to unknown currency"
+        # apply conversion rate
+        if self == to_currency:
+            to_amount = from_amount
+        else:
+            to_amount = from_amount * self._get_conversion_rate(self, to_currency)
+        # apply rounding
+        return to_currency.round(to_amount) if round else to_amount
+
+    @compute.old
     def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
                 round=True, currency_rate_type_from=False, currency_rate_type_to=False, context=None):
         context = dict(context or {})
