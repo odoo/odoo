@@ -1018,10 +1018,13 @@ class _RelationalMulti(_Relational):
     def convert_to_write(self, value, target=None, fnames=None):
         # remove/delete former records
         if target is None:
-            result = [(6, 0, [])]
+            set_ids = []
+            result = [(6, 0, set_ids)]
+            add_existing = lambda id: set_ids.append(id)
         else:
             tag = 2 if self.type == 'one2many' else 3
             result = [(tag, record.id) for record in target[self.name] - value]
+            add_existing = lambda id: result.append((4, id))
 
         if fnames is None:
             # take all fields in cache, except the inverse of self
@@ -1039,7 +1042,7 @@ class _RelationalMulti(_Relational):
                 else:
                     result.append((1, record.id, values))
             else:
-                result.append((4, record.id))
+                add_existing(record.id)
 
         return result
 
