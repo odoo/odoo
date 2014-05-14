@@ -16,7 +16,7 @@ class contactus(http.Controller):
         )
         return url
 
-    @http.route(['/page/website.contactus'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True, multilang=True)
     def contact(self, **kwargs):
         values = {}
         for field in ['description', 'partner_name', 'phone', 'contact_name', 'email_from', 'name']:
