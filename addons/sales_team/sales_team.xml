@@ -195,6 +195,16 @@
                 </p>
             </field>
         </record>
-    <menuitem id="sales_team.menu_sales_team_act" action="crm_case_section_salesteams_act" sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams"/>
+
+        <menuitem id="sales_team.menu_sales_team_act" action="crm_case_section_salesteams_act" sequence="1" parent="base.menu_sales" groups="base.group_multi_salesteams"/>
+
+        <!-- add css / js -->
+        <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/sales_team/static/src/css/sales_team.css"/>
+                <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
+            </xpath>
+        </template>
+
     </data>
 </openerp>
