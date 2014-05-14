@@ -214,9 +214,9 @@ class WebKitParser(report_sxw):
             return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
 
         parser_instance = self.parser(cursor,
-                                           uid,
-                                           self.name2,
-                                           context=context)
+                                      uid,
+                                      self.name2,
+                                      context=context)
 
         self.pool = pooler.get_pool(cursor.dbname)
         objs = self.getObjects(cursor, uid, ids, context)
