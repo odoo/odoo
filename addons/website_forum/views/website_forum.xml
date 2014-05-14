@@ -441,9 +441,9 @@
                     </p>
                     <div t-if="question.state == 'close' and user.karma&gt;=500" class="mb24 text-center">
                         <t t-call="website_forum.link_button">
-                            <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"/></t>
-                            <t t-set="label"> Reopen</t>
-                            <t t-set="classes">fa-arrow-right</t>
+                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
+                            <t t-set="label" t-value="'Reopen'"/>
+                            <t t-set="classes" t-value="'fa-arrow-right'"/>
                         </t>
                     </div>
                 </div>
@@ -465,37 +465,37 @@
                             </li>
                             <li t-if="question.state != 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"/></t>
-                                    <t t-set="label"> Close</t>
-                                    <t t-set="classes">text-muted fa-times</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
+                                    <t t-set="label" t-value="'Close'"/>
+                                    <t t-set="classes" t-vaoue="'text-muted fa-times'"/>
                                 </t>
                             </li>
                             <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"/></t>
-                                    <t t-set="label"> Reopen</t>
-                                    <t t-set="classes">text-muted fa-undo</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
+                                    <t t-set="label" t-value="'Reopen'"/>
+                                    <t t-set="classes" t-value="'text-muted fa-undo'"/>
                                 </t>
                             </li>
                             <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"/></t>
-                                    <t t-set="label"> Edit</t>
-                                    <t t-set="classes">text-muted fa-edit</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/edit'"/>
+                                    <t t-set="label" t-value="'Edit'"/>
+                                    <t t-set="classes" t-value="'text-muted fa-edit'"/>
                                 </t>
                             </li>
                             <li t-if="question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/delete"/></t>
-                                    <t t-set="label"> Delete</t>
-                                    <t t-set="classes">text-muted fa-trash-o</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
+                                    <t t-set="label" t-value="'Delete'"/>
+                                    <t t-set="classes" t-value="'text-muted fa-trash-o'"/>
                                 </t>
                             </li>
                             <li t-if="not question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete"/></t>
-                                    <t t-set="label"> Undelete</t>
-                                    <t t-set="classes">text-muted fa-trash-o</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
+                                    <t t-set="label" t-value="'Undelete'"/>
+                                    <t t-set="classes" t-value="'text-muted fa-trash-o'"/>
                                 </t>
                             </li>
                         </ul>
@@ -544,16 +544,16 @@
                             </li>
                             <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"/></t>
-                                    <t t-set="label"> Delete</t>
-                                    <t t-set="classes">text-muted fa-trash-o</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
+                                    <t t-set="label" t-value="'Delete'"/>
+                                    <t t-set="classes" t-value="'text-muted fa-trash-o'"/>
                                 </t>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
                                 <t t-call="website_forum.link_button">
-                                    <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment"/></t>
-                                    <t t-set="label">Convert as a comment</t>
-                                    <t t-set="classes">text-muted fa-magic</t>
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
+                                    <t t-set="label" t-value="'Convert as a comment'"/>
+                                    <t t-set="classes" t-value="'text-muted fa-magic'"/>
                                 </t>
                             </li>
                         </ul>
@@ -593,16 +593,15 @@
                         t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/delete"
                         class="close comment_delete">&amp;times;</button>
                     <span t-field="message.body"/>
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/convert_to_answer'"/>
+                        <t t-set="label" t-value="'Convert as an answer'"/>
+                        <t t-set="classes" t-value="'text-muted fa-magic pull-right'"/>
+                    </t>
                     <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
                         t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
                     on <span t-field="message.date" t-field-options='{"format":"short"}'/>
-
-                    <t t-call="website_forum.link_button">
-                        <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/convert_to_answer"/></t>
-                        <t t-set="label"> Convert as an answer</t>
-                        <t t-set="classes">text-muted fa-magic pull-right</t>
-                    </t>
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
