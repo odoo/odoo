@@ -26,7 +26,7 @@ from operator import itemgetter
 import time
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
@@ -2078,6 +2078,7 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
+    @api.old
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
@@ -2127,6 +2128,12 @@ class account_tax(osv.osv):
             'total_included': totalin,
             'taxes': tin + tex
         }
+
+    @compute_all.new
+    def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
+        return self._model.compute_all(
+            self._cr, self._uid, self, price_unit, quantity,
+            product=product, partner=partner, force_excluded=force_excluded)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
