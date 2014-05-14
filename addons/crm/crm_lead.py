@@ -167,9 +167,6 @@ class crm_lead(format_address, osv.osv):
         """
         :return dict: difference between current date and log date
         """
-        cal_obj = self.pool.get('resource.calendar')
-        res_obj = self.pool.get('resource.resource')
-
         res = {}
         for lead in self.browse(cr, uid, ids, context=context):
             for field in fields:
@@ -181,39 +178,14 @@ class crm_lead(format_address, osv.osv):
                         date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(lead.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
-                        date_until = lead.date_open
                 elif field == 'day_close':
                     if lead.date_closed:
                         date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(lead.date_closed, "%Y-%m-%d %H:%M:%S")
-                        date_until = lead.date_closed
                         ans = date_close - date_create
                 if ans:
-                    resource_id = False
-                    if lead.user_id:
-                        resource_ids = res_obj.search(cr, uid, [('user_id','=',lead.user_id.id)])
-                        if len(resource_ids):
-                            resource_id = resource_ids[0]
-
-                    duration = float(ans.days)
-                    if lead.section_id and lead.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24
-                        new_dates = cal_obj.interval_get(cr,
-                            uid,
-                            lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
-                            datetime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
-                            duration,
-                            resource=resource_id
-                        )
-                        no_days = []
-                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration =  len(no_days)
-                res[lead.id][field] = abs(int(duration))
+                    duration = abs(int(ans.days))
+                res[lead.id][field] = duration
         return res
 
     _columns = {
@@ -253,7 +225,7 @@ class crm_lead(format_address, osv.osv):
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_close', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Messaging and marketing

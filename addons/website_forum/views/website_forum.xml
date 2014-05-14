@@ -21,9 +21,9 @@
 </template>
 
 <!-- helper -->
-<template id="muted_button">
+<template id="link_button">
     <form method="POST" t-att-action="url">
-        <button t-attf-class="text-muted fa btn-link #{classes}">
+        <button t-attf-class="fa btn-link #{classes}">
             <t t-esc="label"/></button>
     </form>
 </template>
@@ -440,7 +440,11 @@
                         on <span t-field="question.closed_date"/></b>
                     </p>
                     <div t-if="question.state == 'close' and user.karma&gt;=500" class="mb24 text-center">
-                        <a class="fa fa-arrow-right" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"> Reopen</a>
+                        <t t-call="website_forum.link_button">
+                            <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"/></t>
+                            <t t-set="label"> Reopen</t>
+                            <t t-set="classes">fa-arrow-right</t>
+                        </t>
                     </div>
                 </div>
                 <t t-raw="question.content"/>
@@ -460,19 +464,39 @@
                                 </a>
                             </li>
                             <li t-if="question.state != 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
-                                <a class="text-muted fa fa-times" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"> Close</a>
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/ask_for_close"/></t>
+                                    <t t-set="label"> Close</t>
+                                    <t t-set="classes">text-muted fa-times</t>
+                                </t>
                             </li>
                             <li t-if="question.state == 'close' and ((user.id == question.create_uid.id and can_close_own) or can_close_all)">
-                                <a class="text-muted fa fa-undo" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"> Reopen</a>
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/reopen"/></t>
+                                    <t t-set="label"> Reopen</t>
+                                    <t t-set="classes">text-muted fa-undo</t>
+                                </t>
                             </li>
                             <li t-if="(user.id == question.create_uid.id and can_edit_own) or can_edit_all">
-                                <a class="text-muted fa fa-edit" t-attf-href="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"> Edit</a>
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/post/#{slug(question)}/edit"/></t>
+                                    <t t-set="label"> Edit</t>
+                                    <t t-set="classes">text-muted fa-edit</t>
+                                </t>
                             </li>
                             <li t-if="question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/delete"> Delete</a>
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/delete"/></t>
+                                    <t t-set="label"> Delete</t>
+                                    <t t-set="classes">text-muted fa-trash-o</t>
+                                </t>
                             </li>
                             <li t-if="not question.active and ((user.id == question.create_uid.id and can_unlink_own) or can_unlink_all)">
-                                <a class="text-muted fa fa-trash-o" t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete"> Undelete</a>
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url"><t t-escf="/forum/#{ slug(forum) }/question/#{slug(question)}/undelete"/></t>
+                                    <t t-set="label"> Undelete</t>
+                                    <t t-set="classes">text-muted fa-trash-o</t>
+                                </t>
                             </li>
                         </ul>
                     </div>
@@ -519,17 +543,17 @@
                                 <a class="text-muted fa fa-edit" t-attf-href="/forum/#{slug(forum)}/post/#{slug(answer)}/edit"> Edit</a>
                             </li>
                             <li t-if="(user.id == answer.create_uid.id and can_unlink_own) or can_unlink_all">
-                                <t t-call="website_forum.muted_button">
+                                <t t-call="website_forum.link_button">
                                     <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(answer)}/delete"/></t>
                                     <t t-set="label"> Delete</t>
-                                    <t t-set="classes">fa-trash-o</t>
+                                    <t t-set="classes">text-muted fa-trash-o</t>
                                 </t>
                             </li>
                             <li t-if="user.id == answer.create_uid.id">
-                                <t t-call="website_forum.muted_button">
+                                <t t-call="website_forum.link_button">
                                     <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(answer)}/convert_to_comment"/></t>
                                     <t t-set="label">Convert as a comment</t>
-                                    <t t-set="classes">fa-magic</t>
+                                    <t t-set="classes">text-muted fa-magic</t>
                                 </t>
                             </li>
                         </ul>
@@ -574,10 +598,10 @@
                         style="display: inline-block;"/>
                     on <span t-field="message.date" t-field-options='{"format":"short"}'/>
 
-                    <t t-call="website_forum.muted_button">
+                    <t t-call="website_forum.link_button">
                         <t t-set="url"><t t-escf="/forum/#{slug(forum)}/post/#{slug(object)}/comment/#{slug(message)}/convert_to_answer"/></t>
                         <t t-set="label"> Convert as an answer</t>
-                        <t t-set="classes">fa-magic pull-right</t>
+                        <t t-set="classes">text-muted fa-magic pull-right</t>
                     </t>
                 </small>
             </div>

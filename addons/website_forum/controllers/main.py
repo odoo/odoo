@@ -73,7 +73,7 @@ class WebsiteForum(http.Controller):
         forums = Forum.browse(cr, uid, obj_ids, context=context)
         return request.website.render("website_forum.forum_all", {'forums': forums})
 
-    @http.route('/forum/new', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/new', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def forum_create(self, forum_name="New Forum", **kwargs):
         forum_id = request.registry['forum.forum'].create(request.cr, request.uid, {
             'name': forum_name,
@@ -220,7 +220,7 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'favourite_ids': favourite_ids}, context=request.context)
         return favourite
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/ask_for_close', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def question_ask_for_close(self, forum, question, **post):
         check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_close_own' or '_karma_modo_close_all')
         if not check_res[0]:
@@ -261,7 +261,7 @@ class WebsiteForum(http.Controller):
         }, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def question_reopen(self, forum, question, **kwarg):
         check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_close_own' or '_karma_modo_close_all')
         if not check_res[0]:
@@ -270,7 +270,7 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'state': 'active'}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def question_delete(self, forum, question, **kwarg):
         check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_unlink_own' or '_karma_modo_unlink_all')
         if not check_res[0]:
@@ -279,7 +279,7 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].write(request.cr, request.uid, [question.id], {'active': False}, context=request.context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
-    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def question_undelete(self, forum, question, **kwarg):
         check_res = self._has_enough_karma(question.create_uid.id == request.uid and '_karma_modo_unlink_own' or '_karma_modo_unlink_all')
         if not check_res[0]:
@@ -338,7 +338,7 @@ class WebsiteForum(http.Controller):
         request.registry['forum.post'].write(cr, uid, [post.id], {'is_correct': not post.is_correct}, context=context)
         return not post.is_correct
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/delete', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def post_delete(self, forum, post, **kwargs):
         check_res = self._has_enough_karma(post.create_uid.id == request.uid and '_karma_modo_unlink_own' or '_karma_modo_unlink_all')
         if not check_res[0]:
@@ -548,7 +548,7 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.edit_profile", values)
 
-    @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/user/<model("res.users"):user>/save', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def save_edited_profile(self, forum, user, **kwargs):
         request.registry['res.users'].write(request.cr, request.uid, [user.id], {
             'name': kwargs.get('name'),
@@ -589,7 +589,7 @@ class WebsiteForum(http.Controller):
     # Messaging
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="public", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/convert_to_answer', type='http', auth="public", methods=['POST'], multilang=True, website=True)
     def convert_comment_to_answer(self, forum, post, comment, **kwarg):
         body = comment.body
         request.registry['mail.message'].unlink(request.cr, request.uid, [comment.id], context=request.context)
@@ -599,7 +599,7 @@ class WebsiteForum(http.Controller):
                 return self.post_comment(forum, answer, comment=html2plaintext(body))
         return self.post_new(forum, question, content=body)
 
-    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", multilang=True, website=True)
+    @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], multilang=True, website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
         values = {
             'comment': html2plaintext(post.content),
