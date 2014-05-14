@@ -5271,6 +5271,13 @@ class BaseModel(object):
             func = lambda rec: filter(None, rec.map(name))
         return self.browse([rec.id for rec in self if func(rec)])
 
+    def sorted(self, key=None):
+        """ Return the recordset `self` ordered by `key` """
+        if key is None:
+            return self.search([('id', 'in', self.ids)])
+        else:
+            return self.browse(map(int, sorted(self, key=key)))
+
     def update(self, values):
         """ Update record `self[0]` with `values`. """
         for name, value in values.iteritems():
