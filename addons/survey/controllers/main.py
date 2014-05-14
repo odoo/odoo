@@ -310,7 +310,8 @@ class WebsiteSurvey(http.Controller):
             current_filters = survey_obj.filter_input_ids(request.cr, request.uid, filter_data, filter_finish, context=request.context)
             filter_display_data = survey_obj.get_filter_display_data(request.cr, request.uid, filter_data, context=request.context)
         return request.website.render(result_template,
-                                      {'survey_dict': self.prepare_result_dict(survey, current_filters),
+                                      {'survey': survey,
+                                       'survey_dict': self.prepare_result_dict(survey, current_filters),
                                        'page_range': self.page_range,
                                        'current_filters': current_filters,
                                        'filter_display_data': filter_display_data,
