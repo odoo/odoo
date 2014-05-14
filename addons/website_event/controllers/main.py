@@ -169,7 +169,7 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @http.route(['/event/<model("event.event"):event>/page/<page:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/page/<path:page>'], type='http', auth="public", website=True, multilang=True)
     def event_page(self, event, page, **post):
         values = {
             'event': event,

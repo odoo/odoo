@@ -833,14 +833,10 @@ class product_product(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        context = context or {}
-        default = dict(default or {})
+        if context is None:
+            context={}
 
-        # Craft our own `<name> (copy)` in en_US (self.copy_translation()
-        # will do the other languages).
-        context_wo_lang = dict(context or {})
-        context_wo_lang.pop('lang', None)
-        product = self.browse(cr, uid, id, context_wo_lang)
+        product = self.browse(cr, uid, id, context)
         if context.get('variant'):
             # if we copy a variant or create one, we keep the same template
             default['product_tmpl_id'] = product.product_tmpl_id.id

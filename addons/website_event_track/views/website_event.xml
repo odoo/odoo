@@ -53,7 +53,9 @@
                 <input type="text" class="form-control" placeholder="Filter Tracks..." id="event_track_search"/>
             </div>
         </section>
-        <section class="container" t-foreach="days.keys()" t-as="day">
+        <t t-set="dayslist" t-value="days.keys()"/>
+        <t t-set="dayslist2" t-value="dayslist.sort()"/> <!-- display days in the right order -->
+        <section class="container" t-foreach="dayslist" t-as="day">
             <t t-set="locations" t-value="days[day]['locations']"/>
             <t t-set="dates" t-value="days[day]['dates']"/>
             <h3 class="page-header mt0">

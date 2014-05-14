@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
-
+LOC_PER_SITEMAP = 45000
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
@@ -49,7 +49,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
+    @http.route('/page/<path:page>', type='http', auth="public", website=True, multilang=True)
     def page(self, page, **opt):
         values = {
             'path': page,
@@ -69,20 +69,34 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         return request.render(page, values)
 
-    @http.route(['/robots.txt'], type='http', auth="public", website=True)
+    @http.route(['/robots.txt'], type='http', auth="public")
     def robots(self):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
-    @http.route('/sitemap', type='http', auth='public', website=True, multilang=True)
-    def sitemap(self):
-        return request.render('website.sitemap', {
-            'pages': request.website.enumerate_pages()
-        })
-
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
-    def sitemap_xml(self):
+    def sitemap_xml_index(self):
+        pages = list(request.website.enumerate_pages())
+        if len(pages)<=LOC_PER_SITEMAP:
+            return self.__sitemap_xml(pages, 0)
+        # Sitemaps must be split in several smaller files with a sitemap index
         values = {
-            'pages': request.website.enumerate_pages()
+            'pages': range(len(pages)/LOC_PER_SITEMAP+1),
+            'url_root': request.httprequest.url_root
+        }
+        headers = {
+            'Content-Type': 'application/xml;charset=utf-8',
+        }
+        return request.render('website.sitemap_index_xml', values, headers=headers)
+
+    @http.route('/sitemap-<int:page>.xml', type='http', auth="public", website=True)
+    def sitemap_xml(self, page):
+        pages = list(request.website.enumerate_pages())
+        return self.__sitemap_xml(pages, page)
+
+    def __sitemap_xml(self, pages, index=0):
+        values = {
+            'pages': pages[index*LOC_PER_SITEMAP:(index+1)*LOC_PER_SITEMAP],
+            'url_root': request.httprequest.url_root.rstrip('/')
         }
         headers = {
             'Content-Type': 'application/xml;charset=utf-8',
@@ -450,4 +464,3 @@ class Website(openerp.addons.web.controllers.main.Home):
             return res
         return request.redirect('/')
 
-# vim:et:
