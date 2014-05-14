@@ -329,19 +329,20 @@ class gamification_challenge(osv.Model):
                 self.write(cr, uid, [challenge.id], {'user_ids': [(4, user.id) for user in challenge.autojoin_group_id.users]}, context=context)
             self.generate_goals_from_challenge(cr, uid, [challenge.id], context=context)
 
-            # goals closed but still opened at the last report date
-            closed_goals_to_report = goal_obj.search(cr, uid, [
-                ('challenge_id', '=', challenge.id),
-                ('start_date', '>=', challenge.last_report_date),
-                ('end_date', '<=', challenge.last_report_date)
-            ])
+            if challenge.last_report_date != fields.date.today():
+                # goals closed but still opened at the last report date
+                closed_goals_to_report = goal_obj.search(cr, uid, [
+                    ('challenge_id', '=', challenge.id),
+                    ('start_date', '>=', challenge.last_report_date),
+                    ('end_date', '<=', challenge.last_report_date)
+                ])
 
-            if len(closed_goals_to_report) > 0:
-                # some goals need a final report
-                self.report_progress(cr, uid, challenge, subset_goal_ids=closed_goals_to_report, context=context)
+                if fields.date.today() >= challenge.next_report_date:
+                    self.report_progress(cr, uid, challenge, context=context)
 
-            if fields.date.today() == challenge.next_report_date:
-                self.report_progress(cr, uid, challenge, context=context)
+                elif len(closed_goals_to_report) > 0:
+                    # some goals need a final report
+                    self.report_progress(cr, uid, challenge, subset_goal_ids=closed_goals_to_report, context=context)
 
         self.check_challenge_reward(cr, uid, ids, context=context)
         return True
