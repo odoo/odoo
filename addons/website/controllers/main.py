@@ -4,6 +4,7 @@ import contextlib
 import hashlib
 import json
 import logging
+import math
 import os
 import datetime
 import re
@@ -75,12 +76,14 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
-        pages = list(request.website.enumerate_pages())
-        if len(pages)<=LOC_PER_SITEMAP:
-            return self.__sitemap_xml(pages, 0)
+        count = 0
+        for loc in request.website.enumerate_pages():
+            count += 1
+        if count <= LOC_PER_SITEMAP:
+            return self.__sitemap_xml(0)
         # Sitemaps must be split in several smaller files with a sitemap index
         values = {
-            'pages': range(len(pages)/LOC_PER_SITEMAP+1),
+            'pages': range(int(math.ceil(float(count) / LOC_PER_SITEMAP))),
             'url_root': request.httprequest.url_root
         }
         headers = {
@@ -90,12 +93,16 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap-<int:page>.xml', type='http', auth="public", website=True)
     def sitemap_xml(self, page):
-        pages = list(request.website.enumerate_pages())
-        return self.__sitemap_xml(pages, page)
+        return self.__sitemap_xml(page)
 
-    def __sitemap_xml(self, pages, index=0):
+    def __sitemap_xml(self, index=0):
+        locs = request.website.enumerate_pages()
+        feed = index * LOC_PER_SITEMAP
+        for i in xrange(feed):
+            locs.next()
         values = {
-            'pages': pages[index*LOC_PER_SITEMAP:(index+1)*LOC_PER_SITEMAP],
+            'locs': locs,
+            'iter': xrange(LOC_PER_SITEMAP),
             'url_root': request.httprequest.url_root.rstrip('/')
         }
         headers = {
