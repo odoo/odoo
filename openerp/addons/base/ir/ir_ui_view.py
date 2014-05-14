@@ -532,10 +532,10 @@ class view(osv.osv):
 
                :return: True if field should be included in the result of fields_view_get
             """
-            if node.tag == 'field' and node.get('name') in Model._all_columns:
-                column = Model._all_columns[node.get('name')].column
-                if column.groups and not self.user_has_groups(
-                        cr, user, groups=column.groups, context=context):
+            if node.tag == 'field' and node.get('name') in Model._fields:
+                field = Model._fields[node.get('name')]
+                if field.groups and not self.user_has_groups(
+                        cr, user, groups=field.groups, context=context):
                     node.getparent().remove(node)
                     fields.pop(node.get('name'), None)
                     # no point processing view-level ``groups`` anymore, return
@@ -572,15 +572,8 @@ class view(osv.osv):
                 fields = xfields
             if node.get('name'):
                 attrs = {}
-                try:
-                    if node.get('name') in Model._columns:
-                        column = Model._columns[node.get('name')]
-                    else:
-                        column = Model._inherit_fields[node.get('name')][2]
-                except Exception:
-                    column = False
-
-                if column:
+                field = Model._fields.get(node.get('name'))
+                if field:
                     children = False
                     views = {}
                     for f in node:
@@ -588,7 +581,7 @@ class view(osv.osv):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = model
-                            xarch, xfields = self.postprocess_and_fields(cr, user, column._obj or None, f, view_id, ctx)
+                            xarch, xfields = self.postprocess_and_fields(cr, user, field.comodel_name, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
