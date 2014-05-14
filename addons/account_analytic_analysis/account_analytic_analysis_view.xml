@@ -38,6 +38,9 @@
                 <field name="partner_id" position="attributes">
                     <attribute name="attrs">{'required': [('type','=','contract'),'|','|',('fix_price_invoices','=',True), ('invoice_on_timesheets', '=', True), ('recurring_invoices', '=', True)]}</attribute>
                 </field>
+                <field name="template_id" position="attributes">
+                    <attribute name="on_change">on_change_template(template_id, date_start, fix_price_invoices, invoice_on_timesheets, recurring_invoices)</attribute>
+                </field>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
                 </xpath>
                 <xpath expr='//separator[@name="description"]' position='before'>
