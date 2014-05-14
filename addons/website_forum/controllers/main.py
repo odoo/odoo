@@ -87,7 +87,7 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/<model("forum.forum"):forum>',
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
-                 '/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions'
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions'''
                  ], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, tag=None, page=1, filters='all', sorting='date', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -190,7 +190,7 @@ class WebsiteForum(http.Controller):
             }, context=context)
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), new_question_id))
 
-    @http.route(['/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0])]"):question>'''], type='http', auth="public", website=True, multilang=True)
     def question(self, forum, question, **post):
         cr, uid, context = request.cr, request.uid, request.context
         # increment view counter
@@ -575,7 +575,7 @@ class WebsiteForum(http.Controller):
         })
         return request.website.render("website_forum.badge", values)
 
-    @http.route(['/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['''/forum/<model("forum.forum"):forum>/badge/<model("gamification.badge"):badge>'''], type='http', auth="public", website=True, multilang=True)
     def badge_users(self, forum, badge, **kwargs):
         user_ids = [badge_user.user_id.id for badge_user in badge.owner_ids]
         users = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, user_ids, context=request.context)
