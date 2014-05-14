@@ -501,7 +501,7 @@
                         </ul>
                     </div>
                     <div>
-                        <span t-field="question.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
+                        <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{question.create_uid.id}/avatar"/>
                         <div>
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.create_uid.id }"
                                 t-field="question.create_uid"
@@ -557,7 +557,7 @@
                                 </t>
                             </li>
                         </ul>
-                        <span t-field="answer.create_uid.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
+                        <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
                         <div>
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{ answer.create_uid.id }"
                                 t-field="answer.create_uid"
@@ -692,7 +692,7 @@
         </h4>
         <div class="row">
             <div class="col-sm-3 mt16" t-foreach="users" t-as="user">
-                <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
+                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                 </div>
@@ -705,7 +705,7 @@
     <t t-call="website_forum.header">
         <div class="row">
             <div t-foreach="users" t-as="user" class="col-sm-4">
-                <span t-field="user.image" t-field-options='{"widget": "image", "class":"pull-left img img-circle img-avatar"}'/>
+                <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
@@ -736,7 +736,7 @@
     <t t-call="website_forum.header">
         <h3>Edit Profile </h3>
             <div class="col-md-2">
-                <span t-field="user.image" t-field-options='{"widget": "image", "class": "img img-responsive img-circle"}'/>
+                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
             </div>
             <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
                 <input name="user_id" t-att-value="user.id" type="hidden"/>
@@ -786,8 +786,7 @@
         </h1>
         <div class="row">
             <div class="col-sm-2">
-                <span t-field="user.image"
-                    t-field-options='{"widget": "image", "class": "img img-responsive img-circle"}'/>
+                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
             </div>
             <div class="col-sm-10">
                 <table class="table table-condensed">

@@ -2,6 +2,7 @@
 
 from datetime import datetime
 import werkzeug.urls
+import werkzeug.wrappers
 import simplejson
 
 from openerp import tools
@@ -87,7 +88,8 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/<model("forum.forum"):forum>',
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
-                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions'''
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions''',
+                 '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag", "[('forum_id','=',forum[0])]"):tag>/questions/page/<int:page>''',
                  ], type='http', auth="public", website=True, multilang=True)
     def questions(self, forum, tag=None, page=1, filters='all', sorting='date', search='', **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -115,7 +117,21 @@ class WebsiteForum(http.Controller):
             order = 'write_date desc'
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
-        pager = request.website.pager(url="/forum/%s" % slug(forum), total=question_count, page=page, step=self._post_per_page, scope=self._post_per_page)
+        if tag:
+            url = "/forum/%s/%s/questions" % (slug(forum), slug(tag))
+        else:
+            url = "/forum/%s" % slug(forum)
+        
+        url_args = {}
+        if search:
+            url_args['search'] = search
+        if filters:
+            url_args['filters'] = filters
+        if sorting:
+            url_args['sorting'] = sorting
+        pager = request.website.pager(url=url, total=question_count, page=page,
+                                      step=self._post_per_page, scope=self._post_per_page,
+                                      url_args=url_args)
 
         obj_ids = Post.search(cr, uid, domain, limit=self._post_per_page, offset=pager['offset'], order=order, context=context)
         question_ids = Post.browse(cr, uid, obj_ids, context=context)
@@ -418,14 +434,16 @@ class WebsiteForum(http.Controller):
     # User
     # --------------------------------------------------
 
-    @http.route('/forum/<model("forum.forum"):forum>/users', type='http', auth="public", website=True, multilang=True)
+    @http.route(['/forum/<model("forum.forum"):forum>/users',
+                 '/forum/<model("forum.forum"):forum>/users/page/<int:page>'],
+                type='http', auth="public", website=True, multilang=True)
     def users(self, forum, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         User = request.registry['res.users']
 
         step = 30
         tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], count=True, context=context)
-        pager = request.website.pager(url="/forum/users", total=tag_count, page=page, step=step, scope=30)
+        pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
 
         obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
         users = User.browse(cr, SUPERUSER_ID, obj_ids, context=context)
@@ -451,6 +469,17 @@ class WebsiteForum(http.Controller):
                 return werkzeug.utils.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
+    @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True, multilang=True)
+    def user_avatar(self, user_id=0, **post):
+        cr, uid, context = request.cr, request.uid, request.context
+        response = werkzeug.wrappers.Response()
+        User = request.registry['res.users']
+        Website = request.registry['website']
+        user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
+        if not user.exists() or (user_id != request.session.uid and user.karma < 1):
+            return Website._image_placeholder(response)
+        return Website._image(cr, SUPERUSER_ID, 'res.users', user.id, 'image', response)
+
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True, multilang=True)
     def open_user(self, forum, user_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
@@ -461,10 +490,9 @@ class WebsiteForum(http.Controller):
         Followers = request.registry['mail.followers']
         Data = request.registry["ir.model.data"]
 
-        user_id = User.search(cr, SUPERUSER_ID, [('id', '=', user_id), ('karma', '>', '1')], context=context)
-        if not user_id:
+        user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
+        if not user.exists() or (user_id != request.session.uid and user.karma < 1): 
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-        user = User.browse(cr, SUPERUSER_ID, user_id[0], context=context)
 
         # questions and answers by user
         user_questions, user_answers = [], []
