@@ -253,7 +253,7 @@ class website_sale(http.Controller):
     def checkout_redirection(self, order):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
-        # must have a draft state of sale order with lines at this point, otherwise reset
+        # must have a draft sale order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
             request.website_sale_reset(cr, uid, context=context)
             return request.redirect('/shop')
@@ -454,7 +454,7 @@ class website_sale(http.Controller):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
 
-         - a draft state sale order with lines; otherwise, clean context / session and
+         - a draft sale order with lines; otherwise, clean context / session and
            back to the shop
          - no transaction in context / session, or only a draft one, if the customer
            did go to a payment.acquirer website but closed the tab without
