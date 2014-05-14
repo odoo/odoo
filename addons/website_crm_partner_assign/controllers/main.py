@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+import re
 
 import werkzeug
 
-import openerp
+from openerp import SUPERUSER_ID
 from openerp.addons.web import http
-from openerp.tools.translate import _
 from openerp.addons.web.http import request
-from openerp.addons.website_partner.controllers import main as website_partner
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 20
@@ -106,10 +105,14 @@ class WebsiteCrmPartnerAssign(http.Controller):
         return request.website.render("website_crm_partner_assign.index", values)
 
     # Do not use semantic controller due to SUPERUSER_ID
-    @http.route(['/partners/<int:partner_id>', '/partners/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
-    def partners_ref(self, partner_id, partner_name='', **post):
-        values = website_partner.get_partner_template_value(partner_id)
-        if not values:
-            return self.partners(**post)
-        values['main_object'] = values['partner']
-        return request.website.render("website_crm_partner_assign.partner", values)
+    @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True, multilang=True)
+    def partners_detail(self, partner_id, partner_name='', **post):
+        mo = re.search('-([-0-9]+)$', str(partner_id))
+        if mo:
+            partner_id = int(mo.group(1))
+            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
+            if partner.exists() and partner.website_published:
+                values = {}
+                values['main_object'] = values['partner'] = partner
+                return request.website.render("website_crm_partner_assign.partner", values)
+        return self.partners(**post)
