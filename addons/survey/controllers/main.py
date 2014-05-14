@@ -234,7 +234,7 @@ class WebsiteSurvey(http.Controller):
 
     # AJAX submission of a page
     @http.route(['/survey/submit/<model("survey.survey"):survey>'],
-                type='http', auth='public', multilang=True, website=True)
+                type='http', methods=['POST'], auth='public', multilang=True, website=True)
     def submit(self, survey, **post):
         _logger.debug('Incoming data: %s', post)
         page_id = int(post['page_id'])
