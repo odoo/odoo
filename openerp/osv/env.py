@@ -97,9 +97,9 @@ class Environment(object):
         context = dict(context, **kwargs)
         return Environment(cr, uid, context)
 
-    def ref(self, xml_id):
+    def ref(self, xml_id, raise_if_not_found=True):
         """ return the record corresponding to the given `xml_id` """
-        return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=True)
+        return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
 
     @property
     def user(self):
