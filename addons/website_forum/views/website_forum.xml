@@ -703,8 +703,11 @@
 
 <template id="users">
     <t t-call="website_forum.header">
-        <div class="row">
-            <div t-foreach="users" t-as="user" class="col-sm-4">
+        <t t-foreach="users" t-as="user">
+            <t t-if="user_index % 3 == 0">
+                <div class="row"></div>
+            </t>
+            <div class="col-sm-4">
                 <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
@@ -725,7 +728,7 @@
                     <t t-raw="0"/>
                 </div>
             </div>
-        </div>
+        </t>
         <div class="pull-left">
             <t t-call="website.pager"/>
         </div>
