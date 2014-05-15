@@ -41,7 +41,7 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">sales_team = self.pool.get('ir.model.data').get_object(cr, uid, 'crm', 'section_sales_department')
+            <field name="code">sales_team = self.pool.get('ir.model.data').get_object(cr, uid, 'sales_team', 'section_sales_department')
 object.write({'section_id': sales_team.id})
             </field>
         </record>

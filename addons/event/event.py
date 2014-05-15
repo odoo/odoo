@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import pytz
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from datetime import datetime, timedelta
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -156,6 +157,22 @@ class event_event(osv.osv):
             for event in self.browse(cr, uid, ids, context=context)
         }
 
+    def _compute_date_tz(self, cr, uid, ids, fld, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        for event in self.browse(cr, uid, ids, context=context):
+            ctx = dict(context, tz=(event.date_tz or 'UTC'))
+            if fld == 'date_begin_located':
+                date_to_convert = event.date_begin
+            elif fld == 'date_end_located':
+                date_to_convert = event.date_end
+            res[event.id] = fields.datetime.context_timestamp(cr, uid, datetime.strptime(date_to_convert, DEFAULT_SERVER_DATETIME_FORMAT), context=ctx)
+        return res
+
+    def _tz_get(self, cr, uid, context=None):
+        return [(x, x) for x in pytz.all_timezones]
+
     _columns = {
         'name': fields.char('Event Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
@@ -175,8 +192,11 @@ class event_event(osv.osv):
             store={'event.registration': (_get_events_from_registrations, ['state'], 10),
                    'event.event': (lambda  self, cr, uid, ids, c = {}: ids, ['seats_max', 'registration_ids'], 20)}),
         'registration_ids': fields.one2many('event.registration', 'event_id', 'Registrations', readonly=False, states={'done': [('readonly', True)]}),
+        'date_tz': fields.selection(_tz_get, string='Timezone'),
         'date_begin': fields.datetime('Start Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_end': fields.datetime('End Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_begin_located': fields.function(_compute_date_tz, string='Start Date Located', type="datetime"),
+        'date_end_located': fields.function(_compute_date_tz, string='End Date Located', type="datetime"),
         'state': fields.selection([
             ('draft', 'Unconfirmed'),
             ('cancel', 'Cancelled'),
@@ -204,7 +224,8 @@ class event_event(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
         'organizer_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id,
-        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id
+        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, context=c).company_id.partner_id.id,
+        'date_tz': lambda self, cr, uid, ctx: ctx.get('tz', "UTC"),
     }
 
     def _check_seats_limit(self, cr, uid, ids, context=None):

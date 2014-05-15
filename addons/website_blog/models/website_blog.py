@@ -16,7 +16,6 @@ class Blog(osv.Model):
     _description = 'Blogs'
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = 'name'
-
     _columns = {
         'name': fields.char('Blog Name', required=True),
         'subtitle': fields.char('Blog Subtitle'),
@@ -29,7 +28,6 @@ class BlogTag(osv.Model):
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
     _order = 'name'
-
     _columns = {
         'name': fields.char('Name', required=True),
     }

@@ -93,7 +93,7 @@ class CrawlSuite(unittest2.TestSuite):
             # switch registry to test mode, so that requests can be made
             registry.enter_test_mode()
 
-            paths = [URL('/'), URL('/sitemap')]
+            paths = [URL('/')]
             seen = set(paths)
 
             while paths:

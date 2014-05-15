@@ -73,5 +73,27 @@
                 </group>
             </field>
         </record>
+
+        <record id="action_website_menu" model="ir.actions.act_window">
+            <field name="name">Website Menu</field>
+            <field name="res_model">website.menu</field>
+            <field name="view_mode">list</field>
+        </record>
+
+        <record id="menu_tree" model="ir.ui.view">
+            <field name="name">website.menu.tree</field>
+            <field name="model">website.menu</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree string="Website menu" editable="bottom">
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="new_window"/>
+                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
     </data>
 </openerp>
