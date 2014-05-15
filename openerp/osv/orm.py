@@ -5595,7 +5595,7 @@ class BaseModel(object):
             # create a new record with the values, except field_name
             record = self.new(values)
             record_values = dict(record._cache)
-            field_value = record._cache.pop(field_name)
+            field_value = record._cache.pop(field_name, False)
 
         # at this point, the cache should be clean
         assert not env.dirty
