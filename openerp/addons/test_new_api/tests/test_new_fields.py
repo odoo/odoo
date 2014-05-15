@@ -266,7 +266,7 @@ class TestNewFields(common.TransactionCase):
         # check that field attributes are copied
         message_field = message.fields_get(['discussion_name'])['discussion_name']
         discussion_field = discussion.fields_get(['name'])['name']
-        self.assertEqual(message_field['required'], discussion_field['required'])
+        self.assertEqual(message_field['help'], discussion_field['help'])
 
     def test_26_inherited(self):
         """ test inherited fields. """

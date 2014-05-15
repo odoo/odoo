@@ -81,7 +81,8 @@ class Category(Model):
 class Discussion(Model):
     _name = 'test_new_api.discussion'
 
-    name = Char(string='Title', required=True)
+    name = Char(string='Title', required=True,
+        help="General description of what this discussion is about.")
     moderator = Many2one('res.users')
     categories = Many2many('test_new_api.category',
         'test_new_api_discussion_category', 'discussion', 'category')
@@ -107,7 +108,7 @@ class Message(Model):
         compute='_compute_size', search='_search_size')
     double_size = Integer(store=False, readonly=True,
         compute='_compute_double_size')
-    discussion_name = Char(related='discussion.name', store=False)
+    discussion_name = Char(related='discussion.name', store=False, readonly=True)
 
     @one
     @constrains('author', 'discussion')
