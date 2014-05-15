@@ -269,8 +269,7 @@ class Post(osv.Model):
         return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]]}
 
     def set_viewed(self, cr, uid, ids, context=None):
-        for post in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [post.id], {'views': post.views + 1}, context=context)
+        cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (tuple(ids),))
         return True
 
 
