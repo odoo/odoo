@@ -3,6 +3,7 @@ import re
 
 import werkzeug
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
