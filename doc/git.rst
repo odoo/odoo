@@ -81,7 +81,7 @@ Basic development workflow
 
   - update the remotes with ``git fetch --all``
   - merge the remote branch into the local one with ``git merge --no-ff
-    origin/trunk``
+    odoo/trunk``
 
 * to push the branch to the development repository, use ``git push -u dev
   <branchname>``, this will automatically create a branch called
