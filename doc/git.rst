@@ -14,7 +14,7 @@ it will will ask a few questions and create a local copy.
 .. note:: if the repository is private, you have to download it manually then
           execute it wherever you want your working copy to be created, go to
           https://github.com/odoo/odoo/blob/master/checkout.sh then click the
-          :guilabel:`Raw` button.
+          **Raw** button.
 
 Git concepts
 ------------
@@ -83,25 +83,26 @@ Basic development workflow
   - merge the remote branch into the local one with ``git merge --no-ff
     origin/trunk``
 
-    .. note::
-
-       * should we promote rebase? That would lead to cleaner histories, but
-         if the branch is already pushed it requires force-pushing since the
-         branch can't be fast-forwarded
-       * git automatically creates a merge commit, should we configure merge
-         with --no-commit?
-       * make --no-ff the default in the config script?
-       * warn about ``git pull``? It is ~ ``git fetch; git merge`` and should
-         probably be avoided
-
 * to push the branch to the development repository, use ``git push -u dev
   <branchname>``, this will automatically create a branch called
   ``<branchname>`` on dev. Next time around you do not have to use ``-u``
 * once the feature is done, create a pull request
 
-  .. note:: CLI tools?
+.. should we promote rebase? That would lead to cleaner histories, but if the
+   branch is already pushed it requires force-pushing since the branch can't
+   be fast-forwarded
 
-.. note:: format for specifying issues? e.g. closes #42?
+.. git automatically creates a merge commit, should we configure merge with
+   --no-commit?
+
+.. make --no-ff the default in the config script?
+
+.. warn about ``git pull``? It is ~ ``git fetch; git merge`` and should
+   probably be avoided
+
+.. CLI tools?
+
+.. format for specifying issues? e.g. closes #42?
 
 Tasks
 -----
@@ -120,9 +121,7 @@ a few differences:
 * ``git log``'s second positional argument is a path (file or
   directory). Because both are optional, if both a revision and a file match
   the revision will be selected. It is recommended to use ``--`` before a file
-  path:
-
-  .. code-block:: console
+  path::
 
     git log -- filepath
 
