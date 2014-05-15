@@ -120,7 +120,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         headers = {
             'Content-Type': 'application/xml;charset=utf-8',
         }
-        return request.render('website.sitemap_xml', values, headers=headers).flatten()
+        return request.render('website.sitemap_xml', values, headers=headers)
 
     #------------------------------------------------------
     # Edit
