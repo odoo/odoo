@@ -69,6 +69,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
+        return request.not_found() # Temporary disable sitemap
         pages = list(request.website.enumerate_pages())
         if len(pages)<=LOC_PER_SITEMAP:
             return self.__sitemap_xml(pages, 0)
