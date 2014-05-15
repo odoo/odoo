@@ -2751,7 +2751,7 @@ class BaseModel(object):
                                 todo_end.append((order, self._update_store, (f, k)))
 
                             # remember new-style stored fields with compute method
-                            if k in self._fields and self._fields[k].compute:
+                            if k in self._fields and self._fields[k].depends:
                                 stored_fields.append(self._fields[k])
 
                             # and add constraints if needed
@@ -2799,7 +2799,7 @@ class BaseModel(object):
             # trigger computation of new-style stored fields with a compute
             def func(cr):
                 _logger.info("Storing computed values of %s fields %s",
-                    self._name, ', '.join(f.name for f in stored_fields))
+                    self._name, ', '.join(sorted(f.name for f in stored_fields)))
                 recs = self.browse(cr, SUPERUSER_ID, [], {'active_test': False})
                 recs = recs.search([])
                 if recs:
