@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import cStringIO
+from itertools import islice
 import json
 import logging
+import math
 import re
 
 from sys import maxint
@@ -21,6 +23,24 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
+
+import time
+
+from functools import wraps
+
+def timeit(f):
+    @wraps(f)
+    def wrapper(*args, **kw):
+        ts = time.time()
+        result = f(*args, **kw)
+        te = time.time()
+
+        print 'func:%r args:[%r, %r] took: %2.4f sec' % \
+          (f.__name__, args, kw, te-ts)
+        return result
+    return wrapper
+
+
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
@@ -67,15 +87,17 @@ class Website(openerp.addons.web.controllers.main.Home):
     def robots(self):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
+    @timeit
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
-        return request.not_found() # Temporary disable sitemap
-        pages = list(request.website.enumerate_pages())
-        if len(pages)<=LOC_PER_SITEMAP:
-            return self.__sitemap_xml(pages, 0)
+        count = 0
+        for loc in request.website.enumerate_pages():
+            count += 1
+        if count <= LOC_PER_SITEMAP:
+            return self.__sitemap_xml(0)
         # Sitemaps must be split in several smaller files with a sitemap index
         values = {
-            'pages': range(len(pages)/LOC_PER_SITEMAP+1),
+            'pages': range(int(math.ceil(float(count) / LOC_PER_SITEMAP))),
             'url_root': request.httprequest.url_root
         }
         headers = {
@@ -85,18 +107,20 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap-<int:page>.xml', type='http', auth="public", website=True)
     def sitemap_xml(self, page):
-        pages = list(request.website.enumerate_pages())
-        return self.__sitemap_xml(pages, page)
+        return self.__sitemap_xml(page)
 
-    def __sitemap_xml(self, pages, index=0):
+    @timeit
+    def __sitemap_xml(self, index=0):
+        start = index * LOC_PER_SITEMAP
+        locs = islice(request.website.enumerate_pages(), start , start + LOC_PER_SITEMAP)
         values = {
-            'pages': pages[index*LOC_PER_SITEMAP:(index+1)*LOC_PER_SITEMAP],
+            'locs': locs,
             'url_root': request.httprequest.url_root.rstrip('/')
         }
         headers = {
             'Content-Type': 'application/xml;charset=utf-8',
         }
-        return request.render('website.sitemap_xml', values, headers=headers)
+        return request.render('website.sitemap_xml', values, headers=headers).flatten()
 
     #------------------------------------------------------
     # Edit
