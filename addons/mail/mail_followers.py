@@ -183,16 +183,20 @@ class mail_notification(osv.Model):
         references = message.parent_id.message_id if message.parent_id else False
 
         # create email values
-        mail_values = {
-            'mail_message_id': message.id,
-            'auto_delete': True,
-            'body_html': body_html,
-            'recipient_ids': [(4, id) for id in email_pids],
-            'references': references,
-        }
-        email_notif_id = self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
-        if force_send:
-            self.pool.get('mail.mail').send(cr, uid, [email_notif_id], context=context)
+        max_recipients = 100
+        chunks = [email_pids[x:x + max_recipients] for x in xrange(0, len(email_pids), max_recipients)]
+        email_ids = []
+        for chunk in chunks:
+            mail_values = {
+                'mail_message_id': message.id,
+                'auto_delete': True,
+                'body_html': body_html,
+                'recipient_ids': [(4, id) for id in chunk],
+                'references': references,
+            }
+            email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
+        if force_send and len(chunks) < 6:  # for more than 500 followers, use the queue system
+            self.pool.get('mail.mail').send(cr, uid, email_ids, context=context)
         return True
 
     def _notify(self, cr, uid, message_id, partners_to_notify=None, context=None,
