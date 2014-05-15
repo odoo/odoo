@@ -496,24 +496,24 @@ class Field(object):
             # this is a computed field
             if self.store and not env.draft:
                 # recompute field on record if required
-                recs_todo = record._recompute_check(self)
-                if recs_todo:
-                    # mark all computed fields as done
-                    map(recs_todo._recompute_done, self.computed_fields)
-                    recs = recs_todo.exists()
-                    # execute the compute method in DRAFT mode
+                recs = record._recompute_check(self)
+                if recs:
+                    # execute the compute method in DRAFT mode; the result is
+                    # saved to database by method BaseModel.recompute()
                     with env.do_in_draft():
-                        self.compute_value(recs)
-                    # save cached result in database
-                    for rec in recs:
-                        rec._write({
-                            f.name: f.convert_to_write(rec[f.name])
-                            for f in self.computed_fields
-                        })
-                    if self in record._cache:
-                        return
-
-                record._prefetch_field(self)
+                        self.compute_value(recs.exists())
+                    # HACK: if result is in the wrong cache, copy values
+                    if recs.env != env:
+                        for source, target in zip(recs, recs._attach_env(env)):
+                            try:
+                                values = target._convert_to_cache({
+                                    f.name: source[f.name] for f in self.computed_fields
+                                })
+                            except MissingError as e:
+                                values = FailedValue(e)
+                            target._cache.update(values)
+                else:
+                    record._prefetch_field(self)
             else:
                 # execute the compute method in DRAFT mode
                 with env.do_in_draft():

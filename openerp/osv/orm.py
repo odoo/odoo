@@ -3940,7 +3940,8 @@ class BaseModel(object):
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
-        recs.recompute()
+        if context.get('recompute', True):
+            recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
         return True
@@ -5553,14 +5554,16 @@ class BaseModel(object):
         for env in list(self.env.all):
             while env.todo:
                 field, recs = next(env.todo.iteritems())
-                # simply evaluate the fields to recompute
+                # evaluate the fields to recompute, and save them to database
                 for rec in recs:
                     try:
-                        rec[field.name]
+                        values = rec._convert_to_write({
+                            f.name: rec[f.name] for f in field.computed_fields
+                        })
+                        rec.sudo(recompute=False)._write(values)
                     except MissingError:
                         pass
-                # mark the computed fields as done; this is to avoid an infinite
-                # loop, as it should already be done in field.determine_value()
+                # mark the computed fields as done
                 map(recs._recompute_done, field.computed_fields)
 
     #
