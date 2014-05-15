@@ -7,6 +7,9 @@
             <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
             <field name="arch" type="xml">
             <data>
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <field name="use_quotations" class="oe_inline"/><label for="use_quotations"/>
+                </xpath>
                 <xpath expr="//field[@name='code']" position="after">
                     <field name="invoiced_target"/>
                     <field name="invoiced_forecast"/>
@@ -22,6 +25,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='name']" position="after">
+                    <field name="use_quotations"/>
                     <field name="monthly_quoted"/>
                     <field name="monthly_confirmed"/>
                     <field name="monthly_invoiced"/>
@@ -30,7 +34,7 @@
                 </xpath>
                 <xpath expr="//div[@class='oe_clear']" position="before">
                     <div class="oe_items_list">
-                        <div class="oe_salesteams_quotations">
+                        <div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
                             <a name="%(action_quotations_salesteams)d" type="action" class="oe_sparkline_bar_link">Quotations</a>
                             <a name="%(action_order_report_quotation_salesteam)d" type="action" class="oe_sparkline_bar_link">
                                 <field name="monthly_quoted" widget="sparkline_bar" options="{'delayIn': '3000'}">

@@ -32,5 +32,3 @@ class sale_order(osv.osv):
         'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Tags', \
             domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", context="{'object_name': 'crm.lead'}")
     }
-    
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

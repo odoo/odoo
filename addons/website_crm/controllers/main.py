@@ -71,6 +71,7 @@ class contactus(http.Controller):
             if not hasattr(field_value, 'filename'):
                 post['description'] = "%s\n%s: %s" % (post['description'], field_name, field_value)
 
+        post['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
         lead_id = request.registry['crm.lead'].create(request.cr, SUPERUSER_ID, post, request.context)
 
         for field_name, field_value in kwargs.items():

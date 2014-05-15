@@ -19,7 +19,7 @@ class crm_case_section(osv.osv):
         date_end = month_begin.replace(day=calendar.monthrange(month_begin.year, month_begin.month)[1]).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for id in ids:
             res[id] = dict()
-            created_domain = [('section_id', '=', id), ('state', '=', ['draft']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
+            created_domain = [('section_id', '=', id), ('state', '=', 'draft'), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
             validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
@@ -37,6 +37,7 @@ class crm_case_section(osv.osv):
         return res
 
     _columns = {
+        'use_quotations': fields.boolean('Opportunities', help="Check this box to manage quotations in this sales team."),
         'invoiced_forecast': fields.integer(string='Invoice Forecast',
             help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"
@@ -53,6 +54,10 @@ class crm_case_section(osv.osv):
         'monthly_invoiced': fields.function(_get_invoices_data,
             type='string', readonly=True,
             string='Rate of sent invoices per duration'),
+    }
+
+    _defaults = {
+        'use_quotations': True,
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):

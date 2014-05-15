@@ -88,6 +88,7 @@
                     <xpath expr="//templates" position="before">
                         <field name="alias_id"/>
                         <field name="use_leads"/>
+                        <field name="use_opportunities"/>
                         <field name="monthly_open_leads"/>
                         <field name="monthly_planned_revenue"/>
                     </xpath>
@@ -103,7 +104,7 @@
                                         options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
                                 </a>
                             </div>
-                            <div class="oe_salesteams_opportunities">
+                            <div class="oe_salesteams_opportunities" t-if="record.use_opportunities.raw_value">
                                 <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
                                 <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
                                     <field name="monthly_planned_revenue" widget="sparkline_bar"
@@ -121,8 +122,9 @@
                 <field name="model">crm.case.section</field>
                 <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
                 <field name="arch" type="xml">
-                    <xpath expr="//field[@name='name']" position="after">
-                        <h6><field name="use_leads"/><label for="use_leads" string="Leads"/></h6>
+                    <xpath expr="//div[@name='options_active']" position="inside">
+                        <field name="use_leads"/><label for="use_leads" string="Leads"/>
+                        <field name="use_opportunities" class="oe_inline"/><label for="use_opportunities"/>
                     </xpath>
                     <xpath expr="//group/field[@name='active']" position="inside">
                         <group>
