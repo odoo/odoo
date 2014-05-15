@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2014-05-12 17:21+0000\n"
+"PO-Revision-Date: 2014-05-14 23:06+0000\n"
 "Last-Translator: Kenneth Aalberg <kenneaal@gmail.com>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-13 06:27+0000\n"
-"X-Generator: Launchpad (build 17002)\n"
+"X-Launchpad-Export-Date: 2014-05-15 06:10+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -8891,7 +8891,7 @@ msgstr "1cm 28cm 20cm 28cm"
 #. module: base
 #: field:ir.module.module,maintainer:0
 msgid "Maintainer"
-msgstr ""
+msgstr "Vedlikeholdes av"
 
 #. module: base
 #: field:ir.sequence,suffix:0
@@ -8913,7 +8913,7 @@ msgstr "Etiketter"
 msgid ""
 "Select this if you want to set company's address information  for this "
 "contact"
-msgstr ""
+msgstr "Velg dette hvis du vil sette en firmaadresse for denne kontakten"
 
 #. module: base
 #: field:ir.default,field_name:0
@@ -8923,17 +8923,17 @@ msgstr "Objektfelt"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (PE) / Español (PE)"
-msgstr "Spanish (PE) / Español (PE)"
+msgstr "Spansk (PE) / Español (PE)"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "French (CH) / Français (CH)"
-msgstr "French (CH) / Français (CH)"
+msgstr "Fransk (CH) / Français (CH)"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Distributor"
-msgstr ""
+msgstr "Distributør"
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -8942,6 +8942,9 @@ msgid ""
 "the same values as those available in the condition field, e.g. `Hello [[ "
 "object.partner_id.name ]]`"
 msgstr ""
+"Epost emne, kan inneholde uttrykk i doble braketter basert på samme verdier "
+"som er tilgjengelige i alternativfeltet, f. eks 'Hallo "
+"[[object.partner_id.name]]'"
 
 #. module: base
 #: help:res.partner,image:0
@@ -8949,6 +8952,8 @@ msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
 msgstr ""
+"Dette feltet inneholder bildet som brukes som avatar for denne kontakten, "
+"begrenset til 1024x1024 piksler"
 
 #. module: base
 #: model:res.country,name:base.to
@@ -8962,11 +8967,13 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Hvis satt, vil dette feltet bli lagret i serialiseringsfeltet istedet for en "
+"egen databasekolonne. Dette kan ikke endres etter opprettelse."
 
 #. module: base
 #: view:res.partner.bank:0
 msgid "Bank accounts belonging to one of your companies"
-msgstr ""
+msgstr "Bankkontoer som tilhører en av dine firmaer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_plans
@@ -9028,22 +9035,22 @@ msgstr ""
 #. module: base
 #: view:base.language.export:0
 msgid "POEdit"
-msgstr ""
+msgstr "POEdit"
 
 #. module: base
 #: view:ir.values:0
 msgid "Client Actions"
-msgstr ""
+msgstr "Klienthandlinger"
 
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
 msgid "Type Fields"
-msgstr ""
+msgstr "Typefelt"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Jobs, Recruitment, Applications, Job Interviews"
-msgstr ""
+msgstr "Jobber, rekruttering, søknader, jobbintervju"
 
 #. module: base
 #: code:addons/base/module/module.py:539
@@ -9052,8 +9059,8 @@ msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
-"You try to upgrade a module that depends on the module: %s.\n"
-"But this module is not available in your system."
+"Du prøvde å oppgrade en modul som er avhengig av en annen modul, %s,\n"
+"men den modulen er ikke installert på systemet ditt."
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_project_long_term
@@ -9065,13 +9072,19 @@ msgid ""
 "================\n"
 "    "
 msgstr ""
+"\n"
+"Denne modulen legger til nødvendige sikkerhetsregler og tilgangsrettigheter "
+"for prosjekter og portal.\n"
+"============================================================================="
+"================\n"
+"    "
 
 #. module: base
 #: help:res.currency,position:0
 msgid ""
 "Determines where the currency symbol should be placed after or before the "
 "amount."
-msgstr ""
+msgstr "Skal valutasymbolet vises før eller etter beløpet?"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -9086,7 +9099,7 @@ msgstr "base.update.translations"
 #. module: base
 #: view:ir.rule:0
 msgid "Full Access Right"
-msgstr ""
+msgstr "Full tilgang"
 
 #. module: base
 #: field:res.partner.category,parent_id:0
@@ -9101,7 +9114,7 @@ msgstr "Finland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_shortcuts
 msgid "Web Shortcuts"
-msgstr ""
+msgstr "Websnarveier"
 
 #. module: base
 #: view:res.partner:0
@@ -9114,7 +9127,7 @@ msgstr "Kontakt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at
 msgid "Austria - Accounting"
-msgstr ""
+msgstr "Sveits - Regnskapsføring"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -9124,7 +9137,7 @@ msgstr "ir.ui.menu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project
 msgid "Project Management"
-msgstr ""
+msgstr "Prosjektstyring"
 
 #. module: base
 #: view:ir.module.module:0
@@ -9139,22 +9152,22 @@ msgstr "Kommunikasjon"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analytisk bokføring"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
 msgid "ir.model.constraint"
-msgstr ""
+msgstr "ir.model.constraint"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_graph
 msgid "Graph Views"
-msgstr ""
+msgstr "Grafvisninger"
 
 #. module: base
 #: help:ir.model.relation,name:0
 msgid "PostgreSQL table name implementing a many2many relation."
-msgstr ""
+msgstr "PostgreSQL tabellnavn som implementerer en mange-til-mange relasjon"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -9163,6 +9176,9 @@ msgid ""
 "The kernel of OpenERP, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
+"\n"
+"Kjernen av OpenERP, nødvendig for alle installasjoner.\n"
+"===================================================\n"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -9172,12 +9188,12 @@ msgstr "ir.server.object.lines"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be
 msgid "Belgium - Accounting"
-msgstr ""
+msgstr "Belgia - Regnskapsføring"
 
 #. module: base
 #: view:ir.model.access:0
 msgid "Access Control"
-msgstr ""
+msgstr "Tilgangskontroll"
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -9187,13 +9203,13 @@ msgstr "Kuwait"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
 msgid "Payment Follow-up Management"
-msgstr ""
+msgstr "Betalingsoppfølging"
 
 #. module: base
 #: code:addons/orm.py:5334
 #, python-format
 msgid "The value for the field '%s' already exists."
-msgstr ""
+msgstr "Verdien for feltet '%s' eksisterer allerede."
 
 #. module: base
 #: field:workflow.workitem,inst_id:0
@@ -9208,20 +9224,20 @@ msgid ""
 "with the object and time variables."
 msgstr ""
 "Dette er filnavnet til vedlegget som benyttes til å lagre resultatet av "
-"utskriften. Behold blankt for ikke å lagre utskrevne rapporter. Du kan "
-"benytte et python uttrykk på objektet og variabler for tid/dato."
+"utskriften. La det være blankt for å ikke lagre utskrevne rapporter. Du kan "
+"benytte et python-uttrykk på objektet, og variabler for tid/dato."
 
 #. module: base
 #: sql_constraint:ir.model.data:0
 msgid ""
 "You cannot have multiple records with the same external ID in the same "
 "module!"
-msgstr ""
+msgstr "Du kan ikke ha flere poster med samme eksterne ID i samme modul!"
 
 #. module: base
 #: selection:ir.property,type:0
 msgid "Many2One"
-msgstr ""
+msgstr "Mange-til-en"
 
 #. module: base
 #: model:res.country,name:base.ng
@@ -9232,27 +9248,27 @@ msgstr "Nigeria"
 #: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "For utvalgsfelt må utvalgsalternativer velges!"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
 msgid "IBAN Bank Accounts"
-msgstr ""
+msgstr "IBAN bankkontoer"
 
 #. module: base
 #: field:res.company,user_ids:0
 msgid "Accepted Users"
-msgstr ""
+msgstr "Godkjente brukere"
 
 #. module: base
 #: field:ir.ui.menu,web_icon_data:0
 msgid "Web Icon Image"
-msgstr ""
+msgstr "Webikon bilde"
 
 #. module: base
 #: field:ir.actions.server,wkf_model_id:0
 msgid "Target Object"
-msgstr ""
+msgstr "Målobjekt"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -9262,7 +9278,7 @@ msgstr "Alltid søkbar"
 #. module: base
 #: help:res.country.state,code:0
 msgid "The state code in max. three chars."
-msgstr ""
+msgstr "Statskode med maksimalt tre bokstaver."
 
 #. module: base
 #: model:res.country,name:base.hk
