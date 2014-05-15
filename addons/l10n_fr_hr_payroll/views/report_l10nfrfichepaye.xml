@@ -7,16 +7,16 @@
             <t t-call="report.internal_layout">
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row">
+                    <div class="row">   
                         <div class="col-xs-4">
                             <h2>Bulletin de paie</h2>
                             <h4>Paie du <span t-esc="formatLang(o.date_from, date=True)"/> au <span t-esc="formatLang(o.date_to, date=True)"/></h4>
                         </div>
                         <div class="col-xs-4 pull-right">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" stype="border: 2px solid black;">
                                 <tr>
                                     <td>
-                                        <div t-field="o.employee_id.company_id.partner_id" 
+                                        <div t-field="o.employee_id.company_id.partner_id"  
                                     t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />SIRET:
                                         <span t-esc="o.employee_id.company_id.siret or '_'"/> APE:
                                         <span t-esc="o.employee_id.company_id.ape or '_'"/>
@@ -67,16 +67,14 @@
                                 <th>Quantité / Base</th>
                                 <th>Taux</th>
                                 <th>Montant</th>
-                                <th>Charges Patronales</th>
+                                <th colspan="2">Charges Patronales</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="get_payslip_lines(o.line_ids)" t-as="p">
                                 <td>
                                     <span t-esc="p.code or ''"/>
-                                </td>
-                                <td>
-                                    <span t-esc="p.name or ''"/>
+                                     <span t-esc="p.name or ''" class="col-xs-offset-1"/>
                                 </td>
                                 <td>
                                     <t t-if="p.amount_select== 'percentage'">
@@ -96,25 +94,33 @@
                                 </td>
                                 <td>
                                     <span t-esc="get_employer_line(o, p) and get_employer_line(o, p).rate or ''"/>
-                                </td>
-                                <td>
-                                    <span t-esc="get_employer_line(o,p) and get_employer_line(o,p).total or ''"/>
+                                     <span t-esc="get_employer_line(o,p) and get_employer_line(o,p).total or ''"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed">
-                        <tr>
-                            <td>
-                                <strong>Mode de réglement</strong> : <span t-esc="o.payment_mode or ''"/><br/>
-                                <t t-if="o.paid is True"><strong>Payé</strong></t><br/>
-                                <strong>Conv. Coll.</strong> : <span t-esc="o.employee_id.company_id.conv_coll or ''"/>
-                            </td>
-                            <td><strong>Net à payer </strong>: <span t-esc="get_total_by_rule_category(o, 'NET')"/></td>
-                            <td><strong>Total Charges Patronales</strong> : <span t-esc="get_total_by_rule_category(o, 'COMP')"/></td>
-                        </tr>
-                    </table>
-                    <table class="table table-condensed text-center">
+                     <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table  table-round-border">
+                                <tr>
+                                    <td>
+                                        <div class="pull-right">         
+                                        <strong>Net à payer </strong>: <span t-esc="get_total_by_rule_category(o, 'NET')"/>
+                                        <strong>Total Charges Patronales</strong> : <span t-esc="get_total_by_rule_category(o, 'COMP')"/>
+                                        </div>
+                                        <div class="mt15">
+                                             <strong>Mode de réglement</strong> : <span t-esc="o.payment_mode or ''"/> 
+                                        </div>
+                                        <div class="mt15">
+                                             <t t-if="o.paid is True"><strong>Payé</strong></t>
+                                        </div>
+                                        
+                                   </td>
+                                </tr>   
+                            </table>
+                        </div>
+                     </div>   
+                    <table class="table table-bordered text-center">
                         <thead>
                             <tr>
                                 <th>Salaire Brut</th>
@@ -137,7 +143,7 @@
                         </tbody>
                     </table>
 
-                    <p>DANS VOTRE INTERET ET POUR VOUS AIDER A FAIRE VALOIR VOS DROITS, CONSERVEZ CE 
+                    <p class="mt32">DANS VOTRE INTERET ET POUR VOUS AIDER A FAIRE VALOIR VOS DROITS, CONSERVEZ CE 
 BULLETIN DE PAIE SANS LIMITATION DE DUREE</p>
                 </div>
             </t>
