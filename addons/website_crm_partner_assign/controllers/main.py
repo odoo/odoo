@@ -3,10 +3,10 @@ import re
 
 import werkzeug
 
-import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools.translate import _
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 20
@@ -45,10 +45,10 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         # group by country
         countries = partner_obj.read_group(
-            request.cr, openerp.SUPERUSER_ID, partner_domain, ["id", "country_id"],
+            request.cr, SUPERUSER_ID, partner_domain, ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
         countries_partners = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, partner_domain,
+            request.cr, SUPERUSER_ID, partner_domain,
             context=request.context, count=True)
 
         if country_id:
@@ -68,23 +68,23 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         # format pager
         partner_count = partner_obj.search_count(
-            request.cr, openerp.SUPERUSER_ID, partner_domain,
+            request.cr, SUPERUSER_ID, partner_domain,
             context=request.context)
         pager = request.website.pager(url="/partners", total=partner_count, page=page, step=self._references_per_page, scope=7, url_args=post)
 
-        partner_ids = partner_obj.search(request.cr, openerp.SUPERUSER_ID, partner_domain,
+        partner_ids = partner_obj.search(request.cr, SUPERUSER_ID, partner_domain,
                                          offset=pager['offset'], limit=self._references_per_page,
                                          order="grade_id DESC, partner_weight DESC",
                                          context=request.context)
         google_map_partner_ids = ','.join(map(str, partner_ids))
-        partners = partner_obj.browse(request.cr, openerp.SUPERUSER_ID, partner_ids, request.context)
+        partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
 
         # group by grade
         grades = partner_obj.read_group(
-            request.cr, openerp.SUPERUSER_ID, base_partner_domain, ["id", "grade_id"],
+            request.cr, SUPERUSER_ID, base_partner_domain, ["id", "grade_id"],
             groupby="grade_id", orderby="grade_id DESC", context=request.context)
         grades_partners = partner_obj.search(
-            request.cr, openerp.SUPERUSER_ID, base_partner_domain,
+            request.cr, SUPERUSER_ID, base_partner_domain,
             context=request.context, count=True)
         grades.insert(0, {
             'grade_id_count': grades_partners,
