@@ -229,6 +229,7 @@
                   <t t-if="filters == 'followed'">Followed</t>
                   <t t-if="tag"><span t-field="tag.name"/></t>
                   <t t-if="sorting == 'date'"> by activity date</t>
+                  <t t-if="sorting == 'creation'"> by creation date</t>
                   <t t-if="sorting == 'answered'"> by most answered</t>
                   <t t-if="sorting == 'vote'"> by most voted</t>
                   <b class="caret"/>
@@ -251,6 +252,9 @@
                   <li class="dropdown-header">Sort by</li>
                   <li t-att-class="sorting == 'date' and 'active' or '' ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='date')">Last activity date</a>
+                  </li>
+                  <li t-att-class="sorting == 'creation' and 'active' or '' ">
+                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='creation')">Newest</a>
                   </li>
                   <li t-att-class="sorting == 'answered' and 'active' or '' ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='answered')">Most answered</a>

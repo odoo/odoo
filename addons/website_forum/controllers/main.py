@@ -112,9 +112,11 @@ class WebsiteForum(http.Controller):
             order = 'child_count desc'
         elif sorting == 'vote':
             order = 'vote_count desc'
-        else:
-            sorting = 'date'
+        elif sorting == 'date':
             order = 'write_date desc'
+        else:
+            sorting = 'creation'
+            order = 'create_date desc'
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:
