@@ -36,13 +36,13 @@
                 </h2>
             </div>
 
-            <div class="col-md-4 mb32" id="partner_left">
+            <div class="col-md-3 mb32" id="partner_left">
 
-                <ul class="nav nav-pills nav-stacked mt16">
-                    <li class="nav-header"><h3>Categories</h3></li>
+                <ul id="reseller_grades" class="nav nav-pills nav-stacked mt16">
+                    <li class="nav-header"><h3>Filter by Grade</h3></li>
                     <t t-foreach="grades" t-as="grade">
-                        <li t-if="grade['grade_id']" t-att-class="grade['grade_id'][0] == grade_id and 'active' or ''">
-                            <a t-attf-href="#{ grade['grade_id'][0] and '/partners/grade/%s' % grade['grade_id'][0] or '/partners' }#{ current_country_id and ('/country/%s' % current_country_id) or '' }#{ search_path }">
+                        <li t-att-class="grade['active'] and 'active' or ''">
+                            <a t-attf-href="/partners/#{ grade['grade_id'][0] and 'grade/%s/' % grade['grade_id'][0] or '' }#{ current_country and 'country/%s/' % slug(current_country) or '' }#{ search_path }">
                                 <span class="badge pull-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/> 
                             </a>
@@ -51,34 +51,26 @@
                 </ul>
 
                 <ul id="reseller_countries" class="nav nav-pills nav-stacked mt16">
-                    <li class="nav-header"><h3>Locations</h3></li>
-                    <t t-foreach="countries" t-as="country_dict">
-                        <t t-if="country_dict['country_id']">
-                            <li t-att-class="country_dict['country_id'][0] == current_country_id and 'active' or ''">
-                                <a t-attf-href="#{ country_dict['country_id'][0] and ('/partners/country/%s' % slug(country_dict['country_id'])) or '/partners' }#{ search_path }">
-                                    <span class="badge pull-right" t-esc="country_dict['country_id_count'] or ''"/>
-                                    <t t-esc="country_dict['country_id'][1]"/> 
-                                </a>
-                            </li>
-                        </t>
+                    <li class="nav-header"><h3>Filter by Country</h3></li>
+                    <t t-foreach="countries" t-as="country">
+                        <li t-att-class="country['active'] and 'active' or ''">
+                            <a t-attf-href="/partners/#{ current_grade and 'grade/%s/' % slug(current_grade) or ''}#{country['country_id'][0] and 'country/%s/' % country['country_id'][0] or '' }#{ search_path }">
+                                <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
+                                <t t-esc="country['country_id'][1]"/> 
+                            </a>
+                        </li>
                     </t>
                 </ul>
 
             </div>
             
-            <div class="col-md-8" id="ref_content">
-                <div class='navbar'>
-                    <div>
-                        <t t-call="website.pager">
-                           <t t-set="classname">pull-left</t>
-                        </t>
-                        <form action="" method="get" class="navbar-search pull-right pagination form-inline">
-                            <div class="form-group">
-                                <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                            </div>
-
-                        </form>
-                    </div>
+            <div class="col-md-9" id="ref_content">
+                <div class="pull-right">
+                    <form action="" method="get" class="navbar-search pull-right pagination form-inline">
+                        <div class="form-group">
+                            <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        </div>
+                    </form>
                 </div>
                 <div>
                     <p t-if="not partners">No result found</p>
@@ -94,7 +86,7 @@
                                t-field="partner.image_small"
                                t-field-options='{"widget": "image", "class": "media-object"}'
                             ></a>
-                            <div class="media-body" style="min-height: 64px;">
+                            <div class="media-body o_partner_body" style="min-height: 64px;">
                                 <a class="media-heading" t-attf-href="/partners/#{slug(partner)}">
                                     <span t-field="partner.display_name"/>
                                 </a>
@@ -102,7 +94,11 @@
                             </div>
                         </div>
                     </t>
-
+                </div>
+                <div class='navbar'>
+                    <t t-call="website.pager">
+                       <t t-set="classname">pull-left</t>
+                    </t>
                 </div>
             </div>
         </t>
@@ -113,8 +109,8 @@
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <h3>World Map</h3>
         <ul class="nav">
-            <iframe t-attf-src="/google_map/?width=320&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners"
-                style="width:320px; height:260px; border:0; padding:0; margin:0;"></iframe>
+            <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners"
+                style="width:260px; height:260px; border:0; padding:0; margin:0;"></iframe>
         </ul>
     </xpath>
 </template>
