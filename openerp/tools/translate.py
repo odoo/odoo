@@ -778,6 +778,11 @@ def trans_generate(lang, modules, cr):
                 except (IOError, etree.XMLSyntaxError):
                     _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
+        elif model == 'ir.model':
+            model_pool = pool.get(obj.model)
+            if model_pool:
+                push_translation(module, 'code', '_description', 0, model_pool._description)
+
         for field_name,field_def in obj._table._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
