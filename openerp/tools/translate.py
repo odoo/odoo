@@ -196,7 +196,7 @@ class GettextAlias(object):
             lang = ctx.get('lang')
         s = frame.f_locals.get('self', {})
         if not lang:
-            c = getattr(s, 'localcontext', None)
+            c = getattr(s, 'localcontext', None) or getattr(s, 'context', None)
             if c:
                 lang = c.get('lang')
         if not lang:
