@@ -57,9 +57,7 @@ cd $copyname
 
 git config user.name "$name"
 git config user.email "$email"
-for key in branch diff interactive status; do
-    git config --global color.$key auto
-done
+git config color.ui auto
 
 # pre-push script preventing push to odoo repo by default. Git just execs
 # them, so they need a correct shebang and exec bit
