@@ -11,11 +11,6 @@ Use the easy-setup shell script::
 
 it will will ask a few questions and create a local copy.
 
-.. note:: if the repository is private, you have to download it manually then
-          execute it wherever you want your working copy to be created, go to
-          https://github.com/odoo/odoo/blob/master/checkout.sh then click the
-          **Raw** button.
-
 Git concepts
 ------------
 
