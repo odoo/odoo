@@ -101,7 +101,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
         partner_ids = partner_obj.search(
             request.cr, SUPERUSER_ID, base_partner_domain,
             offset=pager['offset'], limit=self._references_per_page,
-            order="grade_id DESC, partner_weight DESC",
+            order="grade_id DESC, implemented_count DESC",
             context=request.context)
         google_map_partner_ids = ','.join(map(str, partner_ids))
         partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
