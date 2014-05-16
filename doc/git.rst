@@ -102,6 +102,11 @@ Basic development workflow
 Tasks
 -----
 
+Converting your feature branches from bazaar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`The readme`_ has some instructions.
+
 Viewing history: ``git log``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -231,3 +236,5 @@ checked-out branch/commit
 .. [#log-patch-empty] but only the changes performed by this actual commit,
                       for a merge the merged changes are not considered part
                       of the merge commit
+
+.. _the readme: https://github.com/odoo/odoo/blob/master/README.md#migration-from-bazaar
