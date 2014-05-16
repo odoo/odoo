@@ -1,14 +1,12 @@
 About Odoo
 ==========
 
-Odoo is suite of OpenSource Business apps. More info at:
+Odoo is suite of OpenSource Business apps. More info at http://www.odoo.com
 
-    http://www.odoo.com
+Odoo setup instructions (employees)
+===================================
 
-Odoo git workflow
-=================
-
-    https://github.com/odoo/odoo/blob/master/doc/git.rst
+https://github.com/odoo/odoo/blob/master/doc/git.rst
 
 Installation
 ============
@@ -18,9 +16,8 @@ System Requirements
 
 The dependencies are listed in setup.py
 
-For Luxembourg localization, you also need:
-
- pdftk (http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
+For Luxembourg localization, you also need
+[pdftk](http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/)
 
 Debian/Ubuntu
 -------------
@@ -55,7 +52,7 @@ Install the openerp rpm
 Windows
 -------
 
-    Check the notes in setup.py
+Check the notes in setup.py
 
 Setting up your database
 ------------------------
