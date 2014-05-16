@@ -1559,7 +1559,7 @@ class BaseModel(object):
                 )
                 self._invalids.update(fields)
         if error_msgs:
-            raise except_orm('ValidateError', '\n'.join(error_msgs))
+            raise except_orm(_('ValidateError'), '\n'.join(error_msgs))
         else:
             self._invalids.clear()
 
