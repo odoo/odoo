@@ -7,7 +7,7 @@ Initializing a working copy
 
 Use the easy-setup shell script::
 
-    curl https://raw.github.com/odoo/odoo/master/checkout.sh | sh
+    curl https://raw.githubusercontent.com/odoo/odoo/master/checkout.sh | sh
 
 it will will ask a few questions and create a local copy.
 
