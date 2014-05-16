@@ -100,11 +100,14 @@ class WebsiteCrmPartnerAssign(http.Controller):
         # search partners matching current search parameters
         partner_ids = partner_obj.search(
             request.cr, SUPERUSER_ID, base_partner_domain,
-            offset=pager['offset'], limit=self._references_per_page,
-            order="grade_id DESC, implemented_count DESC",
-            context=request.context)
-        google_map_partner_ids = ','.join(map(str, partner_ids))
+            order="grade_id DESC",
+            context=request.context)  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
         partners = partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context)
+        # remove me in trunk
+        partners.sort(key=lambda x: (-1 * (x.grade_id and x.grade_id.id or 0), len(x.implemented_partner_ids)), reverse=True)
+        partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
+
+        google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
 
         values = {
             'countries': countries,

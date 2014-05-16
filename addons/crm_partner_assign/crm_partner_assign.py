@@ -54,20 +54,22 @@ class res_partner_activation(osv.osv):
 class res_partner(osv.osv):
     _inherit = "res.partner"
 
-    def _get_implemented_count(self, cr, uid, ids, field_name, arg, context):
-        res = dict.fromkeys(ids, 0)
-        for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] = len(partner.implemented_partner_ids)
-        return res
+    # uncomment me in trunk
+    # def _get_implemented_count(self, cr, uid, ids, field_name, arg, context):
+    #     res = dict.fromkeys(ids, 0)
+    #     for partner in self.browse(cr, uid, ids, context=context):
+    #         res[partner.id] = len(partner.implemented_partner_ids)
+    #     return res
 
-    def _get_partner_from_implementation(self, cr, uid, ids, context=None):
-        pids = set()
-        for partner in self.browse(cr, uid, ids, context=context):
-            pids.add(partner.id)
-            if partner.assigned_partner_id:
-                pids.add(partner.assigned_partner_id.id)
-            pids = pids | set([p.id for p in partner.implemented_partner_ids])
-        return list(pids)
+    # uncomment me in trunk
+    # def _get_partner_from_implementation(self, cr, uid, ids, context=None):
+    #     pids = set()
+    #     for partner in self.browse(cr, uid, ids, context=context):
+    #         pids.add(partner.id)
+    #         if partner.assigned_partner_id:
+    #             pids.add(partner.assigned_partner_id.id)
+    #         pids = pids | set([p.id for p in partner.implemented_partner_ids])
+    #     return list(pids)
 
     _columns = {
         'partner_weight': fields.integer('Grade Weight',
@@ -87,11 +89,12 @@ class res_partner(osv.osv):
             'res.partner', 'assigned_partner_id',
             string='Implementation References',
         ),
-        'implemented_count': fields.function(
-            _get_implemented_count, string="Implementations", type='integer',
-            store={
-                'res.partner': (_get_partner_from_implementation, ['assigned_partner_id', 'implemented_partner_ids'], 10),
-            }),
+        # uncomment me in trunk
+        # 'implemented_count': fields.function(
+        #     _get_implemented_count, string="Implementations", type='integer',
+        #     store={
+        #         'res.partner': (_get_partner_from_implementation, ['assigned_partner_id', 'implemented_partner_ids'], 10),
+        #     }),
     }
     _defaults = {
         'partner_weight': lambda *args: 0
