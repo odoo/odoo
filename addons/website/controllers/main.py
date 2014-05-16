@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import cStringIO
+import datetime
 from itertools import islice
 import json
 import logging
-import math
 import re
 
 from sys import maxint
@@ -13,8 +13,6 @@ import werkzeug.wrappers
 from PIL import Image
 
 import openerp
-from openerp.osv import fields
-from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.http import request, Response
 
@@ -23,24 +21,7 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
-
-import time
-
-from functools import wraps
-
-def timeit(f):
-    @wraps(f)
-    def wrapper(*args, **kw):
-        ts = time.time()
-        result = f(*args, **kw)
-        te = time.time()
-
-        print 'func:%r args:[%r, %r] took: %2.4f sec' % \
-          (f.__name__, args, kw, te-ts)
-        return result
-    return wrapper
-
-
+SITEMAP_CACHE_TIME = datetime.timedelta(hours=6)
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
@@ -87,40 +68,66 @@ class Website(openerp.addons.web.controllers.main.Home):
     def robots(self):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
-    @timeit
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
-        count = 0
-        for loc in request.website.enumerate_pages():
-            count += 1
-        if count <= LOC_PER_SITEMAP:
-            return self.__sitemap_xml(0)
-        # Sitemaps must be split in several smaller files with a sitemap index
-        values = {
-            'pages': range(int(math.ceil(float(count) / LOC_PER_SITEMAP))),
-            'url_root': request.httprequest.url_root
-        }
-        headers = {
-            'Content-Type': 'application/xml;charset=utf-8',
-        }
-        return request.render('website.sitemap_index_xml', values, headers=headers)
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        ira = request.registry['ir.attachment']
+        iuv = request.registry['ir.ui.view']
+        mimetype ='application/xml;charset=utf-8'
+        content = None
 
-    @http.route('/sitemap-<int:page>.xml', type='http', auth="public", website=True)
-    def sitemap_xml(self, page):
-        return self.__sitemap_xml(page)
+        def create_map(url, content):
+            ira.create(cr, uid, dict(
+                datas=content.encode('base64'),
+                mimetype=mimetype,
+                type='binary',
+                name=url,
+                url=url,
+            ), context=context)
 
-    @timeit
-    def __sitemap_xml(self, index=0):
-        start = index * LOC_PER_SITEMAP
-        locs = islice(request.website.enumerate_pages(), start , start + LOC_PER_SITEMAP)
-        values = {
-            'locs': locs,
-            'url_root': request.httprequest.url_root.rstrip('/')
-        }
-        headers = {
-            'Content-Type': 'application/xml;charset=utf-8',
-        }
-        return request.render('website.sitemap_xml', values, headers=headers)
+        sitemap = ira.search_read(cr, uid, [('url', '=' , '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
+        if sitemap:
+            # Check if stored version is still valid
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            create_date = datetime.datetime.strptime(sitemap[0]['create_date'], server_format)
+            delta = datetime.datetime.now() - create_date
+            if delta < SITEMAP_CACHE_TIME:
+                content = sitemap[0]['datas'].decode('base64')
+
+        if not content:
+            # Remove all sitemaps in ir.attachments as we're going to regenerated them
+            sitemap_ids = ira.search(cr, uid, [('url', '=like' , '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
+            if sitemap_ids:
+                ira.unlink(cr, uid, sitemap_ids, context=context)
+
+            pages = 0
+            first_page = None
+            locs = request.website.enumerate_pages()
+            while True:
+                start = pages * LOC_PER_SITEMAP
+                loc_slice = islice(locs, start, start + LOC_PER_SITEMAP)
+                urls = iuv.render(cr, uid, 'website.sitemap_locs', dict(locs=loc_slice), context=context)
+                if urls.strip():
+                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
+                    if not first_page:
+                        first_page = page
+                    pages += 1
+                    create_map('/sitemap-%d.xml' % pages, page)
+                else:
+                    break
+            if not pages:
+                return request.not_found()
+            elif pages == 1:
+                content = first_page
+            else:
+                # Sitemaps must be split in several smaller files with a sitemap index
+                content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
+                    pages=range(1, pages + 1),
+                    url_root=request.httprequest.url_root,
+                ), context=context)
+            create_map('/sitemap.xml', content)
+
+        return request.make_response(content, [('Content-Type', mimetype)])
 
     #------------------------------------------------------
     # Edit
