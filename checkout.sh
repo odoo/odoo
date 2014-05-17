@@ -2,7 +2,7 @@
 set -e
 
 ODOO=https://github.com/odoo/odoo.git
-DEV=https://github.com/odoo-dev/odoo.git
+DEV=https://github.com/lyinfo/odoo.git
 
 usage () {
 cat <<EOF
