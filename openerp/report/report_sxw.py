@@ -215,19 +215,19 @@ class rml_parse(object):
     def removeParentNode(self, tag=None):
         raise GeneratorExit('Skip')
 
-    def set_html_image(self,id,model=None,field=None,context=None):
-        if not id :
+    def set_html_image(self, id, model=None, field=None, context=None):
+        if not id:
             return ''
         if not model:
             model = 'ir.attachment'
-        try :
+        try:
             id = int(id)
-            res = self.pool[model].read(self.cr,self.uid,id)
-            if field :
-                return res[field]
-            elif model =='ir.attachment' :
-                return res['datas']
-            else :
+            res = self.pool[model].read(self.cr, self.uid, id)
+            if field:
+                return res[0][field]
+            elif model == 'ir.attachment':
+                return res[0]['datas']
+            else:
                 return ''
         except Exception:
             return ''
