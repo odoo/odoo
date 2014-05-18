@@ -1167,8 +1167,8 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'payment'}, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'paid'}, context=context)
         self.create_picking(cr, uid, ids, context=context)
+        self.write(cr, uid, ids, {'state': 'paid'}, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
