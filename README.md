@@ -32,7 +32,7 @@ The dependencies are listed in setup.py
 Debian/Ubuntu
 -------------
 
-Add the the apt repository
+Add the apt repository
 
     deb http://nightly.openerp.com/7.0/deb/ ./
 
