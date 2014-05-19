@@ -847,6 +847,7 @@ class Contact(orm.AbstractModel):
             'fax': field_browse.fax,
             'city': field_browse.city,
             'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
+            'website': field_browse.website,
             'email': field_browse.email,
             'fields': opf,
             'object': field_browse,
