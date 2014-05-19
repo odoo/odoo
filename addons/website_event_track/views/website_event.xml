@@ -224,7 +224,7 @@
                             <b>Date</b><br/>
                             <span t-field="track.date" t-field-options='{"hide_seconds":"True"}'/><br/>
                             <b>Duration</b><br/>
-                            <span t-esc="'%.2f' % (track.duration)"/> hours<br/>
+                            <span t-field="track.duration" t-field-options="{&quot;widget&quot;: &quot;duration&quot;, &quot;unit&quot;: &quot;hour&quot;}"/><br/>
                             <b>Location</b><br/>
                             <span t-field="track.location_id"/><br/>
                         </div>
