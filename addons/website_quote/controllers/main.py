@@ -129,7 +129,7 @@ class sale_quote(http.Controller):
         order_line_obj.write(request.cr, SUPERUSER_ID, [line_id], {'product_uom_qty': (quantity)}, context=request.context)
         return [str(quantity), str(order.amount_total)]
 
-    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True, multilang=True)
+    @http.route(["/quote/template/<model('sale.quote.template'):quote>"], type='http', auth="user", website=True)
     def template_view(self, quote, **post):
         values = { 'template': quote }
         return request.website.render('website_quote.so_template', values)

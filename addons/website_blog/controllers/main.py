@@ -62,7 +62,7 @@ class WebsiteBlog(http.Controller):
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def blogs(self, page=1, **post):
         cr, uid, context = request.cr, request.uid, request.context
         blog_obj = request.registry['blog.post']
@@ -87,7 +87,7 @@ class WebsiteBlog(http.Controller):
         '/blog/<model("blog.blog"):blog>/page/<int:page>',
         '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>',
         '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def blog(self, blog=None, tag=None, page=1, **opt):
         """ Prepare all values to display the blog.
 
@@ -156,7 +156,7 @@ class WebsiteBlog(http.Controller):
 
     @http.route([
             '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
@@ -299,7 +299,7 @@ class WebsiteBlog(http.Controller):
         id = self._blog_post_message(user, blog_post_id, **post)
         return self._get_discussion_detail([id], publish, **post)
 
-    @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
+    @http.route('/blogpost/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)

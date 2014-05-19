@@ -39,7 +39,7 @@ class ReportController(Controller):
     @route([
         '/report/<path:converter>/<reportname>',
         '/report/<path:converter>/<reportname>/<docids>',
-    ], type='http', auth='user', website=True, multilang=True)
+    ], type='http', auth='user', website=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report_obj = request.registry['report']
         cr, uid, context = request.cr, request.uid, request.context

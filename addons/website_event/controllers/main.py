@@ -43,7 +43,7 @@ except ImportError:
     _logger.warn("Please install GeoIP python module to use events localisation.")
 
 class website_event(http.Controller):
-    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']
@@ -170,7 +170,7 @@ class website_event(http.Controller):
 
         return request.website.render("website_event.index", values)
 
-    @http.route(['/event/<model("event.event"):event>/page/<page:path>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/page/<page:path>'], type='http', auth="public", website=True)
     def event_page(self, event, page, **post):
         values = {
             'event': event,
@@ -178,7 +178,7 @@ class website_event(http.Controller):
         }
         return request.website.render(page, values)
 
-    @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>'], type='http', auth="public", website=True)
     def event(self, event, **post):
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
@@ -188,7 +188,7 @@ class website_event(http.Controller):
             target_url += '?enable_editor=1'
         return request.redirect(target_url);
 
-    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
         values = {
             'event': event,
@@ -197,7 +197,7 @@ class website_event(http.Controller):
         }
         return request.website.render("website_event.event_description_full", values)
 
-    @http.route('/event/add_event', type='http', auth="user", multilang=True, methods=['POST'], website=True)
+    @http.route('/event/add_event', type='http', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
         return self._add_event(event_name, request.context, **kwargs)
 

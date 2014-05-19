@@ -46,12 +46,12 @@ class ir_http(orm.AbstractModel):
         try:
             func, arguments = self._find_handler()
             request.website_enabled = func.routing.get('website', False)
-            request.website_multilang = func.routing.get('multilang', False)
         except werkzeug.exceptions.NotFound:
             # either we have a language prefixed route, either a real 404
             # in all cases, website processes them
             request.website_enabled = True
-            request.website_multilang = True
+
+        request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
 
         if request.website_enabled:
             if func:
@@ -69,6 +69,10 @@ class ir_http(orm.AbstractModel):
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
+                    if request.lang == request.website.default_lang_code:
+                        # If language is in the url and it is the default language, redirect
+                        # to url without language so google doesn't see duplicate content
+                        return request.redirect(path + request.httprequest.query_string)
                     return self.reroute(path)
                 return self._handle_exception(code=404)
         return super(ir_http, self)._dispatch()

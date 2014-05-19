@@ -28,7 +28,7 @@ class WebsiteMembership(http.Controller):
         '/members/association/<int:membership_id>/country/<int:country_id>',
         '/members/association/<int:membership_id>/country/<country_name>-<int:country_id>/page/<int:page>',
         '/members/association/<int:membership_id>/country/<int:country_id>/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def members(self, membership_id=None, country_name=None, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry['product.product']
@@ -105,7 +105,7 @@ class WebsiteMembership(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @http.route(['/members/<int:partner_id>', '/members/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/members/<int:partner_id>', '/members/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True)
     def partners_ref(self, partner_id, **post):
         partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
         values = website_partner.get_partner_template_value(partner)

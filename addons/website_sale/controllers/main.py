@@ -114,7 +114,7 @@ class website_sale(http.Controller):
         '/shop/page/<int:page>',
         '/shop/category/<model("product.public.category"):category>',
         '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def shop(self, page=0, category=None, search='', **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
 
@@ -170,7 +170,7 @@ class website_sale(http.Controller):
 
         return request.website.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
@@ -215,7 +215,7 @@ class website_sale(http.Controller):
                 context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
 
-    @http.route(['/shop/cart'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
         order = request.website.sale_get_order()
         values = {
@@ -228,13 +228,13 @@ class website_sale(http.Controller):
             values['suggested_products'] = order._cart_accessories(context=request.context)
         return request.website.render("website_sale.cart", values)
 
-    @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
+    @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         cr, uid, context = request.cr, request.uid, request.context
         request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
         return request.redirect("/shop/cart")
 
-    @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, multilang=True)
+    @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None):
         order = request.website.sale_get_order(force_create=1)
         quantity = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
@@ -408,7 +408,7 @@ class website_sale(http.Controller):
 
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
-    @http.route(['/shop/checkout'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/checkout'], type='http', auth="public", website=True)
     def checkout(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
@@ -422,7 +422,7 @@ class website_sale(http.Controller):
 
         return request.website.render("website_sale.checkout", values)
 
-    @http.route(['/shop/confirm_order'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/confirm_order'], type='http', auth="public", website=True)
     def confirm_order(self, **post):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
 
@@ -449,7 +449,7 @@ class website_sale(http.Controller):
     # Payment
     #------------------------------------------------------
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/payment'], type='http', auth="public", website=True)
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
@@ -558,7 +558,7 @@ class website_sale(http.Controller):
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, werkzeug.url_encode(post))
         return request.redirect(acquirer_total_url)
 
-    @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True, multilang=True)
+    @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
 
@@ -607,7 +607,7 @@ class website_sale(http.Controller):
             'validation': validation
         }
 
-    @http.route('/shop/payment/validate', type='http', auth="public", website=True, multilang=True)
+    @http.route('/shop/payment/validate', type='http', auth="public", website=True)
     def payment_validate(self, transaction_id=None, sale_order_id=None, **post):
         """ Method that should be called by the server when receiving an update
         for a transaction. State at this point :
@@ -654,7 +654,7 @@ class website_sale(http.Controller):
 
         return request.redirect('/shop/confirmation')
 
-    @http.route(['/shop/confirmation'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/confirmation'], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
         the status of a sale.order. State at this point :
@@ -677,7 +677,7 @@ class website_sale(http.Controller):
     # Edit
     #------------------------------------------------------
 
-    @http.route(['/shop/add_product'], type='http', auth="user", methods=['POST'], website=True, multilang=True)
+    @http.route(['/shop/add_product'], type='http', auth="user", methods=['POST'], website=True)
     def add_product(self, name=None, category=0, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         if not name:

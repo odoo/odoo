@@ -28,7 +28,7 @@ from openerp.tools.translate import _
 
 class website_event(website_event):
 
-    @http.route(['/event/cart/update'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
+    @http.route(['/event/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, event_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         ticket_obj = request.registry.get('event.event.ticket')

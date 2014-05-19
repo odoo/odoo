@@ -32,7 +32,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # View
     #------------------------------------------------------
-    @http.route('/', type='http', auth="public", website=True, multilang=True)
+    @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
         page = 'homepage'
         try:
@@ -47,12 +47,12 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return self.page(page)
 
-    @http.route(website=True, auth="public", multilang=True)
+    @http.route(website=True, auth="public")
     def web_login(self, *args, **kw):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
+    @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
