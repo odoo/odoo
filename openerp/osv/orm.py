@@ -672,11 +672,11 @@ class BaseModel(object):
 
     OpenERP models are created by inheriting from this class' subclasses:
 
-        * Model: for regular database-persisted models
-        * TransientModel: for temporary data, stored in the database but automatically
-                          vaccuumed every so often
-        * AbstractModel: for abstract super classes meant to be shared by multiple
-                        _inheriting classes (usually Models or TransientModels)
+    * Model: for regular database-persisted models
+    * TransientModel: for temporary data, stored in the database but automatically
+                      vaccuumed every so often
+    * AbstractModel: for abstract super classes meant to be shared by multiple
+                     _inheriting classes (usually Models or TransientModels)
 
     The system will later instantiate the class once per database (on
     which the class' module is installed).
