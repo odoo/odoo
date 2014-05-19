@@ -1164,7 +1164,7 @@ class stock_picking(osv.osv):
         need_rereserve = False
         #sort the operations in order to give higher priority to those with a package, then a serial number
         operations = picking.pack_operation_ids
-        operations.sort(key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
+        operations = sorted(operations, key=lambda x: ((x.package_id and not x.product_id) and -4 or 0) + (x.package_id and -2 or 0) + (x.lot_id and -1 or 0))
         #delete existing operations to start again from scratch
         cr.execute("DELETE FROM stock_move_operation_link WHERE operation_id in %s", (tuple([x.id for x in operations]),))
 
