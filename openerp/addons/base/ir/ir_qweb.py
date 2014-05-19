@@ -801,7 +801,8 @@ class DurationConverter(osv.AbstractModel):
                 v*secs_per_unit, threshold=1, locale=locale)
             if section:
                 sections.append(section)
-        return u' '.join(sections)
+        return ' '.join(sections)
+
 
 class RelativeDatetimeConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.relative'
