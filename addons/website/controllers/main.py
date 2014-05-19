@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
-SITEMAP_CACHE_TIME = datetime.timedelta(hours=6)
+SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
@@ -76,7 +76,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         mimetype ='application/xml;charset=utf-8'
         content = None
 
-        def create_map(url, content):
+        def create_sitemap(url, content):
             ira.create(cr, uid, dict(
                 datas=content.encode('base64'),
                 mimetype=mimetype,
@@ -112,7 +112,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     if not first_page:
                         first_page = page
                     pages += 1
-                    create_map('/sitemap-%d.xml' % pages, page)
+                    create_sitemap('/sitemap-%d.xml' % pages, page)
                 else:
                     break
             if not pages:
@@ -125,7 +125,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     pages=range(1, pages + 1),
                     url_root=request.httprequest.url_root,
                 ), context=context)
-            create_map('/sitemap.xml', content)
+            create_sitemap('/sitemap.xml', content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
