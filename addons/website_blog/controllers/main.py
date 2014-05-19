@@ -51,7 +51,7 @@ class WebsiteBlog(http.Controller):
         blog_post_obj = request.registry['blog.post']
         groups = blog_post_obj.read_group(
             request.cr, request.uid, [], ['name', 'create_date'],
-            groupby="create_date", orderby="create_date asc", context=request.context)
+            groupby="create_date", orderby="create_date desc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
             end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
