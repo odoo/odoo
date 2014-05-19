@@ -425,11 +425,6 @@ class audittrail_objects_proxy(object_proxy):
                             res_ids.remove(resource_id)
                     for res_id in res_ids:
                         lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list))
-            data={
-                    'name': field_name,
-                    'old_value': key in old_values and old_values[key]['value'].get(field_name),
-                    'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
-                  }
             # if the value value is different than the old value: record the change
             if key not in old_values or key not in new_values or old_values[key]['value'][field_name] != new_values[key]['value'][field_name]:
                 data = {
@@ -439,7 +434,15 @@ class audittrail_objects_proxy(object_proxy):
                       'new_value_text': key in new_values and new_values[key]['text'].get(field_name),
                       'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
                 }
-            lines[key].append(data)
+                lines[key].append(data)
+             # On read log add current values for fields.
+            if method == 'read':
+                data={
+                    'name': field_name,
+                    'old_value': key in old_values and old_values[key]['value'].get(field_name),
+                    'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
+                }
+                lines[key].append(data)
         return lines
 
     def process_data(self, cr, uid, pool, res_ids, model, method, old_values=None, new_values=None, field_list=None):
