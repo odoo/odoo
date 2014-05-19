@@ -65,7 +65,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             context=request.context, count=True)
         # flag active country
         for country_dict in countries:
-            country_dict['active'] = country and country_dict['country_id'][0] == country.id
+            country_dict['active'] = country and country_dict['country_id'] and country_dict['country_id'][0] == country.id
         countries.insert(0, {
             'country_id_count': countries_partners,
             'country_id': (0, _("All Countries")),

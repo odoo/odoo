@@ -53,7 +53,7 @@
                 <ul id="reseller_countries" class="nav nav-pills nav-stacked mt16">
                     <li class="nav-header"><h3>Filter by Country</h3></li>
                     <t t-foreach="countries" t-as="country">
-                        <li t-att-class="country['active'] and 'active' or ''">
+                        <li t-if="country['country_id']" t-att-class="country['active'] and 'active' or ''">
                             <a t-attf-href="/partners/#{ current_grade and 'grade/%s/' % slug(current_grade) or ''}#{country['country_id'][0] and 'country/%s/' % country['country_id'][0] or '' }#{ search_path }">
                                 <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
                                 <t t-esc="country['country_id'][1]"/> 
