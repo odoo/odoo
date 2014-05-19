@@ -520,6 +520,8 @@
             </tr>
         </table>
 
+        <div class="oe_searchview_drawer_container"/>
+
         <div class="oe_view_manager_body">
             <t t-foreach="widget.views_src" t-as="view">
                 <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
@@ -1555,9 +1557,11 @@
     <div class="oe_searchview_facets"/>
     <div class="oe_searchview_clear"/>
     <div class="oe_searchview_unfold_drawer" title="Advanced Search..."/>
-    <div class="oe_searchview_drawer"/>
     <button type="button" class="oe_searchview_search"
             title="Search Again">Search</button>
+</div>
+
+<div t-name="SearchViewDrawer" class="oe_searchview_drawer" style="display:none;">
 </div>
 
 <div t-name="SearchView.InputView"

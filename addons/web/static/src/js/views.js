@@ -553,6 +553,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
+        this.searchview_drawer = null;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {
             if (x instanceof Array) {
@@ -800,14 +801,20 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (this.searchview) {
             this.searchview.destroy();
         }
+        if (this.searchview_drawer) {
+            this.searchview_drawer.destroy();
+        }
+
         var options = {
             hidden: this.flags.search_view === false,
             disable_custom_filters: this.flags.search_disable_custom_filters,
         };
         this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, options);
+        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
 
         this.searchview.on('search_data', self, this.do_searchview_search);
-        return this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search"));
+        return $.when(this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search")),
+                      this.searchview_drawer.appendTo(this.$(".oe_searchview_drawer_container")));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
