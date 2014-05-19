@@ -221,8 +221,8 @@ class rml_parse(object):
         if not model:
             model = 'ir.attachment'
         try :
-            id = int(id)
-            res = self.pool[model].read(self.cr,self.uid,id)
+            ids = [int(id)]
+            res = self.pool[model].read(self.cr,self.uid,ids)[0]
             if field :
                 return res[field]
             elif model =='ir.attachment' :
