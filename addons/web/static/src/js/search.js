@@ -1127,7 +1127,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      */
     search_change: function () {
         var self = this;
-        var $filters = this.$('> li').removeClass('oe_selected');
+        var $filters = this.$('> li').removeClass('badge');
         var facet = this.view.query.find(_.bind(this.match_facet, this));
         if (!facet) { return; }
         facet.values.each(function (v) {
@@ -1135,7 +1135,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             if (i === -1) { return; }
             $filters.filter(function () {
                 return Number($(this).data('index')) === i;
-            }).addClass('oe_selected');
+            }).addClass('badge');
         });
     },
     /**
@@ -1747,7 +1747,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         };
     },
     clear_selection: function () {
-        this.$('li.oe_selected').removeClass('oe_selected');
+        this.$('span.badge').removeClass('badge');
     },
     append_filter: function (filter) {
         var self = this;
@@ -1760,12 +1760,13 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         } else {
             var id = filter.id;
             this.filters[key] = filter;
-            $filter = this.$filters[key] = $('<li></li>')
+            $filter = $('<li></li>')
                 .appendTo(this.$('.oe_searchview_custom_list'))
-                .addClass(filter.user_id ? 'oe_searchview_custom_private'
-                                         : 'oe_searchview_custom_public')
                 .toggleClass('oe_searchview_custom_default', filter.is_default)
-                .text(filter.name);
+                .append(this.$filters[key] = $('<span>').text(filter.name));
+
+            this.$filters[key].addClass(filter.user_id ? 'oe_searchview_custom_private'
+                                         : 'oe_searchview_custom_public')
 
             $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
@@ -1782,7 +1783,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 .appendTo($filter);
         }
 
-        $filter.unbind('click').click(function () {
+        this.$filters[key].unbind('click').click(function () {
             self.toggle_filter(filter);
         });
     },
@@ -1792,12 +1793,12 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         });
         if (current) {
             this.view.query.remove(current);
-            this.$filters[this.key_for(filter)].removeClass('oe_selected');
+            this.$filters[this.key_for(filter)].removeClass('badge');
             return;
         }
         this.view.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
-        this.$filters[this.key_for(filter)].addClass('oe_selected');
+        this.$filters[this.key_for(filter)].addClass('badge');
     },
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
