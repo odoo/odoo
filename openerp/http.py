@@ -318,16 +318,15 @@ def route(route=None, **kw):
     :param type: The type of request, can be ``'http'`` or ``'json'``.
     :param auth: The type of authentication method, can on of the following:
 
-        * ``user``: The user must be authenticated and the current request
-          will perform using the rights of the user.
-        * ``admin``: The user may not be authenticated and the current request
-          will perform using the admin user.
-        * ``none``: The method is always active, even if there is no
-          database. Mainly used by the framework and authentication
-          modules. There request code will not have any facilities to access
-          the database nor have any configuration indicating the current
-          database nor the current user.
-
+                 * ``user``: The user must be authenticated and the current request
+                   will perform using the rights of the user.
+                 * ``admin``: The user may not be authenticated and the current request
+                   will perform using the admin user.
+                 * ``none``: The method is always active, even if there is no
+                   database. Mainly used by the framework and authentication
+                   modules. There request code will not have any facilities to access
+                   the database nor have any configuration indicating the current
+                   database nor the current user.
     :param methods: A sequence of http methods this route applies to. If not
                     specified, all methods are allowed.
     :param cors: The Access-Control-Allow-Origin cors directive value.
