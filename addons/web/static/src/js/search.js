@@ -640,8 +640,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             });
     },
     setup_default_query: function () {
-        this.ready.resolve();
-        return;
         // Hacky implementation of CustomFilters#facet_for_defaults ensure
         // CustomFilters will be ready (and CustomFilters#filters will be
         // correctly filled) by the time this method executes.
@@ -803,23 +801,25 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
         this.add_common_inputs();
 
         // build drawer
-        var drawer_started = $.when.apply(
-            null, _(this.select_for_drawer()).invoke(
-                'appendTo', this.$el));
+        var in_drawer = this.select_for_drawer();
 
-        
-        // load defaults
-        // var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
-        //         'facet_for_defaults', this.defaults))
-        //     .then(this.proxy('setup_default_query'));
+        var self = this;
+        var second_col = $('<div class="col-md-5">');
 
+        var insert_first_col = in_drawer[0].appendTo(this.$el).then(function () {
+            second_col.appendTo(self.$el);
+        }).then(function () {
+            return $.when.apply(null, 
+                _(_.rest(in_drawer)).invoke('appendTo', second_col));
+        });
+
+        return $.when.apply(null, _(this.inputs).invoke(
+                'facet_for_defaults', this.searchview.defaults));
 
     },
     notify_searchview: function () {
-        this.searchview.drawer_ready.resolve();
-
-        // with args...
-        // this.searchview.drawer_ready.resolve();
+        var defaults = arguments[1];
+        this.searchview.drawer_ready.resolve.apply(null, defaults);
     },
     /**
      * Sets up thingie where all the mess is put?
