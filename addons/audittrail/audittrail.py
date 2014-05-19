@@ -435,6 +435,14 @@ class audittrail_objects_proxy(object_proxy):
                       'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
                 }
                 lines[key].append(data)
+            # On read log add current values for fields.
+            if method == 'read':
+                data={
+                    'name': field_name,
+                    'old_value': key in old_values and old_values[key]['value'].get(field_name),
+                    'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
+                }
+                lines[key].append(data)
         return lines
 
     def process_data(self, cr, uid, pool, res_ids, model, method, old_values=None, new_values=None, field_list=None):
