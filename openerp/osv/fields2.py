@@ -26,6 +26,7 @@ from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
 import logging
+import pytz
 
 from openerp.tools import float_round, ustr, html_sanitize
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
@@ -693,6 +694,29 @@ class Date(Field):
     @staticmethod
     def today(*args):
         return date.today().strftime(DATE_FORMAT)
+
+    @staticmethod
+    def context_today(record, timestamp=None):
+        """ Return the current date as seen in the client's timezone in a format
+            fit for date fields. This method may be used to compute default
+            values.
+
+            :param datetime timestamp: optional datetime value to use instead of
+                the current date and time (must be a datetime, regular dates
+                can't be converted between timezones.)
+            :rtype: str 
+        """
+        today = timestamp or datetime.now()
+        context_today = None
+        tz_name = record._context.get('tz') or record.env.user.tz
+        if tz_name:
+            try:
+                today_utc = pytz.timezone('UTC').localize(today, is_dst=False)  # UTC = no DST
+                context_today = today_utc.astimezone(pytz.timezone(tz_name))
+            except Exception:
+                _logger.debug("failed to compute context/client-specific today date, using UTC value for `today`",
+                              exc_info=True)
+        return (context_today or today).strftime(DATE_FORMAT)
 
     @staticmethod
     def from_string(value):
