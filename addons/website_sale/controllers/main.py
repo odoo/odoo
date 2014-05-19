@@ -518,6 +518,7 @@ class website_sale(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
+        sale_order_obj = request.registry['sale.order']
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
@@ -539,10 +540,19 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
-        elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+        elif tx and tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
             tx.write({
                 'acquirer_id': acquirer_id,
             })
+
+        # update quotation
+        sale_order_obj.write(
+            cr, SUPERUSER_ID, [order.id], {
+                'payment_acquirer_id': acquirer_id,
+                'payment_tx_id': request.session['sale_transaction_id']
+            }, context=context)
+        # confirm the quotation
+        sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
         acquirer_total_url = '%s?%s' % (acquirer_form_post_url, werkzeug.url_encode(post))
@@ -622,17 +632,22 @@ class website_sale(http.Controller):
         if not tx or not order:
             return request.redirect('/shop')
 
-        if not order.amount_total or tx.state == 'done':
-            # confirm the quotation
-            sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
-            # send by email
-            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
-        elif tx.state == 'pending':
+        if not order.amount_total or tx.state in ['pending', 'done']:
             # send by email
             email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
         elif tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
+
+        # send the email
+        if email_act and email_act.get('context'):
+            composer_values = {}
+            email_ctx = email_act['context']
+            public_id = request.website.user_id.id
+            if uid == public_id:
+                composer_values['email_from'] = request.website.user_id.company_id.email
+            composer_id = request.registry['mail.compose.message'].create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
+            request.registry['mail.compose.message'].send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset(context=context)
