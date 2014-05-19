@@ -96,7 +96,7 @@ class WebsiteForum(http.Controller):
         Post = request.registry['forum.post']
         user = request.registry['res.users'].browse(cr, uid, uid, context=context)
 
-        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False)]
+        domain = [('forum_id', '=', forum.id), ('parent_id', '=', False), ('state', '=', 'active')]
         if search:
             domain += ['|', ('name', 'ilike', search), ('content', 'ilike', search)]
         if tag:
@@ -123,7 +123,7 @@ class WebsiteForum(http.Controller):
             url = "/forum/%s/%s/questions" % (slug(forum), slug(tag))
         else:
             url = "/forum/%s" % slug(forum)
-        
+
         url_args = {}
         if search:
             url_args['search'] = search
