@@ -746,8 +746,10 @@ class account_analytic_account(osv.osv):
                     new_date = next_date+relativedelta(days=+interval)
                 elif contract.recurring_rule_type == 'weekly':
                     new_date = next_date+relativedelta(weeks=+interval)
-                else:
+                elif contract.recurring_rule_type == 'monthly':
                     new_date = next_date+relativedelta(months=+interval)
+                else:
+                    new_date = next_date+relativedelta(years=+interval)
                 self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
                 if automatic:
                     cr.commit()
