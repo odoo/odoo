@@ -44,7 +44,7 @@ in your source.list and type:
 Or download the deb file and type:
 
     $ sudo dpkg -i <openerp-deb-filename>
-    $ sudo apt-get install install -f
+    $ sudo apt-get install -f
 
 RedHat, Fedora, CentOS
 ----------------------
