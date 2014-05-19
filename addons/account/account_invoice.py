@@ -20,17 +20,13 @@
 ##############################################################################
 
 import itertools
-import time
 from lxml import etree
 
 from openerp import Model, Boolean, Integer, Float, Char, Text, Date, \
-                    Selection, Many2one, One2many, Many2many
-from openerp import api, model, multi, one, depends, returns
-from openerp import _
-
-from openerp.osv import fields, osv
+                    Selection, Many2one, One2many, Many2many, \
+                    api, model, multi, one, depends, returns, _
+from openerp.exceptions import except_orm, Warning
 import openerp.addons.decimal_precision as dp
-import openerp.exceptions
 
 # mapping invoice type to journal type
 TYPE2JOURNAL = {
@@ -93,7 +89,7 @@ class account_invoice(Model):
         journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
-            raise osv.except_osv(_('No Analytic Journal!'),
+            raise except_orm(_('No Analytic Journal!'),
                 _("You must define an analytic journal of type '%s'!") % (journal_type,))
         return journal
 
@@ -409,9 +405,9 @@ class account_invoice(Model):
     def unlink(self):
         for invoice in self:
             if invoice.state not in ('draft', 'cancel'):
-                raise openerp.exceptions.Warning(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
+                raise Warning(_('You cannot delete an invoice which is not draft or cancelled. You should refund it instead.'))
             elif invoice.internal_number:
-                raise openerp.exceptions.Warning(_('You cannot delete an invoice after it has been validated (and received a number).  You can set it back to "Draft" state and modify its content, then re-confirm it.'))
+                raise Warning(_('You cannot delete an invoice after it has been validated (and received a number).  You can set it back to "Draft" state and modify its content, then re-confirm it.'))
         return super(account_invoice, self).unlink()
 
     @multi
@@ -440,7 +436,7 @@ class account_invoice(Model):
                     rec_account = rec_prop.get_by_record(rec_prop)
                     pay_account = pay_prop.get_by_record(pay_prop)
                     if not rec_account and not pay_account:
-                        raise osv.except_osv(_('Configuration Error!'),
+                        raise except_orm(_('Configuration Error!'),
                             _('Cannot find a chart of accounts for this company, you should create one.'))
 
             if type in ('out_invoice', 'out_refund'):
@@ -499,7 +495,7 @@ class account_invoice(Model):
         if pterm_list:
             return {'value': {'date_due': max(line[0] for line in pterm_list)}}
         else:
-            raise osv.except_osv(_('Insufficient Data!'),
+            raise except_orm(_('Insufficient Data!'),
                 _('The payment term of supplier does not have a payment term line.'))
 
     @multi
@@ -554,7 +550,7 @@ class account_invoice(Model):
                             continue
                         accounts = self.env['account.account'].search([('name', '=', line.account_id.name), ('company_id', '=', company_id)])
                         if not accounts:
-                            raise osv.except_osv(
+                            raise except_orm(
                                 _('Configuration Error!'),
                                 _('Cannot find a chart of account, you should create one from Settings\Configuration\Accounting menu.')
                             )
@@ -564,7 +560,7 @@ class account_invoice(Model):
                     if len(line_cmd) >= 3 and isinstance(line_cmd[2], dict):
                         line = self.env['account.account'].browse(line_cmd[2]['account_id'])
                         if line.company_id.id != company_id:
-                            raise osv.except_osv(
+                            raise except_orm(
                                 _('Configuration Error!'),
                                 _("Invoice line account's company and invoice's company does not match.")
                             )
@@ -580,7 +576,7 @@ class account_invoice(Model):
             if not values.get('journal_id'):
                 field_desc = journals.fields_get(['journal_id'])
                 type_label = next(t for t, label in field_desc['journal_id']['selection'] if t == journal_type)
-                raise osv.except_osv(_('Configuration Error!'),
+                raise except_orm(_('Configuration Error!'),
                                      _('Cannot find any account journal of "%s" type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % journal_type_label)
             domain = {'journal_id':  [('id', 'in', journals.ids)]}
 
@@ -682,7 +678,7 @@ class account_invoice(Model):
                 else:
                     ref = self._convert_ref(self.number)
                 if not self.journal_id.analytic_journal_id:
-                    raise osv.except_osv(_('No Analytic Journal!'),
+                    raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
@@ -734,13 +730,13 @@ class account_invoice(Model):
                 key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id, tax.account_analytic_id.id)
                 tax_key.append(key)
                 if key not in compute_taxes:
-                    raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
+                    raise except_orm(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
                 if abs(base - tax.base) > company_currency.rounding:
-                    raise osv.except_osv(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
+                    raise except_orm(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if key not in tax_key:
-                    raise osv.except_osv(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
+                    raise except_orm(_('Warning!'), _('Taxes are missing!\nClick on compute button.'))
 
     @multi
     def compute_invoice_totals(self, company_currency, ref, invoice_move_lines):
@@ -805,9 +801,9 @@ class account_invoice(Model):
 
         for inv in self:
             if not inv.journal_id.sequence_id:
-                raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
+                raise except_orm(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
             if not inv.invoice_line:
-                raise osv.except_osv(_('No Invoice Lines!'), _('Please create some invoice lines.'))
+                raise except_orm(_('No Invoice Lines!'), _('Please create some invoice lines.'))
             if inv.move_id:
                 continue
 
@@ -826,7 +822,7 @@ class account_invoice(Model):
             group_check_total = self.env.ref('account.group_supplier_inv_check_total')
             if self.env.user in group_check_total.users:
                 if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0)):
-                    raise osv.except_osv(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
+                    raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
             if inv.payment_term:
                 total_fixed = total_percent = 0
@@ -837,7 +833,7 @@ class account_invoice(Model):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
+                    raise except_orm(_('Error!'), _("Cannot create the invoice.\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."))
 
             # one move line per tax line
             iml += account_invoice_tax.move_line_get(inv.id)
@@ -900,7 +896,7 @@ class account_invoice(Model):
 
             journal = inv.journal_id.sudo(context=ctx)
             if journal.centralisation:
-                raise osv.except_osv(_('User Error!'),
+                raise except_orm(_('User Error!'),
                         _('You cannot create an invoice on a centralized journal. Uncheck the centralized counterpart box in the related journal from the configuration menu.'))
 
             line = inv.finalize_invoice_move_lines(line)
@@ -1001,7 +997,7 @@ class account_invoice(Model):
             if inv.payment_ids:
                 for move_line in inv.payment_ids:
                     if move_line.reconcile_partial_id.line_partial_ids:
-                        raise osv.except_osv(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
+                        raise except_orm(_('Error!'), _('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})
@@ -1312,7 +1308,7 @@ class account_invoice_line(Model):
         self = self.sudo(company_id=company_id, force_company=company_id)
 
         if not partner_id:
-            raise osv.except_osv(_('No Partner Defined!'), _("You must first select a partner!"))
+            raise except_orm(_('No Partner Defined!'), _("You must first select a partner!"))
         if not product:
             if type in ('in_invoice', 'in_refund'):
                 return {'value': {}, 'domain': {'product_uom': []}}
