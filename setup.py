@@ -69,13 +69,51 @@ def py2exe_options():
     if os.name == 'nt':
         import py2exe
         return {
-            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], }],
+            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], },
+                          { "script": "openerp-gevent" },
+                          { "script": "oe" },
+            ],
             'options' : {
                 "py2exe": {
                     "skip_archive": 1,
                     "optimize": 0, # keep the assert running, because the integrated tests rely on them.
                     "dist_dir": 'dist',
-                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "jinja2", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "pytz", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
+                    "packages": [
+                        "HTMLParser",
+                        "PIL",
+                        "asynchat", "asyncore",
+                        "commands",
+                        "dateutil",
+                        "decimal",
+                        "docutils",
+                        "email",
+                        "encodings",
+                        "imaplib",
+                        "jinja2",
+                        "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify",
+                        "mako",
+                        "markupsafe",   # dependence of jinja2 and mako
+                        "mock",
+                        "openerp",
+                        "poplib",
+                        "psutil",
+                        "pychart",
+                        "pydot",
+                        "pyparsing",
+                        "pytz",
+                        "reportlab",
+                        "requests",
+                        "select",
+                        "simplejson",
+                        "smtplib",
+                        "uuid",
+                        "vatnumber",
+                        "vobject",
+                        "win32service", "win32serviceutil",
+                        "xlwt",
+                        "xml", "xml.dom",
+                        "yaml",
+                    ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
@@ -108,7 +146,7 @@ setuptools.setup(
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      scripts          = ['openerp-server'],
+      scripts          = ['openerp-server', 'openerp-gevent', 'oe'],
       data_files       = data(),
       packages         = setuptools.find_packages(),
       dependency_links = ['http://download.gna.org/pychart/'],
