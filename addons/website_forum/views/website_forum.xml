@@ -434,16 +434,18 @@
                     <span t-if="not question.active"><b> [Deleted]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                 </h1>
-                <div class="alert alert-info" t-if="question.state == 'close'">
-                    <p class="mt32 mb16 text-center">
-                        <b>The question has been closed for reason: <i t-esc="question.closed_reason_id.name"/>
-                        <br/>
-                        <t t-if="question.closed_uid">
-                            <i>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ slug(question.closed_uid) }" t-field="question.closed_uid"/> </i>
-                        </t>
-                        on <span t-field="question.closed_date"/></b>
+                <div class="alert alert-info text-center" t-if="question.state == 'close'">
+                    <p class="mt16">
+                        <b>The question has been closed for reason: <i t-esc="question.closed_reason_id.name"/></b>
                     </p>
-                    <div t-if="question.state == 'close' and user.karma&gt;=500" class="mb24 text-center">
+                    <t t-if="question.closed_uid">
+                        <b>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
+                            t-field="question.closed_uid"
+                            t-field-options='{"widget": "contact", "fields": ["name"]}'
+                            style="display: inline-block;"/></b>
+                    </t>
+                    <b>on <span t-field="question.closed_date"/></b>
+                    <div t-if="question.state == 'close' and user.karma&gt;=500" class="mt16 mb24 text-center">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
                             <t t-set="label" t-value="'Reopen'"/>
