@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2014-05-16 12:16+0000\n"
+"PO-Revision-Date: 2014-05-18 20:42+0000\n"
 "Last-Translator: Kenneth Aalberg <kenneaal@gmail.com>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-17 07:10+0000\n"
+"X-Launchpad-Export-Date: 2014-05-19 06:20+0000\n"
 "X-Generator: Launchpad (build 17007)\n"
 
 #. module: base
@@ -9597,12 +9597,16 @@ msgid ""
 "sure to save and close all forms before switching to a different company. "
 "(You can click on Cancel in the User Preferences now)"
 msgstr ""
+"Husk at dokumenter som vises her kan hende ikke er relevante etter at du "
+"bytter til et annet firma. Hvis du har endringer som ikke er lagret, bør du "
+"lagre og lukke alle skjemaer før du skifter til et annet firma. (Du kan "
+"klikke kanseller i brukerpreferanser nå)"
 
 #. module: base
 #: code:addons/orm.py:2818
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
-msgstr ""
+msgstr "Verdien \"%s\" for feltet \"%s.%s\" er ikke i utvalget"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -9612,7 +9616,7 @@ msgstr "Fortsett"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
-msgstr ""
+msgstr "Thai / ภาษาไทย"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -9638,7 +9642,7 @@ msgstr "Slovensk / slovenščina"
 #. module: base
 #: field:res.currency,position:0
 msgid "Symbol Position"
-msgstr ""
+msgstr "Symbolposisjon"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de
@@ -9672,11 +9676,14 @@ msgid ""
 "\n"
 "(Document type: %s)"
 msgstr ""
+"For denne dokumenttypen kan du bare aksessere poster du selv har laget.\n"
+"\n"
+"(Dokumenttype: %s)"
 
 #. module: base
 #: view:base.language.export:0
 msgid "documentation"
-msgstr ""
+msgstr "dokumentasjon"
 
 #. module: base
 #: help:ir.model,osv_memory:0
@@ -9684,17 +9691,19 @@ msgid ""
 "This field specifies whether the model is transient or not (i.e. if records "
 "are automatically deleted from the database or not)"
 msgstr ""
+"Dette feltet spesifiserer om modellen er transient eller ikke (dvs, om "
+"poster automatisk blir slettet fra databasen eller ikke)"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:445
 #, python-format
 msgid "Missing SMTP Server"
-msgstr ""
+msgstr "Mangler SMTP server"
 
 #. module: base
 #: sql_constraint:ir.translation:0
 msgid "Language code of translation item must be among known languages"
-msgstr ""
+msgstr "Språkkoden for begrepet du oversetter må være et kjent språk"
 
 #. module: base
 #: field:base.language.export,data:0
@@ -9705,7 +9714,7 @@ msgstr "Fil"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr ""
+msgstr "Modul Oppgrader Installer"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_configuration_wizard
@@ -9715,18 +9724,18 @@ msgstr "ir.actions.configuration.wizard"
 #. module: base
 #: view:res.lang:0
 msgid "%b - Abbreviated month name."
-msgstr "%b - Navn på måned (forkortet)."
+msgstr "%b - Kort månedsnavn."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:729
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
-msgstr ""
+msgstr "Beklager, du har ikke tillatelse til å slette dette dokumentet."
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules can not be applied on the Record Rules model."
-msgstr ""
+msgstr "Regler kan ikke brukes på regelmodellen for poster"
 
 #. module: base
 #: field:res.partner,supplier:0
@@ -9743,7 +9752,7 @@ msgstr "Flerhandlinger"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Discussions, Mailing Lists, News"
-msgstr ""
+msgstr "Diskusjoner, epostdistribusjonslister og nyheter"
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -9765,6 +9774,21 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"Kjøretøy, leasing, forsikring, kostnader\n"
+"====================================\n"
+"Med denne modulen lar OpenERP deg administrere alle dine kjøretøy,\n"
+"kontakter som benytter disse, så vel som servicer, kjørebok, kostnader og\n"
+"mange andre funksjoner som er nyttig for flåtekontroll.\n"
+"\n"
+"Hovedfunksjoner\n"
+"------------\n"
+"* Legg til kjøretøy til din flåte\n"
+"* Håndtere kontakter for kjøretøy\n"
+"* Påminnelse når kontrakter når utløpsdato\n"
+"* Legg til servicer, kjørebok og odometer for alle kjøretøy\n"
+"* Vise alle kostnader assosiert med et kjøretøy eller type service\n"
+"* Analytisk graf for kostnader\n"
 
 #. module: base
 #: field:multi_company.default,company_dest_id:0
@@ -9774,12 +9798,12 @@ msgstr "Standard firma"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (EC) / Español (EC)"
-msgstr "Spanish (EC) / Español (EC)"
+msgstr "Spansk (EC) / Español (EC)"
 
 #. module: base
 #: help:ir.ui.view,xml_id:0
 msgid "ID of the view defined in xml file"
-msgstr ""
+msgstr "ID til visningen definert i XML filen"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_import
@@ -9794,28 +9818,28 @@ msgstr "Amerikansk Samoa"
 #. module: base
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Mine dokumenter"
 
 #. module: base
 #: help:ir.actions.act_window,res_model:0
 msgid "Model name of the object to open in the view window"
-msgstr ""
+msgstr "Modellnavn til objektet for åpning i visningsvinduet"
 
 #. module: base
 #: field:ir.model.fields,selectable:0
 msgid "Selectable"
-msgstr "Valgbar"
+msgstr "Velgbar"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:222
 #, python-format
 msgid "Everything seems properly set up!"
-msgstr ""
+msgstr "Alt ser ut til å være satt opp korrekt!"
 
 #. module: base
 #: view:res.request.link:0
 msgid "Request Link"
-msgstr "res.request.link"
+msgstr "Be om lenke"
 
 #. module: base
 #: view:ir.attachment:0
@@ -9839,7 +9863,7 @@ msgstr "Iterasjon"
 #: code:addons/orm.py:4347
 #, python-format
 msgid "UserError"
-msgstr "BrukerFeil"
+msgstr "Brukerfeil"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_issue
