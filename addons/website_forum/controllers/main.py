@@ -535,7 +535,7 @@ class WebsiteForum(http.Controller):
 
         #activity by user.
         model, comment = Data.get_object_reference(cr, uid, 'mail', 'mt_comment')
-        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], context=context)
+        activity_ids = Activity.search(cr, uid, [('res_id', 'in', user_post_ids), ('model', '=', 'forum.post'), ('subtype_id', '!=', comment)], order='date DESC', limit=100, context=context)
         activities = Activity.browse(cr, uid, activity_ids, context=context)
 
         posts = {}
