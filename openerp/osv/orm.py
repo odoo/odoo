@@ -3758,9 +3758,13 @@ class BaseModel(object):
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
         for order, obj_name, store_ids, fields in result_store:
-            if obj_name != self._name:
+            if obj_name == self._name:
+                effective_store_ids = list(set(store_ids) - set(ids))
+            else:
+                effective_store_ids = store_ids
+            if effective_store_ids:
                 obj = self.pool[obj_name]
-                cr.execute('select id from '+obj._table+' where id IN %s', (tuple(store_ids),))
+                cr.execute('select id from '+obj._table+' where id IN %s', (tuple(effective_store_ids),))
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
@@ -5130,7 +5134,14 @@ class BaseModel(object):
             # shortcut read if we only want the ids
             return [{'id': id} for id in record_ids]
 
-        result = self.read(cr, uid, record_ids, fields, context=context)
+        # read() ignores active_test, but it would forward it to any downstream search call
+        # (e.g. for x2m or function fields), and this is not the desired behavior, the flag
+        # was presumably only meant for the main search().
+        # TODO: Move this to read() directly?                                                                                                
+        read_ctx = dict(context or {})                                                                                                       
+        read_ctx.pop('active_test', None)                                                                                                    
+                                                                                                                                             
+        result = self.read(cr, uid, record_ids, fields, context=read_ctx) 
         if len(result) <= 1:
             return result
 

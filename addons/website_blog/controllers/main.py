@@ -51,7 +51,7 @@ class WebsiteBlog(http.Controller):
         blog_post_obj = request.registry['blog.post']
         groups = blog_post_obj.read_group(
             request.cr, request.uid, [], ['name', 'create_date'],
-            groupby="create_date", orderby="create_date asc", context=request.context)
+            groupby="create_date", orderby="create_date desc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
             end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
@@ -122,7 +122,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
         post_url = QueryURL('', ['blogpost'], tag_id=tag and tag.id or None, date_begin=date_begin, date_end=date_end)
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date desc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(

@@ -5,8 +5,7 @@ import logging
 import re
 import sys
 
-import werkzeug.exceptions
-import werkzeug.routing
+import werkzeug
 
 import openerp
 from openerp import http
@@ -59,6 +58,12 @@ class ir_http(osv.AbstractModel):
     def _auth_method_user(self):
         request.uid = request.session.uid
         if not request.uid:
+            if not request.params.get('noredirect'):
+                query = werkzeug.url_encode({
+                    'redirect': request.httprequest.url,
+                })
+                response = werkzeug.utils.redirect('/web/login?%s' % query)
+                werkzeug.exceptions.abort(response)
             raise http.SessionExpiredException("Session expired")
 
     def _auth_method_none(self):
