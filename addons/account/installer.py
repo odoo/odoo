@@ -134,6 +134,21 @@ class account_installer(osv.osv_memory):
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
+    
+    def _next(self, cr, uid, context=None):
+        if context is None:context = {}
+        ir_todo_obj = self.pool.get('ir.actions.todo')
+        ir_model_obj = self.pool.get('ir.model.data')
+        if context.get('reload_page'):
+            action_id = ir_model_obj.get_object_reference(cr, uid, 'account', 'account_configuration_installer_todo')[1]
+            state = ir_todo_obj.browse(cr, uid, action_id, context=context).state
+            if state == 'open':
+                ir_todo_obj.write(cr, uid, action_id, {'state':'done'}, context=context)
+            action_id = ir_model_obj.get_object_reference(cr, uid, 'account', context['reload_page'])[1]
+            state = ir_todo_obj.browse(cr, uid, action_id, context=context).state
+            if state == 'done':
+                ir_todo_obj.write(cr, uid, action_id, {'state':'open'}, context=context)
+        return super(account_installer, self)._next(cr, uid, context=context)
 
     def execute(self, cr, uid, ids, context=None):
         self.execute_simple(cr, uid, ids, context)
@@ -171,6 +186,26 @@ class account_installer(osv.osv_memory):
                           context=context)[0]['charts']
         _logger.debug('Installing chart of accounts %s', chart)
         return (modules | set([chart])) - set(['has_default_company', 'configurable'])
-
+    
+    def _open_account_configuration_installer(self, cr, uid, ids, context=None):
+        groups = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'group_account_manager')
+        user_ids = [user.id for user in groups.users]
+        if uid in user_ids:
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'view_account_configuration_installer')[1]
+            result = {
+                'name': 'Configure Accounting Data',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': view_id,
+                'res_model': 'account.installer',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'new',
+                'context': {'reload_page': 'action_wizard_multi_chart_todo'}
+            }
+            return result
+        else:
+            raise osv.except_osv(_('Access Right Error!'), _('Sorry, you are not allowed to create this kind of document. Please ask your Financial Manager.'))
+        return {'type': 'ir.actions.act_window_close'}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
