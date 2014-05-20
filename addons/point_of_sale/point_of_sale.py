@@ -537,7 +537,7 @@ class pos_order(osv.osv):
             try:
                 wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
             except Exception:
-                _logger.error('ERROR: Could not mark POS Order as Paid.', exc_info=True)
+                _logger.error('ERROR: Could not fully process the POS Order', exc_info=True)
         return order_ids
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -692,8 +692,6 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
-            if not order.state=='draft':
-                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
@@ -1136,8 +1134,8 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'payment'}, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
-        self.create_picking(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'paid'}, context=context)
+        self.create_picking(cr, uid, ids, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):

@@ -2,13 +2,13 @@
 <openerp>
     <data noupdate="1">
         <record id="provider_openerp" model="auth.oauth.provider">
-            <field name="name">OpenERP.com Accounts</field>
-            <field name="auth_endpoint">https://accounts.openerp.com/oauth2/auth</field>
+            <field name="name">Odoo.com Accounts</field>
+            <field name="auth_endpoint">https://accounts.odoo.com/oauth2/auth</field>
             <field name="scope">userinfo</field>
-            <field name="validation_endpoint">https://accounts.openerp.com/oauth2/tokeninfo</field>
+            <field name="validation_endpoint">https://accounts.odoo.com/oauth2/tokeninfo</field>
             <field name="data_endpoint"></field>
             <field name="css_class">zocial openerp</field>
-            <field name="body">Log in with OpenERP.com</field>
+            <field name="body">Log in with Odoo.com</field>
             <field name="enabled" eval="True"/>
         </record>
         <record id="provider_facebook" model="auth.oauth.provider">

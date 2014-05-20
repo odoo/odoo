@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-03-05 10:43+0000\n"
+"PO-Revision-Date: 2014-05-17 04:51+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-06 06:14+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-05-18 05:53+0000\n"
+"X-Generator: Launchpad (build 17007)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -390,7 +390,7 @@ msgstr "Mali Durumu"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr "Varsayılan fatura denetim yöntemi"
+msgstr "Varsayılan faturalama kontrol yöntemi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -636,7 +636,7 @@ msgstr "Ara Toplam"
 #. module: purchase
 #: field:purchase.order,shipped:0
 msgid "Received"
-msgstr "Alındı"
+msgstr "Kabul Edildi"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -825,7 +825,7 @@ msgstr "Sipariş Tarihi"
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr "Ürünler için farklı ölçü birimlerini yönetin"
+msgstr "Ürünler için farklı ölçü birimlerini yönetme"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -1082,7 +1082,7 @@ msgstr "Mesajlar ve iletişim geçmişi"
 #: field:purchase.order,warehouse_id:0
 #: field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
-msgstr "Varış Deposu"
+msgstr "Hedef Konum"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:967
@@ -1107,7 +1107,7 @@ msgstr "Ölçü Birimi"
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr "Her tedarikçi için fiyat listesi yürüt"
+msgstr "Her tedarikçi için fiyat listesi yürütme"
 
 #. module: purchase
 #: view:board.board:0
@@ -1180,7 +1180,7 @@ msgstr "Notlar"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage purchase requisitions"
-msgstr "Satınalma istekleri yürüt"
+msgstr "Satınalma isteklerini yürütme"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1216,7 +1216,7 @@ msgstr "İşlem Geçersiz!"
 #: field:purchase.order,validator:0
 #: view:purchase.report:0
 msgid "Validated by"
-msgstr "Doğrulayan"
+msgstr "Onaylayan"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1259,7 +1259,7 @@ msgstr "Bir satınalma siparişi için oluşturulan faturalar"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Pre-generate draft invoices based on purchase orders"
-msgstr "Satınalma siparişlerine göre taslak fatura ön oluşturma"
+msgstr "Satınalma siparişinden oluşturulan taslak faturalardan"
 
 #. module: purchase
 #: help:product.template,purchase_ok:0
@@ -1498,7 +1498,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr "Onayları iki seviye zorlayın"
+msgstr "Onayları ikili düzeye zorlama"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1600,7 +1600,7 @@ msgstr "Siparişleri birleştir"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr "Satınalma siparişlerinde birden çok analitik hesap kullanın"
+msgstr "Satınalma siparişlerinde birden çok analitik hesap kullanma"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1623,7 +1623,7 @@ msgstr "Elle Düzeltildi"
 #. module: purchase
 #: field:purchase.config.settings,group_costing_method:0
 msgid "Compute product cost price based on average cost"
-msgstr "Maliyet fiyatını ortalama fiyata göre hesaplayın"
+msgstr "Maliyet fiyatını ortalama fiyata göre hesaplama"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:352
@@ -1684,12 +1684,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr "Fatura Alındı"
+msgstr "Fatura Kabulu"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
-msgstr "Faturalama Denetimi"
+msgstr "Fatura Kontrolu"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
@@ -1739,7 +1739,7 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr "Varış yeri"
+msgstr "Hedef Konum"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -1863,7 +1863,7 @@ msgstr ""
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
-msgstr "İptal edildi"
+msgstr "İptal Edildi"
 
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
@@ -2013,7 +2013,7 @@ msgstr "Referans Ölçü Birimi"
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
-msgstr "Doğrulayan"
+msgstr "Onaylayan"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2078,7 +2078,7 @@ msgstr "Faturalandı"
 #: view:purchase.order.line:0
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "Satınalma Siparişi Kalemi"
+msgstr "Satınalma Sipariş Satırı"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -2451,7 +2451,7 @@ msgstr "Yıl"
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr "Satınalma sipariş kalemlerine göre"
+msgstr "Satınalma sipariş satırlarına istinaden"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
