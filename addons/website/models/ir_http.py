@@ -106,6 +106,8 @@ class ir_http(orm.AbstractModel):
             if generated_path != current_path:
                 if request.lang != request.website.default_lang_code:
                     path = '/' + request.lang + path
+                if request.httprequest.query_string:
+                    path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path)
 
     def _serve_attachment(self):
