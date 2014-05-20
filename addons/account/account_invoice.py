@@ -1304,6 +1304,7 @@ class account_invoice_line(Model):
     def product_id_change(self, product, uom_id, qty=0, name='', type='out_invoice',
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
             context=None, company_id=None):
+        context = context or {}
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.sudo(company_id=company_id, force_company=company_id)
 
@@ -1371,6 +1372,7 @@ class account_invoice_line(Model):
     @multi
     def uos_id_change(self, product, uom, qty=0, name='', type='out_invoice', partner_id=False,
             fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+        context = context or {}
         company_id = company_id if company_id != None else context.get('company_id', False)
         self = self.sudo(company_id=company_id)
 
