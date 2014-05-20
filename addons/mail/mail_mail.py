@@ -149,19 +149,9 @@ class mail_mail(osv.Model):
         link to action_mail_redirect action that will redirect to doc or Inbox """
         if partner and partner.user_ids:
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-            # the parameters to encode for the query and fragment part of url
-            query = {'db': cr.dbname}
-            fragment = {
-                'login': partner.user_ids[0].login,
-                'action': 'mail.action_mail_redirect',
-            }
-            if mail.notification:
-                fragment['message_id'] = mail.mail_message_id.id
-            elif mail.model and mail.res_id:
-                fragment.update(model=mail.model, res_id=mail.res_id)
-
-            url = urljoin(base_url, "/web?%s#%s" % (urlencode(query), urlencode(fragment)))
-            return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small></span>""") % url
+            mail_model = mail.model or 'mail.thread'
+            url = urljoin(base_url, self.pool[mail_model]._get_access_link(cr, uid, mail, partner, context=context))
+            return _("""<span class='oe_mail_footer_access'><small>Access your messages and documents <a style='color:inherit' href="%s">in Odoo</a></small></span>""") % url
         else:
             return None
 
