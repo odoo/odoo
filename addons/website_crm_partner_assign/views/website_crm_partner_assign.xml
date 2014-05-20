@@ -15,7 +15,7 @@
         <t t-set="additional_title">Resellers</t>
         <div id="wrap">
             <div class="oe_structure"/>
-            <div class="container">
+            <div class="container mt16">
                 <div class="row">
                     <t t-raw="ref_content" />
                 </div>
@@ -42,7 +42,7 @@
                     <li class="nav-header"><h3>Filter by Grade</h3></li>
                     <t t-foreach="grades" t-as="grade">
                         <li t-att-class="grade['active'] and 'active' or ''">
-                            <a t-attf-href="/partners/#{ grade['grade_id'][0] and 'grade/%s/' % grade['grade_id'][0] or '' }#{ current_country and 'country/%s/' % slug(current_country) or '' }#{ search_path }">
+                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }">
                                 <span class="badge pull-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/> 
                             </a>
@@ -54,7 +54,7 @@
                     <li class="nav-header"><h3>Filter by Country</h3></li>
                     <t t-foreach="countries" t-as="country">
                         <li t-if="country['country_id']" t-att-class="country['active'] and 'active' or ''">
-                            <a t-attf-href="/partners/#{ current_grade and 'grade/%s/' % slug(current_grade) or ''}#{country['country_id'][0] and 'country/%s/' % country['country_id'][0] or '' }#{ search_path }">
+                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and 'country_all=True' or '')}">
                                 <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
                                 <t t-esc="country['country_id'][1]"/> 
                             </a>
@@ -85,12 +85,12 @@
                             <t t-set="last_grade" t-value="partner.grade_id.id"/>
                         </t>
                         <div class="media">
-                            <a class="pull-left" t-attf-href="/partners/#{slug(partner)}"
+                            <a class="pull-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                                t-field="partner.image_small"
                                t-field-options='{"widget": "image", "class": "media-object"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/partners/#{slug(partner)}">
+                                <a class="media-heading" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
                                     <span t-field="partner.display_name"/>
                                 </a>
                                 <div t-field="partner.website_short_description"/>
@@ -126,6 +126,12 @@
 <template id="partner" name="Partner Detail">
     <t t-call="website_crm_partner_assign.layout">
         <t t-set="ref_content">
+            <div class="col-md-5">
+                <ol class="breadcrumb">
+                    <li><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
+                    <li class="active"><span t-field="partner.display_name"/></li>
+                </ol>
+            </div>
             <t t-call="website_partner.partner_detail">
                 <t t-set="right_column">
                     <div id="right_column" class="mb16"><t t-call="website_crm_partner_assign.references_block"/></div>

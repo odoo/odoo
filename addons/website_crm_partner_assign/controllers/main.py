@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
 import re
-
 import werkzeug
+
+_logger = logging.getLogger(__name__)
+try:
+    import GeoIP
+except ImportError:
+    GeoIP = None
+    _logger.warn("Please install GeoIP python module to use events localisation.")
 
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
@@ -12,6 +19,12 @@ from openerp.tools.translate import _
 
 class WebsiteCrmPartnerAssign(http.Controller):
     _references_per_page = 40
+
+    def _get_current_country_code(self):
+        if not GeoIP:
+            return False
+        GI = GeoIP.open('/usr/share/GeoIP/GeoIP.dat', 0)
+        return GI.country_code_by_addr(request.httprequest.remote_addr)
 
     @http.route([
         '/partners',
@@ -27,7 +40,9 @@ class WebsiteCrmPartnerAssign(http.Controller):
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
     ], type='http', auth="public", website=True, multilang=True)
     def partners(self, country=None, grade=None, page=0, **post):
+        country_all = post.pop('country_all', False)
         partner_obj = request.registry['res.partner']
+        country_obj = request.registry['res.country']
         search = post.get('search', '')
 
         base_partner_domain = [('is_company', '=', True), ('grade_id.website_published', '=', True), ('website_published', '=', True)]
@@ -36,6 +51,12 @@ class WebsiteCrmPartnerAssign(http.Controller):
 
         # group by grade
         grade_domain = list(base_partner_domain)
+        if not country and not country_all:
+            country_code = self._get_current_country_code()
+            if country_code:
+                country_ids = country_obj.search(request.cr, request.uid, [('code', '=', country_code)], context=request.context)
+                if country_ids:
+                    country = country_obj.browse(request.cr, request.uid, country_ids[0], context=request.context)
         if country:
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.read_group(
@@ -118,7 +139,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'searches': post,
-            'search_path': "?%s" % werkzeug.url_encode(post),
+            'search_path': "%s" % werkzeug.url_encode(post),
         }
         return request.website.render("website_crm_partner_assign.index", values)
 
@@ -126,11 +147,26 @@ class WebsiteCrmPartnerAssign(http.Controller):
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True, multilang=True)
     def partners_detail(self, partner_id, partner_name='', **post):
         mo = re.search('-([-0-9]+)$', str(partner_id))
+        current_grade, current_country = None, None
+        grade_id = post.get('grade_id')
+        country_id = post.get('country_id')
+        if grade_id:
+            grade_ids = request.registry['res.partner.grade'].exists(request.cr, request.uid, int(grade_id), context=request.context)
+            if grade_ids:
+                current_grade = request.registry['res.partner.grade'].browse(request.cr, request.uid, grade_ids[0], context=request.context)
+        if country_id:
+            country_ids = request.registry['res.country'].exists(request.cr, request.uid, int(country_id), context=request.context)
+            if country_ids:
+                current_country = request.registry['res.country'].browse(request.cr, request.uid, country_ids[0], context=request.context)
         if mo:
             partner_id = int(mo.group(1))
             partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
             if partner.exists() and partner.website_published:
-                values = {}
-                values['main_object'] = values['partner'] = partner
+                values = {
+                    'main_object': partner,
+                    'partner': partner,
+                    'current_grade': current_grade,
+                    'current_country': current_country
+                }
                 return request.website.render("website_crm_partner_assign.partner", values)
         return self.partners(**post)
