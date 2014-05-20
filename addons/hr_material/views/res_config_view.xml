@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_material_group" model="ir.ui.view">
+            <field name="name">hr.config.settings.inherit.material</field>
+            <field name="model">hr.config.settings</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//group[@name='contract_grp']" position="after">
+                    <group name="hr_materials_grp">
+                        <label for="id" string="Materials Tracking"/>
+                        <div>
+                            <field name="alias_manage" class="oe_inline"/>
+                            <label for="material_alias_prefix" class="oe_inline"/>
+                            <div attrs="{'invisible': [('alias_manage', '=', False)], 'required': [('alias_manage', '=', True)]}">
+                                <field name="material_alias_prefix" class="oe_inline" attrs="{'required': [('alias_manage', '=', True)]}"/>@
+                                <field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
+                        </div>
+                    </group>
+                 </xpath>
+            </data>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.group_admin_user" model="res.groups">
+        <field name="name">Material Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to manage material.</field>
+    </record>
+
+    <record id="base.group_hr_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base.group_admin_user'))]"/>
+    </record>
+
+</odoo>
