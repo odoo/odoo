@@ -206,29 +206,55 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_procurement_rule_form">
-            <field name="name">procurement.rule.form</field>
-            <field name="model">procurement.rule</field>
-            <field eval="10" name="priority"/>
+        <record model="ir.ui.view" id="warehouse_orderpoint_search">
+            <field name="name">stock.warehouse.orderpoint.search</field>
+            <field name="model">stock.warehouse.orderpoint</field>
             <field name="arch" type="xml">
-                <form string="Pull Rule" version="7.0">
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
-                        </div>
+                <search string="Reordering Rules Search">
+                    <field name="name" string="Reordering Rules"/>
+                    <field name="warehouse_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="product_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Warehouse" icon="terp-go-home" domain="[]"  context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Location" icon="terp-go-home" domain="[]" context="{'group_by':'location_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
+            <field name="name">stock.warehouse.orderpoint.form</field>
+            <field name="model">stock.warehouse.orderpoint</field>
+            <field name="arch" type="xml">
+                <form string="Reordering Rules" version="7.0">
+                    <group>
                         <group>
-                            <group string="General Information">
-                                <field name="action"/>
-                                <field name="sequence"/>
-                                <field name="active"/>
-                            </group>
-                            <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
-                                <field name="group_propagation_option"/>
-                                <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
-                            </group>
+                            <field name="name" />
+                            <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         </group>
-                    </sheet>
+                        <group>
+                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" options="{'no_create': True}" groups="stock.group_locations"/>
+                            <field name="product_uom" groups="product.group_uom"/>
+                            <field name="location_id" groups="stock.group_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Rules">
+                            <field name="product_min_qty" />
+                            <field name="product_max_qty" />
+                            <field name="qty_multiple" string="Quantity Multiple"/>
+                        </group>
+                        <group string="Misc">
+                            <field name="procurement_id" readonly="1"/>
+                            <field name="active" />
+                        </group>
+                    </group>
+                    <group string="Procurement Orders to Process">
+                        <field name="procurement_draft_ids" nolabel="1"/>
+                    </group>
                 </form>
             </field>
         </record>
