@@ -59,6 +59,9 @@
                             <page string="Attachments">
                                 <field name="attachment_ids"/>
                             </page>
+                            <page string="Failure Reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
+                                <field name="failure_reason"/>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -73,6 +76,7 @@
                     <field name="date"/>
                     <field name="subject"/>
                     <field name="author_id" string="User"/>
+                    <field name="failure_reason"/>
                     <field name="message_id" invisible="1"/>
                     <field name="recipient_ids" invisible="1"/>
                     <field name="model" invisible="1"/>

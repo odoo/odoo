@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="action_view_mail_mail_exception" model="ir.actions.act_window">
+            <field name="name">Emails</field>
+            <field name="res_model">mail.mail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_exception': 1}</field>
+        </record>
         <record id="view_general_configuration_mail_alias_domain" model="ir.ui.view">
             <field name="name">base.config.settings.mail.alias</field>
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
+                <xpath expr="//div[@name='email.outgoing_server']" position='before'>
+                     <div>
+	                     <button class="oe_inline oe_stat_button font_size" name= "%(action_view_mail_mail_exception)d" type="action" 
+	                        icon="fa-exclamation-triangle" attrs="{'invisible': [('fail_mail','=',0)]}">
+	                        <field string="Email(s) not sent" name="fail_mail" widget="statinfo"/>
+	                    </button>
+                    </div>
+                </xpath>
                 <xpath expr="//div[@name='email']" position='inside'>
                     <div>
                         <label for="alias_domain" class="oe_inline"/>
