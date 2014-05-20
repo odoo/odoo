@@ -86,7 +86,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     get_search_fields: function () {
         var self = this;
 
-        var groupbygroups = _(this.search_view.inputs).select(function (g) {
+        var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {
             return g instanceof openerp.web.search.GroupbyGroup;
         });
 
