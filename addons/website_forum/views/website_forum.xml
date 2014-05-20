@@ -436,7 +436,7 @@
                 </h1>
                 <div class="alert alert-info text-center" t-if="question.state == 'close'">
                     <p class="mt16">
-                        <b>The question has been closed for reason: <i t-esc="question.closed_reason_id.name"/></b>
+                        <b>The question has been closed<t t-if="question.closed_reason_id"> for reason: <i t-esc="question.closed_reason_id.name"/></t></b>
                     </p>
                     <t t-if="question.closed_uid">
                         <b>by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
@@ -514,6 +514,7 @@
                                 t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
                                 style="display: inline-block;"/>
                             <div t-field="question.create_uid" t-field-options='{"widget": "contact", "badges": true, "fields": ["karma"]}'/>
+                            <span class="text-muted">Asked on <span t-field="question.create_date" t-field-options='{"format":"short"}'/></span>
                         </div>
                     </div>
                 </div>
