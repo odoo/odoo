@@ -62,5 +62,53 @@ class product_template(osv.osv):
             help="This account will be used for invoices instead of the default one to value expenses for the current product."),
     }
 
+class product_product(osv.osv):
+    _inherit = "product.product"
+    
+    def _check_coa_configured(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        prop_ids = self.pool.get('ir.property').search(cr, uid, [('name','in',('property_account_income', 'property_account_income_categ', 'property_account_expense', 'property_account_expense_categ')),(('company_id', '=', company_id) or ('company_id', '=', False))], context=context)
+        return bool(prop_ids)
+   
+    def _get_coa_configured(self, cr, uid, ids, field_names, arg, context=None):
+        return dict.fromkeys(ids, self._check_coa_configured(cr, uid, context=context)) 
+    
+    def open_account_configuration_installer(self, cr, uid, ids, context=None):
+        return self.pool.get('account.installer')._open_account_configuration_installer(cr, uid, ids, context=context)
+    
+    _columns = {
+        'is_coa_configured': fields.function(_get_coa_configured, type='boolean', string='COA Configured',
+            store={
+                'product.product': (lambda self, cr, uid, ids, c={}: ids, ['property_account_income', 'property_account_expense'], 50),
+            },),
+    }
+    _defaults = {
+        'is_coa_configured': _check_coa_configured,
+    }
+    
+class product_category(osv.osv):
+    _inherit = "product.category"
+    
+    def _check_coa_configured(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        prop_ids = self.pool.get('ir.property').search(cr, uid, [('name', 'in', ('property_account_income_categ', 'property_account_expense_categ')), (('company_id', '=', company_id) or ('company_id', '=', False))], context=context)
+        return bool(prop_ids) 
+    
+    def _get_coa_configured(self, cr, uid, ids, field_names, arg, context=None):
+        return dict.fromkeys(ids, self._check_coa_configured(cr, uid, context=context)) 
+    
+    def open_account_configuration_installer(self, cr, uid, ids, context=None):
+        return self.pool.get('account.installer')._open_account_configuration_installer(cr, uid, ids, context=context)
+    
+    _columns = {
+        'is_coa_configured': fields.function(_get_coa_configured, type='boolean', string='COA Configured',
+            store={
+                'product.category': (lambda self, cr, uid, ids, c={}: ids, ['property_account_income_categ', 'property_account_expense_categ'], 50),
+            }),
+    }
+    
+    _defaults = {
+        'is_coa_configured': _check_coa_configured,
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
