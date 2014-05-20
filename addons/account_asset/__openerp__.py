@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Assets Management',
+    'name': 'Assets & Revenue Recognitions Management',
     'version': '1.0',
     'depends': ['account'],
     'author': 'OpenERP S.A.',
