@@ -99,6 +99,19 @@
                             </div>
                         </div>
                     </group>
+                    <group name="hr_materials">
+                        <label for="id" string="Material Tracking"/>
+                        <div>
+                            <div>
+                                <field name="module_hr_material" class="oe_inline"/>
+                                <label for="module_hr_material"/>
+                            </div>
+                            <div  attrs="{'invisible': [('module_hr_material','=',False)]}">  
+                                <label for="alias_prefix" class="oe_inline"/>
+                                <field name="alias_prefix" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
+                        </div>
+                    </group>
                 </form>
             </field>
         </record>
