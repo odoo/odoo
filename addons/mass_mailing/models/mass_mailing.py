@@ -30,6 +30,7 @@ class MassMailingContact(osv.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mail.mass_mailing.contact'
+    _inherit = 'mail.thread'
     _description = 'Mass Mailing Contact'
     _order = 'email'
     _rec_name = 'email'
@@ -527,7 +528,7 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def get_recipients(self, cr, uid, mailing, context=None):
-        domain = eval(mailing.mailing_domain)
+        domain = eval(mailing.mailing_domain) if mailing.mailing_domain else ''
         res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
 
         # randomly choose a fragment
