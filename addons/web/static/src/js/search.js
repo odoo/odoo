@@ -831,7 +831,7 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
     },
     notify_searchview: function () {
         var defaults = arguments[1];
-        this.searchview.drawer_ready.resolve.apply(null, defaults);
+        this.ready.resolve.apply(null, defaults);
     },
     /**
      * Sets up thingie where all the mess is put?
