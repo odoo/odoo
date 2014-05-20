@@ -635,7 +635,7 @@ class DateConverter(osv.AbstractModel):
             strftime_pattern = lang.date_format
             pattern = openerp.tools.posix_to_ldml(strftime_pattern, locale=locale)
 
-        return babel.dates.format_datetime(
+        return babel.dates.format_date(
             value, format=pattern,
             locale=locale)
 

@@ -4,6 +4,14 @@
 OpenERP Server Developers Documentation
 ========================================
 
+Howto
+'''''
+
+.. toctree::
+    :maxdepth: 1
+
+    howto/howto_website
+
 OpenERP Server
 ''''''''''''''
 

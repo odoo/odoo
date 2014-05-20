@@ -672,11 +672,11 @@ class BaseModel(object):
 
     OpenERP models are created by inheriting from this class' subclasses:
 
-        * Model: for regular database-persisted models
-        * TransientModel: for temporary data, stored in the database but automatically
-                          vaccuumed every so often
-        * AbstractModel: for abstract super classes meant to be shared by multiple
-                        _inheriting classes (usually Models or TransientModels)
+    * Model: for regular database-persisted models
+    * TransientModel: for temporary data, stored in the database but automatically
+                      vaccuumed every so often
+    * AbstractModel: for abstract super classes meant to be shared by multiple
+                     _inheriting classes (usually Models or TransientModels)
 
     The system will later instantiate the class once per database (on
     which the class' module is installed).
@@ -5217,7 +5217,7 @@ def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
                  r'not-null constraint\n',
                  str(e))
-    field_name = m.group('field')
+    field_name = m and m.group('field')
     if not m or field_name not in fields:
         return {'message': unicode(e)}
     message = _(u"Missing required value for the field '%s'.") % field_name
@@ -5232,7 +5232,7 @@ def convert_pgerror_23502(model, fields, info, e):
 def convert_pgerror_23505(model, fields, info, e):
     m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
                  str(e))
-    field_name = m.group('field')
+    field_name = m and m.group('field')
     if not m or field_name not in fields:
         return {'message': unicode(e)}
     message = _(u"The value for the field '%s' already exists.") % field_name
