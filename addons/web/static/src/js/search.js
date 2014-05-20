@@ -391,6 +391,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.ready = $.Deferred();
         this.drawer_ready = $.Deferred();
         this.fields_view_get = $.Deferred();
+        this.drawer = new instance.web.SearchViewDrawer(parent, this);
+
     },
     start: function() {
         var self = this;
@@ -424,13 +426,16 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         }
 
         var view_manager = this.getParent();
-        while (!(view_manager instanceof instance.web.ViewManager)) {
+        while (!(view_manager instanceof instance.web.ViewManager) &&
+                (view_manager !== undefined)) {
             view_manager = view_manager.getParent();
         }
-        view_manager.on('switch_mode', this, function (e) {
-            self.drawer.hide();
-        })
 
+        if (view_manager) {
+            view_manager.on('switch_mode', this, function (e) {
+                self.drawer.hide();
+            });
+        }
         return $.when(p, this.ready);
     },
 
@@ -776,6 +781,29 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     on_invalid: function (errors) {
         this.do_notify(_t("Invalid Search"), _t("triggered from search view"));
         this.trigger('invalid_search', errors);
+    },
+
+    // The method appendTo is overwrited to make sure that the search view is not
+    // appendTo'ed.  Instead, the correct way to insert the searchview in the DOM
+    // is by using insert
+    appendTo: function () {
+        throw new Error("SearchView should be inserted, not appended");
+    },
+
+    // This is the correct way to insert the searchview in the dom. First argument
+    // is for the searchview, and second is the place where the drawer should be
+    // appended.
+    insert: function ($searchview_parent, $searchview_drawer_node) {
+        var parent = this.getParent(),
+            $searchview_drawer_node = $searchview_drawer_node || $searchview_parent,
+            insert_searchview = parent.appendTo.call(this, $searchview_parent),
+            insert_drawer = parent.appendTo.call(this.drawer, $searchview_drawer_node);
+        return $.when(insert_searchview, insert_drawer);
+    },
+
+    destroy: function () {
+        this.drawer.destroy();
+        this.getParent().destroy.call(this);
     }
 });
 
