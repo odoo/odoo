@@ -5,7 +5,7 @@ from openerp.addons.web.http import request
 
 class website_hr(http.Controller):
 
-    @http.route(['/page/website.aboutus'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/page/website.aboutus'], type='http', auth="public", website=True)
     def blog(self, **post):
         hr_obj = request.registry['hr.employee']
         employee_ids = hr_obj.search(request.cr, request.uid, [('website_published', '=', True)],

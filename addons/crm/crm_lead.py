@@ -90,7 +90,10 @@ class crm_lead(format_address, osv.osv):
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
-        return self._resolve_section_id_from_context(cr, uid, context=context) or False
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """

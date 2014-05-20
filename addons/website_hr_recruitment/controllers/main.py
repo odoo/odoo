@@ -11,7 +11,7 @@ class website_hr_recruitment(http.Controller):
         '/jobs',
         '/jobs/department/<model("hr.department"):department>',
         '/jobs/office/<string:office>'
-        ], type='http', auth="public", website=True, multilang=True)
+        ], type='http', auth="public", website=True)
     def jobs(self, department=None, office=None):
         context=dict(request.context, show_address=True, no_tag_br=True)
         cr, uid = request.cr, request.uid
@@ -54,11 +54,11 @@ class website_hr_recruitment(http.Controller):
         job_id = request.registry.get('hr.job').create(cr, uid, value, context=context)
         return request.redirect("/jobs/detail/%s?enable_editor=1" % job_id)
 
-    @http.route(['/jobs/detail/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/jobs/detail/<model("hr.job"):job>'], type='http', auth="public", website=True)
     def jobs_detail(self, job, **kwargs):
         return request.website.render("website_hr_recruitment.detail", { 'job': job, 'main_object': job })
 
-    @http.route(['/jobs/apply/<model("hr.job"):job>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/jobs/apply/<model("hr.job"):job>'], type='http', auth="public", website=True)
     def jobs_apply(self, job):
         error = {}
         default = {}
@@ -67,7 +67,7 @@ class website_hr_recruitment(http.Controller):
             default = request.session.pop('website_hr_recruitment_default')
         return request.website.render("website_hr_recruitment.apply", { 'job': job, 'error': error, 'default': default})
 
-    @http.route(['/jobs/thankyou'], methods=['POST'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/jobs/thankyou'], methods=['POST'], type='http', auth="public", website=True)
     def jobs_thankyou(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         imd = request.registry['ir.model.data']
