@@ -1,0 +1,42 @@
+-
+  In order to check Inter-Company Rule of creating SO from PO, I login with user company A
+-
+  !context
+    uid: 'res_users_company_a'
+-
+  Quotation of purchase order.
+-
+  !record {model: purchase.order, id: purchase_order_cmpa}:
+    partner_id: partner_company_b
+    company_id: company_a
+    order_line:
+    - product_id: product_consultant
+      name: 'Service'
+      price_unit: 450.0
+-
+  I confirm the order.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_cmpa}
+-
+  Login with user of company B and check sale order.
+-
+  !context
+    uid: 'res_users_company_b'
+-
+  I check that the Quotation of sale order is created with proper data.
+-
+  !python {model: sale.order}: |
+    #NOTE: Browse PO with superuser id because of different company of user.
+    po_name = self.pool.get('purchase.order').browse(cr, 1, ref("purchase_order_cmpa"), context=context).name
+    sale_order_ids = self.search(cr, uid, [('client_order_ref', '=', po_name)], context=context)
+    sale_order= self.browse(cr, uid, sale_order_ids[0], context=context)
+    assert sale_order.state == "draft", "sale order should be in draft state."
+    assert sale_order.partner_id.id == ref("partner_company_a"), "Supplier is not correspond to Company A."
+    assert sale_order.company_id.id == ref("company_b"), "Applied company in created sale order is incorrect."
+    assert sale_order.amount_total == 450.0, "Total amount is incorrect."
+
+    #check for order line
+    assert sale_order.order_line[0].product_id.id == ref("product_consultant"), "Product in line is incorrect."
+    assert sale_order.order_line[0].name == 'Service', "Product name is incorrect."
+    assert sale_order.order_line[0].product_uom_qty == 1 , "Product qty is incorrect."
+    assert sale_order.order_line[0].price_unit == 450, "Unit Price in line is incorrect."
