@@ -30,6 +30,12 @@ def data():
             if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
                 r.setdefault(root, []).append(os.path.join(root, filename))
 
+    # Put all the official addons inside openerp/addons directory for installing
+    for root, dirnames, filenames in os.walk('addons'):
+        for filename in filenames:
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
+                r.setdefault(os.path.join('openerp', root), []).append(os.path.join(root, filename))
+
     if os.name == 'nt':
         r["Microsoft.VC90.CRT"] = glob.glob('C:\Microsoft.VC90.CRT\*.*')
 
