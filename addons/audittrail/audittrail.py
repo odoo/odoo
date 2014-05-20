@@ -432,6 +432,14 @@ def prepare_audittrail_log_line(cr, uid, pool, model, resource_id, method, old_v
                   'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
             }
             lines[key].append(data)
+            # On read log add current values for fields.
+            if method == 'read':
+                data={
+                    'name': field_name,
+                    'old_value': key in old_values and old_values[key]['value'].get(field_name),
+                    'old_value_text': key in old_values and old_values[key]['text'].get(field_name)
+                }
+                lines[key].append(data)
     return lines
 
 def process_data(cr, uid, pool, res_ids, model, method, old_values=None, new_values=None, field_list=None):

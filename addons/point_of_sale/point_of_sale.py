@@ -565,7 +565,7 @@ class pos_order(osv.osv):
             try:
                 self.signal_paid(cr, uid, [order_id])
             except Exception as e:
-                _logger.error('Could not mark POS Order as Paid: %s', tools.ustr(e))
+                _logger.error('Could not fully process the POS Order: %s', tools.ustr(e))
 
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
@@ -725,8 +725,6 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
 
         for order in self.browse(cr, uid, ids, context=context):
-            if not order.state=='draft':
-                continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
                 'origin': order.name,
@@ -1167,8 +1165,8 @@ class pos_order(osv.osv):
         return self.write(cr, uid, ids, {'state': 'payment'}, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
-        self.create_picking(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'paid'}, context=context)
+        self.create_picking(cr, uid, ids, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
