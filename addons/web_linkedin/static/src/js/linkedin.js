@@ -184,7 +184,113 @@ openerp.web_linkedin = function(instance) {
                         }
                     }
                 })
-                self.view.set_values(to_change);
+                if (entity.__type === "company") {
+                    self.get_employee_list(entity, to_change);
+                } else {
+                    self.view.set_values(to_change);
+                }
+                
+            });
+        },
+        get_employee_list: function(entity, to_change) {
+            var self = this;
+            var p_to_change = to_change.child_ids;
+            to_change.child_ids = []
+            $('.oe_linkedin_pop_company_p').html($(QWeb.render("Linkedin.company_info", {'data':entity})));
+            $('.modal:last').scrollTo('#linkedin_pop_company_p');
+
+            $('#import_all').on("click", function () {
+                self.import_all_employee(to_change, p_to_change);
+            });
+
+            _(p_to_change).each( function(data) {
+                var contact = data[2]
+                var btn_import = 'button[name="'+contact.name+'"]'
+                var btn_upgrade = 'button[id="'+contact.id+'"]'
+                $('.oe_linkedin_pop_company_p').append($(QWeb.render("Linkedin.company_employee", {'data':contact})));
+                if (contact.id && contact.parent_id && contact.current_company) {
+                    to_change.child_ids.push(data);
+                }
+
+                $(btn_import).on("click", function () {
+                    // [0,0,data] if it's a new partner
+                    if(contact.id){
+                        self.on_click_import(to_change, contact);
+                    } else {
+                        to_change.child_ids.push([0, 0, contact] );
+                        self.view.set_values(to_change);
+                        $(btn_import).prop('disabled', true);
+                    }
+                    
+                });
+
+                $(btn_upgrade).on("click", function () {
+                    self.view.dataset._model.call('write', [[contact.id], contact, self.view.dataset.get_context()]);
+                    $(btn_upgrade).prop('disabled', true);
+                });
+            });
+            self.set_page(p_to_change);
+            self.showPage(1);
+        },
+        on_click_import: function(to_change, contact) {
+            var self = this;
+            $('div.oe_edit_actions').remove();
+            self.$dialog = new instance.web.Dialog(this, {
+                size: 'small',
+                title: _t('Import Contact'),
+                buttons: [
+                        { text: _t("Import"), click: function() { 
+                            delete contact['id'];
+                            delete contact['parent_name'];
+                            to_change.child_ids.push([0, 0, contact]);
+                            self.view.set_values(to_change);
+                            $('button[name="'+contact.name+'"]').prop('disabled', true);
+                            this.parents('.modal').modal('hide');
+                        }},
+                        { text: _t("Upgrade"), click: function() { 
+                            delete contact['parent_name'];
+                            self.view.dataset._model.call('write', [[contact.id], contact, self.view.dataset.get_context()]).done(function() {
+                                self.view.set_values(to_change);
+                                $('button[name="'+contact.name+'"]').prop('disabled', true);
+                                $('button[name="'+contact.name+'"]').text('Upgrade');
+                                self.$dialog.destroy();
+                            });
+                        }},
+                            { text: _t("Cancel"), click: function() { this.parents('.modal').modal('hide'); }},
+                        ],
+            },'<div class="oe_edit_actions"><span><b>'+ contact.name +'</b> already exist in the company <b>'+ contact.parent_name +'</b><br/>what do you like to do?</span><ul><li><b>Upgrade: </b>Upgrade Existing contact</li><li><b>Import: </b>Import as a new contact</li></ul></div>').open();
+        },
+        import_all_employee: function(to_change, p_to_change){
+           var self = this;
+            _.each(p_to_change, function (data) {
+                    // [0,0,data] if it's a new partner
+                    if (!data[2].id) {
+                        to_change.child_ids.push(data);
+                    }
+                });
+                self.view.set_values(to_change).then( function() {
+                    $('.modal').modal('hide')
+                });
+        },
+        set_page: function(p_to_change) {
+            var self = this;
+            $('#employee_page').empty();
+            for (var i=1; i<=Math.round(p_to_change.length/5); i++) {
+                $('#employee_page').append('<li><a href="#">' + i + '</a></li>');
+            }
+            $("#employee_page li:first").addClass("active")
+            $("#employee_page li a").click(function() {
+                $("#employee_page li").removeClass("active");
+                $(this).closest('li').addClass("active");
+                self.showPage(parseInt($(this).text()));
+            });
+        },
+        showPage: function(page) {
+            var pageSize = 5;
+            $(".oe_content_employee").hide();
+            $(".oe_content_employee").each(function(n) {
+                if (n >= pageSize * (page - 1) && n < pageSize * page)
+                    $(this).show();
             });
         },
         create_on_change: function(entity) {
@@ -316,13 +422,12 @@ openerp.web_linkedin = function(instance) {
                 }));
             });
             $.when.apply($, defs).then(function () {
-                new instance.web.DataSetSearch(this, 'res.partner').call("linkedin_check_similar_partner", [entities]).then(function (partners) {
+                new instance.web.DataSetSearch(this, 'res.partner').call("check_similar_linkedin_contact", [entities]).then(function (partners) {
                     _.each(partners, function (partner, i) {
-                        _.each(partner, function (val, key) {
-                            if (val) {
-                                childs_to_change[i][key] = val;
-                            }
-                        });
+                        //append only id to enable upgrade the profile.
+                        childs_to_change[i]['id'] = partner.id;
+                        childs_to_change[i]['parent_name'] = partner.parent_name;
+                        childs_to_change[i]['current_company'] = partner.current_company;
                     });
                     deferrer.resolve(childs_to_change);
                 });
@@ -396,7 +501,7 @@ openerp.web_linkedin = function(instance) {
             IN.API.Profile("me")
                 .fields(["firstName", "lastName"])
                 .result(function (result) {
-                    $(QWeb.render('LinkedIn.loginInformation', result.values[0])).appendTo(self.$el.parents('.modal').find(".oe_dialog_custom_buttons"));   
+                    $(QWeb.render('LinkedIn.loginInformation', result.values[0])).appendTo(self.$el.parents('.modal').find(".modal-footer"));   
             })
         },
         do_search: function(url) {
@@ -492,7 +597,9 @@ openerp.web_linkedin = function(instance) {
                 pc.$el.css("width", "20%");
                 pc.on("selected", self, function(data) {
                     self.trigger("selected", data);
-                    self.destroy();
+                    if (data.__type === "people" ) {
+                        self.destroy();
+                    }
                 });
             });
             if (!$elem.find("div").size()) {
@@ -515,6 +622,7 @@ openerp.web_linkedin = function(instance) {
             });
             if (this.data.__type === "company") {
                 this.$("h3").text(this.data.name);
+                self.$el.attr("name", this.data.name)
                 self.$("img").attr("src", this.data.logoUrl);
                 self.$(".oe_linkedin_entity_headline").text(this.data.industry);
             } else { // people
