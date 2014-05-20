@@ -3711,9 +3711,13 @@ class BaseModel(object):
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
         for order, obj_name, store_ids, fields in result_store:
-            if obj_name != self._name:
+            if obj_name == self._name:
+                effective_store_ids = list(set(store_ids) - set(ids))
+            else:
+                effective_store_ids = store_ids
+            if effective_store_ids:
                 obj = self.pool[obj_name]
-                cr.execute('select id from '+obj._table+' where id IN %s', (tuple(store_ids),))
+                cr.execute('select id from '+obj._table+' where id IN %s', (tuple(effective_store_ids),))
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
