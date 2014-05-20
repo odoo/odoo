@@ -218,9 +218,13 @@ instance.web.Dialog = instance.web.Widget.extend({
             //we need this to put the instruction to remove modal from DOM at the end
             //of the queue, otherwise it might already have been removed before the modal-backdrop
             //is removed when pressing escape key
+            var $element = this.$dialog_box;
             setTimeout(function () {
-                //remove last modal from list of opened modal since we just destroy it
-                opened_modal.pop().remove();
+                //remove modal from list of opened modal since we just destroy it
+                var modal_list_index = $.inArray($element, opened_modal);
+                if (modal_list_index > -1){
+                    opened_modal.splice(modal_list_index,1)[0].remove();
+                }
                 if (opened_modal.length > 0){
                     //we still have other opened modal so we should focus it
                     opened_modal[opened_modal.length-1].focus();
