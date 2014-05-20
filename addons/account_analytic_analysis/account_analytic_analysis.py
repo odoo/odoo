@@ -73,7 +73,13 @@ class account_analytic_invoice_line(osv.osv):
 
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
-        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price_unit if price_unit is not False else (res.price or res.list_price)})
+        if price_unit is not False:
+            price = price_unit
+        elif pricelist_id:
+            price = res.price
+        else:
+            price = res.list_price
+        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
 
         res_final = {'value':result}
         if result['uom_id'] != res.uom_id.id:
