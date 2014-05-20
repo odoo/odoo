@@ -12,7 +12,6 @@
 </template>
 
 <template id="website.assets_frontend" name="Website assets">
-    <t t-call="web.assets_common"/>
     <t t-call="website.theme"/>
 
     <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
@@ -89,6 +88,7 @@
                 <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
             </t>
 
+            <t t-call-assets="web.assets_common"/>
             <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
