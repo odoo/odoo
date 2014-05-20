@@ -599,6 +599,7 @@ class WebsiteForum(http.Controller):
         Badge = request.registry['gamification.badge']
         badge_ids = Badge.search(cr, SUPERUSER_ID, [('challenge_ids.category', '=', 'forum')], context=context)
         badges = Badge.browse(cr, uid, badge_ids, context=context)
+        badges = sorted(badges, key=lambda b: b.stat_count_distinct, reverse=True)
         values = self._prepare_forum_values(forum=forum, searches={'badges': True})
         values.update({
             'badges': badges,
