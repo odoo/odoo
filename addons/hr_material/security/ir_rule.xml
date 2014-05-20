@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <record id="maintenance_employee" model="ir.rule">
+        <field name="name">Employee Maintenance request</field>
+        <field name="model_id" ref="model_hr_material_maintenance_request"/>
+        <field name="domain_force">['|',('user_id.id','=',user.id),('employee_id.user_id.id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    <record id="material_employee" model="ir.rule">
+        <field name="name">Employee Material</field>
+        <field name="model_id" ref="model_hr_material"/>
+        <field name="domain_force">[('employee_id.user_id.id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    <record id="maintenance_manager" model="ir.rule">
+        <field name="name">Manager Maintenance Request</field>
+        <field name="model_id" ref="model_hr_material_maintenance_request"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+    <record id="material_manager" model="ir.rule">
+        <field name="name"> Manager Material</field>
+        <field name="model_id" ref="model_hr_material"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+
+
+  </data>
+</openerp>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Standard stages for Maintenance Request -->
+        <record id="stage_new" model="maintenance.request.stage">
+            <field name="name">New Request</field>
+            <field name="sequence" eval="1" />
+            <field name="fold" eval="False" />
+        </record>
+        <record id="stage_in_progress" model="maintenance.request.stage">
+            <field name="name">In Progress</field>
+            <field name="sequence" eval="2" />
+            <field name="fold" eval="False" />
+        </record>
+        <record id="stage_repaired" model="maintenance.request.stage">
+            <field name="name">Repaired</field>
+            <field name="sequence" eval="3" />
+            <field name="fold" eval="True" />
+        </record>
+        <record id="stage_scrap" model="maintenance.request.stage">
+            <field name="name">Scrap</field>
+            <field name="sequence" eval="4" />
+            <field name="fold" eval="True" />
+        </record>
+        <record id="stage_cancel" model="maintenance.request.stage">
+            <field name="name">Cancelled</field>
+            <field name="sequence" eval="10" />
+            <field name="fold" eval="True" />
+        </record>
+
+        <record id="mail_alias_material" model="mail.alias">
+            <field name="alias_name">internal.material</field>
+            <field name="alias_model_id" ref="model_hr_material_maintenance_request"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+        </record>
+
+        <!-- Maintenance Request-related subtypes for messaging / Chatter -->
+        <record id="mt_req_created" model="mail.message.subtype">
+            <field name="name">Request Created</field>
+            <field name="res_model">hr.material.maintenance_request</field>
+            <field name="hidden" eval="True"/>
+            <field name="description">Maintenance Request created</field>
+        </record>
+        <record id="mt_req_status" model="mail.message.subtype">
+            <field name="name">Status Changed</field>
+            <field name="res_model">hr.material.maintenance_request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Status changed</field>
+        </record>
+
+        <!-- Material-related subtypes for messaging / Chatter -->
+
+        <record id="mt_mat_assign" model="mail.message.subtype">
+            <field name="name">Material Assigned</field>
+            <field name="res_model">hr.material</field>
+            <field name="description">Material Assigned</field>
+        </record>
+
+        <!-- Material Category-related subtypes for messaging / Chatter -->
+
+        <record id="mt_cat_req_created" model="mail.message.subtype">
+            <field name="name">Maintenance Request Created</field>
+            <field name="res_model">hr.material.category</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_req_created')"/>
+            <field name="relation_field">category_id</field>
+        </record>
+        <record id="mt_cat_mat_assign" model="mail.message.subtype">
+            <field name="name">Material Assigned</field>
+            <field name="res_model">hr.material.category</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_mat_assign')"/>
+            <field name="relation_field">category_id</field>
+        </record>
+    </data>
+</openerp>
