@@ -21,7 +21,7 @@
 
 from operator import itemgetter
 import time
-
+from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
 class account_fiscal_position(osv.osv):
