@@ -63,25 +63,34 @@ class web_linkedin_fields(osv.Model):
             res[partner.id] = partner.linkedin_url
         return res
 
-    def linkedin_check_similar_partner(self, cr, uid, linkedin_datas, context=None):
+    def check_similar_linkedin_contact(self, cr, uid, linkedin_datas, context=None):
         res = []
         res_partner = self.pool.get('res.partner')
         for linkedin_data in linkedin_datas:
-            partner_ids = res_partner.search(cr, uid, ["|", ("linkedin_id", "=", linkedin_data['id']), 
-                    "&", ("linkedin_id", "=", False), 
-                    "|", ("name", "ilike", linkedin_data['firstName'] + "%" + linkedin_data['lastName']), ("name", "ilike", linkedin_data['lastName'] + "%" + linkedin_data['firstName'])], context=context)
-            if partner_ids:
-                partner = res_partner.read(cr, uid, partner_ids[0], ["image", "mobile", "phone", "parent_id", "name", "email", "function", "linkedin_id"], context=context)
-                if partner['linkedin_id'] and partner['linkedin_id'] != linkedin_data['id']:
-                    partner.pop('id')
-                if partner['parent_id']:
-                    partner['parent_id'] = partner['parent_id'][0]
-                for key, val in partner.items():
-                    if not val:
-                        partner.pop(key)
-                res.append(partner)
-            else:
+            first_name = linkedin_data['firstName']
+            last_name = linkedin_data['lastName']
+            linkedin_id = linkedin_data['id']
+            contact_domain = [
+                "|", ("linkedin_id", "=", linkedin_id),"&",
+                ("linkedin_id", "=", False), "|",
+                ("name","ilike", first_name + "%" + last_name),
+                ("name", "ilike", last_name + "%" + first_name)
+            ]
+            
+            partner_ids = res_partner.search(cr, uid, contact_domain, context=context)
+            if not partner_ids:
                 res.append({})
+            for contact in res_partner.browse(cr, uid, partner_ids, context=context):
+                dict_contact = {}
+                if contact.parent_id:
+                    if contact.parent_id.id == linkedin_data['parent_id']:
+                        dict_contact['current_company'] = contact.parent_id.name
+                    dict_contact['parent_name'] = contact.parent_id.name
+                    dict_contact['parent_id'] = contact.parent_id.id
+                    dict_contact['id'] = contact.id
+                if len(partner_ids) > 1 and not dict_contact.get('current_company'):
+                    continue
+                res.append(dict_contact)
         return res
 
     _columns = {
