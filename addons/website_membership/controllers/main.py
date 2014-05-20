@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+import re
 
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website_partner.controllers import main as website_partner
 from openerp.tools.translate import _
 
 import werkzeug.urls
@@ -102,10 +102,15 @@ class WebsiteMembership(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @http.route(['/members/<int:partner_id>', '/members/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
-    def partners_ref(self, partner_id, **post):
-        values = website_partner.get_partner_template_value(partner_id)
-        if not values:
-            return self.members(**post)
-        values['main_object'] = values['partner']
-        return request.website.render("website_membership.partner", values)
+    # Do not use semantic controller due to SUPERUSER_ID
+    @http.route(['/members/<partner_id>'], type='http', auth="public", website=True, multilang=True)
+    def partners_detail(self, partner_id, **post):
+        mo = re.search('-([-0-9]+)$', str(partner_id))
+        if mo:
+            partner_id = int(mo.group(1))
+            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
+            if partner.exists() and partner.website_published:
+                values = {}
+                values['main_object'] = values['partner'] = partner
+                return request.website.render("website_membership.partner", values)
+        return self.customers(**post)

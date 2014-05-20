@@ -139,7 +139,7 @@ class website_event(http.Controller):
             'country_id': ("all", _("All Countries"))
         })
 
-        step = 5
+        step = 10  # Number of events per page
         event_count = event_obj.search(
             request.cr, request.uid, dom_without("none"), count=True,
             context=request.context)

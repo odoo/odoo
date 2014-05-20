@@ -35,6 +35,7 @@ import socket
 import time
 import xmlrpclib
 from email.message import Message
+from urllib import urlencode
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -640,6 +641,20 @@ class mail_thread(osv.AbstractModel):
                 }
             })
         return action
+
+    def _get_access_link(self, cr, uid, mail, partner, context=None):
+        # the parameters to encode for the query and fragment part of url
+        query = {'db': cr.dbname}
+        fragment = {
+            'login': partner.user_ids[0].login,
+            'action': 'mail.action_mail_redirect',
+        }
+        if mail.notification:
+            fragment['message_id'] = mail.mail_message_id.id
+        elif mail.model and mail.res_id:
+            fragment.update(model=mail.model, res_id=mail.res_id)
+
+        return "/web?%s#%s" % (urlencode(query), urlencode(fragment))
 
     #------------------------------------------------------
     # Email specific

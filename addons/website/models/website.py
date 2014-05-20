@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
+import cStringIO
+import contextlib
+import datetime
 import hashlib
 import inspect
 import itertools
 import logging
 import math
 import mimetypes
+import os
 import re
 import urlparse
+
+from PIL import Image
+from sys import maxint
 
 import werkzeug
 import werkzeug.exceptions
@@ -471,6 +478,99 @@ class website(osv.osv):
         for object_id in object_ids:
             html += request.website._render(template, {'object_id': object_id})
         return html
+
+    def _image_placeholder(self, response):
+        # file_open may return a StringIO. StringIO can be closed but are
+        # not context managers in Python 2 though that is fixed in 3
+        with contextlib.closing(openerp.tools.misc.file_open(
+                os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
+                mode='rb')) as f:
+            response.data = f.read()
+            return response.make_conditional(request.httprequest)
+
+    def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, context=None):
+        """ Fetches the requested field and ensures it does not go above
+        (max_width, max_height), resizing it if necessary.
+
+        Resizing is bypassed if the object provides a $field_big, which will
+        be interpreted as a pre-resized version of the base field.
+
+        If the record is not found or does not have the requested field,
+        returns a placeholder image via :meth:`~._image_placeholder`.
+
+        Sets and checks conditional response parameters:
+        * :mailheader:`ETag` is always set (and checked)
+        * :mailheader:`Last-Modified is set iif the record has a concurrency
+          field (``__last_update``)
+
+        The requested field is assumed to be base64-encoded image data in
+        all cases.
+        """
+        Model = self.pool[model]
+        id = int(id)
+
+        ids = Model.search(cr, uid,
+                           [('id', '=', id)], context=context)
+        if not ids and 'website_published' in Model._all_columns:
+            ids = Model.search(cr, openerp.SUPERUSER_ID,
+                               [('id', '=', id), ('website_published', '=', True)], context=context)
+        if not ids:
+            return self._image_placeholder(response)
+
+        presized = '%s_big' % field
+        concurrency = '__last_update'
+        [record] = Model.read(cr, openerp.SUPERUSER_ID, [id],
+                              [concurrency, field, presized],
+                              context=context)
+
+        if concurrency in record:
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            try:
+                response.last_modified = datetime.datetime.strptime(
+                    record[concurrency], server_format + '.%f')
+            except ValueError:
+                # just in case we have a timestamp without microseconds
+                response.last_modified = datetime.datetime.strptime(
+                    record[concurrency], server_format)
+
+        # Field does not exist on model or field set to False
+        if not record.get(field):
+            # FIXME: maybe a field which does not exist should be a 404?
+            return self._image_placeholder(response)
+
+        response.set_etag(hashlib.sha1(record[field]).hexdigest())
+        response.make_conditional(request.httprequest)
+
+        # conditional request match
+        if response.status_code == 304:
+            return response
+
+        data = (record.get(presized) or record[field]).decode('base64')
+
+        image = Image.open(cStringIO.StringIO(data))
+        response.mimetype = Image.MIME[image.format]
+
+        # record provides a pre-resized version of the base field, use that
+        # directly
+        if record.get(presized):
+            response.data = data
+            return response
+
+        fit = int(max_width), int(max_height)
+        w, h = image.size
+        max_w, max_h = fit
+
+        if w < max_w and h < max_h:
+            response.data = data
+        else:
+            image.thumbnail(fit, Image.ANTIALIAS)
+            image.save(response.stream, image.format)
+            # invalidate content-length computed by make_conditional as
+            # writing to response.stream does not do it (as of werkzeug 0.9.3)
+            del response.headers['Content-Length']
+
+        return response
+        
 
 class website_menu(osv.osv):
     _name = "website.menu"

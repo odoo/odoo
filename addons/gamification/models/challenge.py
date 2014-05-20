@@ -324,7 +324,7 @@ class gamification_challenge(osv.Model):
                     ('end_date', '<=', challenge.last_report_date)
                 ])
 
-                if fields.date.today() >= challenge.next_report_date:
+                if challenge.next_report_date and fields.date.today() >= challenge.next_report_date:
                     self.report_progress(cr, uid, challenge, context=context)
 
                 elif len(closed_goals_to_report) > 0:
