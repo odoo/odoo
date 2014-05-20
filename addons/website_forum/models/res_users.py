@@ -2,9 +2,15 @@
 
 from openerp.osv import osv, fields
 
-
 class Users(osv.Model):
     _inherit = 'res.users'
+
+    def __init__(self, pool, cr):
+        init_res = super(Users, self).__init__(pool, cr) 
+        self.SELF_WRITEABLE_FIELDS = list(set(
+                self.SELF_WRITEABLE_FIELDS + \
+                ['country_id', 'city', 'website', 'website_description']))
+        return init_res
 
     def _get_user_badge_level(self, cr, uid, ids, name, args, context=None):
         """Return total badge per level of users"""
