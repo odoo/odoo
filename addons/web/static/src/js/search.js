@@ -340,8 +340,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         },
         'click .oe_searchview_unfold_drawer': function (e) {
             e.stopImmediatePropagation();
-            if (this.searchview_drawer) 
-                this.searchview_drawer.toggle();
+            if (this.drawer) 
+                this.drawer.toggle();
         },
         'keydown .oe_searchview_input, .oe_searchview_facet': function (e) {
             switch(e.which) {
@@ -423,11 +423,19 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             });
         }
 
+        var view_manager = this.getParent();
+        while (!(view_manager instanceof instance.web.ViewManager)) {
+            view_manager = view_manager.getParent();
+        }
+        view_manager.on('switch_mode', this, function (e) {
+            self.drawer.hide();
+        })
+
         return $.when(p, this.ready);
     },
 
     set_drawer: function (drawer) {
-        this.searchview_drawer = drawer;
+        this.drawer = drawer;
     },
 
     show: function () {
@@ -522,7 +530,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param {Function} resp response callback
      */
     complete_global_search:  function (req, resp) {
-        $.when.apply(null, _(this.inputs).chain()
+        $.when.apply(null, _(this.drawer.inputs).chain()
             .filter(function (input) { return input.visible(); })
             .invoke('complete', req.term)
             .value()).then(function () {
@@ -643,14 +651,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // Hacky implementation of CustomFilters#facet_for_defaults ensure
         // CustomFilters will be ready (and CustomFilters#filters will be
         // correctly filled) by the time this method executes.
-        var custom_filters = this.searchview_drawer.custom_filters.filters;
+        var custom_filters = this.drawer.custom_filters.filters;
         if (!this.options.disable_custom_filters && !_(custom_filters).isEmpty()) {
             // Check for any is_default custom filter
             var personal_filter = _(custom_filters).find(function (filter) {
                 return filter.user_id && filter.is_default;
             });
             if (personal_filter) {
-                this.searchview_drawer.custom_filters.toggle_filter(personal_filter, true);
+                this.drawer.custom_filters.toggle_filter(personal_filter, true);
                 return;
             }
 
@@ -658,7 +666,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return !filter.user_id && filter.is_default;
             });
             if (global_filter) {
-                this.searchview_drawer.custom_filters.toggle_filter(global_filter, true);
+                this.drawer.custom_filters.toggle_filter(global_filter, true);
                 return;
             }
         }
@@ -785,6 +793,10 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
 
     toggle: function () {
         this.$el.toggle();
+    },
+
+    hide: function () {
+        this.$el.hide();
     },
 
     start: function() {
