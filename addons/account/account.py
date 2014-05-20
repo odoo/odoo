@@ -3367,6 +3367,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ref_tax_ids = obj_tax_temp.search(cr, uid, [('type_tax_use','in', ('purchase','all')), ('chart_template_id', 'in', all_parents)], context=context, order="sequence, id desc", limit=1)
             obj_tax_temp.write(cr, uid, ref_tax_ids, {'amount': value/100.0, 'name': _('Purchase Tax %.2f%%') % value})
         return True
+    
+    def _next(self, cr, uid, context=None):
+        if context is None:context = {}
+        res = super(wizard_multi_charts_accounts, self)._next(cr, uid, context=context)
+        if context.get('reload_page'):
+            res = {
+               'type': 'ir.actions.client',
+               'tag': 'reload',
+            }
+            context.pop('reload_page')
+        return res
 
     def execute(self, cr, uid, ids, context=None):
         '''

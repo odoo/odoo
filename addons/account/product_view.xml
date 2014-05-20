@@ -11,6 +11,7 @@
                     <page string="Accounting" groups="account.group_account_invoice">
                         <group name="properties">
                             <group>
+                                <field name="is_coa_configured" invisible="1"/>
                                 <field name="property_account_income" domain="[('type','=','other')]" groups="account.group_account_user"
                                     attrs="{'readonly': [('is_only_child', '=', False)]}"/>
                                 <field name="taxes_id" colspan="2" widget="many2many_tags"
@@ -25,6 +26,13 @@
                         </group>
                     </page>
                 </notebook>
+                <sheet position="before">
+                    <div name="warning" class="oe_form_box_info oe_text_center" attrs="{'invisible':[('is_coa_configured','=',True)]}">
+                        <p>Accounting data do not seem well configured.</p>
+                        <p>Please click here to automatically set up your taxes and chart of accounts:
+                        <button type="object" name="open_account_configuration_installer" string="Setup Accounting Information" class="oe_link" special="nosave"/></p>
+                    </div>
+                </sheet>
             </field>
         </record>
 
@@ -60,11 +68,19 @@
                 <data>
                     <xpath expr="//group[@name='parent']" position="inside">
                         <group name="account_property" string="Account Properties" colspan="2">
+                            <field name="is_coa_configured" invisible="1"/>
                             <field name="property_account_income_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         </group>
                     </xpath>
                 </data>
+                <sheet position="before">
+                    <div name="warning" class="oe_form_box_info oe_text_center" attrs="{'invisible':[('is_coa_configured','=',True)]}">
+                        <p>Accounting data do not seem well configured.</p>
+                        <p>Please click here to automatically set up your taxes and chart of accounts:
+                        <button type="object" name="open_account_configuration_installer" string="Setup Accounting Information" class="oe_link" special="nosave"/></p>
+                    </div>
+                </sheet>
             </field>
         </record>
 
