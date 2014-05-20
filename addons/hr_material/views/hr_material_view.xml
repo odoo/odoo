@@ -25,7 +25,7 @@
                     <field name="department_id"/>
                     <field name="stage_id"/>
                     <separator/>
-                    <filter string="My Requests" icon="terp-accessories-archiver" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Requests" icon="terp-accessories-archiver" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group  expand='0' string='Group by...'>
@@ -375,7 +375,7 @@
                     <filter string="To Do" help="Under Maintenance" icon="terp-accessories-archiver" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
                     <filter string="Assigned" icon="terp-accessories-archiver" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
                     <separator/>
-                    <filter string="My Materials" icon="terp-accessories-archiver" domain="[('user_id','=',uid)]"/>
+                    <filter string="My Materials" icon="terp-accessories-archiver" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group  expand='0' string='Group by...'>

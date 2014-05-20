@@ -13,9 +13,9 @@ class maintenance_request_stage(osv.Model):
     _order = 'sequence asc'
 
     _columns = {
-        'name': fields.char(string="Name", required=True, translate=True),
-        'sequence': fields.integer(string="Sequence"),
-        'fold': fields.boolean(string="Folded in kanban view"),
+        'name': fields.char('Name', required=True, translate=True),
+        'sequence': fields.integer('Sequence'),
+        'fold': fields.boolean('Folded in Kanban View'),
     }
     _defaults = {
         'sequence': 1,
