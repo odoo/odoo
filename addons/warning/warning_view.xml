@@ -13,25 +13,25 @@
                             <separator string="Warning on the Sales Order" colspan="4"/>
                                 <field name="sale_warn" nolabel="1" />
                                 <field name="sale_warn_msg" colspan="3" nolabel="1" 
-                                        attrs="{'required':[('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
+                                    attrs="{'required':[('sale_warn','!=','no-message')],'invisible':[('sale_warn','=','no-message')]}"/>
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Warning on the Purchase Order" colspan="4"/>
                             <field name="purchase_warn" nolabel="1" />
                             <field name="purchase_warn_msg" colspan="3" nolabel="1" 
-                                    attrs="{'required':[('purchase_warn','!=','no-message')],'readonly':[('purchase_warn','=','no-message')]}"/>
-                          </group>
-                          <group colspan="2" col="2">
+                                attrs="{'required':[('purchase_warn','!=','no-message')],'invisible':[('purchase_warn','=','no-message')]}"/>
+                        </group>
+                        <group colspan="2" col="2">
                             <separator string="Warning on the Picking" colspan="4"/>
                             <field name="picking_warn" nolabel="1" />
                             <field name="picking_warn_msg" colspan="3" nolabel="1" 
-                                    attrs="{'required':[('picking_warn','!=','no-message')],'readonly':[('picking_warn','=','no-message')]}"/>
+                                attrs="{'required':[('picking_warn','!=','no-message')],'invisible':[('picking_warn','=','no-message')]}"/>
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Warning on the Invoice" colspan="4"/>
                             <field name="invoice_warn" nolabel="1" />
                             <field name="invoice_warn_msg" colspan="3" nolabel="1" 
-                                    attrs="{'required':[('invoice_warn','!=','no-message')],'readonly':[('invoice_warn','=','no-message')]}"/>
+                                attrs="{'required':[('invoice_warn','!=','no-message')],'invisible':[('invoice_warn','=','no-message')]}"/>
                         </group>
                     </page>
                 </notebook>
@@ -48,12 +48,12 @@
                         <group string="Warning when Selling this Product">
                             <field name="sale_line_warn"/>
                             <field name="sale_line_warn_msg"
-                                    attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'invisible':[('sale_line_warn','=','no-message')]}"/>
                         </group>
                         <group string="Warning when Purchasing this Product">
                             <field name="purchase_line_warn"/>
                             <field name="purchase_line_warn_msg"
-                                    attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
+                                attrs="{'required':[('purchase_line_warn','!=','no-message')],'invisible':[('purchase_line_warn','=','no-message')]}"/>
                         </group>
                     </page>
                 </notebook>
