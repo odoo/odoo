@@ -20,15 +20,11 @@
 ##############################################################################
 
 from openerp.osv import osv
-from openerp.tools import config
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 
-import os
 import time
-import psutil
-import signal
 import base64
 import logging
 import tempfile
@@ -399,25 +395,15 @@ class Report(osv.Model):
             content_file.seek(0)
 
             try:
-                # If the server is running with only one worker, ask to create a secund to be able
-                # to serve the http request of wkhtmltopdf subprocess.
-                if config['workers'] == 1:
-                    ppid = psutil.Process(os.getpid()).ppid
-                    os.kill(ppid, signal.SIGTTIN)
-
                 wkhtmltopdf = command + command_args + command_arg_local
                 wkhtmltopdf += [content_file.name] + [pdfreport.name]
 
-                process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE)
+                process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 out, err = process.communicate()
-
-                if config['workers'] == 1:
-                    os.kill(ppid, signal.SIGTTOU)
 
                 if process.returncode not in [0, 1]:
                     raise osv.except_osv(_('Report (PDF)'),
-                                         _('wkhtmltopdf failed with error code = %s. '
+                                         _('Wkhtmltopdf failed with error code = %s. '
                                            'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
