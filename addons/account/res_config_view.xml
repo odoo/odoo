@@ -22,35 +22,38 @@
                     </header>
 
                     <field name="has_default_company" invisible="1" />
-                    <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
                     <field name="has_fiscal_year" invisible="1"/>
-                    <separator string="Chart of Accounts" groups="base.group_multi_company"/>
-                    <group groups="base.group_multi_company">
-                        <label for="id" string="Chart of Accounts"/>
+                    <separator string="Chart of Accounts"/>
+                    <group>
+                        <label for="company_id" string="Select Company" groups='base.group_multi_company' attrs="{'invisible': [('has_default_company', '=', True)]}"/>
                         <div>
                             <div attrs="{'invisible': [('has_default_company', '=', True)]}">
-                                <label for="company_id" string="Select Company"/>
                                 <field name="company_id"
                                     widget="selection"
+                                    groups='base.group_multi_company'
                                     on_change="onchange_company_id(company_id, context)"
                                     class="oe_inline"/>
                             </div>
-                            <div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',True)]}">
                                 <field name="expects_chart_of_accounts" class="oe_inline"/>
                                 <label for="expects_chart_of_accounts"/>
                             </div>
-                        </div>
-                    </group>
-                    <separator string="Chart of Accounts" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}"/>
-                    <group attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
-                        <label for="id" string="Chart of Account"/>
-                        <div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <field name="has_chart_of_accounts" class="oe_inline" readonly='True'/>
+                                <label for="has_chart_of_accounts"/>
+                            </div>
+                         </div>
+                        </group>
+                       <group>
+                        <label for="id" string="Chart of Accounts" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}"/>
+                        <div attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
                             <div>
                                 <label for="chart_template_id"/>
                                 <field name="chart_template_id"
                                     widget="selection"
                                     domain="[('visible','=', True)]"
+                                    attrs="{'required': [('expects_chart_of_accounts','=',True)]}"
                                     on_change="onchange_chart_template_id(chart_template_id)"
                                     class="oe_inline"/>
                                 <button string="Install more chart templates"
@@ -77,16 +80,16 @@
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
                                 <label for="sale_tax_rate"/>
-                                <field name="sale_tax_rate" on_change="onchange_tax_rate(sale_tax_rate)"/>
+                                <field name="sale_tax_rate" on_change="onchange_tax_rate(sale_tax_rate)" class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('complete_tax_set','=',True)]}">
                                 <label for="purchase_tax_rate"/>
-                                <field name="purchase_tax_rate" />
+                                <field name="purchase_tax_rate" class="oe_inline"/>
                             </div>
                         </div>
                     </group>
-                    <separator string="No Fiscal Year Defined for This Company" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}"/>
-                    <group attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_fiscal_year','=',True)]}">
+                    <separator string="Fiscal Year Setup" attrs="{'invisible': [('has_fiscal_year','=',True)]}"/>
+                    <group attrs="{'invisible': [('has_fiscal_year','=',True)]}">
                         <label for="id" string="Fiscal Year"/>
                         <div>
                             <div>
