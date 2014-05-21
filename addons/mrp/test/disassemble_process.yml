@@ -1,0 +1,96 @@
+-
+    MRP user can doing all process related to Production Order, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_mrp_user'
+- 
+  In order to test Disassemble feature in OpenERP we will create a Production order with negative quantity for PC Assemble SC349
+-
+  !record {model: mrp.production, id: mrp_production_test2}:
+    product_id: product.product_product_4
+    product_qty: -5.0
+    location_src_id: stock.stock_location_14
+    location_dest_id: stock.stock_location_output
+    bom_id: mrp_bom_24
+    routing_id: mrp.mrp_routing_1
+-
+  I compute the production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test2"), context=context)
+    order.action_compute(context=context)
+-
+  I check production lines after compute.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test2"), context=context)
+    assert len(order.product_lines) == 5, "Production lines are not generated proper."
+-
+  Now I check workcenter lines.
+-
+  !python {model: mrp.production}: |
+    from openerp.tools import float_compare
+    def assert_equals(value1, value2, msg, float_compare=float_compare):
+        assert float_compare(value1, value2, precision_digits=2) == 0, msg
+    order = self.browse(cr, uid, ref("mrp_production_test2"), context=context)
+    assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
+-
+  I confirm the Production Order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_test2}
+-
+  I check details of Produce Move of Production Order to trace Final Product.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test2"))
+    assert order.state == 'ready', "Production order should be ready."
+    assert order.move_created_ids, "Trace Record is not created for Final Product."
+    move = order.move_created_ids[0]
+    source_location_id = order.product_id.property_stock_production.id
+    assert move.date == order.date_planned, "Planned date is not correspond."
+    assert move.product_id.id == order.product_id.id, "Product is not correspond."
+    assert move.product_uom.id == order.product_uom.id, "UOM is not correspond."
+    assert move.product_qty == abs(order.product_qty), "Qty is not correspond."
+    assert move.product_uos_qty == order.product_uos and order.product_uos_qty or abs(order.product_qty), "UOS qty is not correspond."
+    if order.product_uos:
+        assert move.product_uos.id == order.product_uos.id, "UOS is not correspond."
+    assert move.location_id.id == order.location_dest_id.id, "Source Location is not correspond."
+    assert move.location_dest_id.id == source_location_id, "Destination Location is not correspond."
+    routing_loc = None
+    if order.bom_id.routing_id and order.bom_id.routing_id.location_id:
+        routing_loc = order.bom_id.routing_id.location_id.id
+    date_planned = order.date_planned
+    for move_line in order.move_lines:
+        for order_line in order.product_lines:
+            if move_line.product_id.type not in ('product', 'consu'):
+                continue
+            if move_line.product_id.id == order_line.product_id.id:
+                assert move_line.date == date_planned, "Planned date is not correspond in 'To consume line'."
+                assert move_line.product_qty == order_line.product_qty, "Qty is not correspond in 'To consume line'."
+                assert move_line.product_uom.id == order_line.product_uom.id, "UOM is not correspond in 'To consume line'."
+                assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond in 'To consume line'."
+                if order_line.product_uos:
+                    assert move_line.product_uos.id == order_line.product_uos.id, "UOS is not correspond in 'To consume line'."
+                assert move_line.location_id.id == source_location_id, "Source location is not correspond in 'To consume line'."
+                assert move_line.location_dest_id.id == routing_loc or order.location_src_id.id, "Destination Location is not correspond in 'To consume line'."
+-
+  I check that production order in ready state.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test2"))
+    assert order.state == 'ready', 'Production order should be in Ready State.'
+
+-
+  I check that production order in production state after start production.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test2"))
+    context.update({'active_id': ref('mrp_production_test2')})
+    assert self.action_produce(cr, uid, order.id , 5.0, 'consume_produce'), 'Can not do action produce.'
+
+-
+  I check that production order in Done state.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test2"))
+    assert order.state == 'done', 'Production order should be in Done State.'

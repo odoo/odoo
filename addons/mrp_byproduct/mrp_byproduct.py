@@ -102,6 +102,8 @@ class mrp_production(osv.osv):
                         qty1 *= product_uom_factor / (production.bom_id.product_qty or 1.0)
                     if production.product_uos_qty:
                         qty2 *= product_uos_factor / (production.bom_id.product_uos_qty or 1.0)
+                if production.disassemble:
+                    continue
                 data = {
                     'name': 'PROD:'+production.name,
                     'date': production.date_planned,
@@ -110,8 +112,8 @@ class mrp_production(osv.osv):
                     'product_uom': sub_product.product_uom.id,
                     'product_uos_qty': qty2,
                     'product_uos': production.product_uos and production.product_uos.id or False,
-                    'location_id': source,
-                    'location_dest_id': production.location_dest_id.id,
+                    'location_id': source if not production.disassemble else production.location_dest_id.id,
+                    'location_dest_id': production.location_dest_id.id if not production.disassemble else source,
                     'move_dest_id': production.move_prod_id.id,
                     'state': 'waiting',
                     'production_id': production.id

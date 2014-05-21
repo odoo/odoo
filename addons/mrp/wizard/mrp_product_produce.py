@@ -21,7 +21,8 @@
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
-
+from lxml import etree
+from openerp.tools.translate import _
 
 class mrp_product_produce_line(osv.osv_memory):
     _name="mrp.product.produce.line"
@@ -71,6 +72,17 @@ class mrp_product_produce(osv.osv_memory):
             new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        res = super(mrp_product_produce,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        mrp_production = self.pool.get('mrp.production').browse(cr, uid, context.get('active_id'), context=context)
+        if view_type == 'form' and mrp_production.disassemble == True:
+            for node in doc.xpath("//group[@name='produce']"):
+                node.set('string',_('Product to Disassemble'))
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def _get_product_qty(self, cr, uid, context=None):
         """ To obtain product quantity
@@ -89,7 +101,7 @@ class mrp_product_produce(osv.osv_memory):
             if move.product_id == prod.product_id:
                 if not move.scrapped:
                     done += move.product_qty
-        return (prod.product_qty - done) or prod.product_qty
+        return (abs(prod.product_qty) - done) or abs(prod.product_qty)
 
     def _get_product_id(self, cr, uid, context=None):
         """ To obtain product id
