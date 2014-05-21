@@ -25,6 +25,7 @@ from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 
+import re
 import time
 import base64
 import logging
@@ -52,16 +53,12 @@ except OSError:
     _logger.info('You need wkhtmltopdf to print a pdf version of the reports.')
 else:
     out, err = process.communicate()
-
-    for line in out.splitlines():
-        line = line.strip()
-        if line.startswith('wkhtmltopdf 0.'):
-            version = line.split(' ')[1]
-            if LooseVersion(version) < LooseVersion('0.12.0'):
-                _logger.info('Upgrade wkhtmltopdf to (at least) 0.12.0')
-                wkhtmltopdf_state = 'upgrade'
-            else:
-                wkhtmltopdf_state = 'ok'
+    version = re.search('([0-9.]+)', out).group(0)
+    if LooseVersion(version) < LooseVersion('0.12.0'):
+        _logger.info('Upgrade wkhtmltopdf to (at least) 0.12.0')
+        wkhtmltopdf_state = 'upgrade'
+    else:
+        wkhtmltopdf_state = 'ok'
 
     if config['workers'] == 1:
         _logger.info('You need to start OpenERP with at least two workers to print a pdf version of the reports.')
