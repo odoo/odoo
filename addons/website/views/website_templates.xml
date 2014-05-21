@@ -12,7 +12,6 @@
 </template>
 
 <template id="website.assets_frontend" name="Website assets">
-    <t t-call="web.assets_common"/>
     <t t-call="website.theme"/>
 
     <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
@@ -89,6 +88,7 @@
                 </t>
             </t>
 
+            <t t-call-assets="web.assets_common"/>
             <t t-call-assets="website.assets_frontend"/>
 
             <t t-raw="head or ''" name='layout_head'/>
