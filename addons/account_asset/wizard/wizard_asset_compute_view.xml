@@ -5,12 +5,18 @@
             <field name="name">asset.depreciation.confirmation.wizard</field>
             <field name="model">asset.depreciation.confirmation.wizard</field>
             <field name="arch" type="xml">
-                <form string="Compute Asset" version="7.0">
+                <form string="Compute Assets" version="7.0">
+                    <div>
+                        <p>
+                            This wizard will post installment/depreciation lines of selected month.<br/>
+                            Note: This will generate journal entry for all related installment lines relay on this period of asset/revenue recongnition and post the installment/depreciation lines.
+                        </p> 
+                    </div>
                     <group>
                         <field name="period_id"/>
                     </group>
                     <footer>
-                        <button string="Compute" name="asset_compute" type="object" class="oe_highlight"/>
+                        <button string="Generate Entries" name="asset_compute" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -19,17 +25,33 @@
         </record>
 
         <record id="action_asset_depreciation_confirmation_wizard" model="ir.actions.act_window">
-            <field name="name">Compute Assets</field>
+            <field name="name">Post Depreciation Lines</field>
             <field name="res_model">asset.depreciation.confirmation.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_asset_depreciation_confirmation_wizard"/>
             <field name="target">new</field>
+            <field name="context">{'type':'purchase'}</field>
         </record>
 
-        <menuitem action="action_asset_depreciation_confirmation_wizard"
+        <menuitem name="Generate Monthly Assets Entries" action="action_asset_depreciation_confirmation_wizard"
             id="menu_asset_depreciation_confirmation_wizard"
-            parent="account.menu_finance_recurrent_entries" />
+            parent="account.menu_finance_recurrent_entries" sequence="2"/>
+
+
+        <record id="action_recognition_depreciation_confirmation_wizard" model="ir.actions.act_window">
+            <field name="name">Post Installment Lines</field>
+            <field name="res_model">asset.depreciation.confirmation.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_asset_depreciation_confirmation_wizard"/>
+            <field name="target">new</field>
+            <field name="context">{'type':'sales'}</field>
+        </record>
+
+        <menuitem name="Generate Monthly Recognition Entries" action="action_recognition_depreciation_confirmation_wizard"
+            id="menu_recognition_depreciation_confirmation_wizard"
+            parent="account.menu_finance_recurrent_entries" sequence="1"/>
 
     </data>
 </openerp>
