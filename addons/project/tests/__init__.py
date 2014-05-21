@@ -20,9 +20,11 @@
 ##############################################################################
 
 from . import test_project_flow
+from . import test_contract_task_copy
 
 checks = [
     test_project_flow,
+    test_contract_task_copy,
 ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
