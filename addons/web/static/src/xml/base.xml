@@ -1562,6 +1562,8 @@
 </div>
 
 <div t-name="SearchViewDrawer" class="oe_searchview_drawer" style="display:none;">
+    <div class="col-md-7"></div>
+    <div class="col-md-5"></div>
 </div>
 
 <div t-name="SearchView.InputView"
@@ -1717,15 +1719,19 @@
         </div>
     </div>
 </t>
-<div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section col-md-7">
+<div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
 
 </div>
 
-<div t-name="SearchView.CustomFilters" class="oe_searchview_custom oe_searchview_section">
+
+<div t-name="SearchView.CustomReports" class="oe_searchview_custom oe_searchview_section">
     <dl class="dl-horizontal">
-        <dt><span class="oe_i">M</span> Custom Filters</dt>
+        <dt><span class="oe_i">M</span> Custom Reports</dt>
         <dd><ul class="oe_searchview_custom_list"/></dd>
     </dl>
+</div>
+
+ <div t-name="SearchView.SaveFilter">
     <div class="oe_searchview_custom">
         <h4>Save current filter</h4>
         <form class="oe_form">

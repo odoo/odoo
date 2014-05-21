@@ -1277,186 +1277,6 @@ $sheet-padding: 16px
                         background: #8786b7
                         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
                         @include radius(2px)
-        &.oe_searchview_open_drawer
-            .oe_searchview_drawer
-                display: block
-
-        .oe_searchview_drawer
-            cursor: default
-            position: absolute
-            z-index: 2
-            // detach drawer from field slightly
-            margin-top: 4px
-            top: 100%
-            right: -1px
-            background-color: white
-            min-width: 100%
-            display: none
-            border: 1px solid $tag-border
-            text-align: left
-            @include radius(4px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            > div
-                border-top: 1px solid #ccc
-                margin: 0
-                padding: 8px
-            > div:first-child
-                border-top: none
-                margin: 0
-            h3
-                margin: 8px 4px 4px 0px
-                color: $section-title-color
-                font-size: 13px
-            h4, h4 *
-                margin: 0 0 0 2px
-                cursor: pointer
-                font-weight: normal
-                display: inline-block
-                &:hover
-                    background-color: $hover-background
-            h4:before
-                content: "▸ "
-                color: #a3a3a3
-            button
-                margin: 4px 0
-            .button
-                border: none
-                background: transparent
-                padding: 0 2px
-                @include box-shadow(none)
-                @include radius(0)
-            .oe_searchview_section
-                display: table
-                width: 100%
-                > div
-                    @include box-sizing(border)
-                    display: table-cell
-                    width: 50%
-                    padding-left: 2px // Managed padding-left according bootstrap3
-                ul
-                    margin: 0 8px 8px
-                    padding: 0
-                    list-style: none
-                li
-                    list-style: none
-                    padding: 2px 4px 2px 20px
-                    line-height: 14px
-                    color: inherit
-                    cursor: pointer
-                    position: relative
-                    &.oe_selected:before
-                        content: "W"
-                        font-family: "entypoRegular" !important
-                        font-size: 24px
-                        font-weight: 300 !important
-                        color: #a3a3a3
-                        position: absolute
-                        left: 4px
-                        top: -2px
-                    // after oe_selected so background color is not overridden
-                    &:hover
-                        background-color: $hover-background
-            form
-                margin-left: 12px
-                p
-                    margin: 4px 0
-                    line-height: 18px
-                button
-                    margin: 0 0 8px -3px // Managed margin-left according bootstrap3
-            .oe_searchview_custom
-                padding: 0 8px 8px 8px
-                div
-                    padding: 0
-                    h4
-                        margin: 0
-                form
-                    display: none
-                li
-                    cursor: pointer
-                    position: relative
-                    line-height: 14px
-                    padding: 2px 4px 2px 20px
-                    &:hover
-                        background-color: $hover-background
-                    button
-                        position: absolute
-                        top: 0
-                        right: 5px
-                //Customize for searchview label
-                label
-                    font-weight: normal
-                //End of Customize
-            .oe_searchview_dashboard
-                form
-                    display: none
-                    margin-top: 2px
-
-            .oe_searchview_advanced
-                form
-                    display: none
-                    margin-top: 8px
-                button.oe_add_condition:before
-                    content: "Z"
-                    font-family: "entypoRegular" !important
-                    font-size: 24px
-                    font-weight: 300 !important
-                    margin-right: 4px
-                ul
-                    list-style: none
-                    padding: 0
-                li
-                    position: relative
-                    list-style: none
-                    margin: 0
-                    white-space: nowrap
-                    &:first-child .searchview_extended_prop_or
-                        visibility: hidden
-                        margin-left: -14px
-                .searchview_extended_prop_or
-                    opacity: 0.5
-                    margin-left: -14px //Customize 'or' in searchview
-            .oe_opened
-                h4:before
-                    content: "▾ "
-                    position: relative
-                    top: -1px
-                form
-                    display: block
-
-            // delete buttons
-            .oe_searchview_custom_delete, .searchview_extended_delete_prop
-                display: inline-block
-                width: 12px
-                height: 12px
-                line-height: 12px
-                padding: 1px
-                color: #8786b7
-                line-height: 8px
-                text-align: center
-                font-weight: bold
-                text-shadow: 0 1px 1px white
-                &:hover
-                    text-decoration: none
-                    color: white
-                    background: #8786b7
-                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
-                    @include radius(2px)
-            .oe_searchview_custom_delete
-                display: none
-                position: absolute
-                bottom: 1px
-                right: 4px
-            .oe_searchview_custom_private, .oe_searchview_custom_public
-                &:hover
-                    .oe_searchview_custom_delete
-                        display: inline-block
-            .oe_searchview_custom_public:after
-                content: ","
-                font-family: "entypoRegular" !important
-                font-size: 22px
-                font-weight: 300 !important
-                margin: 0 0 0 4px
-                padding: 0
 
     .oe_searchview_drawer_container
         overflow: auto
@@ -1480,7 +1300,7 @@ $sheet-padding: 16px
         .col-md-5
             padding-left: 0
         dl 
-            margin-bottom: 10px
+            margin-bottom: 0
         dt
             color: $section-title-color
             font-size: 13px
@@ -1527,10 +1347,6 @@ $sheet-padding: 16px
             button
                 margin: 0 0 8px -3px // Managed margin-left according bootstrap3
         .oe_searchview_custom
-            dt
-                width: 140px
-            dd
-                margin-left: 145px
             form
                 display: none
             li

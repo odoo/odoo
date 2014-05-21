@@ -843,19 +843,16 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
         // build drawer
         var in_drawer = this.select_for_drawer();
 
-        var self = this;
-        var second_col = $('<div class="col-md-5">');
+        var $first_col = this.$(".col-md-7"),
+            $snd_col = this.$(".col-md-5");
 
-        var insert_first_col = in_drawer[0].appendTo(this.$el).then(function () {
-            second_col.appendTo(self.$el);
-        }).then(function () {
-            return $.when.apply(null, 
-                _(_.rest(in_drawer)).invoke('appendTo', second_col));
-        });
-
-        return $.when.apply(null, _(this.inputs).invoke(
+        var add_custom_reports = in_drawer[0].appendTo($first_col),
+            add_filters = in_drawer[1].appendTo($first_col),
+            add_rest = $.when.apply(null, _(in_drawer.slice(2)).invoke('appendTo', $snd_col)),
+            defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
                 'facet_for_defaults', this.searchview.defaults));
 
+        return $.when(add_custom_reports, add_filters, add_rest, defaults_fetched);
     },
     notify_searchview: function () {
         var defaults = arguments[1];
@@ -943,10 +940,11 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
     },
 
     add_common_inputs: function() {
+        // add custom filters to this.inputs
+        this.custom_filters = new instance.web.search.CustomReports(this);
         // add Filters to this.inputs, need view.controls filled
         (new instance.web.search.Filters(this));
-        // add custom filters to this.inputs
-        this.custom_filters = new instance.web.search.CustomFilters(this);
+        (new instance.web.search.SaveFilter(this, this.custom_filters));
         // add Advanced to this.inputs
         (new instance.web.search.Advanced(this));
     },
@@ -1707,12 +1705,12 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
     }
 });
 
-instance.web.search.CustomFilters = instance.web.search.Input.extend({
-    template: 'SearchView.CustomFilters',
+instance.web.search.CustomReports = instance.web.search.Input.extend({
+    template: 'SearchView.CustomReports',
     _in_drawer: true,
     init: function () {
         this.is_ready = $.Deferred();
-        this._super.apply(this, arguments);
+        this._super.apply(this,arguments);
     },
     start: function () {
         var self = this;
@@ -1727,13 +1725,6 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 self.clear_selection();
             })
             .on('reset', this.proxy('clear_selection'));
-        this.$el.on('submit', 'form', this.proxy('save_current'));
-        this.$el.on('click', 'input[type=checkbox]', function() {
-            $(this).siblings('input[type=checkbox]').prop('checked', false);
-        });
-        this.$el.on('click', 'h4', function () {
-            self.$el.toggleClass('oe_opened');
-        });
         return this.model.call('get_filters', [this.view.model])
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
@@ -1843,6 +1834,26 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
     },
+});
+
+instance.web.search.SaveFilter = instance.web.search.Input.extend({
+    template: 'SearchView.SaveFilter',
+    _in_drawer: true,
+    init: function (parent, custom_reports) {
+        this._super(parent);
+        this.custom_reports = custom_reports;
+    },
+    start: function () {
+        var self = this;
+        this.model = new instance.web.Model('ir.filters');
+        this.$el.on('submit', 'form', this.proxy('save_current'));
+        this.$el.on('click', 'input[type=checkbox]', function() {
+            $(this).siblings('input[type=checkbox]').prop('checked', false);
+        });
+        this.$el.on('click', 'h4', function () {
+            self.$el.toggleClass('oe_opened');
+        });
+    },
     save_current: function () {
         var self = this;
         var $name = this.$('input:first');
@@ -1879,14 +1890,16 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).done(function (id) {
                 filter.id = id;
-                self.append_filter(filter);
+                if (self.custom_reports) {
+                    self.custom_reports.append_filter(filter);
+                }
                 self.$el
                     .removeClass('oe_opened')
                     .find('form')[0].reset();
             });
         });
         return false;
-    }
+    },
 });
 
 instance.web.search.Filters = instance.web.search.Input.extend({
