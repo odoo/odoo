@@ -86,6 +86,12 @@ class res_partner(osv.osv):
 
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
+    _track = {
+        'partner_assigned_id': {
+            # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
+            'crm_partner_assign.mt_crm_partner_lead_assign': lambda self, cr, uid, obj, ctx=None: obj.partner_assigned_id,
+        },
+    }
     _columns = {
         'partner_latitude': fields.float('Geo Latitude'),
         'partner_longitude': fields.float('Geo Longitude'),
@@ -105,10 +111,10 @@ class crm_lead(osv.osv):
         else:
             partners = self.pool.get('res.partner').browse(cr, uid, [partner_assigned_id], context=context)
             user_id = partners[0] and partners[0].user_id.id or False
-            return {'value':
-                        {'date_assign': fields.date.context_today(self,cr,uid,context=context),
-                         'user_id' : user_id}
-                   }
+            values = {'date_assign': fields.date.context_today(self,cr,uid,context=context)}
+            if user_id:
+                values.update({'user_id' : user_id})
+            return {'value': values}
 
     def action_assign_partner(self, cr, uid, ids, context=None):
         return self.assign_partner(cr, uid, ids, partner_id=False, context=context)

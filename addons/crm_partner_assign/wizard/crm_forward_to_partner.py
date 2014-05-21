@@ -79,6 +79,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
 
     def action_forward(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
+        partner_obj = self.pool.get('res.partner')
         record = self.browse(cr, uid, ids[0], context=context)
         email_template_obj = self.pool.get('email.template')
         try:
@@ -143,8 +144,25 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 values['section_id'] = partner_leads['partner'].user_id.default_section_id.id
             lead_obj.write(cr, uid, lead_ids, values)
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
+            message = self._prepare_notify_message(partner_leads['leads'], partner_leads['partner'].name)
+            partner_obj.message_post(cr, uid, [partner_id], body=message,subtype="crm_partner_assign.mt_partner_lead_assign", context=context)
         return True
 
+    def _prepare_notify_message(self, leads, partner_name):
+        child_message, lead, link = '<ol>', False, False
+        for lead_dict in leads:
+            link = "#model=crm.lead&id=%s" % (lead_dict['lead_id'].id)
+            lead = lead_dict['lead_id']
+            child_message += '<li> <a href="%s">%s</a></li>'%(link,lead.name)
+        child_message += '</ol>'
+        message = '<ul><li><b>Assign to:</b> %s </li>'%(partner_name)
+        if len(leads) == 1:
+            message += '<li><b>Lead: <a href="%s">%s</a> </b> </li>'%(link,lead.name)
+        else:
+            message += '<li><b>Leads: %s</li>'%(child_message)
+        message += '</b></li></ul>'
+        return message
+            
     def get_lead_portal_url(self, cr, uid, lead_id, type, context=None):
         action = type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
         try:
