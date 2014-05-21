@@ -19,24 +19,10 @@
   !assert {model: account.invoice, id: account.demo_invoice_0, severity: error, string: Invoice should be in 'Open' state}:
     - state == 'open'
 -
-  I confirm the payment order.
--
-  !workflow {model: payment.order, action: open, ref: payment_order_1}
--
-  I check that payment order is now "Confirmed".
--
-  !assert {model: payment.order, id: payment_order_1, severity: error, string: Payment Order should be 'Confirmed'.}:
-    - state == 'open'
+  I search for the invoice entries based on due date to make the payment.
 -
   !record {model: payment.order.create, id: payment_order_create_0}:
     duedate: !eval time.strftime('%Y-%m-%d')
--
-  I search for the invoice entries to make the payment.
--
-  !python {model: payment.order.create}: |
-    self.search_entries(cr, uid, [ref("payment_order_create_0")], {
-      "active_model": "payment.order", "active_ids": [ref("payment_order_1")],
-      "active_id": ref("payment_order_1"), })
 -
   I create payment lines entries.
 -
@@ -47,6 +33,15 @@
     self.create_payment(cr, uid, [ref("payment_order_create_0")], {
       "active_model": "payment.order", "active_ids": [ref("payment_order_1")],
       "active_id": ref("payment_order_1")})
+-
+  I confirm the payment order.
+-
+  !workflow {model: payment.order, action: open, ref: payment_order_1}
+-
+  I check that payment order is now "Confirmed".
+-
+  !assert {model: payment.order, id: payment_order_1, severity: error, string: Payment Order should be 'Confirmed'.}:
+    - state == 'open'
 -
   I check that payment line is created with proper data.
 -
