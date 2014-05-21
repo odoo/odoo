@@ -852,10 +852,10 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
             defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
                 'facet_for_defaults', this.searchview.defaults));
 
-        return $.when(add_custom_reports, add_filters, add_rest, defaults_fetched);
+        return $.when(defaults_fetched, add_custom_reports, add_filters, add_rest);
     },
     notify_searchview: function () {
-        var defaults = arguments[1];
+        var defaults = arguments[1][0];
         this.ready.resolve.apply(null, defaults);
     },
     /**
@@ -1809,6 +1809,9 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
                         $filter.remove();
                         delete self.$filters[key];
                         delete self.filters[key];
+                        if (!self.filters.length) {
+                            self.hide();
+                        }
                     });
                 })
                 .appendTo($filter);
@@ -1817,6 +1820,7 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
         this.$filters[key].unbind('click').click(function () {
             self.toggle_filter(filter);
         });
+        this.show();
     },
     toggle_filter: function (filter, preventSearch) {
         var current = this.view.query.find(function (facet) {
@@ -1833,6 +1837,15 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
     },
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
+        if (!filters.length) {
+            this.hide();
+        }
+    },
+    hide: function () {
+        this.$el.hide();
+    },
+    show: function () {
+        this.$el.show();
     },
 });
 
