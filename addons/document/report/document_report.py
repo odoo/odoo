@@ -71,7 +71,7 @@ class report_document_file(osv.osv):
     _columns = {
         'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
-        'month': fields.char('Month', size=24,readonly=True),
+        'month': fields.char('Month', size=24, readonly=True),
      }
     _order = "month"
     def init(self, cr):

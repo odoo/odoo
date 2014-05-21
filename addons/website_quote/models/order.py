@@ -30,7 +30,7 @@ class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
     _description = "Sale Quotation Template"
     _columns = {
-        'name': fields.char('Quotation Template', size=256, required=True),
+        'name': fields.char('Quotation Template', required=True),
         'website_description': fields.html('Description', translate=True),
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
@@ -110,7 +110,7 @@ class sale_order(osv.osv):
         return res
 
     _columns = {
-        'access_token': fields.char('Security Token', size=256, required=True),
+        'access_token': fields.char('Security Token', required=True),
         'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),

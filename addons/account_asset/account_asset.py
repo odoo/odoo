@@ -32,7 +32,7 @@ class account_asset_category(osv.osv):
     _description = 'Asset category'
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1),
+        'name': fields.char('Name', required=True, select=1),
         'note': fields.text('Note'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True, domain=[('type','=','other')]),
@@ -246,7 +246,7 @@ class account_asset_asset(osv.osv):
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),
-        'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Asset Name', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
         'purchase_value': fields.float('Gross Value', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -379,7 +379,7 @@ class account_asset_depreciation_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Depreciation Name', size=64, required=True, select=1),
+        'name': fields.char('Depreciation Name', required=True, select=1),
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
@@ -474,7 +474,7 @@ class account_asset_history(osv.osv):
     _name = 'account.asset.history'
     _description = 'Asset history'
     _columns = {
-        'name': fields.char('History name', size=64, select=1),
+        'name': fields.char('History name', select=1),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date': fields.date('Date', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),

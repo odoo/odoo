@@ -26,9 +26,9 @@ class account_sequence_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'name': fields.char('Name',size=64, required=True),
-        'prefix': fields.char('Prefix',size=64, help="Prefix value of the record for the sequence"),
-        'suffix': fields.char('Suffix',size=64, help="Suffix value of the record for the sequence"),
+        'name': fields.char('Name', required=True),
+        'prefix': fields.char('Prefix', size=64, help="Prefix value of the record for the sequence"),
+        'suffix': fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
         'number_next': fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_increment': fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
         'padding' : fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),

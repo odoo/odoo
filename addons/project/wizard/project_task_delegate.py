@@ -30,8 +30,8 @@ class project_task_delegate(osv.osv_memory):
     _description = 'Task Delegate'
 
     _columns = {
-        'name': fields.char('Delegated Title', size=64, required=True, help="New title of the task delegated to the user"),
-        'prefix': fields.char('Your Task Title', size=64, help="Title for your validation task"),
+        'name': fields.char('Delegated Title', required=True, help="New title of the task delegated to the user"),
+        'prefix': fields.char('Your Task Title', help="Title for your validation task"),
         'project_id': fields.many2one('project.project', 'Project', help="User you want to delegate this task to"),
         'user_id': fields.many2one('res.users', 'Assign To', required=True, help="User you want to delegate this task to"),
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),

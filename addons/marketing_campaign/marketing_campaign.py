@@ -96,7 +96,7 @@ class marketing_campaign(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
                                       help="Choose the resource on which you want \
 this campaign to be run"),
@@ -126,7 +126,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
-                                   'Status',),
+                                   'Status'),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
@@ -261,7 +261,7 @@ class marketing_campaign_segment(osv.osv):
         return dict.fromkeys(ids, next_sync)
 
     _columns = {
-        'name': fields.char('Name', size=64,required=True),
+        'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
         'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
@@ -282,7 +282,7 @@ class marketing_campaign_segment(osv.osv):
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
                                    ('done', 'Done')],
-                                   'Status',),
+                                   'Status'),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -411,7 +411,7 @@ class marketing_campaign_activity(osv.osv):
     ]
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                             required = True, ondelete='cascade', select=1),
         'object_id': fields.related('campaign_id','object_id',
@@ -446,7 +446,7 @@ class marketing_campaign_activity(osv.osv):
                                             'Previous Activities'),
         'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Product Price')),
         'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Account')),
-        'signal': fields.char('Signal', size=128,
+        'signal': fields.char('Signal', 
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
         'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")

@@ -40,8 +40,8 @@ class purchase_requisition(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Call for Bids Reference', size=32, required=True),
-        'origin': fields.char('Source Document', size=32),
+        'name': fields.char('Call for Bids Reference', required=True),
+        'origin': fields.char('Source Document'),
         'ordering_date': fields.date('Scheduled Ordering Date'),
         'date_end': fields.datetime('Bid Submission Deadline'),
         'schedule_date': fields.date('Scheduled Date', select=True, help="The expected and scheduled date where all the products are received"),

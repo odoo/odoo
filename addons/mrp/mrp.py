@@ -36,7 +36,7 @@ class mrp_property_group(osv.osv):
     _name = 'mrp.property.group'
     _description = 'Property Group'
     _columns = {
-        'name': fields.char('Property Group', size=64, required=True),
+        'name': fields.char('Property Group', required=True),
         'description': fields.text('Description'),
     }
 
@@ -47,7 +47,7 @@ class mrp_property(osv.osv):
     _name = 'mrp.property'
     _description = 'Property'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'composition': fields.selection([('min','min'),('max','max'),('plus','plus')], 'Properties composition', required=True, help="Not used in computations, for information purpose only."),
         'group_id': fields.many2one('mrp.property.group', 'Property Group', required=True),
         'description': fields.text('Description'),
@@ -103,7 +103,7 @@ class mrp_routing(osv.osv):
     _name = 'mrp.routing'
     _description = 'Routing'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the routing without removing it."),
         'code': fields.char('Code', size=8),
 
@@ -131,7 +131,7 @@ class mrp_routing_workcenter(osv.osv):
     _order = 'sequence'
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing Work Centers."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Number of iterations this work center has to do in the specified operation of the routing."),
@@ -192,18 +192,17 @@ class mrp_bom(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name'),
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal', 'Normal'), ('phantom', 'Set')], 'BoM Type', required=True,
                 help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
-        'position': fields.char('Internal Reference', size=64, help="Reference to a position in an external plan."),
+        'position': fields.char('Internal Reference', help="Reference to a position in an external plan."),
         'product_tmpl_id': fields.many2one('product.template', 'Product', required=True),
         'product_id': fields.many2one('product.product', 'Product Variant',
             domain="[('product_tmpl_id','=',product_tmpl_id)]",
             help="If a product variant is defined the BOM is available only for this product."),
-        'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines'),
-        
+        'bom_line_ids': fields.one2many('mrp.bom.line', 'bom_id', 'BoM Lines'),        
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control"),
         'date_start': fields.date('Valid From', help="Validity of this BoM. Keep empty if it's always valid."),
@@ -511,8 +510,8 @@ class mrp_production(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
+        'name': fields.char('Reference', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'origin': fields.char('Source Document', readonly=True, states={'draft': [('readonly', False)]},
             help="Reference of the document that generated this production order request."),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
             select=True, readonly=True, states=dict.fromkeys(['draft', 'confirmed'], [('readonly', False)])),
@@ -1145,7 +1144,7 @@ class mrp_production_workcenter_line(osv.osv):
     _inherit = ['mail.thread']
 
     _columns = {
-        'name': fields.char('Work Order', size=64, required=True),
+        'name': fields.char('Work Order', required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Number of Cycles', digits=(16, 2)),
         'hour': fields.float('Number of Hours', digits=(16, 2)),
@@ -1163,7 +1162,7 @@ class mrp_production_product_line(osv.osv):
     _name = 'mrp.production.product.line'
     _description = 'Production Scheduled Product'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
