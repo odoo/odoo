@@ -193,10 +193,13 @@ class res_users(osv.osv):
     name = openerp.fields.Char(related='partner_id.name', inherited=True)
     email = openerp.fields.Char(related='partner_id.email', inherited=True)
 
-    def on_change_login(self, cr, uid, ids, login, context=None):
+    def on_change_login(self, cr, uid, ids, login, image, context=None):
+        value = {}
+        value['image'] = self.pool.get('res.partner').on_change_email(cr, uid, ids, login, image, context=context)['value'].get('image')
+
         if login and tools.single_email_re.match(login):
-            return {'value': {'email': login}}
-        return {}
+            value['email'] = login
+        return {'value': value}
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
