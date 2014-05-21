@@ -353,8 +353,6 @@ class Report(osv.Model):
         if paperformat:
             command_args.extend(self._build_wkhtmltopdf_args(paperformat, spec_paperformat_args))
 
-        command_args.extend(['--load-error-handling', 'ignore'])
-
         if landscape and '--orientation' in command_args:
             command_args_copy = list(command_args)
             for index, elem in enumerate(command_args_copy):
@@ -417,7 +415,7 @@ class Report(osv.Model):
                 if config['workers'] == 1:
                     os.kill(ppid, signal.SIGTTOU)
 
-                if process.returncode != 0:
+                if process.returncode not in [0, 1]:
                     raise osv.except_osv(_('Report (PDF)'),
                                          _('wkhtmltopdf failed with error code = %s. '
                                            'Message: %s') % (str(process.returncode), err))
