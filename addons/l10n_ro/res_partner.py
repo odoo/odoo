@@ -25,7 +25,7 @@ class res_partner(osv.osv):
     _name = "res.partner"
     _inherit = "res.partner"
     _columns = {
-        'nrc' : fields.char('NRC', size=16, help='Registration number at the Registry of Commerce'),
+        'nrc' : fields.char('NRC', help='Registration number at the Registry of Commerce'),
     }
 
     # The SQL constraints are no-ops but present only to display the right error message to the

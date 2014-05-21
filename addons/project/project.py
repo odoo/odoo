@@ -35,7 +35,7 @@ class project_task_type(osv.osv):
     _description = 'Task Stage'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Stage Name', required=True, size=64, translate=True),
+        'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
         'case_default': fields.boolean('Default for New Projects',
@@ -263,9 +263,9 @@ class project(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
-        'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
+        'alias_model': fields.selection(_alias_models, "Alias Model",size=13, select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True,
+        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', size=9, required=True,
             help="Holds visibility of the tasks or issues that belong to the current project:\n"
                     "- Public: everybody sees everything; if portal is activated, portal users\n"
                     "   see all tasks or issues; if anonymous portal is activated, visitors\n"
@@ -276,7 +276,7 @@ class project(osv.osv):
                     "- Employees Only: employees see all tasks or issues\n"
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', size=9, required=True,),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
         )
@@ -741,12 +741,13 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
+        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', size=1, select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange', select=True,
                         domain="[('project_ids', '=', project_id)]"),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'kanban_state': fields.selection([('normal', 'In Progress'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+                                         size=7,
                                          track_visibility='onchange',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -1133,7 +1134,7 @@ class project_work(osv.osv):
     _name = "project.task.work"
     _description = "Project Task Work"
     _columns = {
-        'name': fields.char('Work summary', size=128),
+        'name': fields.char('Work summary'),
         'date': fields.datetime('Date', select="1"),
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
@@ -1297,7 +1298,7 @@ class project_task_history(osv.osv):
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State', required=False),
+        'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State', size=7, required=False),
         'date': fields.date('Date', select=True),
         'end_date': fields.function(_get_date, string='End Date', type="date", store={
             'project.task.history': (_get_related_date, None, 20)
@@ -1349,6 +1350,6 @@ class project_category(osv.osv):
     _name = "project.category"
     _description = "Category of project's task, issue, ..."
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -92,13 +92,13 @@ class sale_order(osv.osv):
     _columns = {
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
-            'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+            'Shipping Policy', size=6, required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
                 ('picking', 'On Delivery Order'),
                 ('prepaid', 'Before Delivery'),
-            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+            ], 'Create Invoice', size=7, required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
                 'procurement.order': (_get_orders_procurements, ['state'], 10)

@@ -30,7 +30,7 @@ class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment Mode'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='Mode of Payment'),
+        'name': fields.char('Name', required=True, help='Mode of Payment'),
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
@@ -87,13 +87,13 @@ class payment_order(osv.osv):
 
     _columns = {
         'date_scheduled': fields.date('Scheduled Date', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
-        'reference': fields.char('Reference', size=128, required=1, states={'done': [('readonly', True)]}),
+        'reference': fields.char('Reference', required=1, states={'done': [('readonly', True)]}),
         'mode': fields.many2one('payment.mode', 'Payment Mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
             ('open', 'Confirmed'),
-            ('done', 'Done')], 'Status', select=True,
+            ('done', 'Done')], 'Status', select=True, size=6, 
             help='When an order is placed the status is \'Draft\'.\n Once the bank is confirmed the status is set to \'Confirmed\'.\n Then the order is paid the status is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
         'total': fields.function(_total, string="Total", type='float'),
@@ -102,7 +102,7 @@ class payment_order(osv.osv):
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred Date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+            ], "Preferred Date", size=5, change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation Date', readonly=True),
         'date_done': fields.date('Execution Date', readonly=True),
         'company_id': fields.related('mode', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
@@ -303,9 +303,9 @@ class payment_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Your Reference', size=64, required=True),
-        'communication': fields.char('Communication', size=64, required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
-        'communication2': fields.char('Communication 2', size=64, help='The successor message of Communication.'),
+        'name': fields.char('Your Reference', required=True),
+        'communication': fields.char('Communication', required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
+        'communication2': fields.char('Communication 2', help='The successor message of Communication.'),
         'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id', '=', False), ('account_id.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16, 2),
             required=True, help='Payment amount in the partner currency'),
@@ -326,7 +326,7 @@ class payment_line(osv.osv):
         'info_partner': fields.function(info_partner, string="Destination Account", type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created', readonly=True),
-        'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),
+        'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', size=10, required=True),
         'bank_statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }

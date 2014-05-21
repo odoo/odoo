@@ -85,7 +85,7 @@ class event_track(osv.osv):
         'location_id': fields.many2one('event.track.location', 'Location'),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'color': fields.integer('Color Index'),
-        'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', required=True),
+        'priority': fields.selection([('3','Low'),('2','Medium (*)'),('1','High (**)'),('0','Highest (***)')], 'Priority', size=1, required=True),
         'website_published': fields.boolean('Available in the website'),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
         'image': fields.related('speaker_ids', 'image', type='binary', readonly=True)

@@ -84,7 +84,7 @@ class mrp_production_workcenter_line(osv.osv):
     _order = "sequence, date_planned"
 
     _columns = {
-       'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True,
+       'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', size=12, readonly=True,
                                  help="* When a work order is created it is set in 'Draft' status.\n" \
                                        "* When user sets work order in start mode that time it will be set in 'In Progress' status.\n" \
                                        "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n" \
@@ -98,6 +98,7 @@ class mrp_production_workcenter_line(osv.osv):
        'production_state':fields.related('production_id','state',
             type='selection',
             selection=[('draft','Draft'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
+            size=13,
             string='Production Status', readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
@@ -376,9 +377,9 @@ class mrp_production(osv.osv):
 class mrp_operations_operation_code(osv.osv):
     _name="mrp_operations.operation.code"
     _columns={
-        'name': fields.char('Operation Name',size=64, required=True),
+        'name': fields.char('Operation Name', required=True),
         'code': fields.char('Code', size=16, required=True),
-        'start_stop': fields.selection([('start','Start'),('pause','Pause'),('resume','Resume'),('cancel','Cancelled'),('done','Done')], 'Status', required=True),
+        'start_stop': fields.selection([('start','Start'),('pause','Pause'),('resume','Resume'),('cancel','Cancelled'),('done','Done')], 'Status', size=6, required=True),
     }
 
 class mrp_operations_operation(osv.osv):

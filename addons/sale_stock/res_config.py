@@ -38,7 +38,7 @@ class sale_configuration(osv.osv_memory):
                  '-This installs the modules project_timesheet and project_mrp.'),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice based on sales orders'), ('picking', 'Invoice based on deliveries')],
-            'The default invoicing method is', default_model='sale.order',
+            'The default invoicing method is', size=7, default_model='sale.order',
             help="You can generate invoices based on sales orders or based on shippings."),
         'module_delivery': fields.boolean('Allow adding shipping costs',
             help='Allows you to add delivery methods in sales orders and delivery orders.\n'

@@ -113,7 +113,7 @@ class mrp_repair(osv.osv):
         return self.pool['mrp.repair'].search(cr, uid, [('fees_lines', 'in', ids)], context=context)
 
     _columns = {
-        'name': fields.char('Repair Reference', size=24, required=True, states={'confirmed': [('readonly', True)]}),
+        'name': fields.char('Repair Reference', required=True, states={'confirmed': [('readonly', True)]}),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
                                     required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -130,7 +130,7 @@ class mrp_repair(osv.osv):
             ('2binvoiced', 'To be Invoiced'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Repaired')
-            ], 'Status', readonly=True, track_visibility='onchange',
+            ], 'Status', size=14, readonly=True, track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
             \n* The \'Confirmed\' status is used when a user confirms the repair order. \
             \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
@@ -149,7 +149,7 @@ class mrp_repair(osv.osv):
             ("b4repair", "Before Repair"),
             ("after_repair", "After Repair")
            ], "Invoice Method",
-            select=True, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
+            select=True, size=12, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='Selecting \'Before Repair\' or \'After Repair\' will allow you to generate invoice before or after the repair is done respectively. \'No invoice\' means you don\'t want to generate invoice for this repair order.'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, track_visibility="onchange"),
         'move_id': fields.many2one('stock.move', 'Move', readonly=True, help="Move created by the repair order", track_visibility="onchange"),
         'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees', readonly=True, states={'draft': [('readonly', False)]}),
@@ -583,9 +583,9 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         return res
 
     _columns = {
-        'name': fields.char('Description', size=64, required=True),
+        'name': fields.char('Description', required=True),
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', ondelete='cascade', select=True),
-        'type': fields.selection([('add', 'Add'), ('remove', 'Remove')], 'Type', required=True),
+        'type': fields.selection([('add', 'Add'), ('remove', 'Remove')], 'Type', size=6, required=True),
         'to_invoice': fields.boolean('To Invoice'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
@@ -603,7 +603,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                     ('draft', 'Draft'),
                     ('confirmed', 'Confirmed'),
                     ('done', 'Done'),
-                    ('cancel', 'Cancelled')], 'Status', required=True, readonly=True,
+                    ('cancel', 'Cancelled')], 'Status', size=9, required=True, readonly=True,
                     help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
                         \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
                         \n* The \'Done\' status is set automatically when repair order is completed.\
@@ -681,7 +681,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
 
     _columns = {
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', required=True, ondelete='cascade', select=True),
-        'name': fields.char('Description', size=64, select=True, required=True),
+        'name': fields.char('Description', select=True, required=True),
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'price_unit': fields.float('Unit Price', required=True),

@@ -34,13 +34,13 @@ WARNING_HELP = _('Selecting the "Warning" option will notify user with the messa
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-        'sale_warn' : fields.selection(WARNING_MESSAGE, 'Sales Order', help=WARNING_HELP, required=True),
+        'sale_warn' : fields.selection(WARNING_MESSAGE, 'Sales Order', size=10, help=WARNING_HELP, required=True),
         'sale_warn_msg' : fields.text('Message for Sales Order'),
-        'purchase_warn' : fields.selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, required=True),
+        'purchase_warn' : fields.selection(WARNING_MESSAGE, 'Purchase Order', size=10, help=WARNING_HELP, required=True),
         'purchase_warn_msg' : fields.text('Message for Purchase Order'),
-        'picking_warn' : fields.selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP, required=True),
+        'picking_warn' : fields.selection(WARNING_MESSAGE, 'Stock Picking', size=10, help=WARNING_HELP, required=True),
         'picking_warn_msg' : fields.text('Message for Stock Picking'),
-        'invoice_warn' : fields.selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True),
+        'invoice_warn' : fields.selection(WARNING_MESSAGE, 'Invoice', size=10, help=WARNING_HELP, required=True),
         'invoice_warn_msg' : fields.text('Message for Invoice'),
     }
     _defaults = {
@@ -204,9 +204,9 @@ class stock_picking(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-         'sale_line_warn' : fields.selection(WARNING_MESSAGE,'Sales Order Line', help=WARNING_HELP, required=True),
+         'sale_line_warn' : fields.selection(WARNING_MESSAGE,'Sales Order Line', size=10, help=WARNING_HELP, required=True),
          'sale_line_warn_msg' : fields.text('Message for Sales Order Line'),
-         'purchase_line_warn' : fields.selection(WARNING_MESSAGE,'Purchase Order Line', help=WARNING_HELP, required=True),
+         'purchase_line_warn' : fields.selection(WARNING_MESSAGE,'Purchase Order Line', size=10, help=WARNING_HELP, required=True),
          'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
      }
 

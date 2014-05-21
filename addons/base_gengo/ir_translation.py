@@ -61,11 +61,11 @@ class ir_translation(osv.Model):
     _inherit = "ir.translation"
     _columns = {
         'gengo_comment': fields.text("Comments & Activity Linked to Gengo"),
-        'job_id': fields.char('Gengo Job ID', size=32),
+        'job_id': fields.char('Gengo Job ID'),
         "gengo_translation": fields.selection([('machine', 'Translation By Machine'),
                                             ('standard', 'Standard'),
                                             ('pro', 'Pro'),
-                                            ('ultra', 'Ultra')], "Gengo Translation Service Level", help='You can select here the service level you want for an automatic translation using Gengo.'),
+                                            ('ultra', 'Ultra')], "Gengo Translation Service Level", size=8, help='You can select here the service level you want for an automatic translation using Gengo.'),
     }
 
     def _get_all_supported_languages(self, cr, uid, context=None):

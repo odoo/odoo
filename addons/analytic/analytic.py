@@ -171,10 +171,10 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account/Contract Name', size=128, required=True, track_visibility='onchange'),
+        'name': fields.char('Account/Contract Name', required=True, track_visibility='onchange'),
         'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
         'code': fields.char('Reference', select=True, track_visibility='onchange'),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', size=8, required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
@@ -196,7 +196,7 @@ class account_analytic_account(osv.osv):
         'date_start': fields.date('Start Date'),
         'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', required=True, track_visibility='onchange'),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', size=9, required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
@@ -314,7 +314,7 @@ class account_analytic_line(osv.osv):
     _description = 'Analytic Line'
 
     _columns = {
-        'name': fields.char('Description', size=256, required=True),
+        'name': fields.char('Description', required=True),
         'date': fields.date('Date', required=True, select=True),
         'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),

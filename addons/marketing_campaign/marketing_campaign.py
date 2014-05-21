@@ -96,7 +96,7 @@ class marketing_campaign(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
                                       help="Choose the resource on which you want \
 this campaign to be run"),
@@ -117,7 +117,7 @@ this campaign to be run"),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
                                 ('active', 'Normal')],
-                                 'Mode', required=True, help= \
+                                 'Mode', size=13, required=True, help= \
 """Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.
 Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
@@ -126,7 +126,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    ('running', 'Running'),
                                    ('cancelled', 'Cancelled'),
                                    ('done', 'Done')],
-                                   'Status',),
+                                   'Status', size=9),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
@@ -261,7 +261,7 @@ class marketing_campaign_segment(osv.osv):
         return dict.fromkeys(ids, next_sync)
 
     _columns = {
-        'name': fields.char('Name', size=64,required=True),
+        'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
         'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
@@ -273,7 +273,7 @@ class marketing_campaign_segment(osv.osv):
         'sync_mode': fields.selection([('create_date', 'Only records created after last sync'),
                                       ('write_date', 'Only records modified after last sync (no duplicates)'),
                                       ('all', 'All records (no duplicates)')],
-                                      'Synchronization mode',
+                                      'Synchronization mode', size=11,
                                       help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. "\
                                            '"No duplicates" prevents selecting records which have already entered the campaign previously.'\
                                            'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
@@ -282,7 +282,7 @@ class marketing_campaign_segment(osv.osv):
                                    ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
                                    ('done', 'Done')],
-                                   'Status',),
+                                   'Status', size=9),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -411,7 +411,7 @@ class marketing_campaign_activity(osv.osv):
     ]
 
     _columns = {
-        'name': fields.char('Name', size=128, required=True),
+        'name': fields.char('Name', required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                             required = True, ondelete='cascade', select=1),
         'object_id': fields.related('campaign_id','object_id',
@@ -426,7 +426,7 @@ class marketing_campaign_activity(osv.osv):
                                  "   - resource: the resource object this campaign item represents\n"
                                  "   - transitions: list of campaign transitions outgoing from this activity\n"
                                  "...- re: Python regular expression module"),
-        'type': fields.selection(_action_types, 'Type', required=True,
+        'type': fields.selection(_action_types, 'Type', required=True, size=6,
                                   help="""The type of action to execute when an item enters this activity, such as:
    - Email: send an email using a predefined email template
    - Report: print an existing Report defined on the resource item and save it into a specific directory
@@ -446,7 +446,7 @@ class marketing_campaign_activity(osv.osv):
                                             'Previous Activities'),
         'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Product Price')),
         'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Account')),
-        'signal': fields.char('Signal', size=128,
+        'signal': fields.char('Signal', 
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
         'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
@@ -560,14 +560,14 @@ class marketing_campaign_transition(osv.osv):
                                           'Next Activity',
                                           required=True, ondelete="cascade"),
         'interval_nbr': fields.integer('Interval Value', required=True),
-        'interval_type': fields.selection(_interval_units, 'Interval Unit',
+        'interval_type': fields.selection(_interval_units, 'Interval Unit', size=6, 
                                           required=True),
 
         'trigger': fields.selection([('auto', 'Automatic'),
                                      ('time', 'Time'),
                                      ('cosmetic', 'Cosmetic'),  # fake plastic transition
                                     ],
-                                    'Trigger', required=True,
+                                    'Trigger', required=True, size=8, 
                                     help="How is the destination workitem triggered"),
     }
 
@@ -658,7 +658,7 @@ class marketing_campaign_workitem(osv.osv):
                                     ('cancelled', 'Cancelled'),
                                     ('exception', 'Exception'),
                                     ('done', 'Done'),
-                                   ], 'Status', readonly=True),
+                                   ], 'Status', size=9, readonly=True),
         'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {

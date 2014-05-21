@@ -37,7 +37,7 @@ class res_company(osv.osv):
             ('top', 'Check on Top'),
             ('middle', 'Check in middle'),
             ('bottom', 'Check on bottom'),
-            ],"Check Layout",
+            ],"Check Layout", size=6, 
             help="Check on top is compatible with Quicken, QuickBooks and Microsoft Money. Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on bottom is compatible with Peachtree, ACCPAC and DacEasy only"  ),
         }
         

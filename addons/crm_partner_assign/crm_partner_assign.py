@@ -32,7 +32,7 @@ class res_partner_grade(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'name': fields.char('Grade Name', size=32),
+        'name': fields.char('Grade Name'),
         'partner_weight': fields.integer('Grade Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
@@ -47,7 +47,7 @@ class res_partner_activation(osv.osv):
 
     _columns = {
         'sequence' : fields.integer('Sequence'),
-        'name' : fields.char('Name', size=32, required=True),
+        'name' : fields.char('Name', required=True),
     }
 
 

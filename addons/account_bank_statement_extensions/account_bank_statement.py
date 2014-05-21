@@ -62,7 +62,7 @@ class account_bank_statement_line_global(osv.osv):
     _description = 'Batch Payment Info'
 
     _columns = {
-        'name': fields.char('OBI', size=128, required=True, help="Originator to Beneficiary Information"),
+        'name': fields.char('OBI', required=True, help="Originator to Beneficiary Information"),
         'code': fields.char('Code', size=64, required=True),
         'parent_id': fields.many2one('account.bank.statement.line.global', 'Parent Code', ondelete='cascade'),
         'child_ids': fields.one2many('account.bank.statement.line.global', 'parent_id', 'Child Codes'),
@@ -70,7 +70,7 @@ class account_bank_statement_line_global(osv.osv):
             ('iso20022', 'ISO 20022'),
             ('coda', 'CODA'),
             ('manual', 'Manual'),
-            ], 'Type', required=True),
+            ], 'Type', size=8, required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'bank_statement_line_ids': fields.one2many('account.bank.statement.line', 'globalisation_id', 'Bank Statement Lines'),
     }
@@ -110,7 +110,7 @@ class account_bank_statement_line(osv.osv):
         'globalisation_amount': fields.related('globalisation_id', 'amount', type='float',
             relation='account.bank.statement.line.global', string='Glob. Amount', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
-            'Status', required=True, readonly=True),
+            'Status', size=7, required=True, readonly=True),
         'counterparty_name': fields.char('Counterparty Name', size=35),
         'counterparty_bic': fields.char('Counterparty BIC', size=11),
         'counterparty_number': fields.char('Counterparty Number', size=34),

@@ -12,9 +12,9 @@ class lead_test(osv.Model):
     _name = "base.action.rule.lead.test"
 
     _columns = {
-        'name': fields.char('Subject', size=64, required=True, select=1),
+        'name': fields.char('Subject', required=True, select=1),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'state': fields.selection(AVAILABLE_STATES, string="Status", readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, string="Status", size=7, readonly=True),
         'active': fields.boolean('Active', required=False),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null'),
         'date_action_last': fields.datetime('Last Action', readonly=1),

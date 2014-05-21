@@ -100,7 +100,7 @@ class ir_model(osv.osv):
         'model': fields.char('Model', required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', size=6, readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
@@ -240,11 +240,11 @@ class ir_model_fields(osv.osv):
             "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
-        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
+        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', size=1, required=True),
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
-        'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On Delete', help='On delete property for many2one fields'),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', size=6, required=True, readonly=True, select=1),
+        'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On Delete', size=8, help='On delete property for many2one fields'),
         'domain': fields.char('Domain', help="The optional domain to restrict possible values for relationship fields, "
             "specified as a Python expression defining a list of triplets. "
             "For example: [('color','=','red')]"),
@@ -1183,7 +1183,7 @@ class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'
     _columns = {
         'menu_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
-        'name': fields.char('Menu Name', size=64, required=True),
+        'name': fields.char('Menu Name', required=True),
     }
 
     def menu_create(self, cr, uid, ids, context=None):

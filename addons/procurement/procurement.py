@@ -57,7 +57,7 @@ class procurement_group(osv.osv):
         'name': fields.char('Reference', required=True),
         'move_type': fields.selection([
             ('direct', 'Partial'), ('one', 'All at once')],
-            'Delivery Method', required=True),
+            'Delivery Method', size=6, required=True),
         'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'),
     }
     _defaults = {
@@ -107,13 +107,13 @@ class procurement_order(osv.osv):
     _columns = {
         'name': fields.text('Description', required=True),
 
-        'origin': fields.char('Source Document', size=64,
+        'origin': fields.char('Source Document',
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
-        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True, track_visibility='onchange'),
+        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', size=1, required=True, select=True, track_visibility='onchange'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=True, track_visibility='onchange'),
 
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
@@ -132,7 +132,7 @@ class procurement_order(osv.osv):
             ('exception', 'Exception'),
             ('running', 'Running'),
             ('done', 'Done')
-        ], 'Status', required=True, track_visibility='onchange'),
+        ], 'Status', size=9, required=True, track_visibility='onchange'),
     }
 
     _defaults = {

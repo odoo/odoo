@@ -97,7 +97,7 @@ class account_bank_statement(osv.osv):
     _description = "Bank Statement"
     _inherit = ['mail.thread']
     _columns = {
-        'name': fields.char('Reference', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
+        'name': fields.char('Reference', required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}, select=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             readonly=True, states={'draft':[('readonly',False)]}),
@@ -122,7 +122,7 @@ class account_bank_statement(osv.osv):
         'state': fields.selection([('draft', 'New'),
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
-                                   'Status', required=True, readonly="1",
+                                   'Status', required=True, readonly="1", size=7,
                                    help='When new statement is created the status will be \'Draft\'.\n'
                                         'And after getting confirmation from the bank it will be in \'Confirmed\' status.'),
         'currency': fields.function(_currency, string='Currency',
@@ -558,7 +558,7 @@ class account_bank_statement_line(osv.osv):
             ('supplier','Supplier'),
             ('customer','Customer'),
             ('general','General')
-            ], 'Type', required=True),
+            ], 'Type', size=8, required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'account_id': fields.many2one('account.account','Account',
             required=True),
@@ -569,7 +569,7 @@ class account_bank_statement_line(osv.osv):
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'statement_line_id','move_id',
             'Moves'),
-        'ref': fields.char('Reference', size=32),
+        'ref': fields.char('Reference'),
         'note': fields.text('Notes'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of bank statement lines."),
         'company_id': fields.related('statement_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),

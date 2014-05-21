@@ -66,8 +66,8 @@ class res_currency(osv.osv):
     _description = "Currency"
     _columns = {
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
-        'name': fields.char('Currency', size=32, required=True, help="Currency Code (ISO 4217)"),
-        'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
+        'name': fields.char('Currency', required=True, help="Currency Code (ISO 4217)"),
+        'symbol': fields.char('Symbol', help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
 
@@ -81,7 +81,7 @@ class res_currency(osv.osv):
         'company_id':fields.many2one('res.company', 'Company'),
         'date': fields.date('Date'),
         'base': fields.boolean('Base'),
-        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
+        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', size=6, help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
@@ -239,7 +239,7 @@ class res_currency_rate_type(osv.osv):
     _name = "res.currency.rate.type"
     _description = "Currency Rate Type"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', required=True, translate=True),
     }
 
 class res_currency_rate(osv.osv):

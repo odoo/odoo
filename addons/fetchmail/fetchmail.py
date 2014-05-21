@@ -47,27 +47,27 @@ class fetchmail_server(osv.osv):
     _order = 'priority'
 
     _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'name':fields.char('Name', required=True, readonly=False),
         'active':fields.boolean('Active', required=False),
         'state':fields.selection([
             ('draft', 'Not Confirmed'),
             ('done', 'Confirmed'),
-        ], 'Status', select=True, readonly=True),
-        'server' : fields.char('Server Name', size=256, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
+        ], 'Status', select=True, size=5, readonly=True),
+        'server' : fields.char('Server Name', readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
         'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
             ('pop', 'POP Server'),
             ('imap', 'IMAP Server'),
             ('local', 'Local Server'),
-        ], 'Server Type', select=True, required=True, readonly=False),
+        ], 'Server Type', select=True, size=5, required=True, readonly=False),
         'is_ssl':fields.boolean('SSL/TLS', help="Connections are encrypted with SSL/TLS through a dedicated port (default: IMAPS=993, POP3S=995)"),
         'attach':fields.boolean('Keep Attachments', help="Whether attachments should be downloaded. "
                                                          "If not enabled, incoming emails will be stripped of any attachments before being processed"),
         'original':fields.boolean('Keep Original', help="Whether a full original copy of each email should be kept for reference"
                                                         "and attached to each processed message. This will usually double the size of your message database."),
         'date': fields.datetime('Last Fetch Date', readonly=True),
-        'user' : fields.char('Username', size=256, readonly=True, states={'draft':[('readonly', False)]}),
-        'password' : fields.char('Password', size=1024, readonly=True, states={'draft':[('readonly', False)]}),
+        'user' : fields.char('Username', readonly=True, states={'draft':[('readonly', False)]}),
+        'password' : fields.char('Password', readonly=True, states={'draft':[('readonly', False)]}),
         'action_id':fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
                                                                                "on the record that was created or updated by this mail"),
         'object_id': fields.many2one('ir.model', "Create a New Record", help="Process each incoming mail as part of a conversation "
@@ -78,7 +78,7 @@ class fetchmail_server(osv.osv):
                                                                                                                   "lower values mean higher priority"),
         'message_ids': fields.one2many('mail.mail', 'fetchmail_server_id', 'Messages', readonly=True),
         'configuration' : fields.text('Configuration', readonly=True),
-        'script' : fields.char('Script', readonly=True, size=64),
+        'script' : fields.char('Script', readonly=True),
     }
     _defaults = {
         'state': "draft",

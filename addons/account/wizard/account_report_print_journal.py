@@ -31,7 +31,7 @@ class account_print_journal(osv.osv_memory):
     _columns = {
         'sort_selection': fields.selection([('l.date', 'Date'),
                                             ('am.name', 'Journal Entry Number'),],
-                                            'Entries Sorted by', required=True),
+                                            'Entries Sorted by', size=7, required=True),
         'journal_ids': fields.many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
 

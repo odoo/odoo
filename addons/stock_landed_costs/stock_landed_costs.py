@@ -80,7 +80,7 @@ class stock_landed_cost(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Name', size=256, track_visibility='always', readonly=True),
+        'name': fields.char('Name', track_visibility='always', readonly=True),
         'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange'),
         'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}),
         'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}),
@@ -92,7 +92,7 @@ class stock_landed_cost(osv.osv):
                 'stock.landed.cost.lines': (_get_cost_line, ['price_unit', 'quantity', 'cost_id'], 20),
             }, track_visibility='always'
         ),
-        'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange'),
+        'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', size=6, readonly=True, track_visibility='onchange'),
         'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True),
         'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True),
     }
@@ -260,11 +260,11 @@ class stock_landed_cost_lines(osv.osv):
         return {'value': result}
 
     _columns = {
-        'name': fields.char('Description', size=256),
+        'name': fields.char('Description'),
         'cost_id': fields.many2one('stock.landed.cost', 'Landed Cost', required=True, ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price')),
-        'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', required=True),
+        'split_method': fields.selection(product.SPLIT_METHOD, string='Split Method', size=21, required=True),
         'account_id': fields.many2one('account.account', 'Account', domain=[('type', '<>', 'view'), ('type', '<>', 'closed')]),
     }
 
@@ -304,7 +304,7 @@ class stock_valuation_adjustment_lines(osv.osv):
         'former_cost_per_unit': fields.function(_amount_final, multi='cost', string='Former Cost(Per Unit)', type='float', digits_compute=dp.get_precision('Account'), store=True),
         'additional_landed_cost': fields.float('Additional Landed Cost', digits_compute=dp.get_precision('Product Price')),
         'final_cost': fields.function(_amount_final, multi='cost', string='Final Cost', type='float', digits_compute=dp.get_precision('Account'), store=True),
-        'flag': fields.selection([('original', 'Original'), ('duplicate', 'Duplicate')], 'Flag', readonly=True),
+        'flag': fields.selection([('original', 'Original'), ('duplicate', 'Duplicate')], 'Flag', size=9, readonly=True),
     }
 
     _defaults = {

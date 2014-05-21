@@ -67,11 +67,12 @@ class PaymentAcquirer(osv.Model):
         'validation': fields.selection(
             [('manual', 'Manual'), ('automatic', 'Automatic')],
             string='Process Method',
+            size=9,
             help='Static payments are payments like transfer, that require manual steps.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'environment': fields.selection(
             [('test', 'Test'), ('prod', 'Production')],
-            string='Environment', oldname='env'),
+            size=4, string='Environment', oldname='env'),
         'website_published': fields.boolean(
             'Visible in Portal / Website',
             help="Make this payment acquirer available (Customer invoices, etc.)"),
@@ -332,12 +333,12 @@ class PaymentTransaction(osv.Model):
         ),
         'type': fields.selection(
             [('server2server', 'Server To Server'), ('form', 'Form')],
-            string='Type', required=True),
+            string='Type', size=13, required=True),
         'state': fields.selection(
             [('draft', 'Draft'), ('pending', 'Pending'),
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
-             ], 'Status', required=True,
+             ], 'Status', size=7, required=True,
             track_visiblity='onchange'),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),

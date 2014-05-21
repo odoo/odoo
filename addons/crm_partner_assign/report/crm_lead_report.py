@@ -52,11 +52,11 @@ class crm_lead_report_assign(osv.osv):
         'date_closed': fields.date('Close Date', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', size=1),
         'type':fields.selection([
             ('lead','Lead'),
-            ('opportunity','Opportunity'),
-        ],'Type', help="Type is used to separate Leads and Opportunities"),
+            ('opportunity','Opportunity') 
+        ],'Type', size=11, help="Type is used to separate Leads and Opportunities"),
     }
     def init(self, cr):
 

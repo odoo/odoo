@@ -30,8 +30,8 @@ class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
     _description = "Action Reason"
     _columns = {
-        'name': fields.char('Reason', size=64, required=True, help='Specifies the reason for Signing In/Signing Out.'),
-        'action_type': fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action Type"),
+        'name': fields.char('Reason', required=True, help='Specifies the reason for Signing In/Signing Out.'),
+        'action_type': fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action Type", size=8),
     }
     _defaults = {
         'action_type': 'sign_in',
@@ -72,7 +72,7 @@ class hr_attendance(osv.osv):
 
     _columns = {
         'name': fields.datetime('Date', required=True, select=1),
-        'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
+        'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', size=8, required=True),
         'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True, select=True),
         'worked_hours': fields.function(_worked_hours_compute, type='float', string='Worked Hours', store=True),

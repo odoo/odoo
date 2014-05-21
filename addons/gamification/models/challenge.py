@@ -125,7 +125,7 @@ class gamification_challenge(osv.Model):
                 ('inprogress', 'In Progress'),
                 ('done', 'Done'),
             ],
-            string='State', required=True, track_visibility='onchange'),
+            string='State', size=10, required=True, track_visibility='onchange'),
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
 
@@ -142,6 +142,7 @@ class gamification_challenge(osv.Model):
                 ('yearly', 'Yearly')
             ],
             string='Periodicity',
+            size=7,
             help='Period of automatic goal assigment. If none is selected, should be launched manually.',
             required=True),
         'start_date': fields.date('Start Date',
@@ -169,7 +170,7 @@ class gamification_challenge(osv.Model):
                 ('personal', 'Individual Goals'),
                 ('ranking', 'Leader Board (Group Ranking)'),
             ],
-            string="Display Mode", required=True),
+            string="Display Mode", size=8, required=True),
 
         'report_message_frequency': fields.selection([
                 ('never', 'Never'),
@@ -179,7 +180,7 @@ class gamification_challenge(osv.Model):
                 ('monthly', 'Monthly'),
                 ('yearly', 'Yearly')
             ],
-            string="Report Frequency", required=True),
+            string="Report Frequency", size=8, required=True),
         'report_message_group_id': fields.many2one('mail.group',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),

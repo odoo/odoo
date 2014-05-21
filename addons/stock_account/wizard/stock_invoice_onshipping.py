@@ -46,7 +46,7 @@ class stock_invoice_onshipping(osv.osv_memory):
     _columns = {
         'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
         'group': fields.boolean("Group by partner"),
-        'inv_type': fields.selection([('out_invoice','Create Invoice'),('out_refund','Refund Invoice')], "Invoice Type"),
+        'inv_type': fields.selection([('out_invoice','Create Invoice'),('out_refund','Refund Invoice')], "Invoice Type", size=11),
         'invoice_date': fields.date('Invoice Date'),
     }
     _defaults = {

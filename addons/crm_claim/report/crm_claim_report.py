@@ -37,7 +37,7 @@ class crm_claim_report(osv.osv):
     _description = "CRM Claim Report"
 
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
@@ -46,7 +46,7 @@ class crm_claim_report(osv.osv):
                                   ('05', 'May'), ('06', 'June'), \
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+                                  ('11', 'November'), ('12', 'December')], 'Month', size=2, readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True),
@@ -57,8 +57,8 @@ class crm_claim_report(osv.osv):
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
+        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority', size=1),
+        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type', size=10),
         'date_closed': fields.date('Close Date', readonly=True, select=True),
         'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),

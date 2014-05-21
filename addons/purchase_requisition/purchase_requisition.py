@@ -40,13 +40,13 @@ class purchase_requisition(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Call for Bids Reference', size=32, required=True),
-        'origin': fields.char('Source Document', size=32),
+        'name': fields.char('Call for Bids Reference', required=True),
+        'origin': fields.char('Source Document'),
         'ordering_date': fields.date('Scheduled Ordering Date'),
         'date_end': fields.datetime('Bid Submission Deadline'),
         'schedule_date': fields.date('Scheduled Date', select=True, help="The expected and scheduled date where all the products are received"),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Bid Selection Type', required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
+        'exclusive': fields.selection([('exclusive', 'Select only one RFQ (exclusive)'), ('multiple', 'Select multiple RFQ')], 'Bid Selection Type', size=9, required=True, help="Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nSelect multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
@@ -55,7 +55,7 @@ class purchase_requisition(osv.osv):
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Confirmed'), ('open', 'Bid Selection'), ('done', 'PO Created'), ('cancel', 'Cancelled')],
-            'Status', track_visibility='onchange', required=True),
+            'Status', size=11, track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),

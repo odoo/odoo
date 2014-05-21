@@ -15,7 +15,7 @@ class pos_session_opening(osv.osv_memory):
                                      type='selection',
                                      selection=pos_session.POS_SESSION_STATE,
                                      string='Session Status', readonly=True),
-        'pos_state_str' : fields.char('Status', 32, readonly=True),
+        'pos_state_str' : fields.char('Status', readonly=True),
         'show_config' : fields.boolean('Show Config', readonly=True),
         'pos_session_name' : fields.related('pos_session_id', 'name',
                                             type='char', size=64, readonly=True),

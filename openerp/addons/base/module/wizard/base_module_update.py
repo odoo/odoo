@@ -30,7 +30,7 @@ class base_module_update(osv.osv_memory):
     _columns = {
         'update': fields.integer('Number of modules updated', readonly=True),
         'add': fields.integer('Number of modules added', readonly=True),
-        'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
+        'state':fields.selection([('init','init'),('done','done')], 'Status', size=4, readonly=True),
     }
 
     _defaults = {  

@@ -216,7 +216,7 @@ class email_template(osv.osv):
         'name': fields.char('Name'),
         'model_id': fields.many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used"),
         'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
-                                size=128, select=True, store=True, readonly=True),
+                                 select=True, store=True, readonly=True),
         'lang': fields.char('Language',
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "

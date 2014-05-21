@@ -147,7 +147,7 @@ class hr_timesheet_sheet(osv.osv):
         }
 
     _columns = {
-        'name': fields.char('Note', size=64, select=1,
+        'name': fields.char('Note', select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
@@ -164,7 +164,7 @@ class hr_timesheet_sheet(osv.osv):
             ('new', 'New'),
             ('draft','Open'),
             ('confirm','Waiting Approval'),
-            ('done','Approved')], 'Status', select=True, required=True, readonly=True,
+            ('done','Approved')], 'Status', size=7, select=True, required=True, readonly=True,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' status is used for to confirm the timesheet by user. \
                 \n* The \'Done\' status is used when users timesheet is accepted by his/her senior.'),
@@ -628,7 +628,7 @@ class res_company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'timesheet_range': fields.selection(
-            [('day','Day'),('week','Week'),('month','Month')], 'Timesheet range',
+            [('day','Day'),('week','Week'),('month','Month')], 'Timesheet range', size=5,
             help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Timesheet allowed difference(Hours)',
             help="Allowed difference in hours between the sign in/out and the timesheet " \

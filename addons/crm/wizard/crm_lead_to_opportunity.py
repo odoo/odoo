@@ -33,7 +33,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'name': fields.selection([
                 ('convert', 'Convert to opportunity'),
                 ('merge', 'Merge with existing opportunities')
-            ], 'Conversion Action', required=True),
+            ], 'Conversion Action', size=7, required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities'),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True),
@@ -199,7 +199,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         'action': fields.selection([
                 ('each_exist_or_create', 'Use existing partner or create'),
                 ('nothing', 'Do not link to a customer')
-            ], 'Related Customer', required=True),
+            ], 'Related Customer', size=20, required=True),
         'force_assignation': fields.boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities'),
     }
 

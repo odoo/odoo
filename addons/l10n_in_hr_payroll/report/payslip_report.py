@@ -27,22 +27,22 @@ class payslip_report(osv.osv):
     _description = "Payslip Analysis"
     _auto = False
     _columns = {
-        'name':fields.char('Name', size=32, readonly=True),
+        'name':fields.char('Name', readonly=True),
         'date_from': fields.date('Date From', readonly=True,),
         'date_to': fields.date('Date To', readonly=True,),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
             ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
-            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', size=2, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('done', 'Done'),
             ('cancel', 'Rejected'),
-        ], 'Status', readonly=True),
+        ], 'Status', size=6, readonly=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
         'nbr': fields.integer('# Payslip lines', readonly=True),
-        'number': fields.char('Number', size=16, readonly=True),
+        'number': fields.char('Number', readonly=True),
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'paid': fields.boolean('Made Payment Order ? ', readonly=True),

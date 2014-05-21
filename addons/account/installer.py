@@ -72,13 +72,13 @@ class account_installer(osv.osv_memory):
     _columns = {
         # Accounting
         'charts': fields.selection(_get_charts, 'Accounting Package',
-            required=True,
+            required=True, size=32, 
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
                  "country."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months', '3 Monthly')], 'Periods', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months', '3 Monthly')], 'Periods', size=7, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has Default Company', readonly=True),
     }

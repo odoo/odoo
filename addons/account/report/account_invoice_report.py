@@ -79,7 +79,7 @@ class account_invoice_report(osv.osv):
             ('in_invoice','Supplier Invoice'),
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
-            ],'Type', readonly=True),
+            ],'Type', readonly=True, size=11),
         'state': fields.selection([
             ('draft','Draft'),
             ('proforma','Pro-forma'),
@@ -87,7 +87,7 @@ class account_invoice_report(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-            ], 'Invoice Status', readonly=True),
+            ], 'Invoice Status', size=9, readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),

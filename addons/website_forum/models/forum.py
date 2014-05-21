@@ -141,11 +141,11 @@ class Post(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Title', size=128),
+        'name': fields.char('Title'),
         'forum_id': fields.many2one('forum.forum', 'Forum', required=True),
         'content': fields.html('Content'),
         'tag_ids': fields.many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', 'Tags'),
-        'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status'),
+        'state': fields.selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], 'Status', size=9),
         'views': fields.integer('Number of Views'),
         'active': fields.boolean('Active'),
         'is_correct': fields.boolean('Valid Answer', help='Correct Answer or Answer on this question accepted.'),
@@ -289,7 +289,7 @@ class Vote(osv.Model):
     _columns = {
         'post_id': fields.many2one('forum.post', 'Post', ondelete='cascade', required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
-        'vote': fields.selection([('1', '1'), ('-1', '-1'), ('0', '0')], 'Vote', required=True),
+        'vote': fields.selection([('1', '1'), ('-1', '-1'), ('0', '0')], 'Vote', size=1, required=True),
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
     }
     _defaults = {

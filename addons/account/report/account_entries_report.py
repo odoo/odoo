@@ -32,7 +32,7 @@ class account_entries_report(osv.osv):
         'date': fields.date('Effective Date', readonly=True),
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
-        'ref': fields.char('Reference', size=64, readonly=True),
+        'ref': fields.char('Reference', readonly=True),
         'nbr': fields.integer('# of Items', readonly=True),
         'debit': fields.float('Debit', readonly=True),
         'credit': fields.float('Credit', readonly=True),
@@ -44,15 +44,15 @@ class account_entries_report(osv.osv):
         'amount_currency': fields.float('Amount Currency', digits_compute=dp.get_precision('Account'), readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+            ('10','October'), ('11','November'), ('12','December')], 'Month', size=2, readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure', readonly=True),
-        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', readonly=True),
-        'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', readonly=True),
+        'move_state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', size=6, readonly=True),
+        'move_line_state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State of Move Line', size=5, readonly=True),
         'reconcile_id': fields.many2one('account.move.reconcile', readonly=True),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
@@ -66,7 +66,7 @@ class account_entries_report(osv.osv):
             ('consolidation', 'Consolidation'),
             ('other', 'Regular'),
             ('closed', 'Closed'),
-        ], 'Internal Type', readonly=True, help="This type is used to differentiate types with "\
+        ], 'Internal Type', readonly=True, size=13, help="This type is used to differentiate types with "\
             "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),

@@ -159,7 +159,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         return portal_link
 
     _columns = {
-        'forward_type': fields.selection([('single', 'a single partner: manual selection of partner'), ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades"), ], 'Forward selected leads to'),
+        'forward_type': fields.selection([('single', 'a single partner: manual selection of partner'), ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades"), ], 'Forward selected leads to', size=8),
         'partner_id': fields.many2one('res.partner', 'Forward Leads To'),
         'assignation_lines': fields.one2many('crm.lead.assignation', 'forward_id', 'Partner Assignation'),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),

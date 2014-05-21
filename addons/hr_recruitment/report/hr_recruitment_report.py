@@ -42,7 +42,7 @@ class hr_recruitment_report(osv.Model):
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department','Department',readonly=True),
-        'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
+        'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation', size=1),
         'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
         'salary_prop_avg' : fields.float("Avg. Proposed Salary", group_operator="avg", digits_compute=dp.get_precision('Account')),
         'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),

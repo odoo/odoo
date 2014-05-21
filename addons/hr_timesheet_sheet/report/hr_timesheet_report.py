@@ -30,7 +30,7 @@ class hr_timesheet_report(osv.osv):
     _auto = False
     _columns = {
         'date': fields.date('Date', readonly=True),
-        'name': fields.char('Description', size=64,readonly=True),
+        'name': fields.char('Description',readonly=True),
         'product_id' : fields.many2one('product.product', 'Product',readonly=True),
         'journal_id' : fields.many2one('account.analytic.journal', 'Journal',readonly=True),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),

@@ -226,8 +226,8 @@ class account_invoice(osv.osv):
         },
     }
     _columns = {
-        'name': fields.char('Reference/Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Reference/Description', select=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'origin': fields.char('Source Document', help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
         'supplier_invoice_number': fields.char('Supplier Invoice Number', size=64, help="The reference of this invoice as provided by the supplier.", readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
@@ -237,10 +237,10 @@ class account_invoice(osv.osv):
             ],'Type', readonly=True, select=True, change_default=True, track_visibility='always'),
 
         'number': fields.related('move_id','name', type='char', readonly=True, size=64, relation='account.move', store=True, string='Number'),
-        'internal_number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
-        'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
+        'internal_number': fields.char('Invoice Number', readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
+        'reference': fields.char('Invoice Reference', help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Payment Reference',
-            required=True, readonly=True, states={'draft':[('readonly',False)]}),
+            size=4, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'comment': fields.text('Additional Information'),
 
         'state': fields.selection([
@@ -250,7 +250,7 @@ class account_invoice(osv.osv):
             ('open','Open'),
             ('paid','Paid'),
             ('cancel','Cancelled'),
-            ],'Status', select=True, readonly=True, track_visibility='onchange',
+            ],'Status', select=True, size=9, readonly=True, track_visibility='onchange',
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Invoice. \
             \n* The \'Pro-forma\' when invoice is in Pro-forma status,invoice does not have an invoice number. \
             \n* The \'Open\' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice. \
@@ -317,7 +317,7 @@ class account_invoice(osv.osv):
             },
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
-        'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
+        'move_name': fields.char('Journal Entry', readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, track_visibility='onchange', states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]}),
         'commercial_partner_id': fields.related('partner_id', 'commercial_partner_id', string='Commercial Entity', type='many2one',
@@ -1413,7 +1413,7 @@ class account_invoice_line(osv.osv):
     _order = "invoice_id,sequence,id"
     _columns = {
         'name': fields.text('Description', required=True),
-        'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
+        'origin': fields.char('Source Document', help="Reference of the document that produced this invoice."),
         'sequence': fields.integer('Sequence', help="Gives the sequence of this line when displaying the invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null', select=True),
@@ -1658,7 +1658,7 @@ class account_invoice_tax(osv.osv):
 
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
-        'name': fields.char('Tax Description', size=64, required=True),
+        'name': fields.char('Tax Description', required=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'base': fields.float('Base', digits_compute=dp.get_precision('Account')),

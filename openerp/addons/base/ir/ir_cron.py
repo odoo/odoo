@@ -61,17 +61,17 @@ class ir_cron(osv.osv):
     _name = "ir.cron"
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', size=60, required=True),
+        'name': fields.char('Name', required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'active': fields.boolean('Active'),
         'interval_number': fields.integer('Interval Number',help="Repeat every x."),
         'interval_type': fields.selection( [('minutes', 'Minutes'),
-            ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
+            ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit', size=9),
         'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),
         'doall' : fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
         'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
-        'model': fields.char('Object', size=64, help="Model name on which the method to be called is located, e.g. 'res.partner'."),
-        'function': fields.char('Method', size=64, help="Name of the method to be called when this job is processed."),
+        'model': fields.char('Object', help="Model name on which the method to be called is located, e.g. 'res.partner'."),
+        'function': fields.char('Method', help="Name of the method to be called when this job is processed."),
         'args': fields.text('Arguments', help="Arguments to be passed to the method, e.g. (uid,)."),
         'priority': fields.integer('Priority', help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
     }

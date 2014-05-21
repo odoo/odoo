@@ -47,7 +47,7 @@ class report_membership(osv.osv):
                                   ('05', 'May'), ('06', 'June'), \
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+                                  ('11', 'November'), ('12', 'December')], 'Month', size=2, readonly=True),
         'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),
         'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),
         'num_waiting': fields.integer('# Waiting', readonly=True),
@@ -58,7 +58,7 @@ class report_membership(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Member', readonly=True),
         'associate_member_id': fields.many2one('res.partner', 'Associate Member', readonly=True),
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
-        'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
+        'membership_state': fields.selection(STATE, 'Current Membership State', size=9, readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True)
         }

@@ -149,6 +149,7 @@ class gamification_badge(osv.Model):
                 ('nobody', 'No one, assigned through challenges'),
             ],
             string="Allowance to Grant",
+            size=8,
             help="Who can grant this badge",
             required=True),
         'rule_auth_user_ids': fields.many2many('res.users', 'rel_badge_auth_users',

@@ -43,7 +43,7 @@ class mrp_product_produce(osv.osv_memory):
         'product_id': fields.many2one('product.product', type='many2one'),
         'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'mode': fields.selection([('consume_produce', 'Consume & Produce'),
-                                  ('consume', 'Consume Only')], 'Mode', required=True,
+                                  ('consume', 'Consume Only')], 'Mode', size=15, required=True,
                                   help="'Consume only' mode will only consume the products with the quantity selected.\n"
                                         "'Consume & Produce' mode will consume as well as produce the products with the quantity selected "
                                         "and it will finish the production order when total ordered quantities are produced."),

@@ -44,7 +44,7 @@ class account_common_report(osv.osv_memory):
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
         'company_id': fields.related('chart_account_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
-        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
+        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", size=13, required=True),
         'period_from': fields.many2one('account.period', 'Start Period'),
         'period_to': fields.many2one('account.period', 'End Period'),
         'journal_ids': fields.many2many('account.journal', string='Journals', required=True),
@@ -52,7 +52,7 @@ class account_common_report(osv.osv_memory):
         'date_to': fields.date("End Date"),
         'target_move': fields.selection([('posted', 'All Posted Entries'),
                                          ('all', 'All Entries'),
-                                        ], 'Target Moves', required=True),
+                                        ], 'Target Moves', size=6, required=True),
 
         }
 

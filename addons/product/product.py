@@ -146,7 +146,7 @@ class product_uom(osv.osv):
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
-                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
+                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', size=9, required=1),
     }
 
     _defaults = {
@@ -214,7 +214,7 @@ class product_ul(osv.osv):
     _description = "Logistic Unit"
     _columns = {
         'name' : fields.char('Name', select=True, required=True, translate=True),
-        'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
+        'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', size=6, required=True),
         'height': fields.float('Height', help='The height of the package'),
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),
@@ -266,7 +266,7 @@ class product_category(osv.osv):
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', size=6, help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
     }
@@ -432,7 +432,7 @@ class product_template(osv.osv):
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
-        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
+        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', size=7, required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'public_categ_id': fields.many2one('product.public.category','Public Category', help="Those categories are used to group similar products for public sales (eg.: point of sale, e-commerce)."),
@@ -449,7 +449,7 @@ class product_template(osv.osv):
             ('draft', 'In Development'),
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
-            ('obsolete','Obsolete')], 'Status'),
+            ('obsolete','Obsolete')], 'Status', size=8),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
@@ -457,7 +457,7 @@ class product_template(osv.osv):
         'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
+        'mes_type': fields.selection([('fixed', 'Fixed'),('variable', 'Variable')], 'Measure Type', size=8),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         # image: all image fields are base64 encoded and PIL-supported

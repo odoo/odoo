@@ -64,7 +64,7 @@ class account_config_settings(osv.osv_memory):
         'has_fiscal_year': fields.boolean('Company has a fiscal year'),
         'date_start': fields.date('Start date', required=True),
         'date_stop': fields.date('End date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', size=7, required=True),
 
         'sale_journal_id': fields.many2one('account.journal', 'Sale journal'),
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice sequence'),

@@ -27,13 +27,13 @@ class timesheet_report(osv.osv):
     _description = "Timesheet"
     _auto = False
     _columns = {
-        'year': fields.char('Year',size=64,required=False, readonly=True),
+        'year': fields.char('Year', size=4, required=False, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+            ('10','October'), ('11','November'), ('12','December')], 'Month', size=2, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'date': fields.date('Date', readonly=True),
-        'name': fields.char('Description', size=64,readonly=True),
+        'name': fields.char('Description', readonly=True),
         'product_id' : fields.many2one('product.product', 'Product'),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
@@ -52,7 +52,7 @@ class timesheet_report(osv.osv):
             ('new', 'New'),
             ('draft','Draft'),
             ('confirm','Confirmed'),
-            ('done','Done')], 'Status', readonly=True),
+            ('done','Done')], 'Status', size=7, readonly=True),
         'quantity': fields.float('Time',readonly=True),
         'cost': fields.float('#Cost',readonly=True),
         }

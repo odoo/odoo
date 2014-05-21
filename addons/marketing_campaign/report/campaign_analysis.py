@@ -50,7 +50,7 @@ class campaign_analysis(osv.osv):
                                      ('03','March'), ('04','April'),('05','May'), ('06','June'),
                                      ('07','July'), ('08','August'), ('09','September'),
                                      ('10','October'), ('11','November'), ('12','December')],
-                                  'Month', readonly=True),
+                                  'Month', size=2, readonly=True),
         'day': fields.char('Day', size=10, readonly=True),
         'date': fields.date('Date', readonly=True, select=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
@@ -68,7 +68,7 @@ class campaign_analysis(osv.osv):
         'count' : fields.integer('# of Actions', readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'Status', readonly=True),
+                                   ('cancelled', 'Cancelled')], 'Status', size=9, readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')

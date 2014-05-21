@@ -326,7 +326,7 @@ class MassMailing(osv.Model):
         ),
         'state': fields.selection(
             [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
-            string='Status', required=True,
+            string='Status', size=5, required=True,
         ),
         'color': fields.related(
             'mass_mailing_campaign_id', 'color',
@@ -335,7 +335,7 @@ class MassMailing(osv.Model):
         # mailing options
         'reply_to_mode': fields.selection(
             [('thread', 'In Document'), ('email', 'Specified Email Address')],
-            string='Reply-To Mode', required=True,
+            string='Reply-To Mode', size=6, required=True,
         ),
         'reply_to': fields.char('Reply To', help='Preferred Reply-To Address'),
         # recipients

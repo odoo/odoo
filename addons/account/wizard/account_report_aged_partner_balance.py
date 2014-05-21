@@ -35,7 +35,7 @@ class account_aged_trial_balance(osv.osv_memory):
         'period_length':fields.integer('Period Length (days)', required=True),
         'direction_selection': fields.selection([('past','Past'),
                                                  ('future','Future')],
-                                                 'Analysis Direction', required=True),
+                                                 'Analysis Direction', size=6, required=True),
         'journal_ids': fields.many2many('account.journal', 'account_aged_trial_balance_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
     _defaults = {

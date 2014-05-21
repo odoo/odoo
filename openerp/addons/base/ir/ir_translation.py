@@ -197,7 +197,7 @@ class ir_translation(osv.osv):
         'name': fields.char('Translated field', required=True),
         'res_id': fields.integer('Record ID', select=True),
         'lang': fields.selection(_get_language, string='Language'),
-        'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
+        'type': fields.selection(TRANSLATION_TYPE, string='Type', size=14, select=True),
         'src': fields.text('Old source'),
         'source': fields.function(_get_src, fnct_inv=_set_src, type='text', string='Source'),
         'value': fields.text('Translation Value'),
@@ -207,7 +207,7 @@ class ir_translation(osv.osv):
             [('to_translate','To Translate'),
              ('inprogress','Translation in Progress'),
              ('translated','Translated')],
-            string="Status",
+            string="Status", size=12,
             help="Automatically set to let administators find new terms that might need to be translated"),
 
         # aka gettext extracted-comments - we use them to flag openerp-web translation

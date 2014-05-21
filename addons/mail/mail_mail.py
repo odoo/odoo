@@ -51,7 +51,7 @@ class mail_mail(osv.Model):
             ('received', 'Received'),
             ('exception', 'Delivery Failed'),
             ('cancel', 'Cancelled'),
-        ], 'Status', readonly=True),
+        ], 'Status', size=9, readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),

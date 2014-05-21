@@ -33,7 +33,7 @@ class account_tax_chart(osv.osv_memory):
                                     ),
        'target_move': fields.selection([('posted', 'All Posted Entries'),
                                         ('all', 'All Entries'),
-                                        ], 'Target Moves', required=True),
+                                        ], 'Target Moves', size=6, required=True),
     }
 
     def _get_period(self, cr, uid, context=None):

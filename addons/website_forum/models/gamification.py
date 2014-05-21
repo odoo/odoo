@@ -15,5 +15,5 @@ class gamification_challenge(osv.Model):
 class Badge(osv.Model):
     _inherit = 'gamification.badge'
     _columns = {
-        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
+        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level', size=6),
     }

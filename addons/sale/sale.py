@@ -164,10 +164,10 @@ class sale_order(osv.osv):
         return company_id
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True,
+        'name': fields.char('Order Reference', required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
-        'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this sales order request."),
-        'client_order_ref': fields.char('Reference/Description', size=64),
+        'origin': fields.char('Source Document', help="Reference of the document that generated this sales order request."),
+        'client_order_ref': fields.char('Reference/Description'),
         'state': fields.selection([
             ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),
@@ -178,7 +178,7 @@ class sale_order(osv.osv):
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
+            ], 'Status', size=15, readonly=True, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
@@ -191,7 +191,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order."),
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
-            ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+            ], 'Create Invoice', size=7, required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""This field controls how invoice and delivery operations are synchronized."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order."),
         'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True),
@@ -871,7 +871,7 @@ class sale_order_line(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
-        'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', required=True, readonly=True,
+        'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', size=9, required=True, readonly=True,
                 help='* The \'Draft\' status is set when the related sales order in draft status. \
                     \n* The \'Confirmed\' status is set when the related sales order is confirmed. \
                     \n* The \'Exception\' status is set when the related sales order is set as exception. \

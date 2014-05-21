@@ -34,7 +34,7 @@ class product_margin(osv.osv_memory):
            ('paid','Paid'),
            ('open_paid','Open and Paid'),
            ('draft_open_paid','Draft, Open and Paid'),
-        ],'Invoice State', select=True, required=True),
+        ],'Invoice State', size=15, select=True, required=True),
     }
     _defaults = {
         'from_date': time.strftime('%Y-01-01'),

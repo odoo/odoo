@@ -33,7 +33,7 @@ class account_partner_ledger(osv.osv_memory):
     _columns = {
         'initial_balance': fields.boolean('Include Initial Balances',
                                     help='If you selected to filter by date or period, this field allow you to add a row to display the amount of debit/credit/balance that precedes the filter you\'ve set.'),
-        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods'), ('unreconciled', 'Unreconciled Entries')], "Filter by", required=True),
+        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods'), ('unreconciled', 'Unreconciled Entries')], "Filter by", size=13, required=True),
         'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column on report if the currency differs from the company currency."),
         'journal_ids': fields.many2many('account.journal', 'account_partner_ledger_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),

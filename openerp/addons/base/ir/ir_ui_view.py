@@ -124,7 +124,7 @@ class view(osv.osv):
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
             ('search','Search'),
-            ('qweb', 'QWeb')], string='View Type'),
+            ('qweb', 'QWeb')], string='View Type', size=8),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),

@@ -294,7 +294,7 @@ class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
     _columns = {
-        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
+        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', size=7, required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -314,9 +314,9 @@ class product_template(osv.osv):
             domain=[('usage','like','inventory')],
             help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."),
         'sale_delay': fields.float('Customer Lead Time', help="The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
-        'loc_rack': fields.char('Rack', size=16),
-        'loc_row': fields.char('Row', size=16),
-        'loc_case': fields.char('Case', size=16),
+        'loc_rack': fields.char('Rack'),
+        'loc_row': fields.char('Row'),
+        'loc_case': fields.char('Case'),
     }
 
     _defaults = {
@@ -343,7 +343,7 @@ class product_putaway_strategy(osv.osv):
 
     _columns = {
         'name': fields.char('Name', required=True),
-        'method': fields.selection(_get_putaway_options, "Method", required=True),
+        'method': fields.selection(_get_putaway_options, "Method", size=5, required=True),
         'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products"),
     }
 

@@ -24,8 +24,8 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'manufacturer' : fields.many2one('res.partner', 'Manufacturer'),
-        'manufacturer_pname' : fields.char('Manufacturer Product Name', size=64),
-        'manufacturer_pref' : fields.char('Manufacturer Product Code', size=64),
+        'manufacturer_pname' : fields.char('Manufacturer Product Name'),
+        'manufacturer_pref' : fields.char('Manufacturer Product Code'),
         'attribute_ids': fields.one2many('product.manufacturer.attribute', 'product_id', 'Attributes'),
     }
 
@@ -33,8 +33,8 @@ class product_attribute(osv.osv):
     _name = "product.manufacturer.attribute"
     _description = "Product attributes"
     _columns = {
-        'name' : fields.char('Attribute', size=64, required=True),
-        'value' : fields.char('Value', size=64),
+        'name' : fields.char('Attribute', required=True),
+        'value' : fields.char('Value'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
     }
 

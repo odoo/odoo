@@ -307,7 +307,7 @@ class lunch_order(osv.Model):
                                     ('confirmed','Confirmed'), \
                                     ('cancelled','Cancelled'), \
                                     ('partially','Partially Confirmed')] \
-                                ,'Status', readonly=True, select=True),
+                                ,'Status', size=9, readonly=True, select=True),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
     }
 
@@ -416,7 +416,7 @@ class lunch_order_line(osv.Model):
                                     ('confirmed', 'Received'), \
                                     ('ordered', 'Ordered'),  \
                                     ('cancelled', 'Cancelled')], \
-                                'Status', readonly=True, select=True),
+                                'Status', size=9, readonly=True, select=True),
         'cashmove': fields.one2many('lunch.cashmove', 'order_id', 'Cash Move', ondelete='cascade'),
 
     }
@@ -432,7 +432,7 @@ class lunch_product(osv.Model):
     _name = 'lunch.product'
     _description = 'lunch product'
     _columns = {
-        'name': fields.char('Product', required=True, size=64),
+        'name': fields.char('Product', required=True),
         'category_id': fields.many2one('lunch.product.category', 'Category', required=True),
         'description': fields.text('Description', size=256),
         'price': fields.float('Price', digits=(16,2)), #TODO: use decimal precision of 'Account', move it from product to decimal_precision
@@ -461,7 +461,7 @@ class lunch_cashmove(osv.Model):
         'amount': fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
         'description': fields.text('Description'), #the description can be an order or a payment
         'order_id': fields.many2one('lunch.order.line', 'Order', ondelete='cascade'),
-        'state': fields.selection([('order','Order'), ('payment','Payment')], 'Is an order or a Payment'),
+        'state': fields.selection([('order','Order'), ('payment','Payment')], 'Is an order or a Payment', size=7),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
@@ -480,7 +480,7 @@ class lunch_alert(osv.Model):
         'alter_type': fields.selection([('specific', 'Specific Day'), \
                                     ('week', 'Every Week'), \
                                     ('days', 'Every Day')], \
-                                string='Recurrency', required=True, select=True),
+                                string='Recurrency', size=8, required=True, select=True),
         'specific_day': fields.date('Day'),
         'monday': fields.boolean('Monday'),
         'tuesday': fields.boolean('Tuesday'),

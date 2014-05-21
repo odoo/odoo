@@ -28,7 +28,7 @@ class stock_location_path(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
-            required=True,),
+            size=10, required=True,),
     }
     _defaults = {
         'invoice_state': 'none',
@@ -44,7 +44,7 @@ class procurement_rule(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
-            required=True),
+            size=10, required=True),
         }
     _defaults = {
         'invoice_state': 'none',
@@ -61,7 +61,7 @@ class procurement_order(osv.osv):
         'invoice_state': fields.selection([("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-         ], "Invoice Control", required=True),
+         ], "Invoice Control", size=10, required=True),
         }
 
     def _run_move_create(self, cr, uid, procurement, context=None):
@@ -83,7 +83,7 @@ class stock_move(osv.osv):
     _columns = {
         'invoice_state': fields.selection([("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")], "Invoice Control",
+            ("none", "Not Applicable")], "Invoice Control", size=10,
             select=True, required=True, track_visibility='onchange',
             states={'draft': [('readonly', False)]}),
         }
@@ -174,7 +174,7 @@ class stock_picking(osv.osv):
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")
-          ], string="Invoice Control", required=True,
+          ], string="Invoice Control", size=10, required=True,
 
         store={
             'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['state'], 10),

@@ -45,8 +45,8 @@ class PaymentAcquirerOgone(osv.Model):
         'ogone_pspid': fields.char('PSPID', required_if_provider='ogone'),
         'ogone_userid': fields.char('API User ID', required_if_provider='ogone'),
         'ogone_password': fields.char('API User Password', required_if_provider='ogone'),
-        'ogone_shakey_in': fields.char('SHA Key IN', size=32, required_if_provider='ogone'),
-        'ogone_shakey_out': fields.char('SHA Key OUT', size=32, required_if_provider='ogone'),
+        'ogone_shakey_in': fields.char('SHA Key IN', required_if_provider='ogone'),
+        'ogone_shakey_out': fields.char('SHA Key OUT', required_if_provider='ogone'),
     }
 
     def _ogone_generate_shasign(self, acquirer, inout, values):

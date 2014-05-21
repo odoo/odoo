@@ -34,13 +34,13 @@ class res_partner(osv.osv):
         return res
     
     _columns = {
-        'out_inv_comm_type': fields.selection(_get_comm_type, 'Communication Type', change_default=True,
+        'out_inv_comm_type': fields.selection(_get_comm_type, 'Communication Type', size=4, change_default=True,
             help='Select Default Communication Type for Outgoing Invoices.' ),
         'out_inv_comm_algorithm': fields.selection([
             ('random','Random'),
             ('date','Date'),
             ('partner_ref','Customer Reference'),
-            ], 'Communication Algorithm',
+            ], 'Communication Algorithm', size=11, 
             help='Select Algorithm to generate the Structured Communication on Outgoing Invoices.' ),
     }
 

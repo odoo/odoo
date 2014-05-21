@@ -62,7 +62,7 @@ class delivery_carrier(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Delivery Method', size=64, required=True),
+        'name': fields.char('Delivery Method', required=True),
         'partner_id': fields.many2one('res.partner', 'Transport Company', required=True, help="The partner that is doing the delivery service."),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
@@ -171,13 +171,13 @@ class delivery_grid(osv.osv):
     _name = "delivery.grid"
     _description = "Delivery Grid"
     _columns = {
-        'name': fields.char('Grid Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when displaying a list of delivery grid."),
+        'name': fields.char('Grid Name', required=True),
+        'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of delivery grid."),
         'carrier_id': fields.many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade'),
         'country_ids': fields.many2many('res.country', 'delivery_grid_country_rel', 'grid_id', 'country_id', 'Countries'),
         'state_ids': fields.many2many('res.country.state', 'delivery_grid_state_rel', 'grid_id', 'state_id', 'States'),
-        'zip_from': fields.char('Start Zip', size=12),
-        'zip_to': fields.char('To Zip', size=12),
+        'zip_from': fields.char('Start Zip'),
+        'zip_to': fields.char('To Zip'),
         'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery grid without removing it."),
     }
@@ -226,15 +226,15 @@ class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
     _description = "Delivery Grid Line"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
                                   ('wv','Weight * Volume'), ('price','Price')],\
-                                  'Variable', required=True),
-        'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
+                                  'Variable', size=6, required=True),
+        'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', size=2, required=True),
         'max_value': fields.float('Maximum Value', required=True),
-        'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
-        'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
+        'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', size=8, required=True),
+        'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', size=6, required=True),
         'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Product Price'), required=True),
         'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'), required=True),
     }

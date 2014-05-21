@@ -21,7 +21,7 @@ import openerp
 from openerp.osv import fields, osv
 
 TAX_CODE_COLUMNS = {
-                    'domain':fields.char('Domain', size=32, 
+                    'domain':fields.char('Domain', 
                                          help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
                     'tax_discount': fields.boolean('Discount this Tax in Prince', 
                                                    help="Mark it for (ICMS, PIS, COFINS and others taxes included)."),
@@ -115,7 +115,7 @@ class account_tax_template(osv.osv):
                                          ('none','None'), 
                                          ('code','Python Code'), 
                                          ('balance','Balance'), 
-                                         ('quantity','Quantity')], 'Tax Type', required=True,
+                                         ('quantity','Quantity')], 'Tax Type', size=8, required=True,
                                         help="The computation method for the tax amount."),
                }
     _defaults = TAX_DEFAULTS

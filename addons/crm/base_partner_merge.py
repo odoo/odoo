@@ -95,7 +95,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         'state': fields.selection([('option', 'Option'),
                                    ('selection', 'Selection'),
                                    ('finished', 'Finished')],
-                                  'State',
+                                  'State', size=9,
                                   readonly=True,
                                   required=True),
         'number_group': fields.integer("Group of Contacts", readonly=True),

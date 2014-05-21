@@ -30,14 +30,14 @@ class project_task_delegate(osv.osv_memory):
     _description = 'Task Delegate'
 
     _columns = {
-        'name': fields.char('Delegated Title', size=64, required=True, help="New title of the task delegated to the user"),
-        'prefix': fields.char('Your Task Title', size=64, help="Title for your validation task"),
+        'name': fields.char('Delegated Title', required=True, help="New title of the task delegated to the user"),
+        'prefix': fields.char('Your Task Title', help="Title for your validation task"),
         'project_id': fields.many2one('project.project', 'Project', help="User you want to delegate this task to"),
         'user_id': fields.many2one('res.users', 'Assign To', required=True, help="User you want to delegate this task to"),
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
         'planned_hours': fields.float('Planned Hours',  help="Estimated time to close this task by the delegated user"),
         'planned_hours_me': fields.float('Hours to Validate', help="Estimated time for you to validate the work done by the user to whom you delegate this task"),
-        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
+        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', size=7, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed")
     }
 
     def onchange_project_id(self, cr, uid, ids, project_id=False, context=None):

@@ -32,7 +32,7 @@ class account_asset_category(osv.osv):
     _description = 'Asset category'
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1),
+        'name': fields.char('Name', required=True, select=1),
         'note': fields.text('Note'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True, domain=[('type','=','other')]),
@@ -40,13 +40,13 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True, domain=[('type','=','other')]),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', size=10, required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', help="The number of depreciations needed to depreciate your asset"),
         'method_period': fields.integer('Period Length', help="State here the time between 2 depreciations, in months", required=True),
         'method_progress_factor': fields.float('Degressive Factor'),
-        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True,
+        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', size=6, required=True,
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
@@ -246,7 +246,7 @@ class account_asset_asset(osv.osv):
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
         'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),
-        'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Asset Name', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
         'purchase_value': fields.float('Gross Value', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -256,13 +256,13 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True,
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True, size=5,
                                   help="When an asset is created, the status is 'Draft'.\n" \
                                        "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
                                        "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."),
         'active': fields.boolean('Active'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', size=10, required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="The number of depreciations needed to depreciate your asset"),
@@ -270,7 +270,7 @@ class account_asset_asset(osv.osv):
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
-        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]},
+        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', size=6, required=True, readonly=True, states={'draft':[('readonly',False)]},
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
                                        "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
@@ -379,7 +379,7 @@ class account_asset_depreciation_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Depreciation Name', size=64, required=True, select=1),
+        'name': fields.char('Depreciation Name', required=True, select=1),
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, ondelete='cascade'),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
@@ -474,11 +474,11 @@ class account_asset_history(osv.osv):
     _name = 'account.asset.history'
     _description = 'Asset history'
     _columns = {
-        'name': fields.char('History name', size=64, select=1),
+        'name': fields.char('History name', select=1),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date': fields.date('Date', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
-        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True,
+        'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', size=6, required=True,
                                   help="The method to use to compute the dates and number of depreciation lines.\n"\
                                        "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),

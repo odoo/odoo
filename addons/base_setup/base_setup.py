@@ -40,7 +40,7 @@ class specify_partner_terminology(osv.osv_memory):
             ('Donor','Donor'),
             ('Guest','Guest'),
             ('Tenant','Tenant')
-        ], 'How do you call a Customer', required=True ),
+        ], 'How do you call a Customer', size=8, required=True ),
     }
     _defaults={
         'partner' :'Customer',

@@ -30,7 +30,7 @@ class crm_segmentation(osv.osv):
     _description = "Partner Segmentation"
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='The name of the segmentation.'),
+        'name': fields.char('Name', required=True, help='The name of the segmentation.'),
         'description': fields.text('Description'),
         'categ_id': fields.many2one('res.partner.category', 'Partner Category',\
                          required=True, help='The partner category that will be \
@@ -38,7 +38,7 @@ added to partners that match the segmentation criterions after computation.'),
         'exclusif': fields.boolean('Exclusive', help='Check if the category is limited to partners that match the segmentation criterions.\
                         \nIf checked, remove the category from partners that doesn\'t match segmentation criterions'),
         'state': fields.selection([('not running','Not Running'),\
-                    ('running','Running')], 'Execution Status', readonly=True),
+                    ('running','Running')], 'Execution Status', size=11, readonly=True),
         'partner_id': fields.integer('Max Partner ID processed'),
         'segmentation_line': fields.one2many('crm.segmentation.line', \
                             'segmentation_id', 'Criteria', required=True),
@@ -115,14 +115,14 @@ class crm_segmentation_line(osv.osv):
     _description = "Segmentation line"
 
     _columns = {
-        'name': fields.char('Rule Name', size=64, required=True),
+        'name': fields.char('Rule Name', required=True),
         'segmentation_id': fields.many2one('crm.segmentation', 'Segmentation'),
         'expr_name': fields.selection([('sale','Sale Amount'),
-                        ('purchase','Purchase Amount')], 'Control Variable', size=64, required=True),
-        'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', required=True),
+                        ('purchase','Purchase Amount')], 'Control Variable', size=8, required=True),
+        'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', size=1, required=True),
         'expr_value': fields.float('Value', required=True),
         'operator': fields.selection([('and','Mandatory Expression'),\
-                        ('or','Optional Expression')],'Mandatory / Optional', required=True),
+                        ('or','Optional Expression')],'Mandatory / Optional', size=3, required=True),
     }
     _defaults = {
         'expr_name': lambda *a: 'sale',

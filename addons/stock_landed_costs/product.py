@@ -34,7 +34,7 @@ class product_product(osv.osv):
 
     _columns = {
         'landed_cost_ok': fields.boolean('Can constitute a landed cost'),
-        'split_method': fields.selection(SPLIT_METHOD, 'Split Method'),
+        'split_method': fields.selection(SPLIT_METHOD, 'Split Method', size=21),
     }
 
     _defaults = {

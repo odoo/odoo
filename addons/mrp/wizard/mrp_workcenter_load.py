@@ -26,8 +26,8 @@ class mrp_workcenter_load(osv.osv_memory):
     _description = 'Work Center Load'
 
     _columns = {
-        'time_unit': fields.selection([('day', 'Day by day'),('week', 'Per week'),('month', 'Per month')],'Type of period', required=True),
-        'measure_unit': fields.selection([('hours', 'Amount in hours'),('cycles', 'Amount in cycles')],'Amount measuring unit', required=True),
+        'time_unit': fields.selection([('day', 'Day by day'),('week', 'Per week'),('month', 'Per month')],'Type of period', size=5, required=True),
+        'measure_unit': fields.selection([('hours', 'Amount in hours'),('cycles', 'Amount in cycles')],'Amount measuring unit', size=6, required=True),
     }
 
     def print_report(self, cr, uid, ids, context=None):

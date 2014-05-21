@@ -38,7 +38,7 @@ class hr_evaluation_report(osv.Model):
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
             ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
-            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+            ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', size=2, readonly=True),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee", readonly=True),
         'rating': fields.selection([
@@ -47,7 +47,7 @@ class hr_evaluation_report(osv.Model):
             ('2', 'Meet expectations'),
             ('3', 'Exceeds expectations'),
             ('4', 'Significantly exceeds expectations'),
-        ], "Overall Rating", readonly=True),
+        ], "Overall Rating", size=1, readonly=True),
         'nbr': fields.integer('# of Requests', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
@@ -55,7 +55,7 @@ class hr_evaluation_report(osv.Model):
             ('progress', 'Final Validation'),
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
-        ], 'Status', readonly=True),
+        ], 'Status', size=8, readonly=True),
     }
     _order = 'create_date desc'
 

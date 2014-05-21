@@ -39,7 +39,7 @@ class report_account_receivable(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Week of Year', size=7, readonly=True),
-        'type': fields.selection(_code_get, 'Account Type', required=True),
+        'type': fields.selection(_code_get, 'Account Type', size=32, required=True),
         'balance':fields.float('Balance', readonly=True),
         'debit':fields.float('Debit', readonly=True),
         'credit':fields.float('Credit', readonly=True),
@@ -73,7 +73,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name': fields.char('Range',size=64)
+        'name': fields.char('Range')
     }
 
 
@@ -112,7 +112,7 @@ class report_aged_receivable(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Month Range', size=7, readonly=True),
+        'name': fields.char('Month Range', size=24, readonly=True),
         'balance': fields.function(_calc_bal, string='Balance', readonly=True),
     }
 
@@ -151,14 +151,14 @@ class report_invoice_created(osv.osv):
     _description = "Report of Invoices Created within Last 15 days"
     _auto = False
     _columns = {
-        'name': fields.char('Description', size=64, readonly=True),
+        'name': fields.char('Description', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
-            ],'Type', readonly=True),
-        'number': fields.char('Invoice Number', size=32, readonly=True),
+            ],'Type', readonly=True, size=11),
+        'number': fields.char('Invoice Number', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
@@ -173,8 +173,8 @@ class report_invoice_created(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-        ],'Status', readonly=True),
-        'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
+        ],'Status', size=9, readonly=True),
+        'origin': fields.char('Source Document', readonly=True, help="Reference of the document that generated this invoice report."),
         'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
@@ -203,7 +203,7 @@ class report_account_type_sales(osv.osv):
     _description = "Report of the Sales by Account Type"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'name': fields.char('Year', required=False, readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
@@ -211,7 +211,7 @@ class report_account_type_sales(osv.osv):
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', size=2, readonly=True),
     }
     _order = 'name desc,amount_total desc'
 
@@ -244,7 +244,7 @@ class report_account_sales(osv.osv):
     _description = "Report of the Sales by Account"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True, select=True),
+        'name': fields.char('Year', required=False, readonly=True, select=True),
         'period_id': fields.many2one('account.period', 'Force Period', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
@@ -252,7 +252,7 @@ class report_account_sales(osv.osv):
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', size=2, readonly=True),
     }
     _order = 'name desc'
 

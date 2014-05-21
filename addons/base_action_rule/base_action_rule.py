@@ -54,7 +54,7 @@ class base_action_rule(osv.osv):
     _order = 'sequence'
 
     _columns = {
-        'name':  fields.char('Rule Name', size=64, required=True),
+        'name':  fields.char('Rule Name', required=True),
         'model_id': fields.many2one('ir.model', 'Related Document Model',
             required=True, domain=[('osv_memory', '=', False)]),
         'model': fields.related('model_id', 'model', type="char", size=256, string='Model'),
@@ -68,7 +68,7 @@ class base_action_rule(osv.osv):
              ('on_write', 'On Update'),
              ('on_create_or_write', 'On Creation & Update'),
              ('on_time', 'Based on Timed Condition')],
-            string='When to Run'),
+            string='When to Run', size=18),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
             help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
@@ -77,7 +77,7 @@ class base_action_rule(osv.osv):
             "You can put a negative number if you need a delay before the" \
             "trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'),
-                                ('day', 'Days'), ('month', 'Months')], 'Delay type'),
+                                ('day', 'Days'), ('month', 'Months')], 'Delay type', size=7),
         'trg_date_calendar_id': fields.many2one(
             'resource.calendar', 'Use Calendar',
             help='When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.',

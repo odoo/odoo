@@ -168,7 +168,7 @@ class board_create(osv.osv_memory):
     _description = "Board Creation"
 
     _columns = {
-        'name': fields.char('Board Name', size=64, required=True),
+        'name': fields.char('Board Name', required=True),
         'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
     }
 
