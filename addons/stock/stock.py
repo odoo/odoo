@@ -2743,7 +2743,7 @@ class stock_warehouse(osv.osv):
 
     _columns = {
         'name': fields.char('Warehouse Name', size=128, required=True, select=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
