@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import osv
+from openerp.tools import config
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -48,15 +49,23 @@ try:
         ['wkhtmltopdf', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
 except OSError:
-    _logger.error('You need wkhtmltopdf to print a pdf version of the reports.')
+    _logger.info('You need wkhtmltopdf to print a pdf version of the reports.')
 else:
     out, err = process.communicate()
-    version = out.splitlines()[1].strip()
-    version = version.split(' ')[1]
-    if LooseVersion(version) < LooseVersion('0.12.0'):
-        _logger.warning('Upgrade wkhtmltopdf to (at least) 0.12.0')
-        wkhtmltopdf_state = 'upgrade'
-    wkhtmltopdf_state = 'ok'
+
+    for line in out.splitlines():
+        line = line.strip()
+        if line.startswith('wkhtmltopdf 0.'):
+            version = line.split(' ')[1]
+            if LooseVersion(version) < LooseVersion('0.12.0'):
+                _logger.info('Upgrade wkhtmltopdf to (at least) 0.12.0')
+                wkhtmltopdf_state = 'upgrade'
+            else:
+                wkhtmltopdf_state = 'ok'
+
+    if config['workers'] == 1:
+        _logger.info('You need to start OpenERP with at least two workers to print a pdf version of the reports.')
+        wkhtmltopdf_state = 'workers'
 
 
 class Report(osv.Model):
