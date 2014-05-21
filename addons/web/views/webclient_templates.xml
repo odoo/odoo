@@ -43,7 +43,6 @@
         </template>
 
         <template id="web.assets_backend">
-            <t t-call="web.assets_common"/>
             <!-- Datejs -->
             <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
@@ -137,6 +136,7 @@
         <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
             <t t-call="web.layout">
                 <t t-set="head">
+                    <t t-call-assets="web.assets_common"/>
                     <t t-call-assets="web.assets_backend"/>
                     <script type="text/javascript">
                         $(function() {
@@ -242,6 +242,7 @@
                     <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>
                     <script src="/web/static/lib/qunit/qunit.js"></script>
 
+                    <t t-call="web.assets_common"/>
                     <t t-call="web.assets_backend"/>
 
                     <script type="text/javascript" id="qunit_config">

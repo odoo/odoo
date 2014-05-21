@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
+        </record>
+        
+        <record id="section_sales_department" model="crm.case.section">
+            <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
+        </record>
+        <record model="crm.case.section" id="crm_case_section_1">
+            <field name="name">Indirect Sales</field>
+            <field name="code">IM</field>
+            <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
+        </record>
+
+        <record model="crm.case.section" id="crm_case_section_2">
+            <field name="name">Marketing</field>
+            <field name="code">SPD</field>
+            <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
+        </record>
+    </data>
+</openerp>

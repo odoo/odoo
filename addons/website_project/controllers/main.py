@@ -24,7 +24,7 @@ from openerp.addons.web.http import request
 
 class website_project(http.Controller):
 
-    @http.route(['/project/<model("project.project"):project>'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/project/<model("project.project"):project>'], type='http', auth="public", website=True)
     def project(self, project=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         render_values = {
