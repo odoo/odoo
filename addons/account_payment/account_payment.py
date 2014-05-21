@@ -23,6 +23,7 @@ import logging
 import time
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -114,6 +115,7 @@ class payment_order(osv.osv):
         'date_prefered': 'due',
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
         'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'payment.order', context=context)
     }
 
     def set_to_draft(self, cr, uid, ids, *args):
@@ -124,6 +126,10 @@ class payment_order(osv.osv):
     def action_open(self, cr, uid, ids, *args):
         ir_seq_obj = self.pool.get('ir.sequence')
 
+        for line in self.browse(cr, uid, ids, context=None):
+            if not line.line_ids :
+                raise osv.except_osv(_('Error!'), _('You cannot confirm a Payment Order which has no line.'))
+            
         for order in self.read(cr, uid, ids, ['reference']):
             if not order['reference']:
                 reference = ir_seq_obj.get(cr, uid, 'payment.order')
@@ -307,7 +313,7 @@ class payment_line(osv.osv):
         'communication': fields.char('Communication', size=64, required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
         'communication2': fields.char('Communication 2', size=64, help='The successor message of Communication.'),
         'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id', '=', False), ('account_id.type', '=', 'payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
-        'amount_currency': fields.float('Amount in Partner Currency', digits=(16, 2),
+        'amount_currency': fields.float('Amount', digits=(16, 2),
             required=True, help='Payment amount in the partner currency'),
         'currency': fields.many2one('res.currency','Partner Currency', required=True),
         'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),
