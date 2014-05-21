@@ -69,9 +69,9 @@ class account_invoice_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
-        'user_currency_price_total': fields.function(_compute_amounts_in_user_currency, string="Total Without Tax", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
+        'user_currency_price_total': fields.function(_compute_amounts_in_user_currency, string="Total Without Tax", type='float', digits_compute=dp.get_precision('Amount'), multi="_compute_amounts"),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
-        'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
+        'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Amount'), multi="_compute_amounts"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'type': fields.selection([
@@ -93,7 +93,7 @@ class account_invoice_report(osv.osv):
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
-        'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
+        'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Amount'), multi="_compute_amounts"),
         'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
     }
     _order = 'date desc'

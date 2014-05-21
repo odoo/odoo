@@ -435,7 +435,7 @@ class lunch_product(osv.Model):
         'name': fields.char('Product', required=True),
         'category_id': fields.many2one('lunch.product.category', 'Category', required=True),
         'description': fields.text('Description', size=256),
-        'price': fields.float('Price', digits=(16,2)), #TODO: use decimal precision of 'Account', move it from product to decimal_precision
+        'price': fields.float('Price', digits=(16,2)), #TODO: use decimal precision of 'Amount', move it from product to decimal_precision
         'supplier': fields.many2one('res.partner', 'Supplier'),
     }
 

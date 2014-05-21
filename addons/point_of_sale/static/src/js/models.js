@@ -199,7 +199,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.currency = currencies[0];
 
                     /*
-                    return (new instance.web.Model('decimal.precision')).call('get_precision',[['Account']]);
+                    return (new instance.web.Model('decimal.precision')).call('get_precision',[['Amount']]);
                 }).then(function(precision){
                     self.accounting_precision = precision;
                     console.log("PRECISION",precision);

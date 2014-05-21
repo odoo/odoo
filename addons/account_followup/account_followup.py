@@ -272,7 +272,7 @@ class res_partner(osv.osv):
 
                 total = reduce(lambda x, y: x+y['balance'], currency_dict['line'], 0.00)
 
-                total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
+                total = rml_parse.formatLang(total, dp='Amount', currency_obj=currency)
                 followup_table += '''<tr> </tr>
                                 </table>
                                 <center>''' + _("Amount due") + ''' : %s </center>''' % (total)

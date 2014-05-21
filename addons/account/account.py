@@ -76,7 +76,7 @@ class account_payment_term(osv.osv):
         amount = value
         result = []
         obj_precision = self.pool.get('decimal.precision')
-        prec = obj_precision.precision_get(cr, uid, 'Account')
+        prec = obj_precision.precision_get(cr, uid, 'Amount')
         for line in pt.line_ids:
             if line.value == 'fixed':
                 amt = round(line.value_amount, prec)
@@ -109,7 +109,7 @@ class account_payment_term_line(osv.osv):
                                    ('fixed', 'Fixed Amount')], 'Computation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
-        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
+        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Price'), help="For percent enter a ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
@@ -467,14 +467,14 @@ class account_account(osv.osv):
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, type='many2many', relation="account.account", string="Child Accounts"),
-        'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
-        'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
-        'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
-        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
+        'balance': fields.function(__compute, digits_compute=dp.get_precision('Amount'), string='Balance', multi='balance'),
+        'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Amount'), string='Credit', multi='balance'),
+        'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Amount'), string='Debit', multi='balance'),
+        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Amount'), string='Foreign Balance', multi='balance',
                                            help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
-        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Amount'), string='Adjusted Balance', multi='balance',
                                             help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
-        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Amount'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
         'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
@@ -1246,11 +1246,11 @@ class account_move(osv.osv):
             _name: (lambda self, cr,uid,ids,c: ids, ['line_id'], 10),
             'account.move.line': (_get_move_from_lines, ['partner_id'],10)
             }),
-        'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
+        'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Amount'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Internal Note'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
-        'balance': fields.float('balance', digits_compute=dp.get_precision('Account'), help="This is a field only used for internal purpose and shouldn't be displayed"),
+        'balance': fields.float('balance', digits_compute=dp.get_precision('Amount'), help="This is a field only used for internal purpose and shouldn't be displayed"),
     }
 
     _defaults = {
@@ -1741,7 +1741,7 @@ class account_tax_code(osv.osv):
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res2[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
+            res2[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Amount'))
         return res2
 
     def _sum_year(self, cr, uid, ids, name, args, context=None):
@@ -1848,7 +1848,7 @@ class account_tax_code(osv.osv):
 
 def get_precision_tax():
     def change_digit_tax(cr):
-        res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
+        res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Amount')
         return (16, res+3)
     return change_digit_tax
 
@@ -2099,15 +2099,15 @@ class account_tax(osv.osv):
         """
 
         # By default, for each tax, tax amount will first be computed
-        # and rounded at the 'Account' decimal precision for each
+        # and rounded at the 'Amount' decimal precision for each
         # PO/SO/invoice line and then these rounded amounts will be
         # summed, leading to the total amount for that tax. But, if the
         # company has tax_calculation_rounding_method = round_globally,
         # we still follow the same method, but we use a much larger
         # precision when we round the tax amount for each line (we use
-        # the 'Account' decimal precision + 5), and that way it's like
+        # the 'Amount' decimal precision + 5), and that way it's like
         # rounding after the sum of the tax amounts of each line
-        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Amount')
         tax_compute_precision = precision
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
@@ -2150,7 +2150,7 @@ class account_tax(osv.osv):
             one tax for each tax id in IDS and their children
         """
         if not precision:
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Amount')
         res = self._unit_compute(cr, uid, taxes, price_unit, product, partner, quantity)
         total = 0.0
         for r in res:
@@ -2246,7 +2246,7 @@ class account_tax(osv.osv):
             one tax for each tax id in IDS and their children
         """
         if not precision:
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Amount')
         res = self._unit_compute_inv(cr, uid, taxes, price_unit, product, partner=None)
         total = 0.0
         for r in res:
@@ -2375,9 +2375,9 @@ class account_model_line(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones."),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries."),
-        'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
-        'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Quantity'), help="The optional quantity on entries."),
+        'debit': fields.float('Debit', digits_compute=dp.get_precision('Amount')),
+        'credit': fields.float('Credit', digits_compute=dp.get_precision('Amount')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete="cascade"),
         'model_id': fields.many2one('account.model', 'Model', required=True, ondelete="cascade", select=True),

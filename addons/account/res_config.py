@@ -340,12 +340,12 @@ class account_config_settings(osv.osv_memory):
                     fiscalyear.create_period3(cr, uid, [fiscalyear_id])
 
     def get_default_dp(self, cr, uid, fields, context=None):
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_amount')
         return {'decimal_precision': dp.digits}
 
     def set_default_dp(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context)
-        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
+        dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_amount')
         dp.write({'digits': config.decimal_precision})
 
     def onchange_analytic_accounting(self, cr, uid, ids, analytic_accounting, context=None):

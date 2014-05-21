@@ -273,21 +273,21 @@ class account_invoice(osv.osv):
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
         'move_id': fields.many2one('account.move', 'Journal Entry', readonly=True, select=1, ondelete='restrict', help="Link to the automatically generated Journal Items."),
-        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Subtotal', track_visibility='always',
+        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Amount'), string='Subtotal', track_visibility='always',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
                 'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
             },
             multi='all'),
-        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Tax',
+        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Amount'), string='Tax',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
                 'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
             },
             multi='all'),
-        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Amount'), string='Total',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
@@ -298,7 +298,7 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]},
                                       domain="[('type', 'in', {'out_invoice': ['sale'], 'out_refund': ['sale_refund'], 'in_refund': ['purchase_refund'], 'in_invoice': ['purchase']}.get(type, [])), ('company_id', '=', company_id)]"),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
+        'check_total': fields.float('Verification Total', digits_compute=dp.get_precision('Amount'), readonly=True, states={'draft':[('readonly',False)]}),
         'reconciled': fields.function(_reconciled, string='Paid/Reconciled', type='boolean',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
@@ -308,7 +308,7 @@ class account_invoice(osv.osv):
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines, type='many2many', relation='account.move.line', string='Entry Lines'),
-        'residual': fields.function(_amount_residual, digits_compute=dp.get_precision('Account'), string='Balance',
+        'residual': fields.function(_amount_residual, digits_compute=dp.get_precision('Amount'), string='Balance',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line','move_id'], 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
@@ -1349,7 +1349,7 @@ class account_invoice(osv.osv):
                 total += (l.debit or 0.0) - (l.credit or 0.0)
 
         inv_id, name = self.name_get(cr, uid, [invoice.id], context=context)[0]
-        if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))) or writeoff_acc_id:
+        if (not round(total,self.pool.get('decimal.precision').precision_get(cr, uid, 'Amount'))) or writeoff_acc_id:
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             code = invoice.currency_id.symbol
@@ -1408,11 +1408,11 @@ class account_invoice_line(osv.osv):
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null', select=True),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null', select=True),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Price')),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
-            digits_compute= dp.get_precision('Account'), store=True),
-        'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
-        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount')),
+            digits_compute= dp.get_precision('Amount'), store=True),
+        'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Quantity'), required=True),
+        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Price')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
@@ -1649,14 +1649,14 @@ class account_invoice_tax(osv.osv):
         'name': fields.char('Tax Description', required=True),
         'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
-        'base': fields.float('Base', digits_compute=dp.get_precision('Account')),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
+        'base': fields.float('Base', digits_compute=dp.get_precision('Amount')),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Amount')),
         'manual': fields.boolean('Manual'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
-        'base_amount': fields.float('Base Code Amount', digits_compute=dp.get_precision('Account')),
+        'base_amount': fields.float('Base Code Amount', digits_compute=dp.get_precision('Amount')),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
-        'tax_amount': fields.float('Tax Code Amount', digits_compute=dp.get_precision('Account')),
+        'tax_amount': fields.float('Tax Code Amount', digits_compute=dp.get_precision('Amount')),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'factor_base': fields.function(_count_factor, string='Multipication factor for Base code', type='float', multi="all"),
         'factor_tax': fields.function(_count_factor, string='Multipication factor Tax code', type='float', multi="all")
