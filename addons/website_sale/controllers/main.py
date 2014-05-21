@@ -489,7 +489,6 @@ class website_sale(http.Controller):
         values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
-            render_ctx['tx_url'] = '/shop/payment/transaction/%s' % acquirer.id
             acquirer.button = payment_obj.render(
                 cr, SUPERUSER_ID, acquirer.id,
                 order.name,
@@ -503,31 +502,33 @@ class website_sale(http.Controller):
 
         return request.website.render("website_sale.payment", values)
 
-    @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='http', methods=['POST'], auth="public", website=True)
-    def payment_transaction(self, acquirer_id, **post):
-        """ Hook method that creates a payment.transaction and redirect to the
-        acquirer, using post values to re-create the post action.
-
+    @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
+    def payment_transaction(self, acquirer_id):
+        """ Json method that creates a payment.transaction, used to create a
+        transaction when the user clicks on 'pay now' button. After having
+        created the transaction, the event continues and the user is redirected
+        to the acquirer website.
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
-        :param dict post: should coutain all post data for the acquirer
         """
-        # @TDEFIXME: don't know why we received those data, but should not be send to the acquirer
-        post.pop('submit.x', None)
-        post.pop('submit.y', None)
         cr, uid, context = request.cr, request.uid, request.context
-        payment_obj = request.registry.get('payment.acquirer')
         transaction_obj = request.registry.get('payment.transaction')
         order = request.website.sale_get_order(context=context)
 
         if not order or not order.order_line or acquirer_id is None:
-            return request.redirect("/shop/checkout")
+            return False
 
         assert order.partner_id.id != request.website.partner_id.id
 
         # find an already existing transaction
         tx = request.website.sale_get_transaction()
-        if not tx:
+        if tx:
+            if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
+                tx.write({
+                    'acquirer_id': acquirer_id,
+                })
+            tx_id = tx.id
+        else:
             tx_id = transaction_obj.create(cr, SUPERUSER_ID, {
                 'acquirer_id': acquirer_id,
                 'type': 'form',
@@ -539,14 +540,8 @@ class website_sale(http.Controller):
                 'sale_order_id': order.id,
             }, context=context)
             request.session['sale_transaction_id'] = tx_id
-        elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-            tx.write({
-                'acquirer_id': acquirer_id,
-            })
 
-        acquirer_form_post_url = payment_obj.get_form_action_url(cr, uid, acquirer_id, context=context)
-        acquirer_total_url = '%s?%s' % (acquirer_form_post_url, werkzeug.url_encode(post))
-        return request.redirect(acquirer_total_url)
+        return tx_id
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True, multilang=True)
     def payment_get_status(self, sale_order_id, **post):
