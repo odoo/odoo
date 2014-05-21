@@ -44,6 +44,8 @@ TYPE2REFUND = {
     'in_refund': 'in_invoice',          # Supplier Refund
 }
 
+MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
+
 
 class account_invoice(Model):
     _name = "account.invoice"
@@ -1049,7 +1051,7 @@ class account_invoice(Model):
         for line in lines:
             values = {}
             for name, field in line._fields.iteritems():
-                if name in openerp.osv.orm.MAGIC_COLUMNS:
+                if name in MAGIC_COLUMNS:
                     continue
                 elif field.type == 'many2one':
                     values[name] = line[name].id
