@@ -228,7 +228,7 @@ class project(osv.osv):
             'view_mode': 'kanban,form',
             'view_type': 'form',
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'active_test': False}" % (self._name, res_id)
         }
 
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
