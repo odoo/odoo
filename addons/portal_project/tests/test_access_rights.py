@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from openerp.addons.project.tests.test_project_base import TestProjectBase
+from openerp.addons.project.tests.common import TestProject
 from openerp.exceptions import AccessError
 from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 
-class TestPortalProjectBase(TestProjectBase):
+class TestPortalProjectBase(TestProject):
 
     def setUp(self):
         super(TestPortalProjectBase, self).setUp()
