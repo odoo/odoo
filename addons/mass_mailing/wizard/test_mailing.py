@@ -30,11 +30,15 @@ class TestMassMailing(osv.TransientModel):
                     'reply_to': mailing.reply_to,
                     'email_to': test_mail,
                     'subject': mailing.name,
-                    'body_html': mailing.body_html,
-                    'auto_delete': True,
-                    'mailing_id': wizard.mass_mailing_id.id,
+                    'body_html': '',
+                    'notification': True,
+                    'mailing_id': mailing.id,
                 }
-                mail_ids.append(Mail.create(cr, uid, mail_values, context=context))
+                mail_mail_obj = Mail.browse(cr, uid, Mail.create(cr, uid, mail_values, context=context), context=context)
+                unsubscribe_url = Mail._get_unsubscribe_url(cr, uid, mail_mail_obj, test_mail, context=context)
+                body = tools.append_content_to_html(mailing.body_html, unsubscribe_url, plaintext=False, container_tag='p')
+                Mail.write(cr, uid, mail_mail_obj.id, {'body_html': mailing.body_html}, context=context)
+                mail_ids.append(mail_mail_obj.id)
             Mail.send(cr, uid, mail_ids, context=context)
             self.pool['mail.mass_mailing'].write(cr, uid, [mailing.id], {'state': 'test'}, context=context)
         return True
