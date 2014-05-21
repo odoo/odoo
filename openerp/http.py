@@ -207,7 +207,7 @@ class WebRequest(object):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
-        raise 
+        self._failed = exception # prevent tx commit
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -374,8 +374,8 @@ class JsonRequest(WebRequest):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
+        super(JsonRequest, self)._handle_exception(exception)
         _logger.exception("Exception during JSON request handling.")
-        self._failed = exception # prevent tx commit            
         error = {
                 'code': 200,
                 'message': "OpenERP Server Error",

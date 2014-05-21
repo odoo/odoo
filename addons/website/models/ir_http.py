@@ -99,6 +99,7 @@ class ir_http(orm.AbstractModel):
             werkzeug.exceptions.abort(werkzeug.utils.redirect(url))
 
     def _handle_exception(self, exception=None, code=500):
+        res = super(ir_http, self)._handle_exception(exception)
         if isinstance(exception, werkzeug.exceptions.HTTPException) and hasattr(exception, 'response') and exception.response:
             return exception.response
         if getattr(request, 'website_enabled', False) and request.website:
@@ -136,7 +137,7 @@ class ir_http(orm.AbstractModel):
                 html = request.website._render('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
-        return super(ir_http, self)._handle_exception(exception)
+        return res
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False):
