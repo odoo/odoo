@@ -62,22 +62,33 @@ class account_analytic_invoice_line(osv.osv):
         context = context or {}
         uom_obj = self.pool.get('product.uom')
         company_id = company_id or False
-        context.update({'company_id': company_id, 'force_company': company_id, 'pricelist_id': pricelist_id})
+        local_context = dict(context, company_id=company_id, force_company=company_id, pricelist=pricelist_id)
 
         if not product:
             return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
         if partner_id:
-            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
             if part.lang:
-                context.update({'lang': part.lang})
+                local_context.update({'lang': part.lang})
 
         result = {}
-        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price_unit or res.list_price or 0.0})
+        res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
+        if price_unit is not False:
+            price = price_unit
+        elif pricelist_id:
+            price = res.price
+        else:
+            price = res.list_price
+        if not name:
+            name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
+            if res.description_sale:
+                result['name'] += '\n'+res.description_sale
+
+        result.update({'name': name or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
 
         res_final = {'value':result}
         if result['uom_id'] != res.uom_id.id:
-            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=context)
+            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=local_context)
             new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
             res_final['value']['price_unit'] = new_price
         return res_final
@@ -645,12 +656,10 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
-    def _prepare_invoice(self, cr, uid, contract, context=None):
+    def _prepare_invoice_data(self, cr, uid, contract, context=None):
         context = context or {}
 
-        inv_obj = self.pool.get('account.invoice')
         journal_obj = self.pool.get('account.journal')
-        fpos_obj = self.pool.get('account.fiscal.position')
 
         if not contract.partner_id:
             raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
@@ -671,33 +680,36 @@ class account_analytic_account(osv.osv):
         elif contract.company_id:
             currency_id = contract.company_id.currency_id.id
 
-        inv_data = {
-           'reference': contract.code or False,
+        invoice = {
            'account_id': contract.partner_id.property_account_receivable.id,
            'type': 'out_invoice',
            'partner_id': contract.partner_id.id,
            'currency_id': currency_id,
            'journal_id': len(journal_ids) and journal_ids[0] or False,
            'date_invoice': contract.recurring_next_date,
-           'origin': contract.name,
+           'origin': contract.code,
            'fiscal_position': fpos and fpos.id,
            'payment_term': partner_payment_term,
            'company_id': contract.company_id.id or False,
         }
-        invoice_id = inv_obj.create(cr, uid, inv_data, context=context)
+        return invoice
 
+    def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
+        fpos_obj = self.pool.get('account.fiscal.position')
+        fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
+        invoice_lines = []
         for line in contract.recurring_invoice_line_ids:
 
             res = line.product_id
             account_id = res.property_account_income.id
             if not account_id:
                 account_id = res.categ_id.property_account_income_categ.id
-            account_id = fpos_obj.map_account(cr, uid, fpos, account_id)
+            account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
 
             taxes = res.taxes_id or False
-            tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+            tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
 
-            invoice_line_vals = {
+            invoice_lines.append((0, 0, {
                 'name': line.name,
                 'account_id': account_id,
                 'account_analytic_id': contract.id,
@@ -705,13 +717,14 @@ class account_analytic_account(osv.osv):
                 'quantity': line.quantity,
                 'uos_id': line.uom_id.id or False,
                 'product_id': line.product_id.id or False,
-                'invoice_id' : invoice_id,
                 'invoice_line_tax_id': [(6, 0, tax_id)],
-            }
-            self.pool.get('account.invoice.line').create(cr, uid, invoice_line_vals, context=context)
+            }))
+        return invoice_lines
 
-        inv_obj.button_compute(cr, uid, [invoice_id], context=context)
-        return invoice_id
+    def _prepare_invoice(self, cr, uid, contract, context=None):
+        invoice = self._prepare_invoice_data(cr, uid, contract, context=context)
+        invoice['invoice_line'] = self._prepare_invoice_lines(cr, uid, contract, invoice['fiscal_position'], context=context)
+        return invoice
 
     def recurring_create_invoice(self, cr, uid, ids, context=None):
         return self._recurring_create_invoice(cr, uid, ids, context=context)
@@ -721,6 +734,7 @@ class account_analytic_account(osv.osv):
 
     def _recurring_create_invoice(self, cr, uid, ids, automatic=False, context=None):
         context = context or {}
+        invoice_ids = []
         current_date =  time.strftime('%Y-%m-%d')
         if ids:
             contract_ids = ids
@@ -728,8 +742,8 @@ class account_analytic_account(osv.osv):
             contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
         for contract in self.browse(cr, uid, contract_ids, context=context):
             try:
-                invoice_id = self._prepare_invoice(cr, uid, contract, context=context)
-
+                invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
+                invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
                 next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
                 interval = contract.recurring_interval
                 if contract.recurring_rule_type == 'daily':
@@ -747,7 +761,7 @@ class account_analytic_account(osv.osv):
                     _logger.error(traceback.format_exc())
                 else:
                     raise
-        return True
+        return invoice_ids
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
