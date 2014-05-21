@@ -119,11 +119,10 @@ class mail_notification(osv.Model):
         # add user signature
         user = self.pool.get("res.users").browse(cr, SUPERUSER_ID, [user_id], context=context)[0]
         if user.signature:
-            signature = plaintext2html(user.signature)
+            signature = user.signature
         else:
             signature = "--<br />%s" % user.name
-        footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
-
+        footer = tools.append_content_to_html(footer, signature, plaintext=False)
         # add company signature
         if user.company_id.website:
             website_url = ('http://%s' % user.company_id.website) if not user.company_id.website.lower().startswith(('http:', 'https:')) \
