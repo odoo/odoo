@@ -114,6 +114,19 @@ class mail_message(osv.Model):
             res[notif.message_id.id] = True
         return res
 
+    def _search_application(self, cr, uid, obj, name, args, context=None):
+        if not args:
+            return []
+        res = []
+        application_ids = []
+        model_pool = self.pool.get('ir.model')
+        for field,operator,value in args:
+            if field == 'model_id':
+                model = model_pool.browse(cr, uid, value, context=context).model
+                application_ids = self.search(cr, uid, [('model', '=', model)])
+            res.append(('id', 'in', application_ids))
+        return res
+
     def _search_starred(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
@@ -145,6 +158,8 @@ class mail_message(osv.Model):
             ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
         'model': fields.char('Related Document Model', size=128, select=1),
+        'model_id': fields.function(lambda *x : {}, type='many2one', relation='ir.model',
+                    fnct_search=_search_application, string='Application'),
         'res_id': fields.integer('Related Document ID', select=1),
         'record_name': fields.char('Message Record Name', help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
