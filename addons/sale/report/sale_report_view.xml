@@ -21,8 +21,8 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <field name="date_confirm"/>
-                <filter icon="terp-document-new" name="Quotations" domain="[('state','=','draft')]"/>
-                <filter icon="terp-check" name="Sales" string="Sales" domain="[('state','not in',('draft','done','cancel'))]"/>
+                <filter icon="terp-document-new" name="Quotations" domain="[('state','in',('draft','sent'))]"/>
+                <filter icon="terp-check" name="Sales" string="Sales" domain="[('state','not in',('draft','sent','cancel'))]"/>
                 <separator/>
                 <filter icon="terp-personal" string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                 <field name="partner_id"/>
@@ -34,6 +34,7 @@
                 </group>
                 <group expand="1" string="Group By...">
                     <filter string="Salesperson" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                     <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
                     <filter string="Reference Unit of Measure" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
