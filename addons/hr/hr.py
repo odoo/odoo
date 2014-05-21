@@ -290,9 +290,11 @@ class hr_employee(osv.osv):
             context = {}
         if context.get("mail_broadcast"):
             context['mail_create_nolog'] = True
-
+        if data.get('user_id', False) == 1 and data['name'] == 'Administrator':
+            user_name = self.pool.get('res.users').browse(cr, uid, [data['user_id']], context=context)[0].name
+            if data['name'] != user_name:
+                data['name'] = user_name
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
-
         if context.get("mail_broadcast"):
             self._broadcast_welcome(cr, uid, employee_id, context=context)
         return employee_id
@@ -448,5 +450,15 @@ class res_users(osv.osv):
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
     }
 
-
+    def write(self, cr, uid, ids, vals, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        employee_obj = self.pool.get('hr.employee')
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('name') and ids[0] == 1:
+            # Check first employee (Administrator) having Related user set with admin user.
+            employee = employee_obj.browse(cr, uid, [1], context)[0]
+            if employee.user_id.id == ids[0]:
+                employee_obj.write(cr, uid, [employee.user_id.id], {'name': vals['name']}, context=context)
+        return result
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
