@@ -88,11 +88,16 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 line_id = sales_order_line_obj.invoice_line_create(cr, uid, [line.id])
                 for lid in line_id:
                     invoices[line.order_id].append(lid)
+        if not invoices:
+            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n' 
+            '1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+        new_invoice_ids = []
         for order, il in invoices.items():
-            res = make_invoice(order, il)
+            new_invoice_id = make_invoice(order, il)
             cr.execute('INSERT INTO sale_order_invoice_rel \
-                    (order_id,invoice_id) values (%s,%s)', (order.id, res))
+                    (order_id,invoice_id) values (%s,%s)', (order.id, new_invoice_id))
             sales_order_obj.invalidate_cache(cr, uid, ['invoice_ids'], [order.id], context=context)
+            new_invoice_ids.append(new_invoice_id)
             flag = True
             sales_order_obj.message_post(cr, uid, [order.id], body=_("Invoice created"), context=context)
             data_sale = sales_order_obj.browse(cr, uid, order.id, context=context)
@@ -103,31 +108,21 @@ class sale_order_line_make_invoice(osv.osv_memory):
             if flag:
                 workflow.trg_validate(uid, 'sale.order', order.id, 'manual_invoice', cr)
 
-        if not invoices:
-            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+        res = {'type': 'ir.actions.act_window_close'}
         if context.get('open_invoices', False):
-            return self.open_invoices(cr, uid, ids, res, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+            res = self.open_invoices( cr, uid, ids, new_invoice_ids, context=context)
+        return res
 
     def open_invoices(self, cr, uid, ids, invoice_ids, context=None):
         """ open a view on one of the given invoice_ids """
         ir_model_data = self.pool.get('ir.model.data')
-        form_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_form')
-        form_id = form_res and form_res[1] or False
-        tree_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_tree')
-        tree_id = tree_res and tree_res[1] or False
-
-        return {
-            'name': _('Invoice'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'account.invoice',
-            'res_id': invoice_ids,
-            'view_id': False,
-            'views': [(form_id, 'form'), (tree_id, 'tree')],
-            'context': {'type': 'out_invoice'},
-            'type': 'ir.actions.act_window',
-        }
-
+        act_obj = self.pool.get('ir.actions.act_window')
+        action_res = ir_model_data.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
+        action_id = action_res and action_res[1] or False
+        res = act_obj.read(cr, uid, [action_id], context=context)[0]
+        domain = eval(res['domain'])
+        domain.append(('id', 'in', invoice_ids))
+        res['domain'] = str(domain)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
