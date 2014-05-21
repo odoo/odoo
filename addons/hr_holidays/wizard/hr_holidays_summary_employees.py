@@ -37,7 +37,7 @@ class hr_holidays_summary_employee(osv.osv_memory):
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         data['emp'] = context['active_ids']
         datas = {
              'ids': [],
@@ -50,6 +50,5 @@ class hr_holidays_summary_employee(osv.osv_memory):
             'datas': datas,
             }
 
-hr_holidays_summary_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

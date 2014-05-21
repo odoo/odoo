@@ -7,6 +7,7 @@
             id="menu_hr_root"
             groups="base.group_hr_manager,base.group_hr_user,base.group_user"
             sequence="90"/>
+        <menuitem id="menu_hr_reporting" parent="base.menu_reporting" name="Human Resources" sequence="40" />
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_reporting_timesheet" name="Reports"
@@ -27,6 +28,10 @@
                             </h1>
                             <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
                             <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="work_email" class="oe_edit_only"/>
+                            <field name="work_email" widget="email"/>
+                            <label for="work_phone" class="oe_edit_only"/>
+                            <field name="work_phone"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
@@ -36,20 +41,19 @@
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="work_email" widget="email"/>
-                                        <field name="work_phone"/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                                        <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                        <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"
+                                            context="{'default_groups_ref': ['base.group_user']}"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -84,6 +88,10 @@
                             </page>
                         </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -110,7 +118,7 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name" string="Employees"/>
+                    <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
                     <field name="department_id" />
                     <field name="category_ids" groups="base.group_hr_user"/>
                     <group expand="0" string="Group By...">
@@ -128,9 +136,13 @@
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
+                <field name="message_is_follower"/>
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -149,10 +161,19 @@
                                     </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                                    <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
-                                    <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
                                     <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
                                 </ul>
+                                <div class="oe_kanban_footer_left">
+                                    <span title='Messages'><span class='oe_e'>9</span><t t-esc="record.message_ids.raw_value.length"/></span>
+                                    <span title='Followers'><span class='oe_e'>+</span><t t-esc="record.message_follower_ids.raw_value.length"/></span>
+                                </div>
+                                <div class="oe_followers" groups="base.group_user">
+                                    <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_follower oe_following">
+                                        <span class="oe_unfollow">Unfollow</span>
+                                        <span class="oe_following">Following</span>
+                                    </button>
+                                    <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object" class="oe_follower oe_notfollow">Follow</button>
+                                </div>
                             </div>
                         </div>
                         <script>
@@ -204,13 +225,6 @@
         </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
-
-        <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
-            <field name="name">Employees</field>
-            <field name="resource">ir.ui.menu</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
-        </record>
 
         <!-- Employee architecture -->
         <record id="view_partner_tree2" model="ir.ui.view">
@@ -313,14 +327,15 @@
             <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
         </record>
 
+        <!-- hr.job -->
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <button name="job_recruitement" string="Launch Recruitement" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="job_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
@@ -328,21 +343,20 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" class="oe_inline"/></h1>
                         </div>
-                        <group>
-                            <group>
-                                <field name="no_of_employee" groups="base.group_user"/>
-                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                                <field name="expected_employees" groups="base.group_user"/>
-                            </group>
-                            <group>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="department_id"/>                            </group>
+                        <div class="oe_right" name="buttons"/>
+                        <group name="employee_data">
+                            <field name="department_id" class="oe_inline"/>
+                            <label for="no_of_employee"/>no_of_recruitment
+                            <div>
+                                <field name="no_of_employee" class="oe_inline"/>
+                                <p><field name="no_of_recruitment" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> new employee(s) expected</p>
+                            </div>
                         </group>
-                        <div>
+                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="description"/>
                             <field name="description"/>
                         </div>
-                        <div>
+                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="requirements"/>
                             <field name="requirements"/>
                         </div>
@@ -362,10 +376,10 @@
                 <tree string="Job">
                     <field name="name"/>
                     <field name="department_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="expected_employees"/>
                     <field name="no_of_employee"/>
                     <field name="no_of_recruitment"/>
+                    <field name="expected_employees"/>
+                    <field name="no_of_hired_employee"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -377,31 +391,15 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','open')]" string="In Position" help="In Position"/>
-                    <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment" help="In Recruitment"/>
+                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
-            </field>
-        </record>
-
-        <record id="view_hr_job_employee_form" model="ir.ui.view">
-            <field name="name">hr.job.employee.form</field>
-            <field name="model">hr.job</field>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <form string="Job" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="department_id"/>
-                    </group>
-                    <label for="description"/>
-                    <field name="description"/>
-                </form>
             </field>
         </record>
 
@@ -429,7 +427,62 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="hr.menu_hr_configuration" id="menu_hr_job" action="action_hr_job" sequence="6"/>
+
+        <!-- hr.department -->
+        <record id="view_department_form" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <form string="department" version="7.0">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="manager_id"/>
+                            <field name="parent_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_department_tree" model="ir.ui.view">
+            <field name="name">hr.department.tree</field>
+            <field name="model">hr.department</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="complete_name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="manager_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_department_filter" model="ir.ui.view">
+            <field name="name">Departments</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <search string="Departments">
+                    <field name="name" string="Department"/>
+                    <field name="manager_id" />
+                </search>
+             </field>
+        </record>
+        <record id="open_module_tree_department" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a department.
+              </p><p>
+                OpenERP's department structure is used to manage all documents
+                related to employees by departments: expenses, timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
+        </record>
+       <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_configuration" sequence="5"/>
 
     </data>
 </openerp>

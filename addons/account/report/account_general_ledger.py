@@ -23,13 +23,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
+
 
 class general_ledger(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.general.ledger'
@@ -304,7 +306,11 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             return self._translate('Journal & Partner')
         return self._translate('Date')
 
-report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/account_general_ledger.rml', parser=general_ledger, header='internal')
-report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/account_general_ledger_landscape.rml', parser=general_ledger, header='internal landscape')
+
+class report_generalledger(osv.AbstractModel):
+    _name = 'report.account.report_generalledger'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_generalledger'
+    _wrapped_report_class = general_ledger
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

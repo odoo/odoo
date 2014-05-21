@@ -54,7 +54,7 @@ _ref_vat = {
     'gr': 'GR12345670',
     'hu': 'HU12345676',
     'hr': 'HR01234567896', # Croatia, contributed by Milan Tribuson 
-    'ie': 'IE1234567T',
+    'ie': 'IE1234567FA',
     'it': 'IT12345670017',
     'lt': 'LT123456715',
     'lu': 'LU12345613',
@@ -83,6 +83,8 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        if not ustr(country_code).encode('utf-8').isalpha():
+            return False
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or \
                         getattr(vatnumber, check_func_name, None)
@@ -124,6 +126,7 @@ class res_partner(osv.osv):
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not check_func(cr, uid, vat_country, vat_number, context=context):
+                _logger.info(_("Importing VAT Number [%s] is not valid !" % vat_number))
                 return False
         return True
 
@@ -133,6 +136,9 @@ class res_partner(osv.osv):
     _columns = {
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     }
+
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_subjected']
 
     def _construct_constraint_msg(self, cr, uid, ids, context=None):
         def default_vat_check(cn, vn):
@@ -144,7 +150,9 @@ class res_partner(osv.osv):
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         if default_vat_check(vat_country, vat_number):
             vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
-        return '\n' + _('This VAT number does not seem to be valid.\nNote: the expected format is %s') % vat_no
+        #Retrieve the current partner for wich the VAT is not valid
+        error_partner = self.browse(cr, uid, ids, context=context)
+        return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (error_partner[0].vat, error_partner[0].name, vat_no)
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 
@@ -185,6 +193,34 @@ class res_partner(osv.osv):
             return check == int(num[8])
         return False
 
+    def _ie_check_char(self, vat):
+        vat = vat.zfill(8)
+        extra = 0
+        if vat[7] not in ' W':
+            if vat[7].isalpha():
+                extra = 9 * (ord(vat[7]) - 64)
+            else:
+                # invalid
+                return -1
+        checksum = extra + sum((8-i) * int(x) for i, x in enumerate(vat[:7]))
+        return 'WABCDEFGHIJKLMNOPQRSTUV'[checksum % 23]
+
+    def check_vat_ie(self, vat):
+        """ Temporary Ireland VAT validation to support the new format
+        introduced in January 2013 in Ireland, until upstream is fixed.
+        TODO: remove when fixed upstream"""
+        if len(vat) not in (8, 9) or not vat[2:7].isdigit():
+            return False
+        if len(vat) == 8:
+            # Normalize pre-2013 numbers: final space or 'W' not significant
+            vat += ' '
+        if vat[:7].isdigit():
+            return vat[7] == self._ie_check_char(vat[:7] + vat[8])
+        elif vat[1] in (string.ascii_uppercase + '+*'):
+            # Deprecated format
+            # See http://www.revenue.ie/en/online/third-party-reporting/reporting-payment-details/faqs.html#section3
+            return vat[7] == self._ie_check_char(vat[2:7] + vat[0] + vat[8])
+        return False
 
     # Mexican VAT verification, contributed by <moylop260@hotmail.com>
     # and Panos Christeas <p_christ@hol.gr>
@@ -243,6 +279,5 @@ class res_partner(osv.osv):
             return False
         return check == int(vat[8])
 
-res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

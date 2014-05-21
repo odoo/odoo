@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-19 06:55+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2014-03-06 02:20+0000\n"
+"Last-Translator: Baich-info <baich.info@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:37+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2014-04-22 06:47+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -25,19 +25,19 @@ msgstr "系统支付"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr "在一个科目上只能设置一个应税设定"
+msgstr "在一个科目上只能设置一个替换规则。"
 
 #. module: account
 #: help:account.tax.code,sequence:0
 msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
-msgstr "确定以下报表的显示顺序：”会计-报表-通用报表-税务-税务报表“"
+msgstr "确定以下报告的显示顺序：”会计-报告-通用报告-税务-税务报告“"
 
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "凭证核销"
+msgstr "账簿分录对账"
 
 #. module: account
 #: view:account.account:0
@@ -57,28 +57,28 @@ msgid "Residual"
 msgstr "余额"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:368
+#: code:addons/account/account_bank_statement.py:369
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr "凭证\"%s\"无效"
+msgstr "项目\"%s\"无效"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "应收账款账龄"
+msgstr "今日到期的应收账款"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr "从发票或付款单导入"
+msgstr "从发票或支付款导入"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1061
-#: code:addons/account/account_move_line.py:1144
-#: code:addons/account/account_move_line.py:1211
+#: code:addons/account/account_move_line.py:1058
+#: code:addons/account/account_move_line.py:1143
+#: code:addons/account/account_move_line.py:1210
 #, python-format
 msgid "Bad Account!"
-msgstr "坏账"
+msgstr "坏的科目"
 
 #. module: account
 #: view:account.move:0
@@ -93,7 +93,7 @@ msgid ""
 "You cannot create recursive account templates."
 msgstr ""
 "错误！\n"
-"您不能创建重复的帐户模板。"
+"您不能创建递归的帐户模板。"
 
 #. module: account
 #. openerp-web
@@ -104,7 +104,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:30
 #, python-format
 msgid "Reconcile"
-msgstr "核销"
+msgstr "对账"
 
 #. module: account
 #: field:account.bank.statement,name:0
@@ -116,29 +116,28 @@ msgstr "核销"
 #: xsl:account.transfer:0
 #: field:cash.box.in,ref:0
 msgid "Reference"
-msgstr "关联"
+msgstr "关联单号"
 
 #. module: account
 #: help:account.payment.term,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr "如果设置为false，该付款条款将会被隐藏。"
+msgstr "如果active字段设置为false，该付款条款将会被隐藏。"
 
 #. module: account
 #: code:addons/account/account.py:641
 #: code:addons/account/account.py:686
 #: code:addons/account/account.py:781
-#: code:addons/account/account.py:1049
-#: code:addons/account/account_invoice.py:792
-#: code:addons/account/account_invoice.py:795
-#: code:addons/account/account_invoice.py:798
-#: code:addons/account/account_invoice.py:1509
+#: code:addons/account/account.py:1058
+#: code:addons/account/account_invoice.py:820
+#: code:addons/account/account_invoice.py:823
+#: code:addons/account/account_invoice.py:826
+#: code:addons/account/account_invoice.py:1545
 #: code:addons/account/account_move_line.py:98
-#: code:addons/account/account_move_line.py:774
-#: code:addons/account/account_move_line.py:783
-#: code:addons/account/account_move_line.py:827
-#: code:addons/account/account_move_line.py:867
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
+#: code:addons/account/account_move_line.py:864
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #: code:addons/account/wizard/account_invoice_state.py:44
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -150,10 +149,10 @@ msgid "Warning!"
 msgstr "警告！"
 
 #. module: account
-#: code:addons/account/account.py:3149
+#: code:addons/account/account.py:3197
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr "其它凭证簿"
+msgstr "其它账簿"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -196,7 +195,7 @@ msgstr "过去15天开的发票"
 #. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
-msgstr "字段标签"
+msgstr "栏标签"
 
 #. module: account
 #: help:account.config.settings,code_digits:0
@@ -228,22 +227,22 @@ msgstr "税模板"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "选择凭证行核销"
+msgstr "选择凭证行对账"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "核销的第一个输入是会计分录"
+msgstr "对账的第一个输入是会计分录"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr "比利时报表"
+msgstr "比利时报告"
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "已验证"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
@@ -256,12 +255,12 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
-msgstr "科目类别用于生成合乎各国财税规范的报表，设置财年结帐的规则以及生成未登帐凭证"
+msgstr "科目类别用于生成合乎各国财税规范的报告，设置财年结帐的规则以及生成未登帐凭证"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr "下一个信用证编码"
+msgstr "下一个信用证号码"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -323,7 +322,7 @@ msgstr "安装本地化财务系统以尽可能的适应本国的财务要求"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "科目反核销"
+msgstr "科目反对账"
 
 #. module: account
 #: field:account.config.settings,module_account_budget:0
@@ -349,10 +348,10 @@ msgid "Allow multi currencies"
 msgstr "允许多种货币"
 
 #. module: account
-#: code:addons/account/account_invoice.py:73
+#: code:addons/account/account_invoice.py:77
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr "你必须定义一个类型为 '%s'的成本凭证簿！"
+msgstr "你必须定义一个类型为 '%s'的成本账簿！"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -361,13 +360,13 @@ msgstr "你必须定义一个类型为 '%s'的成本凭证簿！"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "June"
-msgstr "6"
+msgstr "6月"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr "你必须选择要核销的账簿 。"
+msgstr "你必须选择要对账的账簿 。"
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
@@ -402,12 +401,12 @@ msgstr "建立日期"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr "采购红字发票"
+msgstr "采购退款"
 
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr "开启/结束状态"
+msgstr "开启/结束情况"
 
 #. module: account
 #: help:account.journal,currency:0
@@ -438,19 +437,19 @@ msgstr ""
 "此处可以管理属于公司或者个人的资产.\n"
 "                跟踪资产折旧的发生，创建折旧明细账户。.\n"
 "                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n"
-"                但不能处理账记(账簿明细, 会计报表, ...)"
+"                但不能处理账记(分录明细, 科目表, ...)"
 
 #. module: account
 #: help:account.bank.statement.line,name:0
 msgid "Originator to Beneficiary Information"
-msgstr ""
+msgstr "发起人到受益人的信息"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:8
 #, python-format
 msgid "Period :"
-msgstr "时间："
+msgstr "期间："
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -458,12 +457,12 @@ msgstr "时间："
 #: field:account.tax.template,chart_template_id:0
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
-msgstr "科目一览表模板"
+msgstr "科目模板一览表"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "修改：创建退款，核销并创建一个新的发票草稿"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -477,6 +476,9 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"如果选择“每行取整”：对于每个税种，首先计算和取整每一（PO/SO/invoice）行的税额，之后将这些已被取整的税额叠加作为该税种的总额。\r\n"
+"如果选择“全局取整”：对于每个税种，先计算其每一（PO/SO/invoice）行，而后先计算该税种的总和，最后再对总和取整作为该税种的总额。\r\n"
+"如果你的销售额含税，你应该选择“每行取整” 因为你需要使你的“含税行”的金额总和等于总的税额。"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -491,7 +493,7 @@ msgstr "备选币种所示金额"
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr "有效的硬币"
+msgstr "可用的硬币"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -529,7 +531,7 @@ msgstr "允许比较"
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
-msgstr "账簿"
+msgstr "凭证簿"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
@@ -549,7 +551,7 @@ msgstr "显示发票的时候给出明细编号。"
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "这账簿上的科目"
+msgstr "使用在凭证簿里的科目"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -582,7 +584,7 @@ msgstr "Li."
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "没核销的交易"
+msgstr "没对账的交易"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -595,30 +597,30 @@ msgstr "对方"
 #: field:account.fiscal.position,tax_ids:0
 #: field:account.fiscal.position.template,tax_ids:0
 msgid "Tax Mapping"
-msgstr "税一览表"
+msgstr "税映射"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
 msgid "Close a Fiscal Year"
-msgstr "关闭一个会计年度"
+msgstr "关闭一个财政年度"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "The accountant confirms the statement."
-msgstr "财务人员确认的报表"
+msgstr "会计确认报告"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing to reconcile"
-msgstr "没有什么被核销"
+msgstr "没有什么被对账"
 
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr "日记帐分录小数精度"
+msgstr "凭证簿分录小数精度"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -635,7 +637,7 @@ msgstr "序号"
 #: field:account.financial.report,account_report_id:0
 #: selection:account.financial.report,type:0
 msgid "Report Value"
-msgstr "报表数值"
+msgstr "报告数值"
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:39
@@ -654,7 +656,7 @@ msgstr "税一览表"
 #. module: account
 #: report:account.central.journal:0
 msgid "Centralized Journal"
-msgstr "汇总账簿"
+msgstr "汇总凭证簿"
 
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
@@ -674,7 +676,7 @@ msgid "Profit Account"
 msgstr "利润科目"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1157
+#: code:addons/account/account_move_line.py:1156
 #, python-format
 msgid "No period found or more than one period found for the given date."
 msgstr "根据输入的凭证日期没有找到期间或找到了多个期间"
@@ -682,16 +684,16 @@ msgstr "根据输入的凭证日期没有找到期间或找到了多个期间"
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr "销售报表的科目类型"
+msgstr "销售报告的科目类型"
 
 #. module: account
-#: code:addons/account/account.py:3153
+#: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
 msgstr "SAJ"
 
 #. module: account
-#: code:addons/account/account.py:1551
+#: code:addons/account/account.py:1591
 #, python-format
 msgid "Cannot create move with currency different from .."
 msgstr "不能不同币种的凭证"
@@ -714,7 +716,7 @@ msgstr "关闭会计期间"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr "业务伙伴普通报表"
+msgstr "业务伙伴普通报告"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -724,13 +726,13 @@ msgstr "会计期间的启用分录"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "账簿的会计期间"
+msgstr "凭证簿的会计期间"
 
 #. module: account
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr "在每个会计期间，你不可以创建1个以上的总分类凭证"
+msgstr "在每个会计期间，你不可以创建1个以上的总凭证簿"
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -746,7 +748,9 @@ msgstr "设置辅助核算项，用于退款时发票上默认税科目。如果
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:297
+#: code:addons/account/report/account_partner_ledger.py:272
 #, python-format
 msgid "Receivable Accounts"
 msgstr "应收款科目"
@@ -759,19 +763,19 @@ msgstr "配置你公司银行账户"
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Create Refund"
-msgstr ""
+msgstr "创建退款"
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr "凭证日期不在所选期间内！可以修改凭证日期或在凭证簿上去掉这个检查项。"
+msgstr "凭证簿分录日期不在所选期间内！可以修改账簿分录日期或在账簿上去掉这个检查项。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
 msgid "General Ledger Report"
-msgstr "总账报表"
+msgstr "总账报告"
 
 #. module: account
 #: view:account.invoice:0
@@ -784,10 +788,10 @@ msgid "Are you sure you want to create entries?"
 msgstr "你确定创建分录?"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1329
+#: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
-msgstr ""
+msgstr "发票已经支付：%s%s ，总额： %s%s (剩余：%s%s )。"
 
 #. module: account
 #: view:account.invoice:0
@@ -800,7 +804,7 @@ msgstr "打印发票"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
-msgstr "不能 %s 已经核销的发票, 发票必须被首先反核销.。只能退还这张发票。"
+msgstr "不能 %s 已经核销的发票, 发票必须被首先反核销。只能退还这张发票。"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -833,9 +837,10 @@ msgstr "退款方式"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr "财务报表"
+msgstr "财务报告"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.analytic.journal:0
 #: field:account.analytic.journal,type:0
 #: field:account.bank.statement.line,type:0
@@ -852,12 +857,14 @@ msgid "Type"
 msgstr "类型"
 
 #. module: account
-#: code:addons/account/account_invoice.py:798
+#: code:addons/account/account_invoice.py:826
 #, python-format
 msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
-msgstr "没有选择税!"
+msgstr ""
+"税额计算有问题!\n"
+"请点击\"更新税\"按钮."
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -875,22 +882,22 @@ msgid "Supplier Invoices And Refunds"
 msgstr "供应商发票和退款"
 
 #. module: account
-#: code:addons/account/account_move_line.py:854
+#: code:addons/account/account_move_line.py:851
 #, python-format
 msgid "Entry is already reconciled."
-msgstr "分录已经核销。"
+msgstr "分录已经对账。"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
-msgstr "反核销"
+msgstr "反对账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "辅助核算账簿"
+msgstr "辅助核算凭证簿"
 
 #. module: account
 #: view:account.invoice:0
@@ -905,7 +912,7 @@ msgstr "以邮件发送"
 msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
-msgstr "如果币种跟公司本位币不同，带币种打印报表。"
+msgstr "如果币种跟公司本位币不同，带币种打印报告。"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -946,18 +953,18 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    账簿明细未找到.\n"
+"                    凭证簿明细未找到.\n"
 "                </p>\n"
 "            "
 
 #. module: account
-#: code:addons/account/account.py:1637
+#: code:addons/account/account.py:1677
 #, python-format
 msgid ""
 "You cannot unreconcile journal items if they has been generated by the       "
 "                                                  opening/closing fiscal "
 "year process."
-msgstr ""
+msgstr "你将不能对由“开启/关闭”会计年度进程所生成的账目记录进行调整。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -995,12 +1002,12 @@ msgstr "到期"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr "采购分类账"
+msgstr "采购凭证簿"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr ""
+msgstr "发票已付清"
 
 #. module: account
 #: view:validate.account.move:0
@@ -1035,7 +1042,7 @@ msgid "Liability"
 msgstr "负债"
 
 #. module: account
-#: code:addons/account/account_invoice.py:871
+#: code:addons/account/account_invoice.py:899
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "请为这张发票对应的凭证簿选择编号规则"
@@ -1053,7 +1060,7 @@ msgstr "汇总账簿"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Sale Refund"
-msgstr "销售红字发票"
+msgstr "销售退款"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
@@ -1106,10 +1113,10 @@ msgid "Features"
 msgstr "特性"
 
 #. module: account
-#: code:addons/account/account.py:2298
-#: code:addons/account/account_bank_statement.py:423
-#: code:addons/account/account_invoice.py:73
-#: code:addons/account/account_invoice.py:748
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_bank_statement.py:424
+#: code:addons/account/account_invoice.py:77
+#: code:addons/account/account_invoice.py:775
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
@@ -1139,6 +1146,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击添加一个账户.\n"
+"              </p><p>\n"
+"                "
+"在处理多币种交易时，由于汇率的变化，可能会产生汇兑收益或者损失。这个菜单提供给你一个假定在今天终结交易预测的损益。只有在账户有多币种时需要设置。\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_name:0
@@ -1155,7 +1169,7 @@ msgstr "用上个期末余额作期初"
 msgid ""
 "Check this box if you don't want any tax related to this tax code to appear "
 "on invoices"
-msgstr ""
+msgstr "如果你不想该税款编码相关的税务信息显示在发票中, 请选中此项"
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1188,7 +1202,7 @@ msgstr "退款 "
 #: code:addons/account/account_analytic_line.py:90
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "产品: \"%s\" (id:%d)  没有定义 成本科目"
 
 #. module: account
 #: view:account.tax:0
@@ -1210,7 +1224,7 @@ msgstr "现金记录"
 #. module: account
 #: field:account.config.settings,sale_refund_journal_id:0
 msgid "Sale refund journal"
-msgstr "销售退货分类账"
+msgstr "销售退货账簿"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1233,7 +1247,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3044
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Bank"
 msgstr "银行"
@@ -1251,7 +1265,7 @@ msgstr "退款"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement"
-msgstr "确认报表"
+msgstr "确认报告"
 
 #. module: account
 #: view:account.tax:0
@@ -1297,7 +1311,7 @@ msgstr "作废发票"
 #. module: account
 #: help:account.journal,code:0
 msgid "The code will be displayed on reports."
-msgstr "该代码会在报表中显示"
+msgstr "该代码会在报告中显示"
 
 #. module: account
 #: view:account.tax.template:0
@@ -1319,6 +1333,7 @@ msgid "Outgoing Currencies Rate"
 msgstr "兑出汇率"
 
 #. module: account
+#: view:account.analytic.account:0
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
 msgstr "模版"
@@ -1361,7 +1376,7 @@ msgstr "其它"
 #. module: account
 #: view:account.subscription:0
 msgid "Draft Subscription"
-msgstr "循环凭证草稿"
+msgstr "草稿订阅"
 
 #. module: account
 #: view:account.account:0
@@ -1413,7 +1428,7 @@ msgstr "级别"
 #: code:addons/account/wizard/account_change_currency.py:38
 #, python-format
 msgid "You can only change currency for Draft Invoice."
-msgstr "您只能修改发票草稿的货币。"
+msgstr "您只能修改发票草稿的币种。"
 
 #. module: account
 #: report:account.invoice:0
@@ -1456,7 +1471,7 @@ msgstr "搜索税模板"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_select
 #: model:ir.actions.act_window,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "核销"
+msgstr "对账"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
@@ -1479,7 +1494,7 @@ msgstr "重置为草稿"
 #: view:account.aged.trial.balance:0
 #: view:account.common.report:0
 msgid "Report Options"
-msgstr "报表选项"
+msgstr "报告选项"
 
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
@@ -1494,7 +1509,7 @@ msgstr "发票序列"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "账簿明细分析"
+msgstr "分录明细分析"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1539,20 +1554,22 @@ msgid "%s (copy)"
 msgstr "%s (副本)"
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
 msgstr "余额不为0"
 
 #. module: account
-#: code:addons/account/account.py:1445
+#: code:addons/account/account.py:1483
 #, python-format
 msgid ""
 "There is no default debit account defined \n"
 "on journal \"%s\"."
-msgstr "在分类账 \"%s\" 没有默认借方科目定义。"
+msgstr "在账簿 \"%s\" 没有默认借方科目定义。"
 
 #. module: account
 #: view:account.tax:0
@@ -1634,7 +1651,7 @@ msgstr "# 分录 "
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr "如不勾选该项，可以隐藏而不删除此应税条件"
+msgstr "如不勾选该项，可以隐藏而不删除此替换规则。"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -1677,7 +1694,7 @@ msgstr "定期分录"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr "财务结构模板"
+msgstr "替换规则模板"
 
 #. module: account
 #: view:account.subscription:0
@@ -1707,7 +1724,7 @@ msgstr "搜索银行对账单"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "未登帐凭证项"
+msgstr "未记账分录明细"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1766,16 +1783,26 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个新的账户类型.\n"
+"              </p><p>\n"
+"                账户类型用来说明在各个日记账中如何使用这个账户。\n"
+"                账户类型的递延方式决定了该账户在年终结账时的处理流程。\n"
+"                财务报表，如资产负债表、利润表，将会使用这个分类。\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.move.line,invoice:0
+#: code:addons/account/account_invoice.py:1157
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
+#, python-format
 msgid "Invoice"
-msgstr "发票"
+msgstr "开发票"
 
 #. module: account
 #: field:account.move,balance:0
@@ -1826,7 +1853,7 @@ msgstr "销售科目类型"
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 天"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1845,13 +1872,13 @@ msgstr "未确定业务伙伴"
 msgid ""
 "The journal must have centralized counterpart without the Skipping draft "
 "state option checked."
-msgstr "这个分类账簿的“合并对方科目”必须被选中，“跳过草稿状态”不能选中。"
+msgstr "这个账簿的“合并对方科目”必须被选中，“跳过草稿状态”不能选中。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:857
+#: code:addons/account/account_move_line.py:854
 #, python-format
 msgid "Some entries are already reconciled."
-msgstr "有些分录已经被核销。"
+msgstr "有些分录已经被对账。"
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -1922,7 +1949,7 @@ msgstr "期终余额"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "科目常用报表"
+msgstr "科目常用账簿报告"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1964,7 +1991,7 @@ msgstr "银行单据草稿"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr ""
+msgstr "发票已核准"
 
 #. module: account
 #: field:account.config.settings,module_account_check_writing:0
@@ -2003,36 +2030,36 @@ msgstr ""
 #: code:addons/account/account.py:634
 #: code:addons/account/account.py:636
 #: code:addons/account/account.py:930
-#: code:addons/account/account.py:1062
-#: code:addons/account/account.py:1064
-#: code:addons/account/account.py:1103
-#: code:addons/account/account.py:1283
-#: code:addons/account/account.py:1297
-#: code:addons/account/account.py:1320
-#: code:addons/account/account.py:1327
-#: code:addons/account/account.py:1547
-#: code:addons/account/account.py:1551
-#: code:addons/account/account.py:1637
-#: code:addons/account/account.py:2310
-#: code:addons/account/account.py:2630
-#: code:addons/account/account.py:3417
+#: code:addons/account/account.py:1071
+#: code:addons/account/account.py:1073
+#: code:addons/account/account.py:1116
+#: code:addons/account/account.py:1319
+#: code:addons/account/account.py:1333
+#: code:addons/account/account.py:1356
+#: code:addons/account/account.py:1363
+#: code:addons/account/account.py:1587
+#: code:addons/account/account.py:1591
+#: code:addons/account/account.py:1677
+#: code:addons/account/account.py:2358
+#: code:addons/account/account.py:2678
+#: code:addons/account/account.py:3465
 #: code:addons/account/account_analytic_line.py:89
 #: code:addons/account/account_analytic_line.py:98
-#: code:addons/account/account_bank_statement.py:367
-#: code:addons/account/account_bank_statement.py:380
-#: code:addons/account/account_bank_statement.py:418
+#: code:addons/account/account_bank_statement.py:368
+#: code:addons/account/account_bank_statement.py:381
+#: code:addons/account/account_bank_statement.py:419
 #: code:addons/account/account_cash_statement.py:256
 #: code:addons/account/account_cash_statement.py:300
-#: code:addons/account/account_invoice.py:871
-#: code:addons/account/account_invoice.py:905
-#: code:addons/account/account_invoice.py:1095
-#: code:addons/account/account_move_line.py:578
-#: code:addons/account/account_move_line.py:831
+#: code:addons/account/account_invoice.py:899
+#: code:addons/account/account_invoice.py:933
+#: code:addons/account/account_invoice.py:1124
+#: code:addons/account/account_move_line.py:579
+#: code:addons/account/account_move_line.py:828
+#: code:addons/account/account_move_line.py:851
 #: code:addons/account/account_move_line.py:854
-#: code:addons/account/account_move_line.py:857
-#: code:addons/account/account_move_line.py:1122
-#: code:addons/account/account_move_line.py:1124
-#: code:addons/account/account_move_line.py:1157
+#: code:addons/account/account_move_line.py:1119
+#: code:addons/account/account_move_line.py:1121
+#: code:addons/account/account_move_line.py:1156
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
@@ -2046,8 +2073,8 @@ msgstr ""
 #: code:addons/account/wizard/account_report_common.py:158
 #: code:addons/account/wizard/account_report_common.py:164
 #: code:addons/account/wizard/account_use_model.py:44
-#: code:addons/account/wizard/pos_box.py:32
-#: code:addons/account/wizard/pos_box.py:36
+#: code:addons/account/wizard/pos_box.py:31
+#: code:addons/account/wizard/pos_box.py:35
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -2095,12 +2122,12 @@ msgid "period close"
 msgstr "关闭一个会计期间"
 
 #. module: account
-#: code:addons/account/account.py:1049
+#: code:addons/account/account.py:1058
 #, python-format
 msgid ""
 "This journal already contains items for this period, therefore you cannot "
 "modify its company field."
-msgstr ""
+msgstr "账簿已经包含了这个会计区间的项目，因此你不嫩修改它的公司字段"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
@@ -2129,6 +2156,11 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"点击登记银行对账单</p><p>\n"
+"银行对账单是一个银行帐户在一定会计期间所发生的全部交易往来的汇总。你可以从银行周期性获得。\n"
+"</p><p>\n"
+"OpenERP允许对账单行直接和相关的销售或采购发票进行核销。\n"
+"            "
 
 #. module: account
 #: field:account.config.settings,currency_id:0
@@ -2140,7 +2172,7 @@ msgstr "公司本位币"
 #: field:account.invoice,move_name:0
 #: field:account.move.line,move_id:0
 msgid "Journal Entry"
-msgstr "会计凭证"
+msgstr "账簿分录"
 
 #. module: account
 #: view:account.invoice:0
@@ -2167,7 +2199,7 @@ msgid "Analytic account"
 msgstr "辅助核算项"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_bank_statement.py:406
 #, python-format
 msgid "Please verify that an account is defined in the journal."
 msgstr "请检查在账簿中已定义科目。"
@@ -2200,7 +2232,7 @@ msgstr "产品类别"
 msgid ""
 "You cannot change the type of account to '%s' type as it contains journal "
 "items!"
-msgstr ""
+msgstr "不能改变科目类型为'%s' ，因为他已经有了一个分类账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2222,7 +2254,7 @@ msgstr "流水帐"
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "同样的税 上面一次只能定义一个财务结构。"
+msgstr "同样的税上面一次只能定义一个税务替换规则。"
 
 #. module: account
 #: view:account.tax:0
@@ -2267,7 +2299,9 @@ msgstr "固定资产管理"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:299
+#: code:addons/account/report/account_partner_ledger.py:274
 #, python-format
 msgid "Payable Accounts"
 msgstr "应付款科目"
@@ -2278,7 +2312,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr "凭证上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在凭证簿设置上选择一个支持多币种的输入界面。"
+msgstr "账簿分录上的科目要求输入一个外币。你可以在科目设置中去掉这个外币或在账簿设置上选择一个支持多币种的输入界面。"
 
 #. module: account
 #: view:account.invoice:0
@@ -2296,7 +2330,7 @@ msgstr "如果此字段设为False，您可以隐藏而不删除这税。"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a sale journal."
-msgstr "与某销售凭证簿关联的分析凭证"
+msgstr "与某销售账簿关联的成本分录明细"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -2308,7 +2342,7 @@ msgstr "斜体（小一些）"
 msgid ""
 "If you want the journal should be control at opening/closing, check this "
 "option"
-msgstr "如果你要这个分类账在开启和结账时被控制，选中此项。"
+msgstr "如果你要这个账簿在开启和结账时被控制，选中此项。"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2354,7 +2388,7 @@ msgstr "下个供应商信用记录编号"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr "科目核销"
+msgstr "科目对账"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2395,7 +2429,7 @@ msgstr "30天"
 #: code:addons/account/account_cash_statement.py:256
 #, python-format
 msgid "You do not have rights to open this %s journal !"
-msgstr "你没有权限打开 %s 分类账。"
+msgstr "你没有权限打开 %s 账簿。"
 
 #. module: account
 #: model:res.groups,name:account.group_supplier_inv_check_total
@@ -2559,7 +2593,7 @@ msgstr "留空为所有开启的会计年度"
 msgid ""
 "You cannot change the type of account from 'Closed' to any other type as it "
 "contains journal items!"
-msgstr ""
+msgstr "当账目记录有数据时，您将不能把它由关闭状态改变到其它状态！"
 
 #. module: account
 #: field:account.invoice.report,account_line_id:0
@@ -2572,7 +2606,7 @@ msgid "Create an Account Based on this Template"
 msgstr "基于此模板创建科目"
 
 #. module: account
-#: code:addons/account/account_invoice.py:905
+#: code:addons/account/account_invoice.py:933
 #, python-format
 msgid ""
 "Cannot create the invoice.\n"
@@ -2580,12 +2614,14 @@ msgid ""
 "amount greater than the total invoiced amount. In order to avoid rounding "
 "issues, the latest line of your payment term must be of type 'balance'."
 msgstr ""
+"无法创建发票。\n"
+"相关的支付记录可能未确认核实，因为合计的总额大于发票的开票总额。为避免统计错误，请您确认最新的支付记录都在平衡状态。"
 
 #. module: account
 #: view:account.move:0
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr "凭证"
+msgstr "科目分录"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2593,12 +2629,12 @@ msgid "Main Sequence"
 msgstr "主序列"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:477
+#: code:addons/account/account_bank_statement.py:478
 #, python-format
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
-msgstr "要删除银行对帐单，必须先取消并删除相关凭证项"
+msgstr "要删除银行对帐单，必须先取消并删除相关账簿项目"
 
 #. module: account
 #: field:account.invoice.report,payment_term:0
@@ -2614,13 +2650,13 @@ msgstr "付款条款"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr "财务结构"
+msgstr "替换规则"
 
 #. module: account
-#: code:addons/account/account_move_line.py:578
+#: code:addons/account/account_move_line.py:579
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
-msgstr "你不能在关闭的科目%s %s 上面创建分类账分录。"
+msgstr "你不能在关闭的科目%s %s 上面创建分账簿项目。"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2646,17 +2682,17 @@ msgstr "科目属性"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft refund"
-msgstr ""
+msgstr "创建一个退款单草稿"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "往来业务核销"
+msgstr "往来业务对账"
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "Fin. Account"
-msgstr ""
+msgstr "财务账目"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2673,7 +2709,7 @@ msgstr "预付30%30天内支付余款"
 #. module: account
 #: view:account.entries.report:0
 msgid "Unreconciled entries"
-msgstr "凭证反核销"
+msgstr "凭证反对账"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2725,7 +2761,7 @@ msgid "Account Model Entries"
 msgstr "凭证模板"
 
 #. module: account
-#: code:addons/account/account.py:3154
+#: code:addons/account/account.py:3202
 #, python-format
 msgid "EXJ"
 msgstr "EXJ"
@@ -2774,7 +2810,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,purchase_sequence_next:0
 msgid "Next supplier invoice number"
-msgstr ""
+msgstr "下个供应商发票编号"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -2784,7 +2820,7 @@ msgstr "选择会计期间"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_pp_statements
 msgid "Statements"
-msgstr "报表"
+msgstr "报告"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -2794,7 +2830,7 @@ msgstr "凭证名称"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "凭证行核销（注销）"
+msgstr "凭证行对账（注销）"
 
 #. module: account
 #: model:account.account.type,name:account.conf_account_type_tax
@@ -2839,24 +2875,23 @@ msgid "Accounts"
 msgstr "科目"
 
 #. module: account
-#: code:addons/account/account.py:3493
-#: code:addons/account/account_bank_statement.py:404
-#: code:addons/account/account_invoice.py:386
-#: code:addons/account/account_invoice.py:488
-#: code:addons/account/account_invoice.py:586
-#: code:addons/account/account_invoice.py:601
+#: code:addons/account/account.py:3541
+#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_invoice.py:507
 #: code:addons/account/account_invoice.py:609
-#: code:addons/account/account_invoice.py:631
-#: code:addons/account/account_move_line.py:535
+#: code:addons/account/account_invoice.py:624
+#: code:addons/account/account_invoice.py:632
+#: code:addons/account/account_invoice.py:657
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid "Configuration Error!"
 msgstr "设置错误!"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:433
+#: code:addons/account/account_bank_statement.py:434
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr ""
+msgstr "对账单 %s 确认，账簿项目被创建."
 
 #. module: account
 #: field:account.invoice.report,price_average:0
@@ -2930,12 +2965,12 @@ msgstr "比较会计和支付项"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic Reconciliation"
-msgstr "自动核销"
+msgstr "自动对账"
 
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "已付/已核销"
+msgstr "已付/已对账"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -2968,6 +3003,12 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"点击建立新的财年.\n"
+"              </p><p>\n"
+"                "
+"根据需要定义公司的会计年度。会计年度通常是公司的账户最后结转的期间，通常是12个月。会计年度通常和结束日期有关。例如，假如一个公司的会计年度结束在2011"
+"年11月30日，那么在2010年12月1日至2011年11月30日的每一个交易会被记录到2011会计年度。              </p>\n"
+"            "
 
 #. module: account
 #: view:account.common.report:0
@@ -3043,7 +3084,7 @@ msgid ""
 msgstr "选择的发票不能被确认，因为它们不是“草稿”或者“形式发票”状态"
 
 #. module: account
-#: code:addons/account/account.py:1062
+#: code:addons/account/account.py:1071
 #, python-format
 msgid "You should choose the periods that belong to the same company."
 msgstr "你要选择属于同一个公司的会计区间"
@@ -3056,10 +3097,10 @@ msgid "Sales by Account"
 msgstr "销售科目"
 
 #. module: account
-#: code:addons/account/account.py:1411
+#: code:addons/account/account.py:1449
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr "你不能删除已经登帐的分类账分录\"%s\"."
+msgstr "你不能删除已经登帐的账簿分录\"%s\"."
 
 #. module: account
 #: view:account.invoice:0
@@ -3069,11 +3110,11 @@ msgstr "会计期间"
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr "销售分类帐"
+msgstr "销售账簿"
 
 #. module: account
-#: code:addons/account/account.py:2298
-#: code:addons/account/account_invoice.py:748
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_invoice.py:775
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
@@ -3085,7 +3126,7 @@ msgstr "您必须定义这 '%s' 的辅助核算账簿！"
 msgid ""
 "This journal already contains items, therefore you cannot modify its company "
 "field."
-msgstr "这个分类账已经包含了分录，因此不能修改他的公司字段"
+msgstr "这个账簿已经包含了项目，因此不能修改他的公司字段"
 
 #. module: account
 #: code:addons/account/account.py:409
@@ -3093,7 +3134,7 @@ msgstr "这个分类账已经包含了分录，因此不能修改他的公司字
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
-msgstr "你需要一个打开的分类账，集中设置初始余额。"
+msgstr "你需要一个打开的账簿，集中设置初始余额。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_code_list
@@ -3126,7 +3167,7 @@ msgstr "会计期间到"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "August"
-msgstr "8"
+msgstr "8月"
 
 #. module: account
 #: field:accounting.report,debit_credit:0
@@ -3140,20 +3181,20 @@ msgstr "显示借贷列"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "October"
-msgstr "10"
+msgstr "10月"
 
 #. module: account
 #: help:account.move.line,quantity:0
 msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
-msgstr "行显示的非强制性数量，如：已销售产品。这数量不是一个强制要求，但对一些报表非常有用。"
+msgstr "行显示的非强制性数量，如：已销售产品。这数量不是一个强制要求，但对一些报告非常有用。"
 
 #. module: account
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile Transactions"
-msgstr ""
+msgstr "未对账交易"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
@@ -3229,10 +3270,10 @@ msgstr "盈利或亏损"
 #: model:ir.model,name:account.model_account_fiscal_position
 #: field:res.partner,property_account_position:0
 msgid "Fiscal Position"
-msgstr "财务结构"
+msgstr "替换规则"
 
 #. module: account
-#: code:addons/account/account_invoice.py:795
+#: code:addons/account/account_invoice.py:823
 #, python-format
 msgid ""
 "Tax base different!\n"
@@ -3293,13 +3334,13 @@ msgstr "搜寻会计周期"
 #. module: account
 #: view:account.change.currency:0
 msgid "Invoice Currency"
-msgstr "发票币别"
+msgstr "发票币种"
 
 #. module: account
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr "财务报表"
+msgstr "财务报告"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -3314,7 +3355,7 @@ msgstr "税模板列表"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr "销售/采购 凭证簿"
+msgstr "销售/采购 账簿"
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -3328,7 +3369,7 @@ msgstr ""
 "将选择要兑换货币的当前汇率。在大多数国家法定为“平均”，但只有少数软件系统能够管理。 所以如果你要导入另一个软件系统，你可能需要使用当日汇率。"
 
 #. module: account
-#: code:addons/account/account.py:2630
+#: code:addons/account/account.py:2678
 #, python-format
 msgid "There is no parent code for the template account."
 msgstr "模版科目没有上级代码"
@@ -3342,7 +3383,7 @@ msgstr "科目代码使用数字"
 #. module: account
 #: field:res.partner,property_supplier_payment_term:0
 msgid "Supplier Payment Term"
-msgstr ""
+msgstr "供应商付款条款"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -3358,7 +3399,7 @@ msgstr "总是"
 #: field:account.config.settings,module_account_accountant:0
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
-msgstr "全部会计特性：分类账，税务报表，会计科目表 等等"
+msgstr "全部会计特性：账簿，税务报告，会计科目表 等等"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3391,8 +3432,8 @@ msgid "View"
 msgstr "视图"
 
 #. module: account
-#: code:addons/account/account.py:3412
-#: code:addons/account/account_bank.py:95
+#: code:addons/account/account.py:3460
+#: code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
 msgstr "BNK"
@@ -3415,7 +3456,7 @@ msgstr "电子文件"
 #. module: account
 #: field:account.move.line,reconcile:0
 msgid "Reconcile Ref"
-msgstr ""
+msgstr "对账编号"
 
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
@@ -3550,7 +3591,7 @@ msgstr "交易"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
 msgid "Account Unreconcile Reconcile"
-msgstr "科目核销反核销"
+msgstr "科目对账反对账"
 
 #. module: account
 #: help:account.account.type,close_method:0
@@ -3650,10 +3691,10 @@ msgid ""
 "if you give the Name other then /, its created Accounting Entries Move will "
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
-msgstr "如果您指定其它名称，它创建的凭证或分录将用报表名相同的名称。这使得报表它自己关联相似的分录。"
+msgstr "如果您指定其它名称，它创建的凭证或分录将用报告名相同的名称。这使得报告它自己关联相似的分录。"
 
 #. module: account
-#: code:addons/account/account_invoice.py:988
+#: code:addons/account/account_invoice.py:1016
 #, python-format
 msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
@@ -3668,7 +3709,7 @@ msgid "Starting Balance"
 msgstr "期初余额"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "No Partner Defined !"
 msgstr "未定义业务伙伴！"
@@ -3691,7 +3732,7 @@ msgstr "期初小计"
 msgid ""
 "You cannot create journal items with a secondary currency without recording "
 "both 'currency' and 'amount currency' field."
-msgstr ""
+msgstr "除非同时记录“currency“和“amount currency”这两个域值，您无法创建科目记录次级货币"
 
 #. module: account
 #: field:account.financial.report,display_detail:0
@@ -3718,9 +3759,12 @@ msgid ""
 "quotations with a button \"Pay with  Paypal\" in automated emails or through "
 "the OpenERP portal."
 msgstr ""
+"Paypal账户（email），在线收取支付信息（credit "
+"card,etc.）的账户。如果您设置了Ｐapal账户，客户就可以通过自动发送的邮件上或ＯpenERP网上的\"Pay with "
+"Paypal\"　按钮　响应您的发票或都报价单。"
 
 #. module: account
-#: code:addons/account/account_move_line.py:535
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -3728,13 +3772,16 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Journals/Journals."
 msgstr ""
+"无法为该公司找到　%s type　的会计账薄\n"
+"您可以通过　菜单　创建一个新账薄：\n"
+"Configuration/Journals/Journals."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "反核销分录"
+msgstr "反对账分录"
 
 #. module: account
 #: field:account.tax.code,notprintable:0
@@ -3792,7 +3839,7 @@ msgstr "所有选择的分录将生效并过账，这意味着您将不能修改
 msgid ""
 "You have not supplied enough arguments to compute the initial balance, "
 "please select a period and a journal in the context."
-msgstr ""
+msgstr "您没有提供足够的数据计算期初余额，请选择一个有完整日记账的期间。"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_transfers
@@ -3802,7 +3849,7 @@ msgstr "转移"
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr ""
+msgstr "该公司有自己的财务报表格式"
 
 #. module: account
 #: view:account.chart:0
@@ -3813,7 +3860,7 @@ msgstr "科目一览表"
 #: view:cash.box.out:0
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
-msgstr ""
+msgstr "取钱"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -3868,17 +3915,17 @@ msgid "Period Length (days)"
 msgstr "期间（天数）"
 
 #. module: account
-#: code:addons/account/account.py:1327
+#: code:addons/account/account.py:1363
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr ""
+msgstr "不能修改已经记账的凭证项，首先设置分类账允许取消"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr "打印 销售/采购 凭证簿"
+msgstr "打印 销售/采购 账簿"
 
 #. module: account
 #: view:account.installer:0
@@ -3898,6 +3945,8 @@ msgid ""
 "There is no fiscal year defined for this date.\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"该日期不在会计年度内\n"
+"请在菜单　accounting->configuration　创建"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -3909,7 +3958,7 @@ msgstr "创建科目"
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #, python-format
 msgid "The entries to reconcile should belong to the same company."
-msgstr ""
+msgstr "对账的条目应该属于同一公司。"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -3919,7 +3968,7 @@ msgstr "税金额"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "未核销凭证"
+msgstr "未对账分录明细"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3929,7 +3978,7 @@ msgstr "详情"
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
 msgid "This purchase tax will be assigned by default on new products."
-msgstr ""
+msgstr "该项购置税将默认分配到新产品"
 
 #. module: account
 #: report:account.invoice:0
@@ -3937,9 +3986,13 @@ msgid "VAT :"
 msgstr "增值税 :"
 
 #. module: account
+#: report:account.account.balance:0
 #: report:account.central.journal:0
 #: view:account.config.settings:0
+#: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -3957,12 +4010,12 @@ msgstr "如果您不选择会计期间，它将取所有开启的会计期间"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_cashbox_line
 msgid "account.journal.cashbox.line"
-msgstr ""
+msgstr "account.journal.cashbox.line"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "与业务伙伴核销的进程"
+msgstr "与业务伙伴对账的进程"
 
 #. module: account
 #: view:account.chart:0
@@ -4020,7 +4073,7 @@ msgstr "过账"
 #: view:account.unreconcile:0
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconcile"
-msgstr "反核销"
+msgstr "反对账"
 
 #. module: account
 #: view:account.chart.template:0
@@ -4028,7 +4081,7 @@ msgid "Chart of Accounts Template"
 msgstr "科目一览表模板"
 
 #. module: account
-#: code:addons/account/account.py:2310
+#: code:addons/account/account.py:2358
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -4039,8 +4092,10 @@ msgstr ""
 "请在业务伙伴里定义它"
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
@@ -4093,7 +4148,7 @@ msgstr "如果没适用的 (计算通过python代码)， 税将不显示在发�
 #. module: account
 #: field:account.config.settings,group_check_supplier_invoice_total:0
 msgid "Check the total of supplier invoices"
-msgstr ""
+msgstr "检查供应商发票的总额"
 
 #. module: account
 #: view:account.tax:0
@@ -4106,7 +4161,7 @@ msgstr "可用代码(如果类型=代码)"
 msgid ""
 "When monthly periods are created. The status is 'Draft'. At the end of "
 "monthly period it is in 'Done' status."
-msgstr ""
+msgstr "月度周期创建后，周期内状态表示为“Draft\"，期末状态转变为“Done\"."
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4136,7 +4191,7 @@ msgstr "应付账"
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #, python-format
 msgid "The periods to generate opening entries cannot be found."
-msgstr ""
+msgstr "要生成分录的 会计区间没有找到。"
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -4147,7 +4202,7 @@ msgstr "付款单"
 #: help:account.account.template,reconcile:0
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
-msgstr "勾选此项, 如果您想用户在这科目核销分录。"
+msgstr "勾选此项, 如果您想用户在这科目对账分录。"
 
 #. module: account
 #: report:account.invoice:0
@@ -4178,7 +4233,7 @@ msgstr "税率"
 #. module: account
 #: field:account.config.settings,complete_tax_set:0
 msgid "Complete set of taxes"
-msgstr ""
+msgstr "完全税收套账"
 
 #. module: account
 #: field:account.account,name:0
@@ -4193,7 +4248,7 @@ msgid "Name"
 msgstr "名称"
 
 #. module: account
-#: code:addons/account/installer.py:94
+#: code:addons/account/installer.py:115
 #, python-format
 msgid "No unconfigured company !"
 msgstr "还没有配置好公司"
@@ -4201,7 +4256,7 @@ msgstr "还没有配置好公司"
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "预计一个会计科目表"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -4212,7 +4267,7 @@ msgstr "生效日期"
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account."
-msgstr ""
+msgstr "日记薄必须设置默认借方和贷方账户"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_tree
@@ -4229,7 +4284,7 @@ msgstr "伙伴 ID"
 #: help:account.bank.statement,message_ids:0
 #: help:account.invoice,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "消息和通信历史"
 
 #. module: account
 #: help:account.journal,analytic_journal_id:0
@@ -4261,14 +4316,14 @@ msgstr "输入的会计年度，期间，科目表必须属于同一公司"
 msgid ""
 "Check this box if you don't want any tax related to this tax Code to appear "
 "on invoices."
-msgstr ""
+msgstr "检查该栏数据，如果您不要发票包含相关税则的税金"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1061
-#: code:addons/account/account_move_line.py:1144
+#: code:addons/account/account_move_line.py:1058
+#: code:addons/account/account_move_line.py:1143
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr ""
+msgstr "您不能使用一个非活动状态的账户"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -4295,11 +4350,11 @@ msgid "Consolidated Children"
 msgstr "合并子科目"
 
 #. module: account
-#: code:addons/account/account_invoice.py:554
+#: code:addons/account/account_invoice.py:573
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "数据不足！"
 
 #. module: account
 #: help:account.account,unrealized_gain_loss:0
@@ -4331,7 +4386,6 @@ msgstr "标题"
 
 #. module: account
 #: view:account.invoice:0
-#: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
 msgstr "设为草稿"
@@ -4349,7 +4403,7 @@ msgstr "显示业务伙伴"
 #. module: account
 #: view:account.invoice:0
 msgid "Validate"
-msgstr "使其生效"
+msgstr "确认生效"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -4359,7 +4413,7 @@ msgstr "资产"
 #. module: account
 #: view:account.config.settings:0
 msgid "Accounting & Finance"
-msgstr ""
+msgstr "会计 & 财务"
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -4386,7 +4440,7 @@ msgstr "(如果你想打开它发票要反核销)"
 #. module: account
 #: field:account.tax,account_analytic_collected_id:0
 msgid "Invoice Tax Analytic Account"
-msgstr ""
+msgstr "发票税的辅助核算科目"
 
 #. module: account
 #: field:account.chart,period_from:0
@@ -4423,14 +4477,14 @@ msgstr "辅助核算余额"
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "该付款方式将代替销售记录和客户发票的默认值。"
 
 #. module: account
 #: view:account.config.settings:0
 msgid ""
 "If you put \"%(year)s\" in the prefix, it will be replaced by the current "
 "year."
-msgstr ""
+msgstr "如果您输入“%(year)“作为前缀，那将被当前年份替换"
 
 #. module: account
 #: help:account.account,active:0
@@ -4442,12 +4496,12 @@ msgstr "如果活动字段设置为False，您将可以隐藏它而不在科目�
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr "已登帐凭证"
+msgstr "已记账分录明细"
 
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "未跟进"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4465,7 +4519,7 @@ msgid ""
 "As an example, a decimal precision of 2 will allow journal entries  like: "
 "9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: "
 "0.0231 EUR."
-msgstr ""
+msgstr "举个例子，2位小数精度，分录金额如同：0.99元；若为4位小数精度，则分录金额如同：0.0231元。"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -4500,7 +4554,7 @@ msgid "Cancel the Selected Invoices"
 msgstr "取消选定的发票"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:423
+#: code:addons/account/account_bank_statement.py:424
 #, python-format
 msgid "You have to assign an analytic journal on the '%s' journal!"
 msgstr "必须分配一个辅助核算账簿给\"%s\"账簿"
@@ -4534,6 +4588,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive Tax Codes."
 msgstr ""
+"错误!\n"
+"你不能循环创建税代码"
 
 #. module: account
 #: constraint:account.period:0
@@ -4541,6 +4597,8 @@ msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
 msgstr ""
+"错误!\n"
+"这个会计期间的持续时间不合法。"
 
 #. module: account
 #: field:account.entries.report,month:0
@@ -4557,16 +4615,16 @@ msgstr "月份"
 #: code:addons/account/account.py:668
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
-msgstr ""
+msgstr "你不能改变已经包含了账簿项目的 科目代码!"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
 msgid "Supplier invoice sequence"
-msgstr ""
+msgstr "供应商发票序列"
 
 #. module: account
-#: code:addons/account/account_invoice.py:587
-#: code:addons/account/account_invoice.py:602
+#: code:addons/account/account_invoice.py:610
+#: code:addons/account/account_invoice.py:625
 #, python-format
 msgid ""
 "Cannot find a chart of account, you should create one from Settings\\"
@@ -4578,7 +4636,7 @@ msgstr ""
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "产品计量单位"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -4593,7 +4651,7 @@ msgstr "科目类型"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr ""
+msgstr "银行和支票"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -4621,7 +4679,7 @@ msgstr "留空使用当前日期"
 #: view:account.bank.statement:0
 #: field:account.cashbox.line,subtotal_closing:0
 msgid "Closing Subtotal"
-msgstr ""
+msgstr "关闭合计"
 
 #. module: account
 #: field:account.tax,base_code_id:0
@@ -4629,11 +4687,11 @@ msgid "Account Base Code"
 msgstr "税基编码"
 
 #. module: account
-#: code:addons/account/account_move_line.py:867
+#: code:addons/account/account_move_line.py:864
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
-msgstr ""
+msgstr "你必须提供一个科目来勾销/兑换凭证差异。"
 
 #. module: account
 #: help:res.company,paypal_account:0
@@ -4675,7 +4733,7 @@ msgstr "检查,如果你想显示平衡科目"
 #. module: account
 #: field:account.move.reconcile,opening_reconciliation:0
 msgid "Opening Entries Reconciliation"
-msgstr ""
+msgstr "开放的对账条目"
 
 #. module: account
 #. openerp-web
@@ -4687,7 +4745,7 @@ msgstr ""
 #. module: account
 #: selection:account.move.line,state:0
 msgid "Balanced"
-msgstr ""
+msgstr "已平衡"
 
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
@@ -4695,12 +4753,12 @@ msgid "Statement from invoice or payment"
 msgstr "发票或付款清单"
 
 #. module: account
-#: code:addons/account/installer.py:94
+#: code:addons/account/installer.py:115
 #, python-format
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
-msgstr ""
+msgstr "目前还没有公司缺少科目表。因此，该向导不会被执行。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -4715,7 +4773,7 @@ msgstr "科目一览表"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "付款参考"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -4749,10 +4807,10 @@ msgid "Bank statements are entered in the system."
 msgstr "把银行对账单输入到系统中。"
 
 #. module: account
-#: code:addons/account/wizard/account_reconcile.py:121
+#: code:addons/account/wizard/account_reconcile.py:122
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "补差额时核销"
+msgstr "补差额时对账"
 
 #. module: account
 #: view:account.account.template:0
@@ -4784,12 +4842,12 @@ msgstr "欠款单据"
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr ""
+msgstr "待调整日记账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "税费模版"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -4804,7 +4862,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Tax Computation"
-msgstr ""
+msgstr "计算税款"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4829,7 +4887,7 @@ msgstr "按模型创建分录"
 #: field:account.account,reconcile:0
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "允许核销"
+msgstr "允许对账"
 
 #. module: account
 #: constraint:account.account:0
@@ -4839,7 +4897,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:631
+#: code:addons/account/account_invoice.py:658
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -4854,7 +4912,7 @@ msgid "Based On"
 msgstr "基于"
 
 #. module: account
-#: code:addons/account/account.py:3156
+#: code:addons/account/account.py:3204
 #, python-format
 msgid "ECNJ"
 msgstr "ECNJ"
@@ -4862,7 +4920,7 @@ msgstr "ECNJ"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
 msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr "分析本期成本明细账的报表"
+msgstr "分析本期成本明细账的报告"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
@@ -4920,7 +4978,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3346
+#: code:addons/account/account.py:3394
 #, python-format
 msgid "Purchase Tax %.2f%%"
 msgstr "采购税 %.2f%%"
@@ -4957,7 +5015,7 @@ msgstr "已取消的发票"
 #. module: account
 #: view:account.invoice:0
 msgid "My Invoices"
-msgstr ""
+msgstr "我的发票"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -4967,7 +5025,7 @@ msgstr "新建"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Sale Tax"
-msgstr ""
+msgstr "营业税"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -4994,7 +5052,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3157
+#: code:addons/account/account.py:3205
 #, python-format
 msgid "MISC"
 msgstr "杂项"
@@ -5071,7 +5129,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:0
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已开发票"
 
 #. module: account
 #: view:account.move:0
@@ -5094,7 +5152,7 @@ msgstr "发票的收款银行帐号。如果是客户发票或供应商红字发
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "今天的与业务伙伴核销"
+msgstr "今天的与业务伙伴对账"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
@@ -5163,7 +5221,7 @@ msgid "Tax Application"
 msgstr "税适用"
 
 #. module: account
-#: code:addons/account/account_invoice.py:894
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -5335,7 +5393,7 @@ msgid "Target Moves"
 msgstr "目标"
 
 #. module: account
-#: code:addons/account/account.py:1416
+#: code:addons/account/account.py:1454
 #, python-format
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
@@ -5362,7 +5420,7 @@ msgstr "付款"
 #. module: account
 #: field:account.subscription.line,move_id:0
 msgid "Entry"
-msgstr "凭证"
+msgstr "分录"
 
 #. module: account
 #: field:account.tax,python_compute_inv:0
@@ -5390,7 +5448,7 @@ msgstr "这个选项用于确定你是否希望提示用户输入销售和采购
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr "科目报表"
+msgstr "科目报告"
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -5416,7 +5474,7 @@ msgid "Internal Name"
 msgstr "内部名称"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1186
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -5438,7 +5496,7 @@ msgstr "月"
 #: view:account.move.line:0
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "核销下一个业务伙伴"
+msgstr "对账下一个业务伙伴"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -5468,7 +5526,7 @@ msgstr "检查凭证日期在期间内"
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
 msgid "Accounting Reports"
-msgstr "会计报表"
+msgstr "会计报告"
 
 #. module: account
 #: field:account.move,line_id:0
@@ -5488,7 +5546,7 @@ msgid "Compute Code (if type=code)"
 msgstr "计算代码(如果类型=代码)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:489
+#: code:addons/account/account_invoice.py:508
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, you should create one."
@@ -5509,7 +5567,7 @@ msgstr "销售"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
 msgid "Automatic Reconcile"
-msgstr "自动核销"
+msgstr "自动对账"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -5616,7 +5674,7 @@ msgid "Recompute taxes and total"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1103
+#: code:addons/account/account.py:1116
 #, python-format
 msgid "You cannot modify/delete a journal with entries for this period."
 msgstr ""
@@ -5644,7 +5702,7 @@ msgid "Amount Computation"
 msgstr "计算金额"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1108
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
@@ -5677,9 +5735,10 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
 msgid "Account Common Account Report"
-msgstr "科目合并的科目报表"
+msgstr "科目合并的科目报告"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.bank.statement:0
 #: selection:account.bank.statement,state:0
 #: view:account.fiscalyear:0
@@ -5763,7 +5822,7 @@ msgid ""
 "This is the remaining partners for who you should check if there is "
 "something to reconcile or not. This figure already count the current partner "
 "as reconciled."
-msgstr "这是业务伙伴的余额，您应该检查出那个已核销那个未核销。这数字计算当前业务伙伴要核销部分。"
+msgstr "这是业务伙伴的余额，您应该检查出那个已对账那个未对账。这数字计算当前业务伙伴要对账部分。"
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5782,7 +5841,7 @@ msgstr "产品数量"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr "未登账"
+msgstr "未记账"
 
 #. module: account
 #: view:account.change.currency:0
@@ -5861,7 +5920,7 @@ msgstr "普通文本"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Payment entries are the second input of the reconciliation."
-msgstr "核销的第二个输入项是付款分录"
+msgstr "对账的第二个输入项是付款分录"
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -5875,7 +5934,7 @@ msgstr ""
 msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
 "be chosen as the power of the automatic reconciliation"
-msgstr "部分金额可以加起来作为找到的平衡点来强制填充自动核销"
+msgstr "部分金额可以加起来作为找到的平衡点来强制填充自动对账"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:56
@@ -5887,7 +5946,7 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr "财务结构模板"
+msgstr "替换规则模版"
 
 #. module: account
 #: view:account.invoice:0
@@ -5924,7 +5983,7 @@ msgstr "自动格式化"
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconcile With Write-Off"
-msgstr "补差额时核销"
+msgstr "补差额时对账"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -5938,7 +5997,7 @@ msgid "Fixed Amount"
 msgstr "固定金额"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1059
+#: code:addons/account/account_move_line.py:1056
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr "你不能修改税，你需要删去并且重建这一行"
@@ -5946,7 +6005,7 @@ msgstr "你不能修改税，你需要删去并且重建这一行"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
 msgid "Account Automatic Reconcile"
-msgstr "科目自动核销"
+msgstr "科目自动对账"
 
 #. module: account
 #: view:account.move:0
@@ -5989,14 +6048,14 @@ msgid "Child Accounts"
 msgstr "子科目"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1120
+#: code:addons/account/account_move_line.py:1117
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "会计凭证号 (id): %s (%s)"
 
 #. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:882
+#: code:addons/account/account_move_line.py:879
 #, python-format
 msgid "Write-Off"
 msgstr "补差额"
@@ -6022,7 +6081,7 @@ msgstr "收入"
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:363
+#: code:addons/account/account_invoice.py:390
 #, python-format
 msgid "Supplier"
 msgstr "供应商"
@@ -6042,7 +6101,7 @@ msgid "Account n°"
 msgstr "科目编码"
 
 #. module: account
-#: code:addons/account/account_invoice.py:91
+#: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "Free Reference"
 msgstr "无限制的单号"
@@ -6052,7 +6111,9 @@ msgstr "无限制的单号"
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:301
+#: code:addons/account/report/account_partner_ledger.py:276
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "应收款与应付款科目"
@@ -6090,14 +6151,14 @@ msgid ""
 "From this view, have an analysis of your different financial accounts. The "
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
-msgstr "在这个界面上，你可以对不同的科目做分析。按照您输入的条件出具报表显示这些科目的借贷方发生额。"
+msgstr "在这个界面上，你可以对不同的科目做分析。按照您输入的条件出具报告显示这些科目的借贷方发生额。"
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
 msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
-msgstr "显示您今天核销的进度，今天业务伙伴的已核销 / （业务伙伴的余额 + 今天业务伙伴的已核销）"
+msgstr "显示您今天对账的进度，今天业务伙伴的已对账 / （业务伙伴的余额 + 今天业务伙伴的已对账）"
 
 #. module: account
 #: field:account.invoice,period_id:0
@@ -6156,7 +6217,7 @@ msgid "Filter by"
 msgstr "筛选"
 
 #. module: account
-#: code:addons/account/account.py:2286
+#: code:addons/account/account.py:2334
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr "模型中存在错误的表达式 \"%(...)s\""
@@ -6204,7 +6265,7 @@ msgid "Number of Days"
 msgstr "天数"
 
 #. module: account
-#: code:addons/account/account.py:1321
+#: code:addons/account/account.py:1357
 #, python-format
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
@@ -6214,17 +6275,17 @@ msgstr "你不能核准这个分类账分录，因为科目 \"%s\" 不属于科�
 #. module: account
 #: view:account.financial.report:0
 msgid "Report"
-msgstr "报表"
+msgstr "报告"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "税务的模板"
+msgstr "税务替换规则的模板"
 
 #. module: account
 #: help:account.tax,name:0
 msgid "This name will be displayed on reports"
-msgstr "这名称将显示在报表"
+msgstr "这名称将显示在报告"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6278,7 +6339,7 @@ msgstr "生成循环分录"
 #. module: account
 #: report:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr "财务状况备注:"
+msgstr "替换规则备注:"
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -6302,7 +6363,7 @@ msgstr "当保存数据时，系统会自动为此银行账户创建像相应的
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Entry"
-msgstr "辅助核算记录"
+msgstr "辅助核算分录"
 
 #. module: account
 #: view:res.company:0
@@ -6336,7 +6397,7 @@ msgstr "根科目"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Reconciliation Date"
-msgstr "最近的核销日期"
+msgstr "最近的对账日期"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -6350,7 +6411,7 @@ msgid "Models"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1095
+#: code:addons/account/account_invoice.py:1124
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -6467,7 +6528,7 @@ msgstr "会计年度"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Partial Reconcile Entries"
-msgstr "部分相关的核销分录"
+msgstr "部分相关的对账分录"
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -6478,19 +6539,16 @@ msgstr "部分相关的核销分录"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.automatic.reconcile:0
-#: view:account.bank.statement:0
 #: view:account.change.currency:0
 #: view:account.chart:0
 #: view:account.common.report:0
 #: view:account.config.settings:0
 #: view:account.fiscalyear.close:0
 #: view:account.fiscalyear.close.state:0
-#: view:account.invoice:0
 #: view:account.invoice.cancel:0
 #: view:account.invoice.confirm:0
 #: view:account.invoice.refund:0
 #: view:account.journal.select:0
-#: view:account.move:0
 #: view:account.move.bank.reconcile:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.select:0
@@ -6525,7 +6583,7 @@ msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:610
+#: code:addons/account/account_invoice.py:633
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
 msgstr ""
@@ -6546,7 +6604,7 @@ msgid "The related account currency if not equal to the company one."
 msgstr "如果不是同一公司, 相关科目的币别"
 
 #. module: account
-#: code:addons/account/installer.py:48
+#: code:addons/account/installer.py:69
 #, python-format
 msgid "Custom"
 msgstr ""
@@ -6573,7 +6631,7 @@ msgid "Internal Transfers Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/pos_box.py:33
+#: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
 msgstr ""
@@ -6599,7 +6657,7 @@ msgid "Power"
 msgstr "强制"
 
 #. module: account
-#: code:addons/account/account.py:3417
+#: code:addons/account/account.py:3465
 #, python-format
 msgid "Cannot generate an unused journal code."
 msgstr "不能生成一个未使用的凭证代码。"
@@ -6613,7 +6671,7 @@ msgstr "辅助核算明细视图"
 #: field:account.invoice,internal_number:0
 #: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr "发票号"
+msgstr "发票编号"
 
 #. module: account
 #: field:account.bank.statement,difference:0
@@ -6630,7 +6688,7 @@ msgstr "标识在计算上一层税的时候是否把本层已计算出来的税
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "核销：转到下一个业务伙伴"
+msgstr "对账：转到下一个业务伙伴"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -6670,12 +6728,12 @@ msgid ""
 msgstr "序列字段用于税从低到高排序, 如果税中有子税这排序是重要的"
 
 #. module: account
-#: code:addons/account/account.py:1410
-#: code:addons/account/account.py:1415
-#: code:addons/account/account.py:1444
-#: code:addons/account/account.py:1451
-#: code:addons/account/account_invoice.py:987
-#: code:addons/account/account_move_line.py:1008
+#: code:addons/account/account.py:1448
+#: code:addons/account/account.py:1453
+#: code:addons/account/account.py:1482
+#: code:addons/account/account.py:1489
+#: code:addons/account/account_invoice.py:1015
+#: code:addons/account/account_move_line.py:1005
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #: code:addons/account/wizard/account_fiscalyear_close.py:99
@@ -6702,7 +6760,7 @@ msgstr "流动资金"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "辅助核算明细"
+msgstr "辅助核算分录明细"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
@@ -6753,14 +6811,16 @@ msgstr "你不能修改已经存在凭证的公司帐户。"
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1160
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Refund"
 msgstr "供应商红字发票"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
-msgstr "明细"
+msgstr "分录明细"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -6837,7 +6897,7 @@ msgstr "辅助核算账薄"
 #. module: account
 #: view:account.entries.report:0
 msgid "Reconciled"
-msgstr "已核销"
+msgstr "已对账"
 
 #. module: account
 #: constraint:account.payment.term.line:0
@@ -6896,7 +6956,7 @@ msgstr "辅助核算统计"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:142
-#: code:addons/account/account_move_line.py:958
+#: code:addons/account/account_move_line.py:955
 #, python-format
 msgid "Entries: "
 msgstr "凭证： "
@@ -6938,7 +6998,7 @@ msgstr "借方合计"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner Entries to reconcile"
-msgstr "要核销的下一个往来凭证"
+msgstr "要对账的下一个往来凭证"
 
 #. module: account
 #: report:account.invoice:0
@@ -7005,7 +7065,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:1024
-#: code:addons/account/account_move_line.py:1108
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -7013,7 +7073,7 @@ msgstr "错误！"
 #. module: account
 #: field:account.financial.report,style_overwrite:0
 msgid "Financial Report Style"
-msgstr "财务报表样式"
+msgstr "财务报告样式"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -7025,7 +7085,7 @@ msgstr "保留余额符号"
 #: model:ir.actions.report.xml,name:account.account_vat_declaration
 #: model:ir.ui.menu,name:account.menu_account_vat_declaration
 msgid "Taxes Report"
-msgstr "税务报表"
+msgstr "税务报告"
 
 #. module: account
 #: selection:account.journal.period,state:0
@@ -7155,12 +7215,12 @@ msgstr "期初余额"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "科目核销"
+msgstr "科目对账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "税负"
+msgstr "税负替换规则"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7227,7 +7287,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2256
+#: code:addons/account/account.py:2304
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -7255,7 +7315,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
 msgid "Manage customer payments"
-msgstr ""
+msgstr "管理客户付款"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -7305,7 +7365,7 @@ msgid "Done"
 msgstr "完成"
 
 #. module: account
-#: code:addons/account/account.py:1283
+#: code:addons/account/account.py:1319
 #, python-format
 msgid ""
 "You cannot validate a non-balanced entry.\n"
@@ -7328,7 +7388,7 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
-"业务伙伴过期试算表是某个时间段内应收账款的详细的报表。打开这个报表后请输入公司名称、会计期间、分析的时间段（按天）。OpenERP会按期间计算应收账款余额"
+"业务伙伴过期试算表是某个时间段内应收账款的详细的报告。打开这个报告后请输入公司名称、会计期间、分析的时间段（按天）。OpenERP会按期间计算应收账款余额"
 "。如果你输入了30天，OpenERP生成业务伙伴前一个月，再前一个月的金额。 "
 
 #. module: account
@@ -7354,7 +7414,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr "会计报表"
+msgstr "会计报告"
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
@@ -7382,7 +7442,7 @@ msgstr "税类型的百分率，请输入0 - 1之间的值"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
 msgid "Financial Reports Hierarchy"
-msgstr "会计报表树"
+msgstr "会计报告树"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -7409,7 +7469,7 @@ msgstr "税模板"
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "你确定要显示这个凭证簿的会计凭证么？"
+msgstr "你确定要显示这个账簿的会计凭证么？"
 
 #. module: account
 #: view:account.state.open:0
@@ -7458,7 +7518,7 @@ msgstr "它将作为一个默认的借方科目"
 #. module: account
 #: view:account.entries.report:0
 msgid "Posted entries"
-msgstr "已复核的会计凭证呢个"
+msgstr "已记账的会计凭证"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -7491,7 +7551,7 @@ msgstr "客户欠款金额合计"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr "未平财务凭证"
+msgstr "未平分录明细"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
@@ -7588,10 +7648,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "报表"
+msgstr "报告"
 
 #. module: account
 #. openerp-web
+#: code:addons/account/account_move_line.py:780
 #: code:addons/account/static/src/js/account_move_reconciliation.js:90
 #, python-format
 msgid "Warning"
@@ -7635,7 +7696,7 @@ msgid ""
 "This field shows you the next partner that will be automatically chosen by "
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
-msgstr "这字段显示被系统自动挑选要去进行核销处理的下一个业务伙伴，因为他最近进行过核销。"
+msgstr "这字段显示被系统自动挑选要去进行对账处理的下一个业务伙伴，因为他最近进行过对账。"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7654,7 +7715,7 @@ msgid "Use model"
 msgstr "使用模型"
 
 #. module: account
-#: code:addons/account/account.py:1452
+#: code:addons/account/account.py:1490
 #, python-format
 msgid ""
 "There is no default credit account defined \n"
@@ -7676,7 +7737,7 @@ msgstr "客户和供应商红字发票"
 #. module: account
 #: field:account.financial.report,sign:0
 msgid "Sign on Reports"
-msgstr "报表上的符号"
+msgstr "报告上的符号"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -7705,7 +7766,7 @@ msgid "Root/View"
 msgstr "根/视图"
 
 #. module: account
-#: code:addons/account/account.py:3158
+#: code:addons/account/account.py:3206
 #, python-format
 msgid "OPEJ"
 msgstr "OPEJ"
@@ -7772,7 +7833,7 @@ msgid "Maturity Date"
 msgstr "到期日期"
 
 #. module: account
-#: code:addons/account/account.py:3145
+#: code:addons/account/account.py:3193
 #, python-format
 msgid "Sales Journal"
 msgstr "销售账簿"
@@ -7783,7 +7844,7 @@ msgid "Invoice Tax"
 msgstr "发票税"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1186
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid "No piece number !"
 msgstr "没会计期间!"
@@ -7792,7 +7853,7 @@ msgstr "没会计期间!"
 #: view:account.financial.report:0
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr "会计报表树"
+msgstr "会计报告树"
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -7809,7 +7870,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr "未审核的会计凭证"
+msgstr "未记账的会计凭证"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -7824,7 +7885,7 @@ msgid "Sales Properties"
 msgstr "销售属性"
 
 #. module: account
-#: code:addons/account/account.py:3493
+#: code:addons/account/account.py:3541
 #, python-format
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
@@ -7834,7 +7895,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr "手动核销"
+msgstr "手动对账"
 
 #. module: account
 #: report:account.overdue:0
@@ -7849,7 +7910,7 @@ msgstr "到"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
-#: code:addons/account/account.py:1502
+#: code:addons/account/account.py:1541
 #, python-format
 msgid "Currency Adjustment"
 msgstr "汇兑损益调整"
@@ -7869,7 +7930,7 @@ msgstr "取消选择的发票"
 #: help:account.account.type,report_type:0
 msgid ""
 "This field is used to generate legal reports: profit and loss, balance sheet."
-msgstr "这个字段用于生成法定的会计报表：损益表 和 资产负债表"
+msgstr "这个字段用于生成法定的会计报告：损益表 和 资产负债表"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -7881,7 +7942,7 @@ msgid "May"
 msgstr "5"
 
 #. module: account
-#: code:addons/account/account_invoice.py:792
+#: code:addons/account/account_invoice.py:820
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
 msgstr "定义了全局税，但发票行中没有！"
@@ -7922,7 +7983,7 @@ msgstr "登账"
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:361
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Customer"
 msgstr "客户"
@@ -7930,7 +7991,7 @@ msgstr "客户"
 #. module: account
 #: field:account.financial.report,name:0
 msgid "Report Name"
-msgstr "报表名称"
+msgstr "报告名称"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_cash
@@ -7938,7 +7999,7 @@ msgstr "报表名称"
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3044
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Cash"
 msgstr "现金"
@@ -7977,12 +8038,12 @@ msgstr ""
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 msgid "Journal Entry Number"
-msgstr "会计凭证编号"
+msgstr "账簿分录编号"
 
 #. module: account
 #: view:account.financial.report:0
 msgid "Parent Report"
-msgstr "上级报表"
+msgstr "上级报告"
 
 #. module: account
 #: constraint:account.account:0
@@ -8000,7 +8061,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr "链接到自动生成的会计凭证行"
+msgstr "链接到自动生成的分录明细"
 
 #. module: account
 #: model:ir.model,name:account.model_account_config_settings
@@ -8053,12 +8114,12 @@ msgstr "月天数设为 -1 是当月的最后一天。如果为正数 为下月�
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconciliation Transactions"
-msgstr "核销交易"
+msgstr "对账交易"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
-msgstr "正式报表"
+msgstr "正式报告"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
@@ -8086,6 +8147,7 @@ msgstr ""
 #. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
@@ -8101,6 +8163,7 @@ msgstr "固定"
 #: code:addons/account/account.py:653
 #: code:addons/account/account.py:656
 #: code:addons/account/account.py:668
+#: code:addons/account/account.py:1031
 #, python-format
 msgid "Warning !"
 msgstr "警告 !"
@@ -8124,7 +8187,7 @@ msgstr "凭证明细的状态"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 msgid "Account move line reconcile"
-msgstr "核销凭证明细"
+msgstr "对账凭证明细"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -8135,7 +8198,7 @@ msgstr "生成周期性凭证"
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 msgid "Open for Unreconciliation"
-msgstr "打开反核销"
+msgstr "打开反对账"
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -8168,7 +8231,7 @@ msgid "Select a currency to apply on the invoice"
 msgstr "在发票上选择合适的币别"
 
 #. module: account
-#: code:addons/account/account_invoice.py:873
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "No Invoice Lines !"
 msgstr "没有发票明细"
@@ -8176,7 +8239,7 @@ msgstr "没有发票明细"
 #. module: account
 #: view:account.financial.report:0
 msgid "Report Type"
-msgstr "报表类型"
+msgstr "报告类型"
 
 #. module: account
 #: help:account.open.closed.fiscalyear,fyear_id:0
@@ -8191,7 +8254,7 @@ msgid "Tax Use In"
 msgstr "税用在"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:381
+#: code:addons/account/account_bank_statement.py:382
 #, python-format
 msgid ""
 "The statement balance is incorrect !\n"
@@ -8201,7 +8264,7 @@ msgstr ""
 "预期的余额是(%.2f)，现在算出来的是(%.2f)"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:419
+#: code:addons/account/account_bank_statement.py:420
 #, python-format
 msgid "The account entries lines are not in valid state."
 msgstr "这分录明细不是在有效的状态"
@@ -8220,7 +8283,7 @@ msgstr "自动录入"
 #: help:account.account,reconcile:0
 msgid ""
 "Check this box if this account allows reconciliation of journal items."
-msgstr "如果此会计科目需要核销，勾选这里"
+msgstr "如果此会计科目需要对账，勾选这里"
 
 #. module: account
 #: report:account.analytic.account.inverted.balance:0
@@ -8245,7 +8308,7 @@ msgid "Associated Partner"
 msgstr "相关业务伙伴"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "You must first select a partner !"
 msgstr "你必须首先选择一个业务伙伴!"
@@ -8256,7 +8319,6 @@ msgid "Additional Information"
 msgstr "附加信息"
 
 #. module: account
-#: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
 #: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
@@ -8325,13 +8387,13 @@ msgid ""
 msgstr "如果在计算未来的税前这税额必须包含在税基金额里，请设置"
 
 #. module: account
-#: code:addons/account/account.py:3148
+#: code:addons/account/account.py:3196
 #, python-format
 msgid "Purchase Refund Journal"
 msgstr "采购红字发票账簿"
 
 #. module: account
-#: code:addons/account/account.py:1297
+#: code:addons/account/account.py:1333
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -8436,7 +8498,7 @@ msgstr "已调整的余额"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr "财务结构模板"
+msgstr "替换规则模板"
 
 #. module: account
 #: view:account.entries.report:0
@@ -8493,7 +8555,7 @@ msgstr "付款"
 #. module: account
 #: view:account.automatic.reconcile:0
 msgid "Reconciliation Result"
-msgstr "核销结果"
+msgstr "对账结果"
 
 #. module: account
 #: field:account.bank.statement,balance_end_real:0
@@ -8517,7 +8579,7 @@ msgstr "您可以勾选此，标记账簿的明细正与相关业务伙伴在争
 #: field:account.move.line,reconcile_partial_id:0
 #: view:account.move.line.reconcile:0
 msgid "Partial Reconcile"
-msgstr "部分核销"
+msgstr "部分对账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
@@ -8527,7 +8589,7 @@ msgstr "辅助核算反向余额"
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
-msgstr "通用报表"
+msgstr "通用报告"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -8546,7 +8608,7 @@ msgid "Automatic import of the bank sta"
 msgstr "自动导入银行对账单"
 
 #. module: account
-#: code:addons/account/account_invoice.py:389
+#: code:addons/account/account_invoice.py:381
 #, python-format
 msgid "Unknown Error!"
 msgstr ""
@@ -8554,12 +8616,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
-msgstr "核销银行凭证"
+msgstr "对账银行凭证"
 
 #. module: account
 #: view:account.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -8574,7 +8636,7 @@ msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1211
+#: code:addons/account/account_move_line.py:1210
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -8598,7 +8660,7 @@ msgstr "P＆L / BS分类"
 #: model:process.node,name:account.process_node_supplierreconciliation0
 #, python-format
 msgid "Reconciliation"
-msgstr "核销"
+msgstr "对账"
 
 #. module: account
 #: view:account.tax.template:0
@@ -8677,7 +8739,7 @@ msgid "The partner account used for this invoice."
 msgstr "这发票用这业务伙伴科目"
 
 #. module: account
-#: code:addons/account/account.py:3343
+#: code:addons/account/account.py:3391
 #, python-format
 msgid "Tax %.2f%%"
 msgstr "税 %.2f%%"
@@ -8695,7 +8757,7 @@ msgid "Payment Term Line"
 msgstr "付款条款明细"
 
 #. module: account
-#: code:addons/account/account.py:3146
+#: code:addons/account/account.py:3194
 #, python-format
 msgid "Purchase Journal"
 msgstr "采购账簿"
@@ -8713,7 +8775,7 @@ msgstr "打印税单"
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr "账簿模型明细"
+msgstr "账簿分录模型明细"
 
 #. module: account
 #: view:account.invoice:0
@@ -8728,7 +8790,7 @@ msgstr "到期日期"
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
-msgstr "供应商列表"
+msgstr "供应商"
 
 #. module: account
 #: view:account.journal:0
@@ -8864,10 +8926,10 @@ msgid "Journal Name"
 msgstr "账簿名称"
 
 #. module: account
-#: code:addons/account/account_move_line.py:832
+#: code:addons/account/account_move_line.py:829
 #, python-format
 msgid "Entry \"%s\" is not valid !"
-msgstr "凭证\"%s\"无效！"
+msgstr "分录\"%s\"无效！"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -8912,7 +8974,7 @@ msgid ""
 msgstr "如果它是一个多货币凭证,这金额表示一个可选的其它货币金额."
 
 #. module: account
-#: code:addons/account/account_move_line.py:1009
+#: code:addons/account/account_move_line.py:1006
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
 msgstr ""
@@ -8970,10 +9032,10 @@ msgstr "会计使该发票的分录生效"
 #: view:account.entries.report:0
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "核销分录"
+msgstr "对账分录"
 
 #. module: account
-#: code:addons/account/account.py:2286
+#: code:addons/account/account.py:2334
 #, python-format
 msgid "Wrong model !"
 msgstr "模型有误！"
@@ -8995,7 +9057,7 @@ msgid "Print Account Partner Balance"
 msgstr "打印业务伙伴余额"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1124
+#: code:addons/account/account_move_line.py:1121
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -9012,8 +9074,8 @@ msgid ""
 "accounts that are typically more credited than debited and that you would "
 "like to print as positive amounts in your reports; e.g.: Income account."
 msgstr ""
-"对于贷方发生额大于借方发生额的会计科目，你希望在打印报表时显示余额的绝对值，你可以对科目的余额取反；例如：收入科目。对于借方发生额大于贷方发生额的会计科目"
-"，你希望在打印报表时显示余额的绝对值，你可以对科目的余额取反；例如：费用科目。"
+"对于贷方发生额大于借方发生额的会计科目，你希望在打印报告时显示余额的绝对值，你可以对科目的余额取反；例如：收入科目。对于借方发生额大于贷方发生额的会计科目"
+"，你希望在打印报告时显示余额的绝对值，你可以对科目的余额取反；例如：费用科目。"
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -9031,7 +9093,7 @@ msgstr "未知的"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3150
+#: code:addons/account/account.py:3198
 #, python-format
 msgid "Opening Entries Journal"
 msgstr "账簿的开账分录"
@@ -9101,7 +9163,7 @@ msgstr "余额"
 #: field:account.invoice,move_lines:0
 #: field:account.move.reconcile,line_id:0
 msgid "Entry Lines"
-msgstr "凭证明细"
+msgstr "分录明细"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
@@ -9126,7 +9188,7 @@ msgid "Unit of Currency"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3147
+#: code:addons/account/account.py:3195
 #, python-format
 msgid "Sales Refund Journal"
 msgstr "销售红字发票账簿"
@@ -9192,13 +9254,13 @@ msgid "Purchase Tax(%)"
 msgstr "进项税(%)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:873
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "请创建发票明细。"
 
 #. module: account
-#: code:addons/account/wizard/pos_box.py:37
+#: code:addons/account/wizard/pos_box.py:36
 #, python-format
 msgid ""
 "Please check that the field 'Internal Transfers Account' is set on the "
@@ -9211,7 +9273,7 @@ msgid "Display Detail"
 msgstr "显示明细"
 
 #. module: account
-#: code:addons/account/account.py:3155
+#: code:addons/account/account.py:3203
 #, python-format
 msgid "SCNJ"
 msgstr "SCNJ"
@@ -9256,7 +9318,7 @@ msgstr "结束会计期间"
 #: model:ir.actions.act_window,name:account.action_account_report
 #: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
-msgstr "会计报表"
+msgstr "会计报告"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_liability_view1
@@ -9329,7 +9391,7 @@ msgstr "周期次数"
 #. module: account
 #: report:account.overdue:0
 msgid "Document: Customer account statement"
-msgstr "文档:客户科目报表"
+msgstr "文档:客户科目报告"
 
 #. module: account
 #: view:account.account.template:0
@@ -9370,8 +9432,8 @@ msgid "Receivable Account"
 msgstr "应收款科目"
 
 #. module: account
-#: code:addons/account/account_move_line.py:774
-#: code:addons/account/account_move_line.py:827
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
@@ -9435,7 +9497,7 @@ msgstr "图表"
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 msgid "Accounting entries are the first input of the reconciliation."
-msgstr "核销的第一个输入是会计分录。"
+msgstr "对账的第一个输入是会计分录。"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -9472,8 +9534,7 @@ msgid "Move"
 msgstr "凭证"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:477
-#: code:addons/account/account_invoice.py:458
+#: code:addons/account/account_bank_statement.py:478
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid Action!"
@@ -9553,7 +9614,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
 msgid "Common Report"
-msgstr "合并报表"
+msgstr "合并报告"
 
 #. module: account
 #: field:account.config.settings,default_sale_tax:0
@@ -9567,7 +9628,7 @@ msgid "Balance :"
 msgstr "余额:"
 
 #. module: account
-#: code:addons/account/account.py:1547
+#: code:addons/account/account.py:1587
 #, python-format
 msgid "Cannot create moves for different companies."
 msgstr ""
@@ -9575,7 +9636,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
 msgid "Periodic Processing"
-msgstr ""
+msgstr "周期性处理"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -9596,7 +9657,7 @@ msgstr "付款分录"
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "July"
-msgstr "7"
+msgstr "7月"
 
 #. module: account
 #: view:account.account:0
@@ -9606,12 +9667,12 @@ msgstr "科目一览表"
 #. module: account
 #: field:account.subscription.line,subscription_id:0
 msgid "Subscription"
-msgstr "周期性"
+msgstr "订阅"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr "辅助核算余额"
+msgstr "辅助核算平衡"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9639,7 +9700,7 @@ msgstr "辅助核算余额"
 #: field:accounting.report,period_to:0
 #: field:accounting.report,period_to_cmp:0
 msgid "End Period"
-msgstr "结束会计期间"
+msgstr "结束期间"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_expense_view1
@@ -9649,7 +9710,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,date_maturity:0
 msgid "Due date"
-msgstr "到期日期"
+msgstr "到期"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -9658,7 +9719,7 @@ msgid "Immediate Payment"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1464
+#: code:addons/account/account.py:1502
 #, python-format
 msgid " Centralisation"
 msgstr ""
@@ -9679,17 +9740,17 @@ msgstr ""
 #: view:account.subscription:0
 #: model:ir.model,name:account.model_account_subscription
 msgid "Account Subscription"
-msgstr "周期性凭证科目"
+msgstr "科目订阅"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Maturity date"
-msgstr "付款到期日"
+msgstr "成熟日期"
 
 #. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
-msgstr "周期性凭证"
+msgstr "分录订阅"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9746,10 +9807,10 @@ msgstr ""
 #: view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr "反核销"
+msgstr "反对账"
 
 #. module: account
-#: code:addons/account/account_invoice.py:894
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid "Bad total !"
 msgstr "坏的合计!"
@@ -9820,13 +9881,15 @@ msgstr "代码/日期"
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
+#: model:ir.actions.act_window,name:account.action_account_items
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_move_line_select
+#: model:ir.actions.act_window,name:account.action_tax_code_items
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 msgid "Journal Items"
-msgstr "会计凭证明细"
+msgstr "分录明细"
 
 #. module: account
 #: view:accounting.report:0
@@ -9834,7 +9897,7 @@ msgid "Comparison"
 msgstr "比较"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1122
+#: code:addons/account/account_move_line.py:1119
 #, python-format
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change "
@@ -9867,19 +9930,19 @@ msgstr "这科目将替换当前业务伙伴的默认支付科目"
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr "打开/关闭会计期间"
+msgstr "开始/结束期间"
 
 #. module: account
 #: field:account.account,currency_id:0
 #: field:account.account.template,currency_id:0
 #: field:account.bank.accounts.wizard,currency_id:0
 msgid "Secondary Currency"
-msgstr "外币"
+msgstr "第二货币"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "使凭证生效"
+msgstr "验证科目分录"
 
 #. module: account
 #: field:account.account,credit:0
@@ -9921,7 +9984,7 @@ msgid "Journal Entry Model"
 msgstr "账簿分录模型"
 
 #. module: account
-#: code:addons/account/account.py:1064
+#: code:addons/account/account.py:1073
 #, python-format
 msgid "Start period should precede then end period."
 msgstr ""
@@ -9930,7 +9993,7 @@ msgstr ""
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
-msgstr "凭证号"
+msgstr "编号"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9945,7 +10008,7 @@ msgstr "一般"
 #: field:account.invoice.report,price_total:0
 #: field:account.invoice.report,user_currency_price_total:0
 msgid "Total Without Tax"
-msgstr "不含税总金额"
+msgstr "总金额(不含税)"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -10006,7 +10069,7 @@ msgid "Profit (Loss) to report"
 msgstr "要打印的损益"
 
 #. module: account
-#: code:addons/account/account_invoice.py:387
+#: code:addons/account/account_invoice.py:379
 #, python-format
 msgid "There is no Sale/Purchase Journal(s) defined."
 msgstr ""
@@ -10014,7 +10077,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile.select:0
 msgid "Open for Reconciliation"
-msgstr "打开核销"
+msgstr "打开对账"
 
 #. module: account
 #: field:account.account,parent_left:0
@@ -10097,7 +10160,6 @@ msgstr "运行中的周期性凭证"
 #: view:account.analytic.cost.ledger:0
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
-#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
 msgstr "选择会计期间"
 
@@ -10108,7 +10170,7 @@ msgstr "选择会计期间"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Posted"
-msgstr "已登账"
+msgstr "已记账"
 
 #. module: account
 #: report:account.account.balance:0
@@ -10221,6 +10283,7 @@ msgstr "开始银行对账"
 
 #. module: account
 #: field:account.account,company_id:0
+#: report:account.account.balance:0
 #: field:account.aged.trial.balance,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.balance.report,company_id:0
@@ -10236,7 +10299,9 @@ msgstr "开始银行对账"
 #: field:account.entries.report,company_id:0
 #: field:account.fiscal.position,company_id:0
 #: field:account.fiscalyear,company_id:0
+#: report:account.general.journal:0
 #: field:account.general.journal,company_id:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,company_id:0
 #: field:account.invoice,company_id:0
 #: field:account.invoice.line,company_id:0
@@ -10245,6 +10310,7 @@ msgstr "开始银行对账"
 #: field:account.invoice.tax,company_id:0
 #: field:account.journal,company_id:0
 #: field:account.journal.period,company_id:0
+#: report:account.journal.period.print:0
 #: field:account.model,company_id:0
 #: field:account.move,company_id:0
 #: field:account.move.line,company_id:0
@@ -10279,15 +10345,15 @@ msgstr "到期日"
 #: field:cash.box.in,name:0
 #: field:cash.box.out,name:0
 msgid "Reason"
-msgstr ""
+msgstr "原因"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:56
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
-msgstr "未核销分录"
+msgstr "未对账分录"
 
 #. module: account
 #: help:account.partner.reconcile.process,today_reconciled:0
@@ -10295,7 +10361,7 @@ msgid ""
 "This figure depicts the total number of partners that have gone throught the "
 "reconciliation process today. The current partner is counted as already "
 "processed."
-msgstr "这数字描述了该业务伙伴到今天为止进行的核销处理的总数，当前业务伙伴算是已处理完。"
+msgstr "这数字描述了该业务伙伴到今天为止进行的对账处理的总数，当前业务伙伴算是已处理完。"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -10336,15 +10402,15 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1059
+#: code:addons/account/account_move_line.py:1056
 #, python-format
 msgid "Unable to change tax!"
-msgstr ""
+msgstr "不能更改税"
 
 #. module: account
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr "所选的凭证簿和期间必须属于相同公司。"
+msgstr "所选的账簿和期间必须属于相同公司。"
 
 #. module: account
 #: view:account.invoice:0
@@ -10393,20 +10459,22 @@ msgstr "管理客户付款 催款"
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
 msgid "Report of the Sales by Account"
-msgstr "销售科目的报表"
+msgstr "销售科目的报告"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr "财务结构"
+msgstr "替换规则"
 
 #. module: account
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1158
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Invoice"
 msgstr "供应商发票"
 
@@ -10453,7 +10521,7 @@ msgstr "凭证行中可选的数量"
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
 msgid "Reconciled transactions"
-msgstr "已核销处理"
+msgstr "已对账处理"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
@@ -10479,7 +10547,7 @@ msgstr "范围"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr "与采购凭证簿相关的成本凭证"
+msgstr "与采购账簿相关的分析分录明细"
 
 #. module: account
 #: help:account.account,type:0
@@ -10493,8 +10561,10 @@ msgstr ""
 "内部类型用于对不同类型的科目进行控制：视图科目不能做凭证，合并科目用于在多公司合并中指定子科目，应收应付科目用于业务伙伴，关闭科目用于不再使用的科目。"
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With movements"
 msgstr "进展"
@@ -10522,7 +10592,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "December"
-msgstr "12"
+msgstr "12月"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10539,7 +10609,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
-msgstr "旧的应收款"
+msgstr "到期的应收款项"
 
 #. module: account
 #: field:account.tax,applicable_type:0
@@ -10560,7 +10630,7 @@ msgstr "为表单导入供应商或客户发票"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
-msgstr "开单"
+msgstr "计费"
 
 #. module: account
 #: view:account.account:0
@@ -10586,10 +10656,10 @@ msgstr "剩余的欠款"
 #. module: account
 #: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted by"
-msgstr "排序依据："
+msgstr "分录排序 按"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1510
+#: code:addons/account/account_invoice.py:1546
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -10600,7 +10670,7 @@ msgstr ""
 #: view:account.fiscal.position:0
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
-msgstr "科目一览"
+msgstr "科目映射"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -10626,7 +10696,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "November"
-msgstr "11"
+msgstr "11月"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_all_a
@@ -10659,7 +10729,7 @@ msgstr ""
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr "总账账簿"
+msgstr "普通账簿"
 
 #. module: account
 #: view:account.invoice:0
@@ -10670,8 +10740,10 @@ msgstr "搜索发票"
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
+#: code:addons/account/account_invoice.py:1159
+#, python-format
 msgid "Refund"
-msgstr "红字发票"
+msgstr "退款"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -10692,7 +10764,7 @@ msgstr "普通信息"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Accounting Documents"
-msgstr "会计凭证"
+msgstr "会计档案"
 
 #. module: account
 #: code:addons/account/account.py:641
@@ -10711,7 +10783,7 @@ msgstr "使凭证行生效"
 #: help:res.partner,property_account_position:0
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr ""
+msgstr "替换规则将决定合作伙伴说使用的税和科目"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
@@ -10727,7 +10799,7 @@ msgstr "一旦核销完成，这发票可能已被支付。"
 #: code:addons/account/wizard/account_change_currency.py:59
 #, python-format
 msgid "New currency is not configured properly."
-msgstr ""
+msgstr "新货币没有正确设置"
 
 #. module: account
 #: view:account.account.template:0
@@ -10740,10 +10812,10 @@ msgid "Manual Invoice Taxes"
 msgstr "手动的发票税(非主营业务纳税)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:554
+#: code:addons/account/account_invoice.py:573
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
-msgstr ""
+msgstr "供应商付款条件没有包含付款条件行"
 
 #. module: account
 #: field:account.account,parent_right:0
@@ -10756,7 +10828,7 @@ msgstr "上级右"
 #: code:addons/account/static/src/js/account_move_reconciliation.js:80
 #, python-format
 msgid "Never"
-msgstr ""
+msgstr "从不"
 
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
@@ -10777,7 +10849,7 @@ msgstr "业务伙伴"
 #. module: account
 #: field:account.account,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "内部备注"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear
@@ -10808,7 +10880,7 @@ msgstr "科目模型"
 #: code:addons/account/account_cash_statement.py:292
 #, python-format
 msgid "Loss"
-msgstr ""
+msgstr "损失"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -10817,13 +10889,13 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "February"
-msgstr "2"
+msgstr "2月"
 
 #. module: account
 #: view:account.bank.statement:0
 #: help:account.cashbox.line,number_closing:0
 msgid "Closing Unit Numbers"
-msgstr ""
+msgstr "关闭单元数"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -10843,17 +10915,17 @@ msgstr "汇总账簿"
 #. module: account
 #: report:account.overdue:0
 msgid "Maturity"
-msgstr "到期日期"
+msgstr "成熟"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr "前景"
+msgstr "将来"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "搜索会计凭证明细"
+msgstr "搜索分录明细"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -10870,7 +10942,7 @@ msgstr "通常用 1或-1"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr "科目一览模版"
+msgstr "科目模版财政映射"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
@@ -10880,19 +10952,19 @@ msgstr "产品模板的费用科目"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "客户付款条款"
 
 #. module: account
 #: help:accounting.report,label_filter:0
 msgid ""
 "This label will be displayed on report to show the balance computed for the "
 "given comparison filter."
-msgstr "这个标签将放在报表上用来显示根据比较过滤条件计算出来的余额"
+msgstr "这个标签将放在报告上用来显示根据比较过滤条件计算出来的余额"
 
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
-msgstr ""
+msgstr "按行舍入"
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0

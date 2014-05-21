@@ -25,8 +25,11 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'category': 'Sales Management',
-    'depends': ['base', 'process', 'decimal_precision', 'mail'],
-    'demo': ['product_demo.xml', 'product_image_demo.xml'],
+    'depends': ['base', 'decimal_precision', 'mail'],
+    'demo': [
+        'product_demo.xml',
+        'product_image_demo.xml',
+    ],
     'description': """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================
@@ -54,18 +57,17 @@ Print product labels with barcode.
         'product_data.xml',
         'product_report.xml',
         'product_view.xml',
-        'product_shortcut_data.xml',
         'pricelist_view.xml',
         'partner_view.xml',
-        'process/product_process.xml'
+        'views/report_pricelist.xml',
     ],
     'test': [
         'product_pricelist_demo.yml',
-        'test/product_uom.yml',
         'test/product_pricelist.yml',
     ],
     'installable': True,
     'auto_install': False,
     'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

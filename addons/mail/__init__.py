@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import ir_attachment
 import mail_message_subtype
 import mail_alias
 import mail_followers

@@ -84,7 +84,9 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="open_entries" string="Entries" type="object" class="oe_inline"/>
+                        <button class="oe_inline oe_stat_button" name="open_entries"  type="object" icon="fa-pencil">
+                        <field string="Entries" name="entry_count" widget="statinfo" />
+                    </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -223,7 +225,7 @@
                 <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
                 <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                 <field name="category_id"/>
-                <field name="partner_id"/>
+                <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
             </search>
         </field>
     </record>

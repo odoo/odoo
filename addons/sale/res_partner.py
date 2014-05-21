@@ -41,7 +41,7 @@ class res_partner(osv.osv):
 
         default.update({'sale_order_ids': []})
 
-        super(res_partner, self).copy(cr, uid, record_id, default, context)
+        return super(res_partner, self).copy(cr, uid, record_id, default, context)
 
     _columns = {
         'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution

@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 25,
-    'summary': 'Jobs, Recruitment, Applications, Job Interviews',
+    'summary': 'Jobs, Recruitment, Applications, Job Interviews, Surveys',
     'description': """
 Manage job positions and the recruitment process
 ================================================
@@ -37,33 +37,32 @@ You can define the different phases of interviews and easily rate the applicant 
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
+    'images': ['images/hr_recruitment_analysis.jpeg',
+               'images/hr_recruitment_applicants.jpeg'],
     'depends': [
-        'base_status',
         'decimal_precision',
         'hr',
         'survey',
-        'base_calendar',
+        'calendar',
         'fetchmail',
+        'web_kanban_gauge',
     ],
     'data': [
-        'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'report/hr_recruitment_report_view.xml',
-        'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
-        'hr_recruitment_data.xml'
+        'survey_data_recruitment.xml',
+        'hr_recruitment_data.xml',
+        'views/hr_recruitment.xml',
     ],
-    'demo': ['hr_recruitment_demo.yml'],
+    'demo': ['hr_recruitment_demo.xml'],
     'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
     'application': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

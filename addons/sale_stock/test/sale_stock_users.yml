@@ -1,0 +1,62 @@
+-
+   Create a user as 'Stock Salesmanager'
+-
+  !record {model: res.users, id: res_sale_stock_salesmanager, view: False}:
+    company_id: base.main_company
+    name: Stock Sales manager
+    login: ssm
+    password: ssm
+    email: ss_salesmanager@yourcompany.com
+-
+  I added groups for Salesmanager.
+-
+  !record {model: res.users, id: res_sale_stock_salesmanager}:
+    groups_id:
+      - base.group_sale_manager
+-
+   Create a user as 'Stock Salesman'
+-
+  !record {model: res.users, id: res_sale_stock_salesman, view: False}:
+    company_id: base.main_company
+    name: Stock Salesman
+    login: ssu
+    password: ssu
+    email: ss_salesman@yourcompany.com
+-
+  I added groups for Stock Salesman.
+-
+  !record {model: res.users, id: res_sale_stock_salesman}:
+    groups_id:
+      - base.group_sale_salesman_all_leads
+      - stock.group_stock_user
+-
+   Create a user as 'Stock User'
+-
+  !record {model: res.users, id: res_stock_user, view: False}:
+    company_id: base.main_company
+    name: Stock User
+    login: sau
+    password: sau
+    email: stock_user@yourcompany.com
+-
+  I added groups for Stock User.
+-
+  !record {model: res.users, id: res_stock_user}:
+    groups_id:
+      - stock.group_stock_user
+-
+   Create a user as 'Stock Manager'
+-
+  !record {model: res.users, id: res_stock_manager, view: False}:
+    company_id: base.main_company
+    name: Stock Manager
+    login: sam
+    password: sam
+    email: admin@portal.example.com
+    email: stock_manager@yourcompany.com
+-
+  I added groups for Stock Manager.
+-
+  !record {model: res.users, id: res_stock_manager}:
+    groups_id:
+      - stock.group_stock_manager

@@ -58,7 +58,6 @@ class project_issue(osv.osv):
             
         return result
 
-project_issue()
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -67,7 +66,6 @@ class account_analytic_line(osv.osv):
         'create_date' : fields.datetime('Create Date', readonly=True),
     }
 
-account_analytic_line()
 
 class hr_analytic_issue(osv.osv):
 
@@ -77,6 +75,5 @@ class hr_analytic_issue(osv.osv):
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
 
-hr_analytic_issue()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

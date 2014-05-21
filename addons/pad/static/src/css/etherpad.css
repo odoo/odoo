@@ -13,13 +13,12 @@
     border: solid 1px #ccc;
     border-radius:3px;
     text-align: center;
-    line-height: 22px;
+    line-height: 28px;
     overflow: hidden;
     -webkit-box-sizing: border-box;
     color: #666666;
-    padding-top:-3px;
-    padding-left:-1px;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .oe_pad_switch:hover{
@@ -43,7 +42,7 @@
     z-index: 1000;
 }
 
-.oe_pad.oe_configured .oe_pad_content.oe_editing{
+.oe_pad .oe_pad_content.oe_editing{
     border: solid 1px #c4c4c4;
     height:500px;
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.1);
@@ -53,7 +52,7 @@
             box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
-.oe_pad.oe_configured.oe_pad_fullscreen .oe_pad_content {
+.oe_pad.oe_pad_fullscreen .oe_pad_content {
     height: 100%;
     border: none;
     -webkit-box-shadow: none;
@@ -63,7 +62,7 @@
             box-shadow: none;
 }
 
-.oe_pad.oe_unconfigured > p {
+.oe_pad .oe_unconfigured {
     text-align: center;
     opacity: 0.75;
 }
@@ -71,14 +70,13 @@
 .oe_pad_loading{
     text-align: center;
     opacity: 0.75;
+    font-style: italic;
 }
 
 .etherpad_readonly ul, .etherpad_readonly ol {
-    margin-before: 1em;
-    margin-after: 1em;
-    margin-start: 0px;
-    margin-end: 0px;
-    padding-start: 40px !important;
+    margin: 0;
+    margin-left: 1.5em;
+    padding: 0;
 }
 .etherpad_readonly ul li{
     list-style-type: disc;
@@ -92,8 +90,9 @@
 
 .etherpad_readonly{ 
     font-family: arial, sans-serif;
-    font-size: 13px;
-    line-height: 18px; 
+    font-size: 15px;
+    line-height: 19px; 
+    word-wrap: break-word;
 }
 
 .openerp .oe_form_nomargin .etherpad_readonly{ 
@@ -109,3 +108,12 @@
 .etherpad_readonly ol ol ol ol ol ol li{ list-style-type: lower-roman !important; }
 .etherpad_readonly ol ol ol ol ol ol ol li{ list-style-type: decimal !important; }
 .etherpad_readonly ol ol ol ol ol ol ol ol li{ list-style-type: lower-latin !important; }
+.etherpad_readonly ul li { list-style-type: disc !important; }
+.etherpad_readonly ul ul li { list-style-type: circle !important; }
+.etherpad_readonly ul ul ul li { list-style-type: square !important; }
+.etherpad_readonly ul ul ul ul li { list-style-type: disc !important; }
+.etherpad_readonly ul ul ul ul ul li { list-style-type: circle !important; }
+.etherpad_readonly ul ul ul ul ul ul li { list-style-type: square !important; }
+.etherpad_readonly ul ul ul ul ul ul ul li { list-style-type: disc !important; }
+.etherpad_readonly ul ul ul ul ul ul ul ul li { list-style-type: circle !important; }
+.etherpad_readonly ul ul ul ul ul ul ul ul ul li { list-style-type: square !important; }

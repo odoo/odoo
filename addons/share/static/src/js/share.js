@@ -14,7 +14,7 @@ openerp.share = function(session) {
         else rec_name = '';
         session.web.pyeval.eval_domains_and_contexts({
             domains: [domain],
-            contexts: [view.dataset.context]
+            contexts: [Share.get_context()]
         }).done(function (result) {
             Share.create({
                 name: action.name,
@@ -25,7 +25,7 @@ openerp.share = function(session) {
                 view_type: view.fields_view.type,
                 invite: invite || false,
             }).done(function(share_id) {
-                var step1 = Share.call('go_step_1', [[share_id]]).done(function(result) {
+                var step1 = Share.call('go_step_1', [[share_id], Share.get_context()]).done(function(result) {
                     var action = result;
                     self.do_action(action);
                 });

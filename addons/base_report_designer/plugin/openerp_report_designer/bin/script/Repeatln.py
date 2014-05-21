@@ -1,49 +1,26 @@
-##########################################################################
+#########################################################################
 #
-# Portions of this file are under the following copyright and license:
+#  Copyright (c) 2003-2004 Danny Brewer d29583@groovegarden.com
+#  Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
 #
-# 
-# and other portions are under the following copyright and license:
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
+#  See:  http://www.gnu.org/licenses/lgpl.html
 #
-#    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-##############################################################################
+#############################################################################
+
 import uno
 import string
 import unohelper
@@ -166,33 +143,33 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
                     self.sValue= "objects"
                 else:
                     sItem=""
-		    for anObject in self.aObjectList:
-			if anObject[:anObject.find("(")] == sObject:
-			    sItem = anObject
-			    self.insVariable.setText( sItem )
+                    for anObject in self.aObjectList:
+                        if anObject[:anObject.find("(")] == sObject:
+                            sItem = anObject
+                            self.insVariable.setText( sItem )
 
-		    genTree(
-			sItem[sItem.find("(")+1:sItem.find(")")],
-			self.aListRepeatIn,
-			self.insField,
-			self.sMyHost,
-			2,
-			ending=['one2many','many2many'],
-			recur=['one2many','many2many']
-		    )
+                    genTree(
+                        sItem[sItem.find("(")+1:sItem.find(")")],
+                        self.aListRepeatIn,
+                        self.insField,
+                        self.sMyHost,
+                        2,
+                        ending=['one2many','many2many'],
+                        recur=['one2many','many2many']
+                    )
 
                     self.sValue= self.win.getListBoxItem("lstFields",self.aListRepeatIn.index(sFields))
 
             for var in self.aVariableList:
 
-		if var[:8] <> 'List of ':
-		    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[var.find("(")+1:var.find(")")])])
+                if var[:8] <> 'List of ':
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[var.find("(")+1:var.find(")")])])
                 else:
-		    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[8:])])
+                    self.model_ids = self.sock.execute(database, uid, self.password, 'ir.model' ,  'search', [('model','=',var[8:])])
                 fields=['name','model']
                 self.model_res = self.sock.execute(database, uid, self.password, 'ir.model', 'read', self.model_ids,fields)
                 if self.model_res <> []:
-		    if var[:8]<>'List of ':
+                    if var[:8]<>'List of ':
                         self.insVariable.addItem(var[:var.find("(")+1] + self.model_res[0]['name'] + ")" ,self.insVariable.getItemCount())
                     else:
                         self.insVariable.addItem('List of ' + self.model_res[0]['name'] ,self.insVariable.getItemCount())
@@ -212,8 +189,8 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
             self.win.setEditText("txtName", self.sGVariable)
             self.win.setEditText("txtUName",self.sGDisplayName)
         else:
-	    self.win.setEditText("txtName",sMain[sMain.rfind("/")+1:])
-	    self.win.setEditText("txtUName","|-."+sItem[sItem.rfind("/")+1:]+".-|")
+            self.win.setEditText("txtName",sMain[sMain.rfind("/")+1:])
+            self.win.setEditText("txtUName","|-."+sItem[sItem.rfind("/")+1:]+".-|")
 
     def cmbVariable_selected(self, oItemEvent):
 
@@ -225,15 +202,15 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
             self.win.removeListBoxItems("lstFields", 0, self.win.getListBoxItemCount("lstFields"))
             sItem=self.win.getComboBoxText("cmbVariable")
             for var in self.aVariableList:
-		if var[:8]=='List of ':
-		    if var[:8]==sItem[:8]:
+                if var[:8]=='List of ':
+                    if var[:8]==sItem[:8]:
                         sItem = var
-		elif var[:var.find("(")+1] == sItem[:sItem.find("(")+1]:
+                elif var[:var.find("(")+1] == sItem[:sItem.find("(")+1]:
                     sItem = var
             self.aListRepeatIn=[]
 
-	    data = ( sItem[sItem.rfind(" ") + 1:] == docinfo.getUserFieldValue(3) ) and docinfo.getUserFieldValue(3) or sItem[sItem.find("(")+1:sItem.find(")")]
-	    genTree( data, self.aListRepeatIn, self.insField, self.sMyHost, 2, ending=['one2many','many2many'], recur=['one2many','many2many'] )
+            data = ( sItem[sItem.rfind(" ") + 1:] == docinfo.getUserFieldValue(3) ) and docinfo.getUserFieldValue(3) or sItem[sItem.find("(")+1:sItem.find(")")]
+            genTree( data, self.aListRepeatIn, self.insField, self.sMyHost, 2, ending=['one2many','many2many'], recur=['one2many','many2many'] )
 
             self.win.selectListBoxItemPos("lstFields", 0, True )
 

@@ -25,13 +25,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
-from openerp import pooler
 
 class report_webkit_actions(osv.osv_memory):
     _name = "report.webkit.actions"
@@ -61,13 +60,13 @@ class report_webkit_actions(osv.osv_memory):
         if not record_id or (active_model and active_model != 'ir.actions.report.xml'):
             return res
         
-        report = self.pool.get('ir.actions.report.xml').browse(
+        report = self.pool['ir.actions.report.xml'].browse(
                                                     cr, 
                                                     uid, 
                                                     context.get('active_id'), 
                                                     context=context
                                                 )
-        ir_values_obj = self.pool.get('ir.values')
+        ir_values_obj = self.pool['ir.values']
         ids = ir_values_obj.search(
                             cr, 
                             uid, 
@@ -93,7 +92,7 @@ class report_webkit_actions(osv.osv_memory):
         """
         if context is None:
             context = {}        
-        report_obj = self.pool.get('ir.actions.report.xml')
+        report_obj = self.pool['ir.actions.report.xml']
         for current in self.browse(cr, uid, ids, context=context):
             report = report_obj.browse(
                                                         cr, 
@@ -102,7 +101,7 @@ class report_webkit_actions(osv.osv_memory):
                                                         context=context
                                                     )
             if current.print_button:
-                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                ir_values_obj = self.pool['ir.values']
                 res = ir_values_obj.set(
                                 cr, 
                                 uid, 
@@ -114,7 +113,7 @@ class report_webkit_actions(osv.osv_memory):
                                  isobject=True
                                 )
             else:
-                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                ir_values_obj = self.pool['ir.values']
                 res = ir_values_obj.set(
                                     cr, 
                                     uid, 
@@ -139,6 +138,5 @@ class report_webkit_actions(osv.osv_memory):
                     'type': 'ir.actions.act_window',
                 }                   
 
-report_webkit_actions()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

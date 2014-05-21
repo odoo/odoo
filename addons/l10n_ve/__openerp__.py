@@ -38,7 +38,7 @@ proposed in OpenERP should comply with some Accepted best practices in Venezuela
 this plan comply with this practices.
 
 This module has been tested as base for more of 1000 companies, because 
-it is based in a mixtures of most common softwares in the Venezuelan 
+it is based in a mixtures of most common software in the Venezuelan 
 market what will allow for sure to accountants feel them first steps with 
 OpenERP more confortable.
 

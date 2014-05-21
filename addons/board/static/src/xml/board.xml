@@ -10,7 +10,7 @@
             <span> Change Layout </span>
         </button>
     </div>
-    <table t-att-data-layout="node.attrs.style" t-attf-class="oe_dashboard oe_dashboard_layout_#{node.attrs.style}" cellspacing="0" cellpadding="0" border="0">
+    <table t-att-data-layout="node.attrs.layout" t-attf-class="oe_dashboard oe_dashboard_layout_#{node.attrs.layout}" cellspacing="0" cellpadding="0" border="0">
     <tr>
         <td t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
              t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe_dashboard_column index_#{column_index}">

@@ -21,7 +21,6 @@
 
 from openerp import SUPERUSER_ID
 from openerp.osv import osv
-from openerp.tools import append_content_to_html
 from openerp.tools.translate import _
 
 
@@ -29,16 +28,19 @@ class mail_mail(osv.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """
     _inherit = 'mail.mail'
 
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ add a signin link inside the body of a mail.mail
-            :param mail: mail.mail browse_record
-            :param partner: browse_record of the specific recipient partner
-            :return: the resulting body_html
+    def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
+        """ Generate URLs for links in mails:
+            - partner is not an user: signup_url
+            - partner is an user: fallback on classic URL
         """
-        body = super(mail_mail, self).send_get_mail_body(cr, uid, mail, partner, context=context)
-        if partner:
-            context = dict(context or {}, signup_valid=True)
-            partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, partner.id, context=context)
-            text = _("""Access your personal documents through <a href="%s">our Customer Portal</a>""") % partner.signup_url
-            body = append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
-        return body
+        if context is None:
+            context = {}
+        partner_obj = self.pool.get('res.partner')
+        if partner and not partner.user_ids:
+            contex_signup = dict(context, signup_valid=True)
+            signup_url = partner_obj._get_signup_url_for_action(cr, SUPERUSER_ID, [partner.id],
+                                                                model=mail.model, res_id=mail.res_id,
+                                                                context=contex_signup)[partner.id]
+            return _(""", <span class='oe_mail_footer_access'><small>access %s %s through <a style='color:inherit' href="%s">our Customer Portal</a></small></span>""") % (context.get('model_name', ''), mail.record_name, signup_url)
+        else:
+            return super(mail_mail, self)._get_partner_access_link(cr, uid, mail, partner=partner, context=context)

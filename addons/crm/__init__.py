@@ -22,12 +22,13 @@
 import crm
 import crm_segmentation
 import crm_lead
-import crm_meeting
+import calendar_event
 import crm_phonecall
 import report
 import wizard
 import res_partner
 import res_config
+import base_partner_merge
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

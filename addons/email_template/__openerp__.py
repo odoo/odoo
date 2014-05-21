@@ -59,10 +59,11 @@ campaigns on any OpenERP document.
         'wizard/email_template_preview_view.xml',
         'email_template_view.xml',
         'res_partner_view.xml',
+        'ir_actions_view.xml',
         'wizard/mail_compose_message_view.xml',
         'security/ir.model.access.csv'
     ],
-    'demo': ['res_partner_demo.yml'],
+    'demo': [],
     'installable': True,
     'auto_install': True,
     'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],

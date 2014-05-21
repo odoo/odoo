@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_expense">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <h2>HR Expenses</h2>
+
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-3">
+                            <strong>Employee:</strong>
+                            <p t-field="o.employee_id.name"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Date:</strong>
+                            <p t-field="o.date"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Description:</strong>
+                            <p t-field="o.name"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Validated By:</strong>
+                            <p t-field="o.user_valid"/>
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th class="text-center">Ref.</th>
+                                <th>Unit Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-right">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.line_ids" t-as="line">
+                                <td><span t-field="line.date_value"/></td>
+                                <td>
+                                    <span t-field="line.name"/> 
+                                    <span t-field="line.description"/><br/>
+                                    <span t-field="line.analytic_account.complete_name" t-if="line.analytic_account"/>
+                                </td>
+                                <td style="text-center">
+                                    <span t-field="line.ref"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.unit_amount"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="line.unit_quantity"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.total_amount"
+                                        t-field-options='{"widget": "monetary", "display_currency":"o.currency_id"}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-right">
+                                        <span t-field="o.amount"
+                                            t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <p t-field="o.note"/>
+                    <p>Certified honest and conform,<br/>(Date and signature).<br/><br/></p>
+                    <p>This document must be dated and signed for reimbursement.</p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

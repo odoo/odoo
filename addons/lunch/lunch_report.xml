@@ -2,12 +2,12 @@
 <openerp>
     <data>
         <report
-            id="report_lunch_order"
+            id="action_report_lunch_order"
             string="Lunch Order"
             model="lunch.order.line"
-            name="lunch.order.line"
-            rml="lunch/report/order.rml"
-            auto="False"
-            />
+            report_type="qweb-pdf"
+            name="lunch.report_lunchorder"
+            file="lunch.report_lunchorder"
+        />
     </data>
 </openerp>

@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
                 <tree editable="top" string="Timesheet Activities">                  
                     <field name="date" on_change="on_change_date(date)"/>
-                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'/>
+                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'
+                        context="{'default_groups_ref': ['base.group_user']}"/>
                     <field name="name"/>
                     <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}"/>
                     <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
@@ -29,7 +30,8 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
+                            <field name="user_id" on_change="on_change_user_id(user_id)" required="1"
+                                context="{'default_groups_ref': ['base.group_user']}"/>
                         </group>
                         <group>
                             <field name="date" on_change="on_change_date(date)"/>
@@ -72,14 +74,15 @@
                         <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Analytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Timesheet Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Timesheet by Month"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="act_analytic_cost_revenue">
-            <field name="context">{'search_default_account_id': [active_id], 'default_account_id': active_id, 'search_default_group_date': 1, 'search_default_group_journal': 1}</field>
+            <field name="context">{'search_default_group_date': 1, 'search_default_group_journal': 1}</field>
+            <field name="domain">[('account_id','child_of', active_id)]</field>
             <field name="name">Costs &amp; Revenues</field>
             <field name="res_model">account.analytic.line</field>
             <field name="src_model">account.analytic.account</field>
@@ -115,14 +118,24 @@
                     <label for="use_timesheets"/>
                 </xpath>
                 <xpath expr='//div[@name="buttons"]' position='inside'>
-                    <button string="Costs and Revenues"
-                        name="%(act_analytic_cost_revenue)d"
-                        type="action"/>
-
+                    <button class="oe_inline oe_stat_button" type="action" name="%(act_analytic_cost_revenue)d" 
+                        icon="fa-usd"  string="Cost/Revenue" widget="statinfo"/>
                 </xpath>
             </field>
         </record>
+        
+        <record id="act_hr_timesheet_accounts_form" model="ir.actions.act_window">
+            <field name="name">Timesheet Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('use_timesheets','=', True)]</field>
+            <field name="context">{'default_use_timesheets':1}</field>
+        </record>
 
+        <menuitem parent="hr.menu_hr_configuration" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="7" groups="base.group_hr_manager"/>
+        
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
             <field name="name">Timesheet Activities</field>
             <field name="type">ir.actions.act_window</field>

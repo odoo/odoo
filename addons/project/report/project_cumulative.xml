@@ -2,32 +2,15 @@
 <openerp>
     <data>
 
-        <record id="view_task_history_tree" model="ir.ui.view">
-            <field name="name">project.task.history.cumulative.tree</field>
-            <field name="model">project.task.history.cumulative</field>
-            <field name="arch" type="xml">
-                <tree string="Tasks's Cumulative Flow">
-                    <field name="date"/>
-                    <field name="project_id"/>
-                    <field name="task_id"/>
-                    <field name="type_id"/>
-                    <field name="user_id"/>
-                    <field name="remaining_hours"/>
-                    <field name="kanban_state"/>
-                    <field name="state" groups="base.group_no_one"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="view_task_history_graph" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.graph</field>
             <field name="model">project.task.history.cumulative</field>
             <field name="arch" type="xml">
-                <!-- <field name="project_id"/> -->
-                <graph string="Project Tasks" type="bar">
-                    <field name="date"/>
-                    <field name="planned_hours" operator="+"/>
-                    <field name="type_id" group="True"/>
+                <graph string="Project Tasks" type="bar" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="type_id" type="row"/>
+                    <field name="planned_hours" type="measure"/>
+                    <field name="remaining_hours" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -40,8 +23,7 @@
                     <field name="date"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
-                    <filter name="open" string="In Progress Tasks" domain="[('state','in',('open','draft'))]"/>
-                    <filter string="Pending Tasks" domain="[('state','=','pending')]" context="{'show_delegated':False}"/>
+                    <filter name="new" string="New" domain="[('type_id.sequence', '=', 1)]"/>
                     <separator/>
                     <filter name="kanban_blocked" string="Blocked" domain="[('kanban_state','=','blocked')]"/>
                     <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]"/>
@@ -58,7 +40,7 @@
             <field name="name">Cumulative Flow</field>
             <field name="res_model">project.task.history.cumulative</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
+            <field name="view_mode">graph</field>
             <field name="view_id" ref="view_task_history_graph"/>
             <field name="filter" eval="False"/>
             <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>

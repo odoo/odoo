@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_trialbalance">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2><span t-esc="res_company.name"/>: Trial Balance</h2>
+
+                <div class="row mt32">
+                    <div class="col-xs-3">
+                        <strong>Chart of Accounts:</strong>
+                        <p t-esc="get_account(data)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Fiscal Year:</strong>
+                        <p t-esc="get_fiscalyear(data)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Display Account:</strong>
+                        <p>
+                            <span t-if="data['form']['display_account'] == 'all'">All accounts</span>
+                            <span t-if="data['form']['display_account'] == 'movement'">With movements</span>
+                            <span t-if="data['form']['display_account'] == 'not_zero'">With balance not equal to zero</span>
+                        </p>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Filter By:</strong>
+                        <p>
+                            <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
+                            <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
+                            <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
+                            <p t-if="data['form']['filter'] == 'filter_period'">
+                                Start Period: <span t-esc="get_start_period(data)"/>
+                                End Period: <span t-esc="get_end_period(data)"/>
+                            </p>
+                            <p t-if="data['form']['filter'] == 'filter_date'">
+                                Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
+                                Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
+                            </p>
+                        </p>
+                    </div>
+                </div>
+                <div class="row mb32">
+                    <div class="col-xs-3">
+                        <strong>Target Moves:</strong>
+                        <p t-esc="get_target_move(data)"/>
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Account</th>
+                            <th class="text-right">Debit</th>
+                            <th class="text-right">Credit</th>
+                            <th class="text-right">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="lines(data['form'])" t-as="childrenaccount">
+                            <t t-if="childrenaccount['type'] == 'view'">
+                                <t t-set="style" t-value="'font-weight:bold;'"/>
+                            </t>
+                            <t t-if="childrenaccount['type'] != 'view'">
+                                <t t-set="style" t-value="'font-weight:normal;'"/>
+                            </t>
+
+                            <td>
+                                <span t-att-style="style" t-esc="childrenaccount['code']"/>                                     
+                            </td>
+                            <td>
+                                <span style="color: white;" t-esc="'.' * (childrenaccount['level'] - 1)"/>
+                                <span t-att-style="style" t-esc="childrenaccount['name']"/>
+                            </td>
+                            <td class="text-right">
+                                 <span t-att-style="style" t-esc="childrenaccount['debit']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-att-style="style" t-esc="childrenaccount['credit']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-att-style="style" t-esc="formatLang(childrenaccount['balance'], currency_obj=res_company.currency_id)"/>
+                            </td>  
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

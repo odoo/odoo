@@ -22,12 +22,11 @@
 import datetime
 import time
 
+import openerp
 from openerp.osv import fields, osv
 from openerp.report.interface import report_rml
 from openerp.report.interface import toxml
 
-from openerp import pooler
-import time
 from openerp.report import report_sxw
 from openerp.tools import ustr
 from openerp.tools.translate import _
@@ -50,8 +49,9 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
     display={}
     if dept==0:
         count=0
-        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
-        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr, uid, p_id, ['date_from','date_to','holiday_status_id','state'])
+        registry = openerp.registry(cr.dbname)
+        holidays_ids = registry['hr.holidays'].search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
+        ids_date = registry['hr.holidays'].read(cr, uid, holidays_ids, ['date_from','date_to','holiday_status_id','state'])
 
         for index in range(1,61):
             diff=index-1
@@ -85,18 +85,18 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
 
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, data, context):
-        obj_dept = pooler.get_pool(cr.dbname).get('hr.department')
-        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
+        registry = openerp.registry(cr.dbname)
+        obj_dept = registry['hr.department']
+        obj_emp = registry['hr.employee']
         depts=[]
         emp_id={}
-#        done={}
-        rpt_obj = pooler.get_pool(cr.dbname).get('hr.holidays')
+        rpt_obj = registry['hr.holidays']
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         cr.execute("SELECT name FROM res_company")
         res=cr.fetchone()[0]
         date_xml=[]
         date_today=time.strftime('%Y-%m-%d %H:%M:%S')
-        date_xml +=['<res name="%s" today="%s" />' % (res,date_today)]
+        date_xml +=['<res name="%s" today="%s" />' % (to_xml(res),date_today)]
 
         cr.execute("SELECT id, name, color_name FROM hr_holidays_status ORDER BY id")
         legend=cr.fetchall()
@@ -128,7 +128,7 @@ class report_custom(report_rml):
 #        date_xml=[]
         for l in range(0,len(legend)):
             date_xml += ['<legend row="%d" id="%d" name="%s" color="%s" />' % (l+1,legend[l][0],_(legend[l][1]),legend[l][2])]
-        date_xml += ['<date month="%s" year="%d" />' % (som.strftime('%B'), som.year),'<days>']
+        date_xml += ['<date month="%s" year="%d" />' % (ustr(som.strftime('%B')), som.year),'<days>']
 
         cell=1
         if day_diff.days>=30:
@@ -213,18 +213,14 @@ class report_custom(report_rml):
         emp_xml=''
         row_id=1
         
-        if data['model']=='hr.employee':
-            for id in data['form']['emp']:
-                 items = obj_emp.read(cr, uid, id, ['id','name'])
-                 
-                 emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
-                 row_id = row_id +1
+        if data['model'] == 'hr.employee':
+            for items in obj_emp.read(cr, uid, data['form']['emp'], ['id', 'name']):
+                emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
+                row_id = row_id +1
 
         elif data['model']=='ir.ui.menu':
-            for id in data['form']['depts']:
-                dept = obj_dept.browse(cr, uid, id, context=context)
-                cr.execute("""SELECT id FROM hr_employee \
-                WHERE department_id = %s""", (id,))
+            for dept in obj_dept.browse(cr, uid, data['form']['depts'], context=context):
+                cr.execute("SELECT id FROM hr_employee WHERE department_id = %s", (dept.id,))
                 emp_ids = [x[0] for x in cr.fetchall()]
                 if emp_ids==[]:
                     continue
@@ -242,7 +238,7 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name))
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(registry['res.users'].browse(cr,uid,uid).company_id.name))
 
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>

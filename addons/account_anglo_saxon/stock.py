@@ -28,12 +28,21 @@ class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _description = "Picking List"
 
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
+        invoice_vals, context=None):
+        """Overwrite to add move_id reference"""
+        res = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
+        res.update({
+            'move_id': move_line.id,
+        })
+        return res
+
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         '''Return ids of created invoices for the pickings'''
         res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type, context=context)
         if type == 'in_refund':
-            for inv in self.pool.get('account.invoice').browse(cr, uid, res.values(), context=context):
+            for inv in self.pool.get('account.invoice').browse(cr, uid, res, context=context):
                 for ol in inv.invoice_line:
                     if ol.product_id:
                         oa = ol.product_id.property_stock_account_output and ol.product_id.property_stock_account_output.id
@@ -45,7 +54,7 @@ class stock_picking(osv.osv):
                             self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
                             
         elif type == 'in_invoice':
-            for inv in self.pool.get('account.invoice').browse(cr, uid, res.values(), context=context):
+            for inv in self.pool.get('account.invoice').browse(cr, uid, res, context=context):
                 for ol in inv.invoice_line:
                     if ol.product_id:
                         oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
@@ -57,7 +66,6 @@ class stock_picking(osv.osv):
                             self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return res
 
-stock_picking()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

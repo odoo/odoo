@@ -78,9 +78,11 @@ class crm_phonecall2phonecall(osv.osv_memory):
 
             categ_id = False
             data_obj = self.pool.get('ir.model.data')
-            res_id = data_obj._get_id(cr, uid, 'crm', 'categ_phone2')
-            if res_id:
+            try:
+                res_id = data_obj._get_id(cr, uid, 'crm', 'categ_phone2')
                 categ_id = data_obj.browse(cr, uid, res_id, context=context).res_id
+            except ValueError:
+                pass
 
             if 'name' in fields:
                 res.update({'name': phonecall.name})
@@ -96,6 +98,5 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 res.update({'partner_id': phonecall.partner_id and phonecall.partner_id.id or False})
         return res
 
-crm_phonecall2phonecall()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

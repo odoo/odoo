@@ -39,7 +39,6 @@ class hr_contract_be(osv.osv):
         'retained_net_amount': fields.float('Net retained ', digits_compute=dp.get_precision('Payroll')),
     }
 
-hr_contract_be()
 
 class hr_employee_be(osv.osv):
     _inherit = 'hr.employee'
@@ -52,6 +51,5 @@ class hr_employee_be(osv.osv):
         'disabled_children_number': fields.integer('Number of disabled children'),
     }
 
-hr_employee_be()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

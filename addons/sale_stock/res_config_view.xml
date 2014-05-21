@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
          <record id="view_sales_config_sale_stock" model="ir.ui.view">
              <field name="name">sale settings</field>
              <field name="model">sale.config.settings</field>
              <field name="inherit_id" ref="sale.view_sales_config"/>
              <field name="arch" type="xml">
                  <data>
-                     <xpath expr="//div[@name='Customer Features']" position="inside">
-                         <div>
-                              <field name="group_sale_delivery_address" class="oe_inline"/>
-                              <label for="group_sale_delivery_address"/>
-                         </div>
-                     </xpath>
                      <xpath expr="//div[@name='group_invoice_so_lines']" position="replace">
                          <div>
                              <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
@@ -31,14 +24,14 @@
                          </div>
                      </xpath>
                      <xpath expr="//label[@string='Default Options']" position="replace">
-                         <label for="id" string="Default Options" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False),('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False),('task_work','=',False), ('module_account_analytic_analysis','=',False)]}"/>
+                         <label for="id" string="Default Options"/>
                      </xpath>
                      <xpath expr="//div[@name='time_unit']" position="before">
                          <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
                              <label for="default_order_policy"/>
                              <field name="default_order_policy" class="oe_inline"/>
                          </div>
-                         <div attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}">
+                         <div>
                              <field name="module_delivery" class="oe_inline"/>
                              <label for="module_delivery"/>
                          </div>
@@ -59,12 +52,6 @@
                              <label for="group_mrp_properties"/>
                          </div>
                      </div>
-                     <xpath expr="//div[@name='module_sale_margin']" position="before">
-                         <div>
-                             <field name="group_multiple_shops" class="oe_inline"/>
-                             <label for="group_multiple_shops"/>
-                         </div>
-                     </xpath>
                      <field name="group_invoice_so_lines" position="replace">
                          <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
                      </field>
@@ -74,9 +61,14 @@
                              <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
                          </div>
                      </xpath>
+                     <xpath expr="//div[@name='Sale Features']" position="inside">
+                         <div>
+                              <field name="group_route_so_lines" class="oe_inline"/>
+                              <label for="group_route_so_lines"/>
+                         </div>
+                     </xpath>
                 </data>
              </field>
          </record>
-
     </data>
 </openerp>

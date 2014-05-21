@@ -43,8 +43,8 @@
                 <form string="Accounting Voucher" version="7.0">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
-                      <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
-                      <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                      <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to unreconcile this record?"/>
+                      <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma" />
                       <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                       <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                   </header>
@@ -80,7 +80,7 @@
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
                                         <label for="amount"/>
-                                        <button type="object" icon="terp-stock_format-scientific"   name="compute_tax" class="oe_link oe_edit_only" string="(Update)" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                        <button type="object" name="compute_tax" class="oe_link oe_edit_only" string="(Update)" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     </div>
                                     <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>
@@ -129,8 +129,8 @@
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <separator/>
                     <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
-                    <field name="partner_id"/>
-                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" />
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -200,9 +200,9 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='import_buttons']" position="inside">
-                    <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action"
-                            attrs="{'invisible':[('state','=','confirm')]}"/>
+                    <button class="oe_inline oe_stat_button" name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoice" type="action"
+                            attrs="{'invisible':[('state','=','confirm')]}" widget="statinfo" icon="fa-pencil-square-o"/>
                 </xpath>
             </field>
         </record>
@@ -213,10 +213,10 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" string="" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False}"/>
+                    <field name="voucher_id" string="" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False, 'account_id': account_id}"/>
                 </xpath>
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
-                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False}"/>
+                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False, 'account_id': account_id}"/>
                 </xpath>
                 <field name="amount" position="attributes">
                     <attribute name="on_change">onchange_amount(amount)</attribute>
@@ -230,7 +230,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
+                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'account_id': account_id}"/>
                 </xpath>
             </field>
         </record>
@@ -241,7 +241,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
+                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'account_id': account_id}"/>
                 </xpath>
             </field>
         </record>

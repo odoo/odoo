@@ -14,6 +14,10 @@ _logger = logging.getLogger(__name__)
 class pad_common(osv.osv_memory):
     _name = 'pad.common'
 
+    def pad_is_configured(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return bool(user.company_id.pad_server)
+
     def pad_generate_url(self, cr, uid, context=None):
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id;
 
@@ -24,7 +28,7 @@ class pad_common(osv.osv_memory):
 
         # make sure pad server in the form of http://hostname
         if not pad["server"]:
-            return ''
+            return pad
         if not pad["server"].startswith('http'):
             pad["server"] = 'http://' + pad["server"]
         pad["server"] = pad["server"].rstrip('/')
@@ -39,10 +43,14 @@ class pad_common(osv.osv_memory):
         #if create with content
         if "field_name" in context and "model" in context and "object_id" in context:
             myPad = EtherpadLiteClient( pad["key"], pad["server"]+'/api')
-            myPad.createPad(path)
+            try:
+                myPad.createPad(path)
+            except urllib2.URLError:
+                raise osv.except_osv(_("Error"), _("Pad creation failed, \
+                either there is a problem with your pad server URL or with your connection."))
 
             #get attr on the field model
-            model = self.pool.get(context["model"])
+            model = self.pool[context["model"]]
             field = model._all_columns[context['field_name']]
             real_field = field.column.pad_content_field
 
@@ -96,7 +104,7 @@ class pad_common(osv.osv_memory):
             field = v.column
             if hasattr(field,'pad_content_field'):
                 pad = self.pad_generate_url(cr, uid, context)
-                default[k] = pad['url']
+                default[k] = pad.get('url')
         return super(pad_common, self).copy(cr, uid, id, default, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

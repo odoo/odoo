@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="report_generalledger">
+    <t t-call="report.html_container">
+        <t t-set="data_report_margin_top" t-value="12"/>
+        <t t-set="data_report_header_spacing" t-value="9"/>
+        <t t-set="data_report_dpi" t-value="110"/>
+
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <h2><span t-esc="res_company.name"/>: General ledger</h2>
+
+                    <div class="row mt32">
+                        <div class="col-xs-3">
+                            <strong>Chart of Accounts:</strong>
+                            <p t-esc="get_account(data)"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Fiscal Year:</strong>
+                            <p t-esc="get_fiscalyear(data)"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Journals:</strong>
+                              <p t-esc="', '.join([ lt or '' for lt in get_journal(data) ])"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Display Account</strong>
+                            <p>
+                                <span t-if="data['form']['display_account'] == 'all'">All accounts'</span>
+                                <span t-if="data['form']['display_account'] == 'movement'">With movements</span>
+                                <span t-if="data['form']['display_account'] == 'not_zero'">With balance not equal to zero</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row mb32">
+                        <div class="col-xs-3">
+                            <strong>Filter By:</strong>
+                            <p>
+                                <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
+                                <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
+                                <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
+                                <p t-if="data['form']['filter'] == 'filter_period'">
+                                    Start Period: <span t-esc="get_start_period(data)"/>
+                                    End Period: <span t-esc="get_end_period(data)"/>
+                                </p>
+                                <p t-if="data['form']['filter'] == 'filter_date'">
+                                    Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
+                                    Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
+                                </p>
+                            </p>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Sorted By:</strong>
+                            <p t-esc="get_sortby(data)"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Target Moves:</strong>
+                            <p t-esc="get_target_move(data)"/>
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Date</th>
+                                <th>JRNL</th>
+                                <th>Partner</th>
+                                <th>Ref</th>
+                                <th>Move</th>
+                                <th>Entry Label</th>
+                                <th>Counterpart</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Progress</th>
+                                <th t-if="data['form']['amount_currency']">Currency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="get_children_accounts(o)" t-as="childrenaccount">
+                                <tr style="font-weight: bold;">
+                                    <td colspan="7">
+                                        <span style="color: white;" t-esc="'..'* (childrenaccount['level'] - 1)"/>
+                                        <span t-esc="childrenaccount['code']"/>
+                                        <span t-esc="childrenaccount['name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(sum_debit_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(sum_credit_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(sum_balance_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right" t-if="data['form']['amount_currency']">
+                                        <span t-esc="formatLang(sum_currency_amount_account(childrenaccount), digits=get_digits(dp='Account'), currency_obj=res_company.currency_id) if sum_currency_amount_account(childrenaccount) > 0.00 else ''"/>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="lines(childrenaccount)" t-as="line">
+                                    <td><span t-esc="formatLang(line['ldate'], date=True)"/></td>
+                                    <td><span t-esc="line['lcode']"/></td>
+                                    <td><span t-esc="line['partner_name']"/></td>
+                                    <td><span t-if="line['lref']" t-esc="line['lref']"/></td>
+                                    <td><span t-esc="line['move']"/></td>
+                                    <td><span t-esc="line['lname']"/></td>
+                                    <td><span t-esc="line['line_corresp'].replace(',',', ')"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(line['debit'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(line['credit'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(line['progress'], digits=get_digits(dp='Account'), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right" t-if="data['form']['amount_currency']">
+                                        <span t-esc="formatLang(line['amount_currency'], currency_obj=res_company.currency_id) if line['amount_currency'] > 0.00 else ''"/>
+                                        <span t-esc="line['currency_code'] if line['amount_currency'] > 0.00 else ''"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

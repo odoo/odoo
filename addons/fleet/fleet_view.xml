@@ -13,7 +13,7 @@
                             <h1>
                                 <field name="modelname" />
                             </h1>
-                            <label for="brand" class="oe_edit_only"/>
+                            <label for="brand_id" class="oe_edit_only"/>
                             <h2>
                                 <field name="brand_id" on_change="on_change_brand(brand_id)"/>
                             </h2>
@@ -43,6 +43,7 @@
                 </form>
             </field>
         </record>
+
         <record model='ir.ui.view' id='fleet_vehicle_model_tree'>
             <field name="name">fleet.vehicle.model.tree</field>
             <field name="model">fleet.vehicle.model</field>
@@ -210,11 +211,46 @@
                             <field name="tag_ids" widget="many2many_tags" />
                         </div>
                         <div class="oe_right oe_button_box">
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_contract_act'}" string="Contracts" help="show the contract for this vehicle" />
-                            <button name="act_show_log_cost" type="object" string="Costs" help="show all the costs for this vehicle" groups="fleet.group_fleet_manager"/>
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_services_act'}" string="Services" help="show the services logs for this vehicle" />
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_fuel_act'}" string="Fuel Logs" help="show the fuel logs for this vehicle" />
-                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_odometer_act'}" string="Odometer Logs" help="show the odometer logs for this vehicle" />
+                            <button name="return_action_to_open" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book" 
+                                context="{'xml_id':'fleet_vehicle_log_contract_act'}" 
+                                help="show the contract for this vehicle">
+                                <field name="contract_count" widget="statinfo" string="Contracts"/>
+                            </button>
+                            <button name="act_show_log_cost" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-usd" 
+                                help="show all the costs for this vehicle" 
+                                groups="fleet.group_fleet_manager">
+                                <field name="cost_count" widget="statinfo" string="Costs"/>
+                            </button>
+                            <button name="return_action_to_open" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-wrench" 
+                                context="{'xml_id':'fleet_vehicle_log_services_act'}" 
+                                help="show the services logs for this vehicle" >
+                                <field name="service_count" widget="statinfo" string="Services"/>
+                            </button>
+                            <button name="return_action_to_open" 
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-flask" 
+                                context="{'xml_id':'fleet_vehicle_log_fuel_act'}" 
+                                help="show the fuel logs for this vehicle" >
+                                <field name="fuel_logs_count" widget="statinfo" string="Fuel"/>
+                            </button>
+                            <button name="return_action_to_open" 
+                                type="object" 
+                                class="oe_stat_button"
+                                icon="fa-tachometer"
+                                context="{'xml_id':'fleet_vehicle_odometer_act'}" 
+                                help="show the odometer logs for this vehicle" >
+                                <field name="odometer_count" widget="statinfo" string="Odometer"/>
+                            </button>
                         </div> 
                         <group col="2" string="General Properties">
                             <group >
@@ -242,11 +278,17 @@
                             <group string="Engine Options">
                                 <field name="transmission" />
                                 <field name="fuel_type" />
-                                <field name="co2" />
+                                <label for="co2"/>
+                                <div>
+                                    <field name="co2" class="oe_inline"/> g/km
+                                </div>
                                 <field name="horsepower" />
                                 <field name="horsepower_tax" />
-                                <field name="power" />
-                            </group>  
+                                <label for="power"/>
+                                <div>
+                                    <field name="power" class="oe_inline"/> kW
+                                </div>
+                            </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -287,6 +329,10 @@
                     <field name="location"/>
                     <field name="state_id" />
                     <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
+                    <group expand="1" string="Group By...">
+                        <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
+                        <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
+                    </group>
                </search>
             </field>
         </record>
@@ -400,7 +446,7 @@
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_subtype_id" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                                <field name="amount" string="Activation Cost"/>
+                                <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract"/>
                                 <label for="cost_generated"/>
                                 <div>
                                     <field name="cost_generated" class="oe_inline" attrs="{'invisible': [('cost_frequency','=','no')]}" />
@@ -440,7 +486,7 @@
                                 </group>
                                 <div class="oe_right"><group><field name="sum_cost" string="Indicative Costs Total"/></group></div>
                             </page>
-                            <page string="Generated Costs">
+                            <page string="Generated Recurring Costs">
                                 <group>
                                     <field name="generated_cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1" sum="amount">
                                         <tree version="7.0" editable="bottom" >
@@ -493,12 +539,11 @@
         <record model="ir.ui.view" id="fleet_vehicle_log_contract_graph">
            <field name="name">fleet.vehicle.log.contract.graph</field>
            <field name="model">fleet.vehicle.log.contract</field>
-           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
-                <graph string="Contract Costs Per Month">
-                    <field name="date" />
-                    <field name="cost_amount" operator="+"/>
-                    <field name="vehicle_id" group="True"/>
+                <graph string="Contract Costs Per Month" type="bar" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_amount" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -555,7 +600,7 @@
                 </tree>
             </field>
         </record>
-        <!--
+        
         <record model='ir.ui.view' id='fleet_vehicle_odometer_search'>
             <field name="name">fleet.vehicle.odometer.search</field>
             <field name="model">fleet.vehicle.odometer</field>
@@ -565,21 +610,20 @@
                     <field name="value"/>
                     <field name="unit"/>
                     <field name="date"/>
-                    <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    </group>
                 </search>
             </field>
         </record>
-        -->
 
         <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
            <field name="name">fleet.vehicle.odometer.graph</field>
            <field name="model">fleet.vehicle.odometer</field>
-           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
-                <graph string="Odometer Values Per Month">
-                    <field name="date" />
-                    <field name="value" operator="+"/>
-                    <field name="vehicle_id" group="True"/> 
+                <graph string="Odometer Values Per Vehicle">
+                    <field name="vehicle_id" type="row"/> 
+                    <field name="value" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -591,6 +635,9 @@
             <field name="view_mode">tree,graph</field>
             <field name="context">{"search_default_groupby_vehicle" : True}</field>
             <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new odometer log. 
+              </p>
               <p>
                 Here you can add various odometer entries for all vehicles.
                 You can also show odometer value for a particular vehicle using
@@ -658,16 +705,31 @@
                 </tree>
             </field>
         </record>
+        
+        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_search'>
+            <field name="name">fleet.vehicle.log.fuel.search</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="arch" type="xml">
+                <search string="Vehicles Fuel Logs" >
+                    <field name="vehicle_id" />
+                    <field name="date"/>
+                    <field name="purchaser_id" />
+                    <field name="liter" />
+                    <field name="amount" sum="Price"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="fleet_vehicle_log_fuel_graph">
            <field name="name">fleet.vehicle.log.fuel.graph</field>
            <field name="model">fleet.vehicle.log.fuel</field>
-           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
                 <graph string="Fuel Costs Per Month">
-                    <field name="date" /> 
-                    <field name="cost_amount" operator="+"/>
-                    <field name="vehicle_id" group="True"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_amount" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -677,6 +739,7 @@
             <field name="res_model">fleet.vehicle.log.fuel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="context">{"search_default_groupby_vehicle" : True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new fuel log. 
@@ -701,7 +764,7 @@
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_subtype_id" string="Service Type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
-                                <field name="amount" string="Price"/>
+                                <field name="amount"/>
                             </group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
@@ -723,7 +786,7 @@
                             <field name="cost_ids" nolabel="1">
                                 <tree string="Included Services" version="7.0" editable="bottom">
                                     <field name="cost_subtype_id" string="Service" domain="[('category','=','service')]"/>
-                                    <field name="amount" sum="Price" string="Cost"/>
+                                    <field name="amount" sum="Price" string="Indicative Cost"/>
                                 </tree>
                             </field>
                         </group>
@@ -756,11 +819,22 @@
            <field name="name">fleet.vehicle.log.services.graph</field>
            <field name="model">fleet.vehicle.log.services</field>
            <field name="arch" type="xml">
-                <graph string="Services Costs Per Month">
-                    <field name="date" />
-                    <field name="cost_amount" operator="+"/>
-                    <field name="vehicle_id" group="True"/> 
+                <graph string="Services Costs Per Month" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="row"/> 
+                    <field name="cost_amount" type="measure"/>
                 </graph>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_services_search'>
+            <field name="name">fleet.vehicle.log.services.search</field>
+            <field name="model">fleet.vehicle.log.services</field>
+            <field name="arch" type="xml">
+                <search string="Services Logs" >
+                    <field name="vehicle_id"/>
+                    <field name="cost_subtype_id"/>
+                </search>
             </field>
         </record>
 
@@ -786,13 +860,16 @@
             <field name="name">fleet.service.type.tree</field>
             <field name="model">fleet.service.type</field>
             <field name="arch" type="xml">
-                <tree string="Service types" editable="bottom">
+                <tree string="Service types" editable="top">
                     <field name="name" />
                     <field name="category"/>
                 </tree>
             </field>
         </record>
 
+        <!--
+            fleet.vehicle.cost
+            -->
         <record model='ir.actions.act_window' id='fleet_vehicle_service_types_act'>
             <field name="name">Service Types</field>
             <field name="res_model">fleet.service.type</field>
@@ -809,20 +886,29 @@
 
         <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
 
-
-        <record model='ir.ui.view' id='fleet_vehicle_costs_tree'>
+        <record model='ir.ui.view' id='fleet_vehicle_cost_tree'>
             <field name="name">fleet.vehicle.cost.tree</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <tree string="Vehicles costs" >
-                    <field name="date"/>
-                    <field name="vehicle_id" />
-                    <field name="cost_type"/>
+                <tree string="Vehicle Costs">
+                    <field name="vehicle_id"/>
                     <field name="cost_subtype_id"/>
-                    <field name="amount" sum="Total Cost"/>
-                    <field name="parent_id" invisible="1" />
-                    <field name="year" invisible="1"/>
+                    <field name="date"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_costs_report'>
+            <field name="name">fleet.vehicle.cost.graph</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <graph string="Vehicles costs" type="pivot">
+                    <field name="date" interval="year" type="row"/>
+                    <field name="vehicle_id" type="row"/>
+                    <field name="cost_type" type="col"/>
+                    <!-- <field name="cost_subtype_id"/> -->
+                    <field name="amount" type="measure"/>
+                </graph>
             </field>
         </record>
 
@@ -840,7 +926,7 @@
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By...">
                         <filter name="groupby_year" context="{'group_by' : 'year'}" string="Year"/>
-                        <filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
+                        <filter name="groupby_date" context="{'group_by' : 'date'}" string="Vehicle Costs Month" help="Vehicle Costs by Month"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype_id" context="{'group_by' : 'cost_subtype_id'}" string="Cost Subtype"/>
                         <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
@@ -876,10 +962,10 @@
            <field name="name">fleet.vehicle.cost.graph</field>
            <field name="model">fleet.vehicle.cost</field>
            <field name="arch" type="xml">
-                <graph string="Costs Per Month">
-                    <field name="date" />
-                    <field name="amount"/>
-                    <field name="vehicle_id" group="True"/>
+                <graph string="Costs Per Month" stacked="True">
+                    <field name="date" type="row"/>
+                    <field name="vehicle_id" type="col"/>
+                    <field name="amount" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -902,31 +988,5 @@
         </record>
 
         <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="group_fleet_manager"/>
-<!--    
-        <record model='ir.ui.view' id='fleet_hr_employee_form'>
-            <field name="name">fleet.hr.employee.form</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form" />
-            <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Vehicle">
-                        <group>
-                            <field name="vehicle_id" widget="many2many_tags"/>
-                        </group>
-                    </page>
-                </notebook>
-            </field>
-        </record>
-
-     <record model="fleet.vehicle.model" id="citroen">
-            <field name="name">Citroen</field>
-        </record>
-
-        <record model="fleet.vehicle" id="stw_vehicle">
-            <field name="name">240BTN</field>
-            <field name="model_id" ref="citroen" />
-        </record>
- -->
     </data>
 </openerp>

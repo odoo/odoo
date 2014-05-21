@@ -40,7 +40,6 @@ class account_move(osv.osv):
                 self.write(cr, uid, [move.id], {'internal_sequence_number': seq_no})
         return res
 
-account_move()
 
 class account_journal(osv.osv):
     _inherit = "account.journal"
@@ -49,7 +48,6 @@ class account_journal(osv.osv):
         'internal_sequence_id': fields.many2one('ir.sequence', 'Internal Sequence', help="This sequence will be used to maintain the internal number for the journal entries related to this journal."),
     }
 
-account_journal()
 
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
@@ -58,6 +56,5 @@ class account_move_line(osv.osv):
         'internal_sequence_number': fields.related('move_id','internal_sequence_number', type='char', relation='account.move', help='Internal Sequence Number', string='Internal Number'),
     }
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

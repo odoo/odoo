@@ -30,4 +30,3 @@ class portal(osv.osv):
     _columns = {
         'is_portal': fields.boolean('Portal', help="If checked, this group is usable as a portal."),
     }
-

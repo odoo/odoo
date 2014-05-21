@@ -143,7 +143,6 @@ class account_analytic_line(osv.osv):
             return res
         return False
 
-account_analytic_line()
 
 class res_partner(osv.osv):
     """ Inherits partner and adds contract information in the partner form """
@@ -154,6 +153,5 @@ class res_partner(osv.osv):
                                                     'partner_id', 'Contracts', readonly=True),
     }
 
-res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

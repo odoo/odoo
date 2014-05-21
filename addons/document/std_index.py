@@ -105,7 +105,7 @@ class DocIndex(indexer):
             
             _logger.warning("Failed attempt to execute antiword (MS Word reader). Antiword is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
             _logger.debug("Trace of the failed file indexing attempt.", exc_info=True)
-            return False
+            return u''
     
 cntIndex.register(DocIndex())
 
@@ -166,9 +166,14 @@ class PdfIndex(indexer):
         return ['.pdf']
 
     def _doIndexFile(self, fname):
-        pop = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', fname, '-'], shell=False, stdout=PIPE)
-        (data, _) = pop.communicate()
-        return _to_unicode(data)
+        try:
+            pop = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', fname, '-'], shell=False, stdout=PIPE)
+            (data, _) = pop.communicate()
+            return _to_unicode(data)
+        except OSError:
+            _logger.warning("Failed attempt to execute pdftotext. This program is necessary to index the file %s of MIME type %s. Detailed error available at DEBUG level.", fname, self._getMimeTypes()[0])
+            _logger.debug("Trace of the failed file indexing attempt.", exc_info=True)
+            return u''
 
 cntIndex.register(PdfIndex())
 

@@ -2,10 +2,11 @@ openerp.mail = function (session) {
     var _t = session.web._t,
        _lt = session.web._lt;
 
-    var mail = session.mail = {};
+    var mail = session.mail;
 
-    openerp_mail_followers(session, mail);        // import mail_followers.js
-    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
+    openerp_mail_followers(session, mail);          // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
+    openerp_announcement(session);
 
     /**
      * ------------------------------------------------------------
@@ -20,6 +21,19 @@ openerp.mail = function (session) {
      */
 
     mail.ChatterUtils = {
+
+        /** parse text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False */
+        parse_email: function (text) {
+            var result = text.match(/(.*)<(.*@.*)>/);
+            if (result) {
+                return [_.str.trim(result[1]), _.str.trim(result[2])];
+            }
+            result = text.match(/(.*@.*)/);
+            if (result) {
+                return [_.str.trim(result[1]), _.str.trim(result[1])];
+            }
+            return [text, false];
+        },
 
         /* Get an image in /web/binary/image?... */
         get_image: function (session, model, field, id, resize) {
@@ -62,8 +76,8 @@ openerp.mail = function (session) {
          */
         get_text2html: function (text) {
             return text
-                .replace(/[\n\r]/g,'<br/>')
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
+                .replace(/[\n\r]/g,'<br/>')                
         },
 
         /* Returns the complete domain with "&" 
@@ -100,57 +114,6 @@ openerp.mail = function (session) {
             }
             return out;
         },
-
-        // returns the file type of a file based on its extension 
-        // As it only looks at the extension it is quite approximative. 
-        filetype: function(url){
-            url = url.filename || url;
-            var tokens = url.split('.');
-            if(tokens.length <= 1){
-                return 'unknown';
-            }
-            var extension = tokens[tokens.length -1];
-            if(extension.length === 0){
-                return 'unknown';
-            }else{
-                extension = extension.toLowerCase();
-            }
-            var filetypes = {
-                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
-                'image':        ['tif','tiff','tga',
-                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
-                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
-                                 'jp2','jpx','dng','djvu','dds'],
-                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
-                'print':        ['dvi','pdf','ps'],
-                'document':     ['doc','docx','odm','odt'],
-                'presentation': ['key','keynote','odp','pps','ppt'],
-                'font':         ['otf','ttf','woff','eot'],
-                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
-                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
-                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
-                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
-                                 'm4a','ra','mid','midi'],
-                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
-                'text':         ['txt','rtf','ass'],
-                'html':         ['html','xhtml','xml','htm','css'],
-                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
-                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
-                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
-                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
-                'binary':       ['exe','com','bin','app'],
-            };
-            for(filetype in filetypes){
-                var ext_list = filetypes[filetype];
-                for(var i = 0, len = ext_list.length; i < len; i++){
-                    if(extension === ext_list[i]){
-                        return filetype;
-                    }
-                }
-            }
-            return 'unknown';
-        },
-
     };
 
 
@@ -204,12 +167,15 @@ openerp.mail = function (session) {
             this.res_id = datasets.res_id || this.context.default_res_id ||  false,
             this.parent_id = datasets.parent_id ||  false,
             this.type = datasets.type ||  false,
+            this.subtype = datasets.subtype ||  false,
             this.is_author = datasets.is_author ||  false,
+            this.author_avatar = datasets.author_avatar || false,
             this.is_private = datasets.is_private ||  false,
             this.subject = datasets.subject ||  false,
             this.name = datasets.name ||  false,
             this.record_name = datasets.record_name ||  false,
             this.body = datasets.body || '',
+            this.body_short = datasets.body_short || '',
             this.vote_nb = datasets.vote_nb || 0,
             this.has_voted = datasets.has_voted ||  false,
             this.is_favorite = datasets.is_favorite ||  false,
@@ -218,12 +184,19 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id || false,
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
-            this._date = datasets.date;
-
+            this.date = datasets.date;
+            this.user_pid = datasets.user_pid || false;
             this.format_data();
 
+            // update record_name: Partner profile
+            if (this.model == 'res.partner') {
+                this.record_name = 'Partner Profile of ' + this.record_name;
+            }
+            else if (this.model == 'hr.employee') {
+                this.record_name = 'News from ' + this.record_name;
+            }
             // record options and data
-            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level && this.model != 'res.partner';
+            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level;
             this.options.show_read = false;
             this.options.show_unread = false;
             if (this.options.show_read_unread_button) {
@@ -232,28 +205,44 @@ openerp.mail = function (session) {
                 else {
                     this.options.show_read = this.to_read;
                     this.options.show_unread = !this.to_read;
-                    this.options.rerender = true;
-                    this.options.toggle_read = true;
                 }
+                this.options.rerender = true;
+                this.options.toggle_read = true;
             }
-            this.parent_thread = parent.messages != undefined ? parent : this.options.root_thread;
+            this.parent_thread = typeof parent.on_message_detroy == 'function' ? parent : this.options.root_thread;
             this.thread = false;
         },
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
+
             //formating and add some fields for render
-            if (this._date) {
-                this.timerelative = $.timeago(this._date+"Z");
-            } 
-            if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
+            this.date = this.date ? session.web.str_to_datetime(this.date) : false;
+            this.display_date = this.date.toString('ddd MMM dd yyyy HH:mm');
+            if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
+                this.timerelative = $.timeago(this.date);
+            }
+            if (this.author_avatar) {
+                this.avatar = "data:image/png;base64," + this.author_avatar;
+            } else if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else if (this.author_id && this.template != 'mail.compose_message') {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
-
+            if (this.author_id && this.author_id[1]) {
+                var parsed_email = mail.ChatterUtils.parse_email(this.author_id[1]);
+                this.author_id.push(parsed_email[0], parsed_email[1]);
+            }
+            if (this.partner_ids && this.partner_ids.length > 3) {
+                this.extra_partners_nbr = this.partner_ids.length - 3;
+                this.extra_partners_str = ''
+                var extra_partners = this.partner_ids.slice(3);
+                for (var key in extra_partners) {
+                    this.extra_partners_str += extra_partners[key][1];
+                }
+            }
         },
 
 
@@ -264,7 +253,6 @@ openerp.mail = function (session) {
                 var attach = this.attachment_ids[l];
                 if (!attach.formating) {
                     attach.url = mail.ChatterUtils.get_attachment_url(this.session, this.id, attach.id);
-                    attach.filetype = mail.ChatterUtils.filetype(attach.filename);
                     attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
                     attach.formating = true;
                 }
@@ -363,13 +351,24 @@ openerp.mail = function (session) {
          *      @param {Object} [context] context passed to the
          *          mail.compose.message DataSetSearch. Please refer to this model
          *          for more details about fields and default values.
+         * @param {Object} recipients = [
+                        {
+                            'email_address': [str],
+                            'partner_id': False/[int],
+                            'name': [str],
+                            'full_name': name<email_address>,
+                        },
+                        { ... },
+                    ]
          */
 
         init: function (parent, datasets, options) {
             this._super(parent, datasets, options);
             this.show_compact_message = false;
             this.show_delete_attachment = true;
-            this.emails_from = [];
+            this.is_log = false;
+            this.recipients = [];
+            this.recipient_ids = [];
         },
 
         start: function () {
@@ -470,15 +469,13 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             var self = this;
-
-            this.$('.oe_compact').on('click', _.bind( this.on_compose_expandable, this));
-
-            // set the function called when attachments are added
-            this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this) );
-
-            this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
-            this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
-            this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
+            this.$('.oe_compact_inbox').on('click', self.on_toggle_quick_composer);
+            this.$('.oe_compose_post').on('click', self.on_toggle_quick_composer);
+            this.$('.oe_compose_log').on('click', self.on_toggle_quick_composer);
+            this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this));
+            this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this));
+            this.$('.oe_post').on('click', self.on_message_post);
+            this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment'));
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_left, .oe_msg_center').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
             this.$('.oe_msg_left, .oe_msg_content').on('mouseup', _.bind( function () { this.$('textarea').focus(); }, this));
@@ -488,49 +485,56 @@ openerp.mail = function (session) {
             this.$('textarea').autosize();
 
             // auto close
-            this.$('textarea').on('blur', _.bind( this.on_compose_expandable, this));
+            this.$('textarea').on('blur', self.on_toggle_quick_composer);
 
             // event: delete child attachments off the oe_msg_attachment_list box
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
 
-            this.$(".oe_emails_from").on('change', 'input', this.on_checked_email_from);
+            this.$(".oe_recipients").on('change', 'input', this.on_checked_recipient);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
-
+            var self = this;
             if(!this.do_check_attachment_upload()) {
                 return false;
             }
-
-            if (default_composition_mode == 'reply') {
-                var context = {
-                    'default_composition_mode': default_composition_mode,
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
-                };
-            } else {
-                var context = {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
-                    'default_composition_mode': default_composition_mode,
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
-                };
+            var recipient_done = $.Deferred();
+            if (this.is_log) {
+                recipient_done.resolve([]);
             }
-            var action = {
-                type: 'ir.actions.act_window',
-                res_model: 'mail.compose.message',
-                view_mode: 'form',
-                view_type: 'form',
-                views: [[false, 'form']],
-                target: 'new',
-                context: context,
-            };
+            else {
+                recipient_done = this.check_recipient_partners();
+            }
+            $.when(recipient_done).done(function (partner_ids) {
+                var context = {
+                    'default_parent_id': self.id,
+                    'default_body': mail.ChatterUtils.get_text2html(self.$el ? (self.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
+                    'default_attachment_ids': _.map(self.attachment_ids, function (file) {return file.id;}),
+                    'default_partner_ids': partner_ids,
+                    'default_is_log': self.is_log,
+                    'mail_post_autofollow': true,
+                    'mail_post_autofollow_partner_ids': partner_ids,
+                    'is_private': self.is_private
+                };
+                if (default_composition_mode != 'reply' && self.context.default_model && self.context.default_res_id) {
+                    context.default_model = self.context.default_model;
+                    context.default_res_id = self.context.default_res_id;
+                }
 
-            this.do_action(action);
-            this.on_cancel();
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: context,
+                };
+
+                self.do_action(action);
+                self.on_cancel();
+            });
+
         },
 
         reinit: function() {
@@ -562,65 +566,128 @@ openerp.mail = function (session) {
             }
         },
 
-        check_recipient_partners: function (emails) {
+        check_recipient_partners: function () {
             var self = this;
-            var deferreds = [];
-            for (var i = 0; i < emails.length; i++) {
-                deferreds.push($.Deferred());
+            var check_done = $.Deferred();
+            var recipients = _.filter(this.recipients, function (recipient) { return recipient.checked });
+            var recipients_to_find = _.filter(recipients, function (recipient) { return (! recipient.partner_id) });
+            var names_to_find = _.pluck(recipients_to_find, 'full_name');
+            var recipients_to_check = _.filter(recipients, function (recipient) { return (recipient.partner_id && ! recipient.email_address) });
+            var recipient_ids = _.pluck(_.filter(recipients, function (recipient) { return recipient.partner_id && recipient.email_address }), 'partner_id');
+            var names_to_remove = [];
+            var recipient_ids_to_remove = [];
+
+            // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
+            var find_done = $.Deferred();
+            if (names_to_find.length > 0) {
+                find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [this.context.default_res_id, names_to_find]);
             }
-            var ds_partner = new session.web.DataSetSearch(this, 'res.partner');
-            _.each(emails, function (email) {
-                ds_partner.call('search', [[['email', 'ilike', email]]]).then(function (partner_ids) {
-                    var deferred = deferreds[_.indexOf(emails, email)];
-                    if (!partner_ids.length) {
-                        var pop = new session.web.form.FormOpenPopup(this);
-                        pop.show_element(
-                            'res.partner',
-                            0,
-                            {
-                                'default_email': email,
-                                'force_email': true,
-                                'ref': "compound_context",
-                            },
-                            {
-                                title: _t("Please complete partner's informations"),
-                            }
-                        );
-                        pop.on('write_completed, closed', self, function () {
-                            deferred.resolve();
-                        });
+            else {
+                find_done.resolve([]);
+            }
+
+            // for unknown names + incomplete partners -> open popup - cancel = remove from recipients
+            $.when(find_done).pipe(function (result) {
+                var emails_deferred = [];
+                var recipient_popups = result.concat(recipients_to_check);
+
+                _.each(recipient_popups, function (partner_info) {
+                    var deferred = $.Deferred()
+                    emails_deferred.push(deferred);
+
+                    var partner_name = partner_info.full_name;
+                    var partner_id = partner_info.partner_id;
+                    var parsed_email = mail.ChatterUtils.parse_email(partner_name);
+
+                    var pop = new session.web.form.FormOpenPopup(this);                    
+                    pop.show_element(
+                        'res.partner',
+                        partner_id,
+                        {   'force_email': true,
+                            'ref': "compound_context",
+                            'default_name': parsed_email[0],
+                            'default_email': parsed_email[1],
+                        }, {
+                            title: _t("Please complete partner's informations"),
+                        }
+                    );
+                    pop.on('closed', self, function () {
+                        deferred.resolve();
+                    });
+                    pop.view_form.on('on_button_cancel', self, function () {
+                        names_to_remove.push(partner_name);
+                        if (partner_id) {
+                            recipient_ids_to_remove.push(partner_id);
+                        }
+                    });
+                });
+
+                $.when.apply($, emails_deferred).then(function () {
+                    var new_names_to_find = _.difference(names_to_find, names_to_remove);
+                    find_done = $.Deferred();
+                    if (new_names_to_find.length > 0) {
+                        find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [self.context.default_res_id, new_names_to_find, true]);
                     }
                     else {
-                        deferred.resolve();
+                        find_done.resolve([]);
                     }
-                    return deferred;
+                    $.when(find_done).pipe(function (result) {
+                        var recipient_popups = result.concat(recipients_to_check);
+                        _.each(recipient_popups, function (partner_info) {
+                            if (partner_info.partner_id && _.indexOf(partner_info.partner_id, recipient_ids_to_remove) == -1) {
+                                recipient_ids.push(partner_info.partner_id);
+                            }
+                        });
+                    }).pipe(function () {
+                        check_done.resolve(recipient_ids);
+                    });
                 });
             });
-            return $.when.apply( $, deferreds ).done();
+            
+            return check_done;
         },
 
         on_message_post: function (event) {
             var self = this;
+            if (self.flag_post) {
+                return;
+            }
+            self.flag_post = true;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
-                // create list of new partners
-                var extra_email = _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]});
-                this.check_recipient_partners(extra_email).done(function () {
-                    self.do_send_message_post();
-                });
+                if (this.is_log) {
+                    this.do_send_message_post([], this.is_log);
+                }
+                else {
+                    this.check_recipient_partners().done(function (partner_ids) {
+                        self.do_send_message_post(partner_ids, self.is_log);
+                    });
+                }
             }
         },
 
-        /*do post a message and fetch the message*/
-        do_send_message_post: function () {
+        /* do post a message and fetch the message */
+        do_send_message_post: function (partner_ids, log) {
             var self = this;
-            this.parent_thread.ds_thread._model.call('message_post_user_api', [this.context.default_res_id], {
+            var values = {
                 'body': this.$('textarea').val(),
                 'subject': false,
                 'parent_id': this.context.default_parent_id,
                 'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
-                'extra_emails': _.map(_.filter(this.emails_from, function (f) {return f[1]}), function (f) {return f[0]}),
-                'context': this.parent_thread.context,
-            }).done(function (message_id) {
+                'partner_ids': partner_ids,
+                'context': _.extend(this.parent_thread.context, {
+                    'mail_post_autofollow': true,
+                    'mail_post_autofollow_partner_ids': partner_ids,
+                }),
+                'type': 'comment',
+                'content_subtype': 'plaintext',
+            };
+            if (log) {
+                values['subtype'] = false;
+            }
+            else {
+                values['subtype'] = 'mail.mt_comment';   
+            }
+            this.parent_thread.ds_thread._model.call('message_post', [this.context.default_res_id], values).done(function (message_id) {
                 var thread = self.parent_thread;
                 var root = thread == self.options.root_thread;
                 if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
@@ -628,26 +695,64 @@ openerp.mail = function (session) {
                 }
                 // create object and attach to the thread object
                 thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
-                    var message = thread.create_message_object( data[0] );
+                    var message = thread.create_message_object( data.slice(-1)[0] );
                     // insert the message on dom
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
                 self.on_cancel();
+                self.flag_post = false;
             });
         },
 
-        /* convert the compact mode into the compose message
-        */
-        on_compose_expandable: function (event) {
-            this.get_emails_from();
-            if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/) && !this.attachment_ids.length)) {
-                this.show_composer = !this.show_composer || this.stay_open;
-                this.reinit();
+        /* Quick composer: toggle minimal / expanded mode
+         * - toggle minimal (one-liner) / expanded (textarea, buttons) mode
+         * - when going into expanded mode:
+         *  - call `message_get_suggested_recipients` to have a list of partners to add
+         *  - compute email_from list (list of unknown email_from to propose to create partners)
+         */
+        on_toggle_quick_composer: function (event) {
+            var self = this;
+            var $input = $(event.target);
+            this.compute_emails_from();
+            var email_addresses = _.pluck(this.recipients, 'email_address');
+            var suggested_partners = $.Deferred();
+
+            // if clicked: call for suggested recipients
+            if (event.type == 'click') {
+                this.is_log = $input.hasClass('oe_compose_log');
+                suggested_partners = this.parent_thread.ds_thread.call('message_get_suggested_recipients', [[this.context.default_res_id], this.context]).done(function (additional_recipients) {
+                    var thread_recipients = additional_recipients[self.context.default_res_id];
+                    _.each(thread_recipients, function (recipient) {
+                        var parsed_email = mail.ChatterUtils.parse_email(recipient[1]);
+                        if (_.indexOf(email_addresses, parsed_email[1]) == -1) {
+                            self.recipients.push({
+                                'checked': true,
+                                'partner_id': recipient[0],
+                                'full_name': recipient[1],
+                                'name': parsed_email[0],
+                                'email_address': parsed_email[1],
+                                'reason': recipient[2],
+                            })
+                        }
+                    });
+                });
             }
-            if (!this.stay_open && this.show_composer && (!event || event.type != 'blur')) {
-                this.$('textarea:not(.oe_compact):first').focus();
+            else {
+                suggested_partners.resolve({});
             }
-            return true;
+
+            // when call for suggested partners finished: re-render the widget
+            $.when(suggested_partners).pipe(function (additional_recipients) {
+                if ((!self.stay_open || (event && event.type == 'click')) && (!self.show_composer || !self.$('textarea:not(.oe_compact)').val().match(/\S+/) && !self.attachment_ids.length)) {
+                    self.show_composer = !self.show_composer || self.stay_open;
+                    self.reinit();
+                }
+                if (!self.stay_open && self.show_composer && (!event || event.type != 'blur')) {
+                    self.$('textarea:not(.oe_compact):first').focus();
+                }
+            });
+
+            return suggested_partners;
         },
 
         do_hide_compact: function () {
@@ -664,7 +769,10 @@ openerp.mail = function (session) {
             }
         },
 
-        get_emails_from: function () {
+        /** Compute the list of unknown email_from the the given thread
+         * TDE FIXME: seems odd to delegate to the composer
+         * TDE TODO: please de-obfuscate and comment your code */
+        compute_emails_from: function () {
             var self = this;
             var messages = [];
 
@@ -672,32 +780,38 @@ openerp.mail = function (session) {
                 // go to the parented message
                 var message = this.parent_thread.parent_message;
                 var parent_message = message.parent_id ? message.parent_thread.parent_message : message;
-                var messages = [parent_message].concat(parent_message.get_childs());
+                if(parent_message){
+                    var messages = [parent_message].concat(parent_message.get_childs());
+                }
             } else if (this.options.emails_from_on_composer) {
                 // get all wall messages if is not a mail.Wall
                 _.each(this.options.root_thread.messages, function (msg) {messages.push(msg); messages.concat(msg.get_childs());});
             }
-            
-            var emails_from = _.map(_.filter(messages,
-                    function (thread) {return thread.author_id && !thread.author_id[0];}),
-                function (thread) {return thread.author_id[1];});
 
-            return _.each(emails_from, function (email_from) {
-                if (!_.find(self.emails_from, function (from) {return from[0] == email_from;})) {
-                    self.emails_from.push([email_from, true]);
+            _.each(messages, function (thread) {
+                if (thread.author_id && !thread.author_id[0] &&
+                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];})) {
+                    self.recipients.push({  'full_name': thread.author_id[1],
+                                            'name': thread.author_id[2],
+                                            'email_address': thread.author_id[3],
+                                            'partner_id': false,
+                                            'checked': true,
+                                            'reason': 'Incoming email author'
+                                        });
+                }
+            });
+            return self.recipients;
+        },
+
+        on_checked_recipient: function (event) {
+            var $input = $(event.target);
+            var full_name = $input.attr("data");
+            _.each(this.recipients, function (recipient) {
+                if (recipient.full_name == full_name) {
+                    recipient.checked = $input.is(":checked");
                 }
             });
         },
-
-        on_checked_email_from: function (event) {
-            var $input = $(event.target);
-            var email = $input.attr("data");
-            _.each(this.emails_from, function (email_from) {
-                if (email_from[0] == email) {
-                    email_from[1] = $input.is(":checked");
-                }
-            });
-        }
     });
 
     /**
@@ -764,9 +878,6 @@ openerp.mail = function (session) {
 
             // read messages
             self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
-                if (self.options.root_thread == self.parent_thread) {
-                    data.reverse();
-                }
                 self.id = false;
                 // insert the message on dom after this message
                 self.parent_thread.switch_new_message( data, self.$el );
@@ -783,7 +894,6 @@ openerp.mail = function (session) {
         
         start: function () {
             this._super.apply(this, arguments);
-            this.expender();
             this.bind_events();
             if(this.thread_level < this.options.display_indented_thread) {
                 this.create_thread();
@@ -806,6 +916,18 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_expand').on('click', this.on_expand);
+            this.$('.oe_mail_reduce').on('click', this.on_expand);
+            this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
+        },
+
+        on_record_clicked: function  (event) {
+            var state = {
+                'model': this.model,
+                'id': this.res_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -816,15 +938,11 @@ openerp.mail = function (session) {
             return false;
         },
 
-        expender: function () {
-            this.$('.oe_msg_body:first').expander({
-                slicePoint: this.options.truncate_limit,
-                expandText: 'read more',
-                userCollapseText: 'read less',
-                detailClass: 'oe_msg_tail',
-                moreClass: 'oe_mail_expand',
-                lessClass: 'oe_mail_reduce',
-                });
+        on_expand: function (event) {
+            event.stopPropagation();
+            this.$('.oe_msg_body_short:first').toggle();
+            this.$('.oe_msg_body_long:first').toggle();
+            return false;
         },
 
         /**
@@ -900,9 +1018,7 @@ openerp.mail = function (session) {
                             msg.renderElement();
                             msg.start();
                         }
-                        if( self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails ) {
-                            self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails();
-                        }
+                        self.options.root_thread.MailWidget.do_reload_menu_emails();
                     });
 
                 });
@@ -1042,6 +1158,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent, options);
+            this.MailWidget = parent instanceof mail.Widget ? parent : false;
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
 
@@ -1060,13 +1177,13 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id || false;
             this.thread_level = (datasets.thread_level+1) || 0;
             datasets.partner_ids = datasets.partner_ids || [];
-            if (datasets.author_id && ! _.contains(datasets.partner_ids, datasets.author_id) && datasets.author_id[0]) {
+            if (datasets.author_id && !_.contains(_.flatten(datasets.partner_ids),datasets.author_id[0]) && datasets.author_id[0]) {
                 datasets.partner_ids.push(datasets.author_id);
             }
+            this.user_pid = datasets.user_pid || false;
             this.partner_ids = datasets.partner_ids;
             this.messages = [];
-
-            this.options.flat_mode = !!(this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
+            this.options.flat_mode = (this.options.display_indented_thread - this.thread_level > 0);
 
             // object compose message
             this.compose_message = false;
@@ -1224,12 +1341,12 @@ openerp.mail = function (session) {
 
         /**
          *If compose_message doesn't exist, instantiate the compose message.
-        * Call the on_compose_expandable method to allow the user to write his message.
+        * Call the on_toggle_quick_composer method to allow the user to write his message.
         * (Is call when a user click on "Reply" button)
         */
         on_compose_message: function (event) {
             this.instantiate_compose_message();
-            this.compose_message.on_compose_expandable(event);
+            this.compose_message.on_toggle_quick_composer(event);
             return false;
         },
 
@@ -1241,7 +1358,10 @@ openerp.mail = function (session) {
             if (this.options.help) {
                 no_message.html(this.options.help);
             }
-            no_message.appendTo(this.$el);
+            if (!this.$el.find(".oe_view_nocontent").length)
+            {
+                no_message.appendTo(this.$el);
+            }
         },
 
         /**
@@ -1255,7 +1375,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids == false ? undefined : ids, 
+                    ids === false ? undefined : ids, 
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1272,11 +1392,16 @@ openerp.mail = function (session) {
 
         message_fetch_set_read: function (message_list) {
             if (! this.context.mail_read_set_read) return;
-            this.render_mutex.exec(_.bind(function() {
+            var self = this;
+            this.render_mutex.exec(function() {
                 msg_ids = _.pluck(message_list, 'id');
-                return this.ds_message.call('set_message_read', [
-                        msg_ids, true, false, this.context]);
-             }, this));
+                return self.ds_message.call('set_message_read', [msg_ids, true, false, self.context])
+                    .then(function (nb_read) {
+                        if (nb_read) {
+                            self.options.root_thread.MailWidget.do_reload_menu_emails();
+                        }
+                    });
+             });
         },
 
         /**
@@ -1288,8 +1413,8 @@ openerp.mail = function (session) {
         create_message_object: function (data) {
             var self = this;
 
-            var data = _.extend(data, {'thread_level': data.thread_level ? data.thread_level : self.thread_level});
-            data.options = _.extend(self.options, data.options);
+            data.thread_level = self.thread_level || 0;
+            data.options = _.extend(data.options || {}, self.options);
 
             if (data.type=='expandable') {
                 var message = new mail.ThreadExpandable(self, data, {'context':{
@@ -1334,8 +1459,7 @@ openerp.mail = function (session) {
             }
 
             this.$('.oe_view_nocontent').remove();
-
-            if (dom_insert_after) {
+            if (dom_insert_after && dom_insert_after.parent()[0] == self.$el[0]) {
                 message.insertAfter(dom_insert_after);
             } else if (prepend) {
                 message.prependTo(self.$el);
@@ -1354,6 +1478,7 @@ openerp.mail = function (session) {
          */
         switch_new_message: function (records, dom_insert_after) {
             var self=this;
+            var dom_insert_after = typeof dom_insert_after == 'object' ? dom_insert_after : false;
             _(records).each(function (record) {
                 var thread = self.browse_thread({
                     'id': record.parent_id, 
@@ -1362,7 +1487,7 @@ openerp.mail = function (session) {
                 // create object and attach to the thread object
                 var message = thread.create_message_object( record );
                 // insert the message on dom
-                thread.insert_message( message, typeof dom_insert_after == 'object' ? dom_insert_after : false);
+                thread.insert_message( message, dom_insert_after);
             });
             if (!records.length && this.options.root_thread == this) {
                 this.no_message();
@@ -1542,6 +1667,22 @@ openerp.mail = function (session) {
         },
         
         /**
+        * create an object "related_menu"
+        * contains the menu widget and the sub menu related of this wall
+        */
+        do_reload_menu_emails: function () {
+            var menu = session.webclient.menu;
+            if (!menu || !menu.current_menu) {
+                return $.when();
+            }
+            return menu.rpc("/web/menu/load_needaction", {'menu_ids': [menu.current_menu]}).done(function(r) {
+                menu.on_needaction_loaded(r);
+            }).then(function () {
+                menu.trigger("need_action_reloaded");
+            });
+        },
+
+        /**
          *Create the root thread and display this object in the DOM.
          * Call the no_message method then c all the message_fetch method 
          * of this root thread to display the messages.
@@ -1590,25 +1731,29 @@ openerp.mail = function (session) {
 
         init: function (parent, node) {
             this._super.apply(this, arguments);
+            this.ParentViewManager = parent;
             this.node = _.clone(node);
             this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
-                'show_read_unread_button': false,
+                'show_read_unread_button': true,
+                'read_action': 'unread',
                 'show_record_name': false,
                 'show_compact_message': 1,
+                'display_log_button' : true,
             }, this.node.params);
-
             if (this.node.attrs.placeholder) {
                 this.node.params.compose_placeholder = this.node.attrs.placeholder;
             }
             if (this.node.attrs.readonly) {
                 this.node.params.readonly = this.node.attrs.readonly;
             }
+            if ('display_log_button' in this.options) {
+                this.node.params.display_log_button = this.options.display_log_button;
+            }
+            this.domain = (this.node.params && this.node.params.domain) || (this.field && this.field.domain) || [];
 
-            this.domain = this.node.params && this.node.params.domain || [];
-
-            if (!this.__parentedParent.is_action_enabled('edit')) {
+            if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
             }
         },
@@ -1658,6 +1803,19 @@ openerp.mail = function (session) {
 
     /**
      * ------------------------------------------------------------
+     * Aside Widget
+     * ------------------------------------------------------------
+     * 
+     * This widget handles the display of a sidebar on the Wall. Its main use
+     * is to display group and employees suggestion (if hr is installed).
+     */
+    mail.WallSidebar = session.web.Widget.extend({
+        template: 'mail.wall.sidebar',
+    });
+
+
+    /**
+     * ------------------------------------------------------------
      * Wall Widget
      * ------------------------------------------------------------
      *
@@ -1679,18 +1837,25 @@ openerp.mail = function (session) {
          */
         init: function (parent, action) {
             this._super(parent, action);
+            this.ActionManager = parent;
 
             this.action = _.clone(action);
             this.domain = this.action.params.domain || this.action.domain || [];
             this.context = _.extend(this.action.params.context || {}, this.action.context || {});
 
+            // filter some parameters that we will propagate as search_default
             this.defaults = {};
+            for (var key in this.action.context.params) {
+                if (_.indexOf(['model', 'res_id'], key) == -1) {
+                    continue;
+                }
+                this.context['search_default_' + key] = this.action.context.params[key];
+            }
             for (var key in this.context) {
                 if (key.match(/^search_default_/)) {
                     this.defaults[key.replace(/^search_default_/, '')] = this.context[key];
                 }
             }
-
             this.action.params = _.extend({
                 'display_indented_thread': 1,
                 'show_reply_button': true,
@@ -1710,23 +1875,9 @@ openerp.mail = function (session) {
             if (! this.searchview.has_defaults) {
                 this.message_render();
             }
-        },
-
-        /**
-        * crete an object "related_menu"
-        * contain the menu widget and the the sub menu related of this wall
-        */
-        do_reload_menu_emails: function () {
-            var menu = this.__parentedParent.__parentedParent.menu;
-            // return this.rpc("/web/menu/load", {'menu_id': 100}).done(function(r) {
-            //     _.each(menu.data.data.children, function (val) {
-            //         if (val.id == 100) {
-            //             val.children = _.find(r.data.children, function (r_val) {return r_val.id == 100;}).children;
-            //         }
-            //     });
-            //     var r = menu.data;
-            // window.setTimeout(function(){menu.do_reload();}, 0);
-            // });
+            // render sidebar
+            var wall_sidebar = new mail.WallSidebar(this);
+            wall_sidebar.appendTo(this.$el.find('.oe_mail_wall_aside'));
         },
 
         /**
@@ -1786,6 +1937,7 @@ openerp.mail = function (session) {
             this.$(".oe_write_full").click(function (event) {
                 event.stopPropagation();
                 var action = {
+                    name: _t('Compose Email'),
                     type: 'ir.actions.act_window',
                     res_model: 'mail.compose.message',
                     view_mode: 'form',
@@ -1798,7 +1950,7 @@ openerp.mail = function (session) {
                 };
                 session.client.action_manager.do_action(action);
             });
-            this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
+            this.$(".oe_write_onwall").click(function (event) { self.root.thread.on_compose_message(event); });
         }
     });
 
@@ -1843,4 +1995,16 @@ openerp.mail = function (session) {
             });
         },
     });
+
+
+    /**
+     * ------------------------------------------------------------
+     * Sub-widgets loading
+     * ------------------------------------------------------------
+     * 
+     * Load here widgets that could depend on widgets defined in mail.js
+     */
+
+    openerp.mail.suggestions(session, mail);        // import suggestion.js (suggestion widget)
+
 };

@@ -23,6 +23,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class hr_attendance_error(osv.osv_memory):
 
     _name = 'hr.attendance.error'
@@ -46,7 +47,7 @@ class hr_attendance_error(osv.osv_memory):
         cr.execute("SELECT id FROM hr_attendance WHERE employee_id IN %s AND to_char(name,'YYYY-mm-dd')<=%s AND to_char(name,'YYYY-mm-dd')>=%s AND action IN %s ORDER BY name" ,(tuple(context['active_ids']), date_to, date_from, tuple(['sign_in','sign_out'])))
         attendance_ids = [x[0] for x in cr.fetchall()]
         if not attendance_ids:
-            raise osv.except_osv(_('No Data Available !'), _('No records are found for your selection!'))
+            raise osv.except_osv(_('No Data Available!'), _('No records are found for your selection!'))
         attendance_records = self.pool.get('hr.attendance').browse(cr, uid, attendance_ids, context=context)
 
         for rec in attendance_records:
@@ -58,12 +59,8 @@ class hr_attendance_error(osv.osv_memory):
              'model': 'hr.employee',
              'form': data_error
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'hr.attendance.error',
-            'datas': datas,
-        }
-
-hr_attendance_error()
+        return self.pool['report'].get_action(
+            cr, uid, [], 'hr_attendance.report_attendanceerrors', data=datas, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

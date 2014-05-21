@@ -19,11 +19,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+
 {
-    'name' : 'Accounting Consistency Tests',
-    'version' : '1.0',
-    'author' : 'OpenERP',
-    'category' : 'Accounting & Finance',
+    'name': 'Accounting Consistency Tests',
+    'version': '1.0',
+    'author': 'OpenERP',
+    'category': 'Accounting & Finance',
     'website': 'http://www.openerp.com',
     'description': """
 Asserts on accounting.
@@ -34,14 +35,16 @@ You can write a query in order to create Consistency Test and you will get the r
 in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test 
 and print the report from Print button in header area.
 """,
-    'depends' : ['account'],
-    'data' : [
+    'depends': ['account'],
+    'data': [
         'security/ir.model.access.csv',
         'account_test_view.xml',
         'account_test_report.xml',
         'account_test_data.xml',
+        'views/report_accounttest.xml',
     ],
     'active': False,
     'installable': True
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

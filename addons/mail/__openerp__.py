@@ -63,6 +63,7 @@ Main Features
         'security/ir.model.access.csv',
         'mail_alias_view.xml',
         'res_users_view.xml',
+        'views/mail.xml',
     ],
     'demo': [
         'data/mail_demo.xml',
@@ -71,30 +72,18 @@ Main Features
     'installable': True,
     'application': True,
     'images': [
-        'images/customer_history.jpeg',
+        'images/inbox.jpeg',
         'images/messages_form.jpeg',
         'images/messages_list.jpeg',
-        'static/src/img/email_icong.png',
-        'static/src/img/_al.png',
-        'static/src/img/_pincky.png',
-        'static/src/img/groupdefault.png',
-        'static/src/img/attachment.png',
-        'static/src/img/checklist.png',
-        'static/src/img/formatting.png',
-    ],
-    'css': [
-        'static/src/css/mail.css',
-        'static/src/css/mail_group.css',
-    ],
-    'js': [
-        'static/lib/jquery.expander/jquery.expander.js',
-        'static/src/js/mail.js',
-        'static/src/js/mail_followers.js',
-        'static/src/js/many2many_tags_email.js',
+        'images/email.jpeg',
+        'images/join_a_group.jpeg',
+        'images/share_a_message.jpeg',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
         'static/src/xml/mail_followers.xml',
+        'static/src/xml/announcement.xml',
+        'static/src/xml/suggestions.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

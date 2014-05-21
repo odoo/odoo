@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_server_action_form_template">
+            <field name="name">ir.actions.server.form</field>
+            <field name="model">ir.actions.server</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='code']" position="after">
+                    <page string="Email" autofocus="autofocus"
+                            attrs="{'invisible': [('state', '!=', 'email')]}">
+                        <p attrs="{'invisible': [('model_id', '!=', False)]}">
+                            Please set the Base Model before setting the action details.
+                        </p>
+                        <group attrs="{'invisible': [('model_id', '=', False)]}">
+                            <field name="template_id"
+                                    on_change='on_change_template_id(template_id)'
+                                    attrs="{'required': [('state', '=', 'email')]}"/>
+                            <p colspan="2" attrs="{'invisible': [('template_id', '!=', False)]}">
+                                Choose a template to display its values.
+                            </p>
+                            <p colspan="2" attrs="{'invisible': [('template_id', '=', False)]}">
+                                The values displayed hereunder are informative. When sending the email, the values
+                                will be taken from the email template.
+                            </p>
+                        </group>
+                        <group attrs="{'invisible': ['|', ('model_id', '=', False), ('template_id', '=', False)]}">
+                            <label for="email_from"/>
+                            <div>
+                                <field name="email_from" nolabel="1'" readonly="1"
+                                        attrs="{'required': [('state', '=', 'email')]}"/>
+                                <p attrs="{'invisible': [('email_from', '!=', False)]}">
+                                    Your template does not defined any email_from. Please update your template.
+                                </p>
+                            </div>
+                            <field name="email_to" readonly="1"/>
+                            <field name="partner_to" readonly="1"/>
+                            <field name="subject" readonly="1" attrs="{'required': [('state', '=', 'email')]}"/>
+                            <field name="body_html" readonly="1" attrs="{'required': [('state', '=', 'email')]}"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

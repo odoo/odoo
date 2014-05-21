@@ -21,7 +21,6 @@
 {
     'name': 'Indian Payroll',
     'category': 'Localization',
-    'init_xml': [],
     'author': 'OpenERP SA',
     'website':'http://www.openerp.com',
     'depends': ['hr_payroll'],
@@ -43,25 +42,28 @@ Indian Payroll Salary Rules.
     - Yearly Salary by Head and Yearly Salary by Employee Report
     """,
     'active': False,
-    'update_xml': [
+    'data': [
          'l10n_in_hr_payroll_view.xml',
          'data/l10n_in_hr_payroll_data.xml',
          'data/hr.salary.rule.csv',
          'security/ir.model.access.csv',
          'l10n_in_hr_payroll_report.xml',
          'l10n_in_hr_payroll_sequence.xml',
+         'views/report_payslipdetails.xml',
+         'views/report_hrsalarybymonth.xml',
          'wizard/hr_salary_employee_bymonth_view.xml',
          'wizard/hr_yearly_salary_detail_view.xml',
          'report/payment_advice_report_view.xml',
          'report/payslip_report_view.xml',
-
+         'views/report_hryearlysalary.xml',
+         'views/report_payrolladvice.xml',
      ],
     'test': [
         'test/payment_advice.yml',
         'test/payment_advice_batch.yml'
     ],
 
-    'demo_xml': ['l10n_in_hr_payroll_demo.xml'],
+    'demo': ['l10n_in_hr_payroll_demo.xml'],
     'installable': True
 }
 

@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on a MRP Repair, we will print an Order Report
--
-  !python {model: mrp.repair}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.repair.order').create(cr, uid, [ref('mrp_repair.mrp_repair_rmrp0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'mrp_repair-order_report.'+format), 'wb+').write(data)

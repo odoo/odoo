@@ -34,11 +34,12 @@ class sale_order(osv.Model):
 
     def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
         result = dict.fromkeys(ids, False)
-        payment_acquirer = self.pool.get('portal.payment.acquirer')
+        payment_acquirer = self.pool['payment.acquirer']
         for this in self.browse(cr, uid, ids, context=context):
             if this.state not in ('draft', 'cancel') and not this.invoiced:
-                result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.name,
-                    this.pricelist_id.currency_id, this.amount_total, context=context)
+                result[this.id] = payment_acquirer.render_payment_block(
+                    cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
+                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -61,18 +62,6 @@ class sale_order(osv.Model):
         partner = document.partner_id
         if partner.id not in document.message_follower_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            mail_values = {
-                'email_from': user.partner_id.email,
-                'email_to': partner.email,
-                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                'auto_delete': True,
-                'type': 'email',
-            }
-            mail_obj = self.pool.get('mail.mail')
-            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
-            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
@@ -96,11 +85,12 @@ class account_invoice(osv.Model):
 
     def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
         result = dict.fromkeys(ids, False)
-        payment_acquirer = self.pool.get('portal.payment.acquirer')
+        payment_acquirer = self.pool.get('payment.acquirer')
         for this in self.browse(cr, uid, ids, context=context):
             if this.type == 'out_invoice' and this.state not in ('draft', 'done') and not this.reconciled:
-                result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.number,
-                    this.currency_id, this.residual, context=context)
+                result[this.id] = payment_acquirer.render_payment_block(
+                    cr, uid, this.number, this.residual, this.currency_id.id,
+                    partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
         return result
 
     def action_invoice_sent(self, cr, uid, ids, context=None):
@@ -118,22 +108,10 @@ class account_invoice(osv.Model):
 
     def invoice_validate(self, cr, uid, ids, context=None):
         # fetch the partner's id and subscribe the partner to the invoice
-        document = self.browse(cr, uid, ids[0], context=context)
-        partner = document.partner_id
-        if partner.id not in document.message_follower_ids:
-            self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            mail_values = {
-                'email_from': user.partner_id.email,
-                'email_to': partner.email,
-                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                'auto_delete': True,
-                'type': 'email',
-            }
-            mail_obj = self.pool.get('mail.mail')
-            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
-            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
+        for invoice in self.browse(cr, uid, ids, context=context):
+            partner = invoice.partner_id
+            if partner.id not in invoice.message_follower_ids:
+                self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
@@ -148,8 +126,8 @@ class account_invoice(osv.Model):
 class mail_mail(osv.osv):
     _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.model == 'sale.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
+        if mail_sent and mail.model == 'sale.order':
             so_obj = self.pool.get('sale.order')
             order = so_obj.browse(cr, uid, mail.res_id, context=context)
             partner = order.partner_id
@@ -160,4 +138,4 @@ class mail_mail(osv.osv):
             for p in mail.partner_ids:
                 if p.id not in order.message_follower_ids:
                     so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)

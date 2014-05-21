@@ -1,0 +1,31 @@
+-
+  Create a user as 'Crm Salesmanager'
+-
+  !record {model: res.users, id: crm_res_users_salesmanager, view: False}:
+    company_id: base.main_company
+    name: Crm Sales manager
+    login: csm
+    password: csm
+    email: crmmanager@yourcompany.com
+-
+  I added groups for Crm Salesmanager.
+-
+  !record {model: res.users, id: crm_res_users_salesmanager}:
+    groups_id:
+      - base.group_sale_manager
+-
+  Create a user as 'Crm Salesman'
+-
+  !record {model: res.users, id: crm_res_users_salesman, view: False}:
+    company_id: base.main_company
+    name: Crm Salesman
+    login: csu
+    password: csu
+    email: crmuser@yourcompany.com
+-
+  I added groups for Crm Salesman.
+-
+  !record {model: res.users, id: crm_res_users_salesman}:
+    groups_id:
+      - base.group_sale_salesman_all_leads
+      - base.group_partner_manager

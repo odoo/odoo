@@ -88,16 +88,13 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         var qdict = {
             current_layout : this.$el.find('.oe_dashboard').attr('data-layout')
         };
-        var $dialog = instance.web.dialog($('<div>'), {
-                            modal: true,
+        var $dialog = new instance.web.Dialog(this, {
                             title: _t("Edit Layout"),
-                            width: 'auto',
-                            height: 'auto'
-                        }).html(QWeb.render('DashBoard.layouts', qdict));
-        $dialog.find('li').click(function() {
+                        }, QWeb.render('DashBoard.layouts', qdict)).open();
+        $dialog.$el.find('li').click(function() {
             var layout = $(this).attr('data-layout');
-            $dialog.dialog('destroy');
             self.do_change_layout(layout);
+            $dialog.$dialog_box.modal('hide'); 
         });
     },
     do_change_layout: function(new_layout) {
@@ -177,8 +174,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             view_mode = action_attrs.view_mode;
 
         // evaluate action_attrs context and domain
+        action_attrs.context_string = action_attrs.context;
         action_attrs.context = instance.web.pyeval.eval(
             'context', action_attrs.context || {});
+        action_attrs.domain_string = action_attrs.domain;
         action_attrs.domain = instance.web.pyeval.eval(
             'domain', action_attrs.domain || [], action_attrs.context);
         if (action_attrs.context['dashboard_merge_domains_contexts'] === false) {
@@ -301,9 +300,9 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
 instance.web.form.DashBoardLegacy = instance.web.form.DashBoard.extend({
     renderElement: function() {
         if (this.node.tag == 'hpaned') {
-            this.node.attrs.style = '2-1';
+            this.node.attrs.layout = '2-1';
         } else if (this.node.tag == 'vpaned') {
-            this.node.attrs.style = '1';
+            this.node.attrs.layout = '1';
         }
         this.node.tag = 'board';
         _.each(this.node.children, function(child) {
@@ -342,7 +341,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
     },
     load_data:function(){
         var board = new instance.web.Model('board.board');
-        return board.call('list');
+        return board.call('list', [board.context()]);
     },
     _x:function() {
         if (!instance.webclient) { return $.Deferred().reject(); }
@@ -378,6 +377,10 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
+
+        context.add({
+            group_by: instance.web.pyeval.eval('groupbys', data.groupbys || [])
+        });
 
         var c = instance.web.pyeval.eval('context', context);
         for(var k in c) {
@@ -417,8 +420,10 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
 instance.web.SearchView.include({
     add_common_inputs: function() {
         this._super();
-        (new instance.board.AddToDashboard(this));
-
+        var vm = this.getParent().getParent();
+        if (vm.inner_action && vm.inner_action.views) {
+            (new instance.board.AddToDashboard(this));
+        }
     }
 });
 

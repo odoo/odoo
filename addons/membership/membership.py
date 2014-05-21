@@ -169,7 +169,6 @@ class membership_line(osv.osv):
         (_check_membership_date, 'Error, this membership product is out of date', [])
     ]
 
-membership_line()
 
 
 class Partner(osv.osv):
@@ -287,21 +286,21 @@ class Partner(osv.osv):
                 line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_from', context=context)
                 if line_id:
-                        res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, line_id[0],
-                                ['date_from'], context=context)['date_from']
+                        res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, [line_id[0]],
+                                ['date_from'], context=context)[0]['date_from']
 
             if name == 'membership_stop':
                 line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_to desc', context=context)
                 if line_id1:
-                      res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
-                                ['date_to'], context=context)['date_to']
+                      res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, [line_id1[0]],
+                                ['date_to'], context=context)[0]['date_to']
 
             if name == 'membership_cancel':
                 if partner.membership_state == 'canceled':
                     line_id2 = member_line_obj.search(cr, uid, [('partner', '=', partner.id)], limit=1, order='date_cancel', context=context)
                     if line_id2:
-                        res[partner.id]['membership_cancel'] = member_line_obj.read(cr, uid, line_id2[0], ['date_cancel'], context=context)['date_cancel']
+                        res[partner.id]['membership_cancel'] = member_line_obj.read(cr, uid, [line_id2[0]], ['date_cancel'], context=context)[0]['date_cancel']
         return res
 
     def _get_partners(self, cr, uid, ids, context=None):
@@ -329,13 +328,13 @@ class Partner(osv.osv):
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
-                    }, help="""It indicates the membership state.
-                    -Non Member: A partner who has not applied for any membership.
-                    -Cancelled Member: A member who has cancelled his membership.
-                    -Old Member: A member whose membership date has expired.
-                    -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
-                    -Invoiced Member: A member whose invoice has been created.
-                    -Paying member: A member who has paid the membership fee."""),
+                    }, help='It indicates the membership state.\n'
+                            '-Non Member: A partner who has not applied for any membership.\n'
+                            '-Cancelled Member: A member who has cancelled his membership.\n'
+                            '-Old Member: A member whose membership date has expired.\n'
+                            '-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n'
+                            '-Invoiced Member: A member whose invoice has been created.\n'
+                            '-Paying member: A member who has paid the membership fee.'),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
                     string = 'Membership Start Date', type = 'date',
@@ -442,7 +441,6 @@ class Partner(osv.osv):
         self.pool.get('res.partner').write(cr, uid, ids, {})
         return invoice_list
 
-Partner()
 
 class Product(osv.osv):
 
@@ -476,7 +474,6 @@ class Product(osv.osv):
         'membership': False,
     }
 
-Product()
 
 
 class Invoice(osv.osv):
@@ -494,7 +491,6 @@ class Invoice(osv.osv):
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
         return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
-Invoice()
 
 class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
@@ -561,6 +557,5 @@ class account_invoice_line(osv.osv):
                         }, context=context)
         return result
 
-account_invoice_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

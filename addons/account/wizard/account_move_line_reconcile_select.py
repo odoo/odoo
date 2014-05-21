@@ -50,6 +50,5 @@ class account_move_line_reconcile_select(osv.osv_memory):
             'type': 'ir.actions.act_window'
         }
 
-account_move_line_reconcile_select()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

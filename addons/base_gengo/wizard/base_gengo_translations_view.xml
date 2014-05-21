@@ -8,7 +8,14 @@
                 <form string="Gengo Request Form" version="7.0">
                     <group>
                         <field name="lang_id"/>
-                        <field name="restart_send_job"/>
+                    </group>
+                    <group>
+	                    <group>
+	                            <field name="sync_type" widget="radio"/>
+	                    </group>
+	                    <group>
+	                            <field name="sync_limit" required="1"/>
+	                    </group>
                     </group>
                     <footer>
                         <button name="act_update" string="Send" type="object" class="oe_highlight"/> 

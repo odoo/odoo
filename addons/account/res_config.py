@@ -22,12 +22,12 @@
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
-from os.path import join as opj
 
+import openerp
+from openerp import SUPERUSER_ID
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
-from openerp import tools
 
 class account_config_settings(osv.osv_memory):
     _name = 'account.config.settings'
@@ -80,31 +80,34 @@ class account_config_settings(osv.osv_memory):
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
         'module_account_check_writing': fields.boolean('Pay your suppliers by check',
-            help="""This allows you to check writing and printing.
-                This installs the module account_check_writing."""),
+            help='This allows you to check writing and printing.\n'
+                 '-This installs the module account_check_writing.'),
         'module_account_accountant': fields.boolean('Full accounting features: journals, legal statements, chart of accounts, etc.',
             help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
         'module_account_asset': fields.boolean('Assets management',
-            help="""This allows you to manage the assets owned by a company or a person.
-                It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
-                This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments,
-                but not accounting (Journal Items, Chart of Accounts, ...)"""),
+            help='This allows you to manage the assets owned by a company or a person.\n'
+                 'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n'
+                 '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
+                 'but not accounting (Journal Items, Chart of Accounts, ...)'),
         'module_account_budget': fields.boolean('Budget management',
-            help="""This allows accountants to manage analytic and crossovered budgets.
-                Once the master budgets and the budgets are defined,
-                the project managers can set the planned amount on each analytic account.
-                This installs the module account_budget."""),
+            help='This allows accountants to manage analytic and crossovered budgets. '
+                 'Once the master budgets and the budgets are defined, '
+                 'the project managers can set the planned amount on each analytic account.\n'
+                 '-This installs the module account_budget.'),
         'module_account_payment': fields.boolean('Manage payment orders',
-            help="""This allows you to create and manage your payment orders, with purposes to
-                    * serve as base for an easy plug-in of various automated payment mechanisms, and
-                    * provide a more efficient way to manage invoice payments.
-                This installs the module account_payment."""),
+            help='This allows you to create and manage your payment orders, with purposes to \n'
+                 '* serve as base for an easy plug-in of various automated payment mechanisms, and \n'
+                 '* provide a more efficient way to manage invoice payments.\n'
+                 '-This installs the module account_payment.' ),
         'module_account_voucher': fields.boolean('Manage customer payments',
-            help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
-                This installs the module account_voucher."""),
+            help='This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.\n'
+                 '-This installs the module account_voucher.'),
         'module_account_followup': fields.boolean('Manage customer payment follow-ups',
-            help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
-                This installs the module account_followup."""),
+            help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
+                 '-This installs the module account_followup.'),
+        'module_product_email_template': fields.boolean('Send products tools and information at the invoice confirmation',
+            help='With this module, link your products to a template to send complete information and tools to your customer.\n'
+                 'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.'),
         'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
@@ -132,12 +135,43 @@ class account_config_settings(osv.osv_memory):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
         return bool(count == 1)
 
+    def _get_default_fiscalyear_data(self, cr, uid, company_id, context=None):
+        """Compute default period, starting and ending date for fiscalyear
+        - if in a fiscal year, use its period, starting and ending date
+        - if past fiscal year, use its period, and new dates [ending date of the latest +1 day ; ending date of the latest +1 year]
+        - if no fiscal year, use monthly, 1st jan, 31th dec of this year
+        :return: (date_start, date_stop, period) at format DEFAULT_SERVER_DATETIME_FORMAT
+        """
+        fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
+                 ('company_id', '=', company_id)])
+        if fiscalyear_ids:
+            # is in a current fiscal year, use this one
+            fiscalyear = self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context)
+            if len(fiscalyear.period_ids) == 5:  # 4 periods of 3 months + opening period
+                period = '3months'
+            else:
+                period = 'month'
+            return (fiscalyear.date_start, fiscalyear.date_stop, period)
+        else:
+            past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
+            if past_fiscalyear_ids:
+                # use the latest fiscal, sorted by (start_date, id)
+                latest_year = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context)
+                latest_stop = datetime.datetime.strptime(latest_year.date_stop, DF)
+                if len(latest_year.period_ids) == 5:
+                    period = '3months'
+                else:
+                    period = 'month'
+                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF), period)
+            else:
+                return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'), 'month')
+
+
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
-        'date_start': lambda *a: time.strftime('%Y-01-01'),
-        'date_stop': lambda *a: time.strftime('%Y-12-31'),
-        'period': 'month',
     }
 
     def create(self, cr, uid, values, context=None):
@@ -151,16 +185,17 @@ class account_config_settings(osv.osv_memory):
         self.write(cr, uid, [id], vals, context)
         return id
 
-    def onchange_company_id(self, cr, uid, ids, company_id):
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         # update related fields
         values = {}
         values['currency_id'] = False
         if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
             has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
             fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
                 [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
                  ('company_id', '=', company_id)])
+            date_start, date_stop, period = self._get_default_fiscalyear_data(cr, uid, company_id, context=context)
             values = {
                 'expects_chart_of_accounts': company.expects_chart_of_accounts,
                 'currency_id': company.currency_id.id,
@@ -170,6 +205,9 @@ class account_config_settings(osv.osv_memory):
                 'has_fiscal_year': bool(fiscalyear_count),
                 'chart_template_id': False,
                 'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
+                'date_start': date_start,
+                'date_stop': date_stop,
+                'period': period,
             }
             # update journals and sequences
             for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
@@ -221,6 +259,12 @@ class account_config_settings(osv.osv_memory):
     def onchange_tax_rate(self, cr, uid, ids, rate, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
+    def onchange_multi_currency(self, cr, uid, ids, group_multi_currency, context=None):
+        res = {}
+        if not group_multi_currency:
+            res['value'] = {'income_currency_exchange_account_id': False, 'expense_currency_exchange_account_id': False}
+        return res
+    
     def onchange_start_date(self, cr, uid, id, start_date):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
@@ -240,11 +284,13 @@ class account_config_settings(osv.osv_memory):
 
     def set_default_taxes(self, cr, uid, ids, context=None):
         """ set default sale and purchase taxes for products """
+        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+            raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, uid, 'product.product', 'taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'taxes_id',
             config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, uid, 'product.product', 'supplier_taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'supplier_taxes_id',
             config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
 
     def set_chart_of_accounts(self, cr, uid, ids, context=None):
@@ -302,4 +348,10 @@ class account_config_settings(osv.osv_memory):
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
         dp.write({'digits': config.decimal_precision})
 
+    def onchange_analytic_accounting(self, cr, uid, ids, analytic_accounting, context=None):
+        if analytic_accounting:
+            return {'value': {
+                'module_account_accountant': True,
+                }}
+        return {}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

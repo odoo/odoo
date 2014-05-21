@@ -22,11 +22,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
 from openerp.osv import fields, osv
+
 
 class account_cdr_report(osv.osv_memory):
     _name = 'account.cdr.report'
@@ -50,8 +51,8 @@ class account_cdr_report(osv.osv_memory):
         data['form'] = {}
         data['ids'] = active_ids
         data['form']['fiscalyear_id'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
-        return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.compute_resultant', 'datas': data}
-
-account_cdr_report()
+        return self.pool['report'].get_action(
+            cr, uid, ids, 'l10n_fr.report_l10nfrresultat', data=data, context=context
+        )
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

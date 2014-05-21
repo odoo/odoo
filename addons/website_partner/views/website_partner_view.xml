@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="partner_detail" name="Partner Details (Complex Template for Access Right)">
+    <t t-if="partner" >
+        <t t-call="website.publish_management">
+            <t t-set="object" t-value="partner"/>
+            <t t-set="publish_edit" t-value="True"/>
+        </t>
+    </t>
+    <t t-if="partner"><h1 class="col-md-12 text-center" t-field="partner.name"/></t>
+    <t t-if="not partner"><h1 class="col-md-12 text-center" t-esc="partner_data.get('name_get')[1]"/></t>
+    <div class="col-md-4">
+        <div class="text-center">
+            <t t-if="partner"><img t-att-src="partner.img('image')"/></t>
+            <t t-if="not partner"><img t-attf-src="data:image/png;base64,#{partner_data.get('image')}"/></t>
+        </div>
+        <address>
+            <table style="margin: auto;" class="well">
+                <colgroup>
+                    <col width="100"/>
+                    <col/>
+                </colgroup>
+                <tbody>
+                    <t t-if="partner">
+                        <t t-set="address" t-value="'&lt;br/&gt;'.join(partner.name_get()[0][1].split('\n')[1:])"/>
+                        <tr t-if="address or editable"><th class="texttop">Address</th><td class="span2" t-raw="address"/></tr>
+                    </t>
+                    <tr t-if="not partner and partner_data.get('address')"><th class="texttop">Address</th><td class="span2" t-raw="partner_data.get('address')"/></tr>
+
+                    <tr t-if="partner and (partner.website or editable)"><th>Website</th><td class="span2">
+                        <t t-if="partner.website"><span t-field="partner.website"/></t></td></tr>
+                    <tr t-if="partner_data.get('website')"><th>Website</th><td class="span2"><span t-esc="partner_data.get('website')"/></td></tr>
+
+                    <tr t-if="partner and (partner.phone or editable)"><th>Phone</th><td class="span2">
+                        <t t-if="partner.phone"><span t-field="partner.phone"/></t></td></tr>
+                    <tr t-if="partner_data.get('phone')"><th>Phone</th><td class="span2"><span t-esc="partner_data.get('phone')"/></td></tr>
+
+                    <tr t-if="partner and (partner.mobile or editable)"><th>Tel</th><td class="span2">
+                        <t t-if="partner.mobile"><span t-field="partner.mobile"/></t></td></tr>
+                    <tr t-if="partner_data.get('mobile')"><th>Tel</th><td class="span2"><span t-esc="partner_data.get('mobile')"/></td></tr>
+
+                    <tr t-if="partner and (partner.fax or editable)"><th>Fax</th><td class="span2">
+                        <t t-if="partner.fax"><span t-field="partner.fax"/></t></td></tr>
+                    <tr t-if="partner_data.get('fax')"><th>Fax</th><td class="span2"><span t-esc="partner_data.get('fax')"/></td></tr>
+
+                    <tr t-if="partner and (partner.email or editable)"><th>Email</th><td class="span2">
+                        <t t-if="partner.email"><span t-field="partner.email"/></t></td></tr>
+                    <tr t-if="partner_data.get('email')"><th>Email</th><td class="span2"><span t-esc="partner_data.get('email')"/></td></tr>
+                </tbody>
+            </table>
+        </address>
+        <t t-raw="left_column or ''"/>
+    </div>
+    <div class="col-md-8 mt32">
+        <t t-if="partner">
+            <div t-field="partner.website_description"/>
+            <t groups="base.group_website_publisher">
+                <h2 class="css_non_editable_mode_hidden">Short Description for List View</h2>
+                <div class="css_non_editable_mode_hidden" t-field="partner.website_short_description"/>
+            </t>
+        </t>
+        <t t-if="not partner">
+            <div class="col-md-8 mt32" t-raw="partner_data.get('website_description')"/>
+        </t>
+        <t t-raw="right_column or ''"/>
+    </div>
+</template>
+</data>
+</openerp>

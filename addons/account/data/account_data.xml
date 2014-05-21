@@ -3,8 +3,14 @@
     <data noupdate="1">
 
         <record id="analytic_journal_sale" model="account.analytic.journal">
+            <field name="code">SAL</field>
             <field name="name">Sales</field>
             <field name="type">sale</field>
+        </record>
+        <record id="exp" model="account.analytic.journal">
+            <field name="code">PUR</field>
+            <field name="name">Purchases</field>
+            <field name="type">purchase</field>
         </record>
 
         <!--
@@ -16,7 +22,6 @@
         </record>
 
         <record id="account_payment_term_line_immediate" model="account.payment.term.line">
-            <field name="name">Immediate Payment</field>
             <field name="value">balance</field>
             <field eval="0" name="days"/>
             <field eval="0" name="days2"/>
@@ -30,7 +35,6 @@
         </record>
 
         <record id="account_payment_term_line_15days" model="account.payment.term.line">
-            <field name="name">15 Days</field>
             <field name="value">balance</field>
             <field eval="15" name="days"/>
             <field eval="0" name="days2"/>
@@ -48,13 +52,12 @@
         </record>
 
         <record id="account_payment_term_line_net" model="account.payment.term.line">
-            <field name="name">30 Net Days</field>
             <field name="value">balance</field>
             <field eval="30" name="days"/>
             <field eval="0" name="days2"/>
             <field eval="account_payment_term_net" name="payment_id"/>
         </record>
-        
+
         <!--
         Account Journal Sequences
         -->
@@ -155,11 +158,13 @@
         <record id="mt_invoice_validated" model="mail.message.subtype">
             <field name="name">Validated</field>
             <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
             <field name="description">Invoice validated</field>
         </record>
         <record id="mt_invoice_paid" model="mail.message.subtype">
             <field name="name">Paid</field>
             <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
             <field name="description">Invoice paid</field>
         </record>
     </data>

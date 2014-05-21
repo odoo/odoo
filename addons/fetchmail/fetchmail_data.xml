@@ -10,6 +10,8 @@
             <field name="model">fetchmail.server</field>
             <field name="function">_fetch_mails</field>
             <field name="args">()</field>
+            <!-- Active flag is set on fetchmail_server.create/write -->
+            <field name="active" eval="False"/>
         </record>
     </data>
 </openerp>

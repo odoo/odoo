@@ -49,7 +49,7 @@
                                 </group>
                                 <group string="Actions to Perform on Incoming Mails">
                                     <field name="object_id" on_change="onchange_server_type(type, is_ssl, object_id)"/>
-                                    <field name="action_id"/>
+                                    <field name="action_id" groups="base.group_no_one"/>
                                 </group>
                                 <group attrs="{'invisible' : [('type', '!=', 'local')]}" string="Configuration">
                                     <field name="configuration" colspan="4"/>
@@ -97,15 +97,17 @@
         <record id="inherit_view_general_configuration" model="ir.ui.view">
             <field name="name">General Settings</field>
             <field name="model">base.config.settings</field>
-              <field name="inherit_id" ref="base_setup.view_general_configuration"/>
-              <field name="arch" type="xml">
-                  <div name="email" position="inside">
-                      <button type="action"
-                            name="%(action_email_server_tree)d"
-                            string="Configure the incoming email gateway" class="oe_link"/>
-                  </div>
-              </field>
-      </record>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <div name="email.outgoing_server" position="after">
+                    <div name="email.incoming_server">
+                        <button type="action"
+                                name="%(action_email_server_tree)d"
+                                string="Configure the incoming email gateway" class="oe_link"/>
+                    </div>
+                </div>
+            </field>
+        </record>
 
 
         <menuitem

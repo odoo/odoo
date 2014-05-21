@@ -26,7 +26,7 @@ from operator import itemgetter
 
 from lxml import etree
 
-from openerp import netsvc
+from openerp import workflow
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -192,7 +192,9 @@ class account_move_line(osv.osv):
         for obj_line in self.browse(cr, uid, ids, context=context):
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
-                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                    raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
+                if obj_line.analytic_lines:
+                    acc_ana_line_obj.unlink(cr,uid,[obj.id for obj in obj_line.analytic_lines])
                 vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
                 acc_ana_line_obj.create(cr, uid, vals_line)
         return True
@@ -311,13 +313,13 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = """SELECT l2.id, SUM(l1.debit-l1.credit)
-                    FROM account_move_line l1, account_move_line l2
-                    WHERE l2.account_id = l1.account_id
-                      AND l1.id <= l2.id
-                      AND l2.id IN %s AND """ + \
-                self._query_get(cr, uid, obj='l1', context=c) + \
-                " GROUP BY l2.id"
+        sql = """SELECT l1.id, COALESCE(SUM(l2.debit-l2.credit), 0)
+                    FROM account_move_line l1 LEFT JOIN account_move_line l2
+                    ON (l1.account_id = l2.account_id
+                      AND l2.id <= l1.id
+                      AND """ + \
+                self._query_get(cr, uid, obj='l2', context=c) + \
+                ") WHERE l1.id IN %s GROUP BY l1.id"
 
         cr.execute(sql, [tuple(ids)])
         return dict(cr.fetchall())
@@ -428,6 +430,19 @@ class account_move_line(osv.osv):
             elif line.reconcile_partial_id:
                 res[line.id] = str(line.reconcile_partial_id.name)
         return res
+        
+    def _get_move_from_reconcile(self, cr, uid, ids, context=None):
+        move = {}
+        for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids, context=context):
+            for line in r.line_partial_ids:
+                move[line.move_id.id] = True
+            for line in r.line_id:
+                move[line.move_id.id] = True
+        move_line_ids = []
+        if move:
+            move_line_ids = self.pool.get('account.move.line').search(cr, uid, [('journal_id','in',move.keys())], context=context)
+        return move_line_ids
+
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -443,7 +458,8 @@ class account_move_line(osv.osv):
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
-        'reconcile': fields.function(_get_reconcile, type='char', string='Reconcile Ref'),
+        'reconcile': fields.function(_get_reconcile, type='char', string='Reconcile Ref', store={
+                    'account.move.line': (lambda self, cr, uid, ids, c={}: ids, ['reconcile_id','reconcile_partial_id'], 50),'account.move.reconcile': (_get_move_from_reconcile, None, 50)}),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'amount_residual_currency': fields.function(_amount_residual, string='Residual Amount in Currency', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
         'amount_residual': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in the company currency."),
@@ -559,10 +575,11 @@ class account_move_line(osv.osv):
     ]
 
     def _auto_init(self, cr, context=None):
-        super(account_move_line, self)._auto_init(cr, context=context)
+        res = super(account_move_line, self)._auto_init(cr, context=context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
@@ -625,7 +642,7 @@ class account_move_line(osv.osv):
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
         (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
         (_check_currency_and_amount, "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field.", ['currency_id','amount_currency']),
-        (_check_currency_amount, 'The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit.', ['amount_currency']),
+        (_check_currency_amount, 'The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited.', ['amount_currency']),
         (_check_currency_company, "You cannot provide a secondary currency if it is the same than the company one." , ['currency_id']),
     ]
 
@@ -654,13 +671,7 @@ class account_move_line(osv.osv):
         }
         return result
 
-    def onchange_account_id(self, cr, uid, ids, account_id, context=None):
-        res = {'value': {}}
-        if account_id:
-            res['value']['account_tax_id'] = [x.id for x in self.pool.get('account.account').browse(cr, uid, account_id, context=context).tax_ids]
-        return res
-
-    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
+    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False, context=None):
         partner_obj = self.pool.get('res.partner')
         payment_term_obj = self.pool.get('account.payment.term')
         journal_obj = self.pool.get('account.journal')
@@ -674,8 +685,8 @@ class account_move_line(osv.osv):
             date = datetime.now().strftime('%Y-%m-%d')
         jt = False
         if journal:
-            jt = journal_obj.browse(cr, uid, journal).type
-        part = partner_obj.browse(cr, uid, partner_id)
+            jt = journal_obj.browse(cr, uid, journal, context=context).type
+        part = partner_obj.browse(cr, uid, partner_id, context=context)
 
         payment_term_id = False
         if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
@@ -700,20 +711,20 @@ class account_move_line(osv.osv):
                     elif part.supplier:
                         val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
-                    d = self.onchange_account_id(cr, uid, ids, val['account_id'])
+                    d = self.onchange_account_id(cr, uid, ids, account_id=val['account_id'], partner_id=part.id, context=context)
                     val.update(d['value'])
         return {'value':val}
 
-    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
+    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False, context=None):
         account_obj = self.pool.get('account.account')
         partner_obj = self.pool.get('res.partner')
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         val = {}
         if account_id:
-            res = account_obj.browse(cr, uid, account_id)
+            res = account_obj.browse(cr, uid, account_id, context=context)
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
-                part = partner_obj.browse(cr, uid, partner_id)
+                part = partner_obj.browse(cr, uid, partner_id, context=context)
                 tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False
@@ -741,24 +752,26 @@ class account_move_line(osv.osv):
 
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
-             """
-             SELECT partner_id
-             FROM (
-                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit
+             """SELECT partner_id FROM (
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
-                    AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
                     AND l.state <> 'draft'
                     GROUP BY l.partner_id, p.last_reconciliation_date
                 ) AS s
-                WHERE debit > 0 AND credit > 0
+                WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
-        ids = cr.fetchall()
-        ids = len(ids) and [x[0] for x in ids] or []
-        return self.pool.get('res.partner').name_get(cr, uid, ids, context=context)
+        ids = [x[0] for x in cr.fetchall()]
+        if not ids: 
+            return []
+
+        # To apply the ir_rules
+        partner_obj = self.pool.get('res.partner')
+        ids = partner_obj.search(cr, uid, [('id', 'in', ids)], context=context)
+        return partner_obj.name_get(cr, uid, ids, context=context)
 
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -780,7 +793,7 @@ class account_move_line(osv.osv):
             else:
                 currency_id = line.company_id.currency_id
             if line.reconcile_id:
-                raise osv.except_osv(_('Warning!'), _('Already reconciled.'))
+                raise osv.except_osv(_('Warning'), _("Journal Item '%s' (id: %s), Move '%s' is already reconciled!") % (line.name, line.id, line.move_id.name)) 
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
@@ -803,7 +816,7 @@ class account_move_line(osv.osv):
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        })
+        }, context=context)
         move_rec_obj.reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
         return True
 
@@ -850,18 +863,17 @@ class account_move_line(osv.osv):
                    (tuple(ids), ))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
+        if len(r) != 1:
+            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
             raise osv.except_osv(_('Error!'), _('Entry is already reconciled.'))
         account = account_obj.browse(cr, uid, account_id, context=context)
+        if not account.reconcile:
+            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
         if r[0][1] != None:
             raise osv.except_osv(_('Error!'), _('Some entries are already reconciled.'))
 
-        if context.get('fy_closing'):
-            # We don't want to generate any write-off when being called from the
-            # wizard used to close a fiscal year (and it doesn't give us any
-            # writeoff_acc_id).
-            pass
-        elif (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+        if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning!'), _('You have to provide an account for the write off/exchange difference entry.'))
@@ -935,11 +947,10 @@ class account_move_line(osv.osv):
             'line_id': map(lambda x: (4, x, False), ids),
             'line_partial_ids': map(lambda x: (3, x, False), ids)
         })
-        wf_service = netsvc.LocalService("workflow")
         # the id of the move.reconcile is written in the move.line (self) by the create method above
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
-            wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+            workflow.trg_trigger(uid, 'account.move.line', id, cr)
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
@@ -983,8 +994,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         period_pool = self.pool.get('account.period')
-        ctx = dict(context, account_period_prefer_normal=True)
-        pids = period_pool.find(cr, user, date, context=ctx)
+        pids = period_pool.find(cr, user, date, context=context)
         if pids:
             res.update({
                 'period_id':pids[0]
@@ -1024,10 +1034,14 @@ class account_move_line(osv.osv):
         part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
+        all_moves = obj_move_line.search(cr, uid, ['|',('reconcile_id', 'in', unlink_ids),('reconcile_partial_id', 'in', unlink_ids)])
+        all_moves = list(set(all_moves) - set(move_ids))
         if unlink_ids:
             if opening_reconciliation:
                 obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
+            if len(all_moves) >= 2:
+                obj_move_line.reconcile_partial(cr, uid, all_moves, 'auto',context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None, check=True):
@@ -1070,12 +1084,12 @@ class account_move_line(osv.osv):
 
         for line in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
-            if ('journal_id' not in ctx):
+            if not ctx.get('journal_id'):
                 if line.move_id:
                    ctx['journal_id'] = line.move_id.journal_id.id
                 else:
                     ctx['journal_id'] = line.journal_id.id
-            if ('period_id' not in ctx):
+            if not ctx.get('period_id'):
                 if line.move_id:
                     ctx['period_id'] = line.move_id.period_id.id
                 else:
@@ -1105,7 +1119,7 @@ class account_move_line(osv.osv):
         period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
+                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
         if not result:
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
@@ -1137,10 +1151,12 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         if vals.get('move_id', False):
-            company_id = self.pool.get('account.move').read(cr, uid, vals['move_id'], ['company_id']).get('company_id', False)
-            if company_id:
-                vals['company_id'] = company_id[0]
-        if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
+            move = self.pool.get('account.move').browse(cr, uid, vals['move_id'], context=context)
+            if move.company_id:
+                vals['company_id'] = move.company_id.id
+            if move.date and not vals.get('date'):
+                vals['date'] = move.date
+        if ('account_id' in vals) and not account_obj.read(cr, uid, [vals['account_id']], ['active'])[0]['active']:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
         if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
@@ -1183,7 +1199,7 @@ class account_move_line(osv.osv):
                     move_id = move_obj.create(cr, uid, v, context)
                     vals['move_id'] = move_id
                 else:
-                    raise osv.except_osv(_('No piece number !'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+                    raise osv.except_osv(_('No Piece Number!'), _('Cannot create an automatic sequence for this piece.\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'], context=context)
@@ -1200,7 +1216,7 @@ class account_move_line(osv.osv):
                         break
             # Automatically convert in the account's secondary currency if there is one and
             # the provided values were not already multi-currency
-            if account.currency_id and (vals.get('amount_currency', False) is False) and account.currency_id.id != account.company_id.currency_id.id:
+            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 ctx = {}
                 if 'date' in vals:
@@ -1209,20 +1225,6 @@ class account_move_line(osv.osv):
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use this general account in this journal, check the tab \'Entry Controls\' on the related journal.'))
-
-        if vals.get('analytic_account_id',False):
-            if journal.analytic_journal_id:
-                vals['analytic_lines'] = [(0,0, {
-                        'name': vals['name'],
-                        'date': vals.get('date', time.strftime('%Y-%m-%d')),
-                        'account_id': vals.get('analytic_account_id', False),
-                        'unit_amount': vals.get('quantity', 1.0),
-                        'amount': vals.get('debit', 0.0) or vals.get('credit', 0.0),
-                        'general_account_id': vals.get('account_id', False),
-                        'journal_id': journal.analytic_journal_id.id,
-                        'ref': vals.get('ref', False),
-                        'user_id': uid
-            })]
 
         result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
@@ -1285,7 +1287,7 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and ((not context.get('no_store_function')) or journal.entry_posted):
+        if check and not context.get('novalidate') and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)
@@ -1304,6 +1306,5 @@ class account_move_line(osv.osv):
                 bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

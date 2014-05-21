@@ -1,28 +1,24 @@
-import simplejson
+import werkzeug.urls
 
-import openerp.addons.web.http as openerpweb
+import openerp
 import openerp.addons.web.controllers.main as webmain
 
-class EDI(openerpweb.Controller):
-    # http://hostname:8069/edi/import_url?url=URIEncodedURL
-    _cp_path = "/edi"
+class EDI(openerp.http.Controller):
 
-    @openerpweb.httprequest
-    def import_url(self, req, url):
-        modules = webmain.module_boot(req) + ['edi']
-        modules_str = ','.join(modules)
-        modules_json = simplejson.dumps(modules)
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list(req, modules_str, 'js'))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list(req, modules_str, 'css'))
-        return webmain.html_template % {
-            'js': js,
-            'css': css,
-            'modules': modules_json,
-            'init': 's.edi.edi_import("%s");' % url,
-        }
+    @openerp.http.route('/edi/import_url', type='http', auth='none')
+    def import_url(self, url):
+        # http://hostname:8069/edi/import_url?url=URIEncodedURL
+        req = openerp.http.request
 
-    @openerpweb.jsonrequest
-    def import_edi_url(self, req, url):
+        # `url` may contain a full URL with a valid query string, we basically want to watch out for XML brackets and double-quotes 
+        safe_url = werkzeug.url_quote_plus(url,':/?&;=')
+
+        values = dict(init='s.edi.edi_import("%s");' % safe_url)
+        return req.render('web.webclient_bootstrap', values)
+
+    @openerp.http.route('/edi/import_edi_url', type='json', auth='none')
+    def import_edi_url(self, url):
+        req = openerp.http.request
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)
         if len(result) == 1:
             return {"action": webmain.clean_action(req, result[0][2])}

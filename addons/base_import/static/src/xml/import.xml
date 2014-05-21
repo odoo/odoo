@@ -229,8 +229,8 @@
                         orders with their respective purchase order lines:</p>
                         <a href="/base_import/static/csv/o2m_purchase_order_lines.csv">Purchase orders with their respective purchase order lines</a>
                         <p>The following CSV file shows how to import 
-                        suppliers and their respective contacts</p>
-                        <a href="/base_import/static/csv/o2m_suppliers_contacts.csv">Suppliers and their respective contacts</a>
+                        customers and their respective contacts</p>
+                        <a href="/base_import/static/csv/o2m_customers_contacts.csv">Customers and their respective contacts</a>
                     </dd>
                 </dl>
 
@@ -347,8 +347,7 @@
         <tr class="oe_import_fields">
             <!-- Iterate on first row to ensure we have all columns -->
             <td t-foreach="preview[0]" t-as="column">
-                <input placeholder="Don't Import"
-                       class="oe_import_match_field"/>
+                <input class="oe_import_match_field"/>
             </td>
         </tr>
         <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">

@@ -64,6 +64,7 @@
             this.chkSSL.TabIndex = 19;
             this.chkSSL.Text = "SSL (https)";
             this.chkSSL.UseVisualStyleBackColor = true;
+            this.chkSSL.CheckedChanged += new System.EventHandler(this.chkSSL_CheckedChanged);
             // 
             // txt_server_port
             // 

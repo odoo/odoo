@@ -9,12 +9,14 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         init: function() {
             this._super.apply(this, arguments);
+            var self = this;
             this.set({
                 sheets: [],
                 date_to: false,
                 date_from: false,
             });
             this.updating = false;
+            this.defs = [];
             this.field_manager.on("field_changed:timesheet_ids", this, this.query_sheets);
             this.field_manager.on("field_changed:date_from", this, function() {
                 this.set({"date_from": instance.web.str_to_date(this.field_manager.get_field_value("date_from"))});
@@ -29,6 +31,14 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
+            // Original save function is overwritten in order to wait all running deferreds to be done before actually applying the save.
+            this.view.original_save = _.bind(this.view.save, this.view);
+            this.view.save = function(prepend_on_create){
+                self.prepend_on_create = prepend_on_create;
+                return $.when.apply($, self.defs).then(function(){
+                    return self.view.original_save(self.prepend_on_create);
+                });
+            };
         },
         go_to: function(event) {
             var id = JSON.parse($(event.target).data("id"));
@@ -163,24 +173,47 @@ openerp.hr_timesheet_sheet = function(instance) {
                 this.dfm = undefined;
             }
         },
+        is_valid_value:function(value){
+            var split_value = value.split(":");
+            var valid_value = true;
+            if (split_value.length > 2)
+                return false;
+            _.detect(split_value,function(num){
+                if(isNaN(num)){
+                    valid_value = false;
+                }
+            });
+            return valid_value;
+        },
         display_data: function() {
             var self = this;
             self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
             _.each(self.accounts, function(account) {
                 _.each(_.range(account.days.length), function(day_count) {
                     if (!self.get('effective_readonly')) {
-                        self.get_box(account, day_count).val(self.sum_box(account, day_count)).change(function() {
-                            var num = Number($(this).val());
+                        self.get_box(account, day_count).val(self.sum_box(account, day_count, true)).change(function() {
+                            var num = $(this).val();
+                            if (self.is_valid_value(num)){
+                                num = (num == 0)?0:Number(self.parse_client(num));
+                            }
                             if (isNaN(num)) {
-                                $(this).val(self.sum_box(account, day_count));
+                                $(this).val(self.sum_box(account, day_count, true));
                             } else {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
-                                self.display_totals();
-                                self.sync();
+                                var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id
+                                var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id
+                                self.defs.push(new instance.web.Model("hr.analytic.timesheet").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
+                                    account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
+                                    self.display_totals();
+                                    self.sync();
+                                }));
+                                if(!isNaN($(this).val())){
+                                    $(this).val(self.sum_box(account, day_count, true));
+                                }
                             }
                         });
                     } else {
-                        self.get_box(account, day_count).html(self.sum_box(account, day_count));
+                        self.get_box(account, day_count).html(self.sum_box(account, day_count, true));
                     }
                 });
             });
@@ -247,12 +280,12 @@ openerp.hr_timesheet_sheet = function(instance) {
         get_super_total: function() {
             return this.$('.oe_timesheet_weekly_supertotal');
         },
-        sum_box: function(account, day_count) {
+        sum_box: function(account, day_count, show_value_in_hour) {
             var line_total = 0;
             _.each(account.days[day_count].lines, function(line) {
                 line_total += line.unit_amount;
             });
-            return line_total;
+            return (show_value_in_hour && line_total != 0)?this.format_client(line_total):line_total;
         },
         display_totals: function() {
             var self = this;
@@ -266,12 +299,12 @@ openerp.hr_timesheet_sheet = function(instance) {
                     day_tots[day_count] += sum;
                     super_tot += sum;
                 });
-                self.get_total(account).html(acc_tot);
+                self.get_total(account).html(self.format_client(acc_tot));
             });
             _.each(_.range(self.dates.length), function(day_count) {
-                self.get_day_total(day_count).html(day_tots[day_count]);
+                self.get_day_total(day_count).html(self.format_client(day_tots[day_count]));
             });
-            self.get_super_total().html(super_tot);
+            self.get_super_total().html(self.format_client(super_tot));
         },
         sync: function() {
             var self = this;
@@ -279,13 +312,21 @@ openerp.hr_timesheet_sheet = function(instance) {
             self.set({sheets: this.generate_o2m_value()});
             self.setting = false;
         },
+        //converts hour value to float
+        parse_client: function(value) {
+            return instance.web.parse_value(value, { type:"float_time" });
+        },
+        //converts float value to hour
+        format_client:function(value){
+            return instance.web.format_value(value, { type:"float_time" });
+        },
         generate_o2m_value: function() {
             var self = this;
             var ops = [];
-
+            
             _.each(self.accounts, function(account) {
                 var auth_keys = _.extend(_.clone(account.account_defaults), {
-                    name: true, unit_amount: true, date: true, account_id:true,
+                    name: true, amount:true, unit_amount: true, date: true, account_id:true,
                 });
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {

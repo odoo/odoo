@@ -67,6 +67,5 @@ class account_move_line_select(osv.osv_memory):
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 
-account_move_line_select()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

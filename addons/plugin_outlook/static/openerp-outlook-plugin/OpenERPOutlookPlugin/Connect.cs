@@ -303,6 +303,7 @@ namespace OpenERPOutlookPlugin
 
                     foreach (outlook.MailItem mailitem in Tools.MailItems())
                     {
+                        
 
                         Object[] contact = Cache.OpenERPOutlookPlugin.RedirectPartnerPage(mailitem);
                         if ((int)contact[1] > 0)

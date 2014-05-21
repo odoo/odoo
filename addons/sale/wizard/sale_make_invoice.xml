@@ -6,16 +6,16 @@
             <field name="model">sale.make.invoice</field>
             <field name="arch" type="xml">
                 <form string="Create invoices" version="7.0">
-                    <header>
-                        <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <separator colspan="4" string="Do you really want to create the invoice(s)?" />
                     <group>
                         <field name="grouped"/>
                         <field name="invoice_date"/>
                     </group>
+                    <footer>
+                        <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>

@@ -38,8 +38,8 @@
          <field name="name">account.entries.report.graph</field>
          <field name="model">account.entries.report</field>
          <field name="arch" type="xml">
-             <graph string="Entries Analysis" type="bar">
-                <field name="partner_id"/>
+             <graph string="Entries Analysis" type="pivot">
+                <field name="partner_id" type="row"/>
                 <field name="debit" operator="+"/>
                 <field name="credit" operator="+"/>
                 <field name="balance" operator="+"/>
@@ -92,7 +92,7 @@
                     <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
                     <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Entries Month" icon="terp-go-today" context="{'group_by':'date'}" help="Entries Date by Month"/>
                     <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
                     <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
                  </group>
@@ -103,9 +103,9 @@
         <field name="name">Entries Analysis</field>
         <field name="res_model">account.entries.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_account_entries_report_search"/>
-        <field name="view_id" ref="view_account_entries_report_tree"/>
+        <field name="view_id" ref="view_account_entries_report_graph"/>
         <field name="context">{'group_by':[], 'search_default_usertype':1, 'search_default_thisyear':1, 'group_by_no_leaf':1}</field>
         <field name="help">From this view, have an analysis of your different financial accounts. The document shows your debit and credit taking in consideration some criteria you can choose by using the search tool.</field>
     </record>

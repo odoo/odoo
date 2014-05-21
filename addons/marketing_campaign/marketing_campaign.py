@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
+#    Copyright (C) 2004-2013 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -31,8 +31,8 @@ from openerp.tools.safe_eval import safe_eval as eval
 import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
-from openerp.osv import fields, osv
-from openerp import netsvc
+from openerp.osv import fields, osv, api
+from openerp.report import render_report
 from openerp.tools.translate import _
 
 _intervalTypes = {
@@ -44,47 +44,19 @@ _intervalTypes = {
 
 DT_FMT = '%Y-%m-%d %H:%M:%S'
 
-def dict_map(f, d):
-    return dict((k, f(v)) for k,v in d.items())
-
-def _find_fieldname(model, field):
-    inherit_columns = dict_map(itemgetter(2), model._inherit_fields)
-    all_columns = dict(inherit_columns, **model._columns)
-    for fn in all_columns:
-        if all_columns[fn] is field:
-            return fn
-    raise ValueError('Field not found: %r' % (field,))
-
-class selection_converter(object):
-    """Format the selection in the browse record objects"""
-    def __init__(self, value):
-        self._value = value
-        self._str = value
-
-    def set_value(self, cr, uid, _self_again, record, field, lang):
-        # this design is terrible
-        # search fieldname from the field
-        fieldname = _find_fieldname(record._table, field)
-        context = dict(lang=lang.code)
-        fg = record._table.fields_get(cr, uid, [fieldname], context=context)
-        selection = dict(fg[fieldname]['selection'])
-        self._str = selection[self.value]
-
-    @property
-    def value(self):
-        return self._value
-
-    def __str__(self):
-        return self._str
-
-translate_selections = {
-    'selection': selection_converter,
-}
-
 
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
     _description = "Marketing Campaign"
+    
+    def _count_segments(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        try:
+            for segments in self.browse(cr, uid, ids, context=context):
+                res[segments.id] = len(segments.segment_ids)
+        except: 
+            pass
+        return res
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -121,6 +93,8 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
+        'segment_ids': fields.one2many('marketing.campaign.segment', 'campaign_id', 'Segments', readonly=False),
+        'segments_count': fields.function(_count_segments, type='integer', string='Segments')
     }
 
     _defaults = {
@@ -166,7 +140,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # dead code
     def signal(self, cr, uid, model, res_id, signal, run_existing=True, context=None):
-        record = self.pool.get(model).browse(cr, uid, res_id, context)
+        record = self.pool[model].browse(cr, uid, res_id, context)
         return self._signal(cr, uid, record, signal, run_existing, context)
 
     #dead code
@@ -175,7 +149,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             raise ValueError('Signal cannot be False.')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.model', '=', record._table._name),
+        domain = [('object_id.model', '=', record._name),
                   ('state', '=', 'running')]
         campaign_ids = self.search(cr, uid, domain, context=context)
         for campaign in self.browse(cr, uid, campaign_ids, context=context):
@@ -229,7 +203,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             if unique_value:
                 if unique_field.ttype == 'many2one':
                     unique_value = unique_value.id
-                similar_res_ids = self.pool.get(campaign_rec.object_id.model).search(cr, uid,
+                similar_res_ids = self.pool[campaign_rec.object_id.model].search(cr, uid,
                                     [(unique_field.name, '=', unique_value)], context=context)
                 if similar_res_ids:
                     duplicate_workitem_domain = [('res_id','in', similar_res_ids),
@@ -237,7 +211,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         return Workitems.search(cr, uid, duplicate_workitem_domain, context=context)
 
 
-marketing_campaign()
 
 class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
@@ -334,6 +307,7 @@ class marketing_campaign_segment(osv.osv):
         self.process_segment(cr, uid, ids)
         return True
 
+    @api.cr_uid_ids_context
     def process_segment(self, cr, uid, segment_ids=None, context=None):
         Workitems = self.pool.get('marketing.campaign.workitem')
         Campaigns = self.pool.get('marketing.campaign')
@@ -350,7 +324,7 @@ class marketing_campaign_segment(osv.osv):
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
 
-            model_obj = self.pool.get(segment.object_id.model)
+            model_obj = self.pool[segment.object_id.model]
             criteria = []
             if segment.sync_last_date and segment.sync_mode != 'all':
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
@@ -384,7 +358,6 @@ class marketing_campaign_segment(osv.osv):
         Workitems.process_all(cr, uid, list(campaigns), context=context)
         return True
 
-marketing_campaign_segment()
 
 class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
@@ -464,8 +437,7 @@ class marketing_campaign_activity(osv.osv):
 
     #dead code
     def _process_wi_report(self, cr, uid, activity, workitem, context=None):
-        service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
-        (report_data, format) = service.create(cr, uid, [], {}, {})
+        report_data, format = render_report(cr, uid, [], activity.report_id.report_name, {}, context=context)
         attach_vals = {
             'name': '%s_%s_%s'%(activity.report_id.report_name,
                                 activity.name,workitem.partner_id.name),
@@ -511,27 +483,36 @@ class marketing_campaign_activity(osv.osv):
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
         return action(cr, uid, activity, workitem, context=context)
 
-marketing_campaign_activity()
 
 class marketing_campaign_transition(osv.osv):
     _name = "marketing.campaign.transition"
     _description = "Campaign Transition"
 
     _interval_units = [
-        ('hours', 'Hour(s)'), ('days', 'Day(s)'),
-        ('months', 'Month(s)'), ('years','Year(s)')
+        ('hours', 'Hour(s)'),
+        ('days', 'Day(s)'),
+        ('months', 'Month(s)'),
+        ('years', 'Year(s)'),
     ]
 
     def _get_name(self, cr, uid, ids, fn, args, context=None):
-        result = dict.fromkeys(ids, False)
+        # name formatters that depend on trigger
         formatters = {
             'auto': _('Automatic transition'),
             'time': _('After %(interval_nbr)d %(interval_type)s'),
             'cosmetic': _('Cosmetic'),
         }
-        for tr in self.browse(cr, uid, ids, context=context,
-                              fields_process=translate_selections):
-            result[tr.id] = formatters[tr.trigger.value] % tr
+        # get the translations of the values of selection field 'interval_type'
+        fields = self.fields_get(cr, uid, ['interval_type'], context=context)
+        interval_type_selection = dict(fields['interval_type']['selection'])
+
+        result = dict.fromkeys(ids, False)
+        for trans in self.browse(cr, uid, ids, context=context):
+            values = {
+                'interval_nbr': trans.interval_nbr,
+                'interval_type': interval_type_selection.get(trans.interval_type, ''),
+            }
+            result[trans.id] = formatters[trans.trigger] % values
         return result
 
 
@@ -583,7 +564,6 @@ class marketing_campaign_transition(osv.osv):
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
 
-marketing_campaign_transition()
 
 class marketing_campaign_workitem(osv.osv):
     _name = "marketing.campaign.workitem"
@@ -595,7 +575,7 @@ class marketing_campaign_workitem(osv.osv):
             if not wi.res_id:
                 continue
 
-            proxy = self.pool.get(wi.object_id.model)
+            proxy = self.pool[wi.object_id.model]
             if not proxy.exists(cr, uid, [wi.res_id]):
                 continue
             ng = proxy.name_get(cr, uid, [wi.res_id], context=context)
@@ -629,7 +609,7 @@ class marketing_campaign_workitem(osv.osv):
         for id, res_id, model in res:
             workitem_map.setdefault(model,{}).setdefault(res_id,set()).add(id)
         for model, id_map in workitem_map.iteritems():
-            model_pool = self.pool.get(model)
+            model_pool = self.pool[model]
             condition_name[0] = model_pool._rec_name
             condition = [('id', 'in', id_map.keys()), condition_name]
             for res_id in model_pool.search(cr, uid, condition, context=context):
@@ -660,12 +640,14 @@ class marketing_campaign_workitem(osv.osv):
         'date': False,
     }
 
+    @api.cr_uid_ids_context
     def button_draft(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
+    @api.cr_uid_ids_context
     def button_cancel(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
@@ -677,7 +659,7 @@ class marketing_campaign_workitem(osv.osv):
             return False
 
         activity = workitem.activity_id
-        proxy = self.pool.get(workitem.object_id.model)
+        proxy = self.pool[workitem.object_id.model]
         object_id = proxy.browse(cr, uid, workitem.res_id, context=context)
 
         eval_context = {
@@ -694,9 +676,9 @@ class marketing_campaign_workitem(osv.osv):
             if condition:
                 if not eval(condition, eval_context):
                     if activity.keep_if_condition_not_met:
-                        workitem.write({'state': 'cancelled'}, context=context)
+                        workitem.write({'state': 'cancelled'})
                     else:
-                        workitem.unlink(context=context)
+                        workitem.unlink()
                     return
             result = True
             if campaign_mode in ('manual', 'active'):
@@ -707,11 +689,11 @@ class marketing_campaign_workitem(osv.osv):
             values = dict(state='done')
             if not workitem.date:
                 values['date'] = datetime.now().strftime(DT_FMT)
-            workitem.write(values, context=context)
+            workitem.write(values)
 
             if result:
                 # process _chain
-                workitem = workitem.browse(context=context)[0] # reload
+                workitem.refresh()       # reload
                 date = datetime.strptime(workitem.date, DT_FMT)
 
                 for transition in activity.to_ids:
@@ -756,9 +738,9 @@ class marketing_campaign_workitem(osv.osv):
 
         except Exception:
             tb = "".join(format_exception(*exc_info()))
-            workitem.write({'state': 'exception', 'error_msg': tb},
-                     context=context)
+            workitem.write({'state': 'exception', 'error_msg': tb})
 
+    @api.cr_uid_ids_context
     def process(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             self._process_one(cr, uid, wi, context=context)
@@ -819,7 +801,6 @@ class marketing_campaign_workitem(osv.osv):
             raise osv.except_osv(_('No preview'),_('The current step for this item has no email or report to preview.'))
         return res
 
-marketing_campaign_workitem()
 
 class email_template(osv.osv):
     _inherit = "email.template"
@@ -829,7 +810,6 @@ class email_template(osv.osv):
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign
 
-email_template()
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
@@ -842,7 +822,6 @@ class report_xml(osv.osv):
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
 
-report_xml()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

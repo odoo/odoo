@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Subtype">
                     <field name="name"/>
+                    <field name="sequence"/>
                     <field name="res_model"/>
                     <field name="default"/>
                 </tree>
@@ -22,12 +23,18 @@
                 <form string="Email message" version="7.0">
                     <sheet>
                         <group>
-                            <field name="name"/>
-                            <field name="res_model"/>
-                            <field name="default"/>
-                            <field name="description"/>
-                            <field name="parent_id"/>
-                            <field name="relation_field"/>
+                            <group string='Description'>
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="res_model"/>
+                                <field name="description"/>
+                                <field name="default"/>
+                                <field name="hidden"/>
+                            </group>
+                            <group string='Auto subscription'>
+                                <field name="parent_id"/>
+                                <field name="relation_field"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>

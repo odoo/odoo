@@ -19,17 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
-from .. import crm
-
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
+from openerp.addons.crm import crm
 
 MONTHS = [
     ('01', 'January'),
@@ -51,26 +43,17 @@ class crm_lead_report(osv.osv):
     _name = "crm.lead.report"
     _auto = False
     _description = "CRM Lead Analysis"
-    _rec_name = 'deadline_day'
+    _rec_name = 'date_deadline'
 
     _columns = {
-        # grouping fields based on Deadline Date
-        'deadline_year': fields.char('Ex. Closing Year', size=10, readonly=True, help="Expected closing year"),
-        'deadline_month':fields.selection(MONTHS, 'Exp. Closing Month', readonly=True, help="Expected closing month"),
-        'deadline_day': fields.char('Exp. Closing Day', size=10, readonly=True, help="Expected closing day"),
-
-        # grouping fields based on Create Date
-        'creation_year': fields.char('Creation Year', size=10, readonly=True, help="Creation year"),
-        'creation_month': fields.selection(MONTHS, 'Creation Month', readonly=True, help="Creation month"),
-        'creation_day': fields.char('Creation Day', size=10, readonly=True, help="Creation day"),
-
-        # other date fields
-        'create_date': fields.datetime('Create Date', readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True),
+        'date_deadline': fields.date('Exp. Closing', size=10, readonly=True, help="Expected Closing"),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'opening_date': fields.date('Assignation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
 
         # durations
-        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
@@ -79,14 +62,12 @@ class crm_lead_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
@@ -94,10 +75,7 @@ class crm_lead_report(osv.osv):
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
-    
-    
-    
-    
+
     def init(self, cr):
 
         """
@@ -109,19 +87,13 @@ class crm_lead_report(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report AS (
                 SELECT
                     id,
-
-                    to_char(c.date_deadline, 'YYYY') as deadline_year,
-                    to_char(c.date_deadline, 'MM') as deadline_month,
-                    to_char(c.date_deadline, 'YYYY-MM-DD') as deadline_day,
-
-                    to_char(c.create_date, 'YYYY') as creation_year,
-                    to_char(c.create_date, 'MM') as creation_month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as creation_day,
+                    c.date_deadline,
 
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
 
-                    c.state,
+                    date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
+
                     c.user_id,
                     c.probability,
                     c.stage_id,
@@ -135,7 +107,6 @@ class crm_lead_report(osv.osv):
                     c.country_id,
                     c.planned_revenue,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
-                    1 as nbr,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
@@ -145,6 +116,5 @@ class crm_lead_report(osv.osv):
                 WHERE c.active = 'true'
             )""")
 
-crm_lead_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-
+from openerp.osv import osv
 from openerp.report import report_sxw
 
 
@@ -55,7 +55,6 @@ class account_analytic_balance(report_sxw.rml_parse):
                     if data['child_ids']:
                         self.get_children(data['child_ids'])
         return True
-
 
     def _get_objects(self, empty_acc):
         if self.read_data:
@@ -143,18 +142,16 @@ class account_analytic_balance(report_sxw.rml_parse):
                     WHERE account_id IN %s AND date>=%s AND date<=%s",query_params)
         return self.cr.fetchone()[0] or 0.0
 
-
-
     def _sum_balance(self, accounts, date1, date2):
         debit = self._sum_all(accounts, date1, date2, 'debit') or 0.0
         credit = self._sum_all(accounts, date1, date2, 'credit') or 0.0
         return (debit-credit)
 
 
-report_sxw.report_sxw('report.account.analytic.account.balance',
-        'account.analytic.account', 'addons/account/project/report/analytic_balance.rml',
-        parser=account_analytic_balance, header="internal")
-
+class report_analyticbalance(osv.AbstractModel):
+    _name = 'report.account.report_analyticbalance'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_analyticbalance'
+    _wrapped_report_class = account_analytic_balance
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

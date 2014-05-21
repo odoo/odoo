@@ -1,0 +1,181 @@
+@charset "utf-8"
+
+.openerp
+    // Kanban views
+    .oe_kanban_view 
+        .oe_kanban_card.oe_kanban_goal
+            width: 230px
+            min-height: 200px
+        .oe_kanban_card.oe_kanban_badge
+            width: 250px
+            min-height: 150px
+    .oe_kanban_badge_avatars
+        margin-top: 8px
+        img
+            width: 30px
+            height: 30px
+            padding-left: 0
+            margin-top: 3px
+            border-radius: 2px
+            -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
+
+    .oe_kanban_goal
+        .oe_goal_state_block
+            width: 200px
+            height: 130px
+            margin: auto
+            margin-bottom: -20px
+            .oe_goal_state
+                font-size: 2.5em
+                font-weight: bold
+                padding-top: 30px
+            .oe_goal_state.oe_e
+                font-size: 7em
+        .oe_goal_state_block,p
+            text-align: center
+    
+    .oe_kanban_content
+        .oe_goal_gauge:first-child
+            margin: auto /* avoid margin-right: 16px */
+        .oe_goal_gauge
+            svg
+                margin-top: -20px
+    .oe_no_overflow
+        overflow: hidden
+
+
+    .oe_red
+        color: red
+    .oe_green
+        color: green
+    .oe_orange
+        color: orange
+
+
+    // compensate padding from .openerp .oe_form td.oe_form_group_cell + .oe_form_group_cell
+    .oe_form td .oe_no_padding
+        margin-left: -6px
+
+
+    .oe_mail_wall
+        .oe_mail_wall_aside
+            margin-top: 15px
+            position: relative
+            display: inline-block
+            vertical-align: top
+            width: 280px
+            border-radius: 2px
+
+            .oe_gamification_challenge_list
+                background-color: #EDEDF6
+            .oe_gamification_suggestion
+                background-color: rgb(211, 222, 241)
+                ul
+                    padding-left: 15px
+
+            h4, .oe_goals_list .oe_thead
+                text-align: center
+                padding-bottom: 15px
+
+        .oe_mail_wall_aside > div
+            border-bottom: solid 5px white
+            border-radius: 2px
+
+        .oe_goal
+            border-bottom: solid 3px white
+            padding: 5px 10px
+            .oe_update_challenge.oe_e, .oe_goal_action.oe_e
+                visibility: hidden
+                font-size: 25px
+                float: right
+                position: relative
+            div:hover > .oe_update_challenge, div:hover > .oe_goal_action, th:hover > .oe_goal_action
+                visibility: visible
+
+            .oe_goals_list
+                padding-left: 0
+                margin-top: 5px
+                margin-bottom: 10px
+                width: 100%
+
+                .oe_no_progress
+                    div
+                        display: inline-block
+                .oe_no_progress::before
+                    content: "•"
+                    padding-right: 4px
+                .oe_no_progress.oe_goal_reached::before
+                    content: "✓"
+                    padding-right: 0
+                    margin-left: -2px
+                .oe_no_progress.oe_goal_reached
+                    .oe_cell
+                        text-decoration: line-through
+
+                .oe_cell.oe_goal_current
+                    font-size: 150%
+                    font-weight: bold
+                    min-width: 50px
+                    padding: 0 5px
+                
+                .oe_goal_outer_box
+                    display: inline-block
+                    position: relative
+                    z-index: 0
+                    vertical-align: middle
+                    width: 100%
+                    border: solid 1px rgba(0,0,0,0.03)
+                    border-radius: 2px
+                .oe_goal_outer_box.oe_no_progress
+                    border: none
+
+                .oe_goal_progress_background
+                    background-color: white
+                    position: absolute
+                    height: 100%
+                    width: 100%
+                    z-index: -2
+                    top: 0
+                    left: 0
+
+                .oe_goal_progress
+                    background-color: rgb(212, 233, 222)
+                    position: absolute
+                    height: 100%
+                    width: 0
+                    z-index: -1
+                    top: 0
+                    left: 0
+
+                .oe_thead
+                    font-weight: normal
+                    padding: 5px
+                    text-align: center
+                .oe_cell
+                    padding: 3px 0
+
+        .oe_table.oe_goals_list
+            .col0
+                font-size: 200%
+                font-weight: bold
+                width: 25px
+                text-align: center
+            .col1
+                padding: 0 5px
+            .col2
+                width: auto
+        
+        .oe_user_avatar
+            width: 24px
+            padding-right: 5px
+
+        .oe_mail
+            display: inline-block
+
+        .oe_table
+            display: table
+        .oe_row
+            display: table-row
+        .oe_cell
+            display: table-cell
+            vertical-align: middle

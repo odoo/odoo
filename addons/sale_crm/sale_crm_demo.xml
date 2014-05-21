@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="crm.case.section" id="crm.section_sales_department">
+            <field name="invoiced_forecast">52700</field>
+            <field name="invoiced_target">60000</field>
+        </record>
+        
+        <record model="crm.case.section" id="crm.crm_case_section_1">
+            <field name="name">Indirect Sales</field>
+            <field name="code">IM</field>
+            <field name="invoiced_forecast">36000</field>
+            <field name="invoiced_target">40000</field>
+        </record>
+
+        <!-- Invoice for Direct Marketing -->
+
+        <record id="test_crm_sale_invoice_1" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="state">draft</field>
+            <field name="type">in_invoice</field>
+            <field name="account_id" ref="account.a_recv"/>
+            <field name="name">Test invoice 1</field>
+        </record>
+        <record id="test_crm_sale_invoice_1_line_1" model="account.invoice.line">
+            <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
+            <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
+            <field name="price_unit">250</field>
+            <field name="quantity">1</field>
+            <field name="account_id" ref="account.a_sale"/>
+        </record>
+        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
+            <field name="name">Little server with raid 1 and 512ECC ram</field>
+            <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
+            <field name="price_unit">800</field>
+            <field name="quantity">2</field>
+            <field name="account_id" ref="account.a_sale"/>
+        </record>
+        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
+            <field name="name">Server with raid 10 and 2048ECC ram</field>
+            <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
+            <field name="price_unit">4800</field>
+            <field name="quantity">4</field>
+            <field name="account_id" ref="account.a_sale"/>
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_1"/>
+        <function model="account.invoice" name="pay_and_reconcile">
+            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_1')]"/>
+            <!-- pay_amount = -->            <value eval="1850"/>
+            <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
+            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
+            <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
+            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- writeoff_journal_id = -->    <value eval="ref('account.bank_journal')"/>
+            <!-- context = -->              <value eval="{}"/>
+            <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
+        </function>
+
+        <!-- Invoice for Indirect Marketing -->
+
+        <record id="test_crm_sale_invoice_2" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="section_id" ref="crm.crm_case_section_1"/>
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="account.a_recv"/>
+            <field name="name">Test invoice 1</field>
+        </record>
+        <record id="test_crm_sale_invoice_2_line_1" model="account.invoice.line">
+            <field name="name">Basic formation with Dvorak</field>
+            <field name="invoice_id" ref="test_crm_sale_invoice_2"/>
+            <field name="price_unit">500</field>
+            <field name="quantity">1</field>
+            <field name="account_id" ref="account.a_sale"/>
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_2"/>
+        <function model="account.invoice" name="pay_and_reconcile">
+            <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_2')]"/>
+            <!-- pay_amount = -->            <value eval="500"/>
+            <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
+            <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
+            <!-- writeoff_acc_id = -->        <value eval="ref('account.cash')"/>
+            <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <!-- writeoff_journal_id = -->    <value eval="ref('account.bank_journal')"/>
+            <!-- context = -->              <value eval="{}"/>
+            <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
+        </function>
+
+
+        <record id="sale.sale_order_1" model="sale.order">
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="sale.sale_order_2" model="sale.order">
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="sale.sale_order_3" model="sale.order">
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+        <record id="sale.sale_order_4" model="sale.order">
+            <field name="section_id" ref="crm.section_sales_department"/>
+        </record>
+        <record id="sale.sale_order_5" model="sale.order">
+            <field name="section_id" ref="crm.crm_case_section_1"/>
+            <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="sale.sale_order_6" model="sale.order">
+            <field name="section_id" ref="crm.crm_case_section_1"/>
+        </record>
+        <record id="sale.sale_order_7" model="sale.order">
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field name="date_confirm" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="sale.sale_order_8" model="sale.order">
+            <field name="section_id" ref="crm.crm_case_section_1"/>
+        </record>
+
+    </data>
+</openerp>

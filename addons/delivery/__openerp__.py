@@ -32,13 +32,13 @@ You can define your own carrier and delivery grids for prices. When creating
 invoices from picking, OpenERP is able to add and compute the shipping line.
 """,
     'author': 'OpenERP SA',
-    'depends': ['sale', 'purchase', 'stock'],
+    'depends': ['sale_stock'],
     'data': [
         'security/ir.model.access.csv',
-        'delivery_report.xml',
         'delivery_view.xml',
         'partner_view.xml',
-        'delivery_data.xml'
+        'delivery_data.xml',
+        'views/report_shipping.xml',
     ],
     'demo': ['delivery_demo.xml'],
     'test': ['test/delivery_cost.yml'],

@@ -37,7 +37,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     'website': 'http://www.openerp.com',
     'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
-        'base_status',
         'crm',
         'project',
     ],
@@ -47,15 +46,14 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
-        'board_project_issue_view.xml',
         'res_config_view.xml',
         'project_issue_data.xml'
      ],
     'demo': ['project_issue_demo.xml'],
     'test': [
+        'test/issue_users.yml',
         'test/subscribe_issue.yml',
         'test/issue_process.yml',
-        'test/cancel_issue.yml',
         'test/issue_demo.yml'
     ],
     'installable': True,

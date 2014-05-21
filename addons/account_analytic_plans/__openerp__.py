@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Multiple Analytic Plans',
     'version': '1.0',
@@ -74,6 +73,7 @@ The analytic plan validates the minimum and maximum percentage at the time of cr
         'account_analytic_plans_report.xml',
         'wizard/analytic_plan_create_model_view.xml',
         'wizard/account_crossovered_analytic_view.xml',
+        'views/report_crossoveredanalyticplans.xml',
     ],
     'demo': [],
     'test': ['test/acount_analytic_plans_report.yml'],

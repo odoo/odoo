@@ -19,60 +19,49 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp import Model, Integer, Char, Datetime, Selection, Many2one
 from openerp import tools
 
-class report_event_registration(osv.osv):
+
+class report_event_registration(Model):
+    """Events Analysis"""
     _name = "report.event.registration"
-    _description = "Events Analysis"
-    _auto = False
-    _columns = {
-        'event_date': fields.char('Event Start Date', size=64, readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([
-            ('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'),
-            ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'event_id': fields.many2one('event.event', 'Event', required=True),
-        'draft_state': fields.integer(' # No of Draft Registrations', size=20),
-        'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
-        'register_max': fields.integer('Maximum Registrations'),
-        'nbevent': fields.integer('Number Of Events'),
-        'event_type': fields.many2one('event.type', 'Event Type'),
-        'registration_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True),
-        'event_state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True),
-        'user_id': fields.many2one('res.users', 'Event Responsible', readonly=True),
-        'user_id_registration': fields.many2one('res.users', 'Register', readonly=True),
-        'name_registration': fields.char('Participant / Contact Name',size=45, readonly=True),
-        'speaker_id': fields.many2one('res.partner', 'Speaker', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-    }
     _order = 'event_date desc'
+    _auto = False
+
+    event_date = Datetime('Event Date', readonly=True)
+    event_id = Many2one('event.event', 'Event', required=True)
+    draft_state = Integer(' # No of Draft Registrations')
+    confirm_state = Integer(' # No of Confirmed Registrations')
+    seats_max = Integer('Max Seats')
+    nbevent = Integer('Number Of Events')
+    event_type = Many2one('event.type', 'Event Type')
+    registration_state = Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Attended'), ('cancel', 'Cancelled')], 'Registration State', readonly=True, required=True)
+    event_state = Selection([('draft', 'Draft'), ('confirm', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Event State', readonly=True, required=True)
+    user_id = Many2one('res.users', 'Event Responsible', readonly=True)
+    user_id_registration = Many2one('res.users', 'Register', readonly=True)
+    name_registration = Char('Participant / Contact Name', readonly=True)
+    company_id = Many2one('res.company', 'Company', readonly=True)
 
     def init(self, cr):
-        """
-        Initialize the sql view for the event registration
-        """
+        """Initialize the sql view for the event registration """
         tools.drop_view_if_exists(cr, 'report_event_registration')
 
         # TOFIX this request won't select events that have no registration
         cr.execute(""" CREATE VIEW report_event_registration AS (
             SELECT
-                e.id::char || '/' || coalesce(r.id::char,'') AS id,
+                e.id::varchar || '/' || coalesce(r.id::varchar,'') AS id,
                 e.id AS event_id,
                 e.user_id AS user_id,
                 r.user_id AS user_id_registration,
                 r.name AS name_registration,
                 e.company_id AS company_id,
-                e.main_speaker_id AS speaker_id,
-                to_char(e.date_begin, 'YYYY-MM-DD') AS event_date,
-                to_char(e.date_begin, 'YYYY') AS year,
-                to_char(e.date_begin, 'MM') AS month,
+                e.date_begin AS event_date,
                 count(e.id) AS nbevent,
                 CASE WHEN r.state IN ('draft') THEN r.nb_register ELSE 0 END AS draft_state,
                 CASE WHEN r.state IN ('open','done') THEN r.nb_register ELSE 0 END AS confirm_state,
                 e.type AS event_type,
-                e.register_max AS register_max,
+                e.seats_max AS seats_max,
                 e.state AS event_state,
                 r.state AS registration_state
             FROM
@@ -91,14 +80,9 @@ class report_event_registration(osv.osv):
                 e.user_id,
                 event_state,
                 e.company_id,
-                e.main_speaker_id,
-                year,
-                month,
-                e.register_max,
+                e.seats_max,
                 name_registration
         )
         """)
-
-report_event_registration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

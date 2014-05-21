@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_analyticcostledgerquantity">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Cost Ledger</h2>
+
+                <div class="row mt32 mb32">
+                    <div class="col-xs-3">
+                        <strong>Period From:</strong>
+                        <p t-esc="formatLang(data['form']['date1'], date=True)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Period To:</strong>
+                        <p t-esc="formatLang(data['form']['date2'], date=True)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Printing Date:</strong>
+                        <p t-esc="formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time=True)" />
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Date/Code</th>
+                            <th>J.C./Move</th>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="font-weight:bold;">
+                            <td>Total:</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span t-esc="sum_quantity(docs, data['form']['date1'], data['form']['date2'], data['form']['journal'])"/>
+                            </td>
+                        </tr>
+                
+                        <t t-foreach="docs" t-as="account">
+                            <tr style="font-weight:bold;">
+                                <td><span t-esc="account.code"/></td>
+                                <td><span t-esc="account.complete_name"/></td>
+                                <td></td>
+                                <td>
+                                    <p t-if="account.quantity_max">
+                                        Max quantity : <span t-esc="formatLang(account.quantity_max)"/>
+                                    </p>
+                                </td>
+                                <td>
+                                    <span t-esc="account_sum_quantity(account.id, data['form']['date1'], data['form']['date2'], data['form']['journal'])"/>
+                                </td>
+                            </tr>
+
+                            <t t-foreach="lines_g(account.id, data['form']['date1'], data['form']['date2'], data['form']['journal'])" t-as="move_g">
+                                <tr style="font-weight:bold;">
+                                    <td><span t-esc="move_g['code']"/></td>
+                                    <td colspan="2"><span t-esc="move_g['name']"/></td>
+                                    <td></td>
+                                    <td class="text-right"><span t-esc="move_g['quantity']"/></td>
+                                </tr>
+                        
+                                <t t-foreach="lines_a(move_g['id'], account.id, data['form']['date1'], data['form']['date2'], data['form']['journal'])" t-as="move_a">
+                                    <tr style="font-weight:normal;">
+                                        <td><span t-esc="formatLang(move_a['date'], date=True)"/></td>
+                                        <td><span t-esc="move_a['cj']"/></td>
+                                        <td><span t-esc="move_a['name']"/></td>
+                                        <td></td>
+                                        <td class="text-right"><span t-esc="move_a['quantity']"/></td> 
+                                    </tr>
+                                </t> 
+                            </t> 
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

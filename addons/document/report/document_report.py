@@ -31,7 +31,7 @@ class report_document_user(osv.osv):
         'name': fields.char('Year', size=64,readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
-        'user_id':fields.integer('Owner', readonly=True),
+        'user_id': fields.many2one('res.users', 'Owner', readonly=True),
         'user': fields.related('user_id', 'name', type='char', size=64, readonly=True),
         'directory': fields.char('Directory',size=64,readonly=True),
         'datas_fname': fields.char('File Name',size=64,readonly=True),

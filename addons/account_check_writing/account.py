@@ -26,10 +26,9 @@ class account_journal(osv.osv):
 
     _columns = {
         'allow_check_writing': fields.boolean('Allow Check writing', help='Check this if the journal is to be used for writing checks.'),
-        'use_preprint_check': fields.boolean('Use Preprinted Check'),
+        'use_preprint_check': fields.boolean('Use Preprinted Check', help='Check if you use a preformated sheet for check'),
         }
 
-account_journal()
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -46,5 +45,4 @@ class res_company(osv.osv):
         'check_layout' : lambda *a: 'top',
     }
     
-res_company()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

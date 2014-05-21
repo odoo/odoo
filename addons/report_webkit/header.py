@@ -25,7 +25,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
@@ -87,7 +87,6 @@ class HeaderHTML(osv.osv):
                 help="Select Proper Paper size"
         )
     }
-HeaderHTML()
 
 class HeaderImage(osv.osv):
     """Logo allows you to define multiple logo per company"""
@@ -98,6 +97,5 @@ class HeaderImage(osv.osv):
         'name' : fields.char('Name', size=128, required =True, help="Name of Image"),
         'type' : fields.char('Type', size=32, required =True, help="Image type(png,gif,jpeg)")
     }
-HeaderImage()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -31,11 +31,11 @@ from StringIO import StringIO
 import psycopg2
 
 import openerp
-from openerp import netsvc
-from openerp import pooler
 from openerp import tools
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.osv.orm import except_orm
+import openerp.report.interface
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval
@@ -69,11 +69,18 @@ class document_file(osv.osv):
     ]
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
-        """Check access wrt. res_model, relax the rule of ir.attachment parent
-        With 'document' installed, everybody will have access to attachments of
-        any resources they can *read*.
-        """
-        return super(document_file, self).check(cr, uid, ids, mode='read', context=context, values=values)
+        """Overwrite check to verify access on directory to validate specifications of doc/access_permissions.rst"""
+        if not isinstance(ids, list):
+            ids = [ids]
+
+        super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
+        
+        if ids:
+            self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
+
+            # use SQL to avoid recursive loop on read
+            cr.execute('SELECT DISTINCT parent_id from ir_attachment WHERE id in %s AND parent_id is not NULL', (tuple(ids),))
+            self.pool.get('document.directory').check_access_rule(cr, uid, [parent_id for (parent_id,) in cr.fetchall()], mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # Grab ids, bypassing 'count'
@@ -138,7 +145,7 @@ class document_file(osv.osv):
             It is a hack that will try to discover if the mentioned record is
             clearly associated with a partner record.
         """
-        obj_model = self.pool.get(res_model)
+        obj_model = self.pool[res_model]
         if obj_model._name == 'res.partner':
             return res_id
         elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
@@ -316,7 +323,7 @@ class document_directory(osv.osv):
         ressource_parent_type_id=vals.get('ressource_parent_type_id',False)
         ressource_id=vals.get('ressource_id',0)
         if op=='write':
-            for directory in self.browse(cr, uid, ids):
+            for directory in self.browse(cr, SUPERUSER_ID, ids):
                 if not name:
                     name=directory.name
                 if not parent_id:
@@ -330,7 +337,7 @@ class document_directory(osv.osv):
                 if len(res):
                     return False
         if op=='create':
-            res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
+            res = self.search(cr, SUPERUSER_ID, [('name','=',name),('parent_id','=',parent_id),('ressource_parent_type_id','=',ressource_parent_type_id),('ressource_id','=',ressource_id)])
             if len(res):
                 return False
         return True
@@ -423,7 +430,6 @@ class document_directory_content(osv.osv):
         tname = ''
         if content.include_name:
             record_name = node.displayname or ''
-            # obj = node.context._dirobj.pool.get(model)
             if record_name:
                 tname = (content.prefix or '') + record_name + (content.suffix or '') + (content.extension or '')
         else:
@@ -456,7 +462,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id, context=context)
-        srv = netsvc.Service._services['report.'+report.report_name]
+        srv = openerp.report.interface.report_int._reports['report.'+report.report_name]
         ctx = node.context.context.copy()
         ctx.update(node.dctx)
         pdf,pdftype = srv.create(cr, uid, [node.act_id,], {}, context=ctx)
@@ -566,6 +572,7 @@ class document_storage(osv.osv):
             # to write the fname and size, and update them in the db concurrently.
             # We cannot use a write() here, because we are already in one.
             cr.execute('UPDATE ir_attachment SET file_size = %s, index_content = %s, file_type = %s WHERE id = %s', (filesize, icont_u, mime, file_node.file_id))
+            self.pool.get('ir.attachment').invalidate_cache(cr, uid, ['file_size', 'index_content', 'file_type'], [file_node.file_id], context=context)
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
@@ -620,7 +627,7 @@ class node_context(object):
         if context is None:
             context = {}
         context['uid'] = uid
-        self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
+        self._dirobj = openerp.registry(cr.dbname).get('document.directory')
         self.node_file_class = node_file
         self.extra_ctx = {} # Extra keys for context, that do _not_ trigger inequality
         assert self._dirobj
@@ -1118,7 +1125,7 @@ class node_dir(node_database):
         if not self.check_perms('u'):
             raise IOError(errno.EPERM,"Permission denied.")
 
-        if directory._table_name=='document.directory':
+        if directory._name == 'document.directory':
             if self.children(cr):
                 raise OSError(39, 'Directory not empty.')
             res = self.context._dirobj.unlink(cr, uid, [directory.id])
@@ -1297,9 +1304,9 @@ class node_res_dir(node_class):
             Note that many objects use NULL for a name, so we should
             better call the name_search(),name_get() set of methods
         """
-        obj = self.context._dirobj.pool.get(self.res_model)
-        if not obj:
+        if self.res_model not in self.context._dirobj.pool:
             return []
+        obj = self.context._dirobj.pool[self.res_model]
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -1334,7 +1341,7 @@ class node_res_dir(node_class):
         if self.ressource_tree:
             object2 = False
             if self.resm_id:
-                object2 = dirobj.pool.get(self.res_model).browse(cr, uid, self.resm_id) or False
+                object2 = dirobj.pool[self.res_model].browse(cr, uid, self.resm_id) or False
             if obj._parent_name in obj.fields_get(cr, uid):
                 where.append((obj._parent_name,'=',object2 and object2.id or False))
 
@@ -1505,7 +1512,7 @@ class node_res_obj(node_class):
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         directory = dirobj.browse(cr, uid, self.dir_id)
-        obj = dirobj.pool.get(self.res_model)
+        obj = dirobj.pool[self.res_model]
         where = []
         res = []
         if name:
@@ -1591,7 +1598,7 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        res_obj = dirobj.pool.get(self.res_model)
+        res_obj = dirobj.pool[self.res_model]
 
         object2 = res_obj.browse(cr, uid, self.res_id) or False
 
@@ -1698,7 +1705,7 @@ class node_file(node_class):
             return False
         document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)
         res = False
-        if document and document._table_name == 'ir.attachment':
+        if document and document._name == 'ir.attachment':
             res = document_obj.unlink(cr, uid, [document.id])
         return res
 
@@ -1999,7 +2006,7 @@ class nodefd_content(StringIO, node_descriptor):
 
         par = self._get_parent()
         uid = par.context.uid
-        cr = pooler.get_db(par.context.dbname).cursor()
+        cr = openerp.registry(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
@@ -2052,7 +2059,7 @@ class nodefd_static(StringIO, node_descriptor):
 
         par = self._get_parent()
         # uid = par.context.uid
-        cr = pooler.get_db(par.context.dbname).cursor()
+        cr = openerp.registry(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()

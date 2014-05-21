@@ -64,6 +64,7 @@ added to partners that match the segmentation criterions after computation.'),
                 if categ['exclusif']:
                     cr.execute('delete from res_partner_res_partner_category_rel \
                             where category_id=%s', (categ['categ_id'][0],))
+                    partner_obj.invalidate_cache(cr, uid, ['category_id'])
 
             id = categ['id']
 
@@ -86,6 +87,7 @@ added to partners that match the segmentation criterions after computation.'),
                 if categ['categ_id'][0] not in category_ids:
                     cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) \
                             values (%s,%s)', (categ['categ_id'][0], partner.id))
+                    partner_obj.invalidate_cache(cr, uid, ['category_id'], [partner.id])
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True
@@ -108,7 +110,6 @@ added to partners that match the segmentation criterions after computation.'),
 
         self.write(cr, uid, ids, {'state':'running', 'partner_id':0})
         return self.process_continue(cr, uid, ids, start=True)
-crm_segmentation()
 
 class crm_segmentation_line(osv.osv):
     """ Segmentation line """
@@ -180,7 +181,6 @@ class crm_segmentation_line(osv.osv):
                     return True
         return True
 
-crm_segmentation_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

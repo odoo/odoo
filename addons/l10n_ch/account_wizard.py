@@ -1,8 +1,11 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    Author: Nicolas Bessi. Copyright Camptocamp SA
-#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
+#    Financial contributors: Hasa SA, Open Net SA,
+#                            Prisme Solutions Informatique SA, Quod SA
+#
+#    Translation contributors: brain-tec AG, Agile Business Group
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as

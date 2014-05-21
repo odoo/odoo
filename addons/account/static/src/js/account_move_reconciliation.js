@@ -26,7 +26,7 @@ openerp.account = function (instance) {
             if (this.partners) {
                 this.$el.prepend(QWeb.render("AccountReconciliation", {widget: this}));
                 this.$(".oe_account_recon_previous").click(function() {
-                    self.current_partner = (self.current_partner - 1) % self.partners.length;
+                    self.current_partner = (((self.current_partner - 1) % self.partners.length) + self.partners.length) % self.partners.length;
                     self.search_by_partner();
                 });
                 this.$(".oe_account_recon_next").click(function() {
@@ -75,9 +75,9 @@ openerp.account = function (instance) {
                 return fct();
             } else {
                 return new instance.web.Model("res.partner").call("read",
-                    [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).then(function(res) {
+                    [[self.partners[self.current_partner][0]], ["last_reconciliation_date"]]).then(function(res) {
                     self.last_reconciliation_date = 
-                        instance.web.format_value(res.last_reconciliation_date, {"type": "datetime"}, _t("Never"));
+                        instance.web.format_value(res[0].last_reconciliation_date, {"type": "datetime"}, _t("Never"));
                     return fct();
                 });
             }
@@ -86,10 +86,10 @@ openerp.account = function (instance) {
             var self = this;
             var ids = this.get_selected_ids();
             if (ids.length === 0) {
-                instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), {
+                new instance.web.Dialog(this, {
                     title: _t("Warning"),
-                    modal: true
-                });
+                    size: 'medium',
+                }, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
 

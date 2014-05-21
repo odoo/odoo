@@ -20,7 +20,8 @@
 ##############################################################################
 
 import time
-from openerp import pooler
+
+import openerp
 from openerp.report.interface import report_rml
 from openerp.tools import to_xml
 from openerp.report import report_sxw
@@ -30,14 +31,13 @@ from openerp.tools.translate import _
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context=None):
         number = (datas.get('form', False) and datas['form']['number']) or 1
-        pool = pooler.get_pool(cr.dbname)
-        product_pool = pool.get('product.product')
-        product_uom_pool = pool.get('product.uom')
-        supplier_info_pool = pool.get('product.supplierinfo')
-        workcenter_pool = pool.get('mrp.workcenter')
-        user_pool = pool.get('res.users')
-        bom_pool = pool.get('mrp.bom')
-        pricelist_pool = pool.get('product.pricelist')
+        registry = openerp.registry(cr.dbname)
+        product_pool = registry.get('product.product')
+        product_uom_pool = registry.get('product.uom')
+        workcenter_pool = registry.get('mrp.workcenter')
+        user_pool = registry.get('res.users')
+        bom_pool = registry.get('mrp.bom')
+        pricelist_pool = registry.get('product.pricelist')
         rml_obj=report_sxw.rml_parse(cr, uid, product_pool._name,context)
         rml_obj.localcontext.update({'lang':context.get('lang',False)})
         company_currency = user_pool.browse(cr, uid, uid).company_id.currency_id
@@ -69,6 +69,8 @@ class report_custom(report_rml):
             main_strd_price = str(std_price) + '\r\n'
             sum_strd = prod_qtty*std_price
             for seller_id in prod.seller_ids:
+                if seller_id.name.id == prod.seller_id.id:
+                    continue
                 sellers +=  '- <i>'+ to_xml(seller_id.name.name) +'</i>\r\n'
                 pricelist = seller_id.name.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr,uid,[pricelist.id],

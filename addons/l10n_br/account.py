@@ -17,7 +17,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.          #
 #################################################################################
 
-from openerp import pooler
+import openerp
 from openerp.osv import fields, osv
 
 TAX_CODE_COLUMNS = {
@@ -92,7 +92,8 @@ class account_tax_code(osv.osv):
 
 def get_precision_tax():
     def change_digit_tax(cr):
-        res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+        decimal_precision = openerp.registry(cr.dbname)['decimal.precision']
+        res = decimal_precision.precision_get(cr, 1, 'Account')
         return (16, res+2)
     return change_digit_tax
 

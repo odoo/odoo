@@ -19,21 +19,15 @@
 #
 ##############################################################################
 
-from openerp.addons.base_status.base_state import base_state
-from openerp.addons.base_status.base_stage import base_stage
+import openerp
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-CRM_HELPDESK_STATES = (
-    crm.AVAILABLE_STATES[2][0], # Cancelled
-    crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
-)
 
-class crm_helpdesk(base_state, base_stage, osv.osv):
+class crm_helpdesk(osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
@@ -60,18 +54,23 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
             'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
-            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+            'ref': fields.reference('Reference', selection=openerp.addons.base.res.res_request.referencable_models),
+            'ref2': fields.reference('Reference 2', selection=openerp.addons.base.res.res_request.referencable_models),
             'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
-            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+            'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
             'probability': fields.float('Probability (%)'),
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
-            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
+            'state': fields.selection(
+                [('draft', 'New'),
+                 ('open', 'In Progress'),
+                 ('pending', 'Pending'),
+                 ('done', 'Closed'),
+                 ('cancel', 'Cancelled')], 'Status', size=16, readonly=True, track_visibility='onchange',
                                   help='The status is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the status is set to \'Open\'.\
                                   \nWhen the case is over, the status is set to \'Done\'.\
@@ -80,14 +79,44 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
-        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'user_id': lambda s, cr, uid, c: uid,
         'state': lambda *a: 'draft',
-        'date': lambda *a: fields.datetime.now(),
+        'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': '1',
     }
+
+    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
+        values = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'email_from': partner.email,
+            }
+        return {'value': values}
+
+    def write(self, cr, uid, ids, values, context=None):
+        """ Override to add case management: open/close dates """
+        if values.get('state'):
+            if values.get('state') in ['draft', 'open'] and not values.get('date_open'):
+                values['date_open'] = fields.datetime.now()
+            elif values.get('state') == 'close' and not values.get('date_closed'):
+                values['date_closed'] = fields.datetime.now()
+        return super(crm_helpdesk, self).write(cr, uid, ids, values, context=context)
+
+    def case_escalate(self, cr, uid, ids, context=None):
+        """ Escalates case to parent level """
+        data = {'active': True}
+        for case in self.browse(cr, uid, ids, context=context):
+            if case.section_id and case.section_id.parent_id:
+                parent_id = case.section_id.parent_id
+                data['section_id'] = parent_id.id
+                if parent_id.change_responsible and parent_id.user_id:
+                    data['user_id'] = parent_id.user_id.id
+            else:
+                raise osv.except_osv(_('Error!'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
+            self.write(cr, uid, [case.id], data, context=context)
+        return True
 
     # -------------------------------------------------------
     # Mail gateway
@@ -98,41 +127,18 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None: custom_values = {}
+        if custom_values is None:
+            custom_values = {}
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
-        custom_values.update({
+        defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
-        })
-        return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-
-    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
-        """ Overrides mail_thread message_update that is called by the mailgateway
-            through message_process.
-            This method updates the document according to the email.
-        """
-        if isinstance(ids, (str, int, long)):
-            ids = [ids]
-        if update_vals is None: update_vals = {}
-
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
-            update_vals['priority'] = msg.get('priority')
-
-        maps = {
-            'cost':'planned_cost',
-            'revenue': 'planned_revenue',
-            'probability':'probability'
+            'partner_id': msg.get('author_id', False),
         }
-        for line in msg['body'].split('\n'):
-            line = line.strip()
-            res = tools.command_re.match(line)
-            if res and maps.get(res.group(1).lower()):
-                key = maps.get(res.group(1).lower())
-                update_vals[key] = res.group(2).lower()
-
-        return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+        defaults.update(custom_values)
+        return super(crm_helpdesk, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

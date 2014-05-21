@@ -71,7 +71,6 @@ class report_timesheet_line(osv.osv):
                     l.invoice_id
             )
         """)
-report_timesheet_line()
 
 
 
@@ -107,7 +106,6 @@ class report_timesheet_user(osv.osv):
                 group by l.date, to_char(l.date,'YYYY'),to_char(l.date,'MM'), l.user_id
             )
         """)
-report_timesheet_user()
 
 class report_timesheet_account(osv.osv):
     _name = "report_timesheet.account"
@@ -140,7 +138,6 @@ class report_timesheet_account(osv.osv):
                     to_char(create_date, 'YYYY'),to_char(create_date, 'MM'), user_id, account_id
             )
         """)
-report_timesheet_account()
 
 
 class report_timesheet_account_date(osv.osv):
@@ -174,7 +171,6 @@ class report_timesheet_account_date(osv.osv):
                     to_char(date,'YYYY'),to_char(date,'MM'), user_id, account_id
             )
         """)
-report_timesheet_account_date()
 
 
 class report_timesheet_invoice(osv.osv):
@@ -215,7 +211,6 @@ class report_timesheet_invoice(osv.osv):
                     a.user_id
             )
         """)
-report_timesheet_invoice()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

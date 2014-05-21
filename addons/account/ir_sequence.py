@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 
 class ir_sequence_fiscalyear(osv.osv):
     _name = 'account.sequence.fiscalyear'
@@ -38,7 +38,6 @@ class ir_sequence_fiscalyear(osv.osv):
             'Main Sequence must be different from current !'),
     ]
 
-ir_sequence_fiscalyear()
 
 class ir_sequence(osv.osv):
     _inherit = 'ir.sequence'
@@ -47,6 +46,7 @@ class ir_sequence(osv.osv):
             'sequence_main_id', 'Sequences')
     }
 
+    @api.cr_uid_ids_context
     def _next(self, cr, uid, seq_ids, context=None):
         if context is None:
             context = {}
@@ -56,6 +56,5 @@ class ir_sequence(osv.osv):
                     return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
         return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
 
-ir_sequence()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

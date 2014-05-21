@@ -20,8 +20,9 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
-from openerp import pooler
+
 
 def titlize(journal_name):
     words = journal_name.split()
@@ -29,12 +30,13 @@ def titlize(journal_name):
         continue
     return ' '.join(words)
 
+
 class order(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context=context)
 
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         partner = user.company_id.partner_id
 
         self.localcontext.update({
@@ -72,6 +74,11 @@ class order(report_sxw.rml_parse):
         data = self.cr.dictfetchall()
         return data
 
-report_sxw.report_sxw('report.pos.receipt', 'pos.order', 'addons/point_of_sale/report/pos_receipt.rml', parser=order, header=False)
+
+class report_order_receipt(osv.AbstractModel):
+    _name = 'report.point_of_sale.report_receipt'
+    _inherit = 'report.abstract_report'
+    _template = 'point_of_sale.report_receipt'
+    _wrapped_report_class = order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

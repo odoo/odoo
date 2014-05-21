@@ -60,7 +60,6 @@ class report_analytic_account_close(osv.osv):
                     (a.quantity_max>0 and (sum(l.unit_amount)>=a.quantity_max)) or
                     a.date <= current_date
             )""")
-report_analytic_account_close()
 
 class report_account_analytic_line_to_invoice(osv.osv):
     _name = "report.account.analytic.line.to.invoice"
@@ -105,7 +104,6 @@ class report_account_analytic_line_to_invoice(osv.osv):
                     to_char(l.date, 'YYYY'), to_char(l.date,'MM'), product_id, product_uom_id, account_id
             )
         """)
-report_account_analytic_line_to_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

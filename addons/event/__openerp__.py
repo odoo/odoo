@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -39,7 +38,7 @@ Key Features
 * Use emails to automatically confirm and send acknowledgements for any event registration
 """,
     'author': 'OpenERP SA',
-    'depends': ['base_setup', 'board', 'email_template'],
+    'depends': ['base_setup', 'board', 'email_template', 'marketing'],
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
@@ -47,16 +46,19 @@ Key Features
         'event_view.xml',
         'event_data.xml',
         'report/report_event_registration_view.xml',
-        'board_association_view.xml',
         'res_partner_view.xml',
         'email_template.xml',
+        'views/event.xml',
     ],
-    'demo': ['event_demo.xml'],
-    'test': ['test/process/event_draft2done.yml'],
-    'css': ['static/src/css/event.css'],
+    'demo': [
+        'event_demo.xml',
+    ],
+    'test': [
+        'test/ui/event_users.yml',
+        'test/process/event_draft2done.yml'
+    ],
     'installable': True,
-    'application': True,
     'auto_install': False,
-    'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
+    'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg','images/events_kanban.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

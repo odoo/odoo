@@ -41,7 +41,7 @@ class bank(osv.osv):
 
     def _prepare_name(self, bank):
         "Return the name to use when creating a bank journal"
-        return (bank.bank_name or '') + ' ' + bank.acc_number
+        return (bank.bank_name or '') + ' ' + (bank.acc_number or '')
 
     def _prepare_name_get(self, cr, uid, bank_dicts, context=None):
         """Add ability to have %(currency_name)s in the format_layout of res.partner.bank.type"""
@@ -65,12 +65,11 @@ class bank(osv.osv):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = obj_acc.search(cr, uid, [('type','=','liquidity'), ('company_id', '=', bank.company_id.id)], context=context)
+                ids = obj_acc.search(cr, uid, [('type','=','liquidity'), ('company_id', '=', bank.company_id.id), ('parent_id', '!=', False)], context=context)
                 # No liquidity account exists, no template available
                 if not ids: continue
 
-                ref_acc_bank_temp = obj_acc.browse(cr, uid, ids[0], context=context)
-                ref_acc_bank = ref_acc_bank_temp.parent_id
+                ref_acc_bank = obj_acc.browse(cr, uid, ids[0], context=context).parent_id
                 while True:
                     new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
                     ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', bank.company_id.id)])
@@ -82,7 +81,7 @@ class bank(osv.osv):
                     'name': name,
                     'code': new_code,
                     'type': 'liquidity',
-                    'user_type': ref_acc_bank_temp.user_type.id,
+                    'user_type': ref_acc_bank.user_type.id,
                     'reconcile': False,
                     'parent_id': ref_acc_bank.id,
                     'company_id': bank.company_id.id,

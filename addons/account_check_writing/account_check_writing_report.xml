@@ -1,29 +1,17 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    <report id="account_print_check_top"
-            string="Print Check (Top)"
-            model="account.voucher"
-            name="account.print.check.top"
-            rml="account_check_writing/report/check_print_top.rml"
-            multi="True"
-            auto="False"/>
+        <report
+            id="action_report_check" 
+            model="account.voucher" 
+            string="Check"
+            report_type="qweb-pdf"
+            name="account_check_writing.report_check" 
+            file="account_check_writing.report_check" 
+        />
 
-    <report id="account_print_check_middle"
-            string="Print Check (Middle)"
-            model="account.voucher"
-            name="account.print.check.middle"
-            rml="account_check_writing/report/check_print_middle.rml"
-            multi="True"
-            auto="False"/>
-            
-    <report id="account_print_check_bottom"
-            string="Print Check (Bottom)"
-            model="account.voucher"
-            name="account.print.check.bottom"
-            rml="account_check_writing/report/check_print_bottom.rml"
-            multi="True"
-            auto="False"/>
-            
-     </data>
+        <record id="action_report_check" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="account_check_writing.paperformat_frenchcheck"/>
+        </record>
+    </data>
 </openerp>

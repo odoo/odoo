@@ -23,6 +23,7 @@ from operator import itemgetter
 import time
 
 from openerp.osv import fields, osv
+from openerp import api
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
@@ -40,6 +41,7 @@ class account_fiscal_position(osv.osv):
         'active': True,
     }
 
+    @api.old
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
         if not taxes:
             return []
@@ -57,6 +59,20 @@ class account_fiscal_position(osv.osv):
                 result.add(t.id)
         return list(result)
 
+    @map_tax.new
+    def map_tax(self, taxes):
+        result = taxes.browse()
+        for tax in taxes:
+            found = False
+            for t in self.tax_ids:
+                if t.tax_src_id == tax:
+                    result |= t.tax_dest_id
+                    found = True
+            if not found:
+                result |= tax
+        return result
+
+    @api.old
     def map_account(self, cr, uid, fposition_id, account_id, context=None):
         if not fposition_id:
             return account_id
@@ -66,7 +82,13 @@ class account_fiscal_position(osv.osv):
                 break
         return account_id
 
-account_fiscal_position()
+    @map_account.new
+    def map_account(self, account):
+        for pos in self.account_ids:
+            if pos.account_src_id == account:
+                return pos.account_dest_id
+        return account
+
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
@@ -84,7 +106,6 @@ class account_fiscal_position_tax(osv.osv):
          'A tax fiscal position could be defined only once time on same taxes.')
     ]
 
-account_fiscal_position_tax()
 
 class account_fiscal_position_account(osv.osv):
     _name = 'account.fiscal.position.account'
@@ -102,7 +123,6 @@ class account_fiscal_position_account(osv.osv):
          'An account fiscal position could be defined only once time on same accounts.')
     ]
 
-account_fiscal_position_account()
 
 class res_partner(osv.osv):
     _name = 'res.partner'
@@ -110,7 +130,9 @@ class res_partner(osv.osv):
     _description = 'Partner'
 
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context=None):
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        ctx = context.copy()
+        ctx['all_fiscalyear'] = True
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=ctx)
         cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
                       LEFT JOIN account_account a ON (l.account_id=a.id)
@@ -163,6 +185,26 @@ class res_partner(osv.osv):
     def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
+    def _invoice_total(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        account_invoice_report = self.pool.get('account.invoice.report')
+        for partner in self.browse(cr, uid, ids, context=context):
+            invoice_ids = account_invoice_report.search(cr, uid, [('partner_id','child_of',partner.id)], context=context)
+            invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
+            result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
+        return result
+
+    def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
+        MoveLine = self.pool('account.move.line')
+        AnalyticAccount = self.pool('account.analytic.account')
+        return {
+            partner_id: {
+                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
+                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
+            }
+            for partner_id in ids
+        }
+
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''
         at least a debit, a credit and a line older than the last reconciliation date of the partner
@@ -191,51 +233,48 @@ class res_partner(osv.osv):
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
         'debit_limit': fields.float('Payable Limit'),
+        'total_invoiced': fields.function(_invoice_total, string="Total Invoiced", type='float'),
+        'contracts_count': fields.function(_journal_item_count, string="Contracts", type='integer', multi="invoice_journal"),
+        'journal_item_count': fields.function(_journal_item_count, string="Journal Items", type="integer", multi="invoice_journal"),
         'property_account_payable': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Account Payable",
-            view_load=True,
             domain="[('type', '=', 'payable')]",
             help="This account will be used instead of the default one as the payable account for the current partner",
             required=True),
         'property_account_receivable': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Account Receivable",
-            view_load=True,
             domain="[('type', '=', 'receivable')]",
             help="This account will be used instead of the default one as the receivable account for the current partner",
             required=True),
         'property_account_position': fields.property(
-            'account.fiscal.position',
             type='many2one',
             relation='account.fiscal.position',
             string="Fiscal Position",
-            view_load=True,
             help="The fiscal position will determine taxes and accounts used for the partner.",
         ),
         'property_payment_term': fields.property(
-            'account.payment.term',
             type='many2one',
             relation='account.payment.term',
             string ='Customer Payment Term',
-            view_load=True,
             help="This payment term will be used instead of the default one for sale orders and customer invoices"),
         'property_supplier_payment_term': fields.property(
-            'account.payment.term',
              type='many2one',
              relation='account.payment.term',
              string ='Supplier Payment Term',
-             view_load=True,
              help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the date of the last reconciliation made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 ways: either the last debit/credit entry was reconciled, either the user pressed the button "Fully Reconciled" in the manual reconciliation process')
+        'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button "Nothing more to reconcile" during the manual reconciliation process.')
     }
 
-res_partner()
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
+            ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
+             'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

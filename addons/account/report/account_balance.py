@@ -21,8 +21,10 @@
 
 import time
 
+from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
+
 
 class account_balance(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.account.balance'
@@ -57,11 +59,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
-
-    #def _add_header(self, node, header=1):
-    #    if header == 0:
-    #        self.rml_header = ""
-    #    return True
 
     def _get_account(self, data):
         if data['model']=='account.account':
@@ -131,6 +128,11 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 _process_child(accounts,form['display_account'],parent)
         return self.result_acc
 
-report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header="internal")
+
+class report_trialbalance(osv.AbstractModel):
+    _name = 'report.account.report_trialbalance'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_trialbalance'
+    _wrapped_report_class = account_balance
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

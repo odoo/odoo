@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     'name': 'Intrastat Reporting',
     'version': '1.0',
@@ -37,7 +36,8 @@ European Union.""",
         'security/ir.model.access.csv',
         'report_intrastat_view.xml',
         'intrastat_report.xml',
-        'report_intrastat_data.xml'
+        'report_intrastat_data.xml',
+        'views/report_intrastatinvoice.xml'
     ],
     'demo': [],
     'test': ['test/report_intrastat_report.yml'],
@@ -45,4 +45,5 @@ European Union.""",
     'auto_install': False,
     'images': ['images/country_intrastat_code.jpeg','images/intrastat_code.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

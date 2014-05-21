@@ -19,25 +19,43 @@
 #
 ##############################################################################
 
+from openerp import depends, one, Integer, One2many
+from openerp.addons.event.event import event_event as Event
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class product(osv.osv):
-    _inherit = 'product.product'
+class product_template(osv.osv):
+    _inherit = 'product.template'
     _columns = {
         'event_ok': fields.boolean('Event Subscription', help='Determine if a product needs to create automatically an event registration at the confirmation of a sales order line.'),
         'event_type_id': fields.many2one('event.type', 'Type of Event', help='Select event types so when we use this product in sales order lines, it will filter events of this type only.'),
     }
 
-    def onchange_event_ok(self, cr, uid, ids, event_ok, context=None):
-        return {'value': {'type': event_ok and 'service' or False}}
+    def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
+        if event_ok:
+            return {'value': {'type': 'service'}}
+        return {}
 
-product()
+class product(osv.osv):
+    _inherit = 'product.product'
+    _columns = {
+        'event_ticket_ids': fields.one2many('event.event.ticket', 'product_id', 'Event Tickets'),
+    }
+
+    def onchange_event_ok(self, cr, uid, ids, type, event_ok, context=None):
+        # cannot directly forward to product.template as the ids are theoretically different
+        if event_ok:
+            return {'value': {'type': 'service'}}
+        return {}
+
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = {
-        'event_id': fields.many2one('event.event', 'Event', help="Choose an event and it will automatically create a registration for this event."),
+        'event_id': fields.many2one('event.event', 'Event',
+            help="Choose an event and it will automatically create a registration for this event."),
+        'event_ticket_id': fields.many2one('event.event.ticket', 'Event Ticket',
+            help="Choose an event ticket and it will automatically create a registration for this event ticket."),
         #those 2 fields are used for dynamic domains and filled by onchange
         'event_type_id': fields.related('product_id','event_type_id', type='many2one', relation="event.type", string="Event Type"),
         'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean'),
@@ -45,7 +63,8 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids,
                           pricelist, 
-                          product, qty=0,
+                          product,
+                          qty=0,
                           uom=False,
                           qty_uos=0,
                           uos=False,
@@ -71,10 +90,11 @@ class sale_order_line(osv.osv):
         '''
         create registration with sales order
         '''
+        if context is None:
+            context = {}
         registration_obj = self.pool.get('event.registration')
-        sale_obj = self.pool.get('sale.order')
         for order_line in self.browse(cr, uid, ids, context=context):
-            if order_line.event_id.id:
+            if order_line.event_id:
                 dic = {
                     'name': order_line.order_id.partner_invoice_id.name,
                     'partner_id': order_line.order_id.partner_id.id,
@@ -83,8 +103,132 @@ class sale_order_line(osv.osv):
                     'phone': order_line.order_id.partner_id.phone,
                     'origin': order_line.order_id.name,
                     'event_id': order_line.event_id.id,
+                    'event_ticket_id': order_line.event_ticket_id and order_line.event_ticket_id.id or None,
                 }
+
+                if order_line.event_ticket_id:
+                    message = _("The registration has been created for event <i>%s</i> with the ticket <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.event_ticket_id.name, order_line.order_id.name)
+                else:
+                    message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
+                
+                context.update({'mail_create_nolog': True})
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
-                message = _("The registration %s has been created from the Sales Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
+
+    def onchange_event_ticket_id(self, cr, uid, ids, event_ticket_id=False, context=None):
+        price = event_ticket_id and self.pool.get("event.event.ticket").browse(cr, uid, event_ticket_id, context=context).price or False
+        return {'value': {'price_unit': price}}
+
+
+class event_event(osv.osv):
+    _inherit = 'event.event'
+
+    event_ticket_ids = One2many('event.event.ticket', 'event_id', string='Event Ticket',
+        compute='_default_tickets')
+    seats_max = Integer(string='Maximum Available Seats',
+        help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
+            "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
+        store=True, readonly=True, compute='_compute_seats_max')
+
+    @one
+    def _default_tickets(self):
+        try:
+            product = self.env.ref('event_sale.product_product_event')
+            self.event_ticket_ids = [{
+                'name': _('Subscription'),
+                'product_id': product.id,
+                'price': 0,
+            }]
+        except ValueError:
+            self.event_ticket_ids = self.env['event.event.ticket']
+
+    @one
+    @depends('event_ticket_ids.seats_max')
+    def _compute_seats_max(self):
+        self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
+
+class event_ticket(osv.osv):
+    _name = 'event.event.ticket'
+
+    def _get_seats(self, cr, uid, ids, fields, args, context=None):
+        """Get reserved, available, reserved but unconfirmed and used seats for each event tickets.
+        @return: Dictionary of function field values.
+        """
+        res = dict([(id, {}) for id in ids])
+        for ticket in self.browse(cr, uid, ids, context=context):
+            res[ticket.id]['seats_reserved'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "open")
+            res[ticket.id]['seats_used'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "done")
+            res[ticket.id]['seats_unconfirmed'] = sum(reg.nb_register for reg in ticket.registration_ids if reg.state == "draft")
+            res[ticket.id]['seats_available'] = ticket.seats_max - \
+                (res[ticket.id]['seats_reserved'] + res[ticket.id]['seats_used']) \
+                if ticket.seats_max > 0 else None
+        return res
+
+    def _is_expired(self, cr, uid, ids, field_name, args, context=None):
+        # FIXME: A ticket is considered expired when the deadline is passed. The deadline should
+        #        be considered in the timezone of the event, not the timezone of the user!
+        #        Until we add a TZ on the event we'll use the context's current date, more accurate
+        #        than using UTC all the time.
+        current_date = fields.date.context_today(self, cr, uid, context=context)
+        return {ticket.id: ticket.deadline and ticket.deadline < current_date
+                      for ticket in self.browse(cr, uid, ids, context=context)}
+        
+
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'event_id': fields.many2one('event.event', "Event", required=True, ondelete='cascade'),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[("event_type_id", "!=", False)]),
+        'registration_ids': fields.one2many('event.registration', 'event_ticket_id', 'Registrations'),
+        'deadline': fields.date("Sales End"),
+        'is_expired': fields.function(_is_expired, type='boolean', string='Is Expired'),
+        'price': fields.float('Price'),
+        'seats_max': fields.integer('Maximum Avalaible Seats', oldname='register_max', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )"),
+        'seats_reserved': fields.function(_get_seats, string='Reserved Seats', type='integer', multi='seats_reserved'),
+        'seats_available': fields.function(_get_seats, string='Available Seats', type='integer', multi='seats_reserved'),
+        'seats_unconfirmed': fields.function(_get_seats, string='Unconfirmed Seat Reservations', type='integer', multi='seats_reserved'),
+        'seats_used': fields.function(_get_seats, string='Number of Participations', type='integer', multi='seats_reserved'),
+    }
+
+    def _default_product_id(self, cr, uid, context={}):
+        imd = self.pool.get('ir.model.data')
+        try:
+            product = imd.get_object(cr, uid, 'event_sale', 'product_product_event')
+        except ValueError:
+            return False
+        return product.id
+
+    _defaults = {
+        'product_id': _default_product_id
+    }
+
+    def _check_seats_limit(self, cr, uid, ids, context=None):
+        for ticket in self.browse(cr, uid, ids, context=context):
+            if ticket.seats_max and ticket.seats_available < 0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_seats_limit, 'No more available tickets.', ['registration_ids','seats_max']),
+    ]
+
+    def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
+        return {'value': {'price': self.pool.get("product.product").browse(cr, uid, product_id).list_price or 0}}
+
+
+class event_registration(osv.osv):
+    """Event Registration"""
+    _inherit= 'event.registration'
+    _columns = {
+        'event_ticket_id': fields.many2one('event.event.ticket', 'Event Ticket'),
+    }
+
+    def _check_ticket_seats_limit(self, cr, uid, ids, context=None):
+        for registration in self.browse(cr, uid, ids, context=context):
+            if registration.event_ticket_id.seats_max and registration.event_ticket_id.seats_available < 0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_ticket_seats_limit, 'No more available tickets.', ['event_ticket_id','nb_register','state']),
+    ]

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:57+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2014-04-22 07:30+0000\n"
+"X-Generator: Launchpad (build 16985)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -25,7 +25,7 @@ msgstr "Potrjeno"
 #. module: fetchmail
 #: field:fetchmail.server,server:0
 msgid "Server Name"
-msgstr ""
+msgstr "Ime strežnika"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -35,7 +35,7 @@ msgstr "POP"
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
 msgid "Defines the order of processing, lower values mean higher priority"
-msgstr ""
+msgstr "Določa vrstni red izvajanja, nižja vrednost pomeni višjo prioriteto"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -47,12 +47,12 @@ msgstr ""
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
 msgid "Keep Attachments"
-msgstr ""
+msgstr "Obdrži priponke"
 
 #. module: fetchmail
 #: field:fetchmail.server,is_ssl:0
 msgid "SSL/TLS"
-msgstr ""
+msgstr "SSL/TLS"
 
 #. module: fetchmail
 #: help:fetchmail.server,original:0
@@ -61,6 +61,9 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
+"Ali se naj ohrani originalna kopja vsakega elektronskega sporočila kot "
+"referenca in priponka k vsakemu procesiranemu sporočilu. To običajno podvoji "
+"velikost vaše baze sporočil."
 
 #. module: fetchmail
 #: view:base.config.settings:0
@@ -76,7 +79,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr ""
+msgstr "Serverji za vhodno pošto"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -91,12 +94,12 @@ msgstr "POP/IMAP Strežniki"
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "Local Server"
-msgstr ""
+msgstr "Lokalni strežnik"
 
 #. module: fetchmail
 #: field:fetchmail.server,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
@@ -106,7 +109,7 @@ msgstr "POP/IMAP Strežnik"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Reset Confirmation"
-msgstr ""
+msgstr "Ponastavi potrditev"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -116,7 +119,7 @@ msgstr "SSL"
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_config_settings
 msgid "fetchmail.config.settings"
-msgstr ""
+msgstr "fetchmail.config.settings"
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
@@ -138,44 +141,44 @@ msgstr "# od emalov"
 #. module: fetchmail
 #: field:fetchmail.server,original:0
 msgid "Keep Original"
-msgstr ""
+msgstr "Ohrani izvirnik"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Advanced Options"
-msgstr ""
+msgstr "Napredne možnosti"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
-msgstr ""
+msgstr "Nastavitve"
 
 #. module: fetchmail
 #: field:fetchmail.server,script:0
 msgid "Script"
-msgstr ""
+msgstr "Skript"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Strežnih vhodne pošte"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
+#: code:addons/fetchmail/fetchmail.py:163
 #, python-format
 msgid "Connection test failed!"
-msgstr ""
+msgstr "Povezava ni uspela!"
 
 #. module: fetchmail
 #: field:fetchmail.server,user:0
 msgid "Username"
-msgstr ""
+msgstr "Uporabniško ime"
 
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr ""
+msgstr "Ime ali IP poštnega strežnika"
 
 #. module: fetchmail
 #: field:fetchmail.server,name:0
@@ -183,7 +186,7 @@ msgid "Name"
 msgstr "Ime"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
+#: code:addons/fetchmail/fetchmail.py:163
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -193,12 +196,12 @@ msgstr ""
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Test & Confirm"
-msgstr ""
+msgstr "Preveri & potrdi"
 
 #. module: fetchmail
 #: field:fetchmail.server,action_id:0
 msgid "Server Action"
-msgstr ""
+msgstr "Strežniška akcija"
 
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
@@ -214,7 +217,7 @@ msgstr "Sporočila"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Search Incoming Mail Servers"
-msgstr ""
+msgstr "Išči strežnike vhodne pošte"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
@@ -231,12 +234,12 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Odhajajoča sporočila"
 
 #. module: fetchmail
 #: field:fetchmail.server,priority:0
 msgid "Server Priority"
-msgstr ""
+msgstr "Prioriteta strežnika"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -251,7 +254,7 @@ msgstr "IMAP"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Server type POP."
-msgstr ""
+msgstr "POP strežnik"
 
 #. module: fetchmail
 #: field:fetchmail.server,password:0
@@ -261,7 +264,7 @@ msgstr "Geslo"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Actions to Perform on Incoming Mails"
-msgstr ""
+msgstr "Aktivnosti, ki se naj izvedeno na vhodni pošti"
 
 #. module: fetchmail
 #: field:fetchmail.server,type:0
@@ -281,12 +284,12 @@ msgstr "Podatki o strežniku"
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "If SSL required."
-msgstr ""
+msgstr "Če je zahtevan SSL."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
 msgid "Advanced"
-msgstr ""
+msgstr "Napredeno"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -304,7 +307,7 @@ msgstr ""
 #. module: fetchmail
 #: field:fetchmail.server,object_id:0
 msgid "Create a New Record"
-msgstr ""
+msgstr "Kreiraj nov zapis"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0

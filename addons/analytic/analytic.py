@@ -33,9 +33,9 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
     _track = {
         'state': {
-            'analytic.mt_account_pending': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'pending',
-            'analytic.mt_account_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'close',
-            'analytic.mt_account_opened': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'analytic.mt_account_pending': lambda self, cr, uid, obj, ctx=None: obj.state == 'pending',
+            'analytic.mt_account_closed': lambda self, cr, uid, obj, ctx=None: obj.state == 'close',
+            'analytic.mt_account_opened': lambda self, cr, uid, obj, ctx=None: obj.state == 'open',
         },
     }
 
@@ -157,9 +157,10 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
-                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."))
         if value:
-            return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
+            cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id))
+            self.invalidate_cache(cr, uid, ['currency_id'], [account.id], context=context)
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -171,9 +172,9 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account/Contract Name', size=128, required=True),
-        'complete_name': fields.function(_get_full_name, type='char', string='Full Account Name'),
-        'code': fields.char('Reference', select=True),
+        'name': fields.char('Account/Contract Name', size=128, required=True, track_visibility='onchange'),
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
+        'code': fields.char('Reference', select=True, track_visibility='onchange'),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
@@ -191,19 +192,19 @@ class account_analytic_account(osv.osv):
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Prepaid Service Units', help='Sets the higher limit of time to work on the contract, based on the timesheet. (for instance, number of hours in a limited support contract.)'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
-        'user_id': fields.many2one('res.users', 'Project Manager'),
-        'manager_id': fields.many2one('res.users', 'Account Manager'),
+        'user_id': fields.many2one('res.users', 'Project Manager', track_visibility='onchange'),
+        'manager_id': fields.many2one('res.users', 'Account Manager', track_visibility='onchange'),
         'date_start': fields.date('Start Date'),
-        'date': fields.date('Date End', select=True),
+        'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True, track_visibility='onchange'),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
             return {}
         res = {'value':{}}
@@ -213,7 +214,8 @@ class account_analytic_account(osv.osv):
             to_dt = datetime.strptime(template.date, tools.DEFAULT_SERVER_DATE_FORMAT)
             timedelta = to_dt - from_dt
             res['value']['date'] = datetime.strftime(datetime.now() + timedelta, tools.DEFAULT_SERVER_DATE_FORMAT)
-        res['value']['date_start'] = fields.date.today()
+        if not date_start:
+            res['value']['date_start'] = fields.date.today()
         res['value']['quantity_max'] = template.quantity_max
         res['value']['parent_id'] = template.parent_id and template.parent_id.id or False
         res['value']['description'] = template.description
@@ -253,10 +255,13 @@ class account_analytic_account(osv.osv):
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
-    _order = 'name asc'
+    _order = 'code, name asc'
     _constraints = [
         (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
+
+    def name_create(self, cr, uid, name, context=None):
+        raise osv.except_osv(_('Warning'), _("Quick account creation disallowed."))
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -292,10 +297,6 @@ class account_analytic_account(osv.osv):
             args=[]
         if context is None:
             context={}
-        if context.get('current_model') == 'project.project':
-            project_obj = self.pool.get("account.analytic.account")
-            project_ids = project_obj.search(cr, uid, args)
-            return self.name_get(cr, uid, project_ids, context=context)
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:
@@ -348,7 +349,5 @@ class account_analytic_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
-
-account_analytic_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

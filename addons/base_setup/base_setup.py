@@ -21,7 +21,6 @@
 
 import simplejson
 import cgi
-from openerp import pooler
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _

@@ -33,7 +33,6 @@ class account_unreconcile(osv.osv_memory):
             obj_move_line._remove_move_reconcile(cr, uid, context['active_ids'], context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-account_unreconcile()
 
 class account_unreconcile_reconcile(osv.osv_memory):
     _name = "account.unreconcile.reconcile"
@@ -48,6 +47,5 @@ class account_unreconcile_reconcile(osv.osv_memory):
             obj_move_reconcile.unlink(cr, uid, rec_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-account_unreconcile_reconcile()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

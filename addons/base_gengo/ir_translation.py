@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 LANG_CODE_MAPPING = {
-    'ar_SA': ('ar', 'Arabic'),
+    'ar_SY': ('ar', 'Arabic'),
     'id_ID': ('id', 'Indonesian'),
     'nl_NL': ('nl', 'Dutch'),
     'fr_CA': ('fr-ca', 'French (Canada)'),
@@ -41,7 +41,19 @@ LANG_CODE_MAPPING = {
     'fr_BE': ('fr', 'French'),
     'ru_RU': ('ru', 'Russian'),
     'it_IT': ('it', 'Italian'),
-    'pt_BR': ('pt-br', 'Portuguese (Brazil)')
+    'pt_BR': ('pt-br', 'Portuguese (Brazil)'),
+    'th_TH': ('th', 'Thai'),
+    'nb_NO': ('no', 'Norwegian'),
+    'ro_RO': ('ro', 'Romanian'),
+    'tr_TR': ('tr', 'Turkish'),
+    'bg_BG': ('bg', 'Bulgarian'),
+    'da_DK': ('da', 'Danish'),
+    'en_GB': ('en-gb', 'English (British)'),
+    'el_GR': ('el', 'Greek'),
+    'vi_VN': ('vi', 'Vietnamese'),
+    'he_IL': ('he', 'Hebrew'),
+    'hu_HU': ('hu', 'Hungarian'),
+    'fi_FI': ('fi', 'Finnish')
 }
 
 class ir_translation(osv.Model):
@@ -71,18 +83,3 @@ class ir_translation(osv.Model):
 
     def _get_gengo_corresponding_language(cr, lang):
         return lang in LANG_CODE_MAPPING and LANG_CODE_MAPPING[lang][0] or lang
-
-    def _check_lang_support(self, cr, uid, ids, context=None):
-        for term in self.browse(cr, uid, ids, context=context):
-            if term.gengo_translation:
-                supported_langs = self._get_all_supported_languages(cr, uid, context=context)
-                if supported_langs:
-                    tier = "nonprofit" if term.gengo_translation == 'machine' else term.gengo_translation
-                    language = self._get_gengo_corresponding_language(term.lang)
-                    if tier not in supported_langs.get(language,[]):
-                        return False
-        return True
-
-    _constraints = [
-        (_check_lang_support, 'The Gengo translation service selected is not supported for this language.', ['gengo_translation'])
-    ]

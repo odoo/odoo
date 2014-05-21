@@ -20,10 +20,9 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import pooler
 from openerp import tools
 from openerp.osv import fields,osv
 
@@ -67,7 +66,6 @@ class report_account_receivable(osv.osv):
                 group by
                     to_char(date,'YYYY:IW'), a.type
             )""")
-report_account_receivable()
 
                     #a.type in ('receivable','payable')
 class temp_range(osv.osv):
@@ -78,7 +76,6 @@ class temp_range(osv.osv):
         'name': fields.char('Range',size=64)
     }
 
-temp_range()
 
 class report_aged_receivable(osv.osv):
     _name = "report.aged.receivable"
@@ -94,7 +91,7 @@ class report_aged_receivable(osv.osv):
         """
         if context is None:context = {}
         if not self.called:
-            self.init(cr, user)
+            self._init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
 
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -119,36 +116,43 @@ class report_aged_receivable(osv.osv):
         'balance': fields.function(_calc_bal, string='Balance', readonly=True),
     }
 
-    def init(self, cr, uid=1):
+    def init(self, cr):
+        return self._init(cr, 1)
+
+    def _init(self, cr, uid):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
-        pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        today = time.strftime('%Y-%m-%d')
+        pool_obj_fy = self.pool['account.fiscalyear']
+        current_date = datetime.date.today()
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
-        LIST_RANGES = []
+        names = []
+
+        def add(names, start_on, stop_on):
+            names.append(start_on.strftime("%Y-%m-%d") + ' to ' + stop_on.strftime('%Y-%m-%d'))
+            return names
+
         if fy_id:
-            fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']
-            fy_start_date = datetime.strptime(fy_start_date, '%Y-%m-%d')
-            last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
+            fiscal_year = pool_obj_fy.browse(cr, uid, fy_id)
+            fy_start_date = datetime.datetime.strptime(fiscal_year.date_start, '%Y-%m-%d').date()
+            last_month_date = current_date - relativedelta(months=1)
 
             while (last_month_date > fy_start_date):
-                LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
-                today = (last_month_date- relativedelta(days=1)).strftime('%Y-%m-%d')
-                last_month_date = datetime.strptime(today, '%Y-%m-%d') - relativedelta(months=1)
+                add(names, current_date, last_month_date)
+                current_date = last_month_date - relativedelta(days=1)
+                last_month_date = current_date - relativedelta(months=1)
 
-            LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
+                add(names, current_date, fy_start_date)
             cr.execute('delete from temp_range')
 
-            for range in LIST_RANGES:
-                pooler.get_pool(cr.dbname).get('temp.range').create(cr, uid, {'name':range})
+            for name in names:
+                self.pool['temp.range'].create(cr, uid, {'name':name})
 
         cr.execute("""
             create or replace view report_aged_receivable as (
                 select id,name from temp_range
             )""")
 
-report_aged_receivable()
 
 class report_invoice_created(osv.osv):
     _name = "report.invoice.created"
@@ -201,7 +205,6 @@ class report_invoice_created(osv.osv):
                 AND
                 (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
-report_invoice_created()
 
 class report_account_type_sales(osv.osv):
     _name = "report.account_type.sales"
@@ -242,7 +245,6 @@ class report_account_type_sales(osv.osv):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type
             )""")
-report_account_type_sales()
 
 
 class report_account_sales(osv.osv):
@@ -284,6 +286,5 @@ class report_account_sales(osv.osv):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
-report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

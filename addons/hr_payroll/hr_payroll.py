@@ -26,8 +26,7 @@ from datetime import datetime
 from datetime import timedelta
 from dateutil import relativedelta
 
-from openerp import netsvc
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp import tools
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -51,6 +50,7 @@ class hr_payroll_structure(osv.osv):
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
         'children_ids':fields.one2many('hr.payroll.structure', 'parent_id', 'Children'),
+        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
     }
 
     def _get_parent(self, cr, uid, context=None):
@@ -68,6 +68,10 @@ class hr_payroll_structure(osv.osv):
         'parent_id': _get_parent,
     }
 
+    _constraints = [
+        (osv.osv._check_recursion, 'Error ! You cannot create a recursive Salary Structure.', ['parent_id']) 
+    ]
+        
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Create a new record in hr_payroll_structure model from existing one
@@ -86,6 +90,7 @@ class hr_payroll_structure(osv.osv):
             company_id=self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
+    @api.cr_uid_ids_context
     def get_all_rules(self, cr, uid, structure_ids, context=None):
         """
         @param structure_ids: list of structure
@@ -97,6 +102,7 @@ class hr_payroll_structure(osv.osv):
             all_rules += self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, struct.rule_ids, context=context)
         return all_rules
 
+    @api.cr_uid_ids_context
     def _get_parent_structure(self, cr, uid, struct_ids, context=None):
         if not struct_ids:
             return []
@@ -108,7 +114,6 @@ class hr_payroll_structure(osv.osv):
             parent = self._get_parent_structure(cr, uid, parent, context)
         return parent + struct_ids
 
-hr_payroll_structure()
 
 class hr_contract(osv.osv):
     """
@@ -135,16 +140,17 @@ class hr_contract(osv.osv):
         'schedule_pay': 'monthly',
     }
 
+    @api.cr_uid_ids_context
     def get_all_structures(self, cr, uid, contract_ids, context=None):
         """
         @param contract_ids: list of contracts
         @return: the structures linked to the given contracts, ordered by hierachy (parent=False first, then first level children and so on) and without duplicata
         """
-        all_structures = []
-        structure_ids = [contract.struct_id.id for contract in self.browse(cr, uid, contract_ids, context=context)]
+        structure_ids = [contract.struct_id.id for contract in self.browse(cr, uid, contract_ids, context=context) if contract.struct_id]
+        if not structure_ids:
+            return []
         return list(set(self.pool.get('hr.payroll.structure')._get_parent_structure(cr, uid, structure_ids, context=context)))
 
-hr_contract()
 
 class contrib_register(osv.osv):
     '''
@@ -167,7 +173,6 @@ class contrib_register(osv.osv):
                     context=context).company_id.id,
     }
 
-contrib_register()
 
 class hr_salary_rule_category(osv.osv):
     """
@@ -191,7 +196,6 @@ class hr_salary_rule_category(osv.osv):
                     context=context).company_id.id,
     }
 
-hr_salary_rule_category()
 
 class one2many_mod2(fields.one2many):
 
@@ -203,9 +207,15 @@ class one2many_mod2(fields.one2many):
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids), ('appears_on_payslip', '=', True)], limit=self._limit)
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+        ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids), ('appears_on_payslip', '=', True)], limit=self._limit)
+        for r in obj.pool[self._obj].read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            key = r[self._fields_id]
+            if isinstance(key, tuple):
+                # Read return a tuple in the case where the field is a many2one
+                # but we want to get the id of this field.
+                key = key[0]
+
+            res[key].append( r['id'] )
         return res
 
 class hr_payslip_run(osv.osv):
@@ -235,7 +245,6 @@ class hr_payslip_run(osv.osv):
     def close_payslip_run(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
-hr_payslip_run()
 
 class hr_payslip(osv.osv):
     '''
@@ -258,10 +267,16 @@ class hr_payslip(osv.osv):
         for r in res:
             result[r[0]].append(r[1])
         return result
+    
+    def _count_detail_payslip(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for details in self.browse(cr, uid, ids, context=context):
+            res[details.id] = len(details.line_ids)
+        return res
 
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True, states={'draft': [('readonly', False)]}, help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
-        'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Payslip Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number': fields.char('Reference', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_from': fields.date('Date From', readonly=True, states={'draft': [('readonly', False)]}, required=True),
@@ -276,17 +291,17 @@ class hr_payslip(osv.osv):
             \n* If the payslip is under verification, the status is \'Waiting\'. \
             \n* If the payslip is confirmed then status is set to \'Done\'.\
             \n* When user cancel payslip the status is \'Rejected\'.'),
-#        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'worked_days_line_ids': fields.one2many('hr.payslip.worked_days', 'payslip_id', 'Payslip Worked Days', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'note': fields.text('Description', readonly=True, states={'draft':[('readonly',False)]}),
+        'note': fields.text('Internal Note', readonly=True, states={'draft':[('readonly',False)]}),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_rule_category': fields.function(_get_lines_salary_rule_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Rule Category'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another", readonly=True, states={'draft': [('readonly', False)]}),
         'payslip_run_id': fields.many2one('hr.payslip.run', 'Payslip Batches', readonly=True, states={'draft': [('readonly', False)]}),
+        'payslip_count': fields.function(_count_detail_payslip, type='integer', string="Payslip Computation Details"),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
@@ -331,13 +346,12 @@ class hr_payslip(osv.osv):
 
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
         for payslip in self.browse(cr, uid, ids, context=context):
             id_copy = self.copy(cr, uid, payslip.id, {'credit_note': True, 'name': _('Refund: ')+payslip.name}, context=context)
             self.compute_sheet(cr, uid, [id_copy], context=context)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'hr_verify_sheet', cr)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
-
+            self.signal_workflow(cr, uid, [id_copy], 'hr_verify_sheet')
+            self.signal_workflow(cr, uid, [id_copy], 'process_sheet')
+            
         form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
         form_res = form_id and form_id[1] or False
         tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')
@@ -572,7 +586,7 @@ class hr_payslip(osv.osv):
         payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
         rules_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, rules)
 
-        localdict = {'categories': categories_obj, 'rules': rules_obj, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
+        baselocaldict = {'categories': categories_obj, 'rules': rules_obj, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -582,11 +596,12 @@ class hr_payslip(osv.osv):
 
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             employee = contract.employee_id
-            localdict.update({'employee': employee, 'contract': contract})
+            localdict = dict(baselocaldict, employee=employee, contract=contract)
             for rule in obj_rule.browse(cr, uid, sorted_rule_ids, context=context):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 localdict['result_qty'] = 1.0
+                localdict['result_rate'] = 100
                 #check if the rule can be applied
                 if obj_rule.satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
@@ -716,7 +731,6 @@ class hr_payslip(osv.osv):
             res['value'].update({'struct_id': False})
         return self.onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
 
-hr_payslip()
 
 class hr_payslip_worked_days(osv.osv):
     '''
@@ -738,7 +752,6 @@ class hr_payslip_worked_days(osv.osv):
     _defaults = {
         'sequence': 10,
     }
-hr_payslip_worked_days()
 
 class hr_payslip_input(osv.osv):
     '''
@@ -761,7 +774,6 @@ class hr_payslip_input(osv.osv):
         'amount': 0.0,
     }
 
-hr_payslip_input()
 
 class hr_salary_rule(osv.osv):
 
@@ -839,6 +851,7 @@ result = rules.NET > categories.NET * 0.10''',
         'quantity': '1.0',
      }
 
+    @api.cr_uid_ids_context
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record
@@ -899,7 +912,6 @@ result = rules.NET > categories.NET * 0.10''',
             except:
                 raise osv.except_osv(_('Error!'), _('Wrong python condition defined for salary rule %s (%s).')% (rule.name, rule.code))
 
-hr_salary_rule()
 
 class hr_rule_input(osv.osv):
     '''
@@ -914,7 +926,6 @@ class hr_rule_input(osv.osv):
         'input_id': fields.many2one('hr.salary.rule', 'Salary Rule Input', required=True)
     }
 
-hr_rule_input()
 
 class hr_payslip_line(osv.osv):
     '''
@@ -949,16 +960,7 @@ class hr_payslip_line(osv.osv):
         'rate': 100.0,
     }
 
-hr_payslip_line()
 
-class hr_payroll_structure(osv.osv):
-
-    _inherit = 'hr.payroll.structure'
-    _columns = {
-        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
-    }
-
-hr_payroll_structure()
 
 class hr_employee(osv.osv):
     '''
@@ -986,11 +988,18 @@ class hr_employee(osv.osv):
             res[employee.id] = {'basic': result['sum']}
         return res
 
+    def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
+        Payslip = self.pool['hr.payslip']
+        return {
+            employee_id: Payslip.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
+
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
+        'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
     }
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

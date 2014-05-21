@@ -74,6 +74,7 @@ class ir_import(orm.TransientModel):
         :param str model: name of the model to get fields form
         :param int landing: depth of recursion into o2m fields
         """
+        model_obj = self.pool[model]
         fields = [{
             'id': 'id',
             'name': 'id',
@@ -81,8 +82,11 @@ class ir_import(orm.TransientModel):
             'required': False,
             'fields': [],
         }]
-        fields_got = self.pool[model].fields_get(cr, uid, context=context)
+        fields_got = model_obj.fields_get(cr, uid, context=context)
+        blacklist = orm.MAGIC_COLUMNS + [model_obj.CONCURRENCY_CHECK_FIELD]
         for name, field in fields_got.iteritems():
+            if name in blacklist:
+                continue
             # an empty string means the field is deprecated, @deprecated must
             # be absent or False to mean not-deprecated
             if field.get('deprecated', False) is not False:
@@ -114,6 +118,8 @@ class ir_import(orm.TransientModel):
             elif field['type'] == 'one2many' and depth:
                 f['fields'] = self.get_fields(
                     cr, uid, field['relation'], context=context, depth=depth-1)
+                if self.pool['res.users'].has_group(cr, uid, 'base.group_no_one'):
+                    f['fields'].append({'id' : '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': []})
 
             fields.append(f)
 
@@ -224,12 +230,13 @@ class ir_import(orm.TransientModel):
             headers, matches = self._match_headers(rows, fields, options)
             # Match should have consumed the first row (iif headers), get
             # the ``count`` next rows for preview
-            preview = itertools.islice(rows, count)
+            preview = list(itertools.islice(rows, count))
+            assert preview, "CSV file seems to have no content"
             return {
                 'fields': fields,
                 'matches': matches or False,
                 'headers': headers or False,
-                'preview': list(preview),
+                'preview': preview,
             }
         except Exception, e:
             # Due to lazy generators, UnicodeDecodeError (for

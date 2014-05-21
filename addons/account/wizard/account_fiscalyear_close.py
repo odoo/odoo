@@ -38,7 +38,7 @@ class account_fiscalyear_close(osv.osv_memory):
        'report_name': fields.char('Name of new entries',size=64, required=True, help="Give name of the new entries"),
     }
     _defaults = {
-        'report_name': _('End of Fiscal Year Entry'),
+        'report_name': lambda self, cr, uid, context: _('End of Fiscal Year Entry'),
     }
 
     def data_save(self, cr, uid, ids, context=None):
@@ -62,6 +62,7 @@ class account_fiscalyear_close(osv.osv_memory):
                 raise osv.except_osv(_('Warning!'), _('The entries to reconcile should belong to the same company.'))
             r_id = self.pool.get('account.move.reconcile').create(cr, uid, {'type': 'auto', 'opening_reconciliation': True})
             cr.execute('update account_move_line set reconcile_id = %s where id in %s',(r_id, tuple(ids),))
+            obj_acc_move_line.invalidate_cache(cr, uid, ['reconcile_id'], ids, context=context)
             return r_id
 
         obj_acc_period = self.pool.get('account.period')
@@ -175,6 +176,7 @@ class account_fiscalyear_close(osv.osv_memory):
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
                                           WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
+            self.invalidate_cache(cr, uid, context=context)
 
         #2. report of the accounts with defferal method == 'detail'
         cr.execute('''
@@ -203,7 +205,7 @@ class account_fiscalyear_close(osv.osv_memory):
                    WHERE account_id IN %s
                      AND ''' + query_line + ''')
                      ''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
-
+            self.invalidate_cache(cr, uid, context=context)
 
         #3. report of the accounts with defferal method == 'balance'
         cr.execute('''
@@ -224,14 +226,6 @@ class account_fiscalyear_close(osv.osv_memory):
         query_2nd_part = ""
         query_2nd_part_args = []
         for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
-            balance_in_currency = 0.0
-            if account.currency_id:
-                cr.execute('SELECT sum(COALESCE(amount_currency,0.0)) as balance_in_currency FROM account_move_line ' \
-                        'WHERE account_id = %s ' \
-                            'AND ' + query_line + ' ' \
-                            'AND currency_id = %s', (account.id, account.currency_id.id))
-                balance_in_currency = cr.dictfetchone()['balance_in_currency']
-
             company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
             if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
                 if query_2nd_part:
@@ -246,11 +240,12 @@ class account_fiscalyear_close(osv.osv_memory):
                        period.id,
                        account.id,
                        account.currency_id and account.currency_id.id or None,
-                       balance_in_currency,
+                       account.foreign_balance if account.currency_id else 0.0,
                        account.company_id.id,
                        'draft')
         if query_2nd_part:
             cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
+            self.invalidate_cache(cr, uid, context=context)
 
         #validate and centralize the opening move
         obj_acc_move.validate(cr, uid, [move_id], context=context)
@@ -275,9 +270,9 @@ class account_fiscalyear_close(osv.osv_memory):
         cr.execute('UPDATE account_fiscalyear ' \
                     'SET end_journal_period_id = %s ' \
                     'WHERE id = %s', (ids[0], old_fyear.id))
+        obj_acc_fiscalyear.invalidate_cache(cr, uid, ['end_journal_period_id'], [old_fyear.id], context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
-account_fiscalyear_close()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -31,7 +31,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             [('all', 'Invoice the whole sales order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
                 ('lines', 'Some order lines')],
             'What do you want to invoice?', required=True,
-            help="""Use All to create the final invoice.
+            help="""Use Invoice the whole sale order to create the final invoice.
                 Use Percentage to invoice a percentage of the total amount.
                 Use Fixed Price to invoice a specific amound in advance.
                 Use Some Order Lines to invoice a selection of the sales order lines."""),
@@ -78,7 +78,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
-                    uom_id=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+                    False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
             res = val['value']
 
             # determine and check income account
@@ -86,7 +86,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 prop = ir_property_obj.get(cr, uid,
                             'property_account_income_categ', 'product.category', context=context)
                 prop_id = prop and prop.id or False
-                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
+                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position or False, prop_id)
                 if not account_id:
                     raise osv.except_osv(_('Configuration Error!'),
                             _('There is no income account defined as global property.'))
@@ -210,6 +210,5 @@ class sale_advance_payment_inv(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-sale_advance_payment_inv()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

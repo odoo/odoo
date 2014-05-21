@@ -23,7 +23,6 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -53,10 +52,19 @@ class account_invoice_refund(osv.osv_memory):
         journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','=',company_id)], limit=1, context=context)
         return journal and journal[0] or False
 
+    def _get_reason(self, cr, uid, context=None):
+        active_id = context and context.get('active_id', False)
+        if active_id:
+            inv = self.pool.get('account.invoice').browse(cr, uid, active_id, context=context)
+            return inv.name
+        else:
+            return ''
+
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
         'filter_refund': 'refund',
+        'description': _get_reason,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -90,7 +98,6 @@ class account_invoice_refund(osv.osv_memory):
         account_m_line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        wf_service = netsvc.LocalService('workflow')
         inv_tax_obj = self.pool.get('account.invoice.tax')
         inv_line_obj = self.pool.get('account.invoice.line')
         res_users_obj = self.pool.get('res.users')
@@ -158,11 +165,10 @@ class account_invoice_refund(osv.osv_memory):
                     to_reconcile_ids = {}
                     for line in movelines:
                         if line.account_id.id == inv.account_id.id:
-                            to_reconcile_ids[line.account_id.id] = [line.id]
-                        if type(line.reconcile_id) != osv.orm.browse_null:
-                            reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
-                    wf_service.trg_validate(uid, 'account.invoice', \
-                                        refund.id, 'invoice_open', cr)
+                            to_reconcile_ids.setdefault(line.account_id.id, []).append(line.id)
+                        if line.reconcile_id:
+                            line.reconcile_id.unlink()
+                    refund.signal_workflow('invoice_open')
                     refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
                     for tmpline in  refund.move_id.line_id:
                         if tmpline.account_id.id == inv.account_id.id:
@@ -183,10 +189,10 @@ class account_invoice_refund(osv.osv_memory):
                                     'journal_id', 'period_id'], context=context)
                         invoice = invoice[0]
                         del invoice['id']
-                        invoice_lines = inv_line_obj.read(cr, uid, invoice['invoice_line'], context=context)
-                        invoice_lines = inv_obj._refund_cleanup_lines(cr, uid, invoice_lines)
-                        tax_lines = inv_tax_obj.read(cr, uid, invoice['tax_line'], context=context)
-                        tax_lines = inv_obj._refund_cleanup_lines(cr, uid, tax_lines)
+                        invoice_lines = inv_line_obj.browse(cr, uid, invoice['invoice_line'], context=context)
+                        invoice_lines = inv_obj._refund_cleanup_lines(cr, uid, invoice_lines, context=context)
+                        tax_lines = inv_tax_obj.browse(cr, uid, invoice['tax_line'], context=context)
+                        tax_lines = inv_obj._refund_cleanup_lines(cr, uid, tax_lines, context=context)
                         invoice.update({
                             'type': inv.type,
                             'date_invoice': date,
@@ -206,13 +212,15 @@ class account_invoice_refund(osv.osv_memory):
                             if 'value' in data and data['value']:
                                 inv_obj.write(cr, uid, [inv_id], data['value'])
                         created_inv.append(inv_id)
+
             xml_id = (inv.type == 'out_refund') and 'action_invoice_tree1' or \
                      (inv.type == 'in_refund') and 'action_invoice_tree2' or \
                      (inv.type == 'out_invoice') and 'action_invoice_tree3' or \
                      (inv.type == 'in_invoice') and 'action_invoice_tree4'
             result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
             id = result and result[1] or False
-            result = act_obj.read(cr, uid, id, context=context)
+
+            result = act_obj.read(cr, uid, [id], context=context)[0]
             invoice_domain = eval(result['domain'])
             invoice_domain.append(('id', 'in', created_inv))
             result['domain'] = invoice_domain
@@ -223,6 +231,5 @@ class account_invoice_refund(osv.osv_memory):
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
 
 
-account_invoice_refund()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

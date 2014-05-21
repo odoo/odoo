@@ -20,21 +20,12 @@
 ##############################################################################
 
 import threading
-from openerp import pooler
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 
 class procurement_compute_all(osv.osv_memory):
     _name = 'procurement.order.compute.all'
     _description = 'Compute all schedulers'
-
-    _columns = {
-        'automatic': fields.boolean('Automatic orderpoint',help='Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.'),
-    }
-
-    _defaults = {
-         'automatic': lambda *a: False,
-    }
 
     def _procure_calculation_all(self, cr, uid, ids, context=None):
         """
@@ -46,10 +37,8 @@ class procurement_compute_all(osv.osv_memory):
         """
         proc_obj = self.pool.get('procurement.order')
         #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
-        new_cr = pooler.get_db(cr.dbname).cursor()
-        for proc in self.browse(new_cr, uid, ids, context=context):
-            proc_obj.run_scheduler(new_cr, uid, automatic=proc.automatic, use_new_cursor=new_cr.dbname,\
-                    context=context)
+        new_cr = self.pool.cursor()
+        proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, context=context)
         #close the new cursor
         new_cr.close()
         return {}
@@ -66,6 +55,5 @@ class procurement_compute_all(osv.osv_memory):
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}
 
-procurement_compute_all()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

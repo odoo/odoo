@@ -1,66 +1,82 @@
 openerp.pad = function(instance) {
+    var _t = instance.web._t;
     
-    instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
+    instance.web.form.FieldPad = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeWidgetMixin, {
         template: 'FieldPad',
-        configured: false,
         content: "",
-        start: function() {
-            this._super();
-            var self  = this;
-            this.on('change:effective_readonly',this,function(){
-                self.renderElement();
+        init: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+            this._configured_deferred = this.view.dataset.call('pad_is_configured').done(function(data) {
+                self.set("configured", !!data);
+            }).fail(function(data, event) {
+                event.preventDefault();
+                self.set("configured", true);
             });
+            this.pad_loading_request = null;
+        },
+        initialize_content: function() {
+            var self = this;
+            this.$('.oe_pad_switch').click(function() {
+                self.$el.toggleClass('oe_pad_fullscreen');
+                self.$el.find('.oe_pad_switch').toggleClass('fa-expand fa-compress');
+                self.view.$el.find('.oe_chatter').toggle();
+            });
+            this._configured_deferred.always(function() {
+                var configured = self.get('configured');
+                self.$(".oe_unconfigured").toggle(!configured);
+                self.$(".oe_configured").toggle(configured);
+            });
+            this.render_value();
         },
         render_value: function() {
             var self = this;
-            var _super = _.bind(this._super, this);
-            if (this.get("value") === false || this.get("value") === "") {
-                self.view.dataset.call('pad_generate_url',{context:{
-                        model: self.view.model,
-                        field_name: self.name,
-                        object_id: self.view.datarecord.id
-                    }}).done(function(data) {
-                    if(data&&data.url){
-                        self.set({value: data.url});
-                        _super(data.url);
-                        self.renderElement();
+            $.when(this._configured_deferred, this.pad_loading_request).always(function() {
+                if (! self.get('configured')) {
+                    return;
+                };
+                var value = self.get('value');
+                if (self.get('effective_readonly')) {
+                    if (_.str.startsWith(value, 'http')) {
+                        self.pad_loading_request = self.view.dataset.call('pad_get_content', {url: value}).done(function(data) {
+                            self.$('.oe_pad_content').removeClass('oe_pad_loading').html('<div class="oe_pad_readonly"><div>');
+                            self.$('.oe_pad_readonly').html(data);
+                        }).fail(function() {
+                            self.$('.oe_pad_content').text(_t('Unable to load pad'));
+                        });
+                    } else {
+                        self.$('.oe_pad_content').addClass('oe_pad_loading').show().text(_t("This pad will be initialized on first edit"));
                     }
-                });
-            } else {
-                self.renderElement();
-            }
-            this._dirty_flag = true;
-        },
-        renderElement: function(){
-            var self  = this;
-            var value = this.get('value');
-            if (this.pad_loading_request) {
-                this.pad_loading_request.abort();
-            }
-            if(!_.str.startsWith(value,'http')){
-                this.configured = false;
-                this.content = "";
-            }else{
-                this.configured = true;
-                if(!this.get('effective_readonly')){
-                    this.content = '<iframe width="100%" height="100%" frameborder="0" src="'+value+'?showChat=false&userName='+this.session.username+'"></iframe>';
-                }else{
-                    this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
-                    this.pad_loading_request = $.get(value+'/export/html')
-                    .done(function(data){
-                        groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
-                        data = (groups || []).length >= 2 ? groups[1] : '';
-                        self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
-                        self.$('.oe_pad_readonly').html(data);
-                    }).error(function(){
-                        self.$('.oe_pad_content').text('Unable to load pad');
+                }
+                else {
+                    var def = $.when();
+                    if (! value || !_.str.startsWith(value, 'http')) {
+                        def = self.view.dataset.call('pad_generate_url', {
+                            context: {
+                                model: self.view.model,
+                                field_name: self.name,
+                                object_id: self.view.datarecord.id
+                            },
+                        }).done(function(data) {
+                            if (! data.url) {
+                                self.set("configured", false);
+                            } else {
+                                self.set("value", data.url);
+                            }
+                        });
+                    }
+                    def.then(function() {
+                        value = self.get('value');
+                        if (_.str.startsWith(value, 'http')) {
+                            var content = '<iframe width="100%" height="100%" frameborder="0" src="' + value + '?showChat=false&userName=' + self.session.username + '"></iframe>';
+                            self.$('.oe_pad_content').html(content);
+                            self._dirty_flag = true;
+                        }
+                        else {
+                            self.$('.oe_pad_content').text(value);
+                        }
                     });
                 }
-            }
-            this._super();
-            this.$('.oe_pad_content').html(this.content);
-            this.$('.oe_pad_switch').click(function(){
-                self.$el.toggleClass('oe_pad_fullscreen');
             });
         },
     });

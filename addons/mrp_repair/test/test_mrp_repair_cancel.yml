@@ -1,6 +1,9 @@
 -
   In order to test the cancel flow of mrp_repair module,
-  I start by creating new copy Repair order for "PC Assemble SC234" product.
+  I start by creating new copy Repair order for "PC Assemble SC234" product with giving access rights of mrp user.
+-
+  !context
+    uid: 'res_mrp_repair_user'
 -
   !python {model: mrp.repair}: |
     copy_id = self.copy(cr, uid, ref("mrp_repair_rmrp1"))

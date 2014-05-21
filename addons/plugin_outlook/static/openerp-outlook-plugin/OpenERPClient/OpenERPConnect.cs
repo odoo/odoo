@@ -377,20 +377,6 @@ namespace OpenERPClient
             return version;
         }
 
-        public bool check_connectivity()
-        {
-            /*
-            It will check connection on given server url.
-        	
-            :return : True or False.
-            */
-
-            this.Open(OpenERPClient.OpenERPService.Common);
-            bool flag = this.rpcclient.check_connectivity();
-            this.Close();
-            return flag;
-        }
-
 
     }
 

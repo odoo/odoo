@@ -19,8 +19,9 @@
 ##############################################################################
 
 import datetime
+
+import openerp
 from openerp.osv import fields, osv
-from openerp import pooler
 
 class stock_production_lot(osv.osv):
     _inherit = 'stock.production.lot'
@@ -34,7 +35,7 @@ class stock_production_lot(osv.osv):
             if not context.get('product_id', False):
                 date = False
             else:
-                product = pooler.get_pool(cr.dbname).get('product.product').browse(
+                product = openerp.registry(cr.dbname)['product.product'].browse(
                     cr, uid, context['product_id'])
                 duration = getattr(product, dtype)
                 # set date to False when no expiry time specified on the product
@@ -73,7 +74,28 @@ class stock_production_lot(osv.osv):
         'removal_date': _get_date('removal_time'),
         'alert_date': _get_date('alert_time'),
     }
-stock_production_lot()
+
+
+class stock_quant(osv.osv):
+    _inherit = 'stock.quant'
+
+    def _get_quants(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.quant').search(cr, uid, [('lot_id', 'in', ids)], context=context)
+
+    _columns = {
+        'removal_date': fields.related('lot_id', 'removal_date', type='datetime', string='Removal Date',
+            store={
+                'stock.quant': (lambda self, cr, uid, ids, ctx: ids, ['lot_id'], 20),
+                'stock.production.lot': (_get_quants, ['removal_date'], 20),
+            }),
+    }
+
+    def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
+        if removal_strategy == 'fefo':
+            order = 'removal_date, id'
+            return self._quants_get_order(cr, uid, location, product, qty, domain, order, context=context)
+        return super(stock_quant, self).apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
+
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -87,5 +109,4 @@ class product_product(osv.osv):
         'alert_time': fields.integer('Product Alert Time',
             help='When a new a Serial Number is issued, this is the number of days before an alert should be notified.'),
     }
-product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

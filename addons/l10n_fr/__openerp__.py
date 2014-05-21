@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 {
@@ -55,6 +55,9 @@ configuration of their taxes and fiscal positions manually.
 """,
     'depends': ['base_iban', 'account', 'account_chart', 'base_vat', 'l10n_fr_rib'],
     'data': [
+        'views/report_l10nfrbilan.xml',
+        'views/report_l10nfrresultat.xml',
+        'l10n_fr_reports.xml',
         'fr_report.xml',
         'plan_comptable_general.xml',
         'l10n_fr_view.xml',
@@ -72,5 +75,5 @@ configuration of their taxes and fiscal positions manually.
     'installable': True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -39,24 +39,29 @@ class account_bank_statement(osv.osv):
         return res
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
+        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
             if st.line_ids:
+                line_ids = [l.id for l in st.line_ids]
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='confirm' WHERE id in %s ",
-                    (tuple([x.id for x in st.line_ids]),))
+                    (tuple(line_ids),))
+                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
     def button_cancel(self, cr, uid, ids, context=None):
+        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
         super(account_bank_statement, self).button_cancel(cr, uid, ids, context=context)
         for st in self.browse(cr, uid, ids, context=context):
             if st.line_ids:
+                line_ids = [l.id for l in st.line_ids]
                 cr.execute("UPDATE account_bank_statement_line  \
                     SET state='draft' WHERE id in %s ",
-                    (tuple([x.id for x in st.line_ids]),))
+                    (tuple([line_ids]),))
+                bank_statement_line_obj.invalidate_cache(cr, uid, ['state'], line_ids, context=context)
         return True
 
-account_bank_statement()
 
 class account_bank_statement_line_global(osv.osv):
     _name = 'account.bank.statement.line.global'
@@ -100,7 +105,6 @@ class account_bank_statement_line_global(osv.osv):
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-account_bank_statement_line_global()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -130,6 +134,5 @@ class account_bank_statement_line(osv.osv):
             Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
-account_bank_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

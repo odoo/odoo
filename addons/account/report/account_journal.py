@@ -20,8 +20,10 @@
 ##############################################################################
 
 import time
-from common_report_header import common_report_header
+from openerp.osv import osv
 from openerp.report import report_sxw
+from common_report_header import common_report_header
+
 
 class journal_print(report_sxw.rml_parse, common_report_header):
 
@@ -154,6 +156,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             journal_id = [journal_id]
         obj_mline = self.pool.get('account.move.line')
         self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
+        self.pool.get('account.journal.period').invalidate_cache(self.cr, self.uid, ['state'], context=self.context)
 
         move_state = ['draft','posted']
         if self.target_move == 'posted':
@@ -189,13 +192,25 @@ class journal_print(report_sxw.rml_parse, common_report_header):
         return data['form']['amount_currency']
 
     def _get_sortby(self, data):
+        # TODO: deprecated, to remove in trunk
         if self.sort_selection == 'date':
-            return 'Date'
+            return self._translate('Date')
         elif self.sort_selection == 'ref':
-            return 'Reference Number'
-        return 'Date'
+            return self._translate('Reference Number')
+        return self._translate('Date')
 
-report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header='external')
-report_sxw.report_sxw('report.account.journal.period.print.sale.purchase', 'account.journal.period', 'addons/account/report/account_journal_sale_purchase.rml', parser=journal_print, header='external')
+
+class report_journal(osv.AbstractModel):
+    _name = 'report.account.report_journal'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_journal'
+    _wrapped_report_class = journal_print
+
+
+class report_salepurchasejournal(osv.AbstractModel):
+    _name = 'report.account.report_salepurchasejournal'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_salepurchasejournal'
+    _wrapped_report_class = journal_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

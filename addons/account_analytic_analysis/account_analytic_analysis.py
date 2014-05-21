@@ -18,6 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from dateutil.relativedelta import relativedelta
+import datetime
+import logging
+import time
+import traceback
 
 from openerp.osv import osv, fields
 from openerp.osv.orm import intersect, except_orm
@@ -25,6 +30,57 @@ import openerp.tools
 from openerp.tools.translate import _
 
 from openerp.addons.decimal_precision import decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
+
+class account_analytic_invoice_line(osv.osv):
+    _name = "account.analytic.invoice.line"
+
+    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict, context=None):
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = line.quantity * line.price_unit
+            if line.analytic_account_id.pricelist_id:
+                cur = line.analytic_account_id.pricelist_id.currency_id
+                res[line.id] = self.pool.get('res.currency').round(cr, uid, cur, res[line.id])
+        return res
+
+    _columns = {
+        'product_id': fields.many2one('product.product','Product',required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'name': fields.text('Description', required=True),
+        'quantity': fields.float('Quantity', required=True),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure',required=True),
+        'price_unit': fields.float('Unit Price', required=True),
+        'price_subtotal': fields.function(_amount_line, string='Sub Total', type="float",digits_compute= dp.get_precision('Account')),
+    }
+    _defaults = {
+        'quantity' : 1,
+    }
+
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', partner_id=False, price_unit=False, pricelist_id=False, company_id=None, context=None):
+        context = context or {}
+        uom_obj = self.pool.get('product.uom')
+        company_id = company_id or False
+        context.update({'company_id': company_id, 'force_company': company_id, 'pricelist_id': pricelist_id})
+
+        if not product:
+            return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
+        if partner_id:
+            part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            if part.lang:
+                context.update({'lang': part.lang})
+
+        result = {}
+        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price_unit or res.list_price or 0.0})
+
+        res_final = {'value':result}
+        if result['uom_id'] != res.uom_id.id:
+            selected_uom = uom_obj.browse(cr, uid, result['uom_id'], context=context)
+            new_price = uom_obj._compute_price(cr, uid, res.uom_id.id, res_final['value']['price_unit'], result['uom_id'])
+            res_final['value']['price_unit'] = new_price
+        return res_final
 
 
 class account_analytic_account(osv.osv):
@@ -202,15 +258,14 @@ class account_analytic_account(osv.osv):
             return res
 
         if child_ids:
-            cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(amount), 0.0) \
-                    FROM account_analytic_line \
-                    JOIN account_analytic_journal \
-                        ON account_analytic_line.journal_id = account_analytic_journal.id  \
-                    WHERE account_analytic_line.account_id IN %s \
-                        AND account_analytic_journal.type = 'sale' \
-                    GROUP BY account_analytic_line.account_id", (child_ids,))
-            for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
+            #Search all invoice lines not in cancelled state that refer to this analytic account
+            inv_line_obj = self.pool.get("account.invoice.line")
+            inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', '!=', 'cancel')], context=context)
+            for line in inv_line_obj.browse(cr, uid, inv_lines, context=context):
+                res[line.account_analytic_id.id] += line.price_subtotal
+        for acc in self.browse(cr, uid, res.keys(), context=context):
+            res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
+
         res_final = res
         return res_final
 
@@ -291,13 +346,12 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('partner_id', '=', account.partner_id.id)], context=context)
+            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
-                if not sale.invoiced:
-                    res[account.id] += sale.amount_untaxed
-                    for invoice in sale.invoice_ids:
-                        if invoice.state not in ('draft', 'cancel'):
-                            res[account.id] -= invoice.amount_untaxed
+                res[account.id] += sale.amount_untaxed
+                for invoice in sale.invoice_ids:
+                    if invoice.state != 'cancel':
+                        res[account.id] -= invoice.amount_untaxed
         return res
 
     def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
@@ -395,6 +449,7 @@ class account_analytic_account(osv.osv):
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                 store={
                                                     'account.analytic.line' : (_get_analytic_account, None, 20),
+                                                    'account.analytic.account': (lambda self, cr, uid, ids, c=None: ids, ['quantity_max'], 10),
                                                 }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
@@ -423,7 +478,7 @@ class account_analytic_account(osv.osv):
         'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
             help="Computed using the formula: Maximum Time - Total Worked Time"),
         'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
-            help="Computed using the formula: Maximum Time - Total Invoiced Time"),
+            help="Computed using the formula: Expected on timesheets - Total invoiced on timesheets"),
         'fix_price_to_invoice': fields.function(_fix_price_to_invoice_calc, type='float', string='Remaining Time',
             help="Sum of quotations for this contract."),
         'timesheet_ca_invoiced': fields.function(_timesheet_ca_invoiced_calc, type='float', string='Remaining Time',
@@ -452,6 +507,22 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
+        'recurring_invoice_line_ids': fields.one2many('account.analytic.invoice.line', 'analytic_account_id', 'Invoice Lines'),
+        'recurring_invoices' : fields.boolean('Generate recurring invoices automatically'),
+        'recurring_rule_type': fields.selection([
+            ('daily', 'Day(s)'),
+            ('weekly', 'Week(s)'),
+            ('monthly', 'Month(s)'),
+            ('yearly', 'Year(s)'),
+            ], 'Recurrency', help="Invoice automatically repeat at specified interval"),
+        'recurring_interval': fields.integer('Repeat Every', help="Repeat every (Days/Week/Month/Year)"),
+        'recurring_next_date': fields.date('Date of Next Invoice'),
+    }
+
+    _defaults = {
+        'recurring_interval': 1,
+        'recurring_next_date': lambda *a: time.strftime('%Y-%m-%d'),
+        'recurring_rule_type':'monthly'
     }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):
@@ -459,7 +530,7 @@ class account_analytic_account(osv.osv):
             context = {}
         sale_ids = self.pool.get('sale.order').search(cr,uid,[('project_id','=',context.get('search_default_project_id',False)),('partner_id','in',context.get('search_default_partner_id',False))])
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
-        name = _('Sales Order Lines of %s') % ','.join(names)
+        name = _('Sales Order Lines to Invoice of %s') % ','.join(names)
         return {
             'type': 'ir.actions.act_window',
             'name': name,
@@ -471,20 +542,222 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, fix_price_invoices=False, invoice_on_timesheets=False, recurring_invoices=False, context=None):
         if not template_id:
             return {}
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
-        if template_id and 'value' in res:
-            template = self.browse(cr, uid, template_id, context=context)
+        obj_analytic_line = self.pool.get('account.analytic.invoice.line')
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
+
+        template = self.browse(cr, uid, template_id, context=context)
+        
+        if not fix_price_invoices:
             res['value']['fix_price_invoices'] = template.fix_price_invoices
+            res['value']['amount_max'] = template.amount_max
+        if not invoice_on_timesheets:
             res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
             res['value']['hours_qtt_est'] = template.hours_qtt_est
-            res['value']['amount_max'] = template.amount_max
+        
+        if template.to_invoice.id:
             res['value']['to_invoice'] = template.to_invoice.id
+        if template.pricelist_id.id:
             res['value']['pricelist_id'] = template.pricelist_id.id
+        if not recurring_invoices:
+            invoice_line_ids = []
+            for x in template.recurring_invoice_line_ids:
+                invoice_line_ids.append((0, 0, {
+                    'product_id': x.product_id.id,
+                    'uom_id': x.uom_id.id,
+                    'name': x.name,
+                    'quantity': x.quantity,
+                    'price_unit': x.price_unit,
+                    'analytic_account_id': x.analytic_account_id and x.analytic_account_id.id or False,
+                }))
+            res['value']['recurring_invoices'] = template.recurring_invoices
+            res['value']['recurring_interval'] = template.recurring_interval
+            res['value']['recurring_rule_type'] = template.recurring_rule_type
+            res['value']['recurring_invoice_line_ids'] = invoice_line_ids
         return res
-account_analytic_account()
+
+    def onchange_recurring_invoices(self, cr, uid, ids, recurring_invoices, date_start=False, context=None):
+        value = {}
+        if date_start and recurring_invoices:
+            value = {'value': {'recurring_next_date': date_start}}
+        return value
+
+    def cron_account_analytic_account(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        remind = {}
+
+        def fill_remind(key, domain, write_pending=False):
+            base_domain = [
+                ('type', '=', 'contract'),
+                ('partner_id', '!=', False),
+                ('manager_id', '!=', False),
+                ('manager_id.email', '!=', False),
+            ]
+            base_domain.extend(domain)
+
+            accounts_ids = self.search(cr, uid, base_domain, context=context, order='name asc')
+            accounts = self.browse(cr, uid, accounts_ids, context=context)
+            for account in accounts:
+                if write_pending:
+                    account.write({'state' : 'pending'})
+                remind_user = remind.setdefault(account.manager_id.id, {})
+                remind_type = remind_user.setdefault(key, {})
+                remind_partner = remind_type.setdefault(account.partner_id, []).append(account)
+
+        # Already expired
+        fill_remind("old", [('state', 'in', ['pending'])])
+
+        # Expires now
+        fill_remind("new", [('state', 'in', ['draft', 'open']), '|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)], True)
+
+        # Expires in less than 30 days
+        fill_remind("future", [('state', 'in', ['draft', 'open']), ('date', '!=', False), ('date', '<', (datetime.datetime.now() + datetime.timedelta(30)).strftime("%Y-%m-%d"))])
+
+        context['base_url'] = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        context['action_id'] = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'action_account_analytic_overdue_all')[1]
+        template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_analytic_analysis', 'account_analytic_cron_email_template')[1]
+        for user_id, data in remind.items():
+            context["data"] = data
+            _logger.debug("Sending reminder to uid %s", user_id)
+            self.pool.get('email.template').send_mail(cr, uid, template_id, user_id, force_send=True, context=context)
+
+        return True
+
+    def onchange_invoice_on_timesheets(self, cr, uid, ids, invoice_on_timesheets, context=None):
+        if not invoice_on_timesheets:
+            return {'value': {'to_invoice': False}}
+        result = {'value': {'use_timesheets': True}}
+        try:
+            to_invoice = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
+            result['value']['to_invoice'] = to_invoice[1]
+        except ValueError:
+            pass
+        return result
+
+
+    def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
+        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Timesheets to Invoice of %s') % ','.join(names)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain' : domain,
+            'res_model': 'account.analytic.line',
+            'nodestroy': True,
+        }
+
+    def _prepare_invoice_data(self, cr, uid, contract, context=None):
+        context = context or {}
+
+        journal_obj = self.pool.get('account.journal')
+
+        if not contract.partner_id:
+            raise osv.except_osv(_('No Customer Defined!'),_("You must first select a Customer for Contract %s!") % contract.name )
+
+        fpos = contract.partner_id.property_account_position or False
+        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', contract.company_id.id or False)], limit=1)
+        if not journal_ids:
+            raise osv.except_osv(_('Error!'),
+            _('Please define a sale journal for the company "%s".') % (contract.company_id.name or '', ))
+
+        partner_payment_term = contract.partner_id.property_payment_term and contract.partner_id.property_payment_term.id or False
+
+        currency_id = False
+        if contract.pricelist_id:
+            currency_id = contract.pricelist_id.currency_id.id
+        elif contract.partner_id.property_product_pricelist:
+            currency_id = contract.partner_id.property_product_pricelist.currency_id.id
+        elif contract.company_id:
+            currency_id = contract.company_id.currency_id.id
+
+        invoice = {
+           'account_id': contract.partner_id.property_account_receivable.id,
+           'type': 'out_invoice',
+           'partner_id': contract.partner_id.id,
+           'currency_id': currency_id,
+           'journal_id': len(journal_ids) and journal_ids[0] or False,
+           'date_invoice': contract.recurring_next_date,
+           'origin': contract.code,
+           'fiscal_position': fpos and fpos.id,
+           'payment_term': partner_payment_term,
+           'company_id': contract.company_id.id or False,
+        }
+        return invoice
+
+    def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
+        fpos_obj = self.pool.get('account.fiscal.position')
+        fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
+        invoice_lines = []
+        for line in contract.recurring_invoice_line_ids:
+
+            res = line.product_id
+            account_id = res.property_account_income.id
+            if not account_id:
+                account_id = res.categ_id.property_account_income_categ.id
+            account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
+
+            taxes = res.taxes_id or False
+            tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
+
+            invoice_lines.append((0, 0, {
+                'name': line.name,
+                'account_id': account_id,
+                'account_analytic_id': contract.id,
+                'price_unit': line.price_unit or 0.0,
+                'quantity': line.quantity,
+                'uos_id': line.uom_id.id or False,
+                'product_id': line.product_id.id or False,
+                'invoice_line_tax_id': [(6, 0, tax_id)],
+            }))
+        return invoice_lines
+
+    def _prepare_invoice(self, cr, uid, contract, context=None):
+        invoice = self._prepare_invoice_data(cr, uid, contract, context=context)
+        invoice['invoice_line'] = self._prepare_invoice_lines(cr, uid, contract, invoice['fiscal_position'], context=context)
+        return invoice
+
+    def recurring_create_invoice(self, cr, uid, ids, context=None):
+        return self._recurring_create_invoice(cr, uid, ids, context=context)
+
+    def _cron_recurring_create_invoice(self, cr, uid, context=None):
+        return self._recurring_create_invoice(cr, uid, [], automatic=True, context=context)
+
+    def _recurring_create_invoice(self, cr, uid, ids, automatic=False, context=None):
+        context = context or {}
+        invoice_ids = []
+        current_date =  time.strftime('%Y-%m-%d')
+        if ids:
+            contract_ids = ids
+        else:
+            contract_ids = self.search(cr, uid, [('recurring_next_date','<=', current_date), ('state','=', 'open'), ('recurring_invoices','=', True), ('type', '=', 'contract')])
+        for contract in self.browse(cr, uid, contract_ids, context=context):
+            try:
+                invoice_values = self._prepare_invoice(cr, uid, contract, context=context)
+                invoice_ids.append(self.pool['account.invoice'].create(cr, uid, invoice_values, context=context))
+                next_date = datetime.datetime.strptime(contract.recurring_next_date or current_date, "%Y-%m-%d")
+                interval = contract.recurring_interval
+                if contract.recurring_rule_type == 'daily':
+                    new_date = next_date+relativedelta(days=+interval)
+                elif contract.recurring_rule_type == 'weekly':
+                    new_date = next_date+relativedelta(weeks=+interval)
+                else:
+                    new_date = next_date+relativedelta(months=+interval)
+                self.write(cr, uid, [contract.id], {'recurring_next_date': new_date.strftime('%Y-%m-%d')}, context=context)
+                if automatic:
+                    cr.commit()
+            except Exception:
+                if automatic:
+                    cr.rollback()
+                    _logger.error(traceback.format_exc())
+                else:
+                    raise
+        return invoice_ids
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
@@ -538,8 +811,6 @@ class account_analytic_account_summary_user(osv.osv):
                     lu.user_id as "user",
                     unit_amount
             from lu, mu)''')
-                   
-account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
     _name = "account_analytic_analysis.summary.month"
@@ -600,6 +871,4 @@ class account_analytic_account_summary_month(osv.osv):
                 'GROUP BY d.month, d.account_id ' \
                 ')')
 
-
-account_analytic_account_summary_month()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

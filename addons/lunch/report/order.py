@@ -72,7 +72,11 @@ class order(report_sxw.rml_parse):
             'get_note': self.get_note,
         })
 
-report_sxw.report_sxw('report.lunch.order.line', 'lunch.order.line',
-        'addons/lunch/report/order.rml',parser=order, header='external')
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+class report_lunchorder(osv.AbstractModel):
+    _name = 'report.lunch.report_lunchorder'
+    _inherit = 'report.abstract_report'
+    _template = 'lunch.report_lunchorder'
+    _wrapped_report_class = order
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

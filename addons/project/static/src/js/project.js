@@ -19,9 +19,7 @@ openerp.project = function(openerp) {
             dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM
-                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
-                        offset: 10
-                    });
+                    self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tooltip();
                 });
             });
         },
@@ -32,12 +30,6 @@ openerp.project = function(openerp) {
             if (self.dataset.model === 'project.project') {
                 self.project_display_members_names();
             }
-        },
-        on_record_moved: function(record, old_group, old_index, new_group, new_index){
-            var self = this;
-            this._super.apply(this, arguments);
-            if(new_group.state.folded)
-                new_group.do_action_toggle_fold();
         }
     });
 

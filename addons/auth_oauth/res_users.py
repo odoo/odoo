@@ -1,6 +1,6 @@
 import logging
 
-import urllib
+import werkzeug.urls
 import urlparse
 import urllib2
 import simplejson
@@ -25,7 +25,7 @@ class res_users(osv.Model):
     ]
 
     def _auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
-        params = urllib.urlencode({'access_token': access_token})
+        params = werkzeug.url_encode({'access_token': access_token})
         if urlparse.urlparse(endpoint)[4]:
             url = endpoint + '&' + params
         else:

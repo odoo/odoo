@@ -38,6 +38,13 @@ class hr_employee(osv.osv):
                 res[emp.id] = False
         return res
 
+    def _contracts_count(self, cr, uid, ids, field_name, arg, context=None):
+        Contract = self.pool['hr.contract']
+        return {
+            employee_id: Contract.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
+
     _columns = {
         'manager': fields.boolean('Is a Manager'),
         'medic_exam': fields.date('Medical Examination Date'),
@@ -47,9 +54,9 @@ class hr_employee(osv.osv):
         'vehicle_distance': fields.integer('Home-Work Dist.', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
         'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contracts_count': fields.function(_contracts_count, type='integer', string='Contracts'),
     }
 
-hr_employee()
 
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
@@ -57,7 +64,6 @@ class hr_contract_type(osv.osv):
     _columns = {
         'name': fields.char('Contract Type', size=32, required=True),
     }
-hr_contract_type()
 
 class hr_contract(osv.osv):
     _name = 'hr.contract'
@@ -90,6 +96,15 @@ class hr_contract(osv.osv):
         'type_id': _get_type
     }
 
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        if not employee_id:
+            return {'value': {'job_id': False}}
+        emp_obj = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        job_id = False
+        if emp_obj.job_id:
+            job_id = emp_obj.job_id.id
+        return {'value': {'job_id': job_id}}
+
     def _check_dates(self, cr, uid, ids, context=None):
         for contract in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
              if contract['date_start'] and contract['date_end'] and contract['date_start'] > contract['date_end']:
@@ -99,6 +114,5 @@ class hr_contract(osv.osv):
     _constraints = [
         (_check_dates, 'Error! Contract start-date must be less than contract end-date.', ['date_start', 'date_end'])
     ]
-hr_contract()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

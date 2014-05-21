@@ -19,71 +19,109 @@
 #
 ##############################################################################
 import logging
-import urllib
-
 import werkzeug
 
 import openerp
-from openerp.modules.registry import RegistryManager
-from ..res_users import SignupError
+from openerp.addons.auth_signup.res_users import SignupError
+from openerp.addons.web.controllers.main import ensure_db
+from openerp import http
+from openerp.http import request
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
-class Controller(openerp.addons.web.http.Controller):
-    _cp_path = '/auth_signup'
+class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
-    @openerp.addons.web.http.jsonrequest
-    def get_config(self, req, dbname):
-        """ retrieve the module config (which features are enabled) for the login page """
-        registry = RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            icp = registry.get('ir.config_parameter')
-            config = {
-                'signup': icp.get_param(cr, openerp.SUPERUSER_ID, 'auth_signup.allow_uninvited') == 'True',
-                'reset_password': icp.get_param(cr, openerp.SUPERUSER_ID, 'auth_signup.reset_password') == 'True',
-            }
-        return config
+    @http.route()
+    def web_login(self, *args, **kw):
+        ensure_db()
+        response = super(AuthSignupHome, self).web_login(*args, **kw)
+        response.qcontext.update(self.get_auth_signup_config())
+        if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
+            # Redirect if already logged in and redirect param is present
+            return http.redirect_with_hash(request.params.get('redirect'))
+        return response
 
-    @openerp.addons.web.http.jsonrequest
-    def retrieve(self, req, dbname, token):
-        """ retrieve the user info (name, login or email) corresponding to a signup token """
-        registry = RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            res_partner = registry.get('res.partner')
-            user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
-        return user_info
+    @http.route('/web/signup', type='http', auth='public', website=True, multilang=True)
+    def web_auth_signup(self, *args, **kw):
+        qcontext = self.get_auth_signup_qcontext()
 
-    @openerp.addons.web.http.jsonrequest
-    def signup(self, req, dbname, token, name, login, password):
-        """ sign up a user (new or existing)"""
-        values = {'name': name, 'login': login, 'password': password}
-        try:
-            self._signup_with_values(req, dbname, token, values)
-        except SignupError, e:
-            return {'error': openerp.tools.exception_to_unicode(e)}
-        return {}
+        if not qcontext.get('token') and not qcontext.get('signup_enabled'):
+            raise werkzeug.exceptions.NotFound()
 
-    def _signup_with_values(self, req, dbname, token, values):
-        registry = RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            res_users = registry.get('res.users')
-            res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
-
-    @openerp.addons.web.http.httprequest
-    def reset_password(self, req, dbname, login):
-        """ retrieve user, and perform reset password """
-        registry = RegistryManager.get(dbname)
-        with registry.cursor() as cr:
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
-                res_users = registry.get('res.users')
-                res_users.reset_password(cr, openerp.SUPERUSER_ID, login)
-                cr.commit()
-                message = 'An email has been sent with credentials to reset your password'
-            except Exception as e:
-                # signup error
+                self.do_signup(qcontext)
+                return super(AuthSignupHome, self).web_login(*args, **kw)
+            except (SignupError, AssertionError), e:
+                qcontext['error'] = _(e.message)
+
+        return request.render('auth_signup.signup', qcontext)
+
+    @http.route('/web/reset_password', type='http', auth='public', website=True, multilang=True)
+    def web_auth_reset_password(self, *args, **kw):
+        qcontext = self.get_auth_signup_qcontext()
+
+        if not qcontext.get('token') and not qcontext.get('reset_password_enabled'):
+            raise werkzeug.exceptions.NotFound()
+
+        if 'error' not in qcontext and request.httprequest.method == 'POST':
+            try:
+                if qcontext.get('token'):
+                    self.do_signup(qcontext)
+                    return super(AuthSignupHome, self).web_login(*args, **kw)
+                else:
+                    login = qcontext.get('login')
+                    assert login, "No login provided."
+                    res_users = request.registry.get('res.users')
+                    res_users.reset_password(request.cr, openerp.SUPERUSER_ID, login)
+                    qcontext['message'] = _("An email has been sent with credentials to reset your password")
+            except SignupError:
+                qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
-                message = e.message
-        params = [('action', 'login'), ('error_message', message)]
-        return werkzeug.utils.redirect("/#" + urllib.urlencode(params))
+            except Exception, e:
+                qcontext['error'] = _(e.message)
+
+
+        return request.render('auth_signup.reset_password', qcontext)
+
+    def get_auth_signup_config(self):
+        """retrieve the module config (which features are enabled) for the login page"""
+
+        icp = request.registry.get('ir.config_parameter')
+        return {
+            'signup_enabled': icp.get_param(request.cr, openerp.SUPERUSER_ID, 'auth_signup.allow_uninvited') == 'True',
+            'reset_password_enabled': icp.get_param(request.cr, openerp.SUPERUSER_ID, 'auth_signup.reset_password') == 'True',
+        }
+
+    def get_auth_signup_qcontext(self):
+        """ Shared helper returning the rendering context for signup and reset password """
+        qcontext = request.params.copy()
+        qcontext.update(self.get_auth_signup_config())
+        if qcontext.get('token'):
+            try:
+                # retrieve the user info (name, login or email) corresponding to a signup token
+                res_partner = request.registry.get('res.partner')
+                token_infos = res_partner.signup_retrieve_info(request.cr, openerp.SUPERUSER_ID, qcontext.get('token'))
+                for k, v in token_infos.items():
+                    qcontext.setdefault(k, v)
+            except:
+                qcontext['error'] = _("Invalid signup token")
+        return qcontext
+
+    def do_signup(self, qcontext):
+        """ Shared helper that creates a res.partner out of a token """
+        values = dict((key, qcontext.get(key)) for key in ('login', 'name', 'password'))
+        assert any([k for k in values.values()]), "The form was not properly filled in."
+        assert values.get('password') == qcontext.get('confirm_password'), "Passwords do not match; please retype them."
+        self._signup_with_values(qcontext.get('token'), values)
+        request.cr.commit()
+
+    def _signup_with_values(self, token, values):
+        db, login, password = request.registry['res.users'].signup(request.cr, openerp.SUPERUSER_ID, values, token)
+        request.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
+        uid = request.session.authenticate(db, login, password)
+        if not uid:
+            raise SignupError(_('Authentification Failed.'))
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

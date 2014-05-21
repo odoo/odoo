@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+      <!--Users-->
       <record id="base.user_demo" model="res.users">
-        <field name="groups_id" eval="[(4, ref('fleet.group_fleet_user'))]" />
+        <field name="groups_id" eval="[(4, ref('fleet.group_fleet_manager'))]" />
       </record>
 
       <record id="vehicle_state_inshop" model="fleet.vehicle.state">

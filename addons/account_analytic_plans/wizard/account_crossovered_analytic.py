@@ -24,6 +24,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class account_crossovered_analytic(osv.osv_memory):
     _name = "account.crossovered.analytic"
     _description = "Print Crossovered Analytic"
@@ -44,7 +45,7 @@ class account_crossovered_analytic(osv.osv_memory):
         res = cr.fetchall()
         acc_ids = [x[0] for x in res]
 
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         data['ref'] = data['ref'][0]
 
         obj_acc = self.pool.get('account.analytic.account').browse(cr, uid, data['ref'], context=context)
@@ -65,12 +66,6 @@ class account_crossovered_analytic(osv.osv_memory):
              'model': 'account.analytic.account',
              'form': data
         }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.analytic.account.crossovered.analytic',
-            'datas': datas,
-        }
-
-account_crossovered_analytic()
+        return self.pool['report'].get_action(cr, uid, [], 'account_analytic_plans.report_crossoveredanalyticplans', data=datas, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

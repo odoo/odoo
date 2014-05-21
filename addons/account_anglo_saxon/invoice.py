@@ -21,21 +21,25 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+from openerp.osv import osv, fields
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
+
+    _columns = {
+        'move_id': fields.many2one('stock.move', string="Move line", help="If the invoice was generated from a stock.picking, reference to the related move line."),
+    }
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         company_currency = inv.company_id.currency_id.id
-        def get_price(cr, uid, inv, company_currency,i_line):
+        def get_price(cr, uid, inv, company_currency, i_line, price_unit):
             cur_obj = self.pool.get('res.currency')
             if inv.currency_id.id != company_currency:
-                price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, i_line.product_id.standard_price * i_line.quantity, context={'date': inv.date_invoice})
+                price = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, price_unit * i_line.quantity, context={'date': inv.date_invoice})
             else:
-                price = i_line.product_id.standard_price * i_line.quantity
+                price = price_unit * i_line.quantity
             return price
 
         if inv.type in ('out_invoice','out_refund'):
@@ -60,12 +64,13 @@ class account_invoice_line(osv.osv):
                     if not cacc:
                         cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
                     if dacc and cacc:
+                        price_unit = i_line.move_id and i_line.move_id.price_unit or i_line.product_id.standard_price
                         res.append({
                             'type':'src',
                             'name': i_line.name[:64],
-                            'price_unit':i_line.product_id.standard_price,
+                            'price_unit':price_unit,
                             'quantity':i_line.quantity,
-                            'price':get_price(cr, uid, inv, company_currency, i_line),
+                            'price':get_price(cr, uid, inv, company_currency, i_line, price_unit),
                             'account_id':dacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
@@ -76,9 +81,9 @@ class account_invoice_line(osv.osv):
                         res.append({
                             'type':'src',
                             'name': i_line.name[:64],
-                            'price_unit':i_line.product_id.standard_price,
+                            'price_unit':price_unit,
                             'quantity':i_line.quantity,
-                            'price': -1 * get_price(cr, uid, inv, company_currency, i_line),
+                            'price': -1 * get_price(cr, uid, inv, company_currency, i_line, price_unit),
                             'account_id':cacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
@@ -117,28 +122,36 @@ class account_invoice_line(osv.osv):
                         for line in res:
                             if a == line['account_id'] and i_line.product_id.id == line['product_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
-                                standard_price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
-                                if standard_price != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
-                                    price_diff = i_line.price_unit - standard_price
-                                    line.update({'price':standard_price * line['quantity']})
+                                valuation_price_unit = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.standard_price, i_line.uos_id.id)
+                                if inv.currency_id.id != company_currency:
+                                    standard_price = self.pool.get('res.currency').compute(cr, uid, company_currency, inv.currency_id.id, standard_price, context={'date': inv.date_invoice})
+                                if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
+                                    #for average/fifo/lifo costing method, fetch real cost price from incomming moves
+                                    stock_move_obj = self.pool.get('stock.move')
+                                    valuation_stock_move = stock_move_obj.search(cr, uid, [('purchase_line_id', '=', i_line.purchase_line_id.id)], limit=1, context=context)
+                                    if valuation_stock_move:
+                                        valuation_price_unit = stock_move_obj.browse(cr, uid, valuation_stock_move[0], context=context).price_unit
+                                if valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
+                                    price_diff = i_line.price_unit - valuation_price_unit
+                                    line.update({'price': valuation_price_unit * line['quantity']})
                                     diff_res.append({
-                                        'type':'src',
+                                        'type': 'src',
                                         'name': i_line.name[:64],
-                                        'price_unit':price_diff,
-                                        'quantity':line['quantity'],
+                                        'price_unit': price_diff,
+                                        'quantity': line['quantity'],
                                         'price': price_diff * line['quantity'],
-                                        'account_id':acc,
-                                        'product_id':line['product_id'],
-                                        'uos_id':line['uos_id'],
-                                        'account_analytic_id':line['account_analytic_id'],
-                                        'taxes':line.get('taxes',[]),
+                                        'account_id': acc,
+                                        'product_id': line['product_id'],
+                                        'uos_id': line['uos_id'],
+                                        'account_analytic_id': line['account_analytic_id'],
+                                        'taxes': line.get('taxes', []),
                                         })
                         res += diff_res
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         fiscal_pool = self.pool.get('account.fiscal.position')
-        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context, company_id)
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context, company_id)
         if not product:
             return res
         if type in ('in_invoice','in_refund'):

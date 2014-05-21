@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:13+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2014-05-09 06:48+0000\n"
+"X-Generator: Launchpad (build 16996)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -93,7 +93,7 @@ msgstr "Verfolgung Upstream"
 #: field:stock.picking.in,date_done:0
 #: field:stock.picking.out,date_done:0
 msgid "Date of Transfer"
-msgstr ""
+msgstr "Datum der Lieferung"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -262,7 +262,7 @@ msgstr "Zugewiesene Auslieferungen"
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr ""
+msgstr "Aktuelle ID ist in diesem Kontext nicht definiert"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -276,7 +276,7 @@ msgstr "Nicht abzurechnen"
 #: help:stock.picking.in,message_unread:0
 #: help:stock.picking.out,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Als zu erledigen markieren"
 
 #. module: stock
 #: help:stock.tracking,serial:0
@@ -622,7 +622,7 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"p class=\"oe_view_nocontent_create\">\n"
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Klicken Sie zur Erstellung einer Lager Umbuchung. \n"
 "              </p><p>\n"
 "                Die meisten Transaktionen für Lagerbuchungen erfolgen "
@@ -660,7 +660,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by logistic serial number"
-msgstr ""
+msgstr "Statistik Lagerbestand nach Serien"
 
 #. module: stock
 #: help:product.product,track_outgoing:0
@@ -836,7 +836,7 @@ msgstr "Pakete"
 #. module: stock
 #: selection:stock.location.product,type:0
 msgid "Analyse Current Inventory"
-msgstr ""
+msgstr "Analysiere den aktuellen Bestand"
 
 #. module: stock
 #: view:stock.move:0
@@ -1189,7 +1189,7 @@ msgstr "Rücklieferung"
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "Abrechnung in einer anderen Einheit als beim Verkaufsauftrag"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -2146,7 +2146,7 @@ msgstr "Datum"
 #: field:stock.picking.in,message_is_follower:0
 #: field:stock.picking.out,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ist bereits Follower"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2163,7 +2163,7 @@ msgstr "Hauptlager"
 #: code:addons/stock/wizard/stock_partial_picking.py:97
 #, python-format
 msgid "_Deliver"
-msgstr ""
+msgstr "_Ausliefern"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -2257,7 +2257,7 @@ msgstr ""
 "über den Lieferanten oder\n"
 "  die Bestellnummer filtern. An dieser Stelle können Sie dann einfach den "
 "Zugang zeilenweise bestätigen\n"
-"   indem Sie die Schalter am rechten Rand der Zeilen anwenden. \n"
+"   indem Sie die Buttons am rechten Rand der Zeilen anwenden. \n"
 "   </p>\n"
 "            "
 
@@ -2728,7 +2728,7 @@ msgstr "Notizen"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Transferred"
-msgstr ""
+msgstr "Geliefert"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2901,7 +2901,7 @@ msgstr "Erstellen"
 #. module: stock
 #: field:stock.change.product.qty,new_quantity:0
 msgid "New Quantity on Hand"
-msgstr "Physikalischer Bestand"
+msgstr "tatsächlicher Bestand"
 
 #. module: stock
 #: field:stock.move,priority:0
@@ -2993,12 +2993,12 @@ msgstr ""
 #. module: stock
 #: report:stock.inventory.move:0
 msgid "Manual Quantity"
-msgstr ""
+msgstr "Eingegebene Menge"
 
 #. module: stock
 #: view:product.product:0
 msgid "On hand:"
-msgstr "Physikalischer Bestand"
+msgstr "tatsächlicher Bestand"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
@@ -3107,7 +3107,7 @@ msgid "Scrap Move"
 msgstr "Buchung Ausschuss"
 
 #. module: stock
-#: help:stock.move,prodlot_id:0
+#: help:stock.move,lot_id:0
 msgid "Serial number is used to put a serial number on the production"
 msgstr "Die Seriennummer wird zur Zuordnung bei der Fertigung eingesetzt"
 
@@ -3239,7 +3239,7 @@ msgstr "Korrekturdatum"
 
 #. module: stock
 #: view:report.stock.inventory:0
-#: field:report.stock.inventory,prodlot_id:0
+#: field:report.stock.inventory,lot_id:0
 #: report:stock.picking.list:0
 msgid "Lot"
 msgstr "Fertigungslos"
@@ -3432,7 +3432,7 @@ msgstr ""
 "auszuliefern sind. \n"
 "                 Sie können  solche Lieferungen einfach ausführen, indem Sie "
 "die vorgeschlagene Positionen \n"
-"                 markieren und anschließend auf den Schalter ganz rechts "
+"                 markieren und anschließend auf den Button ganz rechts "
 "klicken. Sie können dabei Suche und Filter\n"
 "                 einsetzen, um Kunden, Produkte oder Auftragsreferenzen "
 "filtern.\n"
@@ -3543,7 +3543,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Confirm & Receive"
-msgstr "Bestätigen & Empfangen"
+msgstr "Bestätigen & Vereinnahmen"
 
 #. module: stock
 #: field:stock.picking,origin:0
@@ -3560,7 +3560,7 @@ msgstr "Nicht dringend"
 #. module: stock
 #: view:stock.move:0
 msgid "Scheduled"
-msgstr ""
+msgstr "Terminiert"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -3655,10 +3655,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-"p class=\"oe_view_nocontent_create\">\n"
+"<p class=\"oe_view_nocontent_create\">\n"
 "                Klicken Sie zur Erstellung einer neuen Inventur. \n"
 "              </p><p>\n"
-"               Inventuren müssen erstellt werden, um den physikalischen "
+"               Inventuren müssen erstellt werden, um den tatsächlichen "
 "Bestand zu zählen, zu\n"
 "                messen oder zu wiegen.  Um den Bestand bei Bedarf "
 "anzupassen, \n"
@@ -3814,7 +3814,7 @@ msgstr ""
 "              </p><p>\n"
 "Definieren Sie Ihre Lagerorte, um die Struktur Ihres Lagers und Ihrer "
 "individuellen Lagerorte abzubilden.\n"
-"OpenERP kann dabei physikalische Standorte definieren (Lager, Regale,  "
+"OpenERP kann dabei tatsächliche Standorte definieren (Lager, Regale,  "
 "Kasten), Partner Lagerorte definieren (Kunden, Lieferanten) und virtuelle "
 "Lagerorte als Gegenpart von Lagerbuchungen für Fertigungsaufträge, "
 "Beschaffungsdisposition, Inventur etc. benutzen.             \n"
@@ -4056,21 +4056,21 @@ msgstr "Inventurlos"
 #: model:ir.model,name:stock.model_stock_production_lot
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 #: model:res.request.link,name:stock.req_link_tracking
-#: field:stock.change.product.qty,prodlot_id:0
+#: field:stock.change.product.qty,lot_id:0
 #: field:stock.inventory.line,prod_lot_id:0
 #: field:stock.inventory.line.split.lines,name:0
-#: field:stock.inventory.line.split.lines,prodlot_id:0
-#: field:stock.move,prodlot_id:0
+#: field:stock.inventory.line.split.lines,lot_id:0
+#: field:stock.move,lot_id:0
 #: view:stock.move.split:0
 #: field:stock.move.split.lines,name:0
-#: field:stock.move.split.lines,prodlot_id:0
-#: field:stock.partial.move.line,prodlot_id:0
-#: field:stock.partial.picking.line,prodlot_id:0
+#: field:stock.move.split.lines,lot_id:0
+#: field:stock.partial.move.line,lot_id:0
+#: field:stock.partial.picking.line,lot_id:0
 #: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
-#: field:stock.report.prodlots,prodlot_id:0
+#: field:stock.report.prodlots,lot_id:0
 msgid "Serial Number"
 msgstr "Seriennummer"
 
@@ -4202,6 +4202,8 @@ msgid ""
 "The unit of measure rounding does not allow you to ship \"%s %s\", only "
 "roundings of \"%s %s\" is accepted by the Unit of Measure."
 msgstr ""
+"Das Einheit Rundungsverfahren verbietet den Versand von \"%s %s\", nur die "
+"Rundung \"%s %s\" wird aktuell als Mengeneinheit akzeptiert."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -4369,7 +4371,7 @@ msgstr "Produktkategorie"
 #. module: stock
 #: view:stock.move:0
 msgid "Serial  Number"
-msgstr ""
+msgstr "Seriennummer"
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -4566,7 +4568,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Produktzugänge"
 
 #. module: stock
 #: view:product.product:0
@@ -4701,7 +4703,7 @@ msgstr "Wollen Sie diese Bestandsaufnahmen zusammenfassen?"
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Date of Delivery"
-msgstr ""
+msgstr "Datum Lieferung"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -4951,7 +4953,7 @@ msgstr "Zielort"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Picking Slip"
-msgstr ""
+msgstr "Pack Liste"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
@@ -4963,7 +4965,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Delays"
-msgstr ""
+msgstr "Verzögerungen"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -5034,7 +5036,7 @@ msgstr "Lieferung"
 #. module: stock
 #: view:stock.fill.inventory:0
 msgid "Import the current inventory"
-msgstr "Importieren Sie die aktuelle Währung."
+msgstr "Importieren Sie das aktuelle Lager"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action5
@@ -5130,7 +5132,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.in:0
 msgid "Date of Reception"
-msgstr ""
+msgstr "Empfangsdatum"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_multiple_locations:0
@@ -5249,7 +5251,7 @@ msgstr "Optional: Weiterer Lieferauftrag bei Lieferkette"
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Print Delivery Slip"
-msgstr "Druck Lieferauftrag"
+msgstr "Druck Lieferschein"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -5262,7 +5264,7 @@ msgstr "Jahr"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
-msgstr "Physikalische Lagerorte"
+msgstr "tatsächliche Lagerorte"
 
 #. module: stock
 #: view:stock.picking.in:0

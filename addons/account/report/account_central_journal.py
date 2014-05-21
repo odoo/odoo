@@ -20,11 +20,14 @@
 ##############################################################################
 
 import time
+from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
 #
 # Use period and Journal for selection or resources
 #
+
+
 class journal_print(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
@@ -103,6 +106,11 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             return True
         return data['form']['amount_currency']
 
-report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/account_central_journal.rml', parser=journal_print, header='external')
+
+class report_agedpartnerbalance(osv.AbstractModel):
+    _name = 'report.account.report_centraljournal'
+    _inherit = 'report.abstract_report'
+    _template = 'account.report_centraljournal'
+    _wrapped_report_class = journal_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

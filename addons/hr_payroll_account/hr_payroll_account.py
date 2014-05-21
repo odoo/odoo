@@ -20,11 +20,10 @@
 #
 ##############################################################################
 import time
-from openerp import netsvc
 from datetime import date, datetime, timedelta
 
 from openerp.osv import fields, osv
-from openerp.tools import config
+from openerp.tools import config, float_compare
 from openerp.tools.translate import _
 
 class hr_payslip(osv.osv):
@@ -87,6 +86,7 @@ class hr_payslip(osv.osv):
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
         period_pool = self.pool.get('account.period')
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Payroll')
         timenow = time.strftime('%Y-%m-%d')
 
         for slip in self.browse(cr, uid, ids, context=context):
@@ -150,7 +150,7 @@ class hr_payslip(osv.osv):
                     line_ids.append(credit_line)
                     credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
-            if debit_sum > credit_sum:
+            if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_credit_account_id.id
                 if not acc_id:
                     raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Credit Account!')%(slip.journal_id.name))
@@ -166,7 +166,7 @@ class hr_payslip(osv.osv):
                 })
                 line_ids.append(adjust_credit)
 
-            elif debit_sum < credit_sum:
+            elif float_compare(debit_sum, credit_sum, precision_digits=precision) == -1:
                 acc_id = slip.journal_id.default_debit_account_id.id
                 if not acc_id:
                     raise osv.except_osv(_('Configuration Error!'),_('The Expense Journal "%s" has not properly configured the Debit Account!')%(slip.journal_id.name))
@@ -188,7 +188,6 @@ class hr_payslip(osv.osv):
                 move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
 
-hr_payslip()
 
 class hr_salary_rule(osv.osv):
     _inherit = 'hr.salary.rule'
@@ -198,7 +197,6 @@ class hr_salary_rule(osv.osv):
         'account_debit': fields.many2one('account.account', 'Debit Account'),
         'account_credit': fields.many2one('account.account', 'Credit Account'),
     }
-hr_salary_rule()
 
 class hr_contract(osv.osv):
 
@@ -208,7 +206,6 @@ class hr_contract(osv.osv):
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
         'journal_id': fields.many2one('account.journal', 'Salary Journal'),
     }
-hr_contract()
 
 class hr_payslip_run(osv.osv):
 
@@ -229,6 +226,5 @@ class hr_payslip_run(osv.osv):
         'journal_id': _get_default_journal,
     }
 
-hr_payslip_run()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
