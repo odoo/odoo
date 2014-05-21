@@ -104,7 +104,7 @@ class NumberedCanvas(canvas.Canvas):
         self.setFont("Helvetica", 8)
         self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             " %(this)i / %(total)i" % {
-               'this': self._pageNumber+1,
+               'this': self._pageNumber,
                'total': page_count,
             }
         )
@@ -1001,8 +1001,6 @@ class _rml_template(object):
             if story_cnt > 0:
                 fis.append(platypus.PageBreak())
             fis += r.render(node_story)
-            # Reset Page Number with new story tag
-            fis.append(PageReset())
             story_cnt += 1
         try:
             if self.localcontext and self.localcontext.get('internal_header',False):
