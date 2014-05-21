@@ -154,9 +154,9 @@
         <field name="no_of_recruitment">6</field>
         <field name="survey_id" ref="recruitment_form"/>
     </record>
- -->
+
     <record id="message_application_demo" model="mail.message">
-        <field name="model">hr.applicant</field>
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="res_id" ref="hr_case_advertisement"/>
         <field name="body">Please do refer to this application for sure.</field>
         <field name="type">comment</field>
@@ -164,7 +164,7 @@
     </record>
     <record id="msg_case18_aplicant" model="mail.message">
         <field name="subject">Regarding reference</field>
-        <field name="model">hr.applicant</field>
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="res_id" ref="hr_case_advertisement"/>
         <field name="body"><![CDATA[<p>Hello!<br />
             I will surely refer to this application as it is by your reference and <br />
@@ -179,7 +179,7 @@
     />
     <record id="msg_case_salesman0_aplicant" model="mail.message">
         <field name="subject">Refuse Application</field>
-        <field name="model">hr.applicant</field>
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="res_id" ref="hr_case_salesman0"/>
         <field name="body"><![CDATA[<p>Hello,</p>
         <p>I have checked this application but It's not match with our requirement. so no need to process further and we should refuse this application.</p>
@@ -189,7 +189,7 @@
         <field name="author_id" ref="base.partner_demo"/>
     </record>
     <record id="msg_case_fresher0_aplicant" model="mail.message">
-        <field name="model">hr.applicant</field>
+        <field name="model_id" ref="model_hr_applicant"/>
         <field name="res_id" ref="hr_case_fresher0"/>
         <field name="body"><![CDATA[<p>Hello,</p>
         <p>We should move further for this application as early as possible..</p>

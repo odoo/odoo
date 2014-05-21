@@ -309,7 +309,7 @@
         <workflow action="order_confirm" model="sale.order" ref="sale_order_7"/>
 
         <record id="message_sale_1" model="mail.message">
-            <field name="model">sale.order</field>
+            <field name="model_id" ref="model_sale_order"/>
             <field name="res_id" ref="sale_order_2"/>
             <field name="body">Hi,
 I have a question regarding services pricing: I heard of a possible discount for quantities exceeding 25 hours.
@@ -319,7 +319,7 @@ Could you confirm, please?</field>
         </record>
 
         <record id="message_sale_2" model="mail.message">
-            <field name="model">sale.order</field>
+            <field name="model_id" ref="model_sale_order"/>
             <field name="res_id" ref="sale_order_2"/>
             <field name="parent_id" ref="message_sale_1"/>
             <field name="body">Hello, 
@@ -331,7 +331,7 @@ Thanks!</field>
         </record>
 
         <record id="message_sale_3" model="mail.message">
-            <field name="model">sale.order</field>
+            <field name="model_id" ref="model_sale_order"/>
             <field name="res_id" ref="sale_order_2"/>
             <field name="parent_id" ref="message_sale_2"/>
             <field name="body">Alright, thanks for the clarification. I will confirm the order as soon as I get my manager's approval.</field>

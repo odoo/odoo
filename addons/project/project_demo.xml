@@ -392,7 +392,7 @@
             eval="[ref('project_project_3'), ref('project_project_4'), ref('project_project_5')], {'install_mode': True}"/>
 
         <record id="message_task_1" model="mail.message">
-            <field name="model">project.task</field>
+            <field name="model_id" ref="model_project_task"/>
             <field name="res_id" ref="project_task_22"/>
             <field name="body">Hello Demo,
 There is a change in customer requirement.
@@ -402,7 +402,7 @@ Thanks,</field>
             <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_task_2" model="mail.message">
-            <field name="model">project.task</field>
+            <field name="model_id" ref="model_project_task"/>
             <field name="res_id" ref="project_task_22"/>
             <field name="parent_id" ref="message_task_1"/>
             <field name="body">Ok, I have checked the mail,
@@ -411,7 +411,7 @@ I will update the document and let you know.</field>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
         <record id="message_task_3" model="mail.message">
-            <field name="model">project.task</field>
+            <field name="model_id" ref="model_project_task"/>
             <field name="res_id" ref="project_task_22"/>
             <field name="parent_id" ref="message_task_2"/>
             <field name="body">Fine!
