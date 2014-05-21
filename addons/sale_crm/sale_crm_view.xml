@@ -307,5 +307,21 @@
             </data>
             </field>
         </record>
+        
+ 
+        <record id="crm_case_section_salesteams_search" model="ir.ui.view">
+            <field name="name">Case Sections - Search</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="crm.crm_case_section_salesteams_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="monthly_invoiced"/>
+                    <field name="invoiced_forecast"/>
+                    <filter name="invoiced_amount_less" string="Invoiced amount &lt;forecast" domain="[('is_under_performing','=',True)]" help="Sales team(s) that have revenue of invoices hasn't reached to the forecast."/>
+                    <filter name="invoiced_amount_greater" string="Invoiced amount &gt;forecast" domain="[('is_under_performing','=',False)]" help="Sales team(s) that have revenue of invoices reached or exceeded the forecast."/>
+                </xpath>
+            </field>
+        </record> 
+              
     </data>
 </openerp>
