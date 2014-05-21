@@ -96,9 +96,7 @@
                 placement: 'left',
                 title:     _t("Customize your event"),
                 content:   _t("Click here to customize your event further."),
-            },
-            {
-                element:   '.js_publish_management ul>li>a:last:visible',
+                popover:   { next: _t("Close Tutorial") },
             },
         ]
     });

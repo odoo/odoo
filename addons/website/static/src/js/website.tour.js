@@ -164,7 +164,7 @@ var T = website.Tour = {
             }
         }
     },
-    closePopover: function () {
+    closeTour: function (){
         if (T.$element) {
             T.$element.popover('destroy');
             T.$element.removeData("tour");
@@ -172,6 +172,15 @@ var T = website.Tour = {
             $(".tour-backdrop").remove();
             $(".popover.tour").remove();
             T.$element = null;
+        }
+        return;
+    },
+    closePopover: function (animate, last_step) {
+        if (animate === true || last_step === true){
+            $('div.popover').toggle("clip", T.closeTour);
+        }
+        else{
+            T.closeTour();
         }
     },
     autoTogglePopover: function () {
@@ -189,8 +198,7 @@ var T = website.Tour = {
         if (step.busy) {
             return;
         }
-
-        T.closePopover();
+        T.closePopover(false);
 
         var $element = $(step.element).first();
         if (!step.element || !$element.size() || !$element.is(":visible")) {
@@ -201,6 +209,7 @@ var T = website.Tour = {
         T.$element = $element;
         $element.data("tour", state.id);
         $element.data("tour-step", step.id);
+        $element.data("tour-total-steps",state.tour.steps.length - 1);
         $element.popover({
             placement: step.placement || "auto",
             animation: true,
@@ -248,7 +257,13 @@ var T = website.Tour = {
                     clearTimeout(T.timer);
                     T.endTour();
                 }
-                T.closePopover();
+                if (T.$element.data("tour-step") + 1 == T.$element.data("tour-total-steps")){
+                    T.closePopover(step.busy,true);
+                    return;
+                }
+                else{
+                    T.closePopover(!step.busy);
+                }
             });
 
         T.repositionPopover();
@@ -354,7 +369,7 @@ var T = website.Tour = {
         localStorage.removeItem("tour");
         clearTimeout(T.timer);
         clearTimeout(T.testtimer);
-        T.closePopover();
+        T.closePopover(true);
     },
     running: function () {
         function run () {
