@@ -96,7 +96,7 @@
                                         </div>
                                         <label string="Until" for="end_type"/>
                                         <div>
-                                            <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                            <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline oe_edit_only"/>
                                             <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
                                             <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
                                         </div>
