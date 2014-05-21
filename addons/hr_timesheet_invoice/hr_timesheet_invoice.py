@@ -174,125 +174,150 @@ class account_analytic_line(osv.osv):
             data = {}
 
         journal_types = {}
-
+        partners = {}
+        partner_ids = []
+        currency_id = False
         # prepare for iteration on journal and accounts
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
+            if not currency_id :
+                if line.account_id.pricelist_id and line.account_id.pricelist_id.currency_id:
+                    currency_id = line.account_id.pricelist_id.currency_id.id
+            if line.account_id.pricelist_id and line.account_id.pricelist_id.currency_id:
+                if line.account_id.pricelist_id.currency_id.id <> currency_id and data['group_by_partner']:
+                    raise osv.except_osv(_('Error!'),
+                        _('You cannot group invoice having different currencies on different analytic accounts for the same partner.'))
             if line.journal_id.type not in journal_types:
                 journal_types[line.journal_id.type] = set()
+            if line.account_id.partner_id.id not in partners:
+                partners[line.account_id.partner_id.id] = set()
             journal_types[line.journal_id.type].add(line.account_id.id)
-        for journal_type, account_ids in journal_types.items():
-            for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
-                partner = account.partner_id
-                if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Analytic Account Incomplete!'),
-                            _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
+            partners[line.account_id.partner_id.id].add(line.account_id.id)
+        for journal_type in journal_types:
+            if not data['group_by_partner']:
+                partners = {}
+                partners[journal_type] = journal_types[journal_type]
+            for partner_id, account_ids in partners.items():
+                customer_ref = time.strftime('%d/%m/%Y')
+                for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
+                    partner = account.partner_id
+                    if (not partner) or not (account.pricelist_id):
+                        raise osv.except_osv(_('Analytic Account Incomplete!'),
+                                _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
-                date_due = False
-                if partner.property_payment_term:
-                    pterm_list= account_payment_term_obj.compute(cr, uid,
-                            partner.property_payment_term.id, value=1,
-                            date_ref=time.strftime('%Y-%m-%d'))
-                    if pterm_list:
-                        pterm_list = [line[0] for line in pterm_list]
-                        pterm_list.sort()
-                        date_due = pterm_list[-1]
+                    date_due = False
+                    if partner.property_payment_term:
+                        pterm_list= account_payment_term_obj.compute(cr, uid,
+                                partner.property_payment_term.id, value=1,
+                                date_ref=time.strftime('%Y-%m-%d'))
+                        if pterm_list:
+                            pterm_list = [line[0] for line in pterm_list]
+                            pterm_list.sort()
+                            date_due = pterm_list[-1]
 
-                curr_invoice = {
-                    'name': time.strftime('%d/%m/%Y') + ' - '+account.name,
-                    'partner_id': account.partner_id.id,
-                    'company_id': account.company_id.id,
-                    'payment_term': partner.property_payment_term.id or False,
-                    'account_id': partner.property_account_receivable.id,
-                    'currency_id': account.pricelist_id.currency_id.id,
-                    'date_due': date_due,
-                    'fiscal_position': account.partner_id.property_account_position.id
-                }
-                context2 = context.copy()
-                context2['lang'] = partner.lang
-                # set company_id in context, so the correct default journal will be selected
-                context2['force_company'] = curr_invoice['company_id']
-                # set force_company in context so the correct product properties are selected (eg. income account)
-                context2['company_id'] = curr_invoice['company_id']
-
-                last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
-                invoices.append(last_invoice)
-
-                cr.execute("""SELECT product_id, user_id, to_invoice, sum(amount), sum(unit_amount), product_uom_id
-                        FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
-                        WHERE account_id = %s
-                            AND line.id IN %s AND journal.type = %s AND to_invoice IS NOT NULL
-                        GROUP BY product_id, user_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
-
-                for product_id, user_id, factor_id, total_price, qty, uom in cr.fetchall():
-                    context2.update({'uom': uom})
-
-                    if data.get('product'):
-                        # force product, use its public price
-                        product_id = data['product'][0]
-                        unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
-                    elif journal_type == 'general' and product_id:
-                        # timesheets, use sale price
-                        unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
-                    else:
-                        # expenses, using price from amount field
-                        unit_price = total_price*-1.0 / qty
-
-                    factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
-                    # factor_name = factor.customer_name and line_name + ' - ' + factor.customer_name or line_name
-                    factor_name = factor.customer_name
-                    curr_line = {
-                        'price_unit': unit_price,
-                        'quantity': qty,
-                        'product_id': product_id or False,
-                        'discount': factor.factor,
-                        'invoice_id': last_invoice,
-                        'name': factor_name,
-                        'uos_id': uom,
-                        'account_analytic_id': account.id,
+                    curr_invoice = {
+                        'name': time.strftime('%d/%m/%Y') + ' - '+account.name,
+                        'partner_id': account.partner_id.id,
+                        'company_id': account.company_id.id,
+                        'payment_term': partner.property_payment_term.id or False,
+                        'account_id': partner.property_account_receivable.id,
+                        'currency_id': account.pricelist_id.currency_id.id,
+                        'date_due': date_due,
+                        'fiscal_position': account.partner_id.property_account_position.id
                     }
-                    product = product_obj.browse(cr, uid, product_id, context=context2)
-                    if product:
-                        factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
-                        if factor.customer_name:
-                            factor_name += ' - ' + factor.customer_name
+                    context2 = context.copy()
+                    context2['lang'] = partner.lang
+                    # set company_id in context, so the correct default journal will be selected
+                    context2['force_company'] = curr_invoice['company_id']
+                    # set force_company in context so the correct product properties are selected (eg. income account)
+                    context2['company_id'] = curr_invoice['company_id']
 
-                        general_account = product.property_account_income or product.categ_id.property_account_income_categ
-                        if not general_account:
-                            raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
-                        taxes = product.taxes_id or general_account.tax_ids
-                        tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
-                        curr_line.update({
-                            'invoice_line_tax_id': [(6,0,tax )],
+                    customer_ref = customer_ref + '-' + account.name
+                    if account.partner_id.id not in partner_ids and data['group_by_partner']:
+                        partner_ids.append(account.partner_id.id)
+                        last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
+                        invoices.append(last_invoice)
+                    if not data['group_by_partner']:
+                        last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
+                        invoices.append(last_invoice)
+                    else:
+                        invoice_obj.write(cr ,uid, last_invoice, {'name': customer_ref}, context=context)
+
+                    cr.execute("""SELECT product_id, user_id, to_invoice, sum(amount), sum(unit_amount), product_uom_id
+                            FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
+                            WHERE account_id = %s
+                                AND line.id IN %s AND journal.type = %s AND to_invoice IS NOT NULL
+                            GROUP BY product_id, user_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
+
+                    for product_id, user_id, factor_id, total_price, qty, uom in cr.fetchall():
+                        context2.update({'uom': uom})
+
+                        if data.get('product'):
+                            # force product, use its public price
+                            product_id = data['product'][0]
+                            unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
+                        elif journal_type == 'general' and product_id:
+                            # timesheets, use sale price
+                            unit_price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, context2)
+                        else:
+                            # expenses, using price from amount field
+                            unit_price = total_price*-1.0 / qty
+
+                        factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
+                        # factor_name = factor.customer_name and line_name + ' - ' + factor.customer_name or line_name
+                        factor_name = factor.customer_name
+                        curr_line = {
+                            'price_unit': unit_price,
+                            'quantity': qty,
+                            'product_id': product_id or False,
+                            'discount': factor.factor,
+                            'invoice_id': last_invoice,
                             'name': factor_name,
-                            'invoice_line_tax_id': [(6,0,tax)],
-                            'account_id': general_account.id,
-                        })
-                    #
-                    # Compute for lines
-                    #
-                    cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(ids), product_id, factor_id))
+                            'uos_id': uom,
+                            'account_analytic_id': account.id,
+                        }
+                        product = product_obj.browse(cr, uid, product_id, context=context2)
+                        if product:
+                            factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
+                            if factor.customer_name:
+                                factor_name += ' - ' + factor.customer_name
 
-                    line_ids = cr.dictfetchall()
-                    note = []
-                    for line in line_ids:
-                        # set invoice_line_note
-                        details = []
-                        if data.get('date', False):
-                            details.append(line['date'])
-                        if data.get('time', False):
-                            if line['product_uom_id']:
-                                details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
-                            else:
-                                details.append("%s" % (line['unit_amount'], ))
-                        if data.get('name', False):
-                            details.append(line['name'])
-                        note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
-                    if note:
-                        curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
-                    invoice_line_obj.create(cr, uid, curr_line, context=context)
-                    cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+                            general_account = product.property_account_income or product.categ_id.property_account_income_categ
+                            if not general_account:
+                                raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
+                            taxes = product.taxes_id or general_account.tax_ids
+                            tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                            curr_line.update({
+                                'invoice_line_tax_id': [(6,0,tax )],
+                                'name': factor_name,
+                                'invoice_line_tax_id': [(6,0,tax)],
+                                'account_id': general_account.id,
+                            })
+                        #
+                        # Compute for lines
+                        #
+                        cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(ids), product_id, factor_id))
 
-                invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
+                        line_ids = cr.dictfetchall()
+                        note = []
+                        for line in line_ids:
+                            # set invoice_line_note
+                            details = []
+                            if data.get('date', False):
+                                details.append(line['date'])
+                            if data.get('time', False):
+                                if line['product_uom_id']:
+                                    details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
+                                else:
+                                    details.append("%s" % (line['unit_amount'], ))
+                            if data.get('name', False):
+                                details.append(line['name'])
+                            note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+                        if note:
+                            curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
+                        invoice_line_obj.create(cr, uid, curr_line, context=context)
+                        cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+
+                    invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
 
