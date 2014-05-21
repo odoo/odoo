@@ -13,25 +13,37 @@
                 <group>
                     <group>
                         <field name="name"/>
+                        <field name="type" widget="radio" on_change="onchange_type(type)" readonly="context.get('from_asset', False)"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <group>
-                        <field name="journal_id"/>
-                        <field name="account_asset_id" on_change="onchange_account_asset(account_asset_id)"/>
-                        <field name="account_depreciation_id"/>
-                        <field name="account_expense_depreciation_id"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id, type)"/>
+                        <label for="account_asset_id" string="Revenue Recognition Account" attrs="{'invisible': [('type','!=','sales')]}"/>
+                        <label for="account_asset_id" string="Asset Account" attrs="{'invisible': [('type','!=','purchase')]}" style="margin-left: -8px"/>
+                        <field name="account_asset_id" nolabel="1" on_change="onchange_account_asset(account_asset_id)" colspan="0" attrs="{'invisible': [('type','=', False)]}"/>
+                        <field name="account_income_recognition_id" attrs="{'invisible': [('type','!=','sales')],'required': [('type','=','sales')]}" colspan="0"/>
+                        <label for="account_depreciation_id" string="Depreciation Account" attrs="{'invisible': [('type','!=','purchase')]}" style="margin-left: -8px"/>
+                        <field name="account_depreciation_id" nolabel="1" attrs="{'invisible': [('type','!=','purchase')]}" colspan="0"/>
+                        <field name="account_expense_depreciation_id" attrs="{'invisible': [('type','!=','purchase')],'required': [('type','=','purchase')]}"/>
                     </group>
-                    <group string="Depreciation Dates">
-                        <field name="method_time"/>
-                        <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
-                        <field name="method_period"/>
-                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
+                    <group>
+                        <separator string="Installment Information" attrs="{'invisible': [('type','!=','sales')]}" colspan="2"/>
+                        <separator string="Depreciation Information" attrs="{'invisible': [('type','=','sales')]}" colspan="2"/>
+                        <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                        <label for="method_number" string="Number of Installment" attrs="{'invisible': [('type','!=','sales')]}"/>
+                        <label for="method_number" string="Number of Depreciations" attrs="{'invisible': [('type','!=','purchase')]}" style="margin-left: -8px" colspan="0"/>
+                        <field name="method_number" nolabel="1" string="Number of Depreciations" attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
+                        <label for="method_period" string="Installment Period" attrs="{'invisible': [('type','!=','sales')]}"/>
+                        <label for="method_period" string="Depreciation Period " attrs="{'invisible': [('type','!=','purchase')]}" style="margin-left: -8px" colspan="0"/>
+                        <field name="method_period" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
+                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
+                        <field name="open_asset"/>
                     </group>
-                    <group string="Depreciation Method">
+                    <group attrs="{'invisible': [('type','=','sales')]}">
+                        <separator string="Depreciation Method" colspan="2"/>
                         <field name="method"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                         <field name="prorata"/>
-                        <field name="open_asset"/>
                     </group>
                     <group groups="analytic.group_analytic_accounting" string="Analytic Information">
                         <field name="account_analytic_id"/>
@@ -51,6 +63,7 @@
                 <field name="name"/>
                 <field name="journal_id"/>
                 <field name="method"/>
+                <field name="type"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -61,16 +74,222 @@
         <field name="model">account.asset.category</field>
         <field name="arch" type="xml">
             <search string="Search Asset Category">
-                <field name="name" string="Asset Category"/>
+                <filter icon="terp-check" string="Sales" domain="[('type','=', 'sales')]" help="Revenue Recognitions"/>
+                <filter icon="terp-dialog-close" string="Purchase" domain="[('type','=', 'purchase')]" help="Assets"/>
+                <field name="name" string="Category"/>
                 <field name="journal_id"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="view_account_move_line_filter_new" model="ir.ui.view">
+        <field name="name">Journal Items</field>
+        <field eval="30" name="priority"/>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Journal Items">
+                <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                <field name="date"/>
+                <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
+                <separator/>
+                <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
+                <filter name="posted" icon="terp-camera_test" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
+                <separator/>
+                <filter icon="terp-dolar_ok!" string="Unreconciled" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items" name="unreconciled"/>
+                <separator/>
+                <filter string="Next Partner to Reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                <field name="move_id" string="Number (Move)"/>
+                <field name="account_id"/>
+                <field name="asset_id" string="Recognition"/>
+                <field name="partner_id"/>
+                <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
+                <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
+                <group expand="0" string="Group By...">
+                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                    <filter string="Account"  icon="terp-folder-green" context="{'group_by':'account_id'}"/>
+                    <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                </group>
             </search>
         </field>
     </record>
 
+    <record id="action_account_moves_all_search" model="ir.actions.act_window">
+        <field name="name">Journal Items</field>
+        <field name="res_model">account.move.line</field>
+        <field name="context">{'search_default_asset_id': [active_id]}</field>
+        <field name="search_view_id" ref="view_account_move_line_filter_new"/>
+    </record>
+    
     <!--
-        Asset
+        Asset Revenue Recognition Form
      -->
 
+    <record model="ir.ui.view" id="view_revenue_recognition_form">
+        <field name="name">account.revenue.recognition.form</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <form string="Revenue" version="7.0">
+                <header>
+                    <button name="validate" states="draft" string="Confirm Recognition" type="object" class="oe_highlight"/>
+                    <button name="set_to_close" states="open" string="Set to Close" type="object" class="oe_highlight"/>
+                    <button name="set_to_draft" states="open" string="Set to Draft" type="object" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box oe_right">
+                        <button class="oe_inline oe_stat_button" name="%(action_account_moves_all_search)d" type="action" icon="fa-pencil">
+                            <field string="Entries" name="entry_count" widget="statinfo" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Recognition Name"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id" on_change="onchange_category_id(category_id)" string="Category" domain="[('type','=','sales')]" help="Category of revenue recognition" context="{'from_asset':True}"/>
+                            <field name="code"/>
+                            <field name="parent_id" string="Parent Recognition" domain="[('category_id.type', '=', 'sales')]" help="Used as parent recognition of this recognition"/>
+                            <field name="date" string="Sale Date" help="Sale date of revenue recognition"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="value" string="Sale Value" widget="monetary" options="{'currency_field': 'currency_id'}" help="Sale value of revenue recognition"/>
+                            <field name="partner_id" string="Customer"/>
+                            <field name="invoice_id" string="Sale Invoice" domain="[('invoice_line.asset_category_id.type','=','sales')]"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Installment Board">
+                            <field name="depreciation_line_ids" mode="tree" string="Installment Lines" options="{'reload_whole_on_button': true}">
+                                <tree string="Installment Lines" colors="blue:(move_check == False);black:(move_check == True)" create="false">             
+                                    <field name="sequence" string="Serial Number"/>
+                                    <field name="depreciation_date" string="Due Date"/>
+                                    <field name="depreciated_value" invisible="1" string="Amount Already Paid"/>
+                                    <field name="amount" readonly="1" string="Installment Amount"/>
+                                    <field name="remaining_value" readonly="1" string="Remaining Value"/>
+                                    <field name="move_check" invisible="1"/>
+                                    <field name="parent_state" invisible="1"/>
+                                    <button name="create_move" type="object" widget="widgetonbutton"/>
+                                </tree>
+                                <form string="Installment Lines"> 
+                                    <group>
+                                        <group>
+                                            <field name="asset_id" invisible="1"/>
+                                            <field name="parent_state" invisible="1"/>
+                                            <field name="name" string="Installment Name"/>
+                                            <field name="sequence"/>
+                                            <field name="move_id" string="Installment Entry"/>
+                                            <field name="move_check"/>
+                                            <field name="parent_state" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="amount" string="Current Installment"/>
+                                            <field name="depreciation_date" string="Due Date"/>
+                                            <field name="depreciated_value" readonly="1" string="Amount Already Paid"/>
+                                            <field name="remaining_value" readonly="1" string="Remaining value"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                            <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','=','close')]}"/>
+                        </page>
+                        <page string="History">
+                            <field name="history_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                    <separator string="Installment Information" colspan="4"/>
+                    <group>
+                        <field name="method_number" string="Number of Installment" help="The number of installment needed for your recognition"/>
+                        <field name="method_period" string="Installment Period" help="State here the time between 2 installments, in months"/>
+                        <button name="%(action_asset_modify)d" states="open" string="(update)" type="action" class="oe_inline oe_link" colspan="4"/>
+                        <field name="prorata" invisible="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user" />
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_revenue_recognition_tree">
+        <field name="name">account.revenue.recognition.tree</field>
+        <field name="model">account.asset.asset</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Revenue Recognition" colors="blue:(state == 'draft');grey:(state == 'close')">
+                <field name="name" string="Name"/>
+                <field name="category_id" string="Category"/>
+                <field name="date" string="Sale Date"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="value" string="Sale Value"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_revenue_recognition_search" model="ir.ui.view">
+        <field name="name">account.revenue.recognition.search</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <search string="Account Revenue Recognition Search">
+                <field name="name" string="Recognition"/>
+                <field name="category_id" string="Recognition Category"/>
+                <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Recognition in draft and open states"/>
+                <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Recognition in closed state"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Category" icon="terp-go-month" domain="[]" context="{'group_by':'category_id'}"/>    
+                    <filter string="Sale Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>    
+                    <filter string="Parent" icon="terp-go-month" domain="[]" context="{'group_by':'parent_id'}"/>
+                    <filter string="Recognition Name" context="{'group_by':'name'}" invisible="1"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_account_revenue_recognition_graph">
+        <field name="name">account.revenue.recognition.graph</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <graph string="Assets" type="bar">
+                <field name="name" type="row"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_revenue_recognition_hierarchy_tree">
+        <field name="name">account.revenue.recognition.hierarchy</field>
+        <field name="model">account.asset.asset</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Revenue Recognition Hierarchy view">
+                <field name="name" string="Name"/>
+                <field name="category_id" string="Category"/>
+                <field name="code"/>
+                <field name="date" string="Sales Date"/>
+                <field name="value" string="Sales value"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+     <!--
+        Asset
+     -->
+    
     <record model="ir.ui.view" id="view_account_asset_asset_form">
         <field name="name">account.asset.asset.form</field>
         <field name="model">account.asset.asset</field>
@@ -96,51 +315,33 @@
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" on_change="onchange_category_id(category_id)"/>
+                            <field name="category_id" on_change="onchange_category_id(category_id)" domain="[('type','=','purchase')]" string="Asset Category" context="{'default_type':'purchase','default_method_period':12,'from_asset':True}" help="Category of asset"/>
                             <field name="code"/>
-                            <field name="parent_id"/>
+                            <field name="parent_id" domain="[('category_id.type','=','purchase')]" help="Used as parent asset of this asset"/>
+                            <field name="date" string="Purchase Date" help="Purchase date of asset"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         </group>
                         <group>
-                            <field name="purchase_date"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                            <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(value, salvage_value)" string="Gross Value" help="Gross value of asset"/>
+                            <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(value, salvage_value)"/>
+                            <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="partner_id" string="Supplier"/>
+                            <field name="invoice_id" string="Purchase Invoice" domain="[('invoice_line.asset_category_id.type','=','purchase')]"/>
                         </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="General">
-                            <group>
-                                <group>
-                                    <field name="purchase_value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(purchase_value, salvage_value)"/>
-                                    <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(purchase_value, salvage_value)"/>
-                                    <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="partner_id"/>
-                                </group>
-                                <group>
-                                    <field name="method"/>
-                                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                                    <label for="method_time"/>
-                                    <div>
-                                        <field name="method_time" on_change="onchange_method_time(method_time)" class="oe_inline"/>
-                                        <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" class="oe_inline" colspan="1"/>
-                                    </div>
-                                    <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
-                                    <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
-                                    <field name="method_period"/>
-                                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
-                                </group>
-                            </group>
-                        </page>
                         <page string="Depreciation Board">
-                            <field name="depreciation_line_ids" mode="tree">
-                                <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
+                            <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
+                                <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)" create="false">
+                                    <field name="sequence" string="Serial Number"/>
                                     <field name="depreciation_date"/>
-                                    <field name="sequence" invisible="1"/>
                                     <field name="depreciated_value" readonly="1"/>
                                     <field name="amount"/>
                                     <field name="remaining_value" readonly="1"/>
-                                    <field name="move_check"/>
+                                    <field name="move_check" invisible="1"/>
                                     <field name="parent_state" invisible="1"/>
-                                    <button name="create_move" attrs="{'invisible':['|',('move_check','!=',False),('parent_state','!=','open')]}" icon="gtk-execute" string="Create Move" type="object"/>
+                                    <button name="create_move" type="object" widget="widgetonbutton"/>
                                 </tree>
                                 <form string="Depreciation Lines"> 
                                     <group>
@@ -148,13 +349,13 @@
                                             <field name="asset_id" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <field name="name"/>
-                                            <field name="amount"/>
+                                            <field name="sequence"/>
                                             <field name="move_id"/>
                                             <field name="move_check"/>
                                             <field name="parent_state" invisible="1"/>
                                         </group>
                                         <group>
-                                            <field name="sequence"/>
+                                            <field name="amount"/>
                                             <field name="depreciation_date"/>
                                             <field name="depreciated_value" readonly="1"/>
                                             <field name="remaining_value" readonly="1"/>
@@ -165,14 +366,32 @@
                             <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','=','close')]}"/>
                         </page>
                         <page string="History">
-                            <field name="account_move_line_ids" readonly="1"/>
                             <field name="history_ids" readonly="1"/>
                         </page>
-                        <page string="Notes">
-                            <field name="note" placeholder="Add an internal note here..."/>
-                        </page>
                     </notebook>
+                    <separator string="Depreciation Information" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="method"/>
+                            <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                            <label for="method_time"/>
+                            <div>
+                                <field name="method_time" on_change="onchange_method_time(method_time)"/>
+                                <button name="%(action_asset_modify)d" states="open" string="(update)" type="action" class="oe_inline oe_link" colspan="1"/>
+                            </div>
+                            <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
+                        </group>
+                        <group>
+                            <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
+                            <field name="method_period"/>
+                            <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
+                        </group>
+                    </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -183,16 +402,27 @@
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets" colors="blue:(state == 'draft');grey:(state == 'close')">
-                <field name="name"/>
-                <field name="category_id"/>
-                <field name="purchase_date"/>
-                <field name="partner_id"/>
-                <field name="purchase_value"/>
+                <field name="name" string="Name"/>
+                <field name="category_id" string="Category"/>
+                <field name="date" string="Purchase Date"/>
+                <field name="partner_id" string="Supplier"/>
+                <field name="value" string="Gross Value"/>
                 <field name="value_residual"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_asset_graph">
+        <field name="name">account.asset.asset.graph</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <graph string="Assets" type="bar">
+                <field name="name" type="row"/>
+                <field name="value" type="measure"/>
+            </graph>
         </field>
     </record>
 
@@ -204,9 +434,9 @@
             <tree string="Assets">
                 <field name="name"/>
                 <field name="code"/>
-                <field name="category_id"/>
-                <field name="purchase_date"/>
-                <field name="purchase_value"/>
+                <field name="category_id" string="Asset Category"/>
+                <field name="date" string="Purchase Date"/>
+                <field name="value" string="Gross Value"/>
                 <field name="value_residual"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -221,11 +451,16 @@
         <field name="arch" type="xml">
             <search string="Account Asset">
                 <field name="name" string="Asset"/>
-                <field name="purchase_date"/>
+                <field name="date" string="Purchase Date"/>
                 <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
                 <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
                 <field name="category_id"/>
                 <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                <group expand="0" string="Group By...">
+                        <filter string="Purchase Month" icon="terp-personal" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Category" icon="terp-personal" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Parent" icon="terp-go-month" domain="[]" context="{'group_by':'parent_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -273,22 +508,31 @@
             </tree>
         </field>
     </record>
-
+    
     <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
         <field name="name">Asset Hierarchy</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
+        <field name="domain">[('parent_id','=',False),('category_id.type', '=', 'purchase')]</field>
         <field name="view_id" ref="view_account_asset_asset_hierarchy_tree"/>
     </record>
-
+    
+    <record model="ir.actions.act_window" id="action_account_revenue_recognition_hierarchy_tree">
+         <field name="name">Revenue Recognition Hierarchy</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('parent_id','=',False),('category_id.type', '=', 'sales')]</field>
+        <field name="view_id" ref="view_account_revenue_recognition_hierarchy_tree"/>
+     </record>
+    
     <record id="view_account_move_line_form_inherit" model="ir.ui.view">
         <field name="name">Journal Items (form)</field>
         <field name="model">account.move.line</field>
         <field name="inherit_id" ref="account.view_move_line_form"/>
         <field name="arch" type="xml">
             <field name="statement_id" position="after">
-                <field name="asset_id"/>
+                <field name="asset_id" string="Asset"/>
             </field>
         </field>
     </record>
@@ -299,37 +543,94 @@
         <field name="inherit_id" ref="account.view_account_move_line_filter"/>
         <field name="arch" type="xml">
             <field name="account_id" position="after">
-                <field name="asset_id"/>
+                <field name="asset_id" string="Asset"/>
             </field>
         </field>
     </record>
 
-    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance" sequence="9"/>
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree"
-        sequence="100"
-        action="action_account_asset_asset_tree"/>
+    <menuitem id="menu_finance_assets" name="Installment Plans" parent="account.menu_finance" sequence="9"/>
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_form">
-        <field name="name">Assets</field>
+        <field name="name">Revenues Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('category_id.type', '=', 'purchase')]</field>
         <field name="view_id" ref="view_account_asset_asset_tree"/>
         <field name="search_view_id" ref="view_account_asset_search"/>
     </record>
 
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form"/>
+    <record model="ir.actions.act_window.view" id="view_action_account_asset_tree">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_account_asset_asset_tree"/>
+        <field name="act_window_id" ref="action_account_asset_asset_form"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="view_action_account_asset_form">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_account_asset_asset_form"/>
+        <field name="act_window_id" ref="action_account_asset_asset_form"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="view_action_account_asset_graph">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_account_asset_asset_graph"/>
+        <field name="act_window_id" ref="action_account_asset_asset_form"/>
+    </record>
 
-    <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
+    <!-- Revenue Recognition Action -->
 
-    <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_configuration" sequence="25"/>
+    <record model="ir.actions.act_window" id="action_account_revenue_form">
+        <field name="name">Revenues Recognitions</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('category_id.type', '=', 'sales')]</field>
+        <field name="view_id" ref="view_account_revenue_recognition_tree"/>
+        <field name="search_view_id" ref="view_account_revenue_recognition_search"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="view_action_account_revenue_tree">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_account_revenue_recognition_tree"/>
+        <field name="act_window_id" ref="action_account_revenue_form"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="view_action_account_revenue_form">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_revenue_recognition_form"/>
+        <field name="act_window_id" ref="action_account_revenue_form"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="view_action_account_revenue_graph">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_account_revenue_recognition_graph"/>
+        <field name="act_window_id" ref="action_account_revenue_form"/>
+    </record>
+    
+    <menuitem parent="menu_finance_assets" id="menu_revenue_recognition" action="action_account_revenue_form" sequence="102"/>
+    
+    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="103"/>
+    
+    <menuitem id="menu_finance_config_assets" name="Installment Plans" parent="account.menu_finance_configuration" sequence="25"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
-        <field name="name">Asset Categories</field>
+        <field name="name">Categories</field>
         <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
-
+    <menuitem name="Categories" parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal" sequence="1"/>
+    <menuitem name="Asset Hierarchy" parent="menu_finance_config_assets" id="menu_action_account_asset_asset_tree" action="action_account_asset_asset_tree" sequence="2"/>
+    <menuitem name="Revenue Recognition Hierarchy" parent="menu_finance_config_assets" id="menu_action_revenue_recognition_hierarchy" sequence="3" action="action_account_revenue_recognition_hierarchy_tree"/>
+    
+    <template id="assets_backend" name="accountasset assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/account_asset/static/src/js/account_asset.js"></script>
+            </xpath>
+    </template>
+    
 </data>
 </openerp>
