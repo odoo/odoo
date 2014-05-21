@@ -9,7 +9,8 @@ from openerp.addons.web.http import request
 
 
 class MailGroup(http.Controller):
-    _thread_per_page = 10
+    _thread_per_page = 5
+    _replies_per_page = 1
 
     def _get_archives(self, group_id):
         MailMessage = request.registry['mail.message']
@@ -27,7 +28,7 @@ class MailGroup(http.Controller):
     def view(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         group_obj = request.registry.get('mail.group')
-        group_ids = group_obj.search(cr, uid, [], context=context)
+        group_ids = group_obj.search(cr, uid, [('alias_id', '!=', False), ('alias_id.alias_name', '!=', False)], context=context)
         values = {'groups': group_obj.browse(cr, uid, group_ids, context)}
         return request.website.render('website_mail_group.mail_groups', values)
 
@@ -85,7 +86,28 @@ class MailGroup(http.Controller):
             'message': message,
             'group': group,
             'mode': mode,
+            'archives': self._get_archives(group.id),
             'date_begin': date_begin,
             'date_end': date_end,
         }
         return request.website.render('website_mail_group.group_message', values)
+
+    @http.route(
+        '''/groups/<model('mail.group'):group>/<model('mail.message', "[('model','=','mail.group'), ('res_id','=',group[0])]"):message>/get_replies''',
+        type='json', auth="public", methods=['POST'], website=True)
+    def render_messages(self, group, message, **post):
+        last_displayed_id = post.get('last_displayed_id')
+        if not last_displayed_id:
+            return False
+        Message = request.registry['mail.message']
+        replies_domain = [('id', '<', int(last_displayed_id)), ('parent_id', '=', message.id)]
+        msg_ids = Message.search(request.cr, request.uid, replies_domain, limit=self._replies_per_page, context=request.context)
+        msg_count = Message.search(request.cr, request.uid, replies_domain, count=True, context=request.context)
+        messages = Message.browse(request.cr, request.uid, msg_ids, context=request.context)
+        values = {
+            'group': group,
+            'thread_header': message,
+            'messages': messages,
+            'msg_more_count': msg_count - self._replies_per_page,
+        }
+        return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_group.messages_short', values, engine='ir.qweb', context=request.context)
