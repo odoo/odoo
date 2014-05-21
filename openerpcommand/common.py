@@ -14,8 +14,7 @@ def add_addons_argument(parser):
     Add a common --addons argument to a parser.
     """
     parser.add_argument('--addons', metavar='ADDONS',
-        **required_or_default('ADDONS',
-                              'colon-separated list of paths to addons'))
+        help='colon-separated list of paths to addons')
 def set_addons(args):
     """
     Turn args.addons into a list instead of a column-separated strings.
