@@ -2459,6 +2459,7 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
             return (new openerp.web.Model(self.view.fields.stage_id.field.relation)).query([])
                 .filter([["id", "=", stage_id]]).first().then(function(res) {
                     var li = self.$('li');
+                    self.$("ul").find("[data-value='0'] a").attr("title", res['legend_star1']);
                     for (i=1; i<=li.length; i++){
                         var title = res['legend_star'+i]
                         if (title) {
