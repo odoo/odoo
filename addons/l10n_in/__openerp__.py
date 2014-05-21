@@ -20,15 +20,15 @@
 ##############################################################################
 
 {
-    'name': 'Indian - Accounting',
+    'name': 'Indian Chart of Account',
     'version': '1.0',
     'description': """
-Indian Accounting: Chart of Account.
-====================================
+Indian Chart of Account
+=======================
 
 Indian accounting chart and localization.
     """,
-    'author': ['OpenERP SA', 'Axelor'],
+    'author': ['OpenERP SA'],
     'category': 'Localization/Account Charts',
     'depends': [
         'account',
