@@ -47,6 +47,7 @@ def main():
 
     # Subcommand discovery
     if len(args) and not args[0].startswith("-"):
+        logging.disable(logging.CRITICAL)
         for m in module.get_modules():
             m = 'openerp.addons.' + m
             __import__(m)
@@ -54,6 +55,7 @@ def main():
             #except Exception, e:
             #    raise
             #    print e
+        logging.disable(logging.NOTSET)
         command = args[0]
         args = args[1:]
 
