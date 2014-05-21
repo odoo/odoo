@@ -312,8 +312,18 @@ class project_issue(osv.Model):
             default = {}
         default = default.copy()
         default.update(name=_('%s (copy)') % (issue['name']))
-        return super(project_issue, self).copy(cr, uid, id, default=default,
-                context=context)
+        res = super(project_issue, self).copy(cr, uid, id, default, context)
+        # handle attachments: copy them instead of just keeping the links
+        attach_obj = self.pool['ir.attachment']
+        attach_ids = attach_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', id)], context=context)
+        for attach in attach_obj.browse(cr, uid, attach_ids, context=context):
+            attach_obj.copy(cr, uid, attach.id, {
+                'name': '%s %s' % (attach.name, fields.datetime.now()),
+                'res_id': res,
+                'res_model': 'project.issue',
+                'res_name': default['name'],
+            }, context=context)
+        return res
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -474,13 +484,32 @@ class project(osv.Model):
             project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
             for project_id in ids
         }
+
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
+        attachment_obj = self.pool['ir.attachment']
+        issue_obj = self.pool['project.issue']
+        res = super(project, self)._get_attached_docs(cr, uid, ids, field_name, arg=arg, context=context)
+        for id in res:
+            issue_ids = issue_obj.search(cr, uid, [('project_id', '=', id)], context=context)
+            issue_attachments = attachment_obj.search(cr, uid, [('res_model', '=', 'project.issue'), ('res_id', 'in', issue_ids)], context=context, count=True)
+            res[id] += issue_attachments
+        return res
+
+    def attachment_tree_view(self, cr, uid, ids, context):
+        res = super(project, self).attachment_tree_view(cr, uid, ids, context=context)
+        issue_ids = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', ids)], context=context)
+        res['domain'].insert(0, '|')
+        res['domain'] += ['&', ('res_model', '=', 'project.issue'), ('res_id', 'in', issue_ids)]
+        return res
+
     _columns = {
         'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
             help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id',
-                                     domain=[('stage_id.fold', '=', False)])
+                                     domain=[('stage_id.fold', '=', False)]),
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int'),
     }
 
     def _check_escalation(self, cr, uid, ids, context=None):
@@ -494,6 +523,17 @@ class project(osv.Model):
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        default['issue_ids'] = []
+        res = super(project, self).copy(cr, uid, id, default, context=context)
+        issue_obj = self.pool['project.issue']
+        current_project = self.browse(cr, uid, id, context=context)
+        # copy issues
+        if current_project.state == 'template':
+            issue_ids = issue_obj.search(cr, uid, [('project_id','=', id)], context=context)
+            for issue in issue_obj.browse(cr, uid, issue_ids, context=context):
+                issue_obj.copy(cr, uid, issue.id, default={'project_id': res, 'name': issue.name}, context=context)
+        return res
 
 class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'
