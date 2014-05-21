@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -48,7 +48,7 @@ You can manage:
         'images/hr_job_position.jpeg',
         'static/src/img/default_image.png',
     ],
-    'depends': ['base_setup','mail', 'resource', 'board'],
+    'depends': ['base_setup', 'mail', 'resource', 'board'],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',

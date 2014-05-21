@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -94,7 +94,7 @@ class hr_job(osv.Model):
 
     _name = "hr.job"
     _description = "Job Position"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
@@ -381,13 +381,14 @@ class hr_department(osv.osv):
         return dict(res)
 
     _name = "hr.department"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
         'name': fields.char('Department Name', size=64, required=True),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
-        'manager_id': fields.many2one('hr.employee', 'Manager'),
+        'manager_id': fields.many2one('hr.employee', 'Manager', track_visibility='onchange'),
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
         'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
         'note': fields.text('Note'),
@@ -432,6 +433,29 @@ class hr_department(osv.osv):
             default = {}
         default['member_ids'] = []
         return super(hr_department, self).copy_data(cr, uid, ids, default, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        manager_id = vals.get("manager_id")
+        res = super(hr_department, self).create(cr, uid, vals, context=context)
+        if manager_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+            if employee.user_id:
+                self.message_subscribe_users(cr, uid, [res] , user_ids=[employee.user_id.id], context=context)
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        manager_id = vals.get("manager_id")
+        department = self.browse(cr, uid, ids, context=context)[0]
+        if manager_id:
+        	employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+                if manager_id != department.manager_id:
+                    if employee.user_id:
+                        self.message_subscribe_users(cr, uid, [department.id] , user_ids=[employee.user_id.id], context=context)
+                    if department.manager_id.user_id:
+                        self.message_unsubscribe_users(cr, uid, [department.id] , user_ids=[department.manager_id.user_id.id], context=context)
+        elif 'manager_id' in vals and department.manager_id and department.manager_id.user_id:
+            self.message_unsubscribe_users(cr, uid, [department.id] , user_ids=[department.manager_id.user_id.id], context=context)
+        return super(hr_department, self).write(cr, uid, ids, vals, context=context)
 
 
 class res_users(osv.osv):

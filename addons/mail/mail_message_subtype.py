@@ -55,7 +55,6 @@ class mail_message_subtype(osv.osv):
         'sequence': fields.integer('Sequence', help="Used to order subtypes."),
         'hidden': fields.boolean('Hidden', help="Hide the subtype in the follower options")
     }
-
     _defaults = {
         'default': True,
         'sequence': 1,
