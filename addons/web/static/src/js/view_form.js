@@ -3396,8 +3396,9 @@ instance.web.form.CompletionFieldMixin = {
             }
             else if (values.length == 0)
             	values.push({
-            		label: "<center><i>" + _t("No results to show...") + "</i></center>",
+            		label: _t("No results to show..."),
             		action: function() {},
+            		classname: 'oe_m2o_dropdown_option_no_results_to_show'
             	});
 
             return values;
