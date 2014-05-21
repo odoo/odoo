@@ -188,9 +188,8 @@ class account_installer(osv.osv_memory):
         return (modules | set([chart])) - set(['has_default_company', 'configurable'])
     
     def _open_account_configuration_installer(self, cr, uid, ids, context=None):
-        groups = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'group_account_manager')
-        user_ids = [user.id for user in groups.users]
-        if uid in user_ids:
+        in_group = self.pool['res.users'].has_group(cr, uid, 'account.group_account_manager')
+        if in_group:
             view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'view_account_configuration_installer')[1]
             result = {
                 'name': 'Configure Accounting Data',
