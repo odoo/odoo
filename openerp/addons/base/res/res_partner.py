@@ -148,7 +148,7 @@ class res_partner_title(osv.osv):
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'shortcut': fields.char('Abbreviation', translate=True),
-        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', size=7, required=True, size=24)
+        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', size=7, required=True)
     }
     _defaults = {
         'domain': 'contact',
