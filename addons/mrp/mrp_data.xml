@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
@@ -36,5 +36,19 @@ This application supports complete integration and production scheduling for sto
             <field name='manufacture_to_resupply' eval='True'/>
         </record>
 
+        <record id="mt_manufacturing_order" model="mail.message.subtype">
+            <field name="name">Manufacturing Order</field>
+            <field name="res_model">mrp.production</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="description">Manufacturing Order Created</field>
+        </record>
+        <record id="mt_disassemble_order" model="mail.message.subtype">
+            <field name="name">Disassemble Order</field>
+            <field name="res_model">mrp.production</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="False"/>
+            <field name="description">Disassemble Order Created</field>
+        </record>
     </data>
-</openerp>
+</odoo>

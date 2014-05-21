@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
+from lxml import etree
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
+
 import openerp.addons.decimal_precision as dp
 
 
@@ -73,7 +76,6 @@ class mrp_product_produce(osv.osv_memory):
             new_consume_lines.append([0, False, consume])
         return {'value': {'consume_lines': new_consume_lines}}
 
-
     def _get_product_qty(self, cr, uid, context=None):
         """ To obtain product quantity
         @param self: The object pointer.
@@ -90,8 +92,8 @@ class mrp_product_produce(osv.osv_memory):
         for move in prod.move_created_ids2:
             if move.product_id == prod.product_id:
                 if not move.scrapped:
-                    done += move.product_uom_qty # As uom of produced products and production order should correspond
-        return prod.product_qty - done
+                    done += move.product_qty
+        return (abs(prod.product_qty) - done) or abs(prod.product_qty)
 
     def _get_product_id(self, cr, uid, context=None):
         """ To obtain product id

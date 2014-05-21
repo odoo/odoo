@@ -903,7 +903,7 @@
     <div class="oe_clear">
         <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab">
+                <a role="tab" t-attf-href="##{page.id}" t-attf-name="#{page.name}" t-att-accesskey="page.accesskey" data-toggle="tab">
                     <t t-esc="page.string"/>
                 </a>
             </li>
@@ -916,7 +916,7 @@
     </div>
 </t>
 <t t-name="FormRenderingSeparator">
-    <div t-attf-class="oe_horizontal_separator oe_clear #{classnames}">
+    <div t-attf-class="oe_horizontal_separator oe_clear #{classnames} " t-attf-name="#{name}">
         <t t-esc="string"/>
     </div>
 </t>
