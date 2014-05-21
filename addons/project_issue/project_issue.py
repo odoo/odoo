@@ -494,13 +494,17 @@ class project(osv.Model):
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
 
-
 class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
     _columns = {
         'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
+        'issue_label': fields.char('Use Issues as', size=128, help="Gives label to issues on project's kanaban view.", required=True),
+    }
+
+    _defaults = {
+        'issue_label': 'Issues',
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

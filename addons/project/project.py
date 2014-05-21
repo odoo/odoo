@@ -34,6 +34,29 @@ class project_task_type(osv.osv):
     _name = 'project.task.type'
     _description = 'Task Stage'
     _order = 'sequence'
+
+    def _get_tooltips(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        for rec in self.read(cr, uid, ids, ['legend_blocked', 'legend_done', 'legend_star1','legend_star2','description'],context=context):
+            value = ""
+            star = "<img src='/web/static/src/img/icons/star-on.png'/>"
+            if rec['legend_blocked']:
+                img = "<img src='/web/static/src/img/icons/gtk-no.png'/>"
+                value += img +' '+ rec['legend_blocked'] + "<br/>"
+            if rec['legend_done']:
+                img = "<img src='/web/static/src/img/icons/gtk-yes.png'/> "
+                value += img +' '+ rec['legend_done'] + "<br/>"
+            if rec['legend_star1']:
+                value += star +' '+ rec['legend_star1'] + "<br/>"
+            if rec['legend_star2']:
+                value += star + star +' '+ rec['legend_star2'] + "<br/>"
+            if rec['description']:
+                value += rec['description']
+            tooltip = {'tooltip': value}
+            tooltip.update(rec)
+            res[rec['id']] = tooltip
+        return res
+
     _columns = {
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
@@ -44,6 +67,11 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
+        'kanban_column_tooltip': fields.function(_get_tooltips, string='Tooltips', type="char", help="This tooltips will display on kanban stage header"),
+        'legend_blocked': fields.char('Legend Red', help='This tooltip will appear on kanban view column header.'),
+        'legend_done':fields.char('Legend Green', help='This tooltip will appear on kanban view column header.'),
+        'legend_star1':fields.char('Legend Star', help='This tooltip will appear on kanban view column header.'),
+        'legend_star2':fields.char('Legend Star2', help='This tooltip will appear on kanban view column header.'),
     }
 
     def _get_default_project_ids(self, cr, uid, ctx={}):
@@ -54,6 +82,7 @@ class project_task_type(osv.osv):
 
     _defaults = {
         'sequence': 1,
+        'case_default': True,
         'project_ids': _get_default_project_ids,
     }
     _order = 'sequence'
@@ -543,9 +572,9 @@ def Project():
         # if alias_model has been changed, update alias_model_id accordingly
         if vals.get('alias_model'):
             model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', vals.get('alias_model', 'project.task'))])
-            vals.update(alias_model_id=model_ids[0])
+            if model_ids and len(model_ids):
+                vals.update(alias_model_id=model_ids[0])
         return super(project, self).write(cr, uid, ids, vals, context=context)
-
 
 class task(osv.osv):
     _name = "project.task"
@@ -1174,6 +1203,11 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'task_label': fields.char('Use Task as', size=128, help="Gives label to tasks on project's kanaban view.", required=True),
+    }
+
+    _defaults = {
+        'task_label': 'Tasks'
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):

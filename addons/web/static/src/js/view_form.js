@@ -2392,6 +2392,17 @@ instance.web.form.KanbanSelection = instance.web.form.FieldChar.extend({
         this.states = self.prepare_dropdown_selection();;
         this.$el.html(QWeb.render("KanbanSelection", {'widget': self}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
+
+        if (self.view.datarecord.stage_id) {
+            var stage_id = _.isArray(self.view.datarecord.stage_id) ? self.view.datarecord.stage_id[0] : self.view.datarecord.stage_id
+            return (new openerp.web.Model(self.view.fields.stage_id.field.relation)).query([])
+                .filter([["id", "=", stage_id]]).first().then(function(res) {
+                    var title = res['legend_'+self.get('value')]
+                    if (title) {
+                        self.$(".oe_kanban_status").attr("title", title)
+                    }
+             });
+        }
     },
     do_action: function(e) {
         var self = this;
@@ -2442,6 +2453,20 @@ instance.web.form.Priority = instance.web.form.FieldChar.extend({
         this.priorities = self.prepare_priority();
         this.$el.html(QWeb.render("Priority", {'widget': this}));
         this.$el.find('.oe_legend').click(self.do_action.bind(self));
+
+        if (self.view.datarecord.stage_id) {
+            var stage_id = _.isArray(self.view.datarecord.stage_id) ? self.view.datarecord.stage_id[0] : self.view.datarecord.stage_id
+            return (new openerp.web.Model(self.view.fields.stage_id.field.relation)).query([])
+                .filter([["id", "=", stage_id]]).first().then(function(res) {
+                    var li = self.$('li');
+                    for (i=1; i<=li.length; i++){
+                        var title = res['legend_star'+i]
+                        if (title) {
+                            self.$("ul").find("[data-value='" + i + "'] a").attr("title", title);
+                        }
+                    }
+             });
+        }
     },
     do_action: function(e) {
         var self = this;
@@ -6168,6 +6193,9 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
         };
         if (! this.node.attrs.nolabel) {
             options.text = this.string
+        }
+        if(this.options.label_field){
+            options.text = this.view.datarecord[this.options.label_field]
         }
         this.$el.html(QWeb.render("StatInfo", options));
     },

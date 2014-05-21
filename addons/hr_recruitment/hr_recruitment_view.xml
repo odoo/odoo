@@ -246,7 +246,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="stage_id"/>
+                <field name="stage_id" options='{"tooltip_on_group_by": "kanban_column_tooltip"}'/>
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="survey"/>
@@ -541,6 +541,28 @@
                         <field name="fold"/>
                         <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
+                </group>
+                <separator string="Legend"/>
+                <p>The legend will appear as tooltip of each column of the opportunities pipe.</p>
+                <group col="3">
+                    <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">7</span>
+                    <field name="legend_star1" nolabel="1"/>
+                    <div></div>
+                </group>
+                <group col="3">
+                    <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">77</span>
+                    <field name="legend_star2" nolabel="1"/>
+                    <div></div>
+                </group>
+                <group col="3">
+                    <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">777</span>
+                    <field name="legend_star3" nolabel="1"/>
+                    <div></div>
+                </group>
+                <group col="3">
+                    <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">7777</span>
+                    <field name="legend_star4" nolabel="1"/>
+                    <div></div>
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>

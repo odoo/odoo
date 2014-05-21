@@ -87,15 +87,15 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="options_active">
-                            <field name="use_tasks" class="oe_inline"/>
-                            <label for="use_tasks"/>
+                        <div name="options_active" class="oe_inline oe_left">
+                            <field name="use_tasks" class="oe_from_boolean_align"/>
+                            <label for="task_label" class="oe_edit_only"/>
+                            <b><field name="task_label" class="oe_inline"/></b>
                         </div>
                     </div>
                     <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
-                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}" 
-                            name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
-                            <field string="Tasks" name="task_count" widget="statinfo"/>
+                         <button class="oe_inline oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}" name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
+                            <field name="task_count" widget="statinfo" options="{'label_field':'task_label'}"/>
                         </button>
                         <button  class="oe_inline oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
@@ -170,7 +170,13 @@
                             </group>
                         </page>
                         <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
-                             <field name="type_ids"/>
+                             <field name="type_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="kanban_column_tooltip" widget="tooltiphtml"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
@@ -264,9 +270,9 @@
                                         <span class="oe_e oe_e_alias">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
-                                        <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.task_ids.raw_value.length"/> Tasks
-                                        </a>
+                                        <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px"> 
+                                            <span><field name="task_count"/> <field name="task_label"/></span>
+                                         </a>
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
@@ -476,7 +482,7 @@
                 <kanban default_group_by="stage_id" >
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" options='{"tooltip_on_group_by": "kanban_column_tooltip"}'/>
                     <field name="user_id"/>
                     <field name="user_email"/>
                     <field name="description"/>
@@ -605,8 +611,11 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks"/>
-                    <label for="use_tasks"/>
+                    <div name="options_active" class="oe_inline oe_left">
+                        <field name="use_tasks" class="oe_from_boolean_align"/>
+                        <label for="task_label" class="oe_edit_only"/>
+                        <b><field name="task_label" class="oe_inline"/></b>
+                    </div>
                 </xpath>
             </field>
         </record>
@@ -691,6 +700,29 @@
                             <field name="fold"/>
                         </group>
                     </group>
+                    <separator string="Legends"/>
+                    <p>The legend will appear as tooltip of each column of the tasks/issues pipe.</p>
+                    <group col="3">
+                        <span width="35" class='oe_kanban_status oe_kanban_status_red' title="This tooltip will appear on kanban view column header."/> 
+                        <field name="legend_blocked" nolabel="1"/>
+                        <div></div>
+                    </group>
+                    <group col="3">
+                        <span width="35" class='oe_kanban_status oe_kanban_status_green' title="This tooltip will appear on kanban view column header."/>  
+                        <field name="legend_done" nolabel="1"/>
+                        <div></div>
+                    </group>
+                    <group col="3">
+                        <span width="35" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">7</span>
+                        <field name="legend_star1" nolabel="1"/>
+                        <div></div>
+                    </group>
+                    <group col="3">
+                        <span width="35" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">77</span>
+                        <field name="legend_star2" nolabel="1"/>
+                        <div></div>
+                    </group>
+                    <separator string="Description"/>
                     <field name="description" placeholder="Add a description..."/>
                 </form>
             </field>
@@ -729,7 +761,7 @@
 
         <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1" groups="base.group_no_one"/>
 
-        <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
+        <menuitem action="open_task_type_form" name="Project Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
 

@@ -107,6 +107,30 @@
                         </group>
 
                     </group>
+                     <div attrs="{'invisible':[('type','=', 'lead')]}">
+                        <separator string="Legend"/>
+                        <p>The legend will appear as tooltip of each column of the opportunities pipe.</p>
+                        <group col="3">
+                            <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">7</span>
+                            <field name="legend_star1" nolabel="1"/>
+                            <div></div>
+                        </group>
+                        <group col="3">
+                            <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">77</span>
+                            <field name="legend_star2" nolabel="1"/>
+                            <div></div>
+                        </group>
+                        <group col="3">
+                            <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">777</span>
+                            <field name="legend_star3" nolabel="1"/>
+                            <div></div>
+                        </group>
+                        <group col="3">
+                            <span width="72" class="oe_e oe_star_on" title="This tooltip will appear on kanban view column header.">7777</span>
+                            <field name="legend_star4" nolabel="1"/>
+                            <div></div>
+                        </group>
+                    </div>
                     <separator string="Requirements"/>
                     <field name="requirements" nolabel="1"/>
                     <field name="section_ids" invisible="1"/>

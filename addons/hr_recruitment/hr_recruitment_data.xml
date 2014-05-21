@@ -92,30 +92,54 @@
     <record model="hr.recruitment.stage" id="stage_job1">
         <field name="name">Initial Qualification</field>
         <field name="sequence">1</field>
+        <field name="legend_star1">Average</field>
+        <field name="legend_star2">Correspond to the job requirements</field>
+        <field name="legend_star3">Nice to have skills</field>
+        <field name="legend_star4">Excellent</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
         <field name="template_id" ref="applicant_interest"/>
         <field name="sequence">2</field>
+        <field name="legend_star1">Average</field>
+        <field name="legend_star2">Good</field>
+        <field name="legend_star3">Very Good</field>
+        <field name="legend_star4">Excellent</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
         <field name="name">Second Interview</field>
         <field name="sequence">3</field>
+        <field name="legend_star1">Average</field>
+        <field name="legend_star2">Good at required skills</field>
+        <field name="legend_star3">Expert in required skills</field>
+        <field name="legend_star4">Excellent in all the skills</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job4">
         <field name="name">Contract Proposed</field>
         <field name="sequence">4</field>
+        <field name="legend_star1">Average</field>
+        <field name="legend_star2">Good</field>
+        <field name="legend_star3">Very Good</field>
+        <field name="legend_star4">Excellent</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
         <field name="sequence">5</field>
         <field name="fold" eval="True"/>
+        <field name="legend_star1">Average</field>
+        <field name="legend_star2">Good</field>
+        <field name="legend_star3">Very Good</field>
+        <field name="legend_star4">Excellent</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
         <field name="sequence">6</field>
         <field name="template_id" ref="applicant_refuse"/>
         <field name="fold" eval="True"/>
+        <field name="legend_star1">Average</field>
+        <field name="legend_star2">Good</field>
+        <field name="legend_star3">Very Good</field>
+        <field name="legend_star4">Excellent</field>
     </record>
 
     <record id="mail_alias_jobs" model="mail.alias">

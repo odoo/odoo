@@ -261,7 +261,7 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
-                    <field name="stage_id"/>
+                    <field name="stage_id" options='{"tooltip_on_group_by": "kanban_column_tooltip"}'/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
@@ -290,7 +290,7 @@
                                         <b><field name="name"/></b>
                                         <t t-if="record.planned_revenue.raw_value">
                                             - <b><t t-esc="record.planned_revenue.value"/>
-                                            <field name="company_currency"/></b>
+                                            <field name="company_currency_symbol"/></b>
                                         </t>
                                     </div>
                                     <div>
