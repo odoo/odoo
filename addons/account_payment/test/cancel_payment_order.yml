@@ -3,28 +3,28 @@
 -
   I confirm payment order.
 -
-  !workflow {model: payment.order, action: open, ref: payment_order_1}
+  !workflow {model: payment.order, action: open, ref: payment_order_2}
 -
   I check that payment order is now "Confirmed".
 -
-  !assert {model: payment.order, id: payment_order_1, severity: error, string: Payment Order should be 'Confirmed'.}:
+  !assert {model: payment.order, id: payment_order_2, severity: error, string: Payment Order should be 'Confirmed'.}:
     - state == 'open'
 -
   Now, I cancel the payment order.
 -
-  !workflow {model: payment.order, action: cancel, ref: payment_order_1}
+  !workflow {model: payment.order, action: cancel, ref: payment_order_2}
 -
   I check that payment order is now "Cancelled".
 -
-  !assert {model: payment.order, id: payment_order_1, severity: error, string: Payment Order should be 'Cancelled'.}:
+  !assert {model: payment.order, id: payment_order_2, severity: error, string: Payment Order should be 'Cancelled'.}:
     - state == 'cancel'
 -
   I again set the payment order to draft.
 -
   !python {model: payment.order}: |
-    self.set_to_draft(cr, uid, [ref("payment_order_1")])
+    self.set_to_draft(cr, uid, [ref("payment_order_2")])
 -
   I check that payment order is now "Draft".
 -
-  !assert {model: payment.order, id: payment_order_1,  severity: error, string: Payment Order should be in 'Draft' state.}:
+  !assert {model: payment.order, id: payment_order_2,  severity: error, string: Payment Order should be in 'Draft' state.}:
     - state == 'draft'
