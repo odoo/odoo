@@ -7,6 +7,26 @@ $(document).ready(function () {
         $(".oe_website_sale .js_shipping").toggle();
     });
 
+    $('.oe_website_sale input[name="country_id"]').focusin(function(){
+        openerp.jsonRpc('/shop/get_country', 'call', {}).then(function (countries){
+            var st = new Array();
+            $.each(countries, function(s, t) {
+                st.push(t);
+            });
+            $("input[name='country_id']").autocomplete({source: st});
+        });
+    });
+    
+    $('.oe_website_sale input[name="shipping_country_id"]').focusin(function(){
+        openerp.jsonRpc('/shop/get_country', 'call', {}).then(function (countries){
+            var st = new Array();
+            $.each(countries, function(s, t) {
+                st.push(t);
+            });
+            $("input[name='shipping_country_id']").autocomplete({source: st});
+        });
+    });
+    
     // change for css
     $(document).on('mouseup', '.js_publish', function (ev) {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");

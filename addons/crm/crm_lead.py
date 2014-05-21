@@ -37,7 +37,7 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'company_id',
     'country_id',
     'section_id',
-    'state_id',
+    'state',
     'stage_id',
     'type_id',
     'user_id',
@@ -284,7 +284,7 @@ class crm_lead(format_address, osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State'),
+        'state': fields.char('State', size=32),
         'country_id': fields.many2one('res.country', 'Country'),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
@@ -334,7 +334,7 @@ class crm_lead(format_address, osv.osv):
                 'street': partner.street,
                 'street2': partner.street2,
                 'city': partner.city,
-                'state_id': partner.state_id and partner.state_id.id or False,
+                'state': partner.state_name,
                 'country_id': partner.country_id and partner.country_id.id or False,
                 'email_from': partner.email,
                 'phone': partner.phone,
@@ -731,7 +731,7 @@ class crm_lead(format_address, osv.osv):
             'zip': lead.zip,
             'city': lead.city,
             'country_id': lead.country_id and lead.country_id.id or False,
-            'state_id': lead.state_id and lead.state_id.id or False,
+            'state_name': lead.state,
             'is_company': is_company,
             'type': 'contact'
         }
@@ -1053,11 +1053,5 @@ class crm_lead(format_address, osv.osv):
             duration = str(duration)
         message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting_date, meeting_subject, duration)
         return self.message_post(cr, uid, ids, body=message, context=context)
-
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
-        if state_id:
-            country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
-            return {'value':{'country_id':country_id}}
-        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -39,7 +39,6 @@ This is the latest UK OpenERP localisation necessary to run OpenERP accounting f
         'data/account.tax.code.template.csv',
         'data/account.chart.template.csv',
         'data/account.tax.template.csv',
-        'data/res.country.state.csv',
         'l10n_uk_wizard.xml',
     ],
     'demo' : ['demo/demo.xml'],

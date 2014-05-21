@@ -148,7 +148,7 @@ class crm_lead(osv.osv):
                 result = geo_find(geo_query_address(street=lead.street,
                                                     zip=lead.zip,
                                                     city=lead.city,
-                                                    state=lead.state_id.name,
+                                                    state=lead.state,
                                                     country=lead.country_id.name))
                 if result:
                     self.write(cr, uid, [lead.id], {

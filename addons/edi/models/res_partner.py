@@ -36,7 +36,7 @@ RES_PARTNER_EDI_STRUCT = {
     'zip': True,
     'city': True,
     'country_id': True,
-    'state_id': True,
+    'state_name': True,
     'phone': True,
     'fax': True,
     'mobile': True,

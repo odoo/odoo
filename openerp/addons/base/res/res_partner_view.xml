@@ -168,7 +168,7 @@
                                 <field name="street2"  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                    <field name="state_name" placeholder="State" style="width: 37%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                     <field name="zip" placeholder="ZIP" style="width: 20%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                 </div>
                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
@@ -190,7 +190,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_zip': zip, 'default_state_name': state_name, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -207,7 +207,7 @@
                                     <field name="country_id"/>
                                     <field name="mobile"/>
                                     <field name="fax"/>
-                                    <field name="state_id"/>
+                                    <field name="state_name"/>
                                     <field name="has_image"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -279,11 +279,11 @@
                                             </div>
                                             <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
                                             <div attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
-                                                <field name="street" placeholder="Street..."/>
+                                                <field name="street" placeholder="Street..."/>	
                                                 <field name="street2"/>
                                                 <div class="address_format">
                                                     <field name="city" placeholder="City" style="width: 40%%"/>
-                                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                                    <field name="state_name" placeholder="State" style="width: 37%%"/>
                                                     <field name="zip" placeholder="ZIP" style="width: 20%%"/>
                                                 </div>
                                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
@@ -372,7 +372,7 @@
                     <field name="city"/>
                     <field name="country_id"/>
                     <field name="mobile"/>
-                    <field name="state_id"/>
+                    <field name="state_name"/>
                     <field name="category_id"/>
                     <field name="has_image"/>
                     <templates>

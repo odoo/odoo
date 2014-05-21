@@ -68,15 +68,13 @@ class test_search(common.TransactionCase):
 
         # Get country/state data
         country_us_id = registry('res.country').search(cr, uid, [('code', 'like', 'US')])[0]
-        state_ids = registry('res.country.state').search(cr, uid, [('country_id', '=', country_us_id)], limit=2)
         country_be_id = registry('res.country').search(cr, uid, [('code', 'like', 'BE')])[0]
 
         # Create test users
         search_user = users_obj.create(cr, uid, {'name': '__search', 'login': '__search', 'groups_id': [(6, 0, [group_employee_id])]})
-        a = users_obj.create(cr, uid, {'name': '__test_A', 'login': '__test_A', 'country_id': country_be_id, 'state_id': country_be_id})
-        b = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us_id, 'state_id': state_ids[1]})
-        c = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us_id, 'state_id': state_ids[0]})
-
+        a = users_obj.create(cr, uid, {'name': '__test_A', 'login': '__test_A', 'country_id': country_be_id})
+        b = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us_id})
+        c = users_obj.create(cr, uid, {'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us_id})
         # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
         user_ids = users_obj.search(cr, search_user, [], order='name asc, login desc')
         expected_ids = [search_user, a, c, b]
@@ -84,14 +82,14 @@ class test_search(common.TransactionCase):
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 
         # Do: order on many2one and inherits'd fields
-        user_ids = users_obj.search(cr, search_user, [], order='state_id asc, country_id desc, name asc, login desc')
-        expected_ids = [c, b, a, search_user]
+        user_ids = users_obj.search(cr, search_user, [], order='country_id desc, name asc, login desc')
+        expected_ids = [search_user, c, b, a]
         test_user_ids = filter(lambda x: x in expected_ids, user_ids)
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 
         # Do: order on many2one and inherits'd fields
-        user_ids = users_obj.search(cr, search_user, [], order='country_id desc, state_id desc, name asc, login desc')
-        expected_ids = [search_user, b, c, a]
+        user_ids = users_obj.search(cr, search_user, [], order='country_id desc, name asc, login desc')
+        expected_ids = [search_user, c, b, a]
         test_user_ids = filter(lambda x: x in expected_ids, user_ids)
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
 

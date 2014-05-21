@@ -45,7 +45,6 @@ This is the latest Ethiopian OpenERP localization and consists of:
         'data/account.tax.code.template.csv',
         'data/account.chart.template.csv',
         'data/account.tax.template.csv',
-        'data/res.country.state.csv',
     ],
     'data': [
         'l10n_et_wizard.xml',

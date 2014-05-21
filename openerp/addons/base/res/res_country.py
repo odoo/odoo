@@ -52,7 +52,6 @@ class Country(osv.osv):
 addresses belonging to this country.\n\nYou can use the python-style string patern with all the field of the address \
 (for example, use '%(street)s' to display the field 'street') plus
             \n%(state_name)s: the name of the state
-            \n%(state_code)s: the code of the state
             \n%(country_name)s: the name of the country
             \n%(country_code)s: the code of the country"""),
         'currency_id': fields.many2one('res.currency', 'Currency'),
@@ -65,7 +64,7 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             'The code of the country must be unique !')
     ]
     _defaults = {
-        'address_format': "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s",
+        'address_format': "%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s",
     }
     _order='name'
 
@@ -82,22 +81,6 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(cursor, user, ids, vals,
                 context=context)
-
-
-class CountryState(osv.osv):
-    _description="Country state"
-    _name = 'res.country.state'
-    _columns = {
-        'country_id': fields.many2one('res.country', 'Country',
-            required=True),
-        'name': fields.char('State Name', size=64, required=True, 
-                            help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton'),
-        'code': fields.char('State Code', size=3,
-            help='The state code in max. three chars.', required=True),
-    }
-    _order = 'code'
-
-    name_search = location_name_search
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

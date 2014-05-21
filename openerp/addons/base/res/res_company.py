@@ -139,7 +139,7 @@ class res_company(osv.osv):
         'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'),
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
-        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
+        'state_name': fields.function(_get_address_data, fnct_inv=_set_address_data, size=32, type='char', string="Fed. State", multi='address'),
         'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
         'email': fields.related('partner_id', 'email', size=64, type='char', string="Email", store=True),
@@ -176,10 +176,6 @@ class res_company(osv.osv):
             res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
 
         return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
-        if state_id:
-            return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
-        return {}
         
     def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
         """ To change default header style of all <para> and drawstring. """
@@ -200,11 +196,10 @@ class res_company(osv.osv):
                         }}
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
-        res = {'domain': {'state_id': []}}
+        res = {}
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
-            res['domain'] = {'state_id': [('country_id','=',country_id)]}
         res['value'] = {'currency_id': currency_id}
         return res
 

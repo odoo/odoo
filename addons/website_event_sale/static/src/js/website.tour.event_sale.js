@@ -43,7 +43,7 @@
                     $("input[name='street']").val("123");
                     $("input[name='city']").val("123");
                     $("input[name='zip']").val("123");
-                    $("select[name='country_id']").val("21");
+                    $("input[name='country_id']").val("21");
                 },
             },
             {
