@@ -35,9 +35,11 @@
 
         <record id="group_sale_salesman" model="res.groups">
             <field name="name">User</field>
+            <field name="category_id" ref="base.module_category_other"/>
         </record>
         <record id="group_sale_manager" model="res.groups">
             <field name="name">Manager</field>
+            <field name="category_id" ref="base.module_category_other"/>
             <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
         </record>
 

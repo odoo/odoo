@@ -14,11 +14,10 @@ Contains the installer for marketing-related modules.
     """,
     'website': 'http://www.openerp.com',
     'data': [
-        'security/marketing_security.xml',
         'marketing_view.xml',
         'res_config_view.xml',
     ],
-    'demo': ['marketing_demo.xml'],
+    'demo': [ ],
     'installable': True,
     'auto_install': False,
     'images': ['images/config_marketing.jpeg'],

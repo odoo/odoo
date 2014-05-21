@@ -4,11 +4,8 @@
 
         <record id="group_comment" model="res.groups">
             <field name="name">Website Comments</field>
+            <field name="category_id" ref="base.module_category_other"/>
             <field name="comment">Allows website visitors to post comments on blogs, etc.</field>
-        </record>
-
-        <record id="base.group_user" model="res.groups">
-            <field name="implied_ids" eval="[(4, ref('website_mail.group_comment'))]"/>
         </record>
 
     </data>

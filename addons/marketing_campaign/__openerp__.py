@@ -56,12 +56,12 @@ input segments, workflow.
     """,
     'website': 'http://www.openerp.com',
     'data': [
+        'security/marketing_campaign_security.xml',
+        'security/ir.model.access.csv',
         'marketing_campaign_view.xml',
         'marketing_campaign_data.xml',
         'marketing_campaign_workflow.xml',
         'report/campaign_analysis_view.xml',
-        'security/marketing_campaign_security.xml',
-        'security/ir.model.access.csv'
     ],
     'demo': ['marketing_campaign_demo.xml'],
     'test': ['test/marketing_campaign.yml'],
