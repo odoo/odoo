@@ -96,7 +96,7 @@ class marketing_campaign(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Campaign Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
                                       help="Choose the resource on which you want \
 this campaign to be run"),
