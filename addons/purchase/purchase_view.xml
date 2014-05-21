@@ -142,6 +142,9 @@
                     <field name="name"/>
                     <field name="amount_total"/>
                     <field name="partner_id"/>
+                    <field name="state" invisible="1"/>
+                    <field name="minimum_planned_date" invisible="1" attrs="{'readonly': [('shipped','=',True)]}" />
+                    <field name="shipped" invisible="1"/>
                 </calendar>
             </field>
         </record>
@@ -249,7 +252,7 @@
                         <page string="Deliveries &amp; Invoices">
                             <group>
                                 <group>
-                                    <field name="minimum_planned_date"/>
+                                    <field name="minimum_planned_date" attrs="{'readonly': [('shipped','=',True)]}"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>

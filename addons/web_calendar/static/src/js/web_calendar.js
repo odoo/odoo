@@ -102,6 +102,8 @@ openerp.web_calendar = function(instance) {
             this.$calendar = this.$el.find(".oe_calendar_widget");
 
             this.info_fields = [];
+            this.field_modifiers = [];
+            this.field_attrs_modifiers = [];
 
             /* buttons */
             this.$buttons = $(QWeb.render("CalendarView.buttons", {'widget': this}));
@@ -217,6 +219,30 @@ openerp.web_calendar = function(instance) {
             for (var fld = 0; fld < fv.arch.children.length; fld++) {
                 this.info_fields.push(fv.arch.children[fld].attrs.name);
             }
+            _.each(this.fields_view.arch.children, function(node) {
+                if (node.attrs) {
+                    modifier = JSON.parse(node.attrs.modifiers || '{}')
+                    if (modifier.invisible == true){
+                         _.each(self.info_fields, function (fieldname) {
+                             if(fieldname == node.attrs.name){
+                                self.info_fields.splice(self.info_fields.indexOf(fieldname), 1);
+                             }
+                         });
+                    }
+                    if (node.attrs.name == self.date_start) 
+                        self.field_attrs_modifiers = modifier['readonly'];
+                }
+            });
+            if (this.fields[this.date_start].states) {
+                var states = [];
+                var res = "";
+                _.each (this.fields[this.date_start].states, function(modifier, state) {
+                    if (modifier[0][0] == "readonly")
+                        states.push(state);
+                    res = (modifier[0][1] == false) ? ['state', 'not in', states] : ['state', 'in', states];
+                });
+                this.field_modifiers.push(res);
+            }
 
             return (new instance.web.Model(this.dataset.model))
                 .call("check_access_rights", ["create", false])
@@ -252,10 +278,12 @@ openerp.web_calendar = function(instance) {
 
                 eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
                     var data = self.get_event_data(event);
+                    if (event.readonly == true) return _revertFunc();
                     self.proxy('update_record')(event._id, data); // we don't revert the event, but update it.
                 },
                 eventResize: function (event, _day_delta, _minute_delta, _revertFunc) {
                     var data = self.get_event_data(event);
+                    if (event.readonly == true) return _revertFunc();
                     self.proxy('update_record')(event._id, data);
                 },
                 eventRender: function (event, element, view) {
@@ -496,18 +524,50 @@ openerp.web_calendar = function(instance) {
             });
             return def;
         },
-        
+
+        process_modifiers: function(evt, modifier){
+            var compute_domain = instance.web.form.compute_domain;
+            var result = {
+                'readonly':false, 
+                'invisible': false,
+            }
+            var fields = [];
+            _.each(evt, function(d, k){
+                fields[k] = {'value': d};
+            });
+            if (this.field_attrs_modifiers.length) result['readonly'] = compute_domain(this.field_attrs_modifiers, fields);
+            else if (this.field_modifiers.length) result['readonly'] = compute_domain(this.field_modifiers, fields);
+            if (modifier) result['invisible'] = compute_domain(modifier, fields);
+            return result;
+         },
+
         /**
          * Transform OpenERP event object to fullcalendar event object
          */
         event_data_transform: function(evt) {
             var self = this;
+            _.each(this.fields_view.arch.children, function(node) {
+                if (node.attrs) {
+                    modifier = JSON.parse(node.attrs.modifiers || '{}')
+                    if (modifier.invisible instanceof Array){
+                        _.each(self.info_fields, function (fieldname) {
+                             if(fieldname == node.attrs.name){
+                                var result = self.process_modifiers(evt, modifier.invisible);
+                                if (result.invisible)
+                                    evt[fieldname] = null;
+                              }
+                         });
+                    }
+               }
+            });
+
 
             var date_delay = evt[this.date_delay] || 1.0,
                 all_day = this.all_day ? evt[this.all_day] : false,
                 res_computed_text = '',
                 the_title = '',
                 attendees = [];
+                readonly = self.process_modifiers(evt, false)['readonly'];
 
             if (!all_day) {
                 date_start = instance.web.auto_str_to_date(evt[this.date_start]);
@@ -524,7 +584,8 @@ openerp.web_calendar = function(instance) {
                 
                 _.each(this.info_fields, function (fieldname) {
                     var value = evt[fieldname];
-                    if (_.contains(["many2one", "one2one"], self.fields[fieldname].type)) {
+                    if (value == null) return
+                    else if (_.contains(["many2one", "one2one"], self.fields[fieldname].type)) {
                         if (value === false) {
                             temp_ret[fieldname] = null;
                         }
@@ -552,7 +613,7 @@ openerp.web_calendar = function(instance) {
                     res_computed_text = res_computed_text.replace("["+fieldname+"]",temp_ret[fieldname]);
                 });
 
-                
+
                 if (res_computed_text.length) {
                     the_title = res_computed_text;
                 }
@@ -600,7 +661,7 @@ openerp.web_calendar = function(instance) {
                     the_title = the_title_avatar + the_title;
                 }
             }
-            
+
             if (!date_stop && date_delay) {
                 date_stop = date_start.clone().addHours(date_delay);
             }
@@ -610,7 +671,8 @@ openerp.web_calendar = function(instance) {
                 'title': the_title,
                 'allDay': (this.fields[this.date_start].type == 'date' || (this.all_day && evt[this.all_day]) || false),
                 'id': evt.id,
-                'attendees':attendees
+                'attendees':attendees,
+                'readonly': readonly,
             };
             if (!self.useContacts || self.all_filters[evt[this.color_field]] !== undefined) {
                 if (this.color_field && evt[this.color_field]) {

@@ -18,6 +18,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" color="state" date_start="date_order">
+                    <field name="name"/>
                     <field name="partner_id"/>
                     <field name="amount_total"/>
                 </calendar>
