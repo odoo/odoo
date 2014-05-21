@@ -902,6 +902,7 @@ openerp.mail = function (session) {
 
             this.ds_notification = new session.web.DataSetSearch(this, 'mail.notification');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
+            this.ds_thread= new session.web.DataSetSearch(this, 'mail.thread');
         },
 
         /**
@@ -922,12 +923,18 @@ openerp.mail = function (session) {
         },
 
         on_record_clicked: function  (event) {
-            var state = {
-                'model': this.model,
-                'id': this.res_id,
-                'title': this.record_name
-            };
-            session.webclient.action_manager.do_push_state(state);
+            event.stopPropagation();
+            var self = this;
+            this.ds_thread.call('message_redirect_action', [this.context])
+            .then( function (action) {
+                 self.do_action({
+                     res_model: action.res_model,
+                     res_id: action.res_id,
+                     type: 'ir.actions.act_window',
+                     views: action.views
+                 });
+           });
+           return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */

@@ -618,7 +618,9 @@ class mail_thread(osv.AbstractModel):
         act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self._get_inbox_action_xml_id(cr, uid, context=context))
         action = self.pool.get(act_model).read(cr, uid, act_id, [])
         params = context.get('params')
-        msg_id = model = res_id = None
+        model = context.get('default_model', False)
+        res_id = context.get('default_res_id', False)
+        msg_id = Nonemsg_id = model = res_id = None
 
         if params:
             msg_id = params.get('message_id')
