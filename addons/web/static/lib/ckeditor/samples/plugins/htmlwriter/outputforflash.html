@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Output for Flash &mdash; CKEditor Sample</title>
+	<script src="../../../ckeditor.js"></script>
+	<script src="../../sample.js"></script>
+	<script src="assets/outputforflash/swfobject.js"></script>
+	<link href="../../sample.css" rel="stylesheet">
+	<meta name="ckeditor-sample-required-plugins" content="sourcearea">
+	<meta name="ckeditor-sample-name" content="Output for Flash">
+	<meta name="ckeditor-sample-group" content="Advanced Samples">
+	<meta name="ckeditor-sample-description" content="Configuring CKEditor to produce HTML code that can be used with Adobe Flash.">
+	<style>
+
+		.alert
+		{
+			background: #ffa84c;
+			padding: 10px 15px;
+			font-weight: bold;
+			display: block;
+			margin-bottom: 20px;
+		}
+
+	</style>
+</head>
+<body>
+	<h1 class="samples">
+		<a href="../../index.html">CKEditor Samples</a> &raquo; Producing Flash Compliant HTML Output
+	</h1>
+	<div class="description">
+		<p>
+			This sample shows how to configure CKEditor to output
+			HTML code that can be used with
+			<a class="samples" href="http://www.adobe.com/livedocs/flash/9.0/main/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&amp;file=00000922.html">
+			Adobe Flash</a>.
+			The code will contain a subset of standard HTML elements like <code>&lt;b&gt;</code>,
+			<code>&lt;i&gt;</code>, and <code>&lt;p&gt;</code> as well as HTML attributes.
+		</p>
+		<p>
+			To add a CKEditor instance outputting Flash compliant HTML code, load the editor using a standard
+			JavaScript call, and define CKEditor features to use HTML elements and attributes.
+		</p>
+		<p>
+			For details on how to create this setup check the source code of this sample page.
+		</p>
+	</div>
+	<p>
+		To see how it works, create some content in the editing area of CKEditor on the left
+		and send it to the Flash object on the right side of the page by using the
+		<strong>Send to Flash</strong> button.
+	</p>
+	<table style="width: 100%; border-spacing: 0; border-collapse:collapse;">
+		<tr>
+			<td style="width: 100%">
+				<textarea cols="80" id="editor1" name="editor1" rows="10">&lt;p&gt;&lt;b&gt;&lt;font size=&quot;18&quot; style=&quot;font-size:18px;&quot;&gt;Flash and HTML&lt;/font&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;It is possible to have &lt;a href=&quot;http://ckeditor.com&quot;&gt;CKEditor&lt;/a&gt; creating content that will be later loaded inside &lt;b&gt;Flash&lt;/b&gt; objects and animations.&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Flash has a few limitations when dealing with HTML:&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;It has limited support on tags.&lt;/li&gt;&lt;li&gt;There is no margin between block elements, like paragraphs.&lt;/li&gt;&lt;/ul&gt;</textarea>
+				<script>
+
+					if ( document.location.protocol == 'file:' )
+						alert( 'Warning: This samples does not work when loaded from local filesystem' +
+							'due to security restrictions implemented in Flash.' +
+							'\n\nPlease load the sample from a web server instead.' );
+
+					var editor = CKEDITOR.replace( 'editor1', {
+						/*
+						 * Ensure that htmlwriter plugin, which is required for this sample, is loaded.
+						 */
+						extraPlugins: 'htmlwriter',
+
+						height: 290,
+						width: '100%',
+						toolbar: [
+							[ 'Source', '-', 'Bold', 'Italic', 'Underline', '-', 'BulletedList', '-', 'Link', 'Unlink' ],
+							[ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ],
+							'/',
+							[ 'Font', 'FontSize' ],
+							[ 'TextColor', '-', 'About' ]
+						],
+
+						/*
+						 * Style sheet for the contents
+						 */
+						contentsCss: 'body {color:#000; background-color#FFF; font-family: Arial; font-size:80%;} p, ol, ul {margin-top: 0px; margin-bottom: 0px;}',
+
+						/*
+						 * Quirks doctype
+						 */
+						docType: '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">',
+
+						/*
+						 * Core styles.
+						 */
+						coreStyles_bold: { element: 'b' },
+						coreStyles_italic: { element: 'i' },
+						coreStyles_underline: { element: 'u' },
+
+						/*
+						 * Font face.
+						 */
+
+						// Define the way font elements will be applied to the document. The "font"
+						// element will be used.
+						font_style: {
+							element: 'font',
+							attributes: { 'face': '#(family)' }
+						},
+
+						/*
+						 * Font sizes.
+						 */
+
+						// The CSS part of the font sizes isn't used by Flash, it is there to get the
+						// font rendered correctly in CKEditor.
+						fontSize_sizes: '8px/8;9px/9;10px/10;11px/11;12px/12;14px/14;16px/16;18px/18;20px/20;22px/22;24px/24;26px/26;28px/28;36px/36;48px/48;72px/72',
+						fontSize_style: {
+							element: 'font',
+							attributes: { 'size': '#(size)' },
+							styles: { 'font-size': '#(size)px' }
+						} ,
+
+						/*
+						 * Font colors.
+						 */
+						colorButton_enableMore: true,
+
+						colorButton_foreStyle: {
+							element: 'font',
+							attributes: { 'color': '#(color)' }
+						},
+
+						colorButton_backStyle: {
+							element: 'font',
+							styles: { 'background-color': '#(color)' }
+						},
+
+						on: { 'instanceReady': configureFlashOutput }
+					});
+
+					/*
+					 * Adjust the behavior of the dataProcessor to match the
+					 * requirements of Flash
+					 */
+					function configureFlashOutput( ev ) {
+						var editor = ev.editor,
+							dataProcessor = editor.dataProcessor,
+							htmlFilter = dataProcessor && dataProcessor.htmlFilter;
+
+						// Out self closing tags the HTML4 way, like <br>.
+						dataProcessor.writer.selfClosingEnd = '>';
+
+						// Make output formatting match Flash expectations
+						var dtd = CKEDITOR.dtd;
+						for ( var e in CKEDITOR.tools.extend( {}, dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent ) ) {
+							dataProcessor.writer.setRules( e, {
+								indent: false,
+								breakBeforeOpen: false,
+								breakAfterOpen: false,
+								breakBeforeClose: false,
+								breakAfterClose: false
+							});
+						}
+						dataProcessor.writer.setRules( 'br', {
+							indent: false,
+							breakBeforeOpen: false,
+							breakAfterOpen: false,
+							breakBeforeClose: false,
+							breakAfterClose: false
+						});
+
+						// Output properties as attributes, not styles.
+						htmlFilter.addRules( {
+							elements: {
+								$: function( element ) {
+									var style, match, width, height, align;
+
+									// Output dimensions of images as width and height
+									if ( element.name == 'img' ) {
+										style = element.attributes.style;
+
+										if ( style ) {
+											// Get the width from the style.
+											match = ( /(?:^|\s)width\s*:\s*(\d+)px/i ).exec( style );
+											width = match && match[1];
+
+											// Get the height from the style.
+											match = ( /(?:^|\s)height\s*:\s*(\d+)px/i ).exec( style );
+											height = match && match[1];
+
+											if ( width ) {
+												element.attributes.style = element.attributes.style.replace( /(?:^|\s)width\s*:\s*(\d+)px;?/i , '' );
+												element.attributes.width = width;
+											}
+
+											if ( height ) {
+												element.attributes.style = element.attributes.style.replace( /(?:^|\s)height\s*:\s*(\d+)px;?/i , '' );
+												element.attributes.height = height;
+											}
+										}
+									}
+
+									// Output alignment of paragraphs using align
+									if ( element.name == 'p' ) {
+										style = element.attributes.style;
+
+										if ( style ) {
+											// Get the align from the style.
+											match = ( /(?:^|\s)text-align\s*:\s*(\w*);?/i ).exec( style );
+											align = match && match[1];
+
+											if ( align ) {
+												element.attributes.style = element.attributes.style.replace( /(?:^|\s)text-align\s*:\s*(\w*);?/i , '' );
+												element.attributes.align = align;
+											}
+										}
+									}
+
+									if ( element.attributes.style === '' )
+										delete element.attributes.style;
+
+									return element;
+								}
+							}
+						});
+					}
+
+					function sendToFlash() {
+						var html = CKEDITOR.instances.editor1.getData() ;
+
+						// Quick fix for link color.
+						html = html.replace( /<a /g, '<font color="#0000FF"><u><a ' )
+						html = html.replace( /<\/a>/g, '</a></u></font>' )
+
+						var flash = document.getElementById( 'ckFlashContainer' ) ;
+						flash.setData( html ) ;
+					}
+
+					CKEDITOR.domReady( function() {
+						if ( !swfobject.hasFlashPlayerVersion( '8' ) ) {
+							CKEDITOR.dom.element.createFromHtml( '<span class="alert">' +
+									'At least Adobe Flash Player 8 is required to run this sample. ' +
+									'You can download it from <a href="http://get.adobe.com/flashplayer">Adobe\'s website</a>.' +
+								'</span>' ).insertBefore( editor.element );
+						}
+
+						swfobject.embedSWF(
+							'assets/outputforflash/outputforflash.swf',
+							'ckFlashContainer',
+							'550',
+							'400',
+							'8',
+							{ wmode: 'transparent' }
+						);
+					});
+
+				</script>
+				<p>
+					<input type="button" value="Send to Flash" onclick="sendToFlash();">
+				</p>
+			</td>
+			<td style="vertical-align: top; padding-left: 20px">
+				<div id="ckFlashContainer"></div>
+			</td>
+		</tr>
+	</table>
+	<div id="footer">
+		<hr>
+		<p>
+			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+		</p>
+		<p id="copy">
+			Copyright &copy; 2003-2014, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
+			Knabben. All rights reserved.
+		</p>
+	</div>
+</body>
+</html>

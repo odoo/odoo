@@ -1,4 +1,7 @@
-openerp.web.list = function (instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.list = {};
 var _t = instance.web._t,
     _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
@@ -132,8 +135,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.groups = groups;
         $(this.groups).bind({
-            'selected': function (e, ids, records) {
-                self.do_select(ids, records);
+            'selected': function (e, ids, records, deselected) {
+                self.do_select(ids, records, deselected);
             },
             'deleted': function (e, ids) {
                 self.do_delete(ids);
@@ -171,11 +174,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
-
+        var i;
+        var pair;
+        var expression;
         if (this.fonts) {
-            for(var i=0, len=this.fonts.length; i<len; ++i) {
-                var pair = this.fonts[i],
-                font = pair[0],
+            for(i=0, len=this.fonts.length; i<len; ++i) {
+                pair = this.fonts[i];
+                var font = pair[0];
                 expression = pair[1];
                 if (py.evaluate(expression, context).toJSON()) {
                     switch(font) {
@@ -194,10 +199,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         if (!this.colors) { return style; }
-        for(var i=0, len=this.colors.length; i<len; ++i) {
-            var pair = this.colors[i],
-                color = pair[0],
-                expression = pair[1];
+        for(i=0, len=this.colors.length; i<len; ++i) {
+            pair = this.colors[i];
+            var color = pair[0];
+            expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
                 return style += 'color: ' + color + ';';
             }
@@ -321,9 +326,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                             .appendTo($this.empty())
                             .click(function (e) {e.stopPropagation();})
                             .append('<option value="80">80</option>' +
-                                    '<option value="100">100</option>' +
                                     '<option value="200">200</option>' +
                                     '<option value="500">500</option>' +
+                                    '<option value="2000">2000</option>' +
                                     '<option value="NaN">' + _t("Unlimited") + '</option>')
                             .change(function () {
                                 var val = parseInt($select.val(), 10);
@@ -348,12 +353,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        //Sort
+        if(this.dataset._sort.length){
+            if(this.dataset._sort[0].indexOf('-') == -1){
+                this.$el.find('th[data-id=' + this.dataset._sort[0] + ']').addClass("sortdown");
+            }else {
+                this.$el.find('th[data-id=' + this.dataset._sort[0].split('-')[1] + ']').addClass("sortup");
+            }
+        }
         this.trigger('list_view_loaded', data, this.grouped);
     },
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        this.dataset.sort($column.data('id'));
+        var col_name = $column.data('id');
+        var field = this.fields_view.fields[col_name];
+        // test if the field is a function field with store=false, since it's impossible
+        // for the server to sort those fields we desactivate the feature
+        if (field && field.store === false) {
+            return false;
+        }
+        this.dataset.sort(col_name);
         if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
             $column.toggleClass("sortup sortdown");
         } else {
@@ -379,7 +399,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        if (total == 0)
+        if (total === 0)
             this.$pager.hide();
         else
             this.$pager.css("display", "");
@@ -388,6 +408,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (total) {
             var range_start = this.page * limit + 1;
             var range_stop = range_start - 1 + limit;
+            if (this.records.length) {
+                range_stop = range_start - 1 + this.records.length;
+            }
             if (range_stop > total) {
                 range_stop = total;
             }
@@ -439,7 +462,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || index == null ? 'form' : 'form';
+        view = view || index === null || index === undefined ? 'form' : 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
@@ -481,7 +504,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      *
      * @returns {$.Deferred} promise to content reloading
      */
-    reload_content: function () {
+    reload_content: synchronized(function () {
         var self = this;
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
@@ -489,12 +512,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
-                    var has_one = false;
-                    self.records.each(function () { has_one = true; });
-                    if (has_one) {
+                    if (self.records.length) {
                         self.dataset.index = 0;
                     }
+                } else if (self.dataset.index >= self.records.length) {
+                    self.dataset.index = 0;
                 }
+
                 self.compute_aggregates();
                 reloaded.resolve();
             }));
@@ -503,7 +527,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             limit: this._limit
         });
         return reloaded.promise();
-    },
+    }),
     reload: function () {
         return this.reload_content();
     },
@@ -513,14 +537,16 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
-                }), 'name')
+                }), 'name'),
+            {check_access_rule: true}
         ).done(function (records) {
-            if (!records[0]) {
+            var values = records[0];
+            if (!values) {
                 self.records.remove(record);
                 return;
             }
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
+            _(_.keys(values)).each(function(key){
+                record.set(key, values[key], {silent: true});
             });
             record.trigger('change', record);
         });
@@ -563,7 +589,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.load_view(context).then(
+        return this.alive(this.load_view(context)).then(
             this.proxy('reload_content'));
     },
     /**
@@ -580,7 +606,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
-            self.configure_pager(self.dataset);
+            if (self.records.length === 0 && self.dataset.size() > 0) {
+                //Trigger previous manually to navigate to previous page, 
+                //If all records are deleted on current page.
+                self.$pager.find('ul li:first a').trigger('click');
+            } else if (self.dataset.size() == self.limit()) {
+                //Reload listview to update current page with next page records 
+                //because pager going to be hidden if dataset.size == limit
+                self.reload();
+            } else {
+                self.configure_pager(self.dataset);
+            }
             self.compute_aggregates();
         });
     },
@@ -590,7 +626,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Array} ids selected record ids
      * @param {Array} records selected record values
      */
-    do_select: function (ids, records) {
+    do_select: function (ids, records, deselected) {
+        // uncheck header hook if at least one row has been deselected
+        if (deselected) {
+            this.$('.oe_list_record_selector').prop('checked', false);
+        }
+
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
@@ -778,6 +819,29 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return ids;
     },
     /**
+     * Calculate the active domain of the list view. This should be done only
+     * if the header checkbox has been checked. This is done by evaluating the
+     * search results, and then adding the dataset domain (i.e. action domain).
+     */
+    get_active_domain: function () {
+        var self = this;
+        if (this.$('.oe_list_record_selector').prop('checked')) {
+            var search_view = this.getParent().searchview;
+            var search_data = search_view.build_search_data();
+            return instance.web.pyeval.eval_domains_and_contexts({
+                domains: search_data.domains,
+                contexts: search_data.contexts,
+                group_by_seq: search_data.groupbys || []
+            }).then(function (results) {
+                var domain = self.dataset.domain.concat(results.domain || []);
+                return domain
+            });
+        }
+        else {
+            return $.Deferred().resolve();
+        }
+    },
+    /**
      * Adds padding columns at the start or end of all table rows (including
      * field names row)
      *
@@ -880,8 +944,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
-                    '[data-id=' + record.get('id') + ']');
+                var id = record.get('id');
+                self.dataset.remove_ids([id]);
+                var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
             },
@@ -893,12 +958,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw new Error(_.str.sprintf( _t("Setting 'id' attribute on existing record %s"),
                             JSON.stringify(record.attributes) ));
                     }
-                    if (!_.contains(self.dataset.ids, value)) {
-                        // add record to dataset if not already in (added by
-                        // the form view?)
-                        self.dataset.ids.splice(
-                            self.records.indexOf(record), 0, value);
-                    }
+                    self.dataset.add_ids([value], self.records.indexOf(record));
                     // Set id on new record
                     $row = self.$current.children('[data-id=false]');
                 } else {
@@ -909,6 +969,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
+                var id = record.get('id');
+                if (id) { self.dataset.add_ids([id], index); }
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);
@@ -940,8 +1002,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
+                var checked = $(e.currentTarget).find('input').prop('checked');
                 $(self).trigger(
-                        'selected', [selection.ids, selection.records]);
+                        'selected', [selection.ids, selection.records, ! checked]);
             })
             .delegate('td.oe_list_record_delete button', 'click', function (e) {
                 e.stopPropagation();
@@ -1007,7 +1070,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     id = parseInt(ref_match[2], 10);
                 new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
-                    record.set(column.id, names[0][1]);
+                    record.set(column.id + '__display', names[0][1]);
                 });
             }
         } else if (column.type === 'many2one') {
@@ -1081,11 +1144,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             if (column.invisible === '1') {
                 return;
             }
-            if (column.tag === 'button') {
-                cells.push('<td class="oe_button" title="' + column.string + '">&nbsp;</td>');
-            } else {
-                cells.push('<td title="' + column.string + '">&nbsp;</td>');
-            }
+            cells.push('<td title="' + column.string + '">&nbsp;</td>');
         });
         if (this.options.deletable) {
             cells.push('<td class="oe_list_record_delete"><button type="button" style="visibility: hidden"> </button></td>');
@@ -1171,7 +1230,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
     }
 });
 instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
-    passtrough_events: 'action deleted row_link',
+    passthrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
      * with the :js:class:`~DataGroup` bound to it.
@@ -1269,7 +1328,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         }
     },
     close: function () {
-        this.$row.children().last().empty();
+        this.$row.children().last().find('button').remove();
+        this.$row.children().last().find('span').remove();
         this.records.reset();
     },
     /**
@@ -1317,6 +1377,9 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                                 .removeClass('ui-icon-triangle-1-s')
                                 .addClass('ui-icon-triangle-1-e');
                         child.close();
+                        // force recompute the selection as closing group reset properties
+                        var selection = self.get_selection();
+                        $(self).trigger('selected', [selection.ids, this.records]);
                     }
                 });
             }
@@ -1327,22 +1390,29 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             if (group.grouped_on) {
                 var row_data = {};
                 row_data[group.grouped_on] = group;
+                var group_label = _t("Undefined");
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                if (! group_column) {
-                    throw new Error(_.str.sprintf(
-                        _t("Grouping on field '%s' is not possible because that field does not appear in the list view."),
-                        group.grouped_on));
+                if (group_column) {
+                    try {
+                        group_label = group_column.format(row_data, {
+                            value_if_empty: _t("Undefined"),
+                            process_modifiers: false
+                        });
+                    } catch (e) {
+                        group_label = _.str.escapeHTML(row_data[group_column.id].value);
+                    }
+                } else {
+                    group_label = group.value;
+                    if (group_label instanceof Array) {
+                        group_label = group_label[1];
+                    }
+                    if (group_label === false) {
+                        group_label = _t('Undefined');
+                    }
+                    group_label = _.str.escapeHTML(group_label);
                 }
-                var group_label;
-                try {
-                    group_label = group_column.format(row_data, {
-                        value_if_empty: _t("Undefined"),
-                        process_modifiers: false
-                    });
-                } catch (e) {
-                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
-                }
+                    
                 // group_label is html-clean (through format or explicit
                 // escaping if format failed), can inject straight into HTML
                 $group_column.html(_.str.sprintf(_t("%s (%d)"),
@@ -1387,11 +1457,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     bind_child_events: function (child) {
         var $this = $(this),
              self = this;
-        $(child).bind('selected', function (e) {
+        $(child).bind('selected', function (e, _0, _1, deselected) {
             // can have selections spanning multiple links
             var selection = self.get_selection();
-            $this.trigger(e, [selection.ids, selection.records]);
-        }).bind(this.passtrough_events, function (e) {
+            $this.trigger(e, [selection.ids, selection.records, deselected]);
+        }).bind(this.passthrough_events, function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.
@@ -1414,14 +1484,13 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
         var view = this.view,
            limit = view.limit(),
-               d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
+        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().done(function() {
-            dataset.read_slice(fields, options).done(function (records) {
+        return $.async_when().then(function() {
+            return dataset.read_slice(fields, options).then(function (records) {
                 // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
                 if (self.records.length) {
                     self.records.reset(null, {silent: true});
@@ -1431,7 +1500,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 } else {
                     if (dataset.size() == records.length) {
                         // only one page
-                        self.$row.find('td.oe_list_group_pagination').empty();
+                        self.$row.find('td.oe_list_group_pagination').find('button').remove();
+                        self.$row.find('td.oe_list_group_pagination').find('span').remove();
                     } else {
                         var pages = Math.ceil(dataset.size() / limit);
                         self.$row
@@ -1453,13 +1523,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
                 self.records.add(records, {silent: true});
                 list.render();
-                d.resolve(list);
                 if (_.isEmpty(records)) {
                     view.no_result();
                 }
+                return list;
             });
         });
-        return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
         // drag and drop enabled if list is not sorted and there is a
@@ -1506,20 +1575,21 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
-                while (++seq, record = list.records.at(index++)) {
+                var fct = function (dataset, id, seq) {
+                    $.async_when().done(function () {
+                        var attrs = {};
+                        attrs[seqname] = seq;
+                        dataset.write(id, attrs);
+                    });
+                };
+                while (++seq, (record = list.records.at(index++))) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
                     // FIXME: breaks on o2ms (e.g. Accounting > Financial
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
-                    (function (dataset, id, seq) {
-                        $.async_when().done(function () {
-                            var attrs = {};
-                            attrs[seqname] = seq;
-                            dataset.write(id, attrs);
-                        });
-                    }(dataset, record.get('id'), seq));
+                    fct(dataset, record.get('id'), seq);
                     record.set(seqname, seq);
                 }
             }
@@ -1532,18 +1602,19 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
         this.datagroup.list(
             _(this.view.visible_columns).chain()
-                .filter(function (column) { return column.tag === 'field' })
+                .filter(function (column) { return column.tag === 'field';})
                 .pluck('name').value(),
             function (groups) {
                 $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
-                self.render_dataset(dataset).done(function (list) {
+                self.render_dataset(dataset).then(function (list) {
                     self.children[null] = list;
                     self.elements =
                         [list.$current.replaceAll($el)[0]];
                     self.setup_resequence_rows(list, dataset);
+                }).always(function() {
                     if (post_render) { post_render(); }
                 });
             });
@@ -1577,7 +1648,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
-            }
+            };
         }
         return _(this.children).chain()
             .map(function (child) {
@@ -1586,6 +1657,25 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     }
 });
 
+/**
+ * Serializes concurrent calls to this asynchronous method. The method must
+ * return a deferred or promise.
+ *
+ * Current-implementation is class-serialized (the mutex is common to all
+ * instances of the list view). Can be switched to instance-serialized if
+ * having concurrent list views becomes possible and common.
+ */
+function synchronized(fn) {
+    var fn_mutex = new $.Mutex();
+    return function () {
+        var obj = this;
+        var args = _.toArray(arguments);
+        return fn_mutex.exec(function () {
+            if (obj.isDestroyed()) { return $.when(); }
+            return fn.apply(obj, args)
+        });
+    };
+}
 var DataGroup =  instance.web.Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
        this.model = new instance.web.Model(model, context, domain);
@@ -1597,6 +1687,10 @@ var DataGroup =  instance.web.Class.extend({
    },
    list: function (fields, ifGroups, ifRecords) {
        var self = this;
+       if (!_.isEmpty(this.group_by)) {
+           // ensure group_by fields are read.
+           fields = _.unique((fields || []).concat(this.group_by));
+       }
        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
        $.when(query).done(function (querygroups) {
            // leaf node
@@ -1814,7 +1908,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
             var instance_ = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
             instance_.bind(null, this._onRecordEvent);
             this._byId[instance_.get('id')] = instance_;
-            if (options.at == undefined) {
+            if (options.at === undefined || options.at === null) {
                 this.records.push(instance_);
                 if (!options.silent) {
                     this.trigger('add', this, instance_, this.records.length-1);
@@ -1856,7 +1950,8 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         if (!_(this._proxies).isEmpty()) {
             var record = null;
             _(this._proxies).detect(function (proxy) {
-                return record = proxy.get(id);
+                record = proxy.get(id);
+                return record;
             });
             return record;
         }
@@ -1870,10 +1965,11 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
      * @returns {Collection}
      */
     proxy: function (section) {
-        return this._proxies[section] = new Collection(null, {
+        this._proxies[section] = new Collection(null, {
             parent: this,
             key: section
         }).bind(null, this._onRecordEvent);
+        return this._proxies[section];
     },
     /**
      * @param {Array} [records]
@@ -1943,7 +2039,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         var record;
         for(var section in this._proxies) {
             if (!this._proxies.hasOwnProperty(section)) {
-                continue
+                continue;
             }
             if ((record = this._proxies[section].find(callback))) {
                 return record;
@@ -2045,10 +2141,12 @@ instance.web.list.columns = new instance.web.Registry({
     'field': 'instance.web.list.Column',
     'field.boolean': 'instance.web.list.Boolean',
     'field.binary': 'instance.web.list.Binary',
+    'field.char': 'instance.web.list.Char',
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.reference': 'instance.web.list.Reference',
     'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
@@ -2059,7 +2157,7 @@ instance.web.list.columns.for_ = function (id, field, node) {
         tag + '.'+ description.type,
         tag
     ]);
-    return new Type(id, node.tag, description)
+    return new Type(id, node.tag, description);
 };
 
 instance.web.list.Column = instance.web.Class.extend({
@@ -2163,8 +2261,8 @@ instance.web.list.Button = instance.web.list.Column.extend({
             attrs = this.modifiers_for(row_data);
         }
         if (attrs.invisible) { return ''; }
-
-        return QWeb.render('ListView.row.button', {
+        var template = this.icon && 'ListView.row.button' || 'ListView.row.text_button';
+        return QWeb.render(template, {
             widget: this,
             prefix: instance.session.prefix,
             disabled: attrs.readonly
@@ -2197,7 +2295,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         if (value && value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = this.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }
@@ -2211,6 +2309,20 @@ instance.web.list.Binary = instance.web.list.Column.extend({
             href: download_url,
             size: instance.web.binary_to_binsize(value),
         });
+    }
+});
+instance.web.list.Char = instance.web.list.Column.extend({
+    replacement: '*',
+    /**
+     * If password field, only display replacement characters (if value is
+     * non-empty)
+     */
+    _format: function (row_data, options) {
+        var value = row_data[this.id].value;
+        if (value && this.password === 'True') {
+            return value.replace(/[\s\S]/g, _.escape(this.replacement));
+        }
+        return this._super(row_data, options);
     }
 });
 instance.web.list.ProgressBar = instance.web.list.Column.extend({
@@ -2261,5 +2373,18 @@ instance.web.list.Many2Many = instance.web.list.Column.extend({
         return this._super(row_data, options);
     }
 });
-};
+instance.web.list.Reference = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (!_.isEmpty(row_data[this.id].value)) {
+            // If value, use __display version for printing
+            if (!!row_data[this.id + '__display']) {
+                row_data[this.id] = row_data[this.id + '__display'];
+            } else {
+                row_data[this.id] = {'value': ''};
+            }
+        }
+        return this._super(row_data, options);
+    }
+});
+})();
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -3,30 +3,51 @@ openerp.testing = {};
 (function (testing) {
     var dependencies = {
         pyeval: [],
-        corelib: ['pyeval'],
-        coresetup: ['corelib'],
-        data: ['corelib', 'coresetup'],
+        core: ['pyeval'],
+        data: ['core'],
         dates: [],
-        formats: ['coresetup', 'dates'],
-        chrome: ['corelib', 'coresetup'],
-        views: ['corelib', 'coresetup', 'data', 'chrome'],
+        formats: ['core', 'dates'],
+        chrome: ['core'],
+        views: ['core', 'data', 'chrome'],
         search: ['views', 'formats'],
         list: ['views', 'data'],
         form: ['data', 'views', 'list', 'formats'],
         list_editable: ['list', 'form', 'data'],
     };
 
+    var initialized = [];
+    /**
+     * openerp.init is a broken-ass piece of shit, makes it impossible to
+     * progressively add modules, using it, retarded openerp_inited flag
+     * means the first tests being run get their dependencies loaded
+     * (basically just base and web), and for *every other module* the tests
+     * run without the dependencies being correctly loaded
+     */
+    function init(modules) {
+        if (!initialized.length) {
+            openerp.init(modules);
+            initialized = openerp._modules.slice();
+            return;
+        }
+        var to_initialize = _.difference(modules, initialized);
+        for (var i = 0; i < to_initialize.length; i++) {
+            var modname = to_initialize[i];
+            var fct = openerp[modname];
+            if (typeof fct === 'function') {
+                var module = openerp[modname] = {};
+                for(var k in fct) {
+                    if (!fct.hasOwnProperty(k)) { continue; }
+                    module[k] = fct[k];
+                }
+                fct(openerp, module)
+            }
+            initialized.push(modname);
+            openerp._modules.push(modname);
+        }
+    }
+
     testing.dependencies = window['oe_all_dependencies'] || [];
     testing.current_module = null;
-    testing.templates = { };
-    testing.add_template = function (name) {
-        var xhr = QWeb2.Engine.prototype.get_xhr();
-        xhr.open('GET', name, false);
-        xhr.send(null);
-        (testing.templates[testing.current_module] =
-            testing.templates[testing.current_module] || [])
-                .push(xhr.responseXML);
-    };
     /**
      * Function which does not do anything
      */
@@ -53,31 +74,33 @@ openerp.testing = {};
     testing.mockifyRPC = function (instance, responses) {
         var session = instance.session;
         session.responses = responses || {};
-        session.rpc_function = function (url, payload) {
+        session.rpc = function(url, rparams, options) {
+            if (_.isString(url)) {
+                url = {url: url};
+            }
             var fn, params;
-            var needle = payload.params.model + ':' + payload.params.method;
-            if (url.url === '/web/dataset/call_kw'
-                && needle in this.responses) {
+            var needle = rparams.model + ':' + rparams.method;
+            if (url.url.substr(0, 20) === '/web/dataset/call_kw' && needle in this.responses) {
                 fn = this.responses[needle];
                 params = [
-                    payload.params.args || [],
-                    payload.params.kwargs || {}
+                    rparams.args || [],
+                    rparams.kwargs || {}
                 ];
             } else {
                 fn = this.responses[url.url];
-                params = [payload];
+                params = [{params: rparams}];
             }
 
             if (!fn) {
                 return $.Deferred().reject({}, 'failed',
                     _.str.sprintf("Url %s not found in mock responses, with arguments %s",
-                                  url.url, JSON.stringify(payload.params))
+                                  url.url, JSON.stringify(rparams))
                 ).promise();
             }
             try {
                 return $.when(fn.apply(null, params)).then(function (result) {
                     // Wrap for RPC layer unwrapper thingy
-                    return {result: result};
+                    return result;
                 });
             } catch (e) {
                 // not sure why this looks like that
@@ -164,7 +187,6 @@ openerp.testing = {};
         });
     };
 
-    var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
             body = options;
@@ -175,10 +197,10 @@ openerp.testing = {};
             teardown: testing.noop
         });
 
-        QUnit.module(testing.current_module + '.' + name, {_oe: options});
-        body(testing.case);
+        QUnit.module(name, {_oe: options});
+        body(testing['case']);
     };
-    testing.case = function (name, options, callback) {
+    testing['case'] = function (name, options, callback) {
         if (_.isFunction(options)) {
             callback = options;
             options = {};
@@ -193,8 +215,7 @@ openerp.testing = {};
             0, module_index + 1 || undefined);
 
         // Serialize options for this precise test case
-        // WARNING: typo is from jquery, do not fix!
-        var env = QUnit.config.currentModuleTestEnviroment;
+        var env = QUnit.config.currentModuleTestEnvironment;
         // section setup
         //     case setup
         //         test
@@ -204,90 +225,14 @@ openerp.testing = {};
             .push(env._oe.setup, env._oe.teardown)
             .push(options.setup, options.teardown);
         var opts = _.defaults({}, options, env._oe);
-        // FIXME: if this test is ignored, will still query
-        if (opts.rpc === 'rpc' && !db) {
-            QUnit.config.autostart = false;
-            db = {
-                source: null,
-                supadmin: null,
-                password: null
-            };
-            var $msg = $('<form style="margin: 0 1em 1em;">')
-                .append('<h3>A test needs to clone a database</h3>')
-                .append('<h4>Please provide the source clone information</h4>')
-                .append('     Source DB: ').append('<input name="source">').append('<br>')
-                .append('   DB Password: ').append('<input name="supadmin">').append('<br>')
-                .append('Admin Password: ').append('<input name="password">').append('<br>')
-                .append('<input type="submit" value="OK"/>')
-                .submit(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    db.source = $msg.find('input[name=source]').val();
-                    db.supadmin = $msg.find('input[name=supadmin]').val();
-                    db.password = $msg.find('input[name=password]').val();
-                    QUnit.start();
-                    $.unblockUI();
-                });
-            $.blockUI({
-                message: $msg,
-                css: {
-                    fontFamily: 'monospace',
-                    textAlign: 'left',
-                    whiteSpace: 'pre-wrap',
-                    cursor: 'default'
-                }
-            });
-        }
 
         QUnit.test(name, function () {
-            var instance;
-            if (!opts.dependencies) {
-                instance = openerp.init(module_deps);
-            } else {
-                // empty-but-specified dependencies actually allow running
-                // without loading any module into the instance
-
-                // TODO: clean up this mess
-                var d = opts.dependencies.slice();
-                // dependencies list should be in deps order, reverse to make
-                // loading order from last
-                d.reverse();
-                var di = 0;
-                while (di < d.length) {
-                    var m = /^web\.(\w+)$/.exec(d[di]);
-                    if (m) {
-                        d[di] = m[1];
-                    }
-                    d.splice.apply(d, [di+1, 0].concat(
-                        _(dependencies[d[di]]).reverse()));
-                    ++di;
-                }
-
-                instance = openerp.init(null);
-                _(d).chain()
-                    .reverse()
-                    .uniq()
-                    .each(function (module) {
-                        openerp.web[module](instance);
-                    });
-            }
-            if (instance.session) {
-                instance.session.uid = 42;
-            }
+            var instance = openerp;
+            init(module_deps);
+            instance.session = new instance.web.Session();
+            instance.session.uid = 42;
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);
-            }
-
-            if (opts.templates) {
-                for(var i=0; i<module_deps.length; ++i) {
-                    var dep = module_deps[i];
-                    var templates = testing.templates[dep];
-                    if (_.isEmpty(templates)) { continue; }
-
-                    for (var j=0; j < templates.length; ++j) {
-                        instance.web.qweb.add_template(templates[j]);
-                    }
-                }
             }
 
             var $fixture = $('#qunit-fixture');
@@ -301,44 +246,6 @@ openerp.testing = {};
                     instance.session.responses[spec] = handler;
                 };
                 break;
-            case 'rpc':
-                async = true;
-                (function () {
-                // Bunch of random base36 characters
-                var dbname = 'test_' + Math.random().toString(36).slice(2);
-                // Add db setup/teardown at the start of the stack
-                case_stack = case_stack.unshift(function (instance) {
-                    // FIXME hack: don't want the session to go through shitty loading process of everything
-                    instance.session.session_init = testing.noop;
-                    instance.session.load_modules = testing.noop;
-                    instance.session.session_bind();
-                    return instance.session.rpc('/web/database/duplicate', {
-                        fields: [
-                            {name: 'super_admin_pwd', value: db.supadmin},
-                            {name: 'db_original_name', value: db.source},
-                            {name: 'db_name', value: dbname}
-                        ]
-                    }).then(function (result) {
-                        if (result.error) {
-                            return $.Deferred().reject(result.error).promise();
-                        }
-                        return instance.session.session_authenticate(
-                            dbname, 'admin', db.password, true);
-                    });
-                }, function (instance) {
-                    return instance.session.rpc('/web/database/drop', {
-                            fields: [
-                                {name: 'drop_pwd', value: db.supadmin},
-                                {name: 'drop_db', value: dbname}
-                            ]
-                        }).then(function (result) {
-                        if (result.error) {
-                            return $.Deferred().reject(result.error).promise();
-                        }
-                        return result;
-                    });
-                });
-                })();
             }
 
             // Always execute tests asynchronously
@@ -359,7 +266,7 @@ openerp.testing = {};
 
                 return $.Deferred(function (d) {
                     $.when(result).then(function () {
-                        d.resolve.apply(d, arguments)
+                        d.resolve.apply(d, arguments);
                     }, function () {
                         d.reject.apply(d, arguments);
                     });

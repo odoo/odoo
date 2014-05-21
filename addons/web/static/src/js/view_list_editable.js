@@ -2,7 +2,10 @@
  * handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
  * @namespace
  */
-openerp.web.list_editable = function (instance) {
+(function() {
+
+    var instance = openerp;
+    openerp.web.list_editable = {};
     var _t = instance.web._t;
 
     // editability status of list rows
@@ -50,8 +53,10 @@ openerp.web.list_editable = function (instance) {
             });
             this.on('edit:after', this, function () {
                 self.$el.add(self.$buttons).addClass('oe_editing');
+                self.$('.ui-sortable').sortable('disable');
             });
             this.on('save:after cancel:after', this, function () {
+                self.$('.ui-sortable').sortable('enable');
                 self.$el.add(self.$buttons).removeClass('oe_editing');
             });
         },
@@ -96,7 +101,8 @@ openerp.web.list_editable = function (instance) {
             });
         },
         editable: function () {
-            return !this.options.disable_editable_mode 
+            return !this.grouped
+                && !this.options.disable_editable_mode
                 && (this.fields_view.arch.attrs.editable
                 || this._context_editable
                 || this.options.editable);
@@ -120,10 +126,19 @@ openerp.web.list_editable = function (instance) {
          * as an editable row at the top or bottom of the list)
          */
         do_add_record: function () {
+            var self = this;
             if (this.editable()) {
                 this.$el.find('table:first').show();
                 this.$el.find('.oe_view_nocontent').remove();
-                this.start_edition();
+                this.start_edition().then(function(){
+                    var fields = self.editor.form.fields;
+                    self.editor.form.fields_order.some(function(field){
+                        if (fields[field].$el.is(':visible')){
+                            fields[field].$el.find("input").select();
+                            return true;
+                        }
+                    });
+                });
             } else {
                 this._super();
             }
@@ -132,6 +147,15 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
+
+            // In case current editor was started previously, also has to run
+            // when toggling from editable to non-editable in case form widgets
+            // have setup global behaviors expecting themselves to exist
+            // somehow.
+            this.editor.destroy();
+            // Editor is not restartable due to formview not being restartable
+            this.editor = this.make_editor();
+
             if (this.editable()) {
                 this.$el.addClass('oe_list_editable');
                 // FIXME: any hook available to ensure this is only done once?
@@ -143,10 +167,6 @@ openerp.web.list_editable = function (instance) {
                         e.preventDefault();
                         self.cancel_edition();
                     });
-                this.editor.destroy();
-                // Editor is not restartable due to formview not being
-                // restartable
-                this.editor = this.make_editor();
                 var editor_ready = this.editor.prependTo(this.$el)
                     .done(this.proxy('setup_events'));
 
@@ -196,7 +216,7 @@ openerp.web.list_editable = function (instance) {
         make_empty_record: function (id) {
             var attrs = {id: id};
             _(this.columns).chain()
-                .filter(function (x) { return x.tag === 'field'})
+                .filter(function (x) { return x.tag === 'field';})
                 .pluck('name')
                 .each(function (field) { attrs[field] = false; });
             return new instance.web.list.Record(attrs);
@@ -254,7 +274,7 @@ openerp.web.list_editable = function (instance) {
         get_cells_for: function ($row) {
             var cells = {};
             $row.children('td').each(function (index, el) {
-                cells[el.getAttribute('data-field')] = el
+                cells[el.getAttribute('data-field')] = el;
             });
             return cells;
         },
@@ -266,7 +286,7 @@ openerp.web.list_editable = function (instance) {
             if (!this.editor.is_editing()) { return; }
             for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
                 var item = this.fields_for_resize[i];
-                if (!item.field.get('invisible')) {
+                if (!item.field.get('effective_invisible')) {
                     this.resize_field(item.field, item.cell);
                 }
             }
@@ -340,7 +360,7 @@ openerp.web.list_editable = function (instance) {
                         var record = self.records.get(attrs.id);
                         if (!record) {
                             // Record removed by third party during edition
-                            return
+                            return;
                         }
                         return self.reload_record(record);
                     }
@@ -423,7 +443,6 @@ openerp.web.list_editable = function (instance) {
                 var index = this.records.indexOf(source_record) + 1;
                 record = this.make_empty_record(id);
                 this.records.add(record, {at: index});
-                this.dataset.ids.splice(index, 0, id);
             }
             return this.reload_record(record);
         },
@@ -433,20 +452,26 @@ openerp.web.list_editable = function (instance) {
         setup_events: function () {
             var self = this;
             _.each(this.editor.form.fields, function(field, field_name) {
-                var setting = false;
                 var set_invisible = function() {
-                    if (!setting && field.get("effective_readonly")) {
-                        setting = true;
-                        field.set({invisible: true});
-                        setting = false;
-                    }
+                    field.set({'force_invisible': field.get('effective_readonly')});
                 };
                 field.on("change:effective_readonly", self, set_invisible);
-                field.on("change:invisible", self, set_invisible);
                 set_invisible();
+                field.on('change:effective_invisible', self, function () {
+                    if (field.get('effective_invisible')) { return; }
+                    var item = _(self.fields_for_resize).find(function (item) {
+                        return item.field === field;
+                    });
+                    if (item) {
+                        setTimeout(function() {
+                            self.resize_field(item.field, item.cell);
+                        }, 0);
+                    }
+                     
+                });
             });
 
-            this.editor.$el.on('keyup keydown', function (e) {
+            this.editor.$el.on('keyup keypress keydown', function (e) {
                 if (!self.editor.is_editing()) { return true; }
                 var key = _($.ui.keyCode).chain()
                     .map(function (v, k) { return {name: k, code: v}; })
@@ -472,6 +497,7 @@ openerp.web.list_editable = function (instance) {
             next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().then(function (saveInfo) {
+                if (!saveInfo) { return null; }
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
@@ -480,7 +506,7 @@ openerp.web.list_editable = function (instance) {
                 return self.start_edition(record, options);
             });
         },
-        keyup_ENTER: function () {
+        keypress_ENTER: function () {
             return this._next();
         },
         keydown_ESCAPE: function (e) {
@@ -510,10 +536,6 @@ openerp.web.list_editable = function (instance) {
                 };
             } else if (document.body.createTextRange) {
                 throw new Error("Implement text range handling for MSIE");
-                var sel = document.body.createTextRange();
-                if (sel.parentElement() === el) {
-
-                }
             }
             // Element without selection ranges (select, div/@contenteditable)
             return null;
@@ -690,9 +712,9 @@ openerp.web.list_editable = function (instance) {
             var arch = edition_view.arch;
             if (!(arch && arch.children instanceof Array)) {
                 throw new Error("Editor delegate's #edition_view must have a" +
-                                " non-empty arch")
+                                " non-empty arch");
             }
-            if (!(arch.tag === "form")) {
+            if (arch.tag !== "form") {
                 throw new Error("Editor delegate's #edition_view must have a" +
                                 " 'form' root node");
             }
@@ -795,7 +817,7 @@ openerp.web.list_editable = function (instance) {
     });
 
     instance.web.ListView.Groups.include(/** @lends instance.web.ListView.Groups# */{
-        passtrough_events: instance.web.ListView.Groups.prototype.passtrough_events + " edit saved",
+        passthrough_events: instance.web.ListView.Groups.prototype.passthrough_events + " edit saved",
         get_row_for: function (record) {
             return _(this.children).chain()
                 .invoke('get_row_for', record)
@@ -833,4 +855,4 @@ openerp.web.list_editable = function (instance) {
             return null;
         }
     });
-};
+})();

@@ -49,7 +49,7 @@ openerp.testing.section('editor', {
                         readonly: field.readonly
                     })
                 }
-            }
+            };
         });
         return {
             arch: {
@@ -81,7 +81,7 @@ openerp.testing.section('editor', {
     test('toggle-edition-save', {
         asserts: 4,
         setup: function (instance, $s, mock) {
-            mock('test.model:read', function () {
+            mock('test.model:search_read', function () {
                 return [{id: 42, a: false, b: false, c: false}];
             });
         }
@@ -108,7 +108,7 @@ openerp.testing.section('editor', {
             .done(function (record) {
                 ok(!e.is_editing(), "should have stopped editing");
                 equal(record.id, 42, "should have newly created id");
-            })
+            });
     });
     test('toggle-edition-cancel', { asserts: 2 }, function (instance, $fix) {
         var e = new instance.web.list.Editor({
@@ -131,7 +131,7 @@ openerp.testing.section('editor', {
             .done(function (record) {
                 ok(!e.is_editing(), "should have stopped editing");
                 ok(!record.id, "should have no id");
-            })
+            });
     });
     test('toggle-save-required', {
         asserts: 2,
@@ -178,6 +178,15 @@ openerp.testing.section('list.edition', {
         });
         mock('demo:read', function (args) {
             var id = args[0][0];
+            if (id in records) {
+                return [records[id]];
+            }
+            return [];
+        });
+        mock('demo:search_read', function (args) {
+            // args[0][0] = ["id", "=", 42] 
+            // args[0][0] = 42
+            var id = args[0][0][2];
             if (id in records) {
                 return [records[id]];
             }
@@ -316,11 +325,13 @@ openerp.testing.section('list.edition.onwrite', {
         mock('demo:read', function (args, kwargs) {
             if (_.isEmpty(args[0])) {
                 return [];
-            } else if (_.isEqual(args[0], [1])) {
-                return [
-                    {id: 1, a: 'some value'}
-                ];
-            } else if (_.isEqual(args[0], [42])) {
+            }
+            throw new Error(JSON.stringify(_.toArray(arguments)));
+        });
+        mock('demo:search_read', function (args, kwargs) {
+            if (_.isEqual(args[0], [['id', 'in', [1]]])) {
+                return [{id: 1, a: 'some value'}];
+            } else if (_.isEqual(args[0], [['id', 'in', [42]]])) {
                 return [ {id: 42, a: 'foo'} ];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));
@@ -350,8 +361,8 @@ openerp.testing.section('list.edition.onwrite', {
             strictEqual(
                 $fix.find('tbody tr:eq(1)').css('color'), 'rgb(255, 0, 0)',
                 'shoud have color applied');
-            strictEqual(
-                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(0, 0, 0)',
+            notStrictEqual(
+                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(255, 0, 0)',
                 'should have default color applied');
         });
     });

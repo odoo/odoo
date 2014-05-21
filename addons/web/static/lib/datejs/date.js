@@ -7,7 +7,7 @@
  *     date.js       // English (United States)
  *     date-en-US.js // English (United States)
  *     date-de-DE.js // Deutsch (Deutschland)
- *     date-es-MX.js // français (France)
+ *     date-es-MX.js // franÃ§ais (France)
  */
 
 alert(
@@ -17,5 +17,5 @@ alert(
     "    date.js       // English (United States)\n" + 
     "    date-en-US.js // English (United States)\n" + 
     "    date-de-DE.js // Deutsch (Deutschland)\n" + 
-    "    date-es-MX.js // français (France)\n"
+    "    date-es-MX.js // franÃ§ais (France)\n"
     );

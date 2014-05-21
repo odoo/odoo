@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Toolbar Configuration &mdash; CKEditor Sample</title>
+	<meta name="ckeditor-sample-name" content="Toolbar Configurations">
+	<meta name="ckeditor-sample-group" content="Advanced Samples">
+	<meta name="ckeditor-sample-description" content="Configuring CKEditor to display full or custom toolbar layout.">
+	<script src="../../../ckeditor.js"></script>
+	<link href="../../sample.css" rel="stylesheet">
+</head>
+<body>
+	<h1 class="samples">
+		<a href="../../index.html">CKEditor Samples</a> &raquo; Toolbar Configuration
+	</h1>
+	<div class="description">
+		<p>
+			This sample page demonstrates editor with loaded <a href="#fullToolbar">full toolbar</a> (all registered buttons) and, if
+			current editor's configuration modifies default settings, also editor with <a href="#currentToolbar">modified toolbar</a>.
+		</p>
+
+		<p>Since CKEditor 4 there are two ways to configure toolbar buttons.</p>
+
+		<h2 class="samples">By <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-toolbar">config.toolbar</a></h2>
+
+		<p>
+			You can explicitly define which buttons are displayed in which groups and in which order.
+			This is the more precise setting, but less flexible. If newly added plugin adds its
+			own button you'll have to add it manually to your <code>config.toolbar</code> setting as well.
+		</p>
+
+		<p>To add a CKEditor instance with custom toolbar setting, insert the following JavaScript call to your code:</p>
+
+		<pre class="samples">
+CKEDITOR.replace( <em>'textarea_id'</em>, {
+	<strong>toolbar:</strong> [
+		{ name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', '-', 'Templates' ] },	// Defines toolbar group with name (used to create voice label) and items in 3 subgroups.
+		[ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ],			// Defines toolbar group without name.
+		'/',																					// Line break - next group will be placed in new line.
+		{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] }
+	]
+});</pre>
+
+		<h2 class="samples">By <a href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-toolbarGroups">config.toolbarGroups</a></h2>
+
+		<p>
+			You can define which groups of buttons (like e.g. <code>basicstyles</code>, <code>clipboard</code>
+			and <code>forms</code>) are displayed and in which order. Registered buttons are associated
+			with toolbar groups by <code>toolbar</code> property in their definition.
+			This setting's advantage is that you don't have to modify toolbar configuration
+			when adding/removing plugins which register their own buttons.
+		</p>
+
+		<p>To add a CKEditor instance with custom toolbar groups setting, insert the following JavaScript call to your code:</p>
+
+		<pre class="samples">
+CKEDITOR.replace( <em>'textarea_id'</em>, {
+	<strong>toolbarGroups:</strong> [
+		{ name: 'document',	   groups: [ 'mode', 'document' ] },			// Displays document group with its two subgroups.
+ 		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },			// Group's name will be used to create voice label.
+ 		'/',																// Line break - next group will be placed in new line.
+ 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+ 		{ name: 'links' }
+	]
+
+	// NOTE: Remember to leave 'toolbar' property with the default value (null).
+});</pre>
+	</div>
+
+	<div id="currentToolbar" style="display: none">
+		<h2 class="samples">Current toolbar configuration</h2>
+		<p>Below you can see editor with current toolbar definition.</p>
+		<textarea cols="80" id="editorCurrent" name="editorCurrent" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+		<pre id="editorCurrentCfg" class="samples"></pre>
+	</div>
+
+	<div id="fullToolbar">
+		<h2 class="samples">Full toolbar configuration</h2>
+		<p>Below you can see editor with full toolbar, generated automatically by the editor.</p>
+		<p>
+			<strong>Note</strong>: To create editor instance with full toolbar you don't have to set anything.
+			Just leave <code>toolbar</code> and <code>toolbarGroups</code> with the default, <code>null</code> values.
+		</p>
+		<textarea cols="80" id="editorFull" name="editorFull" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+		<pre id="editorFullCfg" class="samples"></pre>
+	</div>
+
+	<script>
+
+(function() {
+	'use strict';
+
+	var buttonsNames;
+
+	CKEDITOR.config.extraPlugins = 'toolbar';
+
+	CKEDITOR.on( 'instanceReady', function( evt ) {
+		var editor = evt.editor,
+			editorCurrent = editor.name == 'editorCurrent',
+			defaultToolbar = !( editor.config.toolbar || editor.config.toolbarGroups || editor.config.removeButtons ),
+			pre = CKEDITOR.document.getById( editor.name + 'Cfg' ),
+			output = '';
+
+		if ( editorCurrent ) {
+			// If default toolbar configuration has been modified, show "current toolbar" section.
+			if ( !defaultToolbar )
+				CKEDITOR.document.getById( 'currentToolbar' ).show();
+			else
+				return;
+		}
+
+		if ( !buttonsNames )
+			buttonsNames = createButtonsNamesHash( editor.ui.items );
+
+		// Toolbar isn't set explicitly, so it was created automatically from toolbarGroups.
+		if ( !editor.config.toolbar ) {
+			output +=
+				'// Toolbar configuration generated automatically by the editor based on config.toolbarGroups.\n' +
+				dumpToolbarConfiguration( editor ) +
+				'\n\n' +
+				'// Toolbar groups configuration.\n' +
+				dumpToolbarConfiguration( editor, true )
+		}
+		// Toolbar groups doesn't count in this case - print only toolbar.
+		else {
+			output += '// Toolbar configuration.\n' +
+				dumpToolbarConfiguration( editor );
+		}
+
+		// Recreate to avoid old IE from loosing whitespaces on filling <pre> content.
+		var preOutput = pre.getOuterHtml().replace( /(?=<\/)/, output );
+		CKEDITOR.dom.element.createFromHtml( preOutput ).replace( pre );
+	} );
+
+	CKEDITOR.replace( 'editorCurrent', { height: 100 } );
+	CKEDITOR.replace( 'editorFull', {
+		// Reset toolbar settings, so full toolbar will be generated automatically.
+		toolbar: null,
+		toolbarGroups: null,
+		removeButtons: null,
+		height: 100
+	} );
+
+	function dumpToolbarConfiguration( editor, printGroups ) {
+		var output = [],
+			toolbar = editor.toolbar;
+
+		for ( var i = 0; i < toolbar.length; ++i ) {
+			var group = dumpToolbarGroup( toolbar[ i ], printGroups );
+			if ( group )
+				output.push( group );
+		}
+
+		return 'config.toolbar' + ( printGroups ? 'Groups' : '' ) + ' = [\n\t' + output.join( ',\n\t' ) + '\n];';
+	}
+
+	function dumpToolbarGroup( group, printGroups ) {
+		var output = [];
+
+		if ( typeof group == 'string' )
+			return '\'' + group + '\'';
+		if ( CKEDITOR.tools.isArray( group ) )
+			return dumpToolbarItems( group );
+		// Skip group when printing entire toolbar configuration and there are no items in this group.
+		if ( !printGroups && !group.items )
+			return;
+
+		if ( group.name )
+			output.push( 'name: \'' + group.name + '\'' );
+
+		if ( group.groups )
+			output.push( 'groups: ' + dumpToolbarItems( group.groups ) );
+
+		if ( !printGroups )
+			output.push( 'items: ' + dumpToolbarItems( group.items ) );
+
+		return '{ ' + output.join( ', ' ) + ' }';
+	}
+
+	function dumpToolbarItems( items ) {
+		if ( typeof items == 'string' )
+			return '\'' + items + '\'';
+
+		var names = [],
+			i, item;
+
+		for ( var i = 0; i < items.length; ++i ) {
+			item = items[ i ];
+			if ( typeof item == 'string' )
+				names.push( item );
+			else {
+				if ( item.type == CKEDITOR.UI_SEPARATOR )
+					names.push( '-' );
+				else
+					names.push( buttonsNames[ item.name ] );
+			}
+		}
+
+		return '[ \'' + names.join( '\', \'' ) + '\' ]';
+	}
+
+	// Creates { 'lowercased': 'LowerCased' } buttons names hash.
+	function createButtonsNamesHash( items ) {
+		var hash = {},
+			name;
+
+		for ( name in items ) {
+			hash[ items[ name ].name ] = name;
+		}
+
+		return hash;
+	}
+
+})();
+	</script>
+
+	<div id="footer">
+		<hr>
+		<p>
+			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+		</p>
+		<p id="copy">
+			Copyright &copy; 2003-2014, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
+			Knabben. All rights reserved.
+		</p>
+	</div>
+</body>
+</html>

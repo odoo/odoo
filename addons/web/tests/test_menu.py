@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import collections
+
 import mock
 import unittest2
+
+from openerp.http import request as req
+
+from . import common
 
 from ..controllers import main
 
@@ -10,37 +15,35 @@ class Placeholder(object):
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
 
-class LoadTest(unittest2.TestCase):
+class LoadTest(common.MockRequestCase):
     def setUp(self):
+        super(LoadTest, self).setUp()
         self.menu = main.Menu()
-        self.request = mock.Mock()
 
         # Have self.request.session.model() return a different mock object for
         # each model (but always the same mock for a given model name)
         models = collections.defaultdict(mock.Mock)
-        model = self.request.session.model.side_effect = \
+        model = req.session.model.side_effect = \
             lambda model_name: models[model_name]
 
         self.MockMenus = model('ir.ui.menu')
         # Mock the absence of custom menu
-        model('res.users').read.return_value = [{
-            'menu_id': False
-        }]
+        model('res.users').read.return_value = []
 
     def tearDown(self):
-        del self.request
         del self.MockMenus
         del self.menu
+        super(LoadTest, self).tearDown()
 
     def test_empty(self):
         self.MockMenus.search.return_value = []
         self.MockMenus.read.return_value = []
 
-        root = self.menu.load(self.request)
+        root = self.menu.load()
 
         self.MockMenus.search.assert_called_with(
             [('parent_id','=', False)], 0, False, False,
-            self.request.context)
+            req.context)
 
         self.assertEqual(root['all_menu_ids'], [])
 
@@ -56,16 +59,16 @@ class LoadTest(unittest2.TestCase):
             {'id': 2, 'sequence': 3, 'parent_id': False},
         ]
 
-        root = self.menu.load(self.request)
+        root = self.menu.load()
 
         self.MockMenus.search.assert_called_with(
             [('id','child_of', [1, 2, 3])], 0, False, False,
-            self.request.context)
+            req.context)
 
         self.MockMenus.read.assert_called_with(
             [1, 2, 3], ['name', 'sequence', 'parent_id',
                         'action'],
-            self.request.context)
+            req.context)
 
         self.assertEqual(root['all_menu_ids'], [1, 2, 3])
 
@@ -95,11 +98,11 @@ class LoadTest(unittest2.TestCase):
                 {'id': 4, 'sequence': 2, 'parent_id': [2, '']},
             ])
 
-        root = self.menu.load(self.request)
+        root = self.menu.load()
 
         self.MockMenus.search.assert_called_with(
             [('id','child_of', [1])], 0, False, False,
-            self.request.context)
+            req.context)
 
         self.assertEqual(root['all_menu_ids'], [1, 2, 3, 4])
 

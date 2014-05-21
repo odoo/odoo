@@ -1,5 +1,7 @@
 .. highlight:: javascript
 
+.. _testing:
+
 Testing in OpenERP Web
 ======================
 
@@ -326,6 +328,8 @@ call. The ability to perform RPC calls must be explicitly requested by
 a test case (or its containing test suite) through
 :js:attr:`~TestOptions.rpc`, and can be one of two modes: ``mock`` or
 ``rpc``.
+
+.. _testing-rpc-mock:
 
 Mock RPC
 ++++++++

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>XHTML Compliant Output &mdash; CKEditor Sample</title>
+	<meta name="ckeditor-sample-required-plugins" content="sourcearea">
+	<script src="../ckeditor.js"></script>
+	<script src="sample.js"></script>
+	<link href="sample.css" rel="stylesheet">
+</head>
+<body>
+	<h1 class="samples">
+		<a href="index.html">CKEditor Samples</a> &raquo; Producing XHTML Compliant Output
+	</h1>
+	<div class="description">
+		<p>
+			This sample shows how to configure CKEditor to output valid
+			<a class="samples" href="http://www.w3.org/TR/xhtml11/">XHTML 1.1</a> code.
+			Deprecated elements (<code>&lt;font&gt;</code>, <code>&lt;u&gt;</code>) or attributes
+			(<code>size</code>, <code>face</code>) will be replaced with XHTML compliant code.
+		</p>
+		<p>
+			To add a CKEditor instance outputting valid XHTML code, load the editor using a standard
+			JavaScript call and define CKEditor features to use the XHTML compliant elements and styles.
+		</p>
+		<p>
+			A snippet of the configuration code can be seen below; check the source of this page for
+			full definition:
+		</p>
+<pre class="samples">
+CKEDITOR.replace( '<em>textarea_id</em>', {
+	contentsCss: 'assets/outputxhtml.css',
+
+	coreStyles_bold: {
+		element: 'span',
+		attributes: { 'class': 'Bold' }
+	},
+	coreStyles_italic: {
+		element: 'span',
+		attributes: { 'class': 'Italic' }
+	},
+
+	...
+});</pre>
+	</div>
+	<form action="sample_posteddata.php" method="post">
+		<p>
+			<label for="editor1">
+				Editor 1:
+			</label>
+			<textarea cols="80" id="editor1" name="editor1" rows="10">&lt;p&gt;This is some &lt;span class="Bold"&gt;sample text&lt;/span&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;</textarea>
+			<script>
+
+				CKEDITOR.replace( 'editor1', {
+					/*
+					 * Style sheet for the contents
+					 */
+					contentsCss: 'assets/outputxhtml/outputxhtml.css',
+
+					/*
+					 * Special allowed content rules for spans used by
+					 * font face, size, and color buttons.
+					 *
+					 * Note: all rules have been written separately so
+					 * it was possible to specify required classes.
+					 */
+					extraAllowedContent: 'span(!FontColor1);span(!FontColor2);span(!FontColor3);' +
+						'span(!FontColor1BG);span(!FontColor2BG);span(!FontColor3BG);' +
+						'span(!FontComic);span(!FontCourier);span(!FontTimes);' +
+						'span(!FontSmaller);span(!FontLarger);span(!FontSmall);span(!FontBig);span(!FontDouble)',
+
+					/*
+					 * Core styles.
+					 */
+					coreStyles_bold: {
+						element: 'span',
+						attributes: { 'class': 'Bold' }
+					},
+					coreStyles_italic: {
+						element: 'span',
+						attributes: { 'class': 'Italic' }
+					},
+					coreStyles_underline: {
+						element: 'span',
+						attributes: { 'class': 'Underline' }
+					},
+					coreStyles_strike: {
+						element: 'span',
+						attributes: { 'class': 'StrikeThrough' },
+						overrides: 'strike'
+					},
+					coreStyles_subscript: {
+						element: 'span',
+						attributes: { 'class': 'Subscript' },
+						overrides: 'sub'
+					},
+					coreStyles_superscript: {
+						element: 'span',
+						attributes: { 'class': 'Superscript' },
+						overrides: 'sup'
+					},
+
+					/*
+					 * Font face.
+					 */
+
+					// List of fonts available in the toolbar combo. Each font definition is
+					// separated by a semi-colon (;). We are using class names here, so each font
+					// is defined by {Combo Label}/{Class Name}.
+					font_names: 'Comic Sans MS/FontComic;Courier New/FontCourier;Times New Roman/FontTimes',
+
+					// Define the way font elements will be applied to the document. The "span"
+					// element will be used. When a font is selected, the font name defined in the
+					// above list is passed to this definition with the name "Font", being it
+					// injected in the "class" attribute.
+					// We must also instruct the editor to replace span elements that are used to
+					// set the font (Overrides).
+					font_style: {
+						element: 'span',
+						attributes: { 'class': '#(family)' },
+						overrides: [
+							{
+								element: 'span',
+								attributes: {
+									'class': /^Font(?:Comic|Courier|Times)$/
+								}
+							}
+						]
+					},
+
+					/*
+					 * Font sizes.
+					 */
+					fontSize_sizes: 'Smaller/FontSmaller;Larger/FontLarger;8pt/FontSmall;14pt/FontBig;Double Size/FontDouble',
+					fontSize_style: {
+						element: 'span',
+						attributes: { 'class': '#(size)' },
+						overrides: [
+							{
+								element: 'span',
+								attributes: {
+									'class': /^Font(?:Smaller|Larger|Small|Big|Double)$/
+								}
+							}
+						]
+					} ,
+
+					/*
+					 * Font colors.
+					 */
+					colorButton_enableMore: false,
+
+					colorButton_colors: 'FontColor1/FF9900,FontColor2/0066CC,FontColor3/F00',
+					colorButton_foreStyle: {
+						element: 'span',
+						attributes: { 'class': '#(color)' },
+						overrides: [
+							{
+								element: 'span',
+								attributes: {
+									'class': /^FontColor(?:1|2|3)$/
+								}
+							}
+						]
+					},
+
+					colorButton_backStyle: {
+						element: 'span',
+						attributes: { 'class': '#(color)BG' },
+						overrides: [
+							{
+								element: 'span',
+								attributes: {
+									'class': /^FontColor(?:1|2|3)BG$/
+								}
+							}
+						]
+					},
+
+					/*
+					 * Indentation.
+					 */
+					indentClasses: [ 'Indent1', 'Indent2', 'Indent3' ],
+
+					/*
+					 * Paragraph justification.
+					 */
+					justifyClasses: [ 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyFull' ],
+
+					/*
+					 * Styles combo.
+					 */
+					stylesSet: [
+						{ name: 'Strong Emphasis', element: 'strong' },
+						{ name: 'Emphasis', element: 'em' },
+
+						{ name: 'Computer Code', element: 'code' },
+						{ name: 'Keyboard Phrase', element: 'kbd' },
+						{ name: 'Sample Text', element: 'samp' },
+						{ name: 'Variable', element: 'var' },
+
+						{ name: 'Deleted Text', element: 'del' },
+						{ name: 'Inserted Text', element: 'ins' },
+
+						{ name: 'Cited Work', element: 'cite' },
+						{ name: 'Inline Quotation', element: 'q' }
+					]
+				});
+
+			</script>
+		</p>
+		<p>
+			<input type="submit" value="Submit">
+		</p>
+	</form>
+	<div id="footer">
+		<hr>
+		<p>
+			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+		</p>
+		<p id="copy">
+			Copyright &copy; 2003-2014, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
+			Knabben. All rights reserved.
+		</p>
+	</div>
+</body>
+</html>

@@ -51,8 +51,38 @@
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
     height: inherit
-    &.oe_kanban_grouped .oe_kanban_dummy_cell
-        background: url(/web/static/src/img/form_sheetbg.png)
+    .oe_kanban_column_higlight
+        background: #eeddf6 !important
+    .oe_view_nocontent
+        position: relative
+        max-width: none
+        height: 100%
+        .oe_view_nocontent_content
+            margin-left: 90px
+            margin-top: 5px
+            max-width: 700px
+        .oe_view_nocontent_bg
+            background: #eee
+            opacity: 0.7
+            position: absolute
+            top: 0
+            bottom: 0
+            left: 0
+            right: 0
+            z-index: -1
+    &.oe_kanban_grouped
+        .oe_kanban_dummy_cell
+            background: url(/web/static/src/img/form_sheetbg.png)
+            width: 100%
+    .oe_kanban_group_length
+        text-align: center
+        display: none
+        .oe_tag
+            position: relative
+            top: +8px
+            font-weight: bold
+    .oe_kanban_header:hover .oe_kanban_group_length
+        display: none
     .ui-sortable-placeholder
         border: 1px solid rgba(0,0,0,0.1)
         visibility: visible !important
@@ -69,13 +99,13 @@
     .oe_kanban_clear
         clear: both
     .oe_kanban_content
-        word-break: break-all
+        word-wrap: break-word
         .oe_star_on, .oe_star_off
             color: #ccc
             text-shadow: 0 0 2px black
             vertical-align: top
             position: relative
-            top: -5px
+            top: -8px
             &:hover
                 text-decoration: none
         .oe_star_on
@@ -89,8 +119,6 @@
     // KanbanGroups {{{
     .oe_kanban_groups
         height: inherit
-    &.oe_kanban_ungrouped .oe_kanban_groups
-        width: 100%
     &.oe_kanban_grouped_by_m2o .oe_kanban_group_title
         cursor: move
     .oe_kanban_header
@@ -105,12 +133,32 @@
             font-weight: normal
             font-size: 13px
     .oe_kanban_group_title
+        position: relative
         font-size: 16px
         font-weight: bold
         color: #333333
         text-shadow: 0 1px 0 white
-        > span
+        margin-right: 30px
+        width: 200px
+        .oe_kanban_group_title_text
             margin-right: 4px
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+    .oe_fold_column
+        .oe_kanban_group_length
+            position: absolute
+            top: -1px
+            right: -14px
+            float: right
+            display: block
+    &.oe_kanban_grouped
+        .oe_kanban_column, .oe_kanban_group_header
+            width: 185px
+            min-width: 185px
+            &.oe_kanban_group_folded
+                width: auto
+                min-width: 30px
 
     .oe_kanban_column, .oe_kanban_group_header
         vertical-align: top
@@ -126,10 +174,6 @@
         background: #f0eeee
         border-left: 1px solid #f0f8f8
         border-right: 1px solid #b9b9b9
-    &.oe_kanban_grouped
-        .oe_kanban_group_header
-            width: 1%
-
     .oe_form
         .oe_kanban_column
             padding: 0px
@@ -143,10 +187,14 @@
     .oe_kanban_group_folded
         .oe_kanban_group_title, &.oe_kanban_column *, .oe_kanban_aggregates, .oe_kanban_add
             display: none
-        .oe_kanban_group_title_vertical
+        .oe_kanban_group_title_vertical, .oe_kanban_group_length
             display: block
         .oe_dropdown_kanban
             left: -5px
+        .oe_kanban_folded_column_cards
+            visibility: visible
+            display: block !important
+            height: 100%
     .oe_kanban_group_title_undefined
         color: #666666
     .oe_kanban_group_title_vertical
@@ -162,17 +210,19 @@
         display: none
         position: relative
         opacity: 0.75
-        top: 20px
+        top: 26px
     // }}}
     // KanbanQuickCreate {{{
     .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
         margin-left: 4px
         cursor: pointer
         position: relative
+        z-index: 1
     .oe_kanban_add
         top: -8px
     .oe_kanban_header .oe_dropdown_toggle
         top: -2px
+        height: 14px
     .oe_kanban_card, .oe_dropdown_toggle
         cursor: pointer
         display: inline-block
@@ -182,8 +232,10 @@
     .oe_kanban_quick_create_buttons
         margin: 4px 0
     .oe_kanban_no_group .oe_kanban_quick_create
-        width: 200px
+        width: 185px
         padding: 10px
+    .oe_kanban_quick_create
+        z-index: 2
     .oe_kanban_quick_create input
         @include box-sizing(border-box)
         outline: none
@@ -233,8 +285,11 @@
         .oe_kanban_title
             font-weight: bold
             margin: 2px 4px
-    &.oe_kanban_grouped .oe_kanban_record
-        margin-bottom: 4px
+        .oe_kanban_alias
+            margin: 0px 0 8px 0
+    &.oe_kanban_grouped
+        .oe_kanban_record
+            margin-bottom: 4px
     .oe_kanban_avatar_smallbox
         height: 40px
         width: 40px
@@ -381,6 +436,12 @@
             .oe_e
                 line-height: 12px
                 font-size: 22px
+        .oe_tags
+            margin-right: 0
+            .oe_tag
+                display: inline-block
+                padding: 0 2px
+                line-height: 14px
         .oe_kanban_mail_new
             line-height: 18px
             background-color: #8a89ba
@@ -393,20 +454,6 @@
         position: relative
         top: 2px
 
-    .oe_kanban_status
-        position: relative
-        top: 4px
-        display: inline-block
-        height: 12px
-        width: 12px
-        @include radius(6px)
-        @include radial-gradient((#eee 0%, #ccc 40%, #bbb 100%))
-    .oe_kanban_status_green
-        background: green
-        @include radial-gradient((#55dd55 0%, #44aa44 40%, #339933 100%))
-    .oe_kanban_status_red
-        background: red
-        @include radial-gradient((#ee7777 0%, #cc3333 40%, #bb0808 100%))
     .oe_kanban_text_red
         color: #A61300
         font-weight: bold
@@ -518,7 +565,6 @@
     .oe_kanban_group_title_vertical
         -ms-writing-mode: lr-tb !important
         background: rgb(240, 238, 238)
-        top: -5px !important
     &.oe_kanban_grouped
         .oe_kanban_group_header
             height: 1%

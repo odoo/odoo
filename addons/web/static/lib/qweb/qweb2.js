@@ -1,3 +1,26 @@
+/*
+Copyright (c) 2013, Fabien Meghazi
+
+Released under the MIT license
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
 // TODO: trim support
 // TODO: line number -> https://bugzilla.mozilla.org/show_bug.cgi?id=618650
 // TODO: templates orverwritten could be called by t-call="__super__" ?
@@ -5,7 +28,7 @@
 var QWeb2 = {
     expressions_cache: {},
     RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
-    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,raw,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
@@ -14,6 +37,7 @@ var QWeb2 = {
         'lt': '<',
         'lte': '<='
     },
+    VOID_ELEMENTS: 'area,base,br,col,embed,hr,img,input,keygen,link,menuitem,meta,param,source,track,wbr'.split(','),
     tools: {
         exception: function(message, context) {
             context = context || {};
@@ -195,6 +219,7 @@ QWeb2.Engine = (function() {
         this.jQuery = window.jQuery;
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
         this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
+        this.void_elements = QWeb2.VOID_ELEMENTS.slice(0);
         this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
         this.preprocess_node = null;
         for (var i = 0; i < arguments.length; i++) {
@@ -203,10 +228,27 @@ QWeb2.Engine = (function() {
     }
 
     QWeb2.tools.extend(Engine.prototype, {
-        add_template : function(template) {
+        /**
+         * Add a template to the engine
+         *
+         * @param {String|Document} template Template as string or url or DOM Document
+         * @param {Function} [callback] Called when the template is loaded, force async request
+         */
+        add_template : function(template, callback) {
+            var self = this;
             this.templates_resources.push(template);
             if (template.constructor === String) {
-                template = this.load_xml(template);
+                return this.load_xml(template, function (err, xDoc) {
+                    if (err) {
+                        if (callback) {
+                            return callback(err);
+                        } else {
+                            throw err;
+                        }
+                    }
+                    self.add_template(xDoc, callback);
+                });
+                template = this.load_xml(template, callback);
             }
             var ec = (template.documentElement && template.documentElement.childNodes) || template.childNodes || [];
             for (var i = 0; i < ec.length; i++) {
@@ -239,35 +281,56 @@ QWeb2.Engine = (function() {
                     }
                 }
             }
+            if (callback) {
+                callback(null, template);
+            }
             return true;
         },
-        load_xml : function(s) {
+        load_xml : function(s, callback) {
+            var self = this;
+            var async = !!callback;
             s = this.tools.trim(s);
             if (s.charAt(0) === '<') {
-                return this.load_xml_string(s);
+                var tpl = this.load_xml_string(s);
+                if (callback) {
+                    callback(null, tpl);
+                }
+                return tpl;
             } else {
                 var req = this.get_xhr();
-                if (req) {
-                    // TODO: third parameter is async : https://developer.mozilla.org/en/XMLHttpRequest#open()
-                    // do an on_ready in QWeb2{} that could be passed to add_template
-                    if (this.debug) {
-                        s += '?debug=' + (new Date()).getTime(); // TODO fme: do it properly in case there's already url parameters
-                    }
-                    req.open('GET', s, false);
-                    req.send(null);
-                    var xDoc = req.responseXML;
-                    if (xDoc) {
-                        if (!xDoc.documentElement) {
-                            throw new Error("QWeb2: This xml document has no root document : " + xDoc.responseText);
-                        }
-                        if (xDoc.documentElement.nodeName == "parsererror") {
-                            return this.tools.exception(xDoc.documentElement.childNodes[0].nodeValue);
-                        }
-                        return xDoc;
-                    } else {
-                        return this.load_xml_string(req.responseText);
-                    }
+                if (this.debug) {
+                    s += '?debug=' + (new Date()).getTime(); // TODO fme: do it properly in case there's already url parameters
                 }
+                req.open('GET', s, async);
+                if (async) {
+                    req.onreadystatechange = function() {
+                        if (req.readyState == 4) {
+                            if (req.status == 200) {
+                                callback(null, self._parse_from_request(req));
+                            } else {
+                                callback(new Error("Can't load template, http status " + req.status));
+                            }
+                        }
+                    };
+                }
+                req.send(null);
+                if (!async) {
+                    return this._parse_from_request(req);
+                }
+            }
+        },
+        _parse_from_request: function(req) {
+            var xDoc = req.responseXML;
+            if (xDoc) {
+                if (!xDoc.documentElement) {
+                    throw new Error("QWeb2: This xml document has no root document : " + xDoc.responseText);
+                }
+                if (xDoc.documentElement.nodeName == "parsererror") {
+                    throw new Error("QWeb2: Could not parse document :" + xDoc.documentElement.childNodes[0].nodeValue);
+                }
+                return xDoc;
+            } else {
+                return this.load_xml_string(req.responseText);
             }
         },
         load_xml_string : function(s) {
@@ -275,17 +338,15 @@ QWeb2.Engine = (function() {
                 var dp = new DOMParser();
                 var r = dp.parseFromString(s, "text/xml");
                 if (r.body && r.body.firstChild && r.body.firstChild.nodeName == 'parsererror') {
-                    return this.tools.exception(r.body.innerText);
+                    throw new Error("QWeb2: Could not parse document :" + r.body.innerText);
                 }
                 return r;
             }
             var xDoc;
             try {
-                // new ActiveXObject("Msxml2.DOMDocument.4.0");
                 xDoc = new ActiveXObject("MSXML2.DOMDocument");
             } catch (e) {
-                return this.tools.exception(
-                    "Could not find a DOM Parser: " + e.message);
+                throw new Error("Could not find a DOM Parser: " + e.message);
             }
             xDoc.async = false;
             xDoc.preserveWhiteSpace = true;
@@ -302,7 +363,7 @@ QWeb2.Engine = (function() {
             try {
                 return new ActiveXObject('MSXML2.XMLHTTP.3.0');
             } catch (e) {
-                return null;
+                throw new Error("Could not get XHR");
             }
         },
         compile : function(node) {
@@ -421,6 +482,7 @@ QWeb2.Element = (function() {
         this._bottom = [];
         this._indent = 1;
         this.process_children = true;
+        this.is_void_element = ~QWeb2.tools.arrayIndexOf(this.engine.void_elements, this.tag);
         var childs = this.node.childNodes;
         if (childs) {
             for (var i = 0, ilen = childs.length; i < ilen; i++) {
@@ -618,11 +680,13 @@ QWeb2.Element = (function() {
                         this.top("r.push(context.engine.tools.gen_attribute(['" + m[1] + "', (" + (this.string_interpolation(v)) + ")]));");
                     }
                 }
-                if (this.children.length || this.actions.opentag === 'true') {
+                if (this.actions.opentag === 'true' || (!this.children.length && this.is_void_element)) {
+                    // We do not enforce empty content on void elements
+                    // because QWeb rendering is not necessarily html.
+                    this.top_string("/>");
+                } else {
                     this.top_string(">");
                     this.bottom_string("</" + this.tag + ">");
-                } else {
-                    this.top_string("/>");
                 }
             }
         },
@@ -676,14 +740,8 @@ QWeb2.Element = (function() {
         compile_action_esc : function(value) {
             this.top("r.push(context.engine.tools.html_escape(" + (this.format_expression(value)) + "));");
         },
-        compile_action_escf : function(value) {
-            this.top("r.push(context.engine.tools.html_escape(" + (this.string_interpolation(value)) + "));");
-        },
         compile_action_raw : function(value) {
             this.top("r.push(" + (this.format_expression(value)) + ");");
-        },
-        compile_action_rawf : function(value) {
-            this.top("r.push(" + (this.string_interpolation(value)) + ");");
         },
         compile_action_js : function(value) {
             this.top("(function(" + value + ") {");

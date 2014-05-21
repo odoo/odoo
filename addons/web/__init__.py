@@ -1,5 +1,8 @@
-import http
-import controllers
-import cli
+import sys
 
-wsgi_postload = http.wsgi_postload
+# Mock deprecated openerp.addons.web.http module
+import openerp.http
+sys.modules['openerp.addons.web.http'] = openerp.http
+http = openerp.http
+
+import controllers

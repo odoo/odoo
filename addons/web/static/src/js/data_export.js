@@ -1,18 +1,42 @@
-openerp.web.data_export = function(instance) {
+
+(function() {
+
+var instance = openerp;
+openerp.web.data_export = {};
+
 var QWeb = instance.web.qweb,
       _t = instance.web._t;
 instance.web.DataExport = instance.web.Dialog.extend({
     template: 'ExportTreeView',
     dialog_title: {toString: function () { return _t("Export Data"); }},
+    events: {
+        'click #add_field': function () {
+            var self = this;
+            this.$('#field-tree-structure tr.ui-selected')
+                .removeClass('ui-selected')
+                .find('a').each(function () {
+                    var id = $(this).attr('id').split('-')[1];
+                    var string = $(this).attr('string');
+                    self.add_field(id, string);
+                });
+        },
+        'click #remove_field': function () {
+            this.$('#fields_list option:selected').remove();
+        },
+        'click #remove_all_field': function () {
+            this.$('#fields_list').empty();
+        },
+        'click #export_new_list': 'on_show_save_list',
+    },
     init: function(parent, dataset) {
         var self = this;
-        options = {
-            buttons : [
-                {text: _t("Close"), click: function() { self.close(); }},
-                {text: _t("Export To File"), click: function() { self.on_click_export_data(); }}
+        var options = {
+            buttons: [
+                {text: _t("Close"), click: function () { self.$el.parents('.modal').modal('hide'); }},
+                {text: _t("Export To File"), click: function () { self.on_click_export_data(); }}
             ],
-            close: function(event, ui){ self.close();}
-        }
+            close: function () { self.close();}
+        };
         this._super(parent, options);
         this.records = {};
         this.dataset = dataset;
@@ -22,25 +46,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        self.$el.removeClass('ui-dialog-content ui-widget-content');
-        self.$el.find('#add_field').click(function() {
-            if ($('#field-tree-structure tr.ui-selected')) {
-                var fld = self.$el.find('#field-tree-structure tr.ui-selected').find('a');
-                for (var i = 0; i < fld.length; i++) {
-                    var id = $(fld[i]).attr('id').split('-')[1];
-                    var string = $(fld[i]).attr('string');
-                    self.add_field(id, string);
-                }
-                self.$el.find('#field-tree-structure tr').removeClass('ui-selected');
-            }
-        });
-        self.$el.find('#remove_field').click(function() {
-            self.$el.find('#fields_list option:selected').remove();
-        });
-        self.$el.find('#remove_all_field').click(function() {
-            self.$el.find('#fields_list').empty();
-        });
-        this.$el.find('#export_new_list').click(this.on_show_save_list);
 
         var got_fields = new $.Deferred();
         this.$el.find('#import_compat').change(function() {
@@ -49,15 +54,28 @@ instance.web.DataExport = instance.web.Dialog.extend({
             var import_comp = self.$el.find("#import_compat").val();
             self.rpc("/web/export/get_fields", {
                 model: self.dataset.model,
-                import_compat: Boolean(import_comp)
+                import_compat: !!import_comp,
             }).done(function (records) {
                 got_fields.resolve();
                 self.on_show_data(records);
             });
         }).change();
 
+        var got_domain = this.getParent().get_active_domain().then(function (domain) {
+            if (domain === undefined) {
+                self.ids_to_export = self.getParent().get_selected_ids();
+                self.domain = self.dataset.domain;
+            }
+            else {
+                self.ids_to_export = false;
+                self.domain = domain;
+            }
+            self.on_show_domain();
+        });
+
         return $.when(
             got_fields,
+            got_domain,
             this.rpc('/web/export/formats', {}).done(this.do_setup_export_formats),
             this.show_exports_list());
     },
@@ -70,7 +88,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 opt.replaceChild(
                     document.createTextNode(
                         _.str.sprintf("%s — %s", format.label, format.error)),
-                    opt.childNodes[0])
+                    opt.childNodes[0]);
             }
             $fmts.append(opt);
         });
@@ -79,7 +97,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         var self = this;
         if (self.$el.find('#saved_export_list').is(':hidden')) {
             self.$el.find('#ExistsExportList').show();
-            return;
+            return $.when();
         }
         return this.exports.read_slice(['name'], {
             domain: [['resource', '=', this.dataset.model]]
@@ -92,7 +110,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 self.$el.find('#fields_list option').remove();
                 var export_id = self.$el.find('#saved_export_list option:selected').val();
                 if (export_id) {
-                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}).done(self.do_load_export_field);
+                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id, 10)}).done(self.do_load_export_field);
                 }
             });
             self.$el.find('#delete_export_list').click(function() {
@@ -100,6 +118,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 if (select_exp.val()) {
                     self.exports.unlink([parseInt(select_exp.val(), 10)]);
                     select_exp.remove();
+                    self.$el.find("#fields_list option").remove();
                     if (self.$el.find('#saved_export_list option').length <= 1) {
                         self.$el.find('#ExistsExportList').hide();
                     }
@@ -147,18 +166,16 @@ instance.web.DataExport = instance.web.Dialog.extend({
             export_fields: _(fields).map(function (field) {
                 return [0, 0, {name: field}];
             })
-        }, function (export_list_id) {
-            if (!export_list_id.result) {
+        }).then(function (export_list_id) {
+            if (!export_list_id) {
                 return;
             }
-            self.$el.find("#saved_export_list").append(
-                    new Option(value, export_list_id.result));
-            if (self.$el.find("#saved_export_list").is(":hidden")) {
+            if (!self.$el.find("#saved_export_list").length || self.$el.find("#saved_export_list").is(":hidden")) {
                 self.show_exports_list();
             }
+            self.$el.find("#saved_export_list").append( new Option(value, export_list_id) );
         });
         this.on_show_save_list();
-        this.$el.find("#fields_list option").remove();
     },
     on_click: function(id, record) {
         var self = this;
@@ -190,9 +207,11 @@ instance.web.DataExport = instance.web.Dialog.extend({
             self.showcontent(record.id);
         }
     },
+    on_show_domain: function() {
+        this.$el.find('tr').first().find('td').append(QWeb.render('ExportTreeView-Domain', {'record': this}));
+    },
     on_show_data: function(result, after) {
         var self = this;
-        var imp_cmpt = Boolean(self.$el.find("#import_compat").val());
 
         if (after) {
             var current_tr = self.$el.find("tr[id='treerow-" + after + "']");
@@ -215,20 +234,21 @@ instance.web.DataExport = instance.web.Dialog.extend({
             self.$el.find("tr[id='treerow-" + record.id + "']").click(function(e) {
                 if (e.shiftKey) {
                     var frst_click, scnd_click = '';
-                    if (self.row_index == 0) {
+                    if (self.row_index === 0) {
                         self.row_index = this.rowIndex;
                         frst_click = self.$el.find("tr[id^='treerow-']")[self.row_index-1];
                         $(frst_click).addClass("ui-selected");
                     } else {
+                        var i;
                         if (this.rowIndex >=self.row_index) {
-                            for (var i = (self.row_index-1); i < this.rowIndex; i++) {
+                            for (i = (self.row_index-1); i < this.rowIndex; i++) {
                                 scnd_click = self.$el.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
                         } else {
-                            for (var i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
+                            for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
                                 scnd_click = self.$el.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
@@ -263,6 +283,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             self.$el.find("tr[id='treerow-" + record.id + "']").keydown(function(e) {
                 var keyCode = e.keyCode || e.which;
                 var arrow = {left: 37, up: 38, right: 39, down: 40 };
+                var elem;
                 switch (keyCode) {
                     case arrow.left:
                         if ($(this).hasClass('open')) {
@@ -275,7 +296,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         }
                         break;
                     case arrow.up:
-                        var elem = this;
+                        elem = this;
                         $(elem).removeClass("ui-selected");
                         while (!$(elem).prev().is(":visible")) {
                             elem = $(elem).prev();
@@ -286,7 +307,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         $(elem).prev().find('a').focus();
                         break;
                     case arrow.down:
-                        var elem = this;
+                        elem = this;
                         $(elem).removeClass("ui-selected");
                         while(!$(elem).next().is(":visible")) {
                             elem = $(elem).next();
@@ -353,14 +374,13 @@ instance.web.DataExport = instance.web.Dialog.extend({
         }
     },
     get_fields: function() {
-        var export_field = [];
-        this.$el.find("#fields_list option").each(function() {
-            export_field.push($(this).val());
-        });
-        if (!export_field.length) {
+        var export_fields = this.$("#fields_list option").map(function() {
+            return $(this).val();
+        }).get();
+        if (!export_fields.length) {
             alert(_t("Please select fields to save export list..."));
         }
-        return export_field;
+        return export_fields;
     },
     on_click_export_data: function() {
         var self = this;
@@ -374,27 +394,26 @@ instance.web.DataExport = instance.web.Dialog.extend({
             alert(_t("Please select fields to export..."));
             return;
         }
-
         exported_fields.unshift({name: 'id', label: 'External ID'});
+
         var export_format = this.$el.find("#export_format").val();
+
         instance.web.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
                 model: this.dataset.model,
                 fields: exported_fields,
-                ids: this.dataset.ids,
-                domain: this.dataset.domain,
-                import_compat: Boolean(
-                    this.$el.find("#import_compat").val())
+                ids: this.ids_to_export,
+                domain: this.domain,
+                import_compat: !!this.$el.find("#import_compat").val(),
             })},
-            complete: instance.web.unblockUI
+            complete: instance.web.unblockUI,
         });
     },
     close: function() {
-        this.$el.remove();
         this._super();
     }
 });
 
-};
+})();

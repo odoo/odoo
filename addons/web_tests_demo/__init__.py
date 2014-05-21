@@ -1,6 +1,6 @@
 from openerp.osv import orm, fields
 
-class TestObject(orm.Model):
+class TestObject(orm.TransientModel):
     _name = 'web_tests_demo.model'
 
     _columns = {

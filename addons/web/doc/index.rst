@@ -3,35 +3,56 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to OpenERP Web's documentation!
-=======================================
+OpenERP Web Reference Documentation
+===================================
 
-Contents:
+See also the `OpenERP Web Training`_.
+
+.. _OpenERP Web Training: https://doc.openerp.com/trunk/training/
+
+Basics
+------
 
 .. toctree::
     :maxdepth: 1
 
     module
-    widget
+    changelog-7.0
 
+Server-Side Web Framework
+-------------------------
 
-    async
-    rpc
-    qweb
-    client_action
+.. toctree::
+    :maxdepth: 1
+
+    web_controllers
+
+Javascript
+----------
+
+.. toctree::
+    :maxdepth: 1
 
     guidelines
-
+    widget
+    rpc
+    async
+    qweb
+    client_action
     testing
+
+Views
+-----
+
+.. toctree::
+    :maxdepth: 1
 
     search_view
     list_view
     form_view
 
-    changelog-7.0
-
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

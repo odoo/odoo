@@ -1,5 +1,9 @@
 
-openerp.web.formats = function(instance) {
+(function() {
+
+var instance = openerp;
+openerp.web.formats = {};
+
 var _t = instance.web._t;
 
 /**
@@ -137,11 +141,13 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
     //noinspection FallthroughInSwitchStatementJS
     switch (value) {
         case '':
-            if (descriptor.type === 'char') {
+            if (descriptor.type === 'char' || descriptor.type === 'text') {
                 return '';
             }
             console.warn('Field', descriptor, 'had an empty string as value, treating as false...');
+            return value_if_empty === undefined ?  '' : value_if_empty;
         case false:
+        case undefined:
         case Infinity:
         case -Infinity:
             return value_if_empty === undefined ?  '' : value_if_empty;
@@ -166,9 +172,13 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                 value = Math.abs(value);
                 pattern = '-' + pattern;
             }
-            return _.str.sprintf(pattern,
-                    Math.floor(value),
-                    Math.round((value % 1) * 60));
+            var hour = Math.floor(value);
+            var min = Math.round((value % 1) * 60);
+            if (min == 60){
+                min = 0;
+                hour = hour + 1;
+            }
+            return _.str.sprintf(pattern, hour, min);
         case 'many2one':
             // name_get value format
             return value[1] ? value[1].split("\n")[0] : value[1];
@@ -186,7 +196,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
                         + ' ' + normalize_format(l10n.time_format));
         case 'date':
             if (typeof(value) == "string")
-                value = instance.web.auto_str_to_date(value);
+                value = instance.web.str_to_date(value.substring(0,10));
             return value.toString(normalize_format(l10n.date_format));
         case 'time':
             if (typeof(value) == "string")
@@ -195,7 +205,7 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
         case 'selection': case 'statusbar':
             // Each choice is [value, label]
             if(_.isArray(value)) {
-                 value = value[0]
+                 return value[1];
             }
             var result = _(descriptor.selection).detect(function (choice) {
                 return choice[0] === value;
@@ -215,9 +225,9 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
         case "":
             return value_if_empty === undefined ?  false : value_if_empty;
     }
+    var tmp;
     switch (descriptor.widget || descriptor.type || (descriptor.field && descriptor.field.type)) {
         case 'integer':
-            var tmp;
             do {
                 tmp = value;
                 value = value.replace(instance.web._t.database.parameters.thousands_sep, "");
@@ -227,7 +237,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
-            var tmp = Number(value);
+            tmp = Number(value);
             if (!isNaN(tmp))
                 return tmp;
 
@@ -310,4 +320,34 @@ instance.web.auto_date_to_str = function(value, type) {
     }
 };
 
+/**
+ * performs a half up rounding with arbitrary precision, correcting for float loss of precision
+ * See the corresponding float_round() in server/tools/float_utils.py for more info
+ * @param {Number} the value to be rounded
+ * @param {Number} a non zero precision parameter. eg: 0.01 rounds to two digits.
+ */
+instance.web.round_precision = function(value, precision){
+    if(!value){
+        return 0;
+    }else if(!precision){
+        throw new Error('round_precision(...):  Cannot round value: '+value+' with a precision of zero (or undefined)');
+    }
+    var normalized_value = value / precision;
+    var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
+    var epsilon = Math.pow(2, epsilon_magnitude - 53);
+    normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
+    var rounded_value = Math.round(normalized_value);
+    return rounded_value * precision;
 };
+
+/**
+ * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
+ * See the corresponding float_round() in server/tools/float_utils.py for more info
+ * @param {Number} the value to be rounded
+ * @param {Number} the number of decimals. eg: round_decimals(3.141592,2) -> 3.14
+ */
+instance.web.round_decimals = function(value, decimals){
+    return instance.web.round_precision(value, Math.pow(10,-decimals));
+};
+
+})();

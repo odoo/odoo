@@ -1,7 +1,10 @@
 /*
  * py.js helpers and setup
  */
-openerp.web.pyeval = function (instance) {
+(function() {
+
+    var instance = openerp;
+
     instance.web.pyeval = {};
 
     var obj = function () {};
@@ -97,7 +100,7 @@ openerp.web.pyeval = function (instance) {
                     divmod(n, 365, function (_n1, n) {
                         n1 = _n1;
                         n0 = n;
-                    })
+                    });
                 });
             });
         });
@@ -139,7 +142,7 @@ openerp.web.pyeval = function (instance) {
         if (microsecond < 0 || microsecond > 999999) {
             divmod(microsecond, 1000000, function (carry, ms) {
                 microsecond = ms;
-                second += carry
+                second += carry;
             });
         }
         if (second < 0 || second > 59) {
@@ -152,13 +155,13 @@ openerp.web.pyeval = function (instance) {
             divmod(minute, 60, function (carry, m) {
                 minute = m;
                 hour += carry;
-            })
+            });
         }
         if (hour < 0 || hour > 23) {
             divmod(hour, 24, function (carry, h) {
                 hour = h;
                 day += carry;
-            })
+            });
         }
         // That was easy.  Now it gets muddy:  the proper range for day
         // can't be determined without knowing the correct month and year,
@@ -170,7 +173,7 @@ openerp.web.pyeval = function (instance) {
             divmod(month-1, 12, function (carry, m) {
                 month = m + 1;
                 year += carry;
-            })
+            });
         }
         // Now only day can be out of bounds (year may also be out of bounds
         // for a datetime object, but we don't care about that here).
@@ -247,7 +250,7 @@ openerp.web.pyeval = function (instance) {
             });
             divmod(seconds, 24*3600, function (days, seconds) {
                 d += days;
-                s += seconds
+                s += seconds;
             });
             // seconds isn't referenced again before redefinition
 
@@ -358,7 +361,7 @@ openerp.web.pyeval = function (instance) {
             return py.float.fromJSON(
                 this.days * 86400
               + this.seconds
-              + this.microseconds / 1000000)
+              + this.microseconds / 1000000);
         },
         __nonzero__: function () {
             return (!!this.days || !!this.seconds || !!this.microseconds)
@@ -379,13 +382,28 @@ openerp.web.pyeval = function (instance) {
                 this[key] = asJS(args[key]);
             }
         },
+        replace: function () {
+            var args = py.PY_parseArgs(arguments, [
+                ['year', py.None], ['month', py.None], ['day', py.None],
+                ['hour', py.None], ['minute', py.None], ['second', py.None],
+                ['microsecond', py.None] // FIXME: tzinfo, can't use None as valid input
+            ]);
+            var params = {};
+            for(var key in args) {
+                if (!args.hasOwnProperty(key)) { continue; }
+
+                var arg = args[key];
+                params[key] = (arg === py.None ? this[key] : asJS(arg));
+            }
+            return py.PY_call(datetime.datetime, params);
+        },
         strftime: function () {
             var self = this;
             var args = py.PY_parseArgs(arguments, 'format');
             return py.str.fromJSON(args.format.toJSON()
                 .replace(/%([A-Za-z])/g, function (m, c) {
                     switch (c) {
-                    case 'Y': return self.year;
+                    case 'Y': return _.str.sprintf('%04d', self.year);
                     case 'm': return _.str.sprintf('%02d', self.month);
                     case 'd': return _.str.sprintf('%02d', self.day);
                     case 'H': return _.str.sprintf('%02d', self.hour);
@@ -396,6 +414,17 @@ openerp.web.pyeval = function (instance) {
                 }));
         },
         now: py.classmethod.fromJSON(function () {
+            var d = new Date;
+            return py.PY_call(datetime.datetime, [
+                d.getFullYear(), d.getMonth() + 1, d.getDate(),
+                d.getHours(), d.getMinutes(), d.getSeconds(),
+                d.getMilliseconds() * 1000]);
+        }),
+        today: py.classmethod.fromJSON(function () {
+            var dt_class = py.PY_getAttr(datetime, 'datetime');
+            return py.PY_call(py.PY_getAttr(dt_class, 'now'));
+        }),
+        utcnow: py.classmethod.fromJSON(function () {
             var d = new Date();
             return py.PY_call(datetime.datetime,
                 [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
@@ -412,7 +441,17 @@ openerp.web.pyeval = function (instance) {
                 py.PY_getAttr(args.time, 'minute'),
                 py.PY_getAttr(args.time, 'second')
             ]);
-        })
+        }),
+        toJSON: function () {
+            return new Date(
+                this.year,
+                this.month - 1,
+                this.day,
+                this.hour,
+                this.minute,
+                this.second,
+                this.microsecond / 1000);
+        },
     });
     datetime.date = py.type('date', null, {
         __init__: function () {
@@ -466,8 +505,13 @@ openerp.web.pyeval = function (instance) {
             return py.float.fromJSON(ymd2ord(this.year, this.month, this.day));
         },
         fromJSON: function (year, month, day) {
-            return py.PY_call(datetime.date, [year, month, day])
-        }
+            return py.PY_call(datetime.date, [year, month, day]);
+        },
+        today: py.classmethod.fromJSON(function () {
+            var d = new Date;
+            return py.PY_call(datetime.date, [
+                d.getFullYear(), d.getMonth() + 1, d.getDate()]);
+        }),
     });
     /**
         Returns the current local date, which means the date on the client (which can be different
@@ -498,16 +542,19 @@ openerp.web.pyeval = function (instance) {
     time.strftime = py.PY_def.fromJSON(function () {
         var args  = py.PY_parseArgs(arguments, 'format');
         var dt_class = py.PY_getAttr(datetime, 'datetime');
-        var d = py.PY_call(py.PY_getAttr(dt_class, 'now'));
+        var d = py.PY_call(py.PY_getAttr(dt_class, 'utcnow'));
         return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
     });
 
+    var args = _.map(('year month day hour minute second microsecond '
+                    + 'years months weeks days hours minutes secondes microseconds '
+                    + 'weekday leakdays yearday nlyearday').split(' '), function (arg) {
+        return [arg, null];
+    });
+    args.unshift('*');
     var relativedelta = py.type('relativedelta', null, {
         __init__: function () {
-            this.ops = py.PY_parseArgs(arguments,
-                '* year month day hour minute second microsecond '
-                + 'years months weeks days hours minutes secondes microseconds '
-                + 'weekday leakdays yearday nlyearday');
+            this.ops = py.PY_parseArgs(arguments, args);
         },
         __add__: function (other) {
             if (!py.PY_isInstance(other, datetime.date)) {
@@ -599,8 +646,88 @@ openerp.web.pyeval = function (instance) {
         }
     });
 
+    // recursively wraps JS objects passed into the context to attributedicts
+    // which jsonify back to JS objects
+    var wrap = function (value) {
+        if (value === null) { return py.None; }
+
+        switch (typeof value) {
+        case 'undefined': throw new Error("No conversion for undefined");
+        case 'boolean': return py.bool.fromJSON(value);
+        case 'number': return py.float.fromJSON(value);
+        case 'string': return py.str.fromJSON(value);
+        }
+
+        switch(value.constructor) {
+        case Object: return wrapping_dict.fromJSON(value);
+        case Array: return wrapping_list.fromJSON(value);
+        }
+
+        throw new Error("ValueError: unable to wrap " + value);
+    };
+    var wrapping_dict = py.type('wrapping_dict', null, {
+        __init__: function () {
+            this._store = {};
+        },
+        __getitem__: function (key) {
+            var k = key.toJSON();
+            if (!(k in this._store)) {
+                throw new Error("KeyError: '" + k + "'");
+            }
+            return wrap(this._store[k]);
+        },
+        __getattr__: function (key) {
+            return this.__getitem__(py.str.fromJSON(key));
+        },
+        get: function () {
+            var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
+
+            if (!(args.k.toJSON() in this._store)) { return args.d; }
+            return this.__getitem__(args.k);
+        },
+        fromJSON: function (d) {
+            var instance = py.PY_call(wrapping_dict);
+            instance._store = d;
+            return instance;
+        },
+        toJSON: function () {
+            return this._store;
+        },
+    });
+    var wrapping_list = py.type('wrapping_list', null, {
+        __init__: function () {
+            this._store = [];
+        },
+        __getitem__: function (index) {
+            return wrap(this._store[index.toJSON()]);
+        },
+        fromJSON: function (ar) {
+            var instance = py.PY_call(wrapping_list);
+            instance._store = ar;
+            return instance;
+        },
+        toJSON: function () {
+            return this._store;
+        },
+    });
+    var wrap_context = function (context) {
+        for (var k in context) {
+            if (!context.hasOwnProperty(k)) { continue; }
+            var val = context[k];
+
+            if (val === null) { continue; }
+            if (val.constructor === Array) {
+                context[k] = wrapping_list.fromJSON(val);
+            } else if (val.constructor === Object
+                       && !py.PY_isInstance(val, py.object)) {
+                context[k] = wrapping_dict.fromJSON(val);
+            }
+        }
+        return context;
+    };
+
     var eval_contexts = function (contexts, evaluation_context) {
-        evaluation_context = evaluation_context || {};
+        evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         return _(contexts).reduce(function (result_context, ctx) {
             // __eval_context evaluations can lead to some of `contexts`'s
             // values being null, skip them as well as empty contexts
@@ -612,8 +739,8 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
-                evaluation_context.context = py.dict.fromJSON(evaluation_context);
-                evaluated = py.eval(ctx.__debug, evaluation_context);
+                evaluation_context.context = evaluation_context;
+                evaluated = py.eval(ctx.__debug, wrap_context(evaluation_context));
                 break;
             case 'compound_context':
                 var eval_context = eval_contexts([ctx.__eval_context]);
@@ -625,9 +752,10 @@ openerp.web.pyeval = function (instance) {
             // siblings
             _.extend(evaluation_context, evaluated);
             return _.extend(result_context, evaluated);
-        }, _.extend({}, instance.session.user_context));
+        }, {});
     };
     var eval_domains = function (domains, evaluation_context) {
+        evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         var result_domain = [];
         _(domains).each(function (domain) {
             if (_.isString(domain)) {
@@ -636,9 +764,9 @@ openerp.web.pyeval = function (instance) {
             }
             switch(domain.__ref) {
             case 'domain':
-                evaluation_context.context = py.dict.fromJSON(evaluation_context);
+                evaluation_context.context = evaluation_context;
                 result_domain.push.apply(
-                    result_domain, py.eval(domain.__debug, evaluation_context));
+                    result_domain, py.eval(domain.__debug, wrap_context(evaluation_context)));
                 break;
             case 'compound_domain':
                 var eval_context = eval_contexts([domain.__eval_context]);
@@ -654,6 +782,7 @@ openerp.web.pyeval = function (instance) {
         return result_domain;
     };
     var eval_groupbys = function (contexts, evaluation_context) {
+        evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         var result_group = [];
         _(contexts).each(function (ctx) {
             if (_.isString(ctx)) {
@@ -664,8 +793,8 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
-                evaluation_context.context = py.dict.fromJSON(evaluation_context);
-                evaluated = py.eval(ctx.__debug, evaluation_context);
+                evaluation_context.context = evaluation_context;
+                evaluated = py.eval(ctx.__debug, wrap_context(evaluation_context));
                 break;
             case 'compound_context':
                 var eval_context = eval_contexts([ctx.__eval_context]);
@@ -689,15 +818,14 @@ openerp.web.pyeval = function (instance) {
     };
 
     instance.web.pyeval.context = function () {
-        return {
-            uid: py.float.fromJSON(instance.session.uid),
+        return _.extend({
             datetime: datetime,
             context_today: context_today,
             time: time,
             relativedelta: relativedelta,
             current_date: py.PY_call(
                 time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
-        };
+        }, instance.session.user_context);
     };
 
     /**
@@ -705,19 +833,26 @@ openerp.web.pyeval = function (instance) {
      * @param {Array} object domains or contexts to evaluate
      * @param {Object} [context] evaluation context
      */
-    instance.web.pyeval.eval = function (type, object, context) {
+    instance.web.pyeval.eval = function (type, object, context, options) {
+        options = options || {};
         context = _.extend(instance.web.pyeval.context(), context || {});
-        context['context'] = py.dict.fromJSON(context);
 
         //noinspection FallthroughInSwitchStatementJS
         switch(type) {
-        case 'context': object = [object];
-        case 'contexts': return eval_contexts(object, context);
-        case 'domain': object = [object];
-        case 'domains': return eval_domains(object, context);
-        case 'groupbys': return eval_groupbys(object, context);
+        case 'context':
+        case 'contexts':
+            if (type === 'context')
+                object = [object];
+            return eval_contexts((options.no_user_context ? [] : [instance.session.user_context]).concat(object), context);
+        case 'domain':
+        case 'domains':
+            if (type === 'domain')
+                object = [object];
+            return eval_domains(object, context);
+        case 'groupbys':
+            return eval_groupbys(object, context);
         }
-        throw new Error("Unknow evaluation type " + type)
+        throw new Error("Unknow evaluation type " + type);
     };
 
     var eval_arg = function (arg) {
@@ -751,16 +886,18 @@ openerp.web.pyeval = function (instance) {
     };
     instance.web.pyeval.eval_domains_and_contexts = function (source) {
         return new $.Deferred(function (d) {setTimeout(function () {
+            var result;
             try {
                 var contexts = ([instance.session.user_context] || []).concat(source.contexts);
                 // see Session.eval_context in Python
-                d.resolve({
+                result = {
                     context: instance.web.pyeval.eval('contexts', contexts),
                     domain: instance.web.pyeval.eval('domains', source.domains),
                     group_by: instance.web.pyeval.eval('groupbys', source.group_by_seq || [])
-                });
+                };
+
             } catch (e) {
-                d.resolve({ error: {
+                result = { error: {
                     code: 400,
                     message: instance.web._t("Evaluation Error"),
                     data: {
@@ -769,8 +906,9 @@ openerp.web.pyeval = function (instance) {
                                 instance.web._t("Local evaluation failure\n%s\n\n%s"),
                                 e.message, JSON.stringify(source))
                     }
-                }});
+                }};
             }
+            d.resolve(result);
         }, 0); });
-    }
-};
+    };
+})();

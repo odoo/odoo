@@ -1,0 +1,1833 @@
+.ui-helper-horizontal > DIV,
+.ui-helper-horizontal > LI,
+.ui-helper-horizontal > SPAN,
+.ui-helper-horizontal > LABEL,
+.ui-helper-horizontal > H1,
+.ui-helper-horizontal > H2,
+.ui-helper-horizontal > H3,
+.ui-helper-horizontal > H4
+{
+    float: left;
+    clear: none;
+    display: block;
+}  /* WijSlider  horizontal
+----------------------------------*/
+.wijmo-wijslider-horizontal
+{
+	position: relative;
+}     
+        
+.wijmo-wijslider-horizontal .wijmo-wijslider-track
+{
+    
+}
+        
+.wijmo-wijslider-horizontal .wijmo-wijslider-decbutton
+{
+    position: absolute;
+    left: 0px;
+    right: auto;
+    cursor:pointer;
+}
+
+.wijmo-wijslider-horizontal .wijmo-wijslider-incbutton
+{
+    position: absolute;
+    left: auto;
+    right: 0px;
+    cursor:pointer;
+}
+
+  /* WijSlider  vertical
+----------------------------------*/
+.wijmo-wijslider-vertical
+{
+	position: relative;
+}     
+        
+.wijmo-wijslider-vertical .wijmo-wijslider-track
+{
+    
+}
+        
+.wijmo-wijslider-vertical .wijmo-wijslider-decbutton
+{
+    position: absolute;
+    top: 0px;
+    bottom: auto;
+    cursor:pointer;
+}
+
+.wijmo-wijslider-vertical .wijmo-wijslider-incbutton
+{
+    position: absolute;
+    top: auto;
+    bottom: 0px;
+    cursor:pointer;
+}/* WijSplitter
+----------------------------------*/
+
+.wijmo-wijsplitter-vertical
+{
+    overflow: hidden; /* fixed bug for IE6.7 */
+    position: relative;
+}
+.wijmo-wijsplitter-v-panel1
+{
+    float: left;
+    position: relative;
+}
+.wijmo-wijsplitter-v-panel1-content
+{
+    position: relative;
+}
+.wijmo-wijsplitter-v-bar
+{
+    float: left;
+    position: relative;
+    font-size: 1px;
+    width: 2px;
+    z-index: 99;
+}
+
+.wijmo-wijsplitter-vertical .ui-resizable-e
+{
+    right: -7px;
+    width: 10px;
+    z-index: 999;
+    display: block;
+    background-color: white;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    opacity: 0;
+}
+
+*html .wijmo-wijsplitter-vertical .ui-resizable-e
+{
+    right: -4px;
+}
+
+* + html .wijmo-wijsplitter-vertical .ui-resizable-e
+{
+    right: -4px;
+}
+
+.wijmo-wijsplitter-v-expander
+{
+    position: absolute;
+    z-index: 999;
+}
+
+.wijmo-wijsplitter-vertical .wijmo-wijsplitter-v-expanded
+{
+    border-right: medium none;
+    overflow: hidden;
+    padding: 12px 0;
+    left: -8px;
+    width: 6px;
+    z-index: 999;
+}
+
+.wijmo-wijsplitter-vertical .wijmo-wijsplitter-v-expanded .ui-icon
+{
+    margin-left: -6px;
+}
+
+.wijmo-wijsplitter-vertical .wijmo-wijsplitter-v-collapsed
+{
+    border-left: medium none;
+    overflow: hidden;
+    padding: 12px 0;
+    right: -8px;
+    width: 6px;
+    z-index: 999;
+}
+
+.wijmo-wijsplitter-vertical .wijmo-wijsplitter-v-collapsed .ui-icon
+{
+    margin-left: -6px;
+}
+
+.wijmo-wijsplitter-v-panel2
+{
+    float: left;
+}
+.wijmo-wijsplitter-v-panel2-content
+{
+    position: relative;
+}
+.wijmo-wijsplitter-v-resize-helper
+{
+    border-right: dotted 1px black;
+    overflow: hidden;
+    border-bottom: dotted 0 black;
+}
+
+.wijmo-wijsplitter-horizontal
+{
+    overflow: hidden; /* fixed bug for IE6.7 */
+    position: relative;
+}
+.wijmo-wijsplitter-h-panel1
+{
+    position: relative;
+}
+.wijmo-wijsplitter-h-panel1-content
+{
+    overflow: auto;
+    position: relative;
+}
+.wijmo-wijsplitter-h-bar
+{
+    position: relative;
+    font-size: 1px;
+    height: 2px;
+    z-index: 999;
+}
+
+.wijmo-wijsplitter-horizontal .ui-resizable-s
+{
+    bottom: -7px;
+    height: 10px;
+    z-index: 999;
+    display: block;
+    background-color: white;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    opacity: 0;
+}
+
+*html .wijmo-wijsplitter-horizontal .ui-resizable-s
+{
+    bottom: -4px;
+}
+
+* + html .wijmo-wijsplitter-horizontal .ui-resizable-s
+{
+    bottom: -4px;
+}
+
+.wijmo-wijsplitter-h-expander
+{
+    position: absolute;
+    z-index: 999;
+}
+
+
+.wijmo-wijsplitter-horizontal .wijmo-wijsplitter-h-expanded
+{
+    border-bottom: none;
+    height: 8px;
+    overflow: hidden;
+    padding: 0 10px;
+    top: -10px;
+    z-index: 999;
+}
+
+.wijmo-wijsplitter-horizontal .wijmo-wijsplitter-h-expanded .ui-icon
+{
+    margin-top: -4px;
+}
+
+.wijmo-wijsplitter-horizontal .wijmo-wijsplitter-h-collapsed
+{
+    border-top: none;
+    height: 8px;
+    overflow: hidden;
+    padding: 0 10px;
+    bottom: -10px;
+    z-index: 999;
+}
+
+.wijmo-wijsplitter-horizontal .wijmo-wijsplitter-h-collapsed .ui-icon
+{
+    margin-top: -4px;
+}
+
+.wijmo-wijsplitter-h-panel2
+{
+}
+
+.wijmo-wijsplitter-h-panel2-content
+{
+    overflow: auto;
+    position: relative;
+}
+
+.wijmo-wijsplitter-h-resize-helper
+{
+    border-bottom: dotted 1px black;
+    overflow: hidden;
+    border-right: dotted 0 black;
+}
+
+
+
+.wijmo-wijprogressbar
+{
+    moz-user-select: none;
+    text-align: left;
+    float: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.wijmo-wijprogressbar .ui-progressbar-value
+{
+    position: absolute;
+    border-width: 0;
+    margin: 0;
+}
+
+div.wijmo-wijprogressbar-east
+{
+    width: 200px;
+    height: 1.1em;
+}
+div.wijmo-wijprogressbar-west
+{
+    width: 200px;
+    height: 1.1em;
+}
+div.wijmo-wijprogressbar-south
+{
+    height: 200px;
+    width: 1.1em;
+    line-height: 100%;
+}
+
+div.wijmo-wijprogressbar-north
+{
+    height: 200px;
+    width: 1.1em;
+    line-height: 100%;
+}
+
+.wijmo-wijprogressbar-east .ui-progressbar-value
+{
+    left: 0;
+    height: 100%;
+}
+.wijmo-wijprogressbar-west .ui-progressbar-value
+{
+    right: 0;
+    height: 100%;
+}
+.wijmo-wijprogressbar-south .ui-progressbar-value
+{
+    top: 0;
+    width: 100%;
+}
+
+.wijmo-wijprogressbar-north .ui-progressbar-value
+{
+    bottom: 0;
+    width: 100%;
+}
+
+.wijmo-wijprogressbar .ui-progressbar-label
+{
+    display: block;
+    position:absolute;
+    text-align: center;
+    width: 100%;
+    height:100%;
+}
+
+.wijmo-wijprogressbar .wijmo-wijprogressbar-lb-west
+{
+    left:0;
+    width:auto;
+}
+
+.wijmo-wijprogressbar .wijmo-wijprogressbar-lb-east
+{
+    right:0;
+    width:auto;
+}
+
+.wijmo-wijprogressbar .wijmo-wijprogressbar-lb-south
+{
+    bottom: 0;
+    height:auto;
+}
+
+.wijmo-wijprogressbar .wijmo-wijprogressbar-lb-north
+{
+    top: 0;
+    height:auto;
+}
+
+.wijmo-wijprogressbar-east .wijmo-wijprogressbar-lb-running,
+.wijmo-wijprogressbar-west .wijmo-wijprogressbar-lb-running
+{
+    display:inline;
+    width:auto;
+}
+
+.wijmo-wijprogressbar-north .wijmo-wijprogressbar-lb-running,
+.wijmo-wijprogressbar-south .wijmo-wijprogressbar-lb-running
+{
+    height:auto;
+}
+
+.wijmo-wijprogressbar-north .ui-progressbar-label,
+.wijmo-wijprogressbar-south .ui-progressbar-label
+{
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+}.wijmo-wijdialog-captionbutton
+{
+    height: 18px;
+    padding: 1px;
+    width: 19px;
+    display: inline-block; /*margin-right:.2em;*/
+    outline: none;
+    text-align: left;
+}
+.wijmo-wijdialog-captionbutton:hover, .wijmo-wijdialog-captionbutton .ui-state-focus
+{
+    padding: 0;
+}
+.wijmo-wijdialog-captionbutton .ui-icon
+{
+    margin: 1px;
+}
+.wijmo-wijdialog .wijmo-wijdialog-hasframe
+{
+    padding: 0;
+}
+.wijmo-wijdialog-defaultdockingzone
+{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+}
+
+.ui-dialog-titlebar
+{
+    /* extend jquery.ui.dialog.css*/
+    text-align: right;
+}
+
+/* for ie 6 minimize*/
+* html .wijmo-wijdialog-defaultdockingzone .ui-dialog-titlebar
+{
+    float: left;
+}
+/*.wijmo-wijaccordion.ui-helper-horizontal > .ui-widget-content
+{
+    width: 200px;
+    height: 200px;  
+    padding-top:0;
+    padding-bottom:0;  
+    margin-top:0;
+    margin-bottom:0;    
+}
+
+.wijmo-wijaccordion.ui-helper-horizontal > .ui-accordion-header
+{
+    height: 200px;	
+    padding-top:0;
+    padding-bottom:0;
+    margin-top:0;
+    margin-bottom:0;    
+}*/
+
+
+.ui-accordion a
+{
+    outline: none;
+}
+
+/* RIGHT */
+
+.ui-accordion-right .ui-accordion-header
+{
+    margin-top: 0;
+    margin-left: 1px;
+    width: 2em;
+    height: 12em;
+    overflow: hidden;
+}
+
+.ui-accordion-right .ui-accordion-content
+{
+    margin: 0;
+    height: 200px;
+    width: 36em;
+    height: 12em;
+    padding: 0 2.2em;
+}
+.ui-accordion-right .ui-accordion-content
+{
+    top: 0;
+    margin-left: -2px;
+    padding: 1px;
+    border: none;
+}
+
+
+.ui-accordion-right .ui-state-active
+{
+    border-right: none;
+}
+
+.ui-accordion-right .ui-accordion-header a
+{
+    padding: 2.2em 0 0 0;
+    text-align: center;
+}
+
+
+.ui-accordion-right .ui-accordion-header .ui-icon
+{
+    top: 10%;
+}
+
+
+/* LEFT */
+
+.ui-accordion-left .ui-accordion-header
+{
+    margin-top: 0;
+    margin-right: 1px;
+    width: 2em;
+    height: 12em;
+    overflow: hidden;
+}
+
+.ui-accordion-left .ui-accordion-content
+{
+    margin: 0;
+    height: 200px;
+    width: 36em;
+    height: 12em;
+    padding: 0 2.2em;
+}
+.ui-accordion-left .ui-accordion-content
+{
+    border: none;
+    padding: 1px;
+    top: 0;
+    margin-right: -2px;
+}
+
+
+.ui-accordion-left .ui-state-active
+{
+    border-left: none;
+}
+
+.ui-accordion-left .ui-accordion-header a
+{
+    padding: 2.2em 0 0 0;
+    text-align: center;
+}
+
+
+.ui-accordion-left .ui-accordion-header .ui-icon
+{
+    top: 10%;
+}
+/* SuperPanel
+----------------------------------*/
+.wijmo-wijsuperpanel
+{
+    overflow: hidden;
+    outline: none;
+    background-image: none;
+}
+.wijmo-wijsuperpanel-statecontainer
+{
+    overflow: hidden;
+    position: relative;
+    zoom:1;
+}
+.wijmo-wijsuperpanel-contentwrapper
+{
+    position: absolute;
+    overflow: hidden;
+
+}
+.wijmo-wijsuperpanel-hbarcontainer, .wijmo-wijsuperpanel-vbarcontainer
+{
+    font-size: 0px;
+    border:0;
+}
+.wijmo-wijsuperpanel-templateouterwrapper
+{
+    position: relative; 
+/*    overflow:auto; */
+    zoom: 1;
+}
+
+.wijmo-wijsuperpanel-vbarcontainer .ui-state-default, .wijmo-wijsuperpanel-hbarcontainer .ui-state-default
+{
+    width: 16px;
+    height: 16px;
+    position: absolute;
+}
+.wijmo-wijsuperpanel .wijmo-wijsuperpanel-vbarcontainer
+{
+    position: absolute;
+    width: 18px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    border: none;
+}
+.wijmo-wijsuperpanel .wijmo-wijsuperpanel-hbarcontainer
+{
+    position: absolute;
+    height: 18px;
+    padding-left: 18px;
+    padding-right: 18px;
+    border: none;
+}
+.wijmo-wijsuperpanel-handle
+{
+    position: absolute;
+    font-size:0px;
+    overflow:hidden;
+}
+.wijmo-wijsuperpanel-handle *
+{
+    font-size:0px;
+}
+.wijmo-wijsuperpanel-helper
+{
+    border-style: dotted;
+    background: transparent;
+}
+
+.wijmo-wijsuperpanel-button
+{
+    position: absolute;
+    padding: 4px;
+}
+.wijmo-wijsuperpanel .ui-icon-gripsmall-diagonal-se
+{
+    background: none;
+    width: 7px;
+    height: 7px;
+}
+.wijmo-wijsuperpanel-hbar-buttonleft
+{
+    left: 0;
+}
+.wijmo-wijsuperpanel-hbar-buttonright
+{
+    right: 0;
+}
+.wijmo-wijsuperpanel-vbar-buttontop
+{
+    top: 0;
+}
+.wijmo-wijsuperpanel-vbar-buttonbottom
+{
+    bottom: 0;
+}
+.wijmo-wijtextbox
+{
+	outline:none;
+	margin: 0;
+	padding:5px;
+}
+
+.wijmo-wijdropdown
+{
+    display: inline-block;
+    position: relative;
+    width: auto;
+    zoom: 1;
+    *display: inline;
+    width:200px;
+    /*z-index: 101;*/
+}
+
+
+
+
+.wijmo-wijdropdown div.wijmo-dropdown-trigger
+{
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    cursor: pointer;
+    width: 16px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0 3px;
+}
+
+.wijmo-wijdropdown .wijmo-dropdown-trigger .ui-icon
+{
+    margin-top: 3px;
+}
+
+.wijmo-wijdropdown label.wijmo-dropdown-label
+{
+    display: block;
+    padding: 3px 26px 3px 5px;
+    width: auto;
+    border: none;
+}
+
+.wijmo-wijdropdown .wijmo-dropdown
+{
+    position: absolute; height:250px;
+}
+
+.wijmo-wijdropdown .wijmo-dropdown .wijmo-dropdown-list
+{
+    padding: 0.4em;
+    border: 0 none;
+}
+
+.wijmo-wijdropdown .wijmo-dropdown .wijmo-dropdown-item
+{
+border:1px solid transparent;
+cursor:pointer;
+font-weight:normal;
+margin:1px 0;
+padding:3px 5px;
+text-align:left;
+*border-color: white;
+*filter: chroma(color=white);
+
+}
+
+/*
+.wijmo-wijdropdown .wijmo-dropdown .wijmo-dropdown-optgroup .wijmo-dropdown-items
+{
+    margin-left: 15%;
+}*/
+
+.wijmo-wijdropdown .wijmo-dropdown .wijmo-dropdown-optgroup .wijmo-dropdown-items li
+{
+    padding-left: 10px;
+}
+
+.wijmo-wijdropdown .wijmo-dropdown .wijmo-optgroup-header
+{
+    font-style: italic;
+}
+.wijmo-checkbox
+{
+    position: relative; /*float: left;*/
+    margin: 3px 0;
+    line-height: 16px;
+    width: 16px;
+}
+.wijmo-checkbox .wijmo-checkbox-inputwrapper
+{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+.wijmo-checkbox label
+{
+    display: block;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    z-index: 1;
+    padding: 0 0 0 1.4em;
+    outline: none;
+    margin: 0 3px;
+    width: 8em;
+}
+.wijmo-checkbox .wijmo-checkbox-box
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    margin-right: 3px;
+}
+
+.wijmo-checkbox .wijmo-checkbox-relative
+{
+    position: relative;
+    float: left;
+    margin-right: 3px;    
+}
+.wijmo-wijradio
+{
+    position: relative; /*float: left;*/
+    margin: 3px 0;
+    width: 16px;
+    line-height: 16px;
+}
+.wijmo-wijradio .wijmo-wijradio-inputwrapper
+{
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+.wijmo-wijradio label
+{
+    display: block;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    z-index: 1;
+    padding: 0 0 0 1.4em;
+    outline: none;
+    margin: 0 3px;
+    width: 8em;
+}
+.wijmo-wijradio .wijmo-wijradio-box
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+.wijmo-wijradio .wijmo-wijradio-relative
+{
+    position: relative;
+    float: left;
+    margin-right: 3px;   
+}
+
+.wijmo-wijlist-list
+{
+    cursor: default;
+    overflow: hidden;
+}
+.wijmo-wijlist-ul
+{
+    list-style: none;
+    padding: 2px;
+    margin: 0;
+    display: block;
+    border: 0px;
+    overflow: hidden;
+}
+.wijmo-wijlist-ul .wijmo-wijlist-item
+{
+    margin: 1px 0;
+    padding: 3px 5px;
+    /*white-space: nowrap;*/
+    cursor: pointer;
+    text-align: left;
+    font-weight: normal;
+    border: solid 1px transparent;
+}
+.wijmo-wijlist-ul .wijmo-wijlist-item.ui-state-hover
+{
+    font-weight: normal;
+}
+
+.wijmo-wijlist .ui-resizable-se
+{
+    width: 7px;
+    height: 7px;
+    background: none;
+}
+.wijmo-wijcalendar
+{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    display:block;
+}
+
+.wijmo-wijcalendar-header
+{
+    position: relative;
+}
+
+.wijmo-wijcalendar-header-inner
+{
+    margin: 0 1.8em;
+    line-height: 1.8em;
+}
+
+.wijmo-wijcalendar .ui-datepicker-header
+{
+    padding: 1px;
+}
+
+.wijmo-wijcalendar .ui-datepicker-header .ui-state-default
+{
+    border-color: transparent;
+    background: none;
+    color: inherit;
+}
+
+.wijmo-wijcalendar .wijmo-wijcalendar-table
+{
+    table-layout: fixed;
+}
+
+.wijmo-wijcalendar-prevpreview-button, .wijmo-wijcalendar-nextpreview-button
+{
+    width: 16px;
+    margin-top: 35%;
+    float: left;
+}
+
+.wijmo-wijcalendar-nextpreview-button
+{
+    float: right;
+}
+
+.wijmo-wijcalendar-preview-wrapper .wijmo-wijcalendar
+{
+    float: left;
+    width: 18em;
+}
+
+.wijmo-wijcalendar-preview-wrapper .wijmo-wijcalendar .ui-datepicker-calendar
+{
+    width: 80%;
+    float: left;
+}
+
+.wijmo-wijcalendar-title, .wijmo-wijcalendar-selectable
+{
+    cursor: pointer;
+}
+
+.ui-datepicker-other-month
+{
+    text-align: right;
+}
+
+.wijmo-wijcalendar-mygrid td span, .wijmo-wijcalendar-mygrid td a
+{
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    padding: 0;
+}
+
+.wijmo-wijcalendar-mygrid .ui-state-default a, .wijmo-wijcalendar-mygrid .ui-state-default a:hover, .wijmo-wijcalendar-mygrid .ui-state-hover a, .wijmo-wijcalendar-mygrid .ui-state-hover a:hover
+{
+    color: inherit;
+}
+
+.ui-header-custom img, .ui-footer-custom img
+{
+    width: 100%;
+}
+
+.wijmo-wijcalendar table.wijmo-wijcalendar-mygrid
+{
+    margin-top: 2px;
+    border-collapse: separate;
+    table-layout: fixed;
+}
+
+.wijmo-wijcalendar table.wijmo-wijcalendar-mygrid .ui-datepicker-week-day
+{
+    cursor: pointer;
+}
+
+.wijmo-wijcalendar-aniwrapper
+{
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.wijmo-wijcalendar-multi-aniwrapper
+{
+    position: absolute;
+    overflow: hidden;
+}
+
+.ui-datepicker-rtl .ui-datepicker-prev .ui-icon, .ui-datepicker-rtl .ui-datepicker-next .ui-icon
+{
+    direction: rtl;
+}
+.wijmo-wijexpander
+{
+    margin: 1px;
+    padding: 0;
+    display: block;
+}
+
+.wijmo-wijexpander a
+{
+    outline: none;
+}
+
+.wijmo-wijexpander .ui-expander-header
+{
+    cursor: pointer;
+    margin-top: 1px;
+    position: relative;
+}
+/*.wijmo-wijexpander.ui-helper-horizontal > .ui-expander-header
+{
+    cursor: pointer;
+    width: 20px;
+    height: 200px;
+}
+.wijmo-wijexpander.ui-state-disabled > .ui-expander-header
+{
+    cursor: default;
+}
+.wijmo-wijexpander > .ui-widget-content
+{
+    height: 100px;
+    overflow: auto;
+}
+.wijmo-wijexpander.ui-state-disabled > .ui-widget-content
+{
+}*/
+
+
+.ui-expander .ui-expander-content
+{
+    border-top: 0 none;
+    display: none;
+    margin-bottom: 2px;
+    margin-top: -2px;
+    overflow: auto;
+    padding: 1em 2.2em;
+    position: relative;
+    top: 1px;
+}
+
+
+.wijmo-wijexpander .ui-expander-header a
+{
+    display: block;
+    font-size: 1em;
+    padding: 0.5em 0.5em 0.5em 0.7em;
+}
+
+.wijmo-wijexpander .ui-expander-header .ui-icon
+{
+    left: 0.5em;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+
+.wijmo-wijexpander .ui-expander-content-active
+{
+    display: block;
+    border-top: 0 none;
+    padding: 1em 2.2em;
+}
+
+
+.wijmo-wijexpander .ui-expander-header > a
+{
+    padding-left: 2.2em;
+}
+
+.ui-helper-horizontal.wijmo-wijexpander .ui-expander-header .ui-icon
+{
+    left: inherit;
+    margin-top: inherit;
+    margin-left: -8px;
+    position: absolute;
+    top: 0.5em;
+    left: 50%;
+}
+
+.ui-helper-horizontal.wijmo-wijexpander .ui-expander-header > a
+{
+    padding-left: inherit;
+    padding-top: 2.2em;
+    display: inline-block;
+}
+
+
+/* RIGHT */
+
+.ui-expander-right .ui-expander-header
+{
+    margin: 0 1px;
+    width: 2em;
+    height: 12em;
+    overflow: hidden;
+}
+
+.ui-expander-right .ui-expander-content
+{
+    margin: 0;
+    height: 200px;
+    width: 12em;
+    height: 12em;
+    padding: 0 2.2em;
+}
+.ui-expander-right .ui-expander-content
+{
+    top: 0;
+    margin-left: -2px;
+    padding: 1px;
+    border: none;
+    margin-right: 1px;
+}
+
+
+.ui-expander-right .ui-state-active
+{
+    border-right: none;
+}
+
+.ui-expander-right .ui-expander-header a
+{
+    padding: 2.2em 0 0 0;
+}
+
+
+.ui-expander-right .ui-expander-header .ui-icon
+{
+    top: 10%;
+}
+
+
+/* LEFT */
+
+.ui-expander-left .ui-expander-header
+{
+    margin: 0 1px;
+    width: 2em;
+    height: 12em;
+    overflow: hidden;
+}
+
+.ui-expander-left .ui-expander-content
+{
+    margin: 0;
+    height: 200px;
+    width: 12em;
+    height: 12em;
+    padding: 0 2.2em;
+}
+.ui-expander-left .ui-expander-content
+{
+    border: none;
+    padding: 1px;
+    top: 0;
+    margin-right: -2px;
+    margin-left: 1px;
+}
+
+
+.ui-expander-left .ui-state-active
+{
+    border-left: none;
+}
+
+.ui-expander-left .ui-expander-header a
+{
+    padding: 2.2em 0 0 0;
+}
+
+
+.ui-expander-left .ui-expander-header .ui-icon
+{
+    top: 10%;
+}
+
+.ui-tabs .ui-tabs-nav li
+{
+    top: 1px;
+}
+
+/* BOTTOM */
+
+.ui-tabs-bottom .ui-tabs-nav li
+{
+    top: -3px;
+    padding: 0;
+    margin: 1px .2em 0 0;
+}
+
+.ui-tabs-bottom .ui-tabs-nav li.ui-tabs-selected
+{
+    margin-top: -1px;
+    padding-bottom: 2px;
+}
+
+.ui-tabs .ui-tabs-nav li
+{
+    border: none;
+}
+
+/* LEFT */
+.ui-tabs-left .ui-tabs-nav
+{
+    float: left;
+    overflow: hidden;
+}
+
+.ui-tabs-left .ui-tabs-nav li
+{
+    white-space: normal;
+    float: right;
+    display: block;
+    width: 98%;
+}
+
+.ui-tabs-left .ui-tabs-nav li a, .ui-tabs-right .ui-tabs-nav li a
+{
+    float: none;
+    display: block;
+}
+
+.ui-tabs-left .ui-tabs-nav li
+{
+    top: -1px;
+    left: 3px;
+    margin-bottom: 2px;
+}
+
+.ui-tabs-left .ui-tabs-panel
+{
+    padding: 1.6em;
+}
+
+.ui-tabs-left .ui-tabs-nav li.ui-tabs-selected
+{
+    border-right: medium none;
+    margin-bottom: 2px;
+}
+.ui-tabs-left .ui-tabs-nav
+{
+    padding: 0.2em 0 0 0;
+}
+
+.ui-tabs-left .wijmo-wijtabs-content
+{
+    float: right;
+    width: 75%;
+    overflow: hidden;
+}
+
+.ui-tabs-left .ui-tabs-nav
+{
+    min-height: 300px;
+    width: 23%;
+    height: 100%;
+}
+
+/* RIGHT */
+
+.ui-tabs-right .ui-tabs-nav
+{
+    float: right;
+    overflow: hidden;
+}
+
+.ui-tabs-right .ui-tabs-nav li
+{
+    white-space: normal;
+    float: left;
+    display: block;
+    width: 98%;
+}
+
+.ui-tabs-right .ui-tabs-nav li
+{
+    top: -1px;
+    left: 0;
+    margin-bottom: 2px;
+}
+
+.ui-tabs-right .ui-tabs-panel
+{
+    padding: 1.6em;
+}
+
+.ui-tabs-right .ui-tabs-nav li.ui-tabs-selected
+{
+    border-left: medium none;
+    margin-bottom: 2px;
+}
+.ui-tabs-right .ui-tabs-nav
+{
+    padding: 0.2em 0 0 0;
+}
+
+.ui-tabs-right .wijmo-wijtabs-content
+{
+    float: left;
+    width: 75%;
+    overflow: hidden;
+}
+
+.ui-tabs-right .ui-tabs-nav
+{
+    min-height: 300px;
+    width: 23%;
+}
+
+
+.ui-tabs-left .ui-tabs-nav li.ui-tabs-selected
+{
+    margin-right: 2px;
+    padding-right: 1px;
+}
+
+.ui-tabs-right .ui-tabs-nav li.ui-tabs-selected
+{
+    margin-left: -1px;
+    padding-left: 1px;
+}
+.wijmo-wijtooltip {
+    position: absolute;
+    z-index: 9999;
+    margin:0;
+}
+
+
+.wijmo-wijtooltip .wijmo-wijtooltip-close
+{
+    background:none repeat scroll 0 0 transparent;
+border:medium none;
+display:block;
+height:16px;
+position:absolute;
+right:3px;
+top:3px;
+width:16px;
+    }
+
+.wijmo-wijtooltip .wijmo-wijtooltip-title
+{
+    background:none repeat scroll 0 0 transparent;
+border:medium none;
+color:inherit;
+padding:0.4em;
+}
+.wijmo-wijtooltip .wijmo-wijtooltip-container
+{
+    padding: 1em;
+    overflow: hidden;
+}
+
+.wijmo-wijtooltip {
+    border-width: 2px;
+}
+
+.wijmo-wijtooltip .wijmo-wijtooltip-pointer, .wijmo-wijtooltip .wijmo-wijtooltip-pointer-inner {
+    background: none;
+    height: 0;
+    position: absolute;
+    width: 0;
+}
+
+.wijmo-wijtooltip-arrow-tr .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-tc .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-tl .wijmo-wijtooltip-pointer {
+    border-bottom-width: 14px;
+    border-top: 0 none;
+    top: -14px;
+	
+}
+
+.wijmo-wijtooltip-arrow-tr .wijmo-wijtooltip-pointer {
+    border-left: 18px dashed transparent;
+    border-right: 0 none;
+    right: 10px;
+}
+
+.wijmo-wijtooltip-arrow-tc .wijmo-wijtooltip-pointer {
+    border-left: 10px dashed transparent;
+    border-right: 10px dashed transparent;
+    left: 50%;
+    margin-left: -10px;
+}
+
+.wijmo-wijtooltip-arrow-tl .wijmo-wijtooltip-pointer {
+    border-left: 0 none;
+    border-right: 18px dashed transparent;
+    left: 10px;
+}
+
+.wijmo-wijtooltip-arrow-tr .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-tc .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-tl .wijmo-wijtooltip-pointer-inner {
+    border-bottom-color: inherit;
+    border-bottom-style: solid;
+    border-bottom-width: 10px;    
+    bottom: -14px;
+	*font-size:0;line-height:0;
+}
+
+.wijmo-wijtooltip-arrow-tr .wijmo-wijtooltip-pointer-inner {
+    border-left: 12px dashed transparent;
+    border-right: 0 none;
+    +border-style:dashed;
+    _border-style:dashed;
+    right: 2px;
+}
+
+.wijmo-wijtooltip-arrow-tc .wijmo-wijtooltip-pointer-inner {
+    border-left: 8px dashed transparent;
+    border-right: 8px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    left: -8px;
+}
+
+.wijmo-wijtooltip-arrow-tl .wijmo-wijtooltip-pointer-inner {
+    border-left: 0 none;
+    border-right-style: dashed;
+    border-right-color: inherit;
+    border-right-width: 12px;
+    +border-style:dashed;
+    _border-style:dashed;
+    left: 2px;
+}
+
+.wijmo-wijtooltip-arrow-rb .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-rc .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-rt .wijmo-wijtooltip-pointer {
+    border-left-width: 14px;
+    border-right: 0 none;
+    right: -14px;
+}
+
+.wijmo-wijtooltip-arrow-rb .wijmo-wijtooltip-pointer {
+    border-bottom: 0 none;
+    border-top: 18px dashed transparent;
+    bottom: 10px;
+}
+
+.wijmo-wijtooltip-arrow-rc .wijmo-wijtooltip-pointer {
+    border-bottom: 10px dashed transparent;
+    border-top: 10px dashed transparent;
+    bottom: 50%;
+    margin-bottom: -10px;
+}
+
+.wijmo-wijtooltip-arrow-rt .wijmo-wijtooltip-pointer {
+    border-bottom: 18px dashed transparent;
+    border-top: 0 none;
+    top: 10px;
+}
+
+.wijmo-wijtooltip-arrow-rb .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-rc .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-rt .wijmo-wijtooltip-pointer-inner {
+    border-left-color: inherit;
+    border-left-style: solid;
+    border-left-width: 10px;
+    left: -14px;
+	*font-size:0;line-height:0;
+}
+
+
+.wijmo-wijtooltip-arrow-rb .wijmo-wijtooltip-pointer-inner {
+    border-bottom: 0 none;
+    border-top-style: dashed;
+    border-top-color: inherit;
+    border-top-width: 12px;
+    +border-style:dashed;
+    _border-style:dashed;
+    bottom: 2px;
+}
+
+.wijmo-wijtooltip-arrow-rc .wijmo-wijtooltip-pointer-inner {
+    border-bottom: 8px dashed transparent;
+    border-top: 8px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    bottom: -8px;
+}
+
+.wijmo-wijtooltip-arrow-rt .wijmo-wijtooltip-pointer-inner {
+    border-bottom-style: dashed;
+    border-bottom-color: inherit;
+    border-bottom-width: 12px;
+    +border-style:dashed;
+    _border-style:dashed;
+    border-top: 0 none;
+    top: 2px;
+}
+
+.wijmo-wijtooltip-arrow-br .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-bc .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-bl .wijmo-wijtooltip-pointer {
+    border-bottom: 0 none;
+    border-top-width: 14px;
+    bottom: -14px;
+	
+}
+
+.wijmo-wijtooltip-arrow-br .wijmo-wijtooltip-pointer {
+    border-left: 18px dashed transparent;
+    border-right: 0 none;
+    right: 10px;
+}
+
+.wijmo-wijtooltip-arrow-bc .wijmo-wijtooltip-pointer {
+    border-left: 10px dashed transparent;
+    border-right: 10px dashed transparent;
+    left: 50%;
+    margin-left: -10px;
+}
+
+.wijmo-wijtooltip-arrow-bl .wijmo-wijtooltip-pointer {
+    border-left: 0 none;
+    border-right: 18px dashed transparent;
+    left: 10px;
+}
+
+.wijmo-wijtooltip-arrow-br .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-bc .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-bl .wijmo-wijtooltip-pointer-inner {
+    border-top-color: inherit;
+    border-top-style: solid;
+    border-top-width: 10px;
+    top: -14px;
+	*font-size:0;line-height:0;
+}
+
+.wijmo-wijtooltip-arrow-br .wijmo-wijtooltip-pointer-inner {
+    border-left: 12px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    border-right: 0 none;
+    right: 2px;
+}
+
+.wijmo-wijtooltip-arrow-bc .wijmo-wijtooltip-pointer-inner {
+    border-left: 8px dashed transparent;
+    border-right: 8px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    left: -8px;
+}
+
+.wijmo-wijtooltip-arrow-bl .wijmo-wijtooltip-pointer-inner {
+    border-left: 0 none;
+    border-right: 12px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    left: 2px;
+}
+
+.wijmo-wijtooltip-arrow-lb .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-lc .wijmo-wijtooltip-pointer, .wijmo-wijtooltip-arrow-lt .wijmo-wijtooltip-pointer {
+    border-left: 0 none;
+    border-right-width: 14px;
+    left: -14px;
+}
+
+.wijmo-wijtooltip-arrow-lb .wijmo-wijtooltip-pointer {
+    border-bottom: 0 none;
+    border-top: 18px dashed transparent;
+    bottom: 10px;
+}
+
+.wijmo-wijtooltip-arrow-lc .wijmo-wijtooltip-pointer {
+    border-bottom: 10px dashed transparent;
+    border-top: 10px dashed transparent;
+    bottom: 50%;
+    margin-bottom: -10px;
+}
+
+.wijmo-wijtooltip-arrow-lt .wijmo-wijtooltip-pointer {
+    border-bottom: 18px dashed transparent;
+    border-top: 0 none;
+    top: 10px;
+}
+
+.wijmo-wijtooltip-arrow-lb .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-lc .wijmo-wijtooltip-pointer-inner, .wijmo-wijtooltip-arrow-lt .wijmo-wijtooltip-pointer-inner {
+    border-right-color: inherit;
+    border-right-style: solid;
+    border-right-width: 10px;
+    right: -14px;
+	*font-size:0;line-height:0;
+}
+
+.wijmo-wijtooltip-arrow-lb .wijmo-wijtooltip-pointer-inner {
+    border-bottom: 0 none;
+    border-top: 12px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    bottom: 2px;
+}
+
+.wijmo-wijtooltip-arrow-lc .wijmo-wijtooltip-pointer-inner {
+    border-bottom: 8px dashed transparent;
+    border-top: 8px dashed transparent;
+    +border-style:dashed;
+    _border-style:dashed;
+    bottom: -8px;
+}
+
+.wijmo-wijtooltip-arrow-lt .wijmo-wijtooltip-pointer-inner {
+    border-bottom-style: dashed;
+    border-bottom-color: inherit;
+    border-bottom-width: 12px;
+    +border-style:dashed;
+    _border-style:dashed;
+    border-top: 0 none;
+    top: 2px;
+}
+.wijmo-wijmenu {
+width:150px;
+padding:0.3em;
+position:relative;
+}
+
+.wijmo-wijmenu .wijmo-wijsuperpanel {
+border:none;
+background: inherit;
+padding:0;
+}
+
+.wijmo-wijmenu-list {
+position:static;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-parent .wijmo-wijmenu-child {
+display:none;
+width:150px;
+padding:0.3em;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-parent {
+position:relative;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-child {
+position:relative;
+left:150px;
+top:0;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-item {
+width:100%;
+float:left;
+clear:both;
+margin:1px 0;
+padding:0;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-list .wijmo-wijmenu-item {
+background:none;
+border:none;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-link {
+display:block;
+width:92%;
+outline:none;
+text-decoration:none;
+font-weight:400;
+border:solid 1px transparent;
+float:left;
+line-height:16px;
+padding:0.3em;
+}
+
+.wijmo-wijmenu-horizontal {
+width:auto;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-item {
+width:auto;
+clear:none;
+margin-right:3px;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-child .wijmo-wijmenu-item {
+width:100%;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-child {
+top:25px;
+left:0;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-link {
+width:auto;
+padding:0.4em 0.3em;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-child .wijmo-wijmenu-link {
+width:92%;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-list .ui-widget-header {
+clear:both;
+float:left;
+width:98%;
+margin:1px 0;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-list .ui-widget-header
+{
+    width: auto;
+    clear: none;
+    margin: -1px 2px -2px 1px;
+}
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-child .ui-widget-header
+{
+    width: 98%;
+    margin: 1px 0;
+}
+
+
+.wijmo-wijmenu-horizontal .ui-widget-header {
+clear:none;
+width:auto;
+margin:0 3px 0 0;
+}
+
+.wijmo-wijmenu .ui-widget-header h1,.wijmo-wijmenu .ui-widget-header h2,.wijmo-wijmenu .ui-widget-header h3,.wijmo-wijmenu .ui-widget-header h4,.wijmo-wijmenu .ui-widget-header h5,.wijmo-wijmenu .ui-widget-header h6 {
+float:left;
+display:block;
+font-size:1em;
+margin:0 auto;
+padding:0.3em 3%;
+}
+
+.wijmo-wijmenu-horizontal .ui-widget-header h1,.wijmo-wijmenu-horizontal .ui-widget-header h2,.wijmo-wijmenu-horizontal .ui-widget-header h3,.wijmo-wijmenu-horizontal .ui-widget-header h4,.wijmo-wijmenu-horizontal .ui-widget-header h5,.wijmo-wijmenu-horizontal .ui-widget-header h6 {
+padding:0.4em 0.3em;
+}
+
+.wijmo-wijmenu a.ui-state-default:link,.wijmo-wijmenu a.ui-state-default:visited,.wijmo-wijmenu a.ui-state-default:hover,.wijmo-wijmenu a.ui-state-default:active,.wijmo-wijmenu a.ui-state-hover:link,.wijmo-wijmenu a.ui-state-hover:visited,.wijmo-wijmenu a.ui-state-hover:hover,.wijmo-wijmenu a.ui-state-hover:active,.wijmo-wijmenu a.ui-state-active:link,.wijmo-wijmenu a.ui-state-active:visited,.wijmo-wijmenu a.ui-state-active:hover,.wijmo-wijmenu a.ui-state-active:active {
+font-weight:400;
+border-style:solid;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-child .ui-state-hover {
+font-weight:400;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-separator {
+clear:both;
+float:left;
+height:1px;
+text-indent:-9999px;
+width:98%;
+margin:1px 0;
+font-size:0;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-separator {
+height:auto;
+clear:none;
+width:1px;
+text-indent:-9999px;
+margin:0 3px 0 0;
+padding:0.4em 0;
+}
+
+.wijmo-wijmenu-horizontal .wijmo-wijmenu-child .wijmo-wijmenu-separator {
+clear:both;
+float:left;
+height:1px;
+text-indent:-9999px;
+width:98%;
+margin:1px 0;
+padding:0;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-group {
+clear:both;
+float:left;
+width:98%;
+margin:3px 0;
+padding:0 0.4em;
+}
+
+.wijmo-wijmenu-ipod {
+width:180px;
+}
+
+.wijmo-wijmenu-container {
+overflow:hidden;
+}
+
+.wijmo-wijmenu-ipod .wijmo-wijmenu-list {
+background:inherit;
+position:absolute;
+border-width:0;
+-moz-box-shadow: none;
+-webkit-box-shadow:none;
+}
+
+.wijmo-wijmenu-breadcrumb {
+margin:0;
+padding:0;
+}
+
+.wijmo-wijmenu-footer {
+margin-top:3px;
+line-height: 22px;
+}
+
+.wijmo-wijmenu-footer .ui-icon {
+margin:3px 0;
+}
+
+.wijmo-wijmenu-header {
+margin-bottom:3px;
+}
+
+.wijmo-wijmenu-breadcrumb li {
+float:left;
+list-style:none;
+font-size:.9em;
+margin:0;
+padding:0 .2em;
+}
+
+.wijmo-wijmenu-breadcrumb li.wijmo-wijmenu-prev-list,.wijmo-wijmenu-breadcrumb li.wijmo-wijmenu-current-crumb {
+clear:left;
+float:none;
+opacity:1;
+}
+
+.wijmo-wijmenu-breadcrumb li.wijmo-wijmenu-current-crumb {
+padding-top:.2em;
+}
+
+.wijmo-wijmenu-footer a:link,.wijmo-wijmenu-footer a:visited {
+float:left;
+width:100%;
+text-decoration:none;
+}
+
+.wijmo-wijmenu-footer a span {
+float:left;
+cursor:pointer;
+}
+
+.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-prev-list a:link,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-prev-list a:visited,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-prev-list a:hover,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-prev-list a:active {
+background-image:none;
+text-decoration:none;
+}
+
+.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-prev-list a {
+float:left;
+padding-right:.4em;
+}
+
+.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-current-crumb a:link,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-current-crumb a:visited,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-current-crumb a:hover,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-current-crumb a:active {
+display:block;
+background-image:none;
+font-size:1.3em;
+text-decoration:none;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-parent .ui-icon,.wijmo-wijmenu-horizontal .wijmo-wijmenu-child .ui-icon,.wijmo-wijmenu-ipod .ui-icon-triangle-1-e {
+float:right;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-item .wijmo-wijmenu-text,.wijmo-wijmenu-horizontal .wijmo-wijmenu-parent .ui-icon,.wijmo-wijmenu-breadcrumb a,.wijmo-wijmenu-breadcrumb span,.wijmo-wijmenu-breadcrumb .wijmo-wijmenu-prev-list a .ui-icon {
+float:left;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-link .wijmo-wijmenu-icon-left {
+display:inline-block;
+float:left;
+}
+
+.wijmo-wijmenu .wijmo-wijmenu-link .wijmo-wijmenu-icon-right {
+display:inline-block;
+float:right;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+For licensing, see LICENSE.md or http://ckeditor.com/license
+-->
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ENTER Key Configuration &mdash; CKEditor Sample</title>
+	<script src="../../../ckeditor.js"></script>
+	<link href="../../sample.css" rel="stylesheet">
+	<meta name="ckeditor-sample-name" content="Using the &quot;Enter&quot; key in CKEditor">
+	<meta name="ckeditor-sample-group" content="Advanced Samples">
+	<meta name="ckeditor-sample-description" content="Configuring the behavior of &lt;em&gt;Enter&lt;/em&gt; and &lt;em&gt;Shift+Enter&lt;/em&gt; keys.">
+	<script>
+
+		var editor;
+
+		function changeEnter() {
+			// If we already have an editor, let's destroy it first.
+			if ( editor )
+				editor.destroy( true );
+
+			// Create the editor again, with the appropriate settings.
+			editor = CKEDITOR.replace( 'editor1', {
+				extraPlugins: 'enterkey',
+				enterMode: Number( document.getElementById( 'xEnter' ).value ),
+				shiftEnterMode: Number( document.getElementById( 'xShiftEnter' ).value )
+			});
+		}
+
+		window.onload = changeEnter;
+
+	</script>
+</head>
+<body>
+	<h1 class="samples">
+		<a href="../../index.html">CKEditor Samples</a> &raquo; ENTER Key Configuration
+	</h1>
+	<div class="description">
+		<p>
+			This sample shows how to configure the <em>Enter</em> and <em>Shift+Enter</em> keys
+			to perform actions specified in the
+			<a class="samples" href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-enterMode"><code>enterMode</code></a>
+			and <a class="samples" href="http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-shiftEnterMode"><code>shiftEnterMode</code></a>
+			parameters, respectively.
+	 		You can choose from the following options:
+		</p>
+		<ul class="samples">
+			<li><strong><code>ENTER_P</code></strong> &ndash; new <code>&lt;p&gt;</code> paragraphs are created;</li>
+			<li><strong><code>ENTER_BR</code></strong> &ndash; lines are broken with <code>&lt;br&gt;</code> elements;</li>
+			<li><strong><code>ENTER_DIV</code></strong> &ndash; new <code>&lt;div&gt;</code> blocks are created.</li>
+		</ul>
+		<p>
+			The sample code below shows how to configure CKEditor to create a <code>&lt;div&gt;</code> block when <em>Enter</em> key is pressed.
+		</p>
+<pre class="samples">
+CKEDITOR.replace( '<em>textarea_id</em>', {
+	<strong>enterMode: CKEDITOR.ENTER_DIV</strong>
+});</pre>
+		<p>
+			Note that <code><em>textarea_id</em></code> in the code above is the <code>id</code> attribute of
+			the <code>&lt;textarea&gt;</code> element to be replaced.
+		</p>
+	</div>
+	<div style="float: left; margin-right: 20px">
+		When <em>Enter</em> is pressed:<br>
+		<select id="xEnter" onchange="changeEnter();">
+			<option selected="selected" value="1">Create a new &lt;P&gt; (recommended)</option>
+			<option value="3">Create a new &lt;DIV&gt;</option>
+			<option value="2">Break the line with a &lt;BR&gt;</option>
+		</select>
+	</div>
+	<div style="float: left">
+		When <em>Shift+Enter</em> is pressed:<br>
+		<select id="xShiftEnter" onchange="changeEnter();">
+			<option value="1">Create a new &lt;P&gt;</option>
+			<option value="3">Create a new &lt;DIV&gt;</option>
+			<option selected="selected" value="2">Break the line with a &lt;BR&gt; (recommended)</option>
+		</select>
+	</div>
+	<br style="clear: both">
+	<form action="../../sample_posteddata.php" method="post">
+		<p>
+			<br>
+			<textarea cols="80" id="editor1" name="editor1" rows="10">This is some &lt;strong&gt;sample text&lt;/strong&gt;. You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.</textarea>
+		</p>
+		<p>
+			<input type="submit" value="Submit">
+		</p>
+	</form>
+	<div id="footer">
+		<hr>
+		<p>
+			CKEditor - The text editor for the Internet - <a class="samples" href="http://ckeditor.com/">http://ckeditor.com</a>
+		</p>
+		<p id="copy">
+			Copyright &copy; 2003-2014, <a class="samples" href="http://cksource.com/">CKSource</a> - Frederico
+			Knabben. All rights reserved.
+		</p>
+	</div>
+</body>
+</html>
