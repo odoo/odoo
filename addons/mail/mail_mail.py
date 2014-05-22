@@ -152,18 +152,8 @@ class mail_mail(osv.Model):
             context = {}
         if partner and partner.user_ids:
             base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-            # the parameters to encode for the query and fragment part of url
-            query = {'db': cr.dbname}
-            fragment = {
-                'login': partner.user_ids[0].login,
-                'action': 'mail.action_mail_redirect',
-            }
-            if mail.notification:
-                fragment['message_id'] = mail.mail_message_id.id
-            elif mail.model and mail.res_id:
-                fragment.update(model=mail.model, res_id=mail.res_id)
-
-            url = urljoin(base_url, "/web?%s#%s" % (urlencode(query), urlencode(fragment)))
+            mail_model = mail.model or 'mail.thread'
+            url = urljoin(base_url, self.pool[mail_model]._get_access_link(cr, uid, mail, partner, context=context))
             return _("""<span class='oe_mail_footer_access'><small>about <a style='color:inherit' href="%s">%s %s</a></small></span>""") % (url, context.get('model_name', ''), mail.record_name)
         else:
             return None

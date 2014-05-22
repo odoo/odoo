@@ -1,0 +1,6 @@
+{%- if show_source and has_source and sourcename %}
+<div id="sourcelink">
+  <a href="{{ pathto('_sources/' + sourcename, true)|e }}"
+     rel="nofollow">{{ _('Source') }}</a>
+</div>
+{%- endif %}

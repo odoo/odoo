@@ -804,3 +804,26 @@ class test_views(ViewCase):
                     E.button(name="action_next", type="object", string="New button")),
                 string="Replacement title", version="7.0"
             ))
+
+class TestXPathExtentions(common.BaseCase):
+    def test_hasclass(self):
+        tree = E.node(
+            E.node({'class': 'foo bar baz'}),
+            E.node({'class': 'foo bar'}),
+            {'class': "foo"})
+
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("foo")]')),
+            3)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("bar")]')),
+            2)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("baz")]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("foo")][not(hasclass("bar"))]')),
+            1)
+        self.assertEqual(
+            len(tree.xpath('//node[hasclass("foo", "baz")]')),
+            1)

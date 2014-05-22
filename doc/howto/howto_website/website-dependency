@@ -1,0 +1,60 @@
+# HG changeset patch
+# Parent 0fdf3e29ce5bb1dd39479f157eeac5bdfd3cffb0
+
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -15,7 +15,7 @@
+     'version': '0.1',
+ 
+     # any module necessary for this one to work correctly
+-    'depends': ['web'],
++    'depends': ['website'],
+     'data': [
+         'security/ir.model.access.csv',
+         'views/templates.xml',
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
+@@ -12,19 +12,12 @@ teaching_assistants = [
+ ]
+ 
+ class academy(main.Home):
+-    @http.route('/', auth='none')
++    @http.route('/', auth='none', website=True)
+     def index(self):
+-        cr, uid, context = http.request.cr, http.request.uid, http.request.context
+-        tas = [
+-            '<li><a href="/tas/%d/">%s</a></li>' % (i, ta['name'])
+-            for i, ta in enumerate(teaching_assistants)
+-        ]
++        return http.request.website.render('academy.index', {
++            'tas': teaching_assistants,
++        })
+ 
+-        return http.request.registry['ir.ui.view'].render(cr, uid, 'academy.index', {
+-            'tas': '\n'.join(tas)
+-        }, context=context)
+-    @http.route('/tas/<int:id>/', auth='none')
++    @http.route('/tas/<int:id>/', auth='none', website=True)
+     def ta(self, id):
+-        cr, uid, context = http.request.cr, http.request.uid, http.request.context
+-        return http.request.registry['ir.ui.view'].render(
+-            cr, uid, 'academy.ta', teaching_assistants[id], context=context)
++        return http.request.website.render('academy.ta', teaching_assistants[id])
+diff --git a/views/templates.xml b/views/templates.xml
+--- a/views/templates.xml
++++ b/views/templates.xml
+@@ -17,7 +17,11 @@
+             </p>
+             <h2>Teaching Assistants</h2>
+             <ul>
+-                <t t-raw="tas"/>
++                <li t-foreach="tas" t-as="ta">
++                    <a t-att-href="url_for('/tas/%d/' % ta_index)">
++                        <t t-esc="ta['name']"/>
++                    </a>
++                </li>
+             </ul>
+         </body>
+     </html>

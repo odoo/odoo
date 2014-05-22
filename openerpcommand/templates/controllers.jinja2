@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+
+from openerp import http
+from openerp.addons.web.controllers import main
+
+class {{ config.controller }}(main.Home):
+    @http.route('/', auth='none')
+    def index(self):
+        return "Hello, world!"

@@ -8,7 +8,7 @@ from openerp.addons.web.http import request
 
 class WebsiteEmailDesigner(http.Controller):
 
-    @http.route('/website_mail/email_designer', type='http', auth="user", website=True, multilang=True)
+    @http.route('/website_mail/email_designer', type='http', auth="user", website=True)
     def index(self, model, res_id, template_model=None, **kw):
         if not model or not model in request.registry or not res_id:
             return request.redirect('/')
