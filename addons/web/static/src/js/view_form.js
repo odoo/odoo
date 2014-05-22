@@ -3209,6 +3209,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this._super(field_manager, node);
         this.selection = _.clone(this.field.selection) || [];
         this.domain = false;
+        this.uniqueId = _.uniqueId("radio");
     },
     initialize_content: function () {
         this.on("change:effective_readonly", this, this.render_value);
@@ -3265,7 +3266,6 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     set_value: function (value_) {
         if (value_) {
             if (this.field.type == "selection") {
-                this.uniqueId = _.uniqueId("radio");
                 value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
             }
             else if (!this.selection.length) {
