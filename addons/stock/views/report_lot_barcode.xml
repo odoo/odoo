@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<template id="report_package_barcode">
+<template id="report_lot_barcode">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
             <t>
@@ -13,23 +13,16 @@
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th class="text-right">Quantity</th>
                                         <th>Lot</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr t-foreach="o.quant_ids" t-as="l">
-                                        <td>
-                                           <span  t-field="l.product_id.name"/>
-                                        </td>
-                                        <td class="text-right">
-                                            <span t-field="l.qty"/>
-                                            <span groups="product.group_uom" t-field="l.product_id.uom_id.name"/>
-                                        </td>
-                                        <td>
-                                            <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
-                                        </td>
-                                    </tr>
+                                    <td>
+                                       <span  t-field="o.product_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.name"/>
+                                    </td>
                                 </tbody>
                             </table>
                         </div>
