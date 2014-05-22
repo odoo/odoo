@@ -4,7 +4,7 @@
 
         <record id="view_base_module_import" model="ir.ui.view">
             <field name="name">Module Import</field>
-            <field name="model">base.module.import</field>
+            <field name="model">base.import.module</field>
             <field name="arch" type="xml">
                 <form string="Import module" version="7.0">
                     <field name="state" invisible="1"/>
@@ -17,11 +17,14 @@
                         <label string="Module file successfully imported!" colspan="4"/>
                     </group>
                     <footer>
-                        <button name="importzip" string="Import module" type="object" states="init" class="oe_highlight"/>
-                        <label string="or" states="init"/>
-                        <button name="action_module_open" string="Open Modules" type="object" states="done" class="oe_highlight"/>
-                        <label string="or" states="done"/>
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <div states="init">
+                            <button name="import_module" string="Import Module" type="object" class="oe_highlight"/> or
+                            <button special="cancel" string="Cancel" class="oe_link"/>
+                        </div>
+                        <div states="done">
+                            <button name="action_module_open" string="Open Modules" type="object" class="oe_highlight"/> or
+                            <button special="cancel" string="Close" class="oe_link"/>
+                        </div>
                     </footer>
                 </form>
             </field>
@@ -30,22 +33,21 @@
         <record id="action_view_base_module_import" model="ir.actions.act_window">
             <field name="name">Module Import</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">base.module.import</field>
+            <field name="res_model">base.import.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
-    <!-- This feature is now deprecated, but may come back later.
         <menuitem
             name="Import Module"
             action="action_view_base_module_import"
             id="menu_view_base_module_import"
-            parent="menu_management"
+            parent="base.menu_management"
             groups="base.group_no_one"
             sequence="6"/>
-    -->
 
     </data>
 </openerp>
+
 
