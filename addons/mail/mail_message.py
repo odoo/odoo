@@ -769,12 +769,8 @@ class mail_message(osv.Model):
             or take the email_from
         """
         model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
-        if model and res_id:
-            ctx = dict(context, thread_model=model)
-            reply_to = self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
-        else:
-            reply_to = email_from
-        return reply_to
+        ctx = dict(context, thread_model=model)
+        return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
 
     def _get_message_id(self, cr, uid, values, context=None):
         if values.get('same_thread', True) is False:
