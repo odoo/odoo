@@ -847,7 +847,7 @@
                         help="Manufacturing Orders which are currently in production."/>
                     <separator/>
                     <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
-                        help="Production started late"/>
+                        help="Manufacturing Order(s) which prodution started lately."/>
                     <field name="product_id"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <group expand="0" string="Group By...">
