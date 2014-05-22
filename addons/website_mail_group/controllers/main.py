@@ -16,7 +16,7 @@ class MailGroup(http.Controller):
         MailMessage = request.registry['mail.message']
         groups = MailMessage.read_group(
             request.cr, request.uid, [('model', '=', 'mail.group'), ('res_id', '=', group_id)], ['subject', 'date'],
-            groupby="date", orderby="date asc", context=request.context)
+            groupby="date", orderby="date desc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
             end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
