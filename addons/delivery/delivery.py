@@ -234,7 +234,7 @@ class delivery_grid_line(osv.osv):
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
                                   ('wv','Weight * Volume'), ('price','Price'), ('quantity','Quantity')],\
                                   'Variable', required=True),
-        'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
+        'operator': fields.selection([('==','='),('<=','<='),('<','<'),('>=','>='),('>','>')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price'), ('quantity','Quantity')], 'Variable Factor', required=True),
