@@ -177,7 +177,7 @@ def load_information_from_description_file(module, mod_path=None):
 
     if not mod_path:
         mod_path = get_module_path(module)
-    terp_file = opj(mod_path, '__openerp__.py')
+    terp_file = mod_path and opj(mod_path, '__openerp__.py') or False
     if terp_file:
         info = {}
         if os.path.isfile(terp_file):

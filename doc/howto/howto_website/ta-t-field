@@ -1,0 +1,15 @@
+# HG changeset patch
+# Parent 9d054be011cf2d3019e3b4d1be7cc95375044a05
+
+diff --git a/views/templates.xml b/views/templates.xml
+--- a/views/templates.xml
++++ b/views/templates.xml
+@@ -35,7 +35,7 @@
+             <div class="oe_structure"/>
+             <div class="oe_structure">
+                 <div class="container">
+-                    <h1><t t-esc="ta.name"/></h1>
++                    <h1 t-field="ta.name"/>
+                 </div>
+             </div>
+             <div class="oe_structure"/>

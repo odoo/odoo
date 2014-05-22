@@ -1,0 +1,117 @@
+# HG changeset patch
+# Parent cd98e5752eedca2780da80387ac01c8cd166940f
+
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -20,6 +20,7 @@
+         'security/ir.model.access.csv',
+         'views/templates.xml',
+         'data/teaching_assistants.xml',
++        'data/lectures.xml',
+     ],
+     'tests': [
+     ],
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
+@@ -6,10 +6,15 @@ from openerp.addons.web.controllers impo
+ class academy(main.Home):
+     @http.route('/', auth='public', website=True)
+     def index(self):
++        cr, uid, context = http.request.cr, http.request.uid, http.request.context
++        Lectures = http.request.registry['academy.lectures']
+         tas = http.request.registry['academy.tas'].search_read(
+             http.request.cr, http.request.uid, context=http.request.context)
++        lectures = Lectures.browse(
++            cr, uid, Lectures.search(cr, uid, [], context=context), context=context)
+         return http.request.website.render('academy.index', {
+             'tas': tas,
++            'lectures': lectures,
+         })
+ 
+     @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
+diff --git a/data/lectures.xml b/data/lectures.xml
+new file mode 100644
+--- /dev/null
++++ b/data/lectures.xml
+@@ -0,0 +1,24 @@
++<openerp>
++    <data>
++        <record model="academy.lectures" id="lecture1">
++            <field name="name">Lecture 1</field>
++            <field name="date">2014-01-06</field>
++        </record>
++        <record model="academy.lectures" id="lecture2">
++            <field name="name">Lecture 2</field>
++            <field name="date">2014-01-08</field>
++        </record>
++        <record model="academy.lectures" id="lecture3">
++            <field name="name">Lecture 3</field>
++            <field name="date">2014-01-10</field>
++        </record>
++        <record model="academy.lectures" id="lecture4">
++            <field name="name">Lecture 4</field>
++            <field name="date">2014-01-13</field>
++        </record>
++        <record model="academy.lectures" id="lecture5">
++            <field name="name">Lecture 5</field>
++            <field name="date">2014-01-15</field>
++        </record>
++    </data>
++</openerp>
+diff --git a/models/academy.py b/models/academy.py
+--- a/models/academy.py
++++ b/models/academy.py
+@@ -8,3 +8,12 @@ class TeachingAssistants(orm.Model):
+         'name': fields.char(),
+         'biography': fields.html(),
+     }
++
++class Lectures(orm.Model):
++    _name = 'academy.lectures'
++    _order = 'date ASC'
++
++    _columns = {
++        'name': fields.char(required=True),
++        'date': fields.date(required=True),
++    }
+diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
+--- a/security/ir.model.access.csv
++++ b/security/ir.model.access.csv
+@@ -1,2 +1,3 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+ access_academy_tas,access_academy_tas,model_academy_tas,,1,0,0,0
++access_academy_lectures,access_academy_lectures,model_academy_lectures,,1,0,0,0
+\ No newline at end of file
+diff --git a/views/templates.xml b/views/templates.xml
+--- a/views/templates.xml
++++ b/views/templates.xml
+@@ -22,6 +22,27 @@
+                             </a>
+                         </li>
+                     </ul>
++                    <h2>Course Calendar</h2>
++                    <table class="table table-condensed table-hover">
++                        <tr>
++                            <th>Date</th>
++                            <th>Day</th>
++                            <th>Topic</th>
++                        </tr>
++                        <tr t-foreach="lectures" t-as="lecture">
++                            <td>
++                                <span t-field="lecture.date"
++                                      t-field-options='{"format": "long"}'/>
++                            </td>
++                            <td>
++                                <span t-field="lecture.date"
++                                      t-field-options='{"format": "EEE"}'/>
++                            </td>
++                            <td>
++                                <span t-field="lecture.name"/>
++                            </td>
++                        </tr>
++                    </table>
+                 </div>
+             </div>
+             <div class="oe_structure"/>

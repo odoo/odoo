@@ -69,7 +69,10 @@ def py2exe_options():
     if os.name == 'nt':
         import py2exe
         return {
-            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], }],
+            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], },
+                          { "script": "openerp-gevent" },
+                          { "script": "oe" },
+            ],
             'options' : {
                 "py2exe": {
                     "skip_archive": 1,
@@ -94,7 +97,7 @@ def py2exe_options():
                         "mock",
                         "openerp",
                         "poplib",
-                        "psutil", 
+                        "psutil",
                         "pychart",
                         "pydot",
                         "pyparsing",
@@ -144,7 +147,7 @@ setuptools.setup(
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      scripts          = ['openerp-server'],
+      scripts          = ['openerp-server', 'openerp-gevent', 'oe'],
       data_files       = data(),
       packages         = setuptools.find_packages(),
       dependency_links = ['http://download.gna.org/pychart/'],

@@ -129,7 +129,7 @@ class gamification_challenge(osv.Model):
         'manager_id': fields.many2one('res.users',
             string='Responsible', help="The user responsible for the challenge."),
 
-        'user_ids': fields.many2many('res.users', 'user_ids',
+        'user_ids': fields.many2many('res.users', 'gamification_challenge_users_rel',
             string='Users',
             help="List of users participating to the challenge"),
         'user_domain': fields.char('User domain', help="Alternative to a list of users"),
@@ -149,7 +149,7 @@ class gamification_challenge(osv.Model):
         'end_date': fields.date('End Date',
             help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."),
 
-        'invited_user_ids': fields.many2many('res.users', 'invited_user_ids',
+        'invited_user_ids': fields.many2many('res.users', 'gamification_invited_user_ids_rel',
             string="Suggest to users"),
 
         'line_ids': fields.one2many('gamification.challenge.line', 'challenge_id',
@@ -316,19 +316,20 @@ class gamification_challenge(osv.Model):
 
         for challenge in self.browse(cr, uid, ids, context=context):
 
-            # goals closed but still opened at the last report date
-            closed_goals_to_report = goal_obj.search(cr, uid, [
-                ('challenge_id', '=', challenge.id),
-                ('start_date', '>=', challenge.last_report_date),
-                ('end_date', '<=', challenge.last_report_date)
-            ])
+            if challenge.last_report_date != fields.date.today():
+                # goals closed but still opened at the last report date
+                closed_goals_to_report = goal_obj.search(cr, uid, [
+                    ('challenge_id', '=', challenge.id),
+                    ('start_date', '>=', challenge.last_report_date),
+                    ('end_date', '<=', challenge.last_report_date)
+                ])
 
-            if len(closed_goals_to_report) > 0:
-                # some goals need a final report
-                self.report_progress(cr, uid, challenge, subset_goal_ids=closed_goals_to_report, context=context)
+                if challenge.next_report_date and fields.date.today() >= challenge.next_report_date:
+                    self.report_progress(cr, uid, challenge, context=context)
 
-            if fields.date.today() == challenge.next_report_date:
-                self.report_progress(cr, uid, challenge, context=context)
+                elif len(closed_goals_to_report) > 0:
+                    # some goals need a final report
+                    self.report_progress(cr, uid, challenge, subset_goal_ids=closed_goals_to_report, context=context)
 
         self.check_challenge_reward(cr, uid, ids, context=context)
         return True
@@ -445,6 +446,12 @@ class gamification_challenge(osv.Model):
                     values['start_date'] = start_date
                 if end_date:
                     values['end_date'] = end_date
+
+                    # the goal is initialised over the limit to make sure we will compute it at least once
+                    if line.condition == 'higher':
+                        values['current'] = line.target_goal - 1
+                    else:
+                        values['current'] = line.target_goal + 1
 
                 if challenge.remind_update_delay:
                     values['remind_update_delay'] = challenge.remind_update_delay

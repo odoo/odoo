@@ -23,6 +23,7 @@ import datetime
 from lxml import etree
 import math
 import pytz
+import urlparse
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -513,6 +514,14 @@ class res_partner(osv.Model, format_address):
             if not parent.is_company:
                 parent.write({'is_company': True})
 
+    def _clean_website(self, website):
+        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
+        if not scheme:
+            if not netloc:
+                netloc, path = path, ''
+            website = urlparse.urlunparse(('http', netloc, path, params, query, fragment))
+        return website
+
     @multi
     def write(self, vals):
         # res.partner must only allow to set the company_id of a partner if it
@@ -520,6 +529,8 @@ class res_partner(osv.Model, format_address):
         # (this is to allow the code from res_users to write to the partner!) or
         # if setting the company_id to False (this is compatible with any user
         # company)
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         if vals.get('company_id'):
             company = self.env['res.company'].browse(vals['company_id'])
             for partner in self:
@@ -535,6 +546,8 @@ class res_partner(osv.Model, format_address):
 
     @model
     def create(self, vals):
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         partner = super(res_partner, self).create(vals)
         self._fields_sync(partner, vals)
         self._handle_first_contact_creation(partner)

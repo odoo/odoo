@@ -86,6 +86,16 @@ class view_custom(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
 
+def _hasclass(context, *cls):
+    """ Checks if the context node has all the classes passed as arguments
+    """
+    node_classes = set(context.context_node.attrib.get('class', '').split())
+
+    return node_classes.issuperset(cls)
+
+xpath_utils = etree.FunctionNamespace(None)
+xpath_utils['hasclass'] = _hasclass
+
 class view(osv.osv):
     _name = 'ir.ui.view'
 
@@ -218,13 +228,6 @@ class view(osv.osv):
 
         self.read_template.clear_cache(self)
         ret = super(view, self).write(cr, uid, ids, vals, context)
-
-        # if arch is modified views become noupdatable
-        if 'arch' in vals and not context.get('install_mode', False):
-            # TODO: should be doable in a read and a write
-            for view_ in self.browse(cr, uid, ids, context=context):
-                if view_.model_data_id:
-                    self.pool.get('ir.model.data').write(cr, openerp.SUPERUSER_ID, view_.model_data_id.id, {'noupdate': True})
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -250,7 +253,7 @@ class view(osv.osv):
             ['type', '=', view_type],
             ['inherit_id', '=', False],
         ]
-        ids = self.search(cr, uid, domain, limit=1, order='priority', context=context)
+        ids = self.search(cr, uid, domain, limit=1, context=context)
         if not ids:
             return False
         return ids[0]
@@ -272,7 +275,8 @@ class view(osv.osv):
            :return: [(view_arch,view_id), ...]
         """
 
-        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
+        user = self.pool['res.users'].browse(cr, 1, uid, context=context)
+        user_groups = frozenset(user.groups_id or ())
 
         check_view_ids = context and context.get('check_view_ids') or (0,)
         conditions = [['inherit_id', '=', view_id], ['model', '=', model]]

@@ -35,6 +35,7 @@ import socket
 import time
 import xmlrpclib
 from email.message import Message
+from urllib import urlencode
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -359,6 +360,10 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
+        if context.get('tracking_disable'):
+            return super(mail_thread, self).create(
+                cr, uid, values, context=context)
+
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             pid = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid).partner_id.id
@@ -394,6 +399,9 @@ class mail_thread(osv.AbstractModel):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if context.get('tracking_disable'):
+            return super(mail_thread, self).write(
+                cr, uid, ids, values, context=context)
         # Track initial values of tracked fields
         track_ctx = dict(context)
         if 'lang' not in track_ctx:
@@ -640,6 +648,20 @@ class mail_thread(osv.AbstractModel):
                 }
             })
         return action
+
+    def _get_access_link(self, cr, uid, mail, partner, context=None):
+        # the parameters to encode for the query and fragment part of url
+        query = {'db': cr.dbname}
+        fragment = {
+            'login': partner.user_ids[0].login,
+            'action': 'mail.action_mail_redirect',
+        }
+        if mail.notification:
+            fragment['message_id'] = mail.mail_message_id.id
+        elif mail.model and mail.res_id:
+            fragment.update(model=mail.model, res_id=mail.res_id)
+
+        return "/web?%s#%s" % (urlencode(query), urlencode(fragment))
 
     #------------------------------------------------------
     # Email specific
