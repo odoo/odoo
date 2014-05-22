@@ -74,6 +74,7 @@ class MailGroup(http.Controller):
             'archives': self._get_archives(group.id),
             'date_begin': date_begin,
             'date_end': date_end,
+            'replies_per_page': self._replies_per_page,
         }
         return request.website.render('website_mail_group.group_messages', values)
 
@@ -89,6 +90,7 @@ class MailGroup(http.Controller):
             'archives': self._get_archives(group.id),
             'date_begin': date_begin,
             'date_end': date_end,
+            'replies_per_page': self._replies_per_page,
         }
         return request.website.render('website_mail_group.group_message', values)
 

@@ -201,8 +201,8 @@
                     <div t-if="message.child_ids" class="o_mg_replies">
                         <h4 class="page-header">Follow-Ups</h4>
                         <t t-call="website_mail_group.messages_short">
-                            <t t-set="messages" t-value="message.child_ids[:1]"/>
-                            <t t-set="msg_more_count" t-value="len(message.child_ids) - 1"/>
+                            <t t-set="messages" t-value="message.child_ids[:replies_per_page]"/>
+                            <t t-set="msg_more_count" t-value="len(message.child_ids) - replies_per_page"/>
                             <t t-set="thread_header" t-value="message"/>
                         </t>
                     </div>
@@ -250,8 +250,8 @@
                     </p>
                     <div class="o_mg_link_content o_mg_replies">
                         <t t-call="website_mail_group.messages_short">
-                            <t t-set="messages" t-value="thread.child_ids[:1]"/>
-                            <t t-set="msg_more_count" t-value="len(thread.child_ids) - 1"/>
+                            <t t-set="messages" t-value="thread.child_ids[:replies_per_page]"/>
+                            <t t-set="msg_more_count" t-value="len(thread.child_ids) - replies_per_page"/>
                             <t t-set="thread_header" t-value="thread"/>
                         </t>
                     </div>
