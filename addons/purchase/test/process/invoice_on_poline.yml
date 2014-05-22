@@ -23,3 +23,39 @@
      purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
      for purchase_line in purchase_order.order_line:
        assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
+-
+  Purchase manager can pay an invoice therefore test with that user which have Purchase manager rights.
+-
+  !context
+    uid: 'res_users_purchase_manager'
+-
+ I validate and pay the invoice and check the status.
+-
+ !python {model: purchase.order}: |
+    for invoice in self.browse(cr, uid, ref("purchase_order_6")).invoice_ids:
+        account_invoice_obj = self.pool.get('account.invoice')
+        account_invoice_obj.signal_invoice_open(cr, uid, [invoice.id])
+        pay = account_invoice_obj.pay_and_reconcile(cr, uid, [invoice.id],
+        3095.00, ref('account.cash'), ref('account.period_10'),
+        ref('account.bank_journal'), ref('account.cash'),
+        ref('account.period_10'), ref('account.bank_journal'),
+        name='Payment for test customer invoice')
+        assert invoice.state == 'paid', "Invoice should be in paid state" 
+-
+ I transfer picking list.
+-
+ !python {model: stock.picking}: |
+    po = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_2"))
+    po_line_ids = [line.id for line in po.order_line]
+    picking_ids = self.pool.get('stock.move').search_read(cr, uid, [('purchase_line_id','in', po_line_ids)], ['picking_id'])
+    pick_id = picking_ids[0]['picking_id'][0]
+    partial_id = self.do_transfer(cr, uid, [pick_id], context={'active_model': 'stock.picking','active_ids': pick_id})
+
+    #I check the state of picking list.
+    assert self.browse(cr, uid, pick_id).state == 'done', "Picking List should be in Transferred state"
+-
+ I check that purchase order is invoiced and it's state is in done.
+-
+ !python {model: purchase.order}: |
+    assert self.browse(cr, uid, ref("purchase_order_6")).invoiced == True,"Purchase Order should be invoiced"
+    assert self.browse(cr, uid, ref("purchase_order_6")).state == 'done', "Purchase order should be in done state"
