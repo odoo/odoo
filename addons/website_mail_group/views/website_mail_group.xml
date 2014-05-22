@@ -26,14 +26,14 @@
                     <i class='fa fa-envelope-o'/>
                     <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div t-esc="group.description" class="text-muted"/>
                 </div>
                 <div class="col-md-2">
                     <i class='fa fa-user'/> <t t-esc="len(group.message_follower_ids)"/> participants<br />
                     <i class='fa fa-envelope-o'/> <t t-esc="len(group.message_ids)"/> messages
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>
                 </div>
             </div>
