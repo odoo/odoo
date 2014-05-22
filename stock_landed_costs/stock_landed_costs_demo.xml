@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="product_template_55" model="product.template">
+            <field name="name">3G Datacard</field>
+            <field name="categ_id" ref="product.product_category_6"/>
+            <field name="public_categ_id" ref="product.Pen_Drive"/>
+            <field name="standard_price">1200</field>
+            <field name="list_price">1500</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+        </record>
+        <record id="product_product_55" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_55"/>
+            <field name="default_code">DC</field>
+            <field name="valuation">real_time</field>
+            <field name="cost_method">real</field>
+            <field name="property_stock_account_input" ref="account.conf_stk"/>
+            <field name="property_stock_account_output" ref="account.conf_a_sale"/>
+        </record>
+
+        <record id="product.product_product_11" model="product.product">
+            <field name="valuation">real_time</field>
+            <field name="cost_method">real</field>
+            <field name="property_stock_account_input" ref="account.conf_stk"/>
+            <field name="property_stock_account_output" ref="account.conf_a_sale"/>
+        </record>
+
+        <record id="product.product_product_17" model="product.product">
+            <field name="valuation">real_time</field>
+            <field name="cost_method">real</field>
+            <field name="property_stock_account_input" ref="account.conf_stk"/>
+            <field name="property_stock_account_output" ref="account.conf_a_sale"/>
+        </record>
+
+	<!--Adding Products For Landed Cost-->
+
+        <record id="product_template_50" model="product.template">
+            <field name="name">Insurance</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="public_categ_id" ref="product.services"/>
+            <field name="standard_price">100</field>
+            <field name="list_price">150</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">This type of service include Insurance on products.</field>
+        </record>
+
+        <record id="product_product_50" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_50"/>
+            <field name="split_method">by_current_cost_price</field>
+            <field name="landed_cost_ok">True</field>
+        </record>
+
+        <record id="product_template_51" model="product.template">
+            <field name="name">Shipping</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="public_categ_id" ref="product.services"/>
+            <field name="standard_price">100</field>
+            <field name="list_price">150</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">This type of service include Shipping of products.</field>
+        </record>
+
+        <record id="product_product_51" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_51"/>
+            <field name="split_method">by_weight</field>
+            <field name="landed_cost_ok">True</field>
+        </record>
+
+        <record id="product_template_52" model="product.template">
+            <field name="name">Storage</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="public_categ_id" ref="product.services"/>
+            <field name="standard_price">100</field>
+            <field name="list_price">150</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="description">This type of service include Storage of products.</field>
+        </record>
+
+        <record id="product_product_52" model="product.product">
+            <field name="product_tmpl_id" ref="product_template_52"/>
+            <field name="split_method">by_volume</field>
+            <field name="landed_cost_ok">True</field>
+        </record>
+
+    </data>
+</openerp>
