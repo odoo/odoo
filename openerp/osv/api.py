@@ -54,7 +54,7 @@ __all__ = [
     'model', 'multi', 'one',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
-    'constrains', 'depends', 'onchange', 'returns', 'propagate_returns',
+    'constrains', 'depends', 'onchange', 'returns',
 ]
 
 from inspect import getargspec
@@ -69,14 +69,17 @@ _logger = logging.getLogger(__name__)
 #  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
 #  - method._returns: set by @returns, specifies return model
+#  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
 #
 # On wrapping method only:
 #  - method._orig: original method
 #
 
-_WRAPPED_ATTRS = ('__module__', '__name__', '__doc__',
-    '_api', '_constrains', '_depends', '_returns', 'clear_cache')
+WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_api', '_constrains',
+                 '_depends', '_onchange', '_returns', 'clear_cache')
+
+INHERITED_ATTRS = ('_returns',)
 
 
 class Meta(type):
@@ -91,9 +94,8 @@ class Meta(type):
 
         for key, value in attrs.items():
             if not key.startswith('__') and callable(value):
-                # make the method inherit from @returns decorators
-                if not get_returns(value):
-                    value = propagate_returns(getattr(parent, key, None), value)
+                # make the method inherit from decorators
+                value = propagate(getattr(parent, key, None), value)
 
                 # guess calling convention if none is given
                 if not hasattr(value, '_api'):
@@ -107,26 +109,38 @@ class Meta(type):
         return type.__new__(meta, name, bases, attrs)
 
 
+identity = lambda x: x
+
+def decorate(method, attr, value):
+    """ Decorate `method` or its original method. """
+    # decorate the original method, and re-apply the api decorator, if any
+    orig = getattr(method, '_orig', method)
+    setattr(orig, attr, value)
+    return getattr(method, '_api', identity)(orig)
+
+def propagate(from_method, to_method):
+    """ Propagate decorators from `from_method` to `to_method`, and return the
+        resulting method.
+    """
+    if from_method:
+        for attr in INHERITED_ATTRS:
+            if hasattr(from_method, attr) and not hasattr(to_method, attr):
+                to_method = decorate(to_method, attr, getattr(from_method, attr))
+    return to_method
+
+
 def constrains(*args):
     """ Return a decorator that specifies the field dependencies of a method
         implementing a constraint checker. Each argument must be a field name.
     """
-    def decorate(method):
-        method._constrains = args
-        return method
-
-    return decorate
+    return lambda method: decorate(method, '_constrains', args)
 
 
 def onchange(*args):
     """ Return a decorator to decorate an onchange method for given fields.
         Each argument must be a field name.
     """
-    def decorate(method):
-        method._onchange = args
-        return method
-
-    return decorate
+    return lambda method: decorate(method, '_onchange', args)
 
 
 def depends(*args):
@@ -139,12 +153,7 @@ def depends(*args):
     """
     if args and callable(args[0]):
         args = args[0]
-
-    def decorate(method):
-        method._depends = args
-        return method
-
-    return decorate
+    return lambda method: decorate(method, '_depends', args)
 
 
 def returns(model, downgrade=None):
@@ -175,31 +184,7 @@ def returns(model, downgrade=None):
         a decorated existing method will be decorated with the same
         ``@returns(model)``.
     """
-    def decorate(method):
-        if hasattr(method, '_orig'):
-            # decorate the original method, and re-apply the api decorator
-            origin = method._orig
-            origin._returns = model, downgrade
-            return origin._api(origin)
-        else:
-            method._returns = model, downgrade
-            return method
-
-    return decorate
-
-
-def get_returns(method):
-    return getattr(method, '_returns', None)
-
-
-def propagate_returns(from_method, to_method):
-    spec = get_returns(from_method)
-    if spec:
-        _logger.debug("Method %s.%s inherited @returns%r",
-                      to_method.__module__, to_method.__name__, spec)
-        return returns(*spec)(to_method)
-    else:
-        return to_method
+    return lambda method: decorate(method, '_returns', (model, downgrade))
 
 
 def make_wrapper(method, old_api, new_api):
@@ -211,8 +196,8 @@ def make_wrapper(method, old_api, new_api):
         else:
             return old_api(self, *args, **kwargs)
 
-    # propagate specific openerp attributes to wrapper
-    for attr in _WRAPPED_ATTRS:
+    # propagate specific openerp attributes from method to wrapper
+    for attr in WRAPPED_ATTRS:
         if hasattr(method, attr):
             setattr(wrapper, attr, getattr(method, attr))
     wrapper._orig = method
@@ -224,7 +209,7 @@ def get_downgrade(method):
     """ Return a function `downgrade(value)` that adapts `value` from
         record-style to traditional-style, following the convention of `method`.
     """
-    spec = get_returns(method)
+    spec = getattr(method, '_returns', None)
     if spec:
         model, downgrade = spec
         return downgrade or (lambda value: value.ids)
@@ -236,7 +221,7 @@ def get_upgrade(method):
     """ Return a function `upgrade(self, value)` that adapts `value` from
         traditional-style to record-style, following the convention of `method`.
     """
-    spec = get_returns(method)
+    spec = getattr(method, '_returns', None)
     if spec:
         model, downgrade = spec
         if model == 'self':
@@ -251,7 +236,7 @@ def get_aggregate(method):
     """ Return a function `aggregate(self, value)` that aggregates record-style
         `value` for a method decorated with ``@one``.
     """
-    spec = get_returns(method)
+    spec = getattr(method, '_returns', None)
     if spec:
         # value is a list of instances, concatenate them
         model, downgrade = spec
@@ -588,6 +573,9 @@ def guess(method):
         Method calls are considered traditional style when their first parameter
         is a database cursor.
     """
+    if hasattr(method, '_api'):
+        return method
+
     # introspection on argument names to determine api style
     args, vname, kwname, defaults = getargspec(method)
     names = tuple(args) + (None,) * 4
