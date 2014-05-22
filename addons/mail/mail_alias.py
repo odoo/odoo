@@ -99,10 +99,10 @@ class mail_alias(osv.Model):
                 ('partners', 'Authenticated Partners'),
                 ('followers', 'Followers only'),
             ], string='Alias Contact Security', required=True,
-            help="Policy to post a message on the document using the mailgateway.\n"
-                    "- everyone: everyone can post\n"
-                    "- partners: only authenticated partners\n"
-                    "- followers: only followers of the related document\n"),
+            help="Policy to post a message on the document using the mail gateway.\n"
+                    "- Everyone: everyone can post.\n"
+                    "- Authenticated Partners: only authenticated partners can post.\n"
+                    "- Followers Only : only followers of the related document can post.\n"),
     }
 
     _defaults = {

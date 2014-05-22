@@ -41,7 +41,7 @@ class account_common_report(osv.osv_memory):
         return res
 
     _columns = {
-        'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
+        'chart_account_id': fields.many2one('account.account', 'Chart of Account', help="Select Charts Of Accounts for the company for which receivable/payables needs to be seen for company's customers/suppliers.", required=True, domain = [('parent_id','=',False)]),
         'company_id': fields.related('chart_account_id', 'company_id', type='many2one', relation='res.company', string='Company', readonly=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),

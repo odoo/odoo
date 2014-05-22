@@ -105,7 +105,7 @@ class sale_config_settings(osv.osv_memory):
                  '-This installs the module plugin_outlook.'),
         'module_mass_mailing': fields.boolean(
             'Manage mass mailing campaigns',
-            help='Get access to statistics with your mass mailing, manage campaigns.'),
+            help='Create Mass Mail & send easily to partners (customers,suppliers etc) and also get access to statistics with your mass mailing.'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

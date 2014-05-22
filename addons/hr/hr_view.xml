@@ -391,7 +391,7 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <filter domain="[('state','=','open')]" string="In Position" help="These Job Positions don't have any recruitment."/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By...">
