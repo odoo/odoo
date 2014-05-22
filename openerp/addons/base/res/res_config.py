@@ -595,11 +595,13 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
             - t[1]: int or long: id of the menuitem's action
         """
+        menu_obj = self.pool['ir.ui.menu']
         module_name, menu_xml_id = menu_xml_id.split('.')
         dummy, menu_id = self.pool['ir.model.data'].get_object_reference(cr, uid, module_name, menu_xml_id)
-        ir_ui_menu = self.pool['ir.ui.menu'].browse(cr, uid, menu_id, context=context)
+        ir_ui_menu = menu_obj.browse(cr, uid, menu_id, context=context)
+        action_id = ir_ui_menu.action.id if menu_obj._filter_visible_menus(cr, uid, [menu_id], context=context) else False
 
-        return (ir_ui_menu.complete_name, ir_ui_menu.action.id)
+        return (ir_ui_menu.complete_name, action_id)
 
     def get_option_name(self, cr, uid, full_field_name, context=None):
         """
@@ -613,7 +615,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
 
         return self.pool[model_name].fields_get(cr, uid, allfields=[field_name], context=context)[field_name]['string']
 
-    def get_config_warning(self, cr, msg, context=None):
+    def get_config_warning(self, cr, uid, msg, context=None):
         """
         Helper: return a Warning exception with the given message where the %(field:xxx)s
         and/or %(menu:yyy)s are replaced by the human readable field's name and/or menuitem's
@@ -656,9 +658,9 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         for item in references:
             ref_type, ref = item.split(':')
             if ref_type == 'menu':
-                values[item], action_id = res_config_obj.get_option_path(cr, SUPERUSER_ID, ref, context=context)
+                values[item], action_id = res_config_obj.get_option_path(cr, uid, ref, context=context)
             elif ref_type == 'field':
-                values[item] = res_config_obj.get_option_name(cr, SUPERUSER_ID, ref, context=context)
+                values[item] = res_config_obj.get_option_name(cr, uid, ref, context=context)
 
         # 3/ substitute and return the result
         if (action_id):

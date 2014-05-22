@@ -60,7 +60,7 @@ class test_res_config(common.TransactionCase):
 
     def test_20_get_config_warning(self):
         """ The get_config_warning() method should return a RedirectWarning """
-        res = self.res_config.get_config_warning(self.cr, self.error_msg, context=None)
+        res = self.res_config.get_config_warning(self.cr, self.uid, self.error_msg, context=None)
 
         # Check type
         self.assertIsInstance(res, openerp.exceptions.RedirectWarning)
@@ -71,7 +71,7 @@ class test_res_config(common.TransactionCase):
 
     def test_30_get_config_warning_wo_menu(self):
         """ The get_config_warning() method should return a Warning exception """
-        res = self.res_config.get_config_warning(self.cr, self.error_msg_wo_menu, context=None)
+        res = self.res_config.get_config_warning(self.cr, self.uid, self.error_msg_wo_menu, context=None)
 
         # Check type
         self.assertIsInstance(res, openerp.exceptions.Warning)
