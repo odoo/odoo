@@ -89,7 +89,7 @@
 
     <!-- If demo data than gives the marketing_campaign user rights -->
         <record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('marketing_campaign.group_marketing_user'))]" name="groups_id"/>
+            <field eval="[(4, ref('group_marketing_user'))]" name="groups_id"/>
         </record>
 
     </data>
