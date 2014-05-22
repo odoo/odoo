@@ -9,7 +9,7 @@
                 <search string="Appraisal Plan">
                    <field name="name" string="Appraisal Plans"/>
                    <field name="company_id" groups="base.group_multi_company"/>
-                   <group expand="0" string="Group By..." groups="base.group_multi_company">
+                   <group expand="0" string="Group By" groups="base.group_multi_company">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
@@ -333,7 +333,7 @@
                     <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                     <field name="user_to_review_id"/>
                     <field name="user_id" string="Interviewer"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Interviewer" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'survey_id'}"/>
                         <filter string="Status" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>

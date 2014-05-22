@@ -102,7 +102,7 @@
                     <field name="name" string="Content" filter_domain="['|', ('name', 'ilike', self), ('content', 'ilike', self)]"/>
                     <field name="create_uid"/>
                     <field name="forum_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
                         <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
                     </group>

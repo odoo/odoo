@@ -63,7 +63,7 @@
                     <field name="name" string="Picking Wave"/>
                     <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Picking Waves not finished"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="State" domain="[]" context="{'group_by':'state'}"/>
                     </group>

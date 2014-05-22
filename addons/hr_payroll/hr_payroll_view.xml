@@ -171,7 +171,7 @@
                     <field name="name" string="Payslip Lines" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     <field name="amount_select"/>
                     <field name="slip_id"/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
+                    <group col="8" colspan="4" expand="0" string="Group By">
                         <filter string="Salary Rule Category" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
                         <filter string="Contribution Register" name="register_id" icon="terp-folder-yellow" context="{'group_by':'register_id'}"/>
                         <filter string="Amount Type" name="amount_select" icon="terp-stock_symbol-selection" context="{'group_by':'amount_select'}"/>
@@ -357,7 +357,7 @@
                     <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
                     <field name="employee_id"/>
                     <field name="payslip_run_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <filter string="PaySlip Batch" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
                         <filter string="Companies" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
@@ -641,7 +641,7 @@
                     <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     <field name="category_id"/>
                     <field name="condition_range_min"/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
+                    <group col="8" colspan="4" expand="0" string="Group By">
                         <filter string="Category" icon="terp-folder-yellow" name="head" context="{'group_by':'category_id'}"/>
                     </group>
                 </search>

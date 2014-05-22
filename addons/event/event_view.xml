@@ -279,7 +279,7 @@
                     <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Upcoming events from today" />
                     <field name="type"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Type" context="{'group_by':'type'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
@@ -435,7 +435,7 @@
                     <field name="event_id"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Responsible"  domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
