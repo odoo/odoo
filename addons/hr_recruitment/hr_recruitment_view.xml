@@ -370,6 +370,10 @@
                         </div>
                     </div>
             </xpath>
+            <xpath expr="//field[@name='requirements']" position="after">
+                <separator string="Recruitment Stages" />
+                    <field name="stage_ids" nolabel="1"/>
+            </xpath>
             <xpath expr="//field[@name='department_id']" position="after">
                 <field name="user_id" class="oe_inline"/>
             </xpath>
@@ -518,7 +522,6 @@
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
-                <field name="department_id"/>
                 <field name="fold"/>
             </tree>
         </field>
@@ -534,17 +537,18 @@
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
-                        <field name="department_id"/>
+                        <field name="sequence"/>
+                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                     <group>
-                        <field name="sequence"/>
                         <field name="fold"/>
-                        <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
+                        <field name="case_default"/>
                     </group>
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
                 </sheet>
+                <field name="job_ids" invisible="1"/>
             </form>
         </field>
     </record>
@@ -564,13 +568,6 @@
           </p>
         </field>
     </record>
-
-    <menuitem
-        id="menu_hr_recruitment_stage"
-        name="Stages"
-        parent="menu_hr_recruitment_recruitment"
-        action="hr_recruitment_stage_act"
-        sequence="1" groups="base.group_no_one"/>
 
     <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
@@ -608,13 +605,6 @@
         <field name="view_id" ref="hr_recruitment_degree_tree"/>
     </record>
 
-     <menuitem
-            id="menu_hr_recruitment_degree"
-            name="Degrees"
-            parent="menu_hr_recruitment_recruitment"
-            action="hr_recruitment_degree_action"
-            sequence="5" groups="base.group_no_one"/>
-
     <!-- Source Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
         <field name="name">hr.recruitment.source.tree</field>
@@ -625,6 +615,7 @@
             </tree>
         </field>
     </record>
+    
     <record model="ir.ui.view" id="hr_recruitment_source_form">
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
@@ -638,18 +629,12 @@
             </form>
         </field>
     </record>
+    
     <record id="hr_recruitment_source_action" model="ir.actions.act_window">
         <field name="name">Sources of Applicants</field>
         <field name="res_model">hr.recruitment.source</field>
         <field name="view_type">form</field>
     </record>
-
-    <menuitem
-        id="menu_hr_recruitment_source"
-        parent="menu_hr_recruitment_recruitment"
-        action="hr_recruitment_source_action"
-        groups="base.group_no_one"
-        sequence="10"/>
 
     </data>
 </openerp>

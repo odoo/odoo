@@ -108,8 +108,7 @@ class project_issue(osv.Model):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += [('project_ids', '=', project_id)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -547,6 +546,15 @@ class project_project(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         self._check_create_write_values(cr, uid, vals, context=context)
         return super(project_project, self).write(cr, uid, ids, vals, context=context)
+    
+class project_task_type(osv.Model):
+    _inherit = "project.task.type"
+
+    def _update_tasks(self, cr, uid, project_id, old_stage_id, new_stage_id, context=None):
+        super(project_task_type, self)._update_tasks(cr, uid, project_id, old_stage_id, new_stage_id, context=context)
+        issue_obj = self.pool.get('project.issue')
+        issue_ids = issue_obj.search(cr, uid, [('stage_id', '=', old_stage_id),('project_id', '=', project_id)], context=context)
+        return issue_obj.write(cr, uid, issue_ids, {'stage_id': new_stage_id} , context=context)
 
 class res_partner(osv.osv):
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):

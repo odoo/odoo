@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from . import test_project_flow
+from . import test_project_flow,project_stage_management
 
 checks = [
     test_project_flow,
+    project_stage_management,
 ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

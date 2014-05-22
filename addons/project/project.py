@@ -55,9 +55,68 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1,
         'project_ids': _get_default_project_ids,
+        'case_default': lambda self, cr, uid, ctx={}: ctx.get('default_project_id', False) == False,
     }
     _order = 'sequence'
+    
+    _sql_constraints = [('stage_name_uniq', 'unique(name)', 'Name should be unique.')]
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        default['project_ids'] = []
+        proj = self.browse(cr, uid, id, context=context)
+        if not default.get('name', False):
+            default.update(name=_("%s (copy)") % (proj.name))
+        return super(project_task_type, self).copy(cr, uid, id, default, context)
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None: context = {}
+        project_id = context.get('default_project_id')
+        type_id = False
+        if project_id:
+            #check already exist or not
+            context.update({'project_id': project_id})
+            type_ids = self.search(cr, uid, [('name','=', vals.get('name'))], context=context, limit=1)
+            if type_ids and len(type_ids):
+                type_id = type_ids[0]
+        if not type_id:
+            type_id = super(project_task_type, self).create(cr, uid, vals, context=context)
+        return type_id
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None: context = {}
+        project_id = context.get('default_project_id')
+        project_obj = self.pool.get('project.project')
+        if project_id:
+            context.update({'project_id': project_id})
+            if vals.get('name', False):
+                for stage in self.browse(cr, uid, ids, context=context):
+                    new_stage_id = self.copy(cr, uid, stage.id, default=vals, context=context)
+                    project_obj.write(cr, uid, [project_id], {'type_ids': [(3, stage.id),(4, new_stage_id),]}, context=context)
+                    self._update_tasks(cr, uid, project_id, stage.id, new_stage_id, context=context)
+                return True
+        return super(project_task_type, self).write(cr, uid, ids, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        project_id = context.get('default_project_id')
+        project_obj = self.pool.get('project.project')
+        if not project_id:
+            return super(project_task_type, self).unlink(cr, uid, ids, context=context)
+
+        for stage in self.browse(cr, uid, ids, context=context):
+            project_obj.write(cr, uid, project_id, {'type_ids': [(3, stage.id)]}, context=context)
+            self._update_tasks(cr, uid, project_id, stage.id, False, context=context)
+        return True
+    
+    def _update_tasks(self, cr, uid, project_id, old_stage_id, new_stage_id, context=None):
+        if context is None: context = {}
+        task_obj = self.pool.get('project.task')
+        task_ids = task_obj.search(cr, uid, [('stage_id', '=', old_stage_id),('project_id', '=', project_id)], context=context)
+        return task_obj.write(cr, uid, task_ids, {'stage_id': new_stage_id} , context=context)
 
 class project(osv.osv):
     _name = "project.project"
@@ -611,8 +670,7 @@ class task(osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += [('id', 'in', ids)]
+            search_domain += [('project_ids', '=', project_id)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search

@@ -61,5 +61,33 @@
             name="Applications"
             parent="base.menu_crm_case_job_req_main"
             id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2"/>
+        
+        <menuitem parent="hr.menu_hr_configuration" id="hr.menu_hr_job" action="hr.action_hr_job" sequence="2"/>
+        
+        <menuitem name="Recruitment" 
+            id="menu_hr_recruitment_recruitment"
+            parent="hr.menu_hr_configuration"
+            sequence="40"/>
+
+        <menuitem
+            id="menu_hr_recruitment_stage"
+            name="Stages"
+            parent="menu_hr_recruitment_recruitment"
+            action="hr_recruitment_stage_act"
+            sequence="1" groups="base.group_no_one"/>
+        <menuitem
+            id="menu_hr_recruitment_degree"
+            name="Degrees"
+            parent="menu_hr_recruitment_recruitment"
+            action="hr_recruitment_degree_action"
+            sequence="5" groups="base.group_no_one"/>
+
+        <menuitem
+            id="menu_hr_recruitment_source"
+            parent="menu_hr_recruitment_recruitment"
+            action="hr_recruitment_source_action"
+            groups="base.group_no_one"
+            sequence="10"/>
+            
     </data>
 </openerp>
