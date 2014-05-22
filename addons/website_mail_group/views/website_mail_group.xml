@@ -236,10 +236,10 @@
                                 "fields": ["name"]
                             }'/>
                         </t>
+                        <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
                         - <i class="fa fa-calendar"/> <t t-esc="thread.date"/>
                         - <i class="fa fa-paperclip"/> <t t-esc="len(thread.attachment_ids)"/>
                     </small>
-                    <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
                     <p t-if="thread.child_ids" class="mt8">
                         <a href="#" class="o_mg_link_hide">
                             <i class="fa fa-chevron-right"/> <t t-raw="len(thread.child_ids)"/> replies
