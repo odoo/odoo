@@ -36,7 +36,9 @@
                     <field name="parent_id"/>
                     <field name="user_id"/>
                     <filter string="Open" domain="[('state','=','open')]" help="Current Accounts"/>
-                    <filter string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+                    <filter name="pending" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+                    <filter name="closed" string="Closed" domain="[('state','=','close')]" help="Closed Accounts" invisible="1"/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]" help="Cancelled Accounts" invisible="1"/>
                     <group expand="0" string="Group By...">
                         <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
@@ -79,6 +81,17 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
             <field name="context">{}</field> <!-- repair invalid context by setting empty one -->
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
+        </record>
+
+        <record id="action_account_analytic_account_form_closed" model="ir.actions.act_window">
+            <field name="name">Analytic Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="context">{'default_manager_id':uid, 'search_default_pending':1, 'search_default_closed':1, 'search_default_cancelled':1}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
