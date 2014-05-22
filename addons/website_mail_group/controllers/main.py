@@ -9,8 +9,8 @@ from openerp.addons.web.http import request
 
 
 class MailGroup(http.Controller):
-    _thread_per_page = 5
-    _replies_per_page = 1
+    _thread_per_page = 20
+    _replies_per_page = 10
 
     def _get_archives(self, group_id):
         MailMessage = request.registry['mail.message']
