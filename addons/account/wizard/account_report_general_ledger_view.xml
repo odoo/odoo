@@ -9,14 +9,14 @@
             <field name="arch" type="xml">
             <data>
             <xpath expr="//field[@name='target_move']" position="after">
-                <field name="display_account"/>
-                <field name="sortby"/>
+                <field name="display_account" widget="radio"/>
+                <field name="sortby" widget="radio"/>
                 <field name="landscape"/>
                 <field name="amount_currency"/>
                 <newline/>
             </xpath>
             <xpath expr="//field[@name='filter']" position="after">
-                <field name="initial_balance" attrs="{'readonly':[('filter', 'in', ('filter_no'))]}" />
+                <field name="initial_balance" attrs="{'readonly':[('filter', 'in', ('filter_no'))]}"/>
             </xpath>
             </data>
             </field>
