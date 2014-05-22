@@ -21,7 +21,6 @@
                                     <field name="uom_id" groups="product.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="website_description" invisible="1"/>
                             </tree>
                         </field>
                     </page>
@@ -29,7 +28,6 @@
                 <xpath expr="//field[@name='client_order_ref']" position="after">
                     <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position)"/>
                     <field name="validity_date"/>
-                    <field name="website_description" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -79,9 +77,6 @@
                                         <page string="Description">
                                             <field name="name" />
                                         </page>
-                                        <page string="Website Description">
-                                            <field name="website_description" />
-                                        </page>
                                     </notebook>
                                 </form>
                                 <tree string="Sales Quote Template Lines" editable="bottom">
@@ -91,7 +86,6 @@
                                     <field name="product_uom_id" groups="product.group_uom"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
-                                    <field name="website_description" invisible="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -104,12 +98,10 @@
                                 <field name="uom_id" groups="product.group_uom"/>
                                 <field name="price_unit"/>
                                 <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                <field name="website_description" invisible="1"/>
                               </tree>
                             </field>
                         </page>
                         </notebook>
-                        <field name="website_description" invisible="1"/>
                         <field name="note" placeholder="Terms and conditions..."  nolable="1"/>
                     </sheet>
                 </form>
