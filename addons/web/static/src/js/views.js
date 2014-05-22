@@ -808,7 +808,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, options);
 
         this.searchview.on('search_data', self, this.do_searchview_search);
-        return this.searchview.insert(this.$(".oe_view_manager_view_search"),
+        return this.searchview.appendTo(this.$(".oe_view_manager_view_search"),
                                       this.$(".oe_searchview_drawer_container"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {

@@ -427,15 +427,15 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         var view_manager = this.getParent();
         while (!(view_manager instanceof instance.web.ViewManager) &&
-                (view_manager !== undefined)) {
+                view_manager && view_manager.getParent) {
             view_manager = view_manager.getParent();
         }
 
         if (view_manager) {
             view_manager.on('switch_mode', this, function (e) {
-                self.drawer.hide();
+                self.drawer.toggle(e === 'graph');
             });
-        }
+        }            
         return $.when(p, this.ready);
     },
 
@@ -783,22 +783,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.trigger('invalid_search', errors);
     },
 
-    // The method appendTo is overwrited to make sure that the search view is not
-    // appendTo'ed.  Instead, the correct way to insert the searchview in the DOM
-    // is by using insert
-    appendTo: function () {
-        throw new Error("SearchView should be inserted, not appended");
-    },
+    // The method appendTo is overwrited to be able to insert the drawer anywhere
+    appendTo: function ($searchview_parent, $searchview_drawer_node) {
+        var $searchview_drawer_node = $searchview_drawer_node || $searchview_parent;
 
-    // This is the correct way to insert the searchview in the dom. First argument
-    // is for the searchview, and second is the place where the drawer should be
-    // appended.
-    insert: function ($searchview_parent, $searchview_drawer_node) {
-        var parent = this.getParent(),
-            $searchview_drawer_node = $searchview_drawer_node || $searchview_parent,
-            insert_searchview = parent.appendTo.call(this, $searchview_parent),
-            insert_drawer = parent.appendTo.call(this.drawer, $searchview_drawer_node);
-        return $.when(insert_searchview, insert_drawer);
+        return $.when(
+            this._super($searchview_parent),
+            this.drawer.appendTo($searchview_drawer_node)
+        );
     },
 
     destroy: function () {
@@ -819,12 +811,8 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
         this.inputs = [];
     },
 
-    toggle: function () {
-        this.$el.toggle();
-    },
-
-    hide: function () {
-        this.$el.hide();
+    toggle: function (visibility) {
+        this.$el.toggle(visibility);
     },
 
     start: function() {
@@ -1011,7 +999,7 @@ instance.web.search.Widget = instance.web.Widget.extend( /** @lends instance.web
             this.drawer = ancestor;
         } while (!(ancestor instanceof instance.web.SearchViewDrawer)
                && (ancestor = (ancestor.getParent && ancestor.getParent())));
-        this.view = this.drawer.searchview;
+        this.view = this.drawer.searchview || this.drawer;
     }
 });
 

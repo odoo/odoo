@@ -1889,7 +1889,7 @@ openerp.mail = function (session) {
             var ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             this.searchview = new session.web.SearchView(this, ds_msg, false, defaults || {}, false);
 
-            this.searchview.insert(this.$('.oe_view_manager_view_search'), 
+            this.searchview.appendTo(this.$('.oe_view_manager_view_search'), 
                                    this.$('.oe_searchview_drawer_container'))
                 .then(function () { self.searchview.on('search_data', self, self.do_searchview_search); });
             if (this.searchview.has_defaults) {
