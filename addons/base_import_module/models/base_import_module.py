@@ -11,7 +11,7 @@ class base_import_module(osv.TransientModel):
     _columns = {
         'module_file': fields.binary('Module .ZIP file', required=True),
         'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
-        'module_name': fields.char('Module Name', size=128),
+        'import_messgae': fields.char('Import messge'),
     }
 
     _defaults = {  
@@ -24,15 +24,24 @@ class base_import_module(osv.TransientModel):
         zip_data = base64.decodestring(data.module_file)
         fp = BytesIO()
         fp.write(zip_data)
-        module_obj.import_zipfile(cr, uid, fp, context=context)
-        fp.close()
-        self.write(cr, uid, ids, {'state': 'done'}, context=context)
-        return False
+        res = module_obj.import_zipfile(cr, uid, fp, context=context)
+        self.write(cr, uid, ids, {'state': 'done', 'import_messgae': res[0]}, context=context)
+        context = dict(context, module_name=res[1])
+        # Return wizard otherwise it will close wizard and will not show result message to user. 
+        return {
+            'name': 'Import Module',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': ids[0],
+            'res_model': 'base.import.module',
+            'type': 'ir.actions.act_window',
+            'context': context,
+        }
 
     def action_module_open(self, cr, uid, ids, context):
-        data = self.browse(cr, uid, ids[0] , context=context)
         return {
-            'domain': str([('name', '=', data.module_name)]),
+            'domain': [('name', 'in', context.get('module_name',[]))],
             'name': 'Modules',
             'view_type': 'form',
             'view_mode': 'tree,form',

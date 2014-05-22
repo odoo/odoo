@@ -3,18 +3,18 @@
     <data>
 
         <record id="view_base_module_import" model="ir.ui.view">
-            <field name="name">Module Import</field>
+            <field name="name">Import Module</field>
             <field name="model">base.import.module</field>
             <field name="arch" type="xml">
                 <form string="Import module" version="7.0">
                     <field name="state" invisible="1"/>
-                    <separator string="Module Import" colspan="4"/>
+                    <separator string="Import Module" colspan="4"/>
                     <group states="init" col="4">
                         <label string="Select module package to import (.zip file):" colspan="4"/>
                         <field name="module_file" colspan="4"/>
                     </group>
                     <group states="done" col="4">
-                        <label string="Module file successfully imported!" colspan="4"/>
+                        <field name="import_messgae" colspan="4" nolabel="1" readonly="1"/>
                     </group>
                     <footer>
                         <div states="init">
@@ -31,7 +31,7 @@
         </record>
 
         <record id="action_view_base_module_import" model="ir.actions.act_window">
-            <field name="name">Module Import</field>
+            <field name="name">Import Module</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.import.module</field>
             <field name="view_type">form</field>

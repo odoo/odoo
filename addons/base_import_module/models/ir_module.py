@@ -81,6 +81,7 @@ class view(osv.osv):
 
         success = []
         errors = dict()
+        module_names = []
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
@@ -90,6 +91,7 @@ class view(osv.osv):
                 z.extractall(module_dir)
                 dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
                 for mod_name in dirs:
+                    module_names.append(mod_name)
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
@@ -100,4 +102,4 @@ class view(osv.osv):
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
             r.append("Error while importing module '%s': %r" % (mod, error))
-        return '\n'.join(r)
+        return '\n'.join(r), module_names

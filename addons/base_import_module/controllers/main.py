@@ -36,4 +36,4 @@ class ImportModule(Controller):
     @webservice
     def upload(self, mod_file=None, **kw):
         self.check_user()
-        return request.registry['ir.module.module'].import_zipfile(request.cr, request.uid, mod_file, context=request.context)
+        return request.registry['ir.module.module'].import_zipfile(request.cr, request.uid, mod_file, context=request.context)[0]
