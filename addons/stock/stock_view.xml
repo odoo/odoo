@@ -744,6 +744,21 @@
                             <field name="pack_operation_exist" invisible="1"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
+                        <page string="Operations Done" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
+                            <field name="pack_operation_ids">
+                                <tree editable="top">   
+                                    <field name="location_id"/>
+                                    <field name="product_id"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                    <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Additional Info">
                             <group string="General Informations">
                                 <group>
@@ -1058,7 +1073,7 @@
                             </group>
                             <group name="main_grp_col2">
                                 <field name="picking_type_id"/>
-                                <field name="picking_priority"/>
+                                <field name="priority"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
