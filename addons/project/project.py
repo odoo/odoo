@@ -267,15 +267,17 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True,
             help="Holds visibility of the tasks or issues that belong to the current project:\n"
-                    "- Public: everybody sees everything; if portal is activated, portal users\n"
-                    "   see all tasks or issues; if anonymous portal is activated, visitors\n"
-                    "   see all tasks or issues\n"
-                    "- Portal (only available if Portal is installed): employees see everything;\n"
-                    "   if portal is activated, portal users see the tasks or issues followed by\n"
-                    "   them or by someone of their company\n"
-                    "- Employees Only: employees see all tasks or issues\n"
-                    "- Followers Only: employees see only the followed tasks or issues; if portal\n"
-                    "   is activated, portal users see the followed tasks or issues."),
+                    "- Public: everybody sees everything; if portal is activated,\n"
+                    "  portal users see all tasks or issues; if anonymous portal \n"
+                    "  is activated, visitors see all tasks or issues.\n"
+                    "- Customer Related Project (only available if Portal is\n"
+                    "  installed): employees see everything.\n"
+                    "  if portal is activated, portal users see the tasks or issues \n"
+                    "  followed by them or by someone of their company.\n"
+                    "- Internal Project: employees see all tasks or issues.\n"
+                    "- Private Project: employees see only the followed tasks or \n"
+                    "  issues; if portal is activated, portal users see the followed \n"
+                    "  tasks or issues."),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'

@@ -1044,9 +1044,10 @@ class ir_actions_todo(osv.osv):
         'state': fields.selection(TODO_STATES, string='Status', required=True),
         'name': fields.char('Name', size=64),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
-            help="""Manual: Launched manually.
-Automatic: Runs whenever the system is reconfigured.
-Launch Manually Once: after having been launched manually, it sets automatically to Done."""),
+            help="Launch Manually : Manually user has to launch the wizard.\n"
+            "Launch Manually Once : Having launched manually,\n"
+            "It sets wizard status to 'Done' automatically.\n"
+            "Launch Automatically : Runs the wizard whenever the system is reconfigured."),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
     }

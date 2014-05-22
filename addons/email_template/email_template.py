@@ -259,7 +259,7 @@ class email_template(osv.osv):
                                            'attachment_id', 'Attachments',
                                            help="You may attach files to this template, to be added to all "
                                                 "emails created from this template"),
-        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save storage(memory) space."),
 
         # Fake fields used to implement the placeholder assistant
         'model_object_field': fields.many2one('ir.model.fields', string="Field",

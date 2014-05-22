@@ -53,7 +53,7 @@ class mail_mail(osv.Model):
             ('cancel', 'Cancelled'),
         ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
-            help="Permanently delete this email after sending it, to save space"),
+            help="Permanently delete this email after sending it, to save storage(memory) space."),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'email_to': fields.text('To', help='Message recipients (emails)'),
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),

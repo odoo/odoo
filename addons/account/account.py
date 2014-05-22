@@ -473,7 +473,7 @@ class account_account(osv.osv):
         'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
                                            help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
         'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance',
-                                            help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
+                                            help="Total amount (in Company Currency) for transactions held in secondary currency for given account."),
         'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance',
                                                 help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
@@ -1894,15 +1894,15 @@ class account_tax(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'base_sign': fields.float('Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
+        'tax_sign': fields.float('Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code'),
@@ -2797,15 +2797,15 @@ class account_tax_template(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'base_sign': fields.float('Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
+        'tax_sign': fields.float('Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),

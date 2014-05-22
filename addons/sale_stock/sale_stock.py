@@ -93,7 +93,7 @@ class sale_order(osv.osv):
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
+            help="""Deliver each Product when available: Allows to deliver the products partially to customers.\nDeliver all products at once: The ordered goods are delivered at one go, no partial delivery possible."""),
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
                 ('picking', 'On Delivery Order'),

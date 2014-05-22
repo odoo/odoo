@@ -64,7 +64,7 @@ class ir_cron(osv.osv):
         'name': fields.char('Name', size=60, required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'active': fields.boolean('Active'),
-        'interval_number': fields.integer('Interval Number',help="Repeat every x."),
+        'interval_number': fields.integer('Interval Number',help="This Scheduled Action will repeat after (x) interval unit, where (x) is the numeric number given by user."),
         'interval_type': fields.selection( [('minutes', 'Minutes'),
             ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),

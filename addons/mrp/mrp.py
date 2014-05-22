@@ -200,8 +200,8 @@ class mrp_bom(osv.osv):
                                  help= "If a by-product is used in several products, it can be useful to create its own BoM. "\
                                  "Though if you don't want separated production orders for this by-product, select Set/Phantom as BoM type. "\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
-        'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
-        'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
+        'date_start': fields.date('Valid From', help="After the given date the component or the BOM will not be valid, if you want this component or BOM to be valid always then keep this field empty."),
+        'date_stop': fields.date('Valid Until', help="After the given date the component or the BOM will not be valid, if you want this component or BOM to be valid always then keep this field empty."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
         'position': fields.char('Internal Reference', size=64, help="Reference to a position in an external plan."),
         'product_id': fields.many2one('product.product', 'Product', required=True),
