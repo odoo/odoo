@@ -27,7 +27,7 @@ import product
 
 class stock_landed_cost(osv.osv):
     _name = 'stock.landed.cost'
-    _description = 'Stock Landed Cost'
+    _description = 'Landed Cost'
     _inherit = 'mail.thread'
 
     _track = {
@@ -81,11 +81,11 @@ class stock_landed_cost(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=256, track_visibility='always', readonly=True),
-        'date': fields.date('Date', required=True, states={'done': [('readonly', True)]}, track_visibility='onchange'),
-        'picking_ids': fields.many2many('stock.picking', string='Pickings', states={'done': [('readonly', True)]}),
-        'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', states={'done': [('readonly', True)]}),
-        'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments', states={'done': [('readonly', True)]}),
-        'description': fields.text('Item Description', states={'done': [('readonly', True)]}),
+        'date': fields.date('Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, track_visibility='onchange'),
+        'picking_ids': fields.many2many('stock.picking', string='Pickings', readonly=True, states={'draft': [('readonly', False)]}),
+        'cost_lines': fields.one2many('stock.landed.cost.lines', 'cost_id', 'Cost Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'valuation_adjustment_lines': fields.one2many('stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments', readonly=True, states={'draft': [('readonly', False)]}),
+        'description': fields.text('Item Description', readonly=True, states={'draft': [('readonly', False)]}),
         'amount_total': fields.function(_total_amount, type='float', string='Total', digits_compute=dp.get_precision('Account'),
             store={
                 'stock.landed.cost': (lambda self, cr, uid, ids, c={}: ids, ['cost_lines'], 20),
@@ -94,19 +94,25 @@ class stock_landed_cost(osv.osv):
         ),
         'state': fields.selection([('draft', 'Draft'), ('done', 'Posted'), ('cancel', 'Cancelled')], 'State', readonly=True, track_visibility='onchange'),
         'account_move_id': fields.many2one('account.move', 'Journal Entry', readonly=True),
-        'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True),
+        'account_journal_id': fields.many2one('account.journal', 'Account Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
 
     _defaults = {
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost'),
+        'name': lambda obj, cr, uid, context: '/',
         'state': 'draft',
         'date': fields.date.context_today,
     }
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost') or '/'
+        return super(stock_landed_cost, self).create(cr, uid, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = {} if default is None else default.copy()
         default.update({
             'account_move_id': False,
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.landed.cost') or '/',
         })
         return super(stock_landed_cost, self).copy(cr, uid, id, default=default, context=context)
 
@@ -155,6 +161,8 @@ class stock_landed_cost(osv.osv):
         return self.pool.get('account.move').create(cr, uid, vals, context=context)
 
     def button_validate(self, cr, uid, ids, context=None):
+        # compute the landed cost before validating the record to reflect the changes in valuation lines and accounting entries.
+        self.compute_landed_cost(cr, uid, ids, context=context)
         quant_obj = self.pool.get('stock.quant')
         for cost in self.browse(cr, uid, ids, context=context):
             if not cost.valuation_adjustment_lines:
@@ -238,14 +246,13 @@ class stock_landed_cost(osv.osv):
                         else:
                             dict[valuation.id] += value
 
-        for key, value in dict.items():
-            line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
+            for key, value in dict.items():
+                line_obj.write(cr, uid, key, {'additional_landed_cost': value}, context=context)
         return True
-
 
 class stock_landed_cost_lines(osv.osv):
     _name = 'stock.landed.cost.lines'
-    _description = 'Stock Landed Cost Lines'
+    _description = 'Landed Cost Lines'
 
     def onchange_product_id(self, cr, uid, ids, product_id=False, context=None):
         result = {}
@@ -270,7 +277,7 @@ class stock_landed_cost_lines(osv.osv):
 
 class stock_valuation_adjustment_lines(osv.osv):
     _name = 'stock.valuation.adjustment.lines'
-    _description = 'Stock Valuation Adjustment Lines'
+    _description = 'Valuation Adjustment Lines'
 
     def _amount_final(self, cr, uid, ids, name, args, context=None):
         result = {}
