@@ -152,6 +152,8 @@ class YamlInterpreter(object):
         #    raise YamlImportException("The xml_id should be a non empty string.")
         elif isinstance(xml_id, types.IntType):
             id = xml_id
+        elif isinstance(xml_id, (list,tuple)):
+            id = xml_id[-1]
         elif xml_id in self.id_map:
             id = self.id_map[xml_id]
         else:
@@ -327,7 +329,7 @@ class YamlInterpreter(object):
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view_info=None, parent={}, default=True):
+    def _create_record(self, model, fields, view_info=None, parent={}, default=True, csv=False):
         """This function processes the !record tag in yalm files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
             on_change() functions, and sending only values for fields that aren't set as readonly.
@@ -390,7 +392,13 @@ class YamlInterpreter(object):
             fg = view_info['fields']
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+            if csv:#if field_name has not a default value or a value is not given in the csv file.
+                if isinstance(fields,(tuple)) and fields[2]:
+                    defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, fields, context=self.context) or {}
+                else:
+                    defaults = {}
+            else:
+                defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
@@ -409,7 +417,7 @@ class YamlInterpreter(object):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
 
-                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
+                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default, csv=csv)
 
                         #call process_val to not update record_dict if values were given for readonly fields
                         val = process_val(field_name, field_value)
@@ -455,17 +463,29 @@ class YamlInterpreter(object):
                             ))
                         if key not in fields:
                             # do not shadow values explicitly set in yaml.
-                            record_dict[key] = process_val(key, val)
+                            # if field value are given in import_csv file.
+                            if csv and ctx[key] > val:
+                                record_dict[key] = process_val(key, ctx[key])
+                            else:
+                                record_dict[key] = process_val(key, val)
                 else:
                     nodes = list(el) + nodes
         else:
             record_dict = {}
 
-        for field_name, expression in fields.items():
-            if field_name in record_dict:
-                continue
-            field_value = self._eval_field(model, field_name, expression, default=False)
-            record_dict[field_name] = field_value
+        if isinstance(fields,(tuple)):
+            if fields[2]:
+                for field_name, expression in fields[2].items():
+                    if field_name in record_dict:
+                        continue
+                    field_value = self._eval_field(model, field_name, expression, default=False, csv=csv)
+                    record_dict[field_name] = field_value
+        else:
+            for field_name, expression in fields.items():
+                if field_name in record_dict:
+                    continue
+                field_value = self._eval_field(model, field_name, expression, default=False)
+                record_dict[field_name] = field_value
         return record_dict
 
     def process_ref(self, node, column=None):
@@ -494,7 +514,7 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
+    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True, csv=False):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name in model._columns:
             column = model._columns[field_name]
@@ -515,10 +535,19 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
-            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
+            if expression is not False:
+                value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default, csv=csv)) for fields in expression]
+            else:
+                value = expression
         elif column._type == "many2many":
-            ids = [self.get_id(xml_id) for xml_id in expression]
-            value = [(6, 0, ids)]
+            if expression is not False:
+                ids = [self.get_id(xml_id) for xml_id in expression]
+                if ids and type(ids[0]) is list:
+                    value = [(6, 0, ids[0])]
+                else:
+                    value = [(6, 0, ids)]
+            else:
+                value = expression
         elif column._type == "date" and is_string(expression):
             # enforce ISO format for string date values, to be locale-agnostic during tests
             time.strptime(expression, misc.DEFAULT_SERVER_DATE_FORMAT)

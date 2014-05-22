@@ -1344,7 +1344,7 @@ class BaseModel(object):
             self._parent_store_compute(cr)
         return position, 0, 0, 0
 
-    def load(self, cr, uid, fields, data, context=None):
+    def load(self, cr, uid, fields, data, csv=False,context=None):
         """
         Attempts to load the data matrix, and returns a list of ids (or
         ``False`` if there was an error and no id could be generated) and a
@@ -1388,6 +1388,12 @@ class BaseModel(object):
                         u"Unknown database error: '%s'" % e))
                 break
             try:
+                if csv:
+                    cur_obj = self.pool.get(self._name)
+                    view_info = self.fields_view_get(cr, uid, False, 'form', context)
+                    interpreter =  tools.YamlInterpreter(cr, current_module, xid, mode, filename=None)
+                    record_dict = interpreter._create_record(cur_obj, record, view_info, csv=csv)
+                    record.update(record_dict)
                 ids.append(ModelData._update(cr, uid, self._name,
                      current_module, record, mode=mode, xml_id=xid,
                      noupdate=noupdate, res_id=id, context=context))
@@ -2135,7 +2141,10 @@ class BaseModel(object):
                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'one2many')) \
                         and isinstance(defaults[dv], (list, tuple)) and defaults[dv] and isinstance(defaults[dv][0], dict):
                     defaults[dv] = [(0, 0, x) for x in defaults[dv]]
-            defaults.update(values)
+            if isinstance(values,(tuple)):
+                defaults.update(values[2])
+            else:
+                defaults.update(values)
             values = defaults
         return values
 
