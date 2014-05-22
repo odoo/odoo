@@ -49,7 +49,7 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
-class TestProjectFlow(TestProjectBase):
+class TestProjectFlow(TestProject):
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
     def test_00_project_process(self):
