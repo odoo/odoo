@@ -612,7 +612,7 @@
     
     <menuitem parent="menu_finance_assets" id="menu_revenue_recognition" action="action_account_revenue_form" sequence="102"/>
     
-    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="103"/>
+    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="104"/>
     
     <menuitem id="menu_finance_config_assets" name="Installment Plans" parent="account.menu_finance_configuration" sequence="25"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
@@ -623,8 +623,8 @@
     </record>
 
     <menuitem name="Categories" parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal" sequence="1"/>
-    <menuitem name="Asset Hierarchy" parent="menu_finance_config_assets" id="menu_action_account_asset_asset_tree" action="action_account_asset_asset_tree" sequence="2"/>
-    <menuitem name="Revenue Recognition Hierarchy" parent="menu_finance_config_assets" id="menu_action_revenue_recognition_hierarchy" sequence="3" action="action_account_revenue_recognition_hierarchy_tree"/>
+    <menuitem name="Assets Hierarchy" parent="menu_finance_assets" id="menu_action_account_asset_asset_tree" action="action_account_asset_asset_tree" sequence="105"/>
+    <menuitem name="Revenues Recognition Hierarchy" parent="menu_finance_assets" id="menu_action_revenue_recognition_hierarchy" sequence="103" action="action_account_revenue_recognition_hierarchy_tree"/>
     
     <template id="assets_backend" name="accountasset assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
