@@ -996,6 +996,10 @@
   text-shadow: none;
   padding-bottom: 16px;
 }
+.openerp .oe_leftbar > div {
+  max-height: 100%;
+  overflow-y: auto;
+}
 .openerp a.oe_logo {
   position: relative;
   width: 220px;
@@ -1135,12 +1139,12 @@
 .openerp .oe_application {
   width: 100%;
   height: 100%;
-  position: relative;
 }
 .openerp .oe_application a {
   color: #7c7bad;
 }
 .openerp .oe_application > div {
+  position: relative;
   height: 100%;
 }
 .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_body {

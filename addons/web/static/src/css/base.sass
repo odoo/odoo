@@ -845,6 +845,9 @@ $sheet-padding: 16px
         border-right: 1px solid $tag-border
         text-shadow: none
         padding-bottom: 16px
+        > div
+            max-height: 100%
+            overflow-y: auto
     a.oe_logo
         position: relative
         width: 220px
@@ -952,10 +955,10 @@ $sheet-padding: 16px
     .oe_application
         width: 100%
         height: 100%
-        position: relative
         a
             color: $link-color
         > div
+            position: relative
             height: 100%
             > .oe_view_manager
                 > .oe_view_manager_body
