@@ -41,10 +41,10 @@ class crm_case_section(osv.Model):
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
         'use_opportunities': fields.boolean('Opportunities', help="Check this box to manage opportunities in this sales team."),
         'monthly_open_leads': fields.function(_get_opportunities_data,
-            type="string", readonly=True, multi='_get_opportunities_data',
+            type="char", readonly=True, multi='_get_opportunities_data',
             string='Open Leads per Month'),
         'monthly_planned_revenue': fields.function(_get_opportunities_data,
-            type="string", readonly=True, multi='_get_opportunities_data',
+            type="char", readonly=True, multi='_get_opportunities_data',
             string='Planned Revenue per Month'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically create new leads assigned to the team."),
     }
