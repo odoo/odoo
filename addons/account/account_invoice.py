@@ -516,13 +516,9 @@ class account_invoice(Model):
 
         values = {}
         domain = {}
-        obj_journal = self.env['account.journal']
-        account_obj = self.env['account.account']
-        inv_line_obj = self.env['account.invoice.line']
 
         if company_id and part_id and type:
             p = self.env['res.partner'].browse(part_id)
-            acc_id = False
             if p.property_account_payable and p.property_account_receivable and \
                     p.property_account_payable.company_id.id != company_id and \
                     p.property_account_receivable.company_id.id != company_id:
@@ -826,7 +822,7 @@ class account_invoice(Model):
             # I disabled the check_total feature
             group_check_total = self.env.ref('account.group_supplier_inv_check_total')
             if self.env.user in group_check_total.users:
-                if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0)):
+                if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
                     raise except_orm(_('Bad Total!'), _('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
 
             if inv.payment_term:
@@ -890,7 +886,7 @@ class account_invoice(Model):
                     'amount_currency': diff_currency and total_currency,
                     'currency_id': diff_currency and inv.currency_id.id,
                     'ref': ref
-            })
+                })
 
             date = inv.date_invoice or Date.today()
 
@@ -964,7 +960,7 @@ class account_invoice(Model):
 
     @multi
     def action_number(self):
-        #TODO: not correct fix but required a frech values before reading it.
+        #TODO: not correct fix but required a fresh values before reading it.
         self.write({})
 
         for inv in self:
@@ -1310,7 +1306,7 @@ class account_invoice_line(Model):
             partner_id=False, fposition_id=False, price_unit=False, currency_id=False,
             context=None, company_id=None):
         context = context or {}
-        company_id = company_id if company_id != None else context.get('company_id', False)
+        company_id = company_id if company_id is not None else context.get('company_id', False)
         self = self.sudo(company_id=company_id, force_company=company_id)
 
         if not partner_id:
