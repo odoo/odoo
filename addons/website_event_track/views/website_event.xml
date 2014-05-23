@@ -85,8 +85,8 @@
                                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
                                             <span t-esc="track and track.name"/>
                                         </a>
-                                        <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
-                                            <small t-esc="speaker.display_name"/>
+                                        <div class="text-muted">
+                                            <small t-esc="speakers[track.id]"/>
                                         </div>
                                     </t>
                                 </td>
@@ -98,11 +98,11 @@
                     <t t-set="track" t-value="dt[1][False][0]"/>
                     <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
-                            <span t-esc="track.name"/><br/>
-                            <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
-                                <small t-esc="speaker.display_name"/>
-                            </div>
+                            <span t-esc="track.name"/>
                         </a>
+                        <div class="text-muted">
+                            <small t-esc="speakers[track.id]"/>
+                        </div>
                     </td>
                 </t>
             </tr>
