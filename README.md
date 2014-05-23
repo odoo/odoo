@@ -1,7 +1,7 @@
 About Odoo
 ==========
 
-Odoo is suite of open source Business apps. More info at http://www.odoo.com
+Odoo is a suite of open source Business apps. More info at http://www.odoo.com
 
 Installation
 ============

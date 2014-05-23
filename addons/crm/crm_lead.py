@@ -90,7 +90,10 @@ class crm_lead(format_address, osv.osv):
 
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
-        return self._resolve_section_id_from_context(cr, uid, context=context) or False
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
@@ -167,9 +170,6 @@ class crm_lead(format_address, osv.osv):
         """
         :return dict: difference between current date and log date
         """
-        cal_obj = self.pool.get('resource.calendar')
-        res_obj = self.pool.get('resource.resource')
-
         res = {}
         for lead in self.browse(cr, uid, ids, context=context):
             for field in fields:
@@ -181,39 +181,14 @@ class crm_lead(format_address, osv.osv):
                         date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(lead.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
-                        date_until = lead.date_open
                 elif field == 'day_close':
                     if lead.date_closed:
                         date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(lead.date_closed, "%Y-%m-%d %H:%M:%S")
-                        date_until = lead.date_closed
                         ans = date_close - date_create
                 if ans:
-                    resource_id = False
-                    if lead.user_id:
-                        resource_ids = res_obj.search(cr, uid, [('user_id','=',lead.user_id.id)])
-                        if len(resource_ids):
-                            resource_id = resource_ids[0]
-
-                    duration = float(ans.days)
-                    if lead.section_id and lead.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24
-                        new_dates = cal_obj.interval_get(cr,
-                            uid,
-                            lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
-                            datetime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
-                            duration,
-                            resource=resource_id
-                        )
-                        no_days = []
-                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration =  len(no_days)
-                res[lead.id][field] = abs(int(duration))
+                    duration = abs(int(ans.days))
+                res[lead.id][field] = duration
         return res
     def _meeting_count(self, cr, uid, ids, field_name, arg, context=None):
         Event = self.pool['calendar.event']
@@ -258,7 +233,7 @@ class crm_lead(format_address, osv.osv):
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                multi='day_close', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Messaging and marketing
@@ -969,7 +944,7 @@ class crm_lead(format_address, osv.osv):
         if obj.type == 'opportunity':
             model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
         else:
-            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, model='crm.lead', context=context)
+            view_id = super(crm_lead, self).get_formview_id(cr, uid, id, context=context)
         return view_id
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

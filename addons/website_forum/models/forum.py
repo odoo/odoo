@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import openerp
+from urlparse import urljoin
 
+import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.osv import osv, fields
@@ -269,9 +270,13 @@ class Post(osv.Model):
         return {'vote_count': self._get_vote_count(cr, uid, ids, None, None, context=context)[ids[0]]}
 
     def set_viewed(self, cr, uid, ids, context=None):
-        for post in self.browse(cr, uid, ids, context=context):
-            self.write(cr, uid, [post.id], {'views': post.views + 1}, context=context)
+        cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (tuple(ids),))
         return True
+
+    def _get_access_link(self, cr, uid, mail, partner, context=None):
+        post = self.pool['forum.post'].browse(cr, uid, mail.res_id, context=context)
+        res_id = post.parent_id and "%s#answer-%s" % (post.parent_id.id, post.id) or post.id
+        return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
 
 
 class PostReason(osv.Model):

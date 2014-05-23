@@ -23,6 +23,7 @@ import datetime
 from lxml import etree
 import math
 import pytz
+import urlparse
 
 import openerp
 from openerp import SUPERUSER_ID
@@ -509,6 +510,14 @@ class res_partner(osv.osv, format_address):
             if not parent.is_company:
                 parent.write({'is_company': True})
 
+    def _clean_website(self, website):
+        (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
+        if not scheme:
+            if not netloc:
+                netloc, path = path, ''
+            website = urlparse.urlunparse(('http', netloc, path, params, query, fragment))
+        return website
+
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -516,6 +525,8 @@ class res_partner(osv.osv, format_address):
         #is the same as the company of all users that inherit from this partner
         #(this is to allow the code from res_users to write to the partner!) or
         #if setting the company_id to False (this is compatible with any user company)
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         if vals.get('company_id'):
             for partner in self.browse(cr, uid, ids, context=context):
                 if partner.user_ids:
@@ -528,6 +539,8 @@ class res_partner(osv.osv, format_address):
         return result
 
     def create(self, cr, uid, vals, context=None):
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         new_id = super(res_partner, self).create(cr, uid, vals, context=context)
         partner = self.browse(cr, uid, new_id, context=context)
         self._fields_sync(cr, uid, partner, vals, context)

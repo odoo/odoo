@@ -351,6 +351,8 @@ class ir_model_fields(osv.osv):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if vals['model'] in self.pool:
+                if vals['model'].startswith('x_') and vals['name'] == 'x_name':
+                    self.pool[vals['model']]._rec_name = 'x_name'
                 self.pool[vals['model']].__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,

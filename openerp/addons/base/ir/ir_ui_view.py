@@ -253,7 +253,7 @@ class view(osv.osv):
             ['type', '=', view_type],
             ['inherit_id', '=', False],
         ]
-        ids = self.search(cr, uid, domain, limit=1, order='priority', context=context)
+        ids = self.search(cr, uid, domain, limit=1, context=context)
         if not ids:
             return False
         return ids[0]
