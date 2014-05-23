@@ -26,9 +26,9 @@
         <field name="arch" type="xml">
             <graph string="Revenue Recognition Analysis" type="pivot">
                 <field name="asset_id" type="row"/>
-                <field name="installment_nbr" type="measure" string="# of Installment Lines"/>
+                <field name="installment_nbr" type="measure"/>
                 <field name="gross_value" type="measure"/>
-                <field name="installment_value" string="Amount of Payment Schedule Line" type="measure"/>
+                <field name="installment_value" type="measure"/>
                 <field name="posted_value" type="measure"/>
             </graph>
         </field>
