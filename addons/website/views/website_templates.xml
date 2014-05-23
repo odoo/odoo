@@ -44,7 +44,7 @@
           t-att-data-main-object="repr(main_object) if editable else None"
           t-att-data-oe-company-name="res_company.name">
         <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta charset="utf-8" />
             <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
             <t t-if="main_object and 'website_meta_title' in main_object">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
