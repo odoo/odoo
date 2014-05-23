@@ -265,10 +265,16 @@ class Image(orm.AbstractModel):
         if options is None: options = {}
         classes = ['img', 'img-responsive'] + options.get('class', '').split()
 
-        return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?model=%s&field=%s&id=%s"/>' % (
+        size_params = []
+        if options.has_key('max_width'):
+            size_params.append("max_width=%i" % options['max_width'])
+        if options.has_key('max_height'):
+            size_params.append("max_height=%i" % options['max_height'])
+
+        return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?model=%s&field=%s&id=%s&%s"/>' % (
             ' '.join(itertools.imap(werkzeug.utils.escape, classes)),
             record._model._name,
-            field_name, record.id))
+            field_name, record.id, '&'.join(size_params)))
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
     def from_html(self, cr, uid, model, column, element, context=None):
