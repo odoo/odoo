@@ -51,7 +51,7 @@ class WebsiteBlog(http.Controller):
         blog_post_obj = request.registry['blog.post']
         groups = blog_post_obj.read_group(
             request.cr, request.uid, [], ['name', 'create_date'],
-            groupby="create_date", orderby="create_date asc", context=request.context)
+            groupby="create_date", orderby="create_date desc", context=request.context)
         for group in groups:
             begin_date = datetime.datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
             end_date = datetime.datetime.strptime(group['__domain'][1][2], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
@@ -62,7 +62,7 @@ class WebsiteBlog(http.Controller):
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def blogs(self, page=1, **post):
         cr, uid, context = request.cr, request.uid, request.context
         blog_obj = request.registry['blog.post']
@@ -87,7 +87,7 @@ class WebsiteBlog(http.Controller):
         '/blog/<model("blog.blog"):blog>/page/<int:page>',
         '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>',
         '/blog/<model("blog.blog"):blog>/tag/<model("blog.tag"):tag>/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def blog(self, blog=None, tag=None, page=1, **opt):
         """ Prepare all values to display the blog.
 
@@ -122,7 +122,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
         post_url = QueryURL('', ['blogpost'], tag_id=tag and tag.id or None, date_begin=date_begin, date_end=date_end)
 
-        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date asc", context=context)
+        blog_post_ids = blog_post_obj.search(cr, uid, domain, order="create_date desc", context=context)
         blog_posts = blog_post_obj.browse(cr, uid, blog_post_ids, context=context)
 
         pager = request.website.pager(
@@ -156,7 +156,7 @@ class WebsiteBlog(http.Controller):
 
     @http.route([
             '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
 
@@ -299,7 +299,7 @@ class WebsiteBlog(http.Controller):
         id = self._blog_post_message(user, blog_post_id, **post)
         return self._get_discussion_detail([id], publish, **post)
 
-    @http.route('/blogpost/new', type='http', auth="public", website=True, multilang=True)
+    @http.route('/blogpost/new', type='http', auth="public", website=True)
     def blog_post_create(self, blog_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         create_context = dict(context, mail_create_nosubscribe=True)

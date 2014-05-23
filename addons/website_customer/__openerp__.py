@@ -30,8 +30,9 @@ OpenERP Customer References
 """,
     'author': 'OpenERP SA',
     'depends': [
+        'crm_partner_assign',
         'website_partner',
-        'website_google_map'
+        'website_google_map',
     ],
     'demo': [
         'website_customer_demo.xml',
