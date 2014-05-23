@@ -1751,16 +1751,24 @@ class Reports(openerpweb.Controller):
             report = zlib.decompress(report)
         report_mimetype = self.TYPES_MAPPING.get(
             report_struct['format'], 'octet-stream')
-        file_name = action.get('name', 'report')
-        if 'name' not in action:
-            reports = req.session.model('ir.actions.report.xml')
-            res_id = reports.search([('report_name', '=', action['report_name']),],
-                                    0, False, False, context)
-            if len(res_id) > 0:
-                file_name = reports.read(res_id[0], ['name'], context)['name']
-            else:
-                file_name = action['report_name']
+        file_name = action['report_name']
+        # Try to get current object model and their ids from context
+        if 'context' in action:
+            action_context = action['context']
+            if (action_context.get('active_model')
+                    and action_context['active_ids']):
+                # Use built-in ORM method to get data from DB
+                m = req.session.model(action_context['active_model'])
+                r = m.name_get(action_context['active_ids'], context)
+                # Parse result to create a better filename
+                item_names = [item[1] or str(item[0]) for item in r]
+                if action.get('name'):
+                    item_names.insert(0, action['name'])
+                file_name = '-'.join(item_names)
         file_name = '%s.%s' % (file_name, report_struct['format'])
+        # Create safe filename
+        p = re.compile('[/:(")<>|?*]|(\\\)')
+        file_name = p.sub('_', file_name)
 
         return req.make_response(report,
              headers=[
