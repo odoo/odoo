@@ -1,23 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011-2014 OpenERP S.A. <http://openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 import pytz
 import re
@@ -188,7 +169,8 @@ class calendar_attendee(osv.Model):
         res = cal.serialize()
         return res
 
-    def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False), template_xmlid='calendar_template_meeting_invitation', context=None):
+    def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
+                                template_xmlid='calendar_template_meeting_invitation', context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
@@ -273,7 +255,8 @@ class calendar_attendee(osv.Model):
         meeting_obj = self.pool['calendar.event']
         res = self.write(cr, uid, ids, {'state': 'accepted'}, context)
         for attendee in self.browse(cr, uid, ids, context=context):
-            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)), subtype="calendar.subtype_invitation", context=context)
+            meeting_obj.message_post(cr, uid, attendee.event_id.id, body=_(("%s has accepted invitation") % (attendee.cn)),
+                                     subtype="calendar.subtype_invitation", context=context)
 
         return res
 
@@ -1410,7 +1393,7 @@ class calendar_event(osv.Model):
             new_args.append(new_arg)
 
         if not context.get('virtual_id', True):
-            return super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, context=context, count=count)
+            return super(calendar_event, self).search(cr, uid, new_args, offset=offset, limit=limit, order=order, count=count, context=context)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         res = super(calendar_event, self).search(cr, uid, new_args, offset=0, limit=0, order=None, context=context, count=False)
@@ -1535,17 +1518,17 @@ class calendar_event(osv.Model):
 
         if (values.get('start_date') or values.get('start_datetime', False)) and values.get('active', True):
             the_id = new_id or (ids and int(ids[0]))
+            if the_id:
+                if attendees_create:
+                    attendees_create = attendees_create[the_id]
+                    mail_to_ids = list(set(attendees_create['old_attendee_ids']) - set(attendees_create['removed_attendee_ids']))
+                else:
+                    mail_to_ids = [att.id for att in self.browse(cr, uid, the_id, context=context).attendee_ids]
 
-            if attendees_create:
-                attendees_create = attendees_create[the_id]
-                mail_to_ids = list(set(attendees_create['old_attendee_ids']) - set(attendees_create['removed_attendee_ids']))
-            else:
-                mail_to_ids = [att.id for att in self.browse(cr, uid, the_id, context=context).attendee_ids]
-
-            if mail_to_ids:
-                current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
-                if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context):
-                    self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"), subtype="calendar.subtype_invitation", context=context)
+                if mail_to_ids:
+                    current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+                    if self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, mail_to_ids, template_xmlid='calendar_template_meeting_changedate', email_from=current_user.email, context=context):
+                        self.message_post(cr, uid, the_id, body=_("A email has been send to specify that the date has been changed !"), subtype="calendar.subtype_invitation", context=context)
         return res or True and False
 
     def create(self, cr, uid, vals, context=None):
@@ -1624,7 +1607,7 @@ class calendar_event(osv.Model):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
-                    if f not in ('id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date'):
+                    if f not in ('id', 'allday', 'start', 'stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule'):
                         if isinstance(r[f], list):
                             r[f] = []
                         else:

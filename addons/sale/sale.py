@@ -163,6 +163,28 @@ class sale_order(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id
 
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
+
+    def _resolve_section_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of section based on the value of 'section_id'
+            context key, or None if it cannot be resolved to a single
+            Sales Team.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_section_id')) in (int, long):
+            return context.get('default_section_id')
+        if isinstance(context.get('default_section_id'), basestring):
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
+            if len(section_ids) == 1:
+                return int(section_ids[0][0])
+        return None
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
@@ -228,7 +250,9 @@ class sale_order(osv.osv):
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'procurement_group_id': fields.many2one('procurement.group', 'Procurement group'),
+
     }
     _defaults = {
         'date_order': fields.datetime.now,
@@ -239,7 +263,8 @@ class sale_order(osv.osv):
         'name': lambda obj, cr, uid, context: '/',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-        'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note
+        'note': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.sale_note,
+        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -374,7 +399,8 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
-            'user_id': order.user_id and order.user_id.id or False
+            'user_id': order.user_id and order.user_id.id or False,
+            'section_id' : order.section_id.id
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
@@ -1188,6 +1214,36 @@ class mail_compose_message(osv.Model):
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
+
+    def _get_default_section_id(self, cr, uid, context=None):
+        """ Gives default section by checking if present in the context """
+        section_id = self._resolve_section_id_from_context(cr, uid, context=context) or False
+        if not section_id:
+            section_id = self.pool.get('res.users').browse(cr, uid, uid, context).default_section_id.id or False
+        return section_id
+
+    def _resolve_section_id_from_context(self, cr, uid, context=None):
+        """ Returns ID of section based on the value of 'section_id'
+            context key, or None if it cannot be resolved to a single
+            Sales Team.
+        """
+        if context is None:
+            context = {}
+        if type(context.get('default_section_id')) in (int, long):
+            return context.get('default_section_id')
+        if isinstance(context.get('default_section_id'), basestring):
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
+            if len(section_ids) == 1:
+                return int(section_ids[0][0])
+        return None
+
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+    _defaults = {
+        'section_id': lambda self, cr, uid, c=None: self._get_default_section_id(cr, uid, context=c)
+    }
 
     def confirm_paid(self, cr, uid, ids, context=None):
         sale_order_obj = self.pool.get('sale.order')

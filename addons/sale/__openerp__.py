@@ -59,7 +59,7 @@ The Dashboard for the Sales Manager will include
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
-    'depends': ['account_voucher', 'procurement', 'report'],
+    'depends': ['sales_team','account_voucher', 'procurement', 'report'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
@@ -71,6 +71,7 @@ The Dashboard for the Sales Manager will include
         'sale_report.xml',
         'sale_data.xml',
         'sale_view.xml',
+        'sales_team_view.xml',
         'res_partner_view.xml',
         'report/sale_report_view.xml',
         'edi/sale_order_action_data.xml',
