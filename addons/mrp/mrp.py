@@ -544,6 +544,16 @@ class mrp_production(osv.osv):
 
     _order = 'priority desc, date_planned asc'
 
+    def _check_qty(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.product_qty == 0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_qty, 'Order quantity cannot be zero!', ['product_qty']),
+    ]
+
     def unlink(self, cr, uid, ids, context=None):
         for production in self.browse(cr, uid, ids, context=context):
             if production.state not in ('draft', 'cancel'):
