@@ -111,5 +111,6 @@ class MailGroup(http.Controller):
             'thread_header': message,
             'messages': messages,
             'msg_more_count': msg_count - self._replies_per_page,
+            'replies_per_page': self._replies_per_page,
         }
         return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_group.messages_short', values, engine='ir.qweb', context=request.context)
