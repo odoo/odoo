@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
+import openerp
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
@@ -83,11 +84,8 @@ class account_asset_category(osv.osv):
         return res
 
     def onchange_type(self, cr, uid, ids, type, context=None):
-        res = {'value': {}}
-        if type == 'sales':
-           res['value'] = {'prorata': True,'method_period': 1}
-        else:
-            res['value'] = {'method_period': 12}
+        res = {}
+        res['value'] = {'prorata': True,'method_period': 1} if type == 'sales' else {'method_period': 12}
         return res
 
 class account_asset_asset(osv.osv):
@@ -97,13 +95,12 @@ class account_asset_asset(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
-            value = 'asset' if asset.category_id.type == 'purchase' else 'revenue recognition'
-            if asset.state == 'open':
-                raise osv.except_osv(_('Error!'), _('You cannot delete an %s which is in Running state.') % value)
-            elif asset.state == 'close':
-                raise osv.except_osv(_('Error!'), _('You cannot delete an %s which is in Close state.') % value)
+            asset_type = 'Asset' if asset.category_id.type == 'purchase' else 'Revenue Recognition'
+            asset_name = 'Depreciation' if asset.category_id.type == 'purchase' else 'Installment'
+            if asset.state in ['open', 'close']:
+                raise osv.except_osv(_('Error!'), _('You cannot delete an %s which is in %s state.') % (asset_type, asset.state))
             if asset.account_move_line_ids: 
-                raise osv.except_osv(_('Error!'), _('You cannot delete an %s that contains posted depreciation lines.') % value)
+                raise osv.except_osv(_('Error!'), _('You cannot delete an %s that contains posted %s lines.') % (asset_type, asset_name))
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
@@ -187,14 +184,16 @@ class account_asset_asset(osv.osv):
                     depreciation_date = (last_depreciation_date+relativedelta(months=+asset.method_period))
                 else:
                     # Fiscal year based on depreciation date of Asset
-                    fiscal_year = fiscal_year_obj.search_read(cr, uid, [('date_start', '<=', date), 
-                                                                        ('date_stop', '>=', date)], 
-                                                                        ['date_start'], context=context)
+                    fiscal_year = fiscal_year_obj.search_read(cr, uid,
+                                                              [('date_start', '<=', time.strftime('%Y-%m-%d')),
+                                                               ('date_stop', '>=', time.strftime('%Y-%m-%d'))],
+                                                              ['date_start'], context=context)
                     # Fiscal year should be there related to purchase date otherwise the journal items have wrong periods and date
                     if not fiscal_year:
-                        raise osv.except_osv(_("Configuration Error !"), _("Fiscal year is not created for this selected year. \n" \
-                                                                           "Please create fiscal year related to purchase date !"))
-                    fis_date = datetime.strptime(fiscal_year[0]['date_start'], '%Y-%m-%d') 
+                        model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_fiscalyear')
+                        msg = _('There is no period defined for this date: %s.\nPlease go to Configuration/Periods and configure a fiscal year.') % asset.date
+                        raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
+                    fis_date = datetime.strptime(fiscal_year[0]['date_start'], '%Y-%m-%d')
                     depreciation_date = datetime(date.year, fis_date.month, fis_date.day)
             day = depreciation_date.day
             month = depreciation_date.month
@@ -221,8 +220,8 @@ class account_asset_asset(osv.osv):
                      'asset_id': asset.id,
                      'sequence': i,
                      'name': new_name,
-                     'remaining_value': residual_amount,
-                     'depreciated_value': (asset.value - asset.salvage_value) - (residual_amount + amount),
+                     'remaining_value': abs(residual_amount),
+                     'depreciated_value': abs((asset.value - asset.salvage_value) - (residual_amount + amount)),
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
@@ -237,22 +236,27 @@ class account_asset_asset(osv.osv):
     def validate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}   
-        data = self.browse(cr, uid, ids[0], context=context)
-        value = 'Asset' if data.category_id.type == 'purchase' else 'Recognition'
-        self.message_post(cr, uid, ids, body=_("%s confirmed.") % value, context=context)
-        return self.write(cr, uid, ids, {
-            'state':'open'
-        }, context)
+        categ_type = self.browse(cr, uid, ids[0], context=context).category_id.type
+        asset_type = 'Asset' if categ_type == 'purchase' else 'Recognition'
+        self.message_post(cr, uid, ids, body=_("%s confirmed.") % asset_type, context=context)
+        return self.write(cr, uid, ids, {'state':'open'}, context=context)
 
     def set_to_close(self, cr, uid, ids, context=None):
-        depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
-        data = self.browse(cr, uid, ids[0], context=context)
-        value = 'Asset' if data.category_id.type == 'purchase' else 'Recognition'
-        value1 = 'depreciation' if data.category_id.type == 'purchase' else 'installment'
-        unposted_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', data.id), ('move_check', '=', False)],order='depreciation_date desc')
-        if len(unposted_depreciation_line_ids) > 0:
-            raise osv.except_osv(_('Error!'), _('You cannot close %s which has unposted %s lines.') % (value, value1))
-        self.message_post(cr, uid, ids, body=_("%s closed.") % value, context=context)
+        if context is None:
+            context = {}
+        dep_line_obj = self.pool.get('account.asset.depreciation.line')
+        categ_type = self.browse(cr, uid, ids[0], context=context).category_id.type
+        asset_type = 'Asset' if categ_type == 'purchase' else 'Recognition'
+        name = 'Depreciation' if categ_type == 'purchase' else 'Installment'
+        unposted_dep_line_ids = dep_line_obj.search(cr, uid, 
+                                                    [('asset_id', 'in', ids),
+                                                     ('move_check', '=', False)],
+                                                    order='depreciation_date desc')
+        if len(unposted_dep_line_ids) > 0:
+            raise osv.except_osv(_('Error !'), 
+                                 _('You cannot close an %s which has unposted %s lines.')
+                                 % (asset_type, name))
+        self.message_post(cr, uid, ids, body=_("%s closed.") % asset_type, context=context)
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
@@ -265,7 +269,7 @@ class account_asset_asset(osv.osv):
             for line in asset.depreciation_line_ids:
                 if line.move_check:
                     total_amount += line.amount
-            res[asset.id] = asset.value - total_amount - asset.salvage_value
+            res[asset.id] = abs(asset.value - total_amount - asset.salvage_value)
         for id in ids:
             res.setdefault(id, 0.0)
         return res
@@ -329,7 +333,7 @@ class account_asset_asset(osv.osv):
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
-        'invoice_id': fields.many2one('account.invoice','Invoice'),
+        'invoice_id': fields.many2one('account.invoice','Invoice', states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
@@ -349,10 +353,9 @@ class account_asset_asset(osv.osv):
         return super(account_asset_asset, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 	
     def _check_recursion_msg(self, cr, uid, ids, context=None, parent=None):
-        data = self.browse(cr, uid, ids[0], context=context)
-        value = 'assets' if data.category_id.type == 'purchase' else 'recognitions'
-        msg = 'Error ! You cannot create recursive %s.' % value
-        return msg
+        categ_type = self.browse(cr, uid, ids[0], context=context).category_id.type
+        asset_type = 'assets' if categ_type == 'purchase' else 'recognitions'
+        return ' \n\n Error ! \n You cannot create recursive %s.' % asset_type
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
@@ -394,10 +397,10 @@ class account_asset_asset(osv.osv):
             context = {}
         asset_record = self.browse(cr, uid, id, context=context)
         default.update({
-                        'depreciation_line_ids': [], 
-                        'account_move_line_ids': [], 
-                        'history_ids': [], 
-                        'state': 'draft', 
+                        'depreciation_line_ids': [],
+                        'account_move_line_ids': [],
+                        'history_ids': [],
+                        'state': 'draft',
                         'name': asset_record.name+ _(' (copy)'),
                         'invoice_id': False
                         })
@@ -408,28 +411,23 @@ class account_asset_asset(osv.osv):
         period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
         period = period_obj.browse(cr, uid, period_id, context=context)
-        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<=', period.date_stop), ('depreciation_date', '>=', period.date_start), ('move_check', '=', False)], context=context)
+        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids),
+                                                             ('depreciation_date', '<=', period.date_stop),
+                                                             ('depreciation_date', '>=', period.date_start),
+                                                             ('move_check', '=', False)],
+                                                   context=context)
         if context is None:
             context = {}
-        context.update({'depreciation_date':period.date_stop})
+        context.update({'depreciation_date': period.date_stop})
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        category = self.pool.get('account.asset.category').read(cr, uid, vals.get('category_id'), ['type'], context=context)
-        if vals.get('date'):
-            date_type = 'purchase' if category['type'] == 'purchase' else 'sale'
-            fiscal_year = self.pool.get('account.fiscalyear').search_read(cr, uid, 
-                                                                          [('date_start', '<=', vals.get('date')), 
-                                                                           ('date_stop', '>=', vals.get('date'))], 
-                                                                          ['date_start'], context=context)
-            if not fiscal_year:
-                raise osv.except_osv(_('Configuration Error !'), _('Fiscal year is not created for this selected year. Please create fiscal year related to %s date !') % date_type)
-        create_context = dict(context, mail_create_nolog=True)    
-        asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=create_context)
+        context.update({'mail_create_nolog': True})
+        asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
         self.compute_depreciation_board(cr, uid, [asset_id], context=context)
-        data = self.browse(cr, uid, asset_id, context=context)
-        value = 'Asset' if data.category_id.type == 'purchase' else 'Recognition'
-        self.message_post(cr, uid, [asset_id], body=_("%s created.") % value, context=context)
+        categ_type = self.browse(cr, uid, asset_id, context=context).category_id.type
+        asset_type = 'Asset' if categ_type == 'purchase' else 'Recognition'
+        self.message_post(cr, uid, [asset_id], body=_("%s created.") % asset_type, context=context)
         return asset_id
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -488,58 +486,58 @@ class account_asset_depreciation_line(osv.osv):
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
-            period_ids = period_obj.find(cr, uid, line.depreciation_date, context=context)
-            context.update({'date': line.depreciation_date})
+            depreciation_date = context.get('depreciation_date') or line.depreciation_date or time.strftime('%Y-%m-%d')
+            period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
+            context.update({'date': depreciation_date})
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
-            asset_name = line.asset_id.name
-            reference = line.name
             move_vals = {
-                'name': asset_name + '-' + reference,
-                'date': line.depreciation_date,
-                'ref': reference,
+                'name': line.asset_id.name + '-' + line.name,
+                'date': depreciation_date,
+                'ref': line.name,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
-            journal_id = line.asset_id.category_id.journal_id.id
-            partner_id = line.asset_id.partner_id.id
-            debit_account = line.asset_id.category_id.account_expense_depreciation_id.id if line.asset_id.category_id.type == 'purchase' else line.asset_id.category_id.account_asset_id.id
-            credit_acount = line.asset_id.category_id.account_depreciation_id.id if line.asset_id.category_id.type == 'purchase' else line.asset_id.category_id.account_income_recognition_id.id
+            if line.asset_id.category_id.type == 'purchase': 
+                debit_account = line.asset_id.category_id.account_expense_depreciation_id.id
+                credit_acount = line.asset_id.category_id.account_depreciation_id.id
+            else:
+                debit_account = line.asset_id.category_id.account_asset_id.id
+                credit_acount = line.asset_id.category_id.account_income_recognition_id.id
             move_line_obj.create(cr, uid, {
-                'name': asset_name + '-' + reference,
-                'ref': reference,
+                'name': line.asset_id.name + '-' + line.name,
+                'ref': line.name,
                 'move_id': move_id,
                 'account_id': credit_acount,
                 'debit': 0.0,
                 'credit': amount,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': journal_id,
-                'partner_id': partner_id,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id or False,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if line.asset_id.category_id.type == 'sales' else False,
-                'date': line.depreciation_date,
+                'date': depreciation_date,
                 'date_created': time.strftime('%Y-%m-%d'),
                 'asset_id': line.asset_id.id if line.asset_id.category_id.type == 'sales' else False
             })
             move_line_obj.create(cr, uid, {
-                'name': asset_name + '-' + reference,
-                'ref': reference,
+                'name': line.asset_id.name + '-' + line.name,
+                'ref': line.name,
                 'move_id': move_id,
                 'account_id': debit_account,
                 'credit': 0.0,
                 'debit': amount,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': journal_id,
-                'partner_id': partner_id,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if line.asset_id.category_id.type == 'purchase' else False,
-                'date': line.depreciation_date,
+                'date': depreciation_date,
                 'date_created': time.strftime('%Y-%m-%d'),
                 'asset_id': line.asset_id.id if line.asset_id.category_id.type == 'purchase' else False
             })
@@ -548,12 +546,18 @@ class account_asset_depreciation_line(osv.osv):
             asset_ids.append(line.asset_id.id)
             partner_name = line.asset_id.partner_id.name
             currency_name = line.asset_id.company_id.currency_id.name
-        # we re-evaluate the assets to determine whether we can close them
-            data = asset_obj.browse(cr, uid, [line.asset_id.id][0], context=context)
-            msg_line = 'Depreciation' if data.category_id.type == 'purchase' else 'Installment'
-            msg_partner = 'Supplier' if data.category_id.type == 'purchase' else 'Customer'
-            msg=_("%s line posted.<br/> <b>&nbsp;&nbsp;&nbsp;&bull; Currency:</b> %s <br/> <b>&nbsp;&nbsp;&nbsp;&bull; Posted Amount:</b> %s <br/> <b>&nbsp;&nbsp;&nbsp;&bull; %s:</b> %s") % (msg_line,currency_name,line.amount,msg_partner,partner_name)
-            asset_obj.message_post(cr, uid, line.asset_id.id, body=msg, context=context)    
+            categ_type = asset_obj.browse(cr, uid, line.asset_id.id, context=context).category_id.type
+            msg_data = ['Depreciation','Supplier'] if categ_type == 'purchase' else ['Installment','Customer']
+            msg=_("%s line posted. <br/> <b>&nbsp;&nbsp;&nbsp;"
+                "&bull; Currency:</b> %s <br/> <b>&nbsp;&nbsp;&nbsp;"
+                "&bull; Posted Amount:</b> %s <br/> <b>&nbsp;&nbsp;&nbsp;"
+                "&bull; %s:</b> %s") % (msg_data[0],
+                                        currency_name,
+                                        line.amount,
+                                        msg_data[1],
+                                        partner_name)
+            asset_obj.message_post(cr, uid, line.asset_id.id, body=msg, context=context)
+        # we re-evaluate the assets to determine whether we can close them    
         for asset in asset_obj.browse(cr, uid, list(set(asset_ids)), context=context):
             if currency_obj.is_zero(cr, uid, asset.currency_id, asset.value_residual):
                 value = 'Asset' if asset.category_id.type == 'purchase' else 'Recognition'
@@ -565,8 +569,9 @@ class account_asset_depreciation_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('account.move')
         for record in self.browse(cr, uid, ids, context=context):
+            asset_name = 'depreciation' if record.asset_id.category_id.type == 'purchase' else 'installment'
             if record.move_check:
-                raise osv.except_osv(_('Error!'), _("You cannot delete posted depreciation lines."))
+                raise osv.except_osv(_('Error!'), _("You cannot delete posted %s lines.") % asset_name)
         return super(account_asset_depreciation_line, self).unlink(cr, uid, ids, context=context)
 
 
