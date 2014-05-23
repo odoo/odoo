@@ -29,7 +29,7 @@
             <field name="body"><![CDATA[<p>This application lets you create and send quotations and process your sales orders; from delivery to invoicing.</p>
 <p>If you need to manage your sales pipeline (leads, opportunities, phonecalls), the <i>CRM</i> application may be useful. Use the Settings menu to install it.</p>]]></field>
         </record>
-        
+
         <!-- Sale-related subtypes for messaging / Chatter -->
         <record id="mt_order_sent" model="mail.message.subtype">
             <field name="name">Quotation sent</field>
@@ -42,6 +42,22 @@
             <field name="res_model">sale.order</field>
             <field name="default" eval="False"/>
             <field name="description">Quotation confirmed</field>
+        </record>
+
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation Send</field>
+            <field name="sequence">20</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('sale.mt_order_sent')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="sequence">21</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('sale.mt_order_confirmed')"/>
+            <field name="relation_field">section_id</field>
         </record>
 
     </data>
