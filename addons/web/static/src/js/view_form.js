@@ -4457,7 +4457,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             else
                 return $.when();
         }).done(function () {
-            if (!self.o2m.options.reload_on_button) {
+            if (self.o2m.options.reload_whole_on_button){
+                self.handle_button(name, id, function(){
+                self.o2m.dataset.parent_view.recursive_reload();
+                });
+            }else if (!self.o2m.options.reload_on_button) {
                 self.handle_button(name, id, callback);
             }else {
                 self.handle_button(name, id, function(){

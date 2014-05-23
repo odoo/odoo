@@ -316,6 +316,7 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
         this.error = error;
     },
     display: function() {
+        var self = this;
         error = this.error;
         error.data.message = error.data.arguments[0];
 
@@ -323,10 +324,10 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
             size: 'medium',
             title: "OpenERP " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
-                {text: _t("Ok"), click: function() { this.$el.parents('.modal').modal('hide'); }},
+                {text: _t("Ok"), click: function() { self.$el.parents('.modal').modal('hide');  self.destroy();}},
                 {text: error.data.arguments[2], click: function() {
                     window.location.href='#action='+error.data.arguments[1];
-                    this.$el.parents('.modal').modal('hide');
+                    self.destroy();
                 }}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
