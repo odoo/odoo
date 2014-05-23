@@ -40,11 +40,11 @@ Financial and accounting module that covers:
 
 Creates a dashboard for accountants that includes:
 --------------------------------------------------
-    * List of Customer Invoice to Approve
+    * List of Customer Invoices to Approve
     * Company Analysis
     * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) 
+Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal) 
 for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
