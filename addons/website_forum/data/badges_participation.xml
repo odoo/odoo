@@ -78,16 +78,16 @@
             <field name="target_goal">10</field>
         </record>
 
-        <!-- Pundit: 10 comments with at least score of 10 -->
+        <!-- Pundit: 10 answers with at least score of 10 -->
         <record id="badge_25" model="gamification.badge">
             <field name="name">Pundit</field>
-            <field name="description">Left comments with score of 10 or more</field>
+            <field name="description">Left 10 answers with score of 10 or more</field>
             <field name="level">silver</field>
             <field name="rule_auth">nobody</field>
         </record>
         <record model="gamification.goal.definition" id="definition_pundit">
             <field name="name">Pundit</field>
-            <field name="description">Post 10 comments with score of 10 or more</field>
+            <field name="description">Post 10 answers with score of 10 or more</field>
             <field name="display_mode">boolean</field>
             <field name="condition">higher</field>
             <field name="model_id" eval="ref('website_forum.model_forum_post')"/>
