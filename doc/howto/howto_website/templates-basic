@@ -1,0 +1,107 @@
+# HG changeset patch
+# Parent 2edbac8244a982055a6786c14ee41719ea5410e8
+
+diff --git a/__openerp__.py b/__openerp__.py
+--- a/__openerp__.py
++++ b/__openerp__.py
+@@ -16,7 +16,10 @@
+ 
+     # any module necessary for this one to work correctly
+     'depends': ['web'],
+-    'data': ['security/ir.model.access.csv'],
++    'data': [
++        'security/ir.model.access.csv',
++        'views/templates.xml',
++    ],
+     'tests': [
+     ],
+ }
+diff --git a/controllers/academy.py b/controllers/academy.py
+--- a/controllers/academy.py
++++ b/controllers/academy.py
+@@ -14,34 +14,17 @@ teaching_assistants = [
+ class academy(main.Home):
+     @http.route('/', auth='none')
+     def index(self):
++        cr, uid, context = http.request.cr, http.request.uid, http.request.context
+         tas = [
+             '<li><a href="/tas/%d/">%s</a></li>' % (i, ta['name'])
+             for i, ta in enumerate(teaching_assistants)
+         ]
+ 
+-        return """<!doctype html>
+-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+-<body class="container">
+-    <h1>Introduction to something</h1>
+-    <h2>Teaching Assistants</h2>
+-    <ul>
+-        %(tas)s
+-    </ul>
+-</body>
+-""" % {
+-        'tas': '\n'.join(tas)
+-    }
+-
++        return http.request.registry['ir.ui.view'].render(cr, uid, 'academy.index', {
++            'tas': '\n'.join(tas)
++        }, context=context)
+     @http.route('/tas/<int:id>/', auth='none')
+     def ta(self, id):
+-        return """<!doctype html>
+-<html>
+-    <head>
+-        <title>AcademyAcademy TA %(name)s</title>
+-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+-    </head>
+-    <body class="container">
+-        <h1>%(name)s</h1>
+-    </body>
+-</html>
+-""" % teaching_assistants[id]
++        cr, uid, context = http.request.cr, http.request.uid, http.request.context
++        return http.request.registry['ir.ui.view'].render(
++            cr, uid, 'academy.ta', teaching_assistants[id], context=context)
+diff --git a/views/templates.xml b/views/templates.xml
+new file mode 100644
+--- /dev/null
++++ b/views/templates.xml
+@@ -0,0 +1,39 @@
++<openerp>
++    <data>
++<template id="index" name="Index">
++    <html>
++        <head>
++            <title>AcademyAcademy</title>
++            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
++        </head>
++        <body class="container">
++            <h1>Introduction to a thing</h1>
++            <h2>Course description</h2>
++            <p>
++                This course will provide a basic introduction to a thing, for
++                motivated students with no prior experience in things. The course
++                will focus on the discovery of things and the planning and
++                organization necessary to handle things.
++            </p>
++            <h2>Teaching Assistants</h2>
++            <ul>
++                <t t-raw="tas"/>
++            </ul>
++        </body>
++    </html>
++</template>
++
++<template id="ta" name="Teaching Assistant">
++    <html>
++        <head>
++            <title>AcademyAcademy TA <t t-esc="name"/></title>
++            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
++        </head>
++        <body class="container">
++            <h1><t t-esc="name"/></h1>
++        </body>
++    </html>
++</template>
++
++    </data>
++</openerp>

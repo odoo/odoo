@@ -28,7 +28,7 @@ from openerp.tools.translate import _
 
 class website_event(website_event):
 
-    @http.route(['/event/cart/update'], type='http', auth="public", methods=['POST'], website=True, multilang=True)
+    @http.route(['/event/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, event_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         ticket_obj = request.registry.get('event.event.ticket')
@@ -50,7 +50,6 @@ class website_event(website_event):
 
     def _add_event(self, event_name="New Event", context={}, **kwargs):
         try:
-            print kwargs
             dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
             context['default_event_ticket_ids'] = [[0,0,{
                 'name': _('Subscription'),

@@ -2,7 +2,7 @@
 
 if __name__ == '__main__':
     import sys
-    if sys.argv[1] == 'run-tests':
+    if len(sys.argv) > 1 and sys.argv[1] == 'run-tests':
         sys.exit(0)
     import openerpcommand.main
     openerpcommand.main.run()

@@ -1,0 +1,12 @@
+# HG changeset patch
+# Parent 313d7c760558b24461a544063de061d00fdf7059
+
+diff --git a/models/academy.py b/models/academy.py
+--- a/models/academy.py
++++ b/models/academy.py
+@@ -6,4 +6,5 @@ class TeachingAssistants(orm.Model):
+ 
+     _columns = {
+         'name': fields.char(),
++        'biography': fields.html(),
+     }
