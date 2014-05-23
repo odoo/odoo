@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
         <!--
             CRM CASE STAGE
         -->
-
         <!-- Stage Search view -->
         <record id="crm_lead_stage_search" model="ir.ui.view">
             <field name="name">Stage - Search</field>
@@ -570,12 +568,12 @@
                             help="Opportunities that are assigned to me"/>
                     <filter string="My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to any sales teams I am member of"/>
+                            help="Opportunities that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <group expand="0" string="Group By..." colspan="16">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
+                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>

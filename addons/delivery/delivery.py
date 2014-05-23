@@ -191,21 +191,23 @@ class delivery_grid(osv.osv):
         total = 0
         weight = 0
         volume = 0
+        quantity = 0
         for line in order.order_line:
             if not line.product_id or line.is_delivery:
                 continue
             weight += (line.product_id.weight or 0.0) * line.product_uom_qty
             volume += (line.product_id.volume or 0.0) * line.product_uom_qty
+            quantity += line.product_uom_qty
         total = order.amount_total or 0.0
 
 
-        return self.get_price_from_picking(cr, uid, id, total,weight, volume, context=context)
+        return self.get_price_from_picking(cr, uid, id, total,weight, volume, quantity, context=context)
 
-    def get_price_from_picking(self, cr, uid, id, total, weight, volume, context=None):
+    def get_price_from_picking(self, cr, uid, id, total, weight, volume, quantity, context=None):
         grid = self.browse(cr, uid, id, context=context)
         price = 0.0
         ok = False
-        price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight}
+        price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight, 'quantity': quantity}
         for line in grid.line_ids:
             test = eval(line.type+line.operator+str(line.max_value), price_dict)
             if test:
@@ -227,24 +229,26 @@ class delivery_grid_line(osv.osv):
     _description = "Delivery Grid Line"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
+        'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when calculating delivery grid."),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True, ondelete='cascade'),
         'type': fields.selection([('weight','Weight'),('volume','Volume'),\
-                                  ('wv','Weight * Volume'), ('price','Price')],\
+                                  ('wv','Weight * Volume'), ('price','Price'), ('quantity','Quantity')],\
                                   'Variable', required=True),
-        'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
+        'operator': fields.selection([('==','='),('<=','<='),('<','<'),('>=','>='),('>','>')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
-        'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
+        'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price'), ('quantity','Quantity')], 'Variable Factor', required=True),
         'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Product Price'), required=True),
         'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'), required=True),
     }
     _defaults = {
+        'sequence': lambda *args: 10,
         'type': lambda *args: 'weight',
         'operator': lambda *args: '<=',
         'price_type': lambda *args: 'fixed',
         'variable_factor': lambda *args: 'weight',
     }
-    _order = 'list_price'
+    _order = 'sequence, list_price'
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

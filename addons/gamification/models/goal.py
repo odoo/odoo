@@ -349,8 +349,8 @@ class gamification_goal(osv.Model):
                 goal = all_goals[goal_id]
 
                 # check goal target reached
-                if (goal.definition_condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
-                  or (goal.definition_condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
+                if (goal.definition_id.condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
+                  or (goal.definition_id.condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
                     value['state'] = 'reached'
 
                 # check goal failure

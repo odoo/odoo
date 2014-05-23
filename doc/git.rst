@@ -7,7 +7,8 @@ Initializing a working copy
 
 Use the easy-setup shell script::
 
-    curl https://raw.githubusercontent.com/odoo/odoo/master/checkout.sh | sh
+     curl -O https://raw.githubusercontent.com/odoo/odoo/master/checkout.sh
+     sh checkout.sh
 
 it will will ask a few questions and create a local copy.
 
@@ -69,14 +70,14 @@ Basic development workflow
 * update your remotes with ``git fetch --all``
 * create your development branch with ``git checkout -b <branch_name>
   <source_branch>``. For instance if you wanted to add support for full-text
-  search in trunk you could use ``git checkout -b trunk-fts-xxx odoo/trunk``
+  search in master you could use ``git checkout -b master-fts-xxx odoo/master``
 * do your changes, stage them with ``git add`` and commit them with ``git
   commit``
 * if your branch is long-lived, you may want to update it to its parent
 
   - update the remotes with ``git fetch --all``
   - merge the remote branch into the local one with ``git merge --no-ff
-    odoo/trunk``
+    odoo/master``
 
 * to push the branch to the development repository, use ``git push -u dev
   <branchname>``, this will automatically create a branch called

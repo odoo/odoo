@@ -214,7 +214,7 @@ class project(osv.osv):
             'res_model': 'ir.attachment',
             'type': 'ir.actions.act_window',
             'view_id': False,
-            'view_mode': 'kanban,form',
+            'view_mode': 'kanban,tree,form',
             'view_type': 'form',
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)

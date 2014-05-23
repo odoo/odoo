@@ -276,7 +276,7 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
             active_ids = active_ids.difference(merged_lead_ids)
             active_ids = active_ids.union(remaining_lead_ids)
             ctx['active_ids'] = list(active_ids)
-        ctx['no_force_assignation'] = not data.force_assignation
+        ctx['no_force_assignation'] = context.get('no_force_assignation', not data.force_assignation)
         return self.action_apply(cr, uid, ids, context=ctx)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
