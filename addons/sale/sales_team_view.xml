@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="crm_case_section_salesteams_view_form" model="ir.ui.view">
+            <field name="name">crm.case.section.form</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <field name="use_quotations" class="oe_inline"/><label for="use_quotations"/>
+                </xpath>
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="invoiced_target"/>
+                    <field name="invoiced_forecast"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
+            <field name="name">crm.case.section.kanban</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="use_quotations"/>
+                    <field name="monthly_quoted"/>
+                    <field name="monthly_confirmed"/>
+                    <field name="monthly_invoiced"/>
+                    <field name="invoiced_forecast"/>
+                    <field name="invoiced_target"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_clear']" position="before">
+                    <div class="oe_items_list">
+                        <div class="oe_salesteams_quotations" t-if="record.use_quotations.raw_value">
+                            <a name="%(action_quotations_salesteams)d" type="action" class="oe_sparkline_bar_link">Quotations</a>
+                            <a name="%(action_order_report_quotation_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                <field name="monthly_quoted" widget="sparkline_bar" options="{'delayIn': '3000'}">
+                                    Revenue of created quotations per month.<br/>Click to see a detailed analysis.
+                                </field>
+                            </a>
+                        </div>
+                        <div class="oe_salesteams_orders">
+                            <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
+                            <a name="%(action_order_report_so_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                <field name="monthly_confirmed" widget="sparkline_bar" options="{'delayIn': '3000'}">
+                                    Revenue of confirmed sales orders per month.<br/>Click to acces the Sales Analysis.
+                                </field>
+                            </a>
+                        </div>
+                        <div class="oe_salesteams_invoices" groups="account.group_account_invoice">
+                            <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
+                            <a name="%(action_account_invoice_report_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                <field name="monthly_invoiced" widget="sparkline_bar" options="{'delayIn': '3000'}">
+                                    Revenue of sent invoices per month.<br/>Click to see a detailed analysis of invoices.
+                                </field>
+                            </a>
+                        </div>
+                      </div>
+                </xpath>
+                <xpath expr="//div[@class='oe_clear']" position="after">
+                    <div class="oe_center" t-if="record.invoiced_target.raw_value">
+                        <field name="monthly_invoiced" widget="gauge" style="width:160px; height: 120px; cursor: pointer;"
+                            options="{'max_field': 'invoiced_target'}">Invoiced</field>
+                        <field name="invoiced_forecast" widget="gauge" style="width:160px; height: 120px; cursor: pointer;"
+                            options="{'max_field': 'invoiced_target', 'on_change': 'action_forecast'}">Forecast</field>
+                    </div>
+                    <div class="oe_center oe_salesteams_help" style="color:#bbbbbb;" t-if="!record.invoiced_target.raw_value">
+                        <br/>Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.
+                    </div>
+                </xpath>
+            </data>
+           </field>
+        </record>
+    </data>
+</openerp>

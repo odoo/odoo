@@ -51,13 +51,13 @@ Dashboard for CRM will include:
     'depends': [
         'base_action_rule',
         'base_setup',
+        'sales_team',
         'mail',
         'email_template',
         'calendar',
         'resource',
         'board',
         'fetchmail',
-        'web_kanban_sparkline',
     ],
     'data': [
         'crm_data.xml',
@@ -91,8 +91,7 @@ Dashboard for CRM will include:
         'res_config_view.xml',
         'base_partner_merge_view.xml',
 
-        'crm_case_section_view.xml',
-        'views/crm.xml',
+        'sales_team_view.xml',
     ],
     'demo': [
         'crm_demo.xml',

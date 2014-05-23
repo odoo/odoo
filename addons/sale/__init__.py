@@ -19,15 +19,10 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# Init Sales
-#----------------------------------------------------------
-
 import sale
+import sales_team
 import res_partner
 import wizard
 import report
 import edi
 import res_config
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
