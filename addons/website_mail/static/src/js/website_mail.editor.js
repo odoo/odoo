@@ -3,6 +3,12 @@
 
     var website = openerp.website;
     var _t = openerp._t;
+    
+    website.snippet.BuildingBlock.include({
+         _get_snippet_url: function () {
+             return '/website_mail/snippets';
+         }
+     });
 
     website.snippet.options.subscribe = website.snippet.Option.extend({
         on_prompt: function () {
