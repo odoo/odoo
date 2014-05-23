@@ -103,6 +103,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
         <field name="search_view_id" ref="view_asset_asset_report_search"/>
+        <field name="view_id" ref="action_account_asset_report_graph"/>
         <field name="domain">[('asset_category_id.type', '=', 'purchase')]</field>
         <field name="context">{'search_default_year':1,'search_default_this_month':1,'search_default_asset_category':1, 'search_default_posted':1, 'group_by':[], 'group_by_no_leaf':1}</field>
         <field name="help" type="html">
@@ -123,6 +124,7 @@
         <field name="res_model">asset.asset.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph</field>
+        <field name="view_id" ref="action_account_revenue_report_graph"/>
         <field name="search_view_id" ref="view_asset_revenue_report_search"/>
         <field name="domain">[('asset_category_id.type', '=', 'sales')]</field>
         <field name="context">{'search_default_asset_category':2,'search_default_posted':1,'group_by':[],'group_by_no_leaf':1}</field>
@@ -135,13 +137,6 @@
         </field>
     </record>
     
-    <record model="ir.actions.act_window.view" id="view_action_report_revenue_graph">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">graph</field>
-        <field name="view_id" ref="action_account_revenue_report_graph"/>
-        <field name="act_window_id" ref="action_asset_revenue_report"/>
-    </record>
-
     <menuitem action="action_asset_asset_report"
               id="menu_action_asset_asset_report"
               parent="account.menu_finance_reporting" sequence="21"/>
