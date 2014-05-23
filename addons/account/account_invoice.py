@@ -1242,7 +1242,7 @@ class account_invoice_line(Model):
                 if taxes and len(taxes[0]) >= 3 and taxes[0][2]:
                     taxes = self.env['account.tax'].browse(taxes[0][2])
                     tax_res = taxes.compute_all(price, vals.get('quantity'),
-                        product=vals.get('product_id'), partner=context.get('partner_id'))
+                        product=vals.get('product_id'), partner=self._context.get('partner_id'))
                     for tax in tax_res['taxes']:
                         total = total - tax['amount']
         return total
