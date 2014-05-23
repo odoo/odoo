@@ -12,12 +12,12 @@
                    <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
                    <field name="company_id" invisible="1"/>
                    <field name="fiscalyear_id" domain="[('company_id','=',company_id)]"/>
-                   <field name="target_move"/>
+                   <field name="target_move" widget="radio" nolable="1"/>
                 </group>
                 <notebook tabpos="up" colspan="4">
                     <page string="Filters" name="filters">
-                        <group>
-                            <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
+                        <group col="4">
+                            <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" widget="radio" nolabel="1"/>
                         </group>
                         <group string="Dates"  attrs="{'invisible':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}">
                             <field name="date_from" />

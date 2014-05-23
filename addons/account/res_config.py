@@ -51,8 +51,8 @@ class account_config_settings(osv.osv_memory):
         'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
         'tax_calculation_rounding_method': fields.related('company_id',
             'tax_calculation_rounding_method', type='selection', selection=[
-            ('round_per_line', 'Round per line'),
-            ('round_globally', 'Round globally'),
+            ('round_per_line', 'Round calculation of taxes per line'),
+            ('round_globally', 'Round globally calculation of taxes '),
             ], string='Tax calculation rounding method',
             help="If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default sale tax"),
