@@ -1,24 +1,18 @@
 # -*- coding: utf-8 -*-
 import cStringIO
-import contextlib
-import hashlib
+import datetime
+from itertools import islice
 import json
 import logging
-import os
-import datetime
 import re
 
 from sys import maxint
 
-import werkzeug
-import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 from PIL import Image
 
 import openerp
-from openerp.osv import fields
-from openerp.addons.website.models import website
 from openerp.addons.web import http
 from openerp.http import request, Response
 
@@ -27,12 +21,13 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
+SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 
 class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # View
     #------------------------------------------------------
-    @http.route('/', type='http', auth="public", website=True, multilang=True)
+    @http.route('/', type='http', auth="public", website=True)
     def index(self, **kw):
         page = 'homepage'
         try:
@@ -47,12 +42,12 @@ class Website(openerp.addons.web.controllers.main.Home):
             pass
         return self.page(page)
 
-    @http.route(website=True, auth="public", multilang=True)
+    @http.route(website=True, auth="public")
     def web_login(self, *args, **kw):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
 
-    @http.route('/page/<page:page>', type='http', auth="public", website=True, multilang=True)
+    @http.route('/page/<path:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
         values = {
             'path': page,
@@ -78,33 +73,64 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
-        pages = list(request.website.enumerate_pages())
-        if len(pages)<=LOC_PER_SITEMAP:
-            return self.__sitemap_xml(pages, 0)
-        # Sitemaps must be split in several smaller files with a sitemap index
-        values = {
-            'pages': range(len(pages)/LOC_PER_SITEMAP+1),
-            'url_root': request.httprequest.url_root
-        }
-        headers = {
-            'Content-Type': 'application/xml;charset=utf-8',
-        }
-        return request.render('website.sitemap_index_xml', values, headers=headers)
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        ira = request.registry['ir.attachment']
+        iuv = request.registry['ir.ui.view']
+        mimetype ='application/xml;charset=utf-8'
+        content = None
 
-    @http.route('/sitemap-<int:page>.xml', type='http', auth="public", website=True)
-    def sitemap_xml(self, page):
-        pages = list(request.website.enumerate_pages())
-        return self.__sitemap_xml(pages, page)
+        def create_sitemap(url, content):
+            ira.create(cr, uid, dict(
+                datas=content.encode('base64'),
+                mimetype=mimetype,
+                type='binary',
+                name=url,
+                url=url,
+            ), context=context)
 
-    def __sitemap_xml(self, pages, index=0):
-        values = {
-            'pages': pages[index*LOC_PER_SITEMAP:(index+1)*LOC_PER_SITEMAP],
-            'url_root': request.httprequest.url_root.rstrip('/')
-        }
-        headers = {
-            'Content-Type': 'application/xml;charset=utf-8',
-        }
-        return request.render('website.sitemap_xml', values, headers=headers)
+        sitemap = ira.search_read(cr, uid, [('url', '=' , '/sitemap.xml'), ('type', '=', 'binary')], ('datas', 'create_date'), context=context)
+        if sitemap:
+            # Check if stored version is still valid
+            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
+            create_date = datetime.datetime.strptime(sitemap[0]['create_date'], server_format)
+            delta = datetime.datetime.now() - create_date
+            if delta < SITEMAP_CACHE_TIME:
+                content = sitemap[0]['datas'].decode('base64')
+
+        if not content:
+            # Remove all sitemaps in ir.attachments as we're going to regenerated them
+            sitemap_ids = ira.search(cr, uid, [('url', '=like' , '/sitemap%.xml'), ('type', '=', 'binary')], context=context)
+            if sitemap_ids:
+                ira.unlink(cr, uid, sitemap_ids, context=context)
+
+            pages = 0
+            first_page = None
+            locs = request.website.enumerate_pages()
+            while True:
+                start = pages * LOC_PER_SITEMAP
+                loc_slice = islice(locs, start, start + LOC_PER_SITEMAP)
+                urls = iuv.render(cr, uid, 'website.sitemap_locs', dict(locs=loc_slice), context=context)
+                if urls.strip():
+                    page = iuv.render(cr, uid, 'website.sitemap_xml', dict(content=urls), context=context)
+                    if not first_page:
+                        first_page = page
+                    pages += 1
+                    create_sitemap('/sitemap-%d.xml' % pages, page)
+                else:
+                    break
+            if not pages:
+                return request.not_found()
+            elif pages == 1:
+                content = first_page
+            else:
+                # Sitemaps must be split in several smaller files with a sitemap index
+                content = iuv.render(cr, uid, 'website.sitemap_index_xml', dict(
+                    pages=range(1, pages + 1),
+                    url_root=request.httprequest.url_root,
+                ), context=context)
+            create_sitemap('/sitemap.xml', content)
+
+        return request.make_response(content, [('Content-Type', mimetype)])
 
     #------------------------------------------------------
     # Edit
@@ -332,13 +358,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.website.kanban_col(**post)
 
     def placeholder(self, response):
-        # file_open may return a StringIO. StringIO can be closed but are
-        # not context managers in Python 2 though that is fixed in 3
-        with contextlib.closing(openerp.tools.misc.file_open(
-                os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
-                mode='rb')) as f:
-            response.data = f.read()
-            return response.make_conditional(request.httprequest)
+        return request.registry['website']._image_placeholder(response)
 
     @http.route([
         '/website/image',
@@ -354,60 +374,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         Sets and checks conditional response parameters:
         * :mailheader:`ETag` is always set (and checked)
         * :mailheader:`Last-Modified is set iif the record has a concurrency
-          field (``write_date``)
+          field (``__last_update``)
 
         The requested field is assumed to be base64-encoded image data in
         all cases.
         """
-        id = int(id)
         response = werkzeug.wrappers.Response()
-        concurrency = 'write_date'
-        try:
-            [record] = request.registry[model].read(request.cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field],
-                              context=request.context)
-        except:
-            return self.placeholder(response)
+        return request.registry['website']._image(
+                    request.cr, request.uid, model, id, field, response)
 
-        if concurrency in record:
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(
-                    record[concurrency], server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(
-                    record[concurrency], server_format)
-
-        # Field does not exist on model or field set to False
-        if not record.get(field):
-            # FIXME: maybe a field which does not exist should be a 404?
-            return self.placeholder(response)
-
-        response.set_etag(hashlib.sha1(record[field]).hexdigest())
-        response.make_conditional(request.httprequest)
-
-        # conditional request match
-        if response.status_code == 304:
-            return response
-
-        data = record[field].decode('base64')
-        if (not max_width) and (not max_height):
-            response.data = data
-            return response
-
-        image = Image.open(cStringIO.StringIO(data))
-        response.mimetype = Image.MIME[image.format]
-
-        w, h = image.size
-        max_w, max_h = int(max_width), int(max_height)
-        if w < max_w and h < max_h:
-            response.data = data
-        else:
-            image.thumbnail((max_w, max_h), Image.ANTIALIAS)
-            image.save(response.stream, image.format)
-            del response.headers['Content-Length']
-        return response
 
     #------------------------------------------------------
     # Server actions

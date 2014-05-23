@@ -6,7 +6,7 @@ from openerp import SUPERUSER_ID
 
 class website_sale(openerp.addons.website_sale.controllers.main.website_sale):
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True, multilang=True)
+    @http.route(['/shop/payment'], type='http', auth="public", website=True)
     def payment(self, **post):
         cr, uid, context = request.cr, request.uid, request.context
         order = self.get_order()
