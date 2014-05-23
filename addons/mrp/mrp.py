@@ -567,6 +567,8 @@ class mrp_production(osv.osv):
         origin = False
         if default.get('disassemble'):
             origin = mo.origin + '-' + mo.name if not mo.disassemble and mo.origin else mo.name
+        if not mo.disassemble:
+            origin = mo.origin
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.production'),
             'move_lines': [],
