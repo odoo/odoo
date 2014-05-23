@@ -106,6 +106,22 @@ class res_partner(osv.osv):
             'default_partner_ids': partner_ids,
         }
         return res
+        
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_setup', 'action_sale_config')
+        res_add_link = """<p class="oe_view_nocontent_create">
+            Click to add a contact in your address book. <a href="/web?#action="""+str(res_id[1])+"""">Configure linkedin to import contact</a>
+            </p><p>
+            OpenERP helps you easily track all activities related to
+            a customer; discussions, history of business opportunities,
+            documents, etc.
+            </p>"""
+        res = super(res_partner, self).get_empty_list_help(cr, uid, help, context=context)
+        key = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.linkedin.apikey") or ""
+        ir_model_install = self.pool.get('ir.module.module').search(cr, uid, ['&', ('state', '=', 'installed'), ('name', '=', 'web_linkedin')], context=None)
+        if ir_model_install and key:
+            return res
+        return res_add_link
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
