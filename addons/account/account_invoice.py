@@ -853,7 +853,7 @@ class account_invoice(Model):
             total, total_currency, iml = inv.sudo(context=ctx).compute_invoice_totals(company_currency, ref, iml)
 
             name = inv.name or inv.supplier_invoice_number or '/'
-            totlines = False
+            totlines = []
             if inv.payment_term:
                 totlines = inv.sudo(context=ctx).payment_term.compute(total, inv.date_invoice)[0]
             if totlines:
