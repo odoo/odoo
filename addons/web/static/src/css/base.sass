@@ -970,8 +970,14 @@ $sheet-padding: 16px
         display: table
         height: inherit
         width: 100%
+        position: relative
         .oe_view_manager_body
-            height: inherit
+            position: absolute
+            overflow: auto
+            top: 90px
+            bottom: 0
+            left: 0
+            right: 0
         .oe_view_manager_view_kanban:not(:empty)
             height: inherit
         &[data-view-type=kanban]
@@ -2762,5 +2768,7 @@ input[type="radio"], input[type="checkbox"]
     opacity: 0.6000000238418579
 
 
+body
+    overflow: hidden
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
