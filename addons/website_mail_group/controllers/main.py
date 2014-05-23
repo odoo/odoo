@@ -83,6 +83,19 @@ class MailGroup(http.Controller):
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        Message = request.registry['mail.message']
+        if mode == 'thread':
+            base_domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id), ('parent_id', '=', message.parent_id and message.parent_id.id or False)]
+        else:
+            base_domain = [('model', '=', 'mail.group'), ('res_id', '=', group.id)]
+        next_message = None
+        next_message_ids = Message.search(cr, uid, base_domain + [('date', '<', message.date)], order="date DESC", limit=1, context=context)
+        if next_message_ids:
+            next_message = Message.browse(cr, uid, next_message_ids[0], context=context)
+        prev_message = None
+        prev_message_ids = Message.search(cr, uid, base_domain + [('date', '>', message.date)], order="date ASC", limit=1, context=context)
+        if prev_message_ids:
+            prev_message = Message.browse(cr, uid, prev_message_ids[0], context=context)
         values = {
             'message': message,
             'group': group,
@@ -91,6 +104,8 @@ class MailGroup(http.Controller):
             'date_begin': date_begin,
             'date_end': date_end,
             'replies_per_page': self._replies_per_page,
+            'next_message': next_message,
+            'prev_message': prev_message,
         }
         return request.website.render('website_mail_group.group_message', values)
 
