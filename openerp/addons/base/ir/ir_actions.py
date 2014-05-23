@@ -45,18 +45,34 @@ class actions(osv.osv):
     _name = 'ir.actions.actions'
     _table = 'ir_actions'
     _order = 'name'
+
+    def fn1(self, cr, uid, ids,field_name, args, context=None):
+        view_model = self.pool.get('ir.ui.view')
+        res = {}
+        for action in self.browse(cr, uid, ids, context=context):
+            if action.help_id:
+                res[action.id] = action.help_id.render(context=context)
+                return res
+        return {}
+
+    def fn(self, cr, uid, ids, field_name, field_value, arg, context=None):
+        if not field_value: return False
+        if type(ids)!=type([]):
+            ids=[ids]
+            for id in ids:
+                cr.execute("update ir_actions set help =%s where id=%s",(field_value, id))
+        return True
+    
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'type': fields.char('Action Type', required=True, size=32),
-        'usage': fields.char('Action Usage', size=32),
-        'help': fields.text('Action description',
-            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-            translate=True),
+       'name': fields.char('Name', size=64, required=True),
+       'type': fields.char('Action Type', required=True, size=32),
+       'usage': fields.char('Action Usage', size=32),
+       'help_id': fields.many2one('ir.ui.view', "Help"),
+       'help': fields.function(fn1, fnct_inv=fn, store=True, type="text", string="Help", translate=True)
     }
     _defaults = {
         'usage': lambda *a: False,
     }
-
 
 class ir_actions_report_xml(osv.osv):
 

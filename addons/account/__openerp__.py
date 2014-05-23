@@ -51,6 +51,7 @@ for a particular financial year and for preparation of vouchers there is a modul
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'depends' : ['base_setup', 'product', 'analytic', 'board', 'edi', 'report'],
     'data': [
+        'views/account.xml',
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
@@ -139,7 +140,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/views/report_analyticcostledgerquantity.xml',
         'project/views/report_analyticcostledger.xml',
         'project/views/report_invertedanalyticbalance.xml',
-        'views/account.xml',
+        
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",

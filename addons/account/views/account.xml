@@ -12,5 +12,145 @@
                 <script type="text/javascript" src="/account/static/src/js/account_move_line_quickadd.js"></script>
             </xpath>
         </template>
+        
+        <template id="help_action_account_fiscalyear">
+		      <p class="oe_view_nocontent_create">
+		         Click to start a new fiscal year.
+		      </p><p>
+		        Define your company's financial year according to your needs. A
+		        financial year is a period at the end of which a company's
+		        accounts are made up (usually 12 months). The financial year is
+		        usually referred to by the date in which it ends. For example,
+		        if a company's financial year ends November 30, 2011, then
+		        everything between December 1, 2010 and November 30, 2011
+		        would be referred to as FY 2011.
+		      </p>
+        </template>
+        <template id="help_action_account_period">
+        	  <p class="oe_view_nocontent_create">
+                Click to add a fiscal period.
+              </p><p>
+                An accounting period typically is a month or a quarter. It
+                usually corresponds to the periods of the tax declaration.
+              </p>
+        </template>
+        <template id="help_action_account_form">
+              <p class="oe_view_nocontent_create">
+                Click to add an account.
+              </p><p>
+                An account is part of a ledger allowing your company
+                to register all kinds of debit and credit transactions.
+                Companies present their annual accounts in two main parts: the
+                balance sheet and the income statement (profit and loss
+                account). The annual accounts of a company are required by law
+                to disclose a certain amount of information.
+              </p>
+        </template>
+        <template id="help_action_account_gain_loss">
+              <p class="oe_view_nocontent_create">
+                Click to add an account.
+              </p><p>
+                When doing multi-currency transactions, you may loose or gain
+                some amount due to changes of exchange rate. This menu gives
+                you a forecast of the Gain or Loss you'd realized if those
+                transactions were ended today. Only for accounts having a
+                secondary currency set.
+              </p>
+        </template>
+        <template id="help_action_account_journal_form">
+             <p class="oe_view_nocontent_create">
+                Click to add a journal.
+              </p><p>
+                A journal is used to record transactions of all accounting data
+                related to the day-to-day business.
+              </p><p>
+                A typical company may use one journal per payment method (cash,
+                bank accounts, checks), one purchase journal, one sale journal
+                and one for miscellaneous information.
+              </p>
+        </template>
+        <template id="help_action_bank_statement_tree">
+              <p class="oe_view_nocontent_create">
+                Click to register a bank statement.
+              </p><p>
+                A bank statement is a summary of all financial transactions
+                occurring over a given period of time on a bank account. You
+                should receive this periodicaly from your bank.
+              </p><p>
+                OpenERP allows you to reconcile a statement line directly with
+                the related sale or puchase invoices.
+              </p>
+        </template>
+        <template id="help_action_account_type_form"> 
+              <p class="oe_view_nocontent_create">
+                Click to define a new account type.
+              </p><p>
+                An account type is used to determine how an account is used in
+                each journal. The deferral method of an account type determines
+                the process for the annual closing. Reports such as the Balance
+                Sheet and the Profit and Loss report use the category
+                (profit/loss or balance sheet).
+              </p>
+        </template>
+        <template id="help_action_tax_code_list"> 
+              <p class="oe_view_nocontent_create">
+                Click to define a new tax code.
+              </p><p>
+                Depending on the country, a tax code is usually a cell to fill
+                in your legal tax statement. OpenERP allows you to define the
+                tax structure and each tax computation will be registered in
+                one or several tax code.
+              </p>
+        </template>
+        <template id="help_action_account_moves_all_a"> 
+              <p class="oe_view_nocontent_create">
+                Select the period and the journal you want to fill.
+              </p><p>
+                This view can be used by accountants in order to quickly record
+                entries in OpenERP. If you want to record a supplier invoice,
+                start by recording the line of the expense account. OpenERP
+                will propose to you automatically the Tax related to this
+                account and the counterpart "Account Payable".
+              </p>
+        </template>
+        <template id="help_action_account_manual_reconcile"> 
+              <p>
+                 No journal items found.
+              </p>
+        </template>
+        <template id="help_action_move_journal_line"> 
+              <p class="oe_view_nocontent_create">
+                Click to create a journal entry.
+              </p><p>
+                A journal entry consists of several journal items, each of
+                which is either a debit or a credit transaction.
+              </p><p>
+                OpenERP automatically creates one journal entry per accounting
+                document: invoice, refund, supplier payment, bank statements,
+                etc. So, you should record journal entries manually only/mainly
+                for miscellaneous operations.
+              </p>
+        </template>
+        <template id="help_action_subscription_form"> 
+              <p class="oe_view_nocontent_create">
+                Click to define a new recurring entry.
+              </p><p>
+                A recurring entry occurs on a recurrent basis from a specific
+                date, i.e. corresponding to the signature of a contract or an
+                agreement with a customer or a supplier. You can create such
+                entries to automate the postings in the system.
+              </p>
+        </template>
+        <template id="help_action_view_bank_statement_tree"> 
+              <p class="oe_view_nocontent_create">
+                Click to create a new cash log.
+              </p><p>
+                A Cash Register allows you to manage cash entries in your cash
+                journals. This feature provides an easy way to follow up cash
+                payments on a daily basis. You can enter the coins that are in
+                your cash box, and then post entries when money comes in or
+                goes out of the cash box.
+              </p>
+        </template>
     </data>
 </openerp>

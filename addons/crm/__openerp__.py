@@ -60,6 +60,7 @@ Dashboard for CRM will include:
         'web_kanban_sparkline',
     ],
     'data': [
+        'views/crm.xml',
         'crm_data.xml',
         'crm_lead_data.xml',
         'crm_phonecall_data.xml',
@@ -92,7 +93,6 @@ Dashboard for CRM will include:
         'base_partner_merge_view.xml',
 
         'crm_case_section_view.xml',
-        'views/crm.xml',
     ],
     'demo': [
         'crm_demo.xml',
