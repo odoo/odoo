@@ -77,7 +77,7 @@ class res_partner(osv.osv):
             result = geo_find(geo_query_address(street=partner.street,
                                                 zip=partner.zip,
                                                 city=partner.city,
-                                                state=partner.state_id.name,
+                                                state=partner.state_name,
                                                 country=partner.country_id.name))
             if result:
                 self.write(cr, uid, [partner.id], {

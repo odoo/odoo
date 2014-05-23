@@ -38,10 +38,10 @@ class format_address(object):
         fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
         fmt = fmt and fmt.address_format
         layouts = {
-            '%(city)s %(state_code)s\n%(zip)s': """
+            '%(city)s %(state_name)s\n%(zip)s': """
                 <div class="address_format">
                     <field name="city" placeholder="City" style="width: 50%%"/>
-                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
+                    <field name="state_name" class="oe_no_button" placeholder="State" style="width: 47%%"/>
                     <br/>
                     <field name="zip" placeholder="ZIP"/>
                 </div>
@@ -51,13 +51,13 @@ class format_address(object):
                     <field name="zip" placeholder="ZIP" style="width: 40%%"/>
                     <field name="city" placeholder="City" style="width: 57%%"/>
                     <br/>
-                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                    <field name="state_name" class="oe_no_button" placeholder="State"/>
                 </div>
             """,
             '%(city)s\n%(state_name)s\n%(zip)s': """
                 <div class="address_format">
                     <field name="city" placeholder="City"/>
-                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                    <field name="state_name" class="oe_no_button" placeholder="State"/>
                     <field name="zip" placeholder="ZIP"/>
                 </div>
             """
@@ -71,6 +71,7 @@ class format_address(object):
                 arch = etree.tostring(doc)
                 break
         return arch
+    
 
 
 def _tz_get(self,cr,uid, context=None):
@@ -162,7 +163,7 @@ def _lang_get(self, cr, uid, context=None):
     return [(r['code'], r['name']) for r in res]
 
 # fields copy if 'use_parent_address' is checked
-ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_name', 'country_id')
 
 class res_partner(osv.osv, format_address):
     _description = 'Partner'
@@ -264,7 +265,7 @@ class res_partner(osv.osv, format_address):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
+        'state_name': fields.char('State', size=32),
         'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
         'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
                                   deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
@@ -388,12 +389,6 @@ class res_partner(osv.osv, format_address):
         else:
             result['value'] = {'use_parent_address': False}
         return result
-
-    def onchange_state(self, cr, uid, ids, state_id, context=None):
-        if state_id:
-            country_id = self.pool['res.country.state'].browse(cr, uid, state_id, context).country_id.id
-            return {'value':{'country_id':country_id}}
-        return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in self.pool['res.partner'].read(cr, uid, ids, ['ean13',]):
@@ -739,7 +734,7 @@ class res_partner(osv.osv, format_address):
         # default to type 'default' or the partner itself
         default = result.get('default', partner.id)
         for adr_type in adr_pref:
-            result[adr_type] = result.get(adr_type) or default 
+            result[adr_type] = result.get(adr_type) or default
         return result
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
@@ -773,10 +768,9 @@ class res_partner(osv.osv, format_address):
         # get the information that will be injected into the display format
         # get the address format
         address_format = address.country_id and address.country_id.address_format or \
-              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
+              "%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s"
         args = {
-            'state_code': address.state_id and address.state_id.code or '',
-            'state_name': address.state_id and address.state_id.name or '',
+            'state_name': address.state_name or '',
             'country_code': address.country_id and address.country_id.code or '',
             'country_name': address.country_id and address.country_id.name or '',
             'company_name': address.parent_id and address.parent_id.name or '',

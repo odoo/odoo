@@ -68,7 +68,7 @@
                                     <group>
                                         <group>
                                             <field name="country_ids" widget="many2many_tags"/>
-                                            <field name="state_ids" widget="many2many_tags"/>
+                                            <field name="state"/>
                                         </group>
                                         <group>
                                             <label for="zip_from" string="Zip"/>
@@ -143,7 +143,7 @@
                                 <field name="country_ids" nolabel="1"/>
                             </group>
                             <group string="States">
-                                <field colspan="2" name="state_ids" nolabel="1"/>
+                                <field colspan="2" name="state" nolabel="1"/>
                                 <field name="zip_from"/>
                                 <field name="zip_to"/>
                             </group>

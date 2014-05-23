@@ -49,7 +49,7 @@ EDI_LIKE_HTML_SOURCE = """<div style="font-family: 'Lucica Grande', Ubuntu, Aria
         ${object.company_id.street}<br/>
         ${object.company_id.street2}<br/>
         ${object.company_id.zip} ${object.company_id.city}<br/>
-        ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        ${('%s, ' % object.company_id.state_name) or ''} ${object.company_id.country_id.name or ''}<br/>
         </span>
         <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
             Phone:&nbsp; ${object.company_id.phone}

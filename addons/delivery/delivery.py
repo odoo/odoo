@@ -86,10 +86,7 @@ class delivery_carrier(osv.osv):
             for grid in carrier.grids_id:
                 get_id = lambda x: x.id
                 country_ids = map(get_id, grid.country_ids)
-                state_ids = map(get_id, grid.state_ids)
                 if country_ids and not contact.country_id.id in country_ids:
-                    continue
-                if state_ids and not contact.state_id.id in state_ids:
                     continue
                 if grid.zip_from and (contact.zip or '')< grid.zip_from:
                     continue
@@ -175,7 +172,7 @@ class delivery_grid(osv.osv):
         'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when displaying a list of delivery grid."),
         'carrier_id': fields.many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade'),
         'country_ids': fields.many2many('res.country', 'delivery_grid_country_rel', 'grid_id', 'country_id', 'Countries'),
-        'state_ids': fields.many2many('res.country.state', 'delivery_grid_state_rel', 'grid_id', 'state_id', 'States'),
+        'state': fields.char('States', size=32),
         'zip_from': fields.char('Start Zip', size=12),
         'zip_to': fields.char('To Zip', size=12),
         'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line'),

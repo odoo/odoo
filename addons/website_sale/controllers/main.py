@@ -6,6 +6,8 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
+from openerp.osv.orm import browse_record
+
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -264,27 +266,31 @@ class website_sale(http.Controller):
         if tx and tx.state != 'draft':
             return request.redirect('/shop/payment/confirmation/%s' % order.id)
 
+    @http.route('/shop/get_country', type='json', auth='user', website=True)
+    def get_country(self, **post):
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        orm_country = registry.get('res.country')
+        country_ids = orm_country.search(cr, uid, [], context=context)
+        countries = {}
+        for country in orm_country.browse(cr, uid, country_ids, context=context):
+            countries.update({country.id : country.name})
+        return countries
+    
     def checkout_values(self, data=None):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
         orm_partner = registry.get('res.partner')
         orm_user = registry.get('res.users')
-        orm_country = registry.get('res.country')
-        state_orm = registry.get('res.country.state')
-
-        country_ids = orm_country.search(cr, SUPERUSER_ID, [], context=context)
-        countries = orm_country.browse(cr, SUPERUSER_ID, country_ids, context)
-        states_ids = state_orm.search(cr, SUPERUSER_ID, [], context=context)
-        states = state_orm.browse(cr, SUPERUSER_ID, states_ids, context)
+        partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context=context).partner_id
+        shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
 
         checkout = {}
         if not data:
             if request.uid != request.website.user_id.id:
-                partner = orm_user.browse(cr, SUPERUSER_ID, request.uid, context).partner_id
                 checkout.update( self.checkout_parse("billing", partner) )
 
-                shipping_ids = orm_partner.search(cr, SUPERUSER_ID, [("parent_id", "=", partner.id), ('type', "=", 'delivery')], limit=1, context=context)
                 if shipping_ids:
-                    shipping = orm_user.browse(cr, SUPERUSER_ID, request.uid, context)
+                    shipping = orm_partner.browse(cr, SUPERUSER_ID, shipping_ids[0], context=context)
+                    checkout.update({'shipping_ids': shipping_ids})
                     checkout.update( self.checkout_parse("shipping", shipping) )
                     checkout['shipping_different'] = True
             else:
@@ -297,12 +303,11 @@ class website_sale(http.Controller):
         else:
             checkout = self.checkout_parse('billing', data)
             if data.get("shipping_different"):
+                checkout.update({'shipping_ids': shipping_ids})
                 checkout.update(self.checkout_parse('shipping', data))
                 checkout["shipping_different"] = True
 
         values = {
-            'countries': countries,
-            'states': states,
             'checkout': checkout,
             'shipping_different': checkout.get('shipping_different'),
             'error': {},
@@ -310,13 +315,16 @@ class website_sale(http.Controller):
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-    optional_billing_fields = ["street2", "state_id"]
+    optional_billing_fields = ["street2", "state_name"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
-    optional_shipping_fields = ["state_id"]
+    optional_shipping_fields = ["state_name"]
 
     def checkout_parse(self, address_type, data, remove_prefix=False):
         """ data is a dict OR a partner browse record
         """
+        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        
+        orm_country = registry.get('res.country')
         # set mandatory and optional fields
         assert address_type in ('billing', 'shipping')
         if address_type == 'billing':
@@ -336,10 +344,20 @@ class website_sale(http.Controller):
             if data.parent_id:
                 query[prefix + 'street2'] = data.parent_id.name
 
-        if query.get(prefix + 'state_id'):
-            query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
+        if query.get(prefix + 'state_name'):
+            query[prefix + 'state_name'] = query[prefix + 'state_name']
+        
         if query.get(prefix + 'country_id'):
-            query[prefix + 'country_id'] = int(query[prefix + 'country_id'])
+            if query.get('shipping_country_id', False):
+                ctr_id = query['shipping_country_id']
+            else:
+                ctr_id = query.get('country_id', False)
+            if isinstance(ctr_id, browse_record):
+                query[prefix + 'country_id'] = query[prefix + 'country_id'].name
+            elif remove_prefix:
+                country_id = orm_country.search(cr, SUPERUSER_ID, [('name', '=', ctr_id)], context=context)
+                if country_id:
+                    data[prefix + 'country_id'] = country_id[0]
 
         if not remove_prefix:
             return query
@@ -396,7 +414,10 @@ class website_sale(http.Controller):
             shipping_info = self.checkout_parse('shipping', checkout, True)
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
-            shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
+            if checkout['shipping_ids']:
+                orm_partner.write(cr, SUPERUSER_ID, checkout['shipping_ids'], shipping_info, context=context)
+            else:
+                shipping_id = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context=context)
 
         order_info = {
             'partner_id': partner_id,

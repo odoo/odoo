@@ -32,8 +32,7 @@ class Bank(osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state': fields.many2one("res.country.state", 'Fed. State',
-            domain="[('country_id', '=', country)]"),
+        'state': fields.char('Fed. State', size=32),
         'country': fields.many2one('res.country', 'Country'),
         'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
@@ -96,7 +95,7 @@ class res_partner_bank(osv.osv):
 
     def _default_value(self, cursor, user, field, context=None):
         if context is None: context = {}
-        if field in ('country_id', 'state_id'):
+        if field in ('country_id', 'state_name'):
             value = False
         else:
             value = ''
@@ -124,8 +123,7 @@ class res_partner_bank(osv.osv):
         'city': fields.char('City', size=128),
         'country_id': fields.many2one('res.country', 'Country',
             change_default=True),
-        'state_id': fields.many2one("res.country.state", 'Fed. State',
-            change_default=True, domain="[('country_id','=',country_id)]"),
+        'state_name': fields.char('Fed. State', size=32),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
         'partner_id': fields.many2one('res.partner', 'Account Owner', required=True,
@@ -147,8 +145,8 @@ class res_partner_bank(osv.osv):
             cursor, user, 'zip', context=context),
         'country_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'country_id', context=context),
-        'state_id': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'state_id', context=context),
+        'state_name': lambda obj, cursor, user, context: obj._default_value(
+            cursor, user, 'state_name', context=context),
         'name': '/'
     }
 
@@ -225,7 +223,7 @@ class res_partner_bank(osv.osv):
             result['city'] = part.city or False
             result['zip'] =  part.zip or False
             result['country_id'] =  part.country_id.id
-            result['state_id'] = part.state_id.id
+            result['state_name'] = part.state_name or False
         return {'value': result}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

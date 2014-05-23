@@ -449,25 +449,20 @@ class ExtendedLeaf(object):
     #   running examples:
     #   - res_users.name, like, foo: name is on res_partner, not on res_users
     #   - res_partner.bank_ids.name, like, foo: bank_ids is a one2many with _auto_join
-    #   - res_partner.state_id.name, like, foo: state_id is a many2one with _auto_join
     # A join:
     #   - link between src_table and dst_table, using src_field and dst_field
     #       i.e.: inherits: res_users.partner_id = res_partner.id
     #       i.e.: one2many: res_partner.id = res_partner_bank.partner_id
-    #       i.e.: many2one: res_partner.state_id = res_country_state.id
     #   - done in the context of a field
     #       i.e.: inherits: 'partner_id'
     #       i.e.: one2many: 'bank_ids'
-    #       i.e.: many2one: 'state_id'
     #   - table names use aliases: initial table followed by the context field
     #     names, joined using a '__'
     #       i.e.: inherits: res_partner as res_users__partner_id
     #       i.e.: one2many: res_partner_bank as res_partner__bank_ids
-    #       i.e.: many2one: res_country_state as res_partner__state_id
     #   - join condition use aliases
     #       i.e.: inherits: res_users.partner_id = res_users__partner_id.id
     #       i.e.: one2many: res_partner.id = res_partner__bank_ids.parr_id
-    #       i.e.: many2one: res_partner.state_id = res_partner__state_id.id
     # Variables explanation:
     #   - src_table: working table before the join
     #       -> res_users, res_partner, res_partner
@@ -477,7 +472,6 @@ class ExtendedLeaf(object):
     #     necessarily a field (because 'id' is not a field instance)
     #       i.e.: inherits: 'partner_id', found in the inherits of the current table
     #       i.e.: one2many: 'id', not a field
-    #       i.e.: many2one: 'state_id', the current field name
     #   - dst_table_link_name: field name used to link the dst table, not
     #     necessarily a field (because 'id' is not a field instance)
     #       i.e.: inherits: 'id', not a field
@@ -486,7 +480,6 @@ class ExtendedLeaf(object):
     #   - context_field_name: field name used as a context to make the alias
     #       i.e.: inherits: 'partner_id': found in the inherits of the current table
     #       i.e.: one2many: 'bank_ids': current field name
-    #       i.e.: many2one: 'state_id': current field name
     # --------------------------------------------------
 
     def __init__(self, leaf, model, join_context=None):
@@ -629,7 +622,7 @@ class expression(object):
             :attr list result: list that will hold the result of the parsing
                 as a list of ExtendedLeaf
             :attr list joins: list of join conditions, such as
-                (res_country_state."id" = res_partner."state_id")
+                (res_country_state."id" = res_partner."state_name")
             :attr root_model: base model for the query
             :attr list expression: the domain expression, that will be normalized
                 and prepared
@@ -822,7 +815,6 @@ class expression(object):
             # ----------------------------------------
 
             elif len(field_path) > 1 and field._type == 'many2one' and field._auto_join:
-                # res_partner.state_id = res_partner__state_id.id
                 leaf.add_join_context(relational_model, field_path[0], 'id', field_path[0])
                 push(create_substitution_leaf(leaf, (field_path[1], operator, right), relational_model))
 

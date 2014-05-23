@@ -118,14 +118,14 @@
                             <field name="partner_id" string="Customer"
                                 on_change="on_change_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
-                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
+                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state': state, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
                                 <field name="street2"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" on_change="onchange_state(state_id)" options='{"no_open": True}' placeholder="State" style="width: 24%%"/>
+                                    <field name="state" placeholder="State" style="width: 24%%"/>
                                     <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
                                 <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
@@ -464,7 +464,7 @@
                                         <field name="street2"/>
                                         <div class="address_format">
                                             <field name="city" placeholder="City" style="width: 40%%"/>
-                                            <field name="state_id" options='{"no_open": True}' on_change="onchange_state(state_id)" placeholder="State" style="width: 24%%"/>
+                                            <field name="state" placeholder="State" style="width: 24%%"/>
                                             <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                         </div>
                                         <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
