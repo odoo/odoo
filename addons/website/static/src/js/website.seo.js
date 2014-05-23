@@ -296,7 +296,7 @@
             });
         },
         company: function () {
-            return $('meta[name="openerp.company"]').attr('value');
+            return $('body').attr('data-oe-company-name');
         },
         bodyText: function () {
             return $('body').children().not('.js_seo_configuration').text();

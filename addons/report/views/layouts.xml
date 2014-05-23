@@ -9,7 +9,8 @@
           t-att-data-main-object="repr(main_object) if editable else None"
           t-att-data-report-margin-top="data_report_margin_top if data_report_margin_top else None"
           t-att-data-report-header-spacing="data_report_header_spacing if data_report_header_spacing else None"
-          t-att-data-report-dpi="data_report_dpi if data_report_dpi else None">
+          t-att-data-report-dpi="data_report_dpi if data_report_dpi else None"
+          t-att-data-oe-company-name="res_company.name">
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -19,7 +20,6 @@
             <t t-if="not title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <meta name="openerp.company" t-att-value="res_company.name"/>
             <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object

@@ -41,7 +41,8 @@
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
-          t-att-data-main-object="repr(main_object) if editable else None">
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-oe-company-name="res_company.name">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
@@ -55,7 +56,6 @@
                 <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
             </t>
             <meta name="viewport" content="initial-scale=1"/>
-            <meta name="openerp.company" t-att-content="res_company.name"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
