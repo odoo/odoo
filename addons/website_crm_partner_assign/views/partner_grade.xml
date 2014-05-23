@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+  <record model="ir.ui.view" id="partner_grade_view">
+    <field name="name">res.partner.grade.website</field>
+    <field name="model">res.partner.grade</field>
+    <field name="inherit_id" ref="crm_partner_assign.view_partner_grade_form"/>
+    <field name="arch" type="xml">
+      <field name="active" position="after">
+        <field name="website_published"/>
+      </field>
+    </field>
+  </record>
+
+</data>
+</openerp>
+
