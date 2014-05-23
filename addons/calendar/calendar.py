@@ -297,7 +297,7 @@ class res_partner(osv.Model):
         Used by web_calendar.js : Many2ManyAttendee
         """
         datas = []
-        meeting = False
+        meeting = None
         if meeting_id:
             meeting = self.pool['calendar.event'].browse(cr, uid, get_real_ids(meeting_id), context=context)
         for partner in self.browse(cr, uid, ids, context=context):
