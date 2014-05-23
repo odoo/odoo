@@ -957,6 +957,15 @@ $sheet-padding: 16px
             color: $link-color
         > div
             height: 100%
+            > .oe_view_manager
+                > .oe_view_manager_body
+                    position: absolute
+                    overflow: auto
+                    top: 90px
+                    bottom: 0
+                    left: 0
+                    right: 0
+
         .oe_breadcrumb_item:not(:last-child)
             max-width: 7em
             white-space: nowrap
@@ -971,13 +980,6 @@ $sheet-padding: 16px
         display: table
         height: inherit
         width: 100%
-        .oe_view_manager_body
-            position: absolute
-            overflow: auto
-            top: 90px
-            bottom: 0
-            left: 0
-            right: 0
         .oe_view_manager_view_kanban:not(:empty)
             height: 100%
         &[data-view-type=kanban]
