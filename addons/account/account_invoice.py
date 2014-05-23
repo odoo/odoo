@@ -578,8 +578,11 @@ class account_invoice(Model):
             if not values.get('journal_id'):
                 field_desc = journals.fields_get(['journal_id'])
                 type_label = next(t for t, label in field_desc['journal_id']['selection'] if t == journal_type)
-                raise except_orm(_('Configuration Error!'),
-                                     _('Cannot find any account journal of "%s" type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % journal_type_label)
+                raise except_orm(
+                    _('Configuration Error!'),
+                    _('Cannot find any account journal of "%s" type for this company.\n\n'
+                      'You can create one in the menu: \n'
+                      'Configuration\Journals\Journals.') % type_label)
             domain = {'journal_id':  [('id', 'in', journals.ids)]}
 
         return {'value': values, 'domain': domain}
