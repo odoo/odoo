@@ -734,43 +734,50 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
-    template: 'Menu',
+    // template: 'Menu',
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        this.on("menu_loaded", this, function (menu_data) {
-            self.reflow();
-            // launch the fetch of needaction counters, asynchronous
-            if (!_.isEmpty(menu_data.all_menu_ids)) {
-                this.do_load_needaction(menu_data.all_menu_ids);
-            }
-        });
-        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        instance.web.bus.on('resize', this, function() {
-            self.$el.height(0);
-            lazyreflow();
-        });
+        // this.on("menu_loaded", this, function (menu_data) {
+        //     self.reflow();
+        //     // launch the fetch of needaction counters, asynchronous
+        //     if (!_.isEmpty(menu_data.all_menu_ids)) {
+        //         this.do_load_needaction(menu_data.all_menu_ids);
+        //     }
+        // });
+        // var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        // instance.web.bus.on('resize', this, function() {
+        //     self.$el.height(0);
+        //     lazyreflow();
+        // });
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$secondary_menus = this.getParent().$el.find('.oe_secondary_menus_container');
-        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
+        // this.$secondary_menus = this.getParent().$el.find('.oe_secondary_menus_container');
+        // this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         return this.do_reload();
     },
     do_reload: function() {
         var self = this;
-        return this.rpc("/web/menu/load", {}).done(function(r) {
-            self.menu_loaded(r);
+        // return this.rpc("/web/menu/load", {}).done(function(r) {
+        //     self.menu_loaded(r);
+        // });
+        return $.when().done(function(r) {
+            self.menu_loaded(null);
         });
     },
     menu_loaded: function(data) {
         var self = this;
-        this.data = {data: data};
-        this.renderElement();
-        this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
+        // this.data = {data: data};
+        // this.renderElement();
+        // this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
+        this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
+        this.$el = this.$el.parents().find('.nav.navbar-nav.navbar-left')
+
+
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
@@ -940,21 +947,21 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     on_top_menu_click: function(ev) {
         var self = this;
-        var id = $(ev.currentTarget).data('menu');
-        var menu_ids = [id];
-        var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
-        function add_menu_ids (menu) {
-            if (menu.children) {
-                _.each(menu.children, function (menu) {
-                    menu_ids.push(menu.id);
-                    add_menu_ids(menu);
-                });
-            }
-        }
-        add_menu_ids(menu);
-        self.do_load_needaction(menu_ids).then(function () {
-            self.trigger("need_action_reloaded");
-        });
+        // var id = $(ev.currentTarget).data('menu');
+        // var menu_ids = [id];
+        // var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
+        // function add_menu_ids (menu) {
+        //     if (menu.children) {
+        //         _.each(menu.children, function (menu) {
+        //             menu_ids.push(menu.id);
+        //             add_menu_ids(menu);
+        //         });
+        //     }
+        // }
+        // add_menu_ids(menu);
+        // self.do_load_needaction(menu_ids).then(function () {
+        //     self.trigger("need_action_reloaded");
+        // });
         this.on_menu_click(ev);
     },
     on_menu_click: function(ev) {
@@ -1086,9 +1093,9 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            var $e = $(QWeb.render(self._template, {widget: self}));
-            self.replaceElement($e);
-            $e.openerpClass();
+            // var $e = $(QWeb.render(self._template, {widget: self}));
+            // self.replaceElement($e);
+            // $e.openerpClass();
             self.bind_events();
             return self.show_common();
         });
@@ -1135,7 +1142,6 @@ instance.web.Client = instance.web.Widget.extend({
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$el);
         self.action_manager = new instance.web.ActionManager(self);
-        self.action_manager.appendTo(self.$('.oe_application'));
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
@@ -1146,7 +1152,7 @@ instance.web.Client = instance.web.Widget.extend({
 });
 
 instance.web.WebClient = instance.web.Client.extend({
-    _template: 'WebClient',
+    // _template: 'WebClient',
     events: {
         'click .oe_logo_edit_admin': 'logo_edit'
     },
@@ -1229,15 +1235,16 @@ instance.web.WebClient = instance.web.Client.extend({
         self.toggle_bars(true);
         self.update_logo();
         self.menu = new instance.web.Menu(self);
-        self.menu.replace(this.$el.find('.oe_menu_placeholder'));
+        self.menu.replace(this.$el.parents('body').find('.oe_menu_placeholder'));
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
+        self.user_menu.replace(this.$el.parents('body').find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
+        self.action_manager.appendTo(this.$el.parents('body').find('.oe_application'));
         if (self.client_options.action_post_login) {
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
@@ -1245,8 +1252,8 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     update_logo: function() {
         var img = this.session.url('/web/binary/company_logo');
-        this.$('.oe_logo img').attr('src', '').attr('src', img);
-        this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
+        this.$el.parents('body').find('.oe_logo img').attr('src', '').attr('src', img);
+        this.$el.parents('body').find('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },
     logo_edit: function(ev) {
         var self = this;

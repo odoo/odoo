@@ -1991,7 +1991,7 @@ openerp.mail = function (session) {
             this._super.apply(this, arguments);
             this.update_promise.then(function() {
                 var mail_button = new session.web.ComposeMessageTopButton();
-                mail_button.appendTo(session.webclient.$el.find('.oe_systray'));
+                mail_button.appendTo(session.webclient.$el.parents('body').find('.oe_systray'));
             });
         },
     });

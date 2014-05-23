@@ -134,39 +134,39 @@
         </template>
 
         <template id="web.menu">
-            <div class="openerp openerp_webclient_container">
-                <div class="oe_webclient">
-                    <div class="navbar navbar-default navbar-static-top oe_navbar">
-                        <ul class="nav navbar-nav navbar-left">
-                            <li t-foreach="menu_data['children']" t-as="menu">
-                                <t t-call="web.menu_link"/>
-                            </li>
-                            <li id="menu_more_container" class="dropdown" style="display: none;">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-                                <ul id="menu_more" class="dropdown-menu"></ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <ul class="nav navbar-nav navbar-left">
+                <li t-foreach="menu_data['children']" t-as="menu">
+                    <t t-call="web.menu_link"/>
+                </li>
+                <li id="menu_more_container" class="dropdown" style="display: none;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+                    <ul id="menu_more" class="dropdown-menu"></ul>
+                </li>
+            </ul>
+
+            <div class="oe_menu_placeholder"/>
+            <div class="oe_user_menu_placeholder"/>
+            <div class="oe_systray"/>
         </template>
         <template id="web.menu_secondary">
-            <div class="openerp openerp_webclient_container">
-                <div class="oe_webclient">
-                    <div class="of_leftbar">
-                        <t t-foreach="menu_data['children']" t-as="menu">
-                            <!-- <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']"> -->
-                            <div class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
-                                <t t-foreach="menu['children']" t-as="menu">
-                                    <div class="oe_secondary_menu_section">
-                                        <t t-esc="menu['name']"/>
-                                    </div>
-                                    <t t-call="web.menu_secondary_submenu"/>
-                                </t>
+            <a class="oe_logo" t-attf-href="/web">
+                <span class="oe_logo_edit">Edit Company data</span>
+                <img src='/web/binary/company_logo'/>
+            </a>
+            <div class="oe_secondary_menus_container">
+                <t t-foreach="menu_data['children']" t-as="menu">
+                    <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
+                        <t t-foreach="menu['children']" t-as="menu">
+                            <div class="oe_secondary_menu_section">
+                                <t t-esc="menu['name']"/>
                             </div>
+                            <t t-call="web.menu_secondary_submenu"/>
                         </t>
                     </div>
-                </div>
+                </t>
+            </div>
+            <div class="oe_footer">
+                Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
             </div>
         </template>
         <template id="web.menu_secondary_submenu">
@@ -208,13 +208,21 @@
                     </script>
                 </t>
 
-                <div class="oe_topmenu">
-                    <t t-call="web.menu"/>
+                <div class="openerp openerp_webclient_container">
+                    <table class="oe_webclient">
+                        <tr>
+                            <td colspan="2" class="navbar navbar-default navbar-static-top oe_navbar" role="navigation">
+                                <t t-call="web.menu"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="oe_leftbar" valign="top">
+                                <t t-call="web.menu_secondary"/>
+                            </td>
+                            <td class="oe_application"/>
+                        </tr>
+                    </table>
                 </div>
-                <div class="oe_submenu">
-                    <t t-call="web.menu_secondary"/>
-                </div>
-                <div class="oe_application"/>
             </t>
         </template>
 
