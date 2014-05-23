@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
+import re
 
-import openerp
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.addons.website_partner.controllers import main as website_partner
 from openerp.tools.translate import _
 
 import werkzeug.urls
@@ -28,7 +27,7 @@ class WebsiteMembership(http.Controller):
         '/members/association/<int:membership_id>/country/<int:country_id>',
         '/members/association/<int:membership_id>/country/<country_name>-<int:country_id>/page/<int:page>',
         '/members/association/<int:membership_id>/country/<int:country_id>/page/<int:page>',
-    ], type='http', auth="public", website=True, multilang=True)
+    ], type='http', auth="public", website=True)
     def members(self, membership_id=None, country_name=None, country_id=0, page=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
         product_obj = request.registry['product.product']
@@ -39,7 +38,7 @@ class WebsiteMembership(http.Controller):
         current_country = None
 
         # base domain for groupby / searches
-        base_line_domain = [("partner.website_published", "=", True),('state', 'in', ['free', 'paid'])]
+        base_line_domain = [("partner.website_published", "=", True), ('state', 'in', ['free', 'paid'])]
         if membership_id:
             base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
@@ -76,12 +75,10 @@ class WebsiteMembership(http.Controller):
         membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
         membership_lines = membership_line_obj.browse(cr, uid, membership_line_ids, context=context)
         membership_lines.sort(key=lambda x: x.membership_id.website_sequence)
-        partner_ids = [m.partner and m.partner.id for m in membership_lines]
+        partner_ids = [m.partner.id for m in membership_lines]
         google_map_partner_ids = ",".join(map(str, partner_ids))
 
-        partners_data = {}
-        for partner in partner_obj.read(cr, openerp.SUPERUSER_ID, partner_ids, request.website.get_partner_white_list_fields(), context=context):
-            partners_data[partner.get("id")] = partner
+        partners = dict((p.id, p) for p in partner_obj.browse(request.cr, SUPERUSER_ID, partner_ids, request.context))
 
         # format domain for group_by and memberships
         membership_ids = product_obj.search(cr, uid, [('membership', '=', True)], order="website_sequence", context=context)
@@ -91,7 +88,7 @@ class WebsiteMembership(http.Controller):
         pager = request.website.pager(url="/members", total=len(membership_line_ids), page=page, step=self._references_per_page, scope=7, url_args=post)
 
         values = {
-            'partners_data': partners_data,
+            'partners': partners,
             'membership_lines': membership_lines,
             'memberships': memberships,
             'membership': membership,
@@ -105,11 +102,15 @@ class WebsiteMembership(http.Controller):
         }
         return request.website.render("website_membership.index", values)
 
-    @http.route(['/members/<int:partner_id>', '/members/<partner_name>-<int:partner_id>'], type='http', auth="public", website=True, multilang=True)
-    def partners_ref(self, partner_id, **post):
-        partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
-        values = website_partner.get_partner_template_value(partner)
-        if not values:
-            return self.members(**post)
-        values['main_object'] = values['partner']
-        return request.website.render("website_membership.partner", values)
+    # Do not use semantic controller due to SUPERUSER_ID
+    @http.route(['/members/<partner_id>'], type='http', auth="public", website=True)
+    def partners_detail(self, partner_id, **post):
+        mo = re.search('-([-0-9]+)$', str(partner_id))
+        if mo:
+            partner_id = int(mo.group(1))
+            partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)
+            if partner.exists() and partner.website_published:
+                values = {}
+                values['main_object'] = values['partner'] = partner
+                return request.website.render("website_membership.partner", values)
+        return self.customers(**post)
