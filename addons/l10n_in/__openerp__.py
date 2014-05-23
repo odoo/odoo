@@ -37,10 +37,8 @@ Indian accounting chart and localization.
     'demo': [],
     'data': [
         'l10n_in_tax_code_template.xml',
-        'l10n_in_public_chart.xml',
-        'l10n_in_public_tax_template.xml',
-        'l10n_in_private_chart.xml',
-        'l10n_in_private_tax_template.xml',
+        'l10n_in_standard_chart.xml',
+        'l10n_in_standard_tax_template.xml',        
         'l10n_in_wizard.xml',
     ],
     'auto_install': False,

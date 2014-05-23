@@ -31,155 +31,191 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a1"/>
         </record>
-        
-       <record model="account.account.template" id="a101">
-            <field name="name">Cash</field>
+	<record model="account.account.template" id="a100">
+            <field name="name">Non Current Assets</field>
+            <field name="code">100</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="a10"/>
+        </record>
+	<record model="account.account.template" id="a1000">
+            <field name="name">Intangible Assets</field>
+            <field name="code">1000</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="a100"/>
+        </record>
+
+<!--NOTE Add GoodWill over here under intangible Assets-->
+
+        <record model="account.account.template" id="a1001">
+            <field name="name">Tangible Assets</field>
+            <field name="code">1001</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="a100"/>
+        </record>        
+	<record model="account.account.template" id="a101">
+            <field name="name">Current Assets</field>
             <field name="code">101</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="a10"/>
+        </record>
+
+
+       <record model="account.account.template" id="a1010">
+            <field name="name">Cash and Cash Equivalent</field>
+            <field name="code">1010</field>
             <field name="type">liquidity</field>
             <field name="user_type" ref="account.data_account_type_cash"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a101"/>
             <field name="note">Checking account balance (as shown in company records), currency, coins, checks received from customers but not yet deposited.</field>
         </record>
         
-        <record model="account.account.template" id="a120">
+        <record model="account.account.template" id="a1011">
             <field name="name">Accounts Receivable</field>
-            <field name="code">120</field>
+            <field name="code">1011</field>
             <field name="type">receivable</field>
             <field name="user_type" ref="account.data_account_type_receivable"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a101"/>
             <field name="note">Amounts owed to the company for services performed or products sold but not yet paid for.</field>
         </record>
         
-        <record model="account.account.template" id="a140">
+        <record model="account.account.template" id="a1012">
             <field name="name">Merchandise Inventory</field>
-            <field name="code">140</field>
+            <field name="code">1012</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a101"/>
             <field name="note">Cost of merchandise purchased but has not yet been sold.</field>
         </record>
         
-        <record model="account.account.template" id="a150">
+        <record model="account.account.template" id="a1013">
             <field name="name">Supplies</field>
-            <field name="code">150</field>
+            <field name="code">1013</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a101"/>
             <field name="note">Cost of supplies that have not yet been used. Supplies that have been used are recorded in Supplies Expense.</field>
         </record>
         
-        <record model="account.account.template" id="a160">
+        <record model="account.account.template" id="a1014">
             <field name="name">Prepaid Insurance</field>
-            <field name="code">160</field>
+            <field name="code">1014</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a101"/>
             <field name="note">Cost of insurance that is paid in advance and includes a future accounting period.</field>
         </record>
         
-        <record model="account.account.template" id="a170">
+        <record model="account.account.template" id="a10010">
             <field name="name">Land</field>
-            <field name="code">170</field>
+            <field name="code">10010</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a1001"/>
             <field name="note">Cost to acquire and prepare land for use by the company.</field>
         </record>
         
-        <record model="account.account.template" id="a175">
+        <record model="account.account.template" id="a10011">
             <field name="name">Buildings</field>
-            <field name="code">175</field>
+            <field name="code">10011</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a1001"/>
             <field name="note">Cost to purchase or construct buildings for use by the company.</field>
         </record>
         
-        <record model="account.account.template" id="a178">
+        <record model="account.account.template" id="a10012">
             <field name="name">Accumulated Depreciation - Buildings</field>
-            <field name="code">178</field>
+            <field name="code">10012</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a1001"/>
             <field name="note">Amount of the buildings' cost that has been allocated to Depreciation Expense since the time the building was acquired.</field>
         </record>
         
-        <record model="account.account.template" id="a180">
+        <record model="account.account.template" id="a10013">
             <field name="name">Equipment</field>
-            <field name="code">180</field>
+            <field name="code">10013</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a1001"/>
             <field name="note">Cost to acquire and prepare equipment for use by the company.</field>
         </record>
         
-        <record model="account.account.template" id="a188">
+        <record model="account.account.template" id="a10014">
             <field name="name">Accumulated Depreciation - Equipment</field>
-            <field name="code">188</field>
+            <field name="code">10014</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a1001"/>
             <field name="note">Amount of equipment's cost that has been allocated to Depreciation Expense since the time the equipment was acquired.</field>
         </record>
         
-        <record model="account.account.template" id="a189">
+        <record model="account.account.template" id="a1015">
             <field name="name">Tax Receivable</field>
-            <field name="code">189</field>
+            <field name="code">1015</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
-            <field name="parent_id" ref="a10"/>
+            <field name="parent_id" ref="a101"/>
         </record>
 
-        <record model="account.account.template" id="a189100">
+        <record model="account.account.template" id="a10150">
             <field name="name">Purchase Tax Receivable</field>
-            <field name="code">189100</field>
+            <field name="code">10150</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a189"/>
+            <field name="parent_id" ref="a1015"/>
         </record>
 
-        <record model="account.account.template" id="a189200">
+        <record model="account.account.template" id="a10151">
             <field name="name">VAT Receivable</field>
-            <field name="code">189200</field>
+            <field name="code">10151</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a189"/>
+            <field name="parent_id" ref="a1015"/>
         </record>
 
-        <record model="account.account.template" id="a189300">
+        <record model="account.account.template" id="a10152">
             <field name="name">Service Tax Receivable</field>
-            <field name="code">189300</field>
+            <field name="code">10152</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a189"/>
+            <field name="parent_id" ref="a1015"/>
         </record>
 
-        <record model="account.account.template" id="a189400">
+        <record model="account.account.template" id="a10153">
             <field name="name">Exice Duty Receivable</field>
-            <field name="code">189400</field>
+            <field name="code">10153</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="True"/>
-            <field name="parent_id" ref="a189"/>
+            <field name="parent_id" ref="a1015"/>
         </record>
 
         <!-- Liabilities -->
         
         <record model="account.account.template" id="a20">
-            <field name="name">Liabilities</field>
+            <field name="name">Equity and Liabilities</field>
             <field name="code">20</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
@@ -261,7 +297,7 @@
     <!-- Tax Account -->
     
     <record model="account.account.template" id="a216">
-        <field name="name">Tax payable</field>
+        <field name="name">Other Current Liability</field>
         <field name="code">216</field>
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_liability"/>
@@ -306,14 +342,22 @@
     </record>
     
     <!--  Owner's Equity Accounts -->
-    
-        <record model="account.account.template" id="29">
-            <field name="name">Owner's Equity Accounts</field>
+	 <record model="account.account.template" id="29">
+            <field name="name">Share Capital</field>
             <field name="code">29</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_liability"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a20"/>
+        </record>    
+
+        <record model="account.account.template" id="290">
+            <field name="name">Owner's Equity Accounts</field>
+            <field name="code">290</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="29"/>
         </record>
         
       <!--  <record model="account.account.template" id="290">
@@ -361,7 +405,7 @@
         <!-- Income Operating Revenues -->
         
         <record model="account.account.template" id="a31">
-            <field name="name">Operating Revenue Accounts</field>
+            <field name="name">Revenue from Operations</field>
             <field name="code">31</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_income"/>
@@ -390,7 +434,7 @@
         </record>
         
         <record model="account.account.template" id="a80">
-            <field name="name">Non-Operating Revenue and Gains</field>
+            <field name="name">Other Income</field>
             <field name="code">80</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_income"/>
@@ -430,21 +474,29 @@
         </record>
         
         <record model="account.account.template" id="a51">
-            <field name="name">Operating Expense Accounts</field>
+            <field name="name">Other Administrative Expense</field>
             <field name="code">51</field>
             <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a50"/>
         </record>
-        
         <record model="account.account.template" id="a500">
-            <field name="name">Salaries Expense</field>
+            <field name="name">Employment benifit Expense</field>
             <field name="code">500</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="a50"/>
+            <field name="note">Expenses incurred for the work performed by salaried employees during the accounting period. These employees normally receive a fixed amount on a weekly, monthly, or annual basis.</field>
+        </record>
+        <record model="account.account.template" id="a5001">
+            <field name="name">Salaries Expense</field>
+            <field name="code">5001</field>
             <field name="type">other</field>
             <field name="user_type" ref="account.data_account_type_expense"/>
             <field name="reconcile" eval="False"/>
-            <field name="parent_id" ref="a51"/>
+            <field name="parent_id" ref="a500"/>
             <field name="note">Expenses incurred for the work performed by salaried employees during the accounting period. These employees normally receive a fixed amount on a weekly, monthly, or annual basis.</field>
         </record>
         
@@ -542,11 +594,11 @@
         <!-- Chart template -->
         
         <record id="indian_chart_template_private" model="account.chart.template">
-            <field name="name">India - Chart of Accounts for Private Ltd/Partnership</field>
+            <field name="name">India - Chart of Accounts  private </field>
             <field name="account_root_id" ref="a0"/>
             <field name="tax_code_root_id" ref="vat_code_tax"/>
-            <field name="bank_account_view_id" ref="a101"/>
-            <field name="property_account_receivable" ref="a120"/>
+            <field name="bank_account_view_id" ref="a1010"/>
+            <field name="property_account_receivable" ref="a1011"/>
             <field name="property_account_payable" ref="a215"/>
             <field name="property_account_expense_categ" ref="a540"/>
             <field name="property_account_income_categ" ref="a311"/>
