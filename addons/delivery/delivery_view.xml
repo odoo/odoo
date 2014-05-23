@@ -179,6 +179,7 @@
                 <form string="Grid Lines" version="7.0">
                     <group>
                         <field name="name"/>
+                        <field name="sequence"/>
                     </group>
                     <group>
                         <group>
@@ -208,6 +209,7 @@
             <field name="model">delivery.grid.line</field>
             <field name="arch" type="xml">
                 <tree string="Grid Lines">
+                    <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="type"/>
                     <field name="operator"/>
