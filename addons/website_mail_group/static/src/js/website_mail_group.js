@@ -28,10 +28,11 @@ $(document).ready(function () {
             if (! data) {
                 return true;
             }
-            var $current_ul = $link.parents('.o_mg_replies').first().find('ul.media-list');
-            if ($current_ul) {
-                $(data).find('li.media').insertAfter($current_ul.find('li.media').last());
-                $(data).find('p.well').appendTo($current_ul);
+            var $thread_container = $link.parents('.o_mg_replies').first().find('ul.media-list');
+            if ($thread_container) {
+                var $last_msg = $thread_container.find('li.media').last();
+                $(data).find('li.media').insertAfter($last_msg);
+                $(data).find('p.well').appendTo($thread_container);
             }
             var $show_more = $link.parents('p.well').first();
             $show_more.remove();
