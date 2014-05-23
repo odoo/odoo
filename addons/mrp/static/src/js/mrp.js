@@ -19,7 +19,7 @@ instance.web.form.mrp_product_qty =  instance.web.form.FieldFloat.extend({
     update_label:function(value){
         var self = this
         _.map(self.label_list, function(ele, i){ 
-            value > 0 ? ele.text(self.label_value[i][0]) : ele.text(self.label_value[i][1])
+            value >= 0 ? ele.text(self.label_value[i][0]) : ele.text(self.label_value[i][1])
         });
     },			
     parse_value: function(val, def) {
