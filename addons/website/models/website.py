@@ -555,8 +555,10 @@ class website(osv.osv):
         if record.get(presized):
             response.data = data
             return response
-
-        fit = int(max_width), int(max_height)
+        try:
+            fit = int(max_width), int(max_height)
+        except TypeError:
+            fit = (maxint, maxint)
         w, h = image.size
         max_w, max_h = fit
 
