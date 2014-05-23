@@ -520,13 +520,11 @@
             </tr>
         </table>
 
-    <div class="oe_view_manager_parent">
-        <div class="oe_view_manager_body">
-            <div class="oe_searchview_drawer_container"/>
-                <t t-foreach="widget.views_src" t-as="view">
-                    <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
-                </t>
-            </div>
+    <div class="oe_view_manager_body">
+        <div class="oe_searchview_drawer_container"/>
+            <t t-foreach="widget.views_src" t-as="view">
+                <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
+            </t>
         </div>
     </div>
 </t>
