@@ -1135,6 +1135,7 @@
 .openerp .oe_application {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .openerp .oe_application a {
   color: #7c7bad;
@@ -1156,7 +1157,6 @@
   display: table;
   height: inherit;
   width: 100%;
-  position: relative;
 }
 .openerp .oe_view_manager .oe_view_manager_body {
   position: absolute;
@@ -1167,7 +1167,7 @@
   right: 0;
 }
 .openerp .oe_view_manager .oe_view_manager_view_kanban:not(:empty) {
-  height: inherit;
+  height: 100%;
 }
 .openerp .oe_view_manager[data-view-type=kanban] .oe_view_manager_body {
   display: table-row;
@@ -3409,5 +3409,5 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 body {
-  overflow: hidden;
+  overflow: auto;
 }
