@@ -51,6 +51,8 @@ class ir_http(orm.AbstractModel):
             # in all cases, website processes them
             request.website_enabled = True
 
+        request.website_multilang = request.website_enabled and func and func.routing.get('multilang', True)
+
         if request.website_enabled:
             if func:
                 self._authenticate(func.routing['auth'])
@@ -67,6 +69,10 @@ class ir_http(orm.AbstractModel):
                 if path[1] in langs:
                     request.lang = request.context['lang'] = path.pop(1)
                     path = '/'.join(path) or '/'
+                    if request.lang == request.website.default_lang_code:
+                        # If language is in the url and it is the default language, redirect
+                        # to url without language so google doesn't see duplicate content
+                        return request.redirect(path + request.httprequest.query_string)
                     return self.reroute(path)
                 return self._handle_exception(code=404)
         return super(ir_http, self)._dispatch()
@@ -106,6 +112,8 @@ class ir_http(orm.AbstractModel):
             if generated_path != current_path:
                 if request.lang != request.website.default_lang_code:
                     path = '/' + request.lang + path
+                if request.httprequest.query_string:
+                    path += '?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path)
 
     def _serve_attachment(self):
