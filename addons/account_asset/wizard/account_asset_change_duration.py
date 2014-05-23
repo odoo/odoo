@@ -52,7 +52,7 @@ class asset_modify(osv.osv_memory):
         asset_obj = self.pool.get('account.asset.asset')
         result = super(asset_modify, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         asset_id = context.get('active_id', False)
-        active_model = context.get('active_model', '')
+        active_model = context.get('active_model')
         if active_model == 'account.asset.asset' and asset_id:
             asset = asset_obj.browse(cr, uid, asset_id, context=context)
             doc = etree.XML(result['arch'])

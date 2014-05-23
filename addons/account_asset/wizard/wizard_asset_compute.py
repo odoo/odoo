@@ -45,9 +45,9 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)
         period_id = data[0].period_id.id
         created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, period_id, context=context)
-        value = 'Asset' if context.get('type',False) == 'purchase' else 'Recognition'
+        asset_type = 'Asset' if context.get('type',False) == 'purchase' else 'Recognition'
         return {
-            'name': _('Created %s Moves') % value,
+            'name': _('Created %s Moves') % asset_type,
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
