@@ -95,6 +95,7 @@ class procurement_order(osv.osv):
                     'origin': procurement.origin,
                     'product_id': procurement.product_id.id,
                     'product_qty': procurement.product_qty,
+                    'qty_to_disassemble': procurement.product_qty,
                     'product_uom': procurement.product_uom.id,
                     'product_uos_qty': procurement.product_uos and procurement.product_uos_qty or False,
                     'product_uos': procurement.product_uos and procurement.product_uos.id or False,

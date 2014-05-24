@@ -34,7 +34,7 @@
 Manage the Manufacturing process in OpenERP
 ===========================================
 
-The manufacturing module allows you to cover planning, ordering, stocks and the manufacturing or assembly of products from raw materials and components. It handles the consumption and production of products according to a bill of materials and the necessary operations on machinery, tools or human resources according to routings.
+The manufacturing module allows you to cover planning, ordering, stocks and the manufacturing or assembly and disassembling of products from raw materials and components. It handles the consumption and production of products according to a bill of materials and the necessary operations on machinery, tools or human resources according to routings.
 
 It supports complete integration and planification of stockable goods, consumables or services. Services are completely integrated with the rest of the software. For instance, you can set up a sub-contracting service in a bill of materials to automatically purchase on order the assembly of your production.
 
@@ -63,6 +63,7 @@ Dashboard / Reports for MRP will include:
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
         'wizard/stock_move_view.xml',
+        'wizard/disassemble_qty_view.xml',
         'mrp_view.xml',
         'mrp_report.xml',
         'company_view.xml',
