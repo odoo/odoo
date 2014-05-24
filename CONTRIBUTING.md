@@ -35,6 +35,7 @@ While you can file a feature request on GitHub, pull requests are a much better 
 
 Helping with Documentation
 --------------------------
+```
 == STILL NOT IMPLEMENTED, see it as "lore ipsum" ==
 
 ODOO documentation is a community project too!  If you would like to help with the 
@@ -47,6 +48,7 @@ on creating pull requests, please refer to the
 [github help guide](https://help.github.com/articles/using-pull-requests).
 
 == /STILL NOT IMPLEMENTED, see it as "lore ipsum" ==
+```
 
 Contributing Code (Features or Bugfixes)
 ----------------------------------------
@@ -62,6 +64,7 @@ Note that we do keep ODOO to a particular aesthetic, so if you are unclear about
 is a good fit or not, having the discussion on the development list is often a lot easier than having
 to modify a pull request later.
 
+```
 == NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
 When submitting patches, be sure to run the unit tests first “make tests” and always use 
 “git rebase” vs “git merge” (aliasing git pull to git pull --rebase is a great idea) to 
@@ -88,13 +91,18 @@ and no tabs.
 Tip: To easily run from a checkout, source "./hacking/env-setup" and that's it -- no install
 required.  You're now live!
 == /NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
+```
+
 
 Reporting A Bug
 ---------------
 
+```
 == NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
 Ansible practices responsible disclosure - if this is a security related bug, email security@ansible.com instead of filing a ticket or posting to the Google Group and you will recieve a prompt response.
 == /NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
+```
+
 Bugs should be reported to [github.com/odoo/odoo](http://github.com/odoo/odoo) after 
 signing up for a free github account.  Before reporting a bug, please use the bug/issue search 
 to see if the issue has already been reported.  
@@ -121,6 +129,7 @@ It may take some time to get to your report, see "A Note About Priorities" below
 
 A Note About Priorities
 =======================
+```
 == NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
 ODOO was one of the top 5 projects with the most OSS contributors on GitHub in 2013, and well over
 600 people have added code to the project.  As a result, we have a LOT of incoming activity to process.
@@ -146,6 +155,8 @@ Don't worry though -- we'll also take periodic sweeps through the lower priority
 them some attention as well, particularly in the area of new module changes.  So it doesn't neccessarily
 mean that we'll be exhausting all of the higher-priority queues before getting to your ticket.
 == NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
+```
+
 
 Release Numbering
 =================
@@ -169,6 +180,7 @@ You can also find some best practices examples that we recommend reading at
 
 Mailing lists
 -------------
+```
 == NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
 ODOO has several mailing lists.  Your first post to the mailing list will be 
 moderated (to reduce spam), so please allow a day or less for your first post.
@@ -188,6 +200,8 @@ prospective feature implementations, or technical challenges.
 To subscribe to a group from a non-google account, you can email the subscription address, for 
 example ansible-devel+subscribe@googlegroups.com.
 == /NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
+```
+
 IRC
 ---
 
@@ -200,6 +214,7 @@ Miscellaneous Information
 
 Staff
 -----
+```
 == NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
 Ansible, Inc is a company supporting Ansible and building additional solutions based on 
 Ansible.  We also do services and support for those that are interested.   Our most 
@@ -210,6 +225,8 @@ any of these things, contact info@ansible.com
 On IRC, you can find us as mdehaan, jimi_c, Tybstar, and others.   On the mailing list, 
 we post with an @ansible.com address.
 == /NEEDS REVISION OF A PRO, see it as "lore ipsum" ==
+```
+
 
 Community Code of Conduct
 -------------------------
