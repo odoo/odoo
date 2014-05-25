@@ -734,30 +734,23 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
-    // template: 'Menu',
+    template: 'EmptyTemplate',
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        // this.on("menu_loaded", this, function (menu_data) {
-        //     self.reflow();
-        //     // launch the fetch of needaction counters, asynchronous
-        //     if (!_.isEmpty(menu_data.all_menu_ids)) {
-        //         this.do_load_needaction(menu_data.all_menu_ids);
-        //     }
-        // });
-        // var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        // instance.web.bus.on('resize', this, function() {
-        //     self.$el.height(0);
-        //     lazyreflow();
-        // });
+        this.on("menu_loaded", this, function (menu_data) {
+            self.reflow();
+            // launch the fetch of needaction counters, asynchronous
+            // if (!_.isEmpty(menu_data.all_menu_ids)) {
+            //     this.do_load_needaction(menu_data.all_menu_ids);
+            // }
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
-        // this.$secondary_menus = this.getParent().$el.find('.oe_secondary_menus_container');
-        // this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         return this.do_reload();
     },
     do_reload: function() {
@@ -771,12 +764,14 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     menu_loaded: function(data) {
         var self = this;
-        // this.data = {data: data};
-        // this.renderElement();
-        // this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
         this.$el = this.$el.parents().find('.nav.navbar-nav.navbar-left')
 
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            self.$el.height(0);
+            lazyreflow();
+        });
 
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
