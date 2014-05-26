@@ -744,9 +744,11 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.on("menu_loaded", this, function (menu_data) {
             self.reflow();
             // launch the fetch of needaction counters, asynchronous
-            // if (!_.isEmpty(menu_data.all_menu_ids)) {
-            //     this.do_load_needaction(menu_data.all_menu_ids);
-            // }
+            $all_menus = self.$el.parents('.oe_webclient').find('[data-menu]');
+            all_menu_ids = $.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'));});
+            if (!_.isEmpty(all_menu_ids)) {
+                this.do_load_needaction(all_menu_ids);
+            }
         });
     },
     start: function() {
@@ -942,21 +944,17 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     on_top_menu_click: function(ev) {
         var self = this;
-        // var id = $(ev.currentTarget).data('menu');
-        // var menu_ids = [id];
-        // var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
-        // function add_menu_ids (menu) {
-        //     if (menu.children) {
-        //         _.each(menu.children, function (menu) {
-        //             menu_ids.push(menu.id);
-        //             add_menu_ids(menu);
-        //         });
-        //     }
-        // }
-        // add_menu_ids(menu);
-        // self.do_load_needaction(menu_ids).then(function () {
-        //     self.trigger("need_action_reloaded");
-        // });
+        var id = $(ev.currentTarget).data('menu');
+
+        // Fetch the menu leaves ids in order to check if they need a 'needaction'
+        $secondary_menu = this.$el.parents().find('.oe_secondary_menu[data-menu-parent=' + id + ']')
+        $menu_leaves = $secondary_menu.children().find('.oe_menu_leaf')
+        menu_ids = $.map($menu_leaves, function (leave) {return parseInt($(leave).attr('data-menu'));});
+
+        self.do_load_needaction(menu_ids).then(function () {
+            self.trigger("need_action_reloaded");
+        });
+
         this.on_menu_click(ev);
     },
     on_menu_click: function(ev) {
