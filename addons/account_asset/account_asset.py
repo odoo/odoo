@@ -75,10 +75,12 @@ class account_asset_category(osv.osv):
         return res
         
     def onchange_journal_id(self, cr, uid, ids, journal_id, type, context=None):
-        res = {'value':{}}
+        res = {}
+        if not journal_id:
+            return {'value':{}}
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
         if type == 'sales':
-            res['value'] = {'account_income_recognition_id': journal.default_debit_account_id.id}
+            res['value'] = {'account_income_recognition_id': journal.default_credit_account_id.id}
         else:
             res['value'] = {'account_expense_depreciation_id': journal.default_debit_account_id.id}
         return res
@@ -93,14 +95,18 @@ class account_asset_asset(osv.osv):
     _description = 'Asset/Recognition'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    def _get_category_type(self, cr, uid, ids, context=None):
+        type = self.browse(cr, uid, ids[0], context=context).category_id.type
+        res = {'name': 'Installment', 'type': 'Recongnition'} if type == 'sales' else {'name': 'Depreciation', 'type': 'Asset'}
+        return res
+
     def unlink(self, cr, uid, ids, context=None):
-        for asset in self.browse(cr, uid, ids, context=context):
-            asset_type = 'Asset' if asset.category_id.type == 'purchase' else 'Revenue Recognition'
-            asset_name = 'Depreciation' if asset.category_id.type == 'purchase' else 'Installment'
-            if asset.state in ['open', 'close']:
-                raise osv.except_osv(_('Error!'), _('You cannot delete an %s which is in %s state.') % (asset_type, asset.state))
-            if asset.account_move_line_ids: 
-                raise osv.except_osv(_('Error!'), _('You cannot delete an %s that contains posted %s lines.') % (asset_type, asset_name))
+        record = self.browse(cr, uid, ids[0], context=context)
+        res = self._get_category_type(cr, uid, ids, context=context)
+        if record.state in ['open', 'close']:
+            raise osv.except_osv(_('Error!'), _('You cannot delete an %s which is in %s state.') % (res.get('type'), record.state))
+        if record.account_move_line_ids: 
+            raise osv.except_osv(_('Error!'), _('You cannot delete an %s that contains posted %s lines.') % (res.get('type'), res.get('name')))
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
@@ -212,16 +218,14 @@ class account_asset_asset(osv.osv):
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
                 company_currency = asset.company_id.currency_id.id
                 current_currency = asset.currency_id.id
-                residual_amount -= round(amount,2)
-                obj_sequence = self.pool.get('ir.sequence')
-                new_name = obj_sequence.next_by_id(cr, uid, asset.category_id.journal_id.sequence_id.id, context)
+                residual_amount -= round(amount, 2)
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
                      'sequence': i,
-                     'name': new_name,
-                     'remaining_value': abs(residual_amount),
-                     'depreciated_value': abs((asset.value - asset.salvage_value) - (residual_amount + amount)),
+                     'name': (asset.code or str(asset.id)) +'/' + str(i),
+                     'remaining_value': residual_amount,
+                     'depreciated_value': (asset.value - asset.salvage_value) - (residual_amount + amount),
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
@@ -236,27 +240,25 @@ class account_asset_asset(osv.osv):
     def validate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}   
-        categ_type = self.browse(cr, uid, ids[0], context=context).category_id.type
-        asset_type = 'Asset' if categ_type == 'purchase' else 'Recognition'
-        self.message_post(cr, uid, ids, body=_("%s confirmed.") % asset_type, context=context)
+        type = self._get_category_type(cr, uid, ids, context=context).get('type')
+        self.message_post(cr, uid, ids, body=_("%s confirmed.") % type, context=context)
         return self.write(cr, uid, ids, {'state':'open'}, context=context)
 
     def set_to_close(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         dep_line_obj = self.pool.get('account.asset.depreciation.line')
-        categ_type = self.browse(cr, uid, ids[0], context=context).category_id.type
-        asset_type = 'Asset' if categ_type == 'purchase' else 'Recognition'
-        name = 'Depreciation' if categ_type == 'purchase' else 'Installment'
+        res = self._get_category_type(cr, uid, ids, context=context)
         unposted_dep_line_ids = dep_line_obj.search(cr, uid, 
                                                     [('asset_id', 'in', ids),
                                                      ('move_check', '=', False)],
-                                                    order='depreciation_date desc')
+                                                    order='depreciation_date desc',
+                                                    context=context)
         if len(unposted_dep_line_ids) > 0:
             raise osv.except_osv(_('Error !'), 
                                  _('You cannot close an %s which has unposted %s lines.')
-                                 % (asset_type, name))
-        self.message_post(cr, uid, ids, body=_("%s closed.") % asset_type, context=context)
+                                 % (res.get('type'), res.get('name')))
+        self.message_post(cr, uid, ids, body=_("%s closed.") % res.get('type'), context=context)
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
@@ -269,7 +271,7 @@ class account_asset_asset(osv.osv):
             for line in asset.depreciation_line_ids:
                 if line.move_check:
                     total_amount += line.amount
-            res[asset.id] = abs(asset.value - total_amount - asset.salvage_value)
+            res[asset.id] = asset.value - total_amount - asset.salvage_value
         for id in ids:
             res.setdefault(id, 0.0)
         return res
@@ -353,9 +355,8 @@ class account_asset_asset(osv.osv):
         return super(account_asset_asset, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 	
     def _check_recursion_msg(self, cr, uid, ids, context=None, parent=None):
-        categ_type = self.browse(cr, uid, ids[0], context=context).category_id.type
-        asset_type = 'assets' if categ_type == 'purchase' else 'recognitions'
-        return ' \n\n Error ! \n You cannot create recursive %s.' % asset_type
+        type = self._get_category_type(cr, uid, ids, context=context).get('type')
+        return ' \n\n Error ! \n You cannot create recursive %s.' % type
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
@@ -395,13 +396,13 @@ class account_asset_asset(osv.osv):
             default = {}
         if context is None:
             context = {}
-        asset_record = self.browse(cr, uid, id, context=context)
+        asset = self.browse(cr, uid, id, context=context)
         default.update({
                         'depreciation_line_ids': [],
                         'account_move_line_ids': [],
                         'history_ids': [],
                         'state': 'draft',
-                        'name': asset_record.name+ _(' (copy)'),
+                        'name': asset.name+ _(' (copy)'),
                         'invoice_id': False
                         })
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
@@ -425,9 +426,8 @@ class account_asset_asset(osv.osv):
         context.update({'mail_create_nolog': True})
         asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
         self.compute_depreciation_board(cr, uid, [asset_id], context=context)
-        categ_type = self.browse(cr, uid, asset_id, context=context).category_id.type
-        asset_type = 'Asset' if categ_type == 'purchase' else 'Recognition'
-        self.message_post(cr, uid, [asset_id], body=_("%s created.") % asset_type, context=context)
+        type = self._get_category_type(cr, uid, [asset_id], context=context).get('type')
+        self.message_post(cr, uid, [asset_id], body=_("%s created.") % type, context=context)
         return asset_id
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -471,7 +471,7 @@ class account_asset_depreciation_line(osv.osv):
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
-        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True, track_visibility='always')
+        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
 
     def create_move(self, cr, uid, ids, context=None):
@@ -493,60 +493,64 @@ class account_asset_depreciation_line(osv.osv):
             current_currency = line.asset_id.currency_id.id
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
+            asset_name = line.asset_id.name
+            reference = line.name
+            obj_sequence = self.pool.get('ir.sequence')
+            seq_num = obj_sequence.next_by_id(cr, uid, line.asset_id.category_id.journal_id.sequence_id.id, context)
             move_vals = {
-                'name': line.asset_id.name + '-' + line.name,
+                'name': seq_num,
                 'date': depreciation_date,
-                'ref': line.name,
+                'ref': seq_num,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
-            if line.asset_id.category_id.type == 'purchase': 
+            journal_id = line.asset_id.category_id.journal_id.id
+            partner_id = line.asset_id.partner_id.id
+            categ_type = line.asset_id.category_id.type
+            if categ_type == 'purchase': 
                 debit_account = line.asset_id.category_id.account_expense_depreciation_id.id
                 credit_acount = line.asset_id.category_id.account_depreciation_id.id
             else:
                 debit_account = line.asset_id.category_id.account_asset_id.id
                 credit_acount = line.asset_id.category_id.account_income_recognition_id.id
             move_line_obj.create(cr, uid, {
-                'name': line.asset_id.name + '-' + line.name,
-                'ref': line.name,
+                'name': asset_name or reference,
+                'ref': seq_num,
                 'move_id': move_id,
                 'account_id': credit_acount,
                 'debit': 0.0,
                 'credit': amount,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id or False,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
-                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if line.asset_id.category_id.type == 'sales' else False,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sales' else False,
                 'date': depreciation_date,
-                'date_created': time.strftime('%Y-%m-%d'),
-                'asset_id': line.asset_id.id if line.asset_id.category_id.type == 'sales' else False
+                'asset_id': line.asset_id.id if category_id == 'sales' else False
             })
             move_line_obj.create(cr, uid, {
-                'name': line.asset_id.name + '-' + line.name,
-                'ref': line.name,
+                'name': asset_name or reference,
+                'ref': seq_num,
                 'move_id': move_id,
                 'account_id': debit_account,
                 'credit': 0.0,
                 'debit': amount,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
-                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if line.asset_id.category_id.type == 'purchase' else False,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
                 'date': depreciation_date,
-                'date_created': time.strftime('%Y-%m-%d'),
-                'asset_id': line.asset_id.id if line.asset_id.category_id.type == 'purchase' else False
+                'asset_id': line.asset_id.id if categ_type == 'purchase' else False
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
             asset_ids.append(line.asset_id.id)
             partner_name = line.asset_id.partner_id.name
             currency_name = line.asset_id.company_id.currency_id.name
-            categ_type = asset_obj.browse(cr, uid, line.asset_id.id, context=context).category_id.type
             msg_data = ['Depreciation','Supplier'] if categ_type == 'purchase' else ['Installment','Customer']
             msg=_("%s line posted. <br/> <b>&nbsp;&nbsp;&nbsp;"
                 "&bull; Currency:</b> %s <br/> <b>&nbsp;&nbsp;&nbsp;"
@@ -560,18 +564,17 @@ class account_asset_depreciation_line(osv.osv):
         # we re-evaluate the assets to determine whether we can close them    
         for asset in asset_obj.browse(cr, uid, list(set(asset_ids)), context=context):
             if currency_obj.is_zero(cr, uid, asset.currency_id, asset.value_residual):
-                value = 'Asset' if asset.category_id.type == 'purchase' else 'Recognition'
-                asset_obj.message_post(cr, uid, asset.id, body=_("%s closed.") % value, context=context)
+                name = 'Asset' if categ_type == 'purchase' else 'Recognition'
+                asset_obj.message_post(cr, uid, asset.id, body=_("%s closed.") % name, context=context)
                 asset.write({'state': 'close'})
                 asset_obj.compute_depreciation_board(cr, uid, [], context=context)
         return created_move_ids
 
     def unlink(self, cr, uid, ids, context=None):
-        move_obj = self.pool.get('account.move')
         for record in self.browse(cr, uid, ids, context=context):
-            asset_name = 'depreciation' if record.asset_id.category_id.type == 'purchase' else 'installment'
+            name = 'Depreciation' if record.asset_id.category_id.type == 'purchase' else 'installment'
             if record.move_check:
-                raise osv.except_osv(_('Error!'), _("You cannot delete posted %s lines.") % asset_name)
+                raise osv.except_osv(_('Error!'), _("You cannot delete posted %s lines.") % name)
         return super(account_asset_depreciation_line, self).unlink(cr, uid, ids, context=context)
 
 
