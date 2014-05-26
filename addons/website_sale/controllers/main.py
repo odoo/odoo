@@ -255,7 +255,8 @@ class website_sale(http.Controller):
 
         # must have a draft sale order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
-            request.website_sale_reset(cr, uid, context=context)
+            request.session['sale_order_id'] = None
+            request.session['sale_transaction_id'] = None
             return request.redirect('/shop')
 
         # if transaction pending / done: redirect to confirmation
