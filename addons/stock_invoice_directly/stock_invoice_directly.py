@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import api
 from openerp.osv import osv
 from openerp.tools.translate import _
 
@@ -26,6 +27,7 @@ from openerp.tools.translate import _
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
+    @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """Launch Create invoice wizard if invoice state is To be Invoiced,
           after processing the picking.

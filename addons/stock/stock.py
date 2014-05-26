@@ -27,7 +27,7 @@ import time
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 import openerp.addons.decimal_precision as dp
 import logging
 
@@ -508,6 +508,7 @@ class stock_quant(osv.osv):
                 move = m
         return move
 
+    @api.cr_uid_ids_context
     def _quants_merge(self, cr, uid, solved_quant_ids, solving_quant, context=None):
         path = []
         for move in solving_quant.history_ids:
@@ -931,6 +932,7 @@ class stock_picking(osv.osv):
             return backorder_id
         return False
 
+    @api.cr_uid_ids_context
     def recheck_availability(self, cr, uid, picking_ids, context=None):
         self.action_assign(cr, uid, picking_ids, context=context)
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
@@ -1060,14 +1062,17 @@ class stock_picking(osv.osv):
             })
         return vals
 
+    @api.cr_uid_ids_context
     def open_barcode_interface(self, cr, uid, picking_ids, context=None):
         final_url="/barcode/web/#action=stock.ui&picking_id="+str(picking_ids[0])
         return {'type': 'ir.actions.act_url', 'url':final_url, 'target': 'self',}
 
+    @api.cr_uid_ids_context
     def do_partial_open_barcode(self, cr, uid, picking_ids, context=None):
         self.do_prepare_partial(cr, uid, picking_ids, context=context)
         return self.open_barcode_interface(cr, uid, picking_ids, context=context)
 
+    @api.cr_uid_ids_context
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
@@ -1101,6 +1106,7 @@ class stock_picking(osv.osv):
         self.do_recompute_remaining_quantities(cr, uid, picking_ids, context=context)
         self.write(cr, uid, picking_ids, {'recompute_pack_op': False}, context=context)
 
+    @api.cr_uid_ids_context
     def do_unreserve(self, cr, uid, picking_ids, context=None):
         """
           Will remove all quants for picking in picking_ids
@@ -1226,6 +1232,7 @@ class stock_picking(osv.osv):
             need_rereserve, all_op_processed = self.recompute_remaining_qty(cr, uid, picking, context=context)
         return need_rereserve, all_op_processed
 
+    @api.cr_uid_ids_context
     def do_recompute_remaining_quantities(self, cr, uid, picking_ids, context=None):
         for picking in self.browse(cr, uid, picking_ids, context=context):
             if picking.pack_operation_ids:
@@ -1263,6 +1270,7 @@ class stock_picking(osv.osv):
             stock_move_obj.do_unreserve(cr, uid, move_ids, context=context)
             stock_move_obj.action_assign(cr, uid, move_ids, context=context)
 
+    @api.cr_uid_ids_context
     def do_transfer(self, cr, uid, picking_ids, context=None):
         """
             If no pack operation, we do simple action_done of the picking
@@ -1312,6 +1320,7 @@ class stock_picking(osv.osv):
                 stock_move_obj.action_assign(cr, uid, toassign_move_ids, context=context)
         return True
 
+    @api.cr_uid_ids_context
     def do_split(self, cr, uid, picking_ids, context=None):
         """ just split the picking (create a backorder) without making it 'done' """
         if context is None:
@@ -1339,6 +1348,7 @@ class stock_picking(osv.osv):
         #return id of next picking to work on
         return self.get_next_picking_for_ui(cr, uid, context=context)
 
+    @api.cr_uid_ids_context
     def action_pack(self, cr, uid, picking_ids, operation_filter_ids=None, context=None):
         """ Create a package with the current pack_operation_ids of the picking that aren't yet in a pack.
         Used in the barcode scanner UI and the normal interface as well. 
@@ -1740,6 +1750,7 @@ class stock_move(osv.osv):
         default['state'] = 'draft'
         return super(stock_move, self).copy_data(cr, uid, id, default, context)
 
+    @api.cr_uid_ids_context
     def do_unreserve(self, cr, uid, move_ids, context=None):
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, move_ids, context=context):
@@ -1964,6 +1975,7 @@ class stock_move(osv.osv):
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
 
+    @api.cr_uid_ids_context
     def _picking_assign(self, cr, uid, move_ids, procurement_group, location_from, location_to, context=None):
         """Assign a picking on the given move_ids, which is a list of move supposed to share the same procurement_group, location_from and location_to
         (and company). Those attributes are also given as parameters.
@@ -2180,6 +2192,7 @@ class stock_move(osv.osv):
             move2 = not move2.move_orig_ids and move2.split_from or False
         return ancestors
 
+    @api.cr_uid_ids_context
     def recalculate_move_state(self, cr, uid, move_ids, context=None):
         '''Recompute the state of moves given because their reserved quants were used to fulfill another operation'''
         for move in self.browse(cr, uid, move_ids, context=context):
