@@ -43,7 +43,7 @@
 - 
   I add the routes manufacture and mto to the product
 - 
-  !python {model: product.product, id: scheduler_product}: |
+  !python {model: product.product}: |
     route_warehouse0_manufacture = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).manufacture_pull_id.route_id.id 
     route_warehouse0_mto = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).mto_pull_id.route_id.id 
     self.write(cr, uid, ref('product_product_slidermobile0'), { 'route_ids': [(6, 0, [route_warehouse0_mto,route_warehouse0_manufacture])]}, context=context)
