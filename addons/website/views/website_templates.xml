@@ -294,7 +294,7 @@
 
 <template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
     <xpath expr='//t[@name="layout_head"]' position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
+        <t t-set="debugger_hook" t-value="1" />
     </xpath>
 </template>
 

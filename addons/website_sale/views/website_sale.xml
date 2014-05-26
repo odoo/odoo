@@ -5,7 +5,7 @@
 <!-- Layout add nav and footer -->
 
 <template id="debugger" inherit_id="website.debugger" name="Event Debugger">
-    <xpath expr="//script[last()]" position="after">
+    <xpath expr='//t[@t-set="debugger_hook"]' position="after">
         <script type="text/javascript" src="/website_sale/static/src/js/website.tour.sale.js"></script>
     </xpath>
 </template>
@@ -451,7 +451,7 @@
                               method="POST">
                           <img class="img pull-left img-rounded" t-att-src="'/website/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)" style="width: 50px; margin-right: 10px;"/>
                           <div class="pull-left mb32" style="width: 75%%">
-                            
+
                               <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
                               <a class="btn btn-primary mt8 a-submit">Post</a>
                           </div>
