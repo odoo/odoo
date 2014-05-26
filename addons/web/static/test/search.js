@@ -1329,10 +1329,10 @@ openerp.testing.section('search.filters.saved', {
         });
         return view.appendTo($fix)
         .then(function () {
-            $fix.find('.oe_searchview_custom input#oe_searchview_custom_input')
+            $fix.find('.oe_searchview_savefilter input#oe_searchview_custom_input')
                     .val("filter name")
                 .end()
-                .find('.oe_searchview_custom button').click();
+                .find('.oe_searchview_savefilter button').click();
             return done.promise();
         });
     });

@@ -443,7 +443,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     adjust_top: function () {
         // hack to adjust the top of the view manager body to the actual header height
         var parent = this.getParent();
-        if (parent) {
+        if (parent && parent.$) {
             var h = parent.$(".oe_view_manager_header").height() + 1;
             parent.$(".oe_view_manager_body").css('top', h + 'px');                
         }        
