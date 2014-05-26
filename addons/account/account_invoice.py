@@ -937,6 +937,7 @@ class account_invoice(Model):
     def invoice_validate(self):
         return self.write({'state': 'open'})
 
+    @model
     def line_get_convert(self, line, part, date):
         return {
             'date_maturity': line.get('date_maturity', False),
