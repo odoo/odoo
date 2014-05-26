@@ -7,7 +7,7 @@ If possible, always attach a pull request when creating an issue (GitHub will au
 
 If later on you create a pull request solving an opened issue, do not forget to reference to it in your pull request (e.g.: "This patch fixes issue #42").
 
-When reporting an issue or creating a pull request, use the following *[template structure](https://raw.githubusercontent.com/blaggacao/odoo/update-contributing-with-template-to-copy/doc/_templates/issue_template.md)*:
+When reporting an issue or creating a pull request, use the following ***[template structure](https://raw.githubusercontent.com/odoo/odoo/master/doc/_templates/issue_template.md)***:
 
 > **Quantity field is ignored in a sale order**
 >
