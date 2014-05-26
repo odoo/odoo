@@ -64,8 +64,8 @@
                                  Selected contacts will be merged together. All documents linked to one of these contacts will be redirected to the destination contact. You can remove contacts from this list to avoid merging them.
                             </p>
                             <group attrs="{'invisible': [('state', 'in', ('option', 'finished'))]}" col="2">
-+                                <field name="dst_partner_id" domain="[('id', 'in', partner_ids and partner_ids[0] and partner_ids[0][2] or False)]" attrs="{'required': [('state', '=', 'selection')]}"/>
-+                           </group>
+                                <field name="dst_partner_id" domain="[('id', 'in', partner_ids and partner_ids[0] and partner_ids[0][2] or False)]" attrs="{'required': [('state', '=', 'selection')]}"/>
+                           </group>
 
                             <field name="partner_ids" nolabel="1">
                                 <tree string="Partners">
@@ -80,35 +80,35 @@
                         </group>
                     </sheet>
                     <footer>
-+                        <button name='merge_cb' string='Merge Contacts'
-+                            class='oe_highlight'
-+                            type='object'
-+                            attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}"
-+                            />
-+                        <button name='start_process_cb'
-+                            string='Merge with Manual Check'
-+                            type='object'  class='oe_highlight'
-+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
-+                        <button name='automatic_process_cb'
-+                            string='Merge Automatically'
-+                            type='object' class='oe_highlight'
-+                            confirm="Are you sure to execute the automatic merge of your contacts ?"
-+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
-+                        <button name='update_all_process_cb'
-+                            string='Merge Automatically all process'
-+                            type='object'
-+                            confirm="Are you sure to execute the list of automatic merges of your contacts ?"
-+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
-+                        <span class="or_cancel" attrs="{'invisible': [('state', '=', 'finished')]} ">or
-+                            <button name="close_cb" special="nosave" string="Cancel" type="object" class="oe_link oe_inline"/>
-+                        </span>
-+                        <span class="or_cancel" attrs="{'invisible': [('state', '!=', 'finished')]} ">
-+                            <button name="close_cb" special="nosave"
-+                                string="Close"
-+                                type="object"
-+                                class="oe_link oe_inline"/>
-+                        </span>
-+                    </footer>
+                        <button name='merge_cb' string='Merge Contacts'
+                            class='oe_highlight'
+                            type='object'
+                            attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}"
+                            />
+                        <button name='start_process_cb'
+                            string='Merge with Manual Check'
+                            type='object'  class='oe_highlight'
+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
+                        <button name='automatic_process_cb'
+                            string='Merge Automatically'
+                            type='object' class='oe_highlight'
+                            confirm="Are you sure to execute the automatic merge of your contacts ?"
+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
+                        <button name='update_all_process_cb'
+                            string='Merge Automatically all process'
+                            type='object'
+                            confirm="Are you sure to execute the list of automatic merges of your contacts ?"
+                            attrs="{'invisible': [('state', '!=', 'option')]}" />
+                        <span class="or_cancel" attrs="{'invisible': [('state', '=', 'finished')]} ">or
+                            <button name="close_cb" special="nosave" string="Cancel" type="object" class="oe_link oe_inline"/>
+                        </span>
+                        <span class="or_cancel" attrs="{'invisible': [('state', '!=', 'finished')]} ">
+                            <button name="close_cb" special="nosave"
+                                string="Close"
+                                type="object"
+                                class="oe_link oe_inline"/>
+                        </span>
+                    </footer>
                 </form>
             </field>
         </record>
