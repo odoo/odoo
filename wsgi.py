@@ -12,6 +12,8 @@
 # Then the following command should run:
 #   $ gunicorn openerp:service.wsgi_server.application -c openerp-wsgi.py
 
+import os
+import ConfigParser
 import openerp
 
 #----------------------------------------------------------
@@ -25,8 +27,34 @@ conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-
-conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
+def load(rcfile):
+    p = ConfigParser.ConfigParser()
+    try:
+        p.read([rcfile])
+        for (name,value) in p.items('options'):
+            if value=='True' or value=='true':
+                value = True
+            if value=='False' or value=='false':
+                value = False
+            conf[name] = value
+        #parse the other sections, as well
+        # for sec in p.sections():
+        #     if sec == 'options':
+        #         continue
+        #     if not self.misc.has_key(sec):
+        #         self.misc[sec]= {}
+        #     for (name, value) in p.items(sec):
+        #         if value=='True' or value=='true':
+        #             value = True
+        #         if value=='False' or value=='false':
+        #             value = False
+        #         self.misc[sec][name] = value
+    except IOError:
+        pass
+    except ConfigParser.NoSectionError:
+        pass
+# conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
+load(os.environ['OPENERP_CONFIGRC'])
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
@@ -44,10 +72,10 @@ application = openerp.service.wsgi_server.application
 # Gunicorn
 #----------------------------------------------------------
 # Standard OpenERP XML-RPC port is 8069
-bind = '127.0.0.1:8069'
-pidfile = '.gunicorn.pid'
-workers = 4
-timeout = 240
-max_requests = 2000
+# bind = '127.0.0.1:8069'
+# pidfile = '.gunicorn.pid'
+# workers = 4
+# timeout = 240
+# max_requests = 2000
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
