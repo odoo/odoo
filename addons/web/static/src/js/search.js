@@ -826,10 +826,14 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
     },
 
     start: function() {
+        var self = this;
         var filters_ready = this.searchview.fields_view_get
                                 .then(this.proxy('prepare_filters'));
-        return $.when(this._super(), filters_ready)
-                .then(this.proxy('notify_searchview'));
+        return $.when(this._super(), filters_ready).then(function () {
+            self.$el.show();
+            var defaults = arguments[1][0];
+            self.ready.resolve.apply(null, defaults);
+        });
     },
     prepare_filters: function (data) {
         this.make_widgets(
@@ -851,10 +855,6 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
                 'facet_for_defaults', this.searchview.defaults));
 
         return $.when(defaults_fetched, add_custom_reports, add_filters, add_rest);
-    },
-    notify_searchview: function () {
-        var defaults = arguments[1][0];
-        this.ready.resolve.apply(null, defaults);
     },
     /**
      * Sets up thingie where all the mess is put?
@@ -1807,7 +1807,7 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
                         $filter.remove();
                         delete self.$filters[key];
                         delete self.filters[key];
-                        if (!self.filters.length) {
+                        if (!Object.keys(self.filters).length) {
                             self.hide();
                         }
                     });
