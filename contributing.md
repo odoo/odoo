@@ -63,6 +63,6 @@ A pull request is closed when it will not be merged into odoo. This will typical
 What is this odoo-dev repository? Should I use it?
 --------------------------------------------------
 
-The `odoo-dev/odoo` repository is an internal repository used by the R&D of Odoo to keep the main repository clean. If you come from Launchpad, this is the equivalent of the `~openerp-dev` repository.
+The `odoo-dev/odoo` repository is an internal repository used by the R&D of Odoo to keep the main repository clean. If you are coming from Launchpad, this is the equivalent of the `~openerp-dev` repository.
 
 When forking odoo to submit a patch, always use the `github.com/odoo/odoo` repository. Be also careful of the version you are branching as it will determine the history once the pull request will be realized (e.g.: `git checkout -b 7.0-my-branch odoo/7.0`).
