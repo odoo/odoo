@@ -720,8 +720,7 @@ class calendar_event(osv.Model):
             1) if user add duration for 2 hours, return : August-23-2013 at (04-30 To 06-30) (Europe/Brussels)
             2) if event all day ,return : AllDay, July-31-2013
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         tz = context.get('tz', False)
         if not tz:  # tz can have a value False, so dont do it in the default value of get !
