@@ -131,6 +131,7 @@ Finally, to instruct OpenERP to really use the unaccent function, you have to
 start the server specifying the ``--unaccent`` flag.
 
 """
+import collections
 
 import logging
 import traceback
@@ -929,11 +930,11 @@ class expression(object):
                         ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                         if ids2:
                             operator = 'in'
+                    elif isinstance(right, collections.Iterable):
+                        ids2 = right
                     else:
-                        if not isinstance(right, list):
-                            ids2 = [right]
-                        else:
-                            ids2 = right
+                        ids2 = [right]
+
                     if not ids2:
                         if operator in ['like', 'ilike', 'in', '=']:
                             #no result found with given search criteria
