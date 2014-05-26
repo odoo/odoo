@@ -69,7 +69,6 @@ def registry(database_name):
 import addons
 import cli
 import conf
-import http
 import loglevels
 import modules
 import netsvc
