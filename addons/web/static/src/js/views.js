@@ -436,6 +436,16 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_act_window: function (action, options) {
         var self = this;
 
+        if (action.target === 'current'){
+            action.context['active_model'] = action.res_model;
+            if (action.res_id){
+                action.context['active_id'] = action.res_id;
+                action.context['active_ids'] = [action.res_id];
+            } else{
+                delete action.context['active_id'];
+                delete action.context['active_ids'];
+            }
+        }
         return this.ir_actions_common({
             widget: function () { return new instance.web.ViewManagerAction(self, action); },
             action: action,
