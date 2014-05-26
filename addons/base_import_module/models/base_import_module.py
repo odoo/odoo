@@ -11,7 +11,7 @@ class base_import_module(osv.TransientModel):
     _columns = {
         'module_file': fields.binary('Module .ZIP file', required=True),
         'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
-        'import_messgae': fields.char('Import messge'),
+        'import_message': fields.char('Import message'),
     }
 
     _defaults = {  
@@ -25,7 +25,7 @@ class base_import_module(osv.TransientModel):
         fp = BytesIO()
         fp.write(zip_data)
         res = module_obj.import_zipfile(cr, uid, fp, context=context)
-        self.write(cr, uid, ids, {'state': 'done', 'import_messgae': res[0]}, context=context)
+        self.write(cr, uid, ids, {'state': 'done', 'import_message': res[0]}, context=context)
         context = dict(context, module_name=res[1])
         # Return wizard otherwise it will close wizard and will not show result message to user. 
         return {
