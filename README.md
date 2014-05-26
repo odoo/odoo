@@ -1,7 +1,7 @@
 About Odoo
 ==========
 
-Odoo is suite of open source Business apps. More info at http://www.odoo.com
+Odoo is a suite of open source Business apps. More info at http://www.odoo.com
 
 Installation
 ============
@@ -44,7 +44,7 @@ in your source.list and type:
 Or download the deb file and type:
 
     $ sudo dpkg -i <openerp-deb-filename>
-    $ sudo apt-get install install -f
+    $ sudo apt-get install -f
 
 RedHat, Fedora, CentOS
 ----------------------

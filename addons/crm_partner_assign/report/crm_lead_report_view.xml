@@ -27,9 +27,9 @@
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                        <filter string="Section" icon="terp-personal+"
+                        <filter string="Sales Team" icon="terp-personal+"
                                 domain="[]"
-                                context="{'group_by':'section_id'}" />
+                                context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
                                 domain="[]" context="{'group_by':'grade_id'}" />
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>

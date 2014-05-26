@@ -65,7 +65,6 @@
                             <field name="visits"/>
                             <field name="ranking" invisible="1"/>
                         </group>
-                        <field name="content" placeholder="e.g. Once upon a time..." widget="html"/>
                         <group string="Technical" groups="base.group_no_one">
                             <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
                             <field name="write_date"/>
@@ -141,8 +140,6 @@
                     <h1><field name="post_id" select="1" /></h1>
                     <label for="create_date" class="oe_edit_only"/>
                     <field name="create_date" readonly="1"/>
-                    <label for="content" class="oe_edit_only"/>
-                    <field name="content" colspan="4"/>
                 </form>
             </field>
         </record>

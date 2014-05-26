@@ -22,7 +22,7 @@ from openerp.osv import osv, fields
 from openerp.addons.edi import EDIMixin
 from openerp.tools.translate import _
 
-from urllib import urlencode
+from werkzeug import url_encode
 
 SALE_ORDER_LINE_EDI_STRUCT = {
     'sequence': True,
@@ -197,7 +197,7 @@ class sale_order(osv.osv, EDIMixin):
                     "no_note": "1",
                     "bn": "OpenERP_Order_PayNow_" + order.pricelist_id.currency_id.name,
                 }
-                res[order.id] = "https://www.paypal.com/cgi-bin/webscr?" + urlencode(params)
+                res[order.id] = "https://www.paypal.com/cgi-bin/webscr?" + url_encode(params)
         return res
 
     _columns = {
