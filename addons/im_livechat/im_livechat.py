@@ -169,15 +169,14 @@ class im_livechat_channel(osv.Model):
     def get_channel_session(self, cr, uid, channel_id, anonymous_name, context=None):
         """ return a session given a channel : create on with a registered user, or return false otherwise """
         # get the avalable user of the channel
-        users = self.get_available_users(cr, openerp.SUPERUSER_ID, channel_id, context=context)
+        users = self.get_available_users(cr, uid, channel_id, context=context)
         if len(users) == 0:
             return False
         user_id = random.choice(users).id
         # create the session, and add the link with the given channel
         Session = self.pool["im_chat.session"]
         newid = Session.create(cr, openerp.SUPERUSER_ID, {'user_ids': [(4,user_id)], 'channel_id': channel_id, 'name' : anonymous_name}, context=context)
-        session = Session.browse(cr, openerp.SUPERUSER_ID, newid, context=context)
-        return session.session_info()
+        return self.pool['im_chat.session'].session_info(cr, openerp.SUPERUSER_ID, [newid], context=context)
 
     def test_channel(self, cr, uid, channel, context=None):
         if not channel:

@@ -50,6 +50,7 @@ class ImBus(osv.Model):
         self.unlink(cr, uid, ids)
 
     def sendmany(self, cr, uid, notifications):
+        print notifications
         channels = set()
         for channel, message in notifications:
             channels.add(channel)

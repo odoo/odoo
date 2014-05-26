@@ -98,6 +98,8 @@
         },
 
         activate_session: function(session, focus) {
+            console.log("@@@@ REcieve message without session loaded afeter : ", JSON.stringify(session));
+
             var self = this;
             var conv = this.sessions[session.uuid];
             if (! conv) {
@@ -236,11 +238,11 @@
             // built the name
             var names = [];
             _.each(this.get("session").users, function(user){
-                if(openerp.session.uid != user.id){
+                if( (openerp.session.uid !== user.id) && !(_.isUndefined(openerp.session.uid) && !user.id) ){
                     names.push(user.name);
                 }
             });
-            this.$(".oe_im_chatview_header_name").text(names.join(", "));
+            this.$(".oe_im_chatview_header_name").text(names.join(", "));//this.get("session").name);//names.join(", "));
             // update the fold state
             if(this.get("session").state){
                 if(this.get("session").state === 'closed'){

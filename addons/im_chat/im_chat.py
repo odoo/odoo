@@ -81,18 +81,15 @@ class im_chat_session(osv.Model):
     _name = 'im_chat.session'
     _rec_name = 'uuid'
 
-    def _get_fullname(self, cr, uid, ids, fields, arg, context=None):
-        """ built the header of a given session """
+    def _get_users(self, cr, uid, ids, fields, arg, context=None):
+        """ built the user list of a given session """
         result = {}
         sessions = self.pool["im_chat.session"].browse(cr, uid, ids, context=context)
         for session in sessions:
-            name = []
-            if (uid is not None) and session.name:
-                name.append(session.name)
-            for u in session.user_ids:
-                if u.id != uid:
-                    name.append(u.name)
-            result[session.id] = ', '.join(name)
+            users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
+            if session.name:
+                users_infos.append({'id' : False, 'name' : session.name, 'im_status' : 'online'})
+            result[session.id] = users_infos
         return result
 
     _columns = {
@@ -101,6 +98,7 @@ class im_chat_session(osv.Model):
         'message_ids': fields.one2many('im_chat.message', 'to_id', 'Messages'),
         'user_ids': fields.many2many('res.users', 'im_chat_session_res_users_rel', 'session_id', 'user_id', "Session Users"),
         'session_res_users_rel': fields.one2many('im_chat.session_res_users_rel', 'session_id', 'Relation Session Users'),
+        'user_list' : fields.function(_get_users, type="string", string="Complete list of users in the Session"),
     }
     _defaults = {
         'uuid': lambda *args: '%s' % uuid.uuid4(),
@@ -116,22 +114,21 @@ class im_chat_session(osv.Model):
     def session_info(self, cr, uid, ids, context=None):
         """ get the session info/header of a given session """
         for session in self.browse(cr, uid, ids, context=context):
-            users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
+            #users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
             info = {
                 'uuid': session.uuid,
-                'name': session.name,
-                'users': users_infos,
+                #'name': session.fullname,
+                'users': session.user_list,
                 'state': 'open',
             }
             print "########## sessino_info as ", uid
-            print info
             # add uid_state if available
-            domain = [('user_id','=',uid), ('session_id','=',session.id)]
-            uid_state = self.pool['im_chat.session_res_users_rel'].search_read(cr, uid, domain, ['state'], context=context)
-            print domain
-            print uid_state
-            if uid_state:
-                info['state'] = uid_state[0]['state'] or 'open' # because the default value of im_chat_session_res_users_rel is not set
+            if uid:
+                domain = [('user_id','=',uid), ('session_id','=',session.id)]
+                uid_state = self.pool['im_chat.session_res_users_rel'].search_read(cr, uid, domain, ['state'], context=context)
+                if uid_state:
+                    info['state'] = uid_state[0]['state']
+            print info
             return info
 
     def session_get(self, cr, uid, user_to, context=None):
@@ -172,7 +169,7 @@ class im_chat_session(osv.Model):
                 self.pool['im.bus'].sendmany(cr, uid, notifications)
                 # send a message to the conversation
                 user = self.pool['res.users'].read(cr, uid, user_id, ['name'], context=context)
-                self.pool["im_chat.message"].post(cr, uid, session.uuid, "meta", user['name'] + " joined the conversation.", context=context)
+                self.pool["im_chat.message"].post(cr, uid, uid, session.uuid, "meta", user['name'] + " joined the conversation.", context=context)
 
     def get_image(self, cr, uid, uuid, user_id, context=None):
         """ get the avatar of a user in the given session """
@@ -249,6 +246,7 @@ class im_chat_message(osv.Model):
             message_id = self.create(cr, uid, vals, context=context)
             # broadcast it to channel (anonymous users) and users_ids
             data = self.read(cr, uid, [message_id], ['from_id','to_id','create_date','type','message'], context=context)[0]
+            print "############################## post : ",data
             notifications.append([uuid, data])
             for user in session.user_ids:
                 notifications.append([(cr.dbname, 'im_chat.session', user.id), data])
