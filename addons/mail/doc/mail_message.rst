@@ -109,3 +109,7 @@ Methods
    expandable messages. The expandable messages contain the domain to expand.
  - ``check_access_rule`` :
    Overwrite the initial message for this model.
+ - ``_message_read_add_expandables`` :
+   add paremeter max_limit ,telling we have overlimit messages.
+ - ``_get_expandable`` :
+   add parameters limit.

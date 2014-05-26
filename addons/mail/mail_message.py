@@ -68,7 +68,7 @@ class mail_message(osv.Model):
     _order = 'id desc'
     _rec_name = 'record_name'
 
-    _message_read_limit = 30
+    _message_read_limit = 50
     _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
         'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
     _message_record_name_length = 18
@@ -411,7 +411,7 @@ class mail_message(osv.Model):
             }
 
     def _message_read_add_expandables(self, cr, uid, messages, message_tree, parent_tree,
-            message_unload_ids=[], thread_level=0, domain=[], parent_id=False, context=None):
+            message_unload_ids=[], thread_level=0, domain=[], parent_id=False, max_limit=False, context=None):
         """ Create expandables for message_read, to load new messages.
             1. get the expandable for new threads
                 if display is flat (thread_level == 0):
@@ -434,13 +434,14 @@ class mail_message(osv.Model):
                 to load
             :return bool: True
         """
-        def _get_expandable(domain, message_nb, parent_id, max_limit):
+        def _get_expandable(domain, message_nb, parent_id, limit, max_limit):
             return {
                 'domain': domain,
                 'nb_messages': message_nb,
                 'type': 'expandable',
                 'parent_id': parent_id,
                 'max_limit':  max_limit,
+                'limit': limit,
             }
 
         if not messages:
@@ -456,10 +457,10 @@ class mail_message(osv.Model):
         if ids:
             # inside a thread: prepend
             if parent_id:
-                messages.insert(0, _get_expandable(exp_domain, -1, parent_id, True))
+                messages.insert(0, _get_expandable(exp_domain, -1, parent_id, self._message_read_limit, max_limit))
             # new threads: append
             else:
-                messages.append(_get_expandable(exp_domain, -1, parent_id, True))
+                messages.append(_get_expandable(exp_domain, -1, parent_id, self._message_read_limit, max_limit))
 
         # 2. get the expandables for new messages inside threads if display is not flat
         if thread_level == 0:
@@ -490,7 +491,7 @@ class mail_message(osv.Model):
                     exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
                     idx = [msg.get('id') for msg in messages].index(child_id) + 1
                     # messages.append(_get_expandable(exp_domain, nb, message_id, False))
-                    messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
+                    messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False, False))
                     id_min, id_max, nb = max(child_ids), 0, 0
                 else:
                     id_min, id_max, nb = max(child_ids), 0, 0
@@ -498,7 +499,7 @@ class mail_message(osv.Model):
                 exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
                 idx = [msg.get('id') for msg in messages].index(message_id) + 1
                 # messages.append(_get_expandable(exp_domain, nb, message_id, id_min))
-                messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
+                messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False, False))
 
         return True
 
@@ -536,10 +537,15 @@ class mail_message(osv.Model):
         message_tree = {}
         message_list = []
         parent_tree = {}
+        max_limit = False
 
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if ids is None:
-            ids = self.search(cr, uid, domain, context=context, limit=limit)
+            ids = self.search(cr, uid, domain, context=context)
+        if ids:
+            if len(ids) > limit:
+                max_limit = True
+            ids = limit and ids[:limit] or ids
 
         # fetch parent if threaded, sort messages
         for message in self.browse(cr, uid, ids, context=context):
@@ -577,7 +583,7 @@ class mail_message(osv.Model):
         # get the child expandable messages for the tree
         self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
         self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
-            thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+            thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, max_limit=max_limit, context=context)
         return message_list
 
     #------------------------------------------------------
