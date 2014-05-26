@@ -566,7 +566,7 @@ class Field(object):
         spec = [(self, records._ids)]
         for field, path in self._triggers:
             if field.store:
-                target = env[field.model_name].search([(path, 'in', records._ids)])
+                target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
                     target._attach_env(records.env)._recompute_todo(field)
