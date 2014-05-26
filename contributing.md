@@ -21,7 +21,7 @@ When reporting an issue or creating a pull request, use the following structure:
 >  2. add a line with product 'Service', quantity 2, unit price 10.0
 >  3. validate the sale order
 > 
-> Expected behavior:
+> Current behavior:
 > 
 >  - Total price of 10.0
 > 
