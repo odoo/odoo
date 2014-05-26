@@ -124,6 +124,7 @@
                             <field name="property_account_payable" groups="account.group_account_invoice"/>
                             <field name="property_supplier_payment_term" widget="selection"/>
                             <field name="debit"/>
+                            <field name="is_coa_configured" invisible="1"/>
                         </group>
                     </group>
                     <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}">
@@ -142,6 +143,13 @@
                     </div>
                 </page>
                 </page>
+                <sheet position="before">
+                    <div name="warning" class="oe_form_box_info oe_text_center" attrs="{'invisible':[('is_coa_configured','=',True)]}">
+                        <p>Accounting data do not seem well configured.</p>
+                        <p>Please click here to automatically set up your taxes and chart of accounts:
+                        <button type="object" name="open_account_configuration_installer" string="Setup Accounting Information" class="oe_link" special="nosave"/></p>
+                    </div>
+                </sheet>
             </field>
         </record>
     </data>

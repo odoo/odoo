@@ -21,7 +21,7 @@
 
 from operator import itemgetter
 import time
-
+from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
 class account_fiscal_position(osv.osv):
@@ -205,7 +205,19 @@ class res_partner(osv.osv):
     def mark_as_reconciled(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
+    def _check_coa_configured(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        prop_ids = self.pool.get('ir.property').search(cr, uid, [('name', 'in', ('property_account_receivable', 'property_account_payable')), (('company_id', '=', company_id) or ('company_id', '=', False))], context=context)
+        return bool(prop_ids)
+
+    def _get_coa_configured(self, cr, uid, ids, field_names, arg, context=None):
+        return dict.fromkeys(ids, self._check_coa_configured(cr, uid, context=context))
+    
+    def open_account_configuration_installer(self, cr, uid, ids, context=None):
+        return self.pool.get('account.installer')._open_account_configuration_installer(cr, uid, ids, context=context)
+    
     _columns = {
+        'is_coa_configured': fields.function(_get_coa_configured, type='boolean', string='COA Configured'),
         'credit': fields.function(_credit_debit_get,
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
         'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, string='Total Payable', multi='dc', help="Total amount you have to pay to this supplier."),
@@ -247,6 +259,10 @@ class res_partner(osv.osv):
             'Companies that refers to partner'),
         'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button "Nothing more to reconcile" during the manual reconciliation process.')
     }
+    
+    _defaults = {
+         'is_coa_configured': _check_coa_configured
+     }
 
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
