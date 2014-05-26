@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <menuitem id="screen_record_menu_main" name="Screen record"/>
+        <menuitem id="screen_record_menu" parent="screen_record_menu_main" name="Screen Records" sequence="19" />
+
+        <!-- Screen Record Form view -->
+        <record model="ir.ui.view" id="im_screenshare_record_form_view">
+            <field name="name">im_screenshare.record.form.view</field>
+            <field name="model">im_screenshare.record</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Screen Record" version="7.0">
+                    <header>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_inline" ></label>
+                            <h1><field name="name" /></h1>
+                            <label for="user_id" class="oe_inline"></label>
+                            <h2><field name="user_id" /></h2>
+                        </div>
+                        <div class="oe_right oe_button_box">
+                            <button name="play_screen_record" string="Play Screen Record" type="object" class="oe_highlight" />
+                        </div>
+
+                        <group>
+                            <field name="starttime" />
+                            <field name="endtime" />
+                            <field name="duration" />
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" style="min-height: 50px;" />
+                            </page>
+                            <page string="Events">
+                                <field name="event_ids" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Screen Record List view -->
+        <record model="ir.ui.view" id="screen_record_list_view">
+            <field name="name">im_screenshare.record.list.view</field>
+            <field name="model">im_screenshare.record</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Screen Records" version="7.0">
+                    <field name="id" />
+                    <field name="name" />
+                    <field name="starttime" />
+                    <field name="endtime" />
+                    <field name="duration" />
+                    <field name="user_id" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Screen Record Event Form view -->
+        <record model="ir.ui.view" id="screen_record_event_form_view">
+            <field name="name">im_screenshare.record.event.form.view</field>
+            <field name="model">im_screenshare.record.event</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Screen Record" version="7.0">
+                    <header>
+
+                    </header>
+                    <sheet>
+                        <label for="timestamp_date" class="oe_edit_only"></label>
+                        <h1><field name="timestamp_date" /></h1>
+                        <label for="screen_record_id"></label>
+                        <h2><field name="screen_record_id" /></h2>
+                        <group>
+                            <field name="timestamp" />
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field name="notes" style="min-height: 50px;" />
+                            </page>
+                            <page string="Messages">
+                                <field name="msglist" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Screen Record Event List view -->
+        <record model="ir.ui.view" id="screen_record_event_list_view">
+            <field name="name">im_screenshare.record.event.list.view</field>
+            <field name="model">im_screenshare.record.event</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Screen Record Events" version="7.0">
+                    <field name="id" />
+                    <field name="screen_record_id" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Screen Record Action -->
+        <record model="ir.actions.act_window" id="action_screen_record_form">
+                <field name="name">Screen Records</field>
+                <field name="res_model">im_screenshare.record</field>
+                <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Recordings" parent="screen_record_menu" id="screen_record_form" action="action_screen_record_form" />
+
+    </data>
+</openerp>

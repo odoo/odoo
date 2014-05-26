@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+
+        <!-- Template for the external support page -->
+        <template id="support_page" name="Livechat Support Page">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title>OpenERP Livechat Support Page</title>
+
+                    <!-- import all the js required to launch LiveSupport -->
+                    <t t-call="im_livechat.support_loader">
+                        <t t-set="url" t-value="url"/>
+                        <t t-set="dbname" t-value="dbname"/>
+                        <t t-set="channel" t-value="channel"/>
+                    </t>
+
+                    <style type="text/css">
+                        body {
+                            height: 100%;
+                            font-size: 16px;
+                            font-weight: 400;
+                            font-family: "Lato", "Lucida Grande", "Helvetica neue", "Helvetica", "Verdana", "Arial", sans-serif;
+                            overflow: hidden;
+                            overflow-y: auto;
+                            display: block;
+                            margin: 0;
+                            padding: 0;
+                            border: none;
+                            width: 100%;
+                            height: 100%;
+                            background: #C9C8E0;
+                            background-image: -webkit-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -moz-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -ms-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -o-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: linear-gradient(to bottom, #7c7bad, #ddddee);
+                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c7bad', endColorstr='#ddddee',GradientType=0 );
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-attachment: fixed;
+                        }
+                        .main {
+                            position: absolute;
+                            opacity: 0;
+                            top: 50%;
+                            width: 100%;
+                            margin-top: -150px;
+                            color: white;
+                            text-shadow: 0 1px 0 rgba(34, 52, 72, 0.2);
+                            z-index: 10;
+                            text-align: center;
+                        }
+                        .main h1 {
+                            font-size: 54px;
+                        }
+                        .main div {
+                            font-style: italic;
+                        }
+                    </style>
+                </head>
+
+                <body>
+                     <div class="main" style="opacity: 1;">
+                        <h1 class="channel_name"><t t-esc="channel_name"/></h1>
+                        <div>Live Chat Powered by <strong>OpenERP</strong>.</div>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <!-- render the 2 js tags required to launch LiveSupport on a web page -->
+        <template id="support_loader" name="All the scripts to launch the LiveSupport">
+            <link t-att-href="'%s/web/css/im_livechat.lib_loader' % (url)" rel="stylesheet"/>
+            <script type="text/javascript" t-att-src="'%s/web/js/im_livechat.lib_loader' % (url)" />
+            <script type="text/javascript" t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)"></script>
+        </template>
+
+        <!-- the js code to initialize the LiveSupport object -->
+        <template id="loader" name="Javascript initializing the LiveSupport">
+            (function() {
+                window.livesupport = new openerp.im_livechat.LiveSupport(
+                    "<t t-esc="url"/>",
+                    "<t t-esc="dbname"/>",
+                    <t t-esc="channel"/>,
+                    {
+                        buttonText: "<t t-esc="buttonText"/>",
+                        inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
+                        defaultMessage: "<t t-esc="defaultMessage"/>" || '',
+                        auto: window.oe_im_livechat_auto || false,
+                        defaultUsername: "<t t-esc="username"/>" || undefined,
+                    });
+            })();
+        </template>
+
+        <!-- bundle of js files required to launch the LiveSupport on an external website -->
+        <template id="lib_loader" name="List of js required for livechat on external web page">
+            <!-- OpenERP minimal lib -->
+            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+
+            <!-- Datejs -->
+            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
+
+            <!-- IM module -->
+            <script type="text/javascript" src="/im/static/src/js/im.js"></script>
+            <script type="text/javascript" src="/im_chat/static/src/js/im_chat.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/lib/jquery-achtung/src/ui.achtung.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
+
+            <!-- CSS -->
+            <link rel="stylesheet" href="/im_chat/static/src/css/im_common.css"></link>
+            <link rel="stylesheet" href="/im_livechat/static/lib/jquery-achtung/src/ui.achtung.css"></link>
+        </template>
+
+    </data>
+</openerp>
