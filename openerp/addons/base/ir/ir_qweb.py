@@ -612,7 +612,7 @@ class FloatConverter(osv.AbstractModel):
         # it to switch to scientific notation starting at a million *and* to
         # strip decimals. So use %f and if no precision was specified manually
         # strip trailing 0.
-        if not precision:
+        if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
         return formatted
 
