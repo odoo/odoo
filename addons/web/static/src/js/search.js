@@ -435,8 +435,18 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             view_manager.on('switch_mode', this, function (e) {
                 self.drawer.toggle(e === 'graph');
             });
-        }            
-        return $.when(p, this.ready);
+        }
+        $(window).resize(this.adjust_top.bind(this));
+        return $.when(p, this.ready).then(this.adjust_top.bind(this));
+    },
+
+    adjust_top: function () {
+        // hack to adjust the top of the view manager body to the actual header height
+        var parent = this.getParent();
+        if (parent) {
+            var h = parent.$(".oe_view_manager_header").height() + 1;
+            parent.$(".oe_view_manager_body").css('top', h + 'px');                
+        }        
     },
 
     set_drawer: function (drawer) {
