@@ -192,13 +192,14 @@ class delivery_grid(osv.osv):
         total = 0
         weight = 0
         volume = 0
+        product_uom_obj = self.pool.get('product.uom')
         for line in order.order_line:
             if not line.product_id:
                 continue
+            q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uos_qty, line.product_id.uom_id.id)
             total += line.price_subtotal or 0.0
-            weight += (line.product_id.weight or 0.0) * line.product_uom_qty
-            volume += (line.product_id.volume or 0.0) * line.product_uom_qty
-
+            weight += (line.product_id.weight or 0.0) * q
+            volume += (line.product_id.volume or 0.0) * q
 
         return self.get_price_from_picking(cr, uid, id, total,weight, volume, context=context)
 
