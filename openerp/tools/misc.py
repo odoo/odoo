@@ -1220,19 +1220,19 @@ def dumpstacks(sig=None, frame=None):
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
-        raise AttributeError('__delitem__')
+        raise NotImplementedError("'__delitem__' not supported on frozendict")
     def __setitem__(self, key, val):
-        raise AttributeError('__setitem__')
+        raise NotImplementedError("'__setitem__' not supported on frozendict")
     def clear(self):
-        raise AttributeError('clear')
+        raise NotImplementedError("'clear' not supported on frozendict")
     def pop(self, key, default=None):
-        raise AttributeError('pop')
+        raise NotImplementedError("'pop' not supported on frozendict")
     def popitem(self):
-        raise AttributeError('popitem')
+        raise NotImplementedError("'popitem' not supported on frozendict")
     def setdefault(self, key, default=None):
-        raise AttributeError('setdefault')
+        raise NotImplementedError("'setdefault' not supported on frozendict")
     def update(self, *args, **kwargs):
-        raise AttributeError('update')
+        raise NotImplementedError("'update' not supported on frozendict")
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
