@@ -2007,74 +2007,6 @@ class account_tax(osv.osv):
                 res.append(tax)
         return res
 
-    def _unit_compute(self, cr, uid, taxes, price_unit, product=None, partner=None, quantity=0):
-        taxes = self._applicable(cr, uid, taxes, price_unit ,product, partner)
-        res = []
-        cur_price_unit=price_unit
-        for tax in taxes:
-            # we compute the amount for the current tax object and append it to the result
-            data = {'id':tax.id,
-                    'name':tax.description and tax.description + " - " + tax.name or tax.name,
-                    'account_collected_id':tax.account_collected_id.id,
-                    'account_paid_id':tax.account_paid_id.id,
-                    'account_analytic_collected_id': tax.account_analytic_collected_id.id,
-                    'account_analytic_paid_id': tax.account_analytic_paid_id.id,
-                    'base_code_id': tax.base_code_id.id,
-                    'ref_base_code_id': tax.ref_base_code_id.id,
-                    'sequence': tax.sequence,
-                    'base_sign': tax.base_sign,
-                    'tax_sign': tax.tax_sign,
-                    'ref_base_sign': tax.ref_base_sign,
-                    'ref_tax_sign': tax.ref_tax_sign,
-                    'price_unit': cur_price_unit,
-                    'tax_code_id': tax.tax_code_id.id,
-                    'ref_tax_code_id': tax.ref_tax_code_id.id,
-            }
-            res.append(data)
-            if tax.type=='percent':
-                amount = cur_price_unit * tax.amount
-                data['amount'] = amount
-
-            elif tax.type=='fixed':
-                data['amount'] = tax.amount
-                data['tax_amount']=quantity
-               # data['amount'] = quantity
-            elif tax.type=='code':
-                localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
-                exec tax.python_compute in localdict
-                amount = localdict['result']
-                data['amount'] = amount
-            elif tax.type=='balance':
-                data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
-                data['balance'] = cur_price_unit
-
-            amount2 = data.get('amount', 0.0)
-            if tax.child_ids:
-                if tax.child_depend:
-                    latest = res.pop()
-                amount = amount2
-                child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, product, partner, quantity)
-                res.extend(child_tax)
-                for child in child_tax:
-                    amount2 += child.get('amount', 0.0)
-                if tax.child_depend:
-                    for r in res:
-                        for name in ('base','ref_base'):
-                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
-                                r[name+'_code_id'] = latest[name+'_code_id']
-                                r[name+'_sign'] = latest[name+'_sign']
-                                r['price_unit'] = latest['price_unit']
-                                latest[name+'_code_id'] = False
-                        for name in ('tax','ref_tax'):
-                            if latest[name+'_code_id'] and latest[name+'_sign'] and not r[name+'_code_id']:
-                                r[name+'_code_id'] = latest[name+'_code_id']
-                                r[name+'_sign'] = latest[name+'_sign']
-                                r['amount'] = data['amount']
-                                latest[name+'_code_id'] = False
-            if tax.include_base_amount:
-                cur_price_unit+=amount2
-        return res
-
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
@@ -2101,95 +2033,69 @@ class account_tax(osv.osv):
         if taxes and taxes[0].company_id.tax_calculation_rounding_method == 'round_globally':
             tax_compute_precision += 5
         totalin = totalex = round(price_unit * quantity, precision)
-        tin = []
-        tex = []
-        for tax in taxes:
-            if not tax.price_include or force_excluded:
-                tex.append(tax)
+        res = self.compute_unified(cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=tax_compute_precision, force_excluded=False)
+        for r in res:
+            if not r['price_include'] or force_excluded:
+                totalin += r.get('amount', 0.0)
             else:
-                tin.append(tax)
-        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, product=product, partner=partner, precision=tax_compute_precision)
-        for r in tin:
-            totalex -= r.get('amount', 0.0)
-        totlex_qty = 0.0
-        try:
-            totlex_qty = totalex/quantity
-        except:
-            pass
-        tex = self._compute(cr, uid, tex, totlex_qty, quantity, product=product, partner=partner, precision=tax_compute_precision)
-        for r in tex:
-            totalin += r.get('amount', 0.0)
+                totalex -= r.get('amount', 0.0)
         return {
             'total': totalex,
             'total_included': totalin,
-            'taxes': tin + tex
+            'taxes': res
         }
 
-    def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
-        _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
-        return self._compute(cr, uid, taxes, price_unit, quantity, product, partner)
-
-    def _compute(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
-        """
-        Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
-
-        RETURN:
-            [ tax ]
-            tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
-            one tax for each tax id in IDS and their children
-        """
-        if not precision:
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        res = self._unit_compute(cr, uid, taxes, price_unit, product, partner, quantity)
-        total = 0.0
-        for r in res:
-            if r.get('balance',False):
-                r['amount'] = round(r.get('balance', 0.0) * quantity, precision) - total
-            else:
-                r['amount'] = round(r.get('amount', 0.0) * quantity, precision)
-                total += r['amount']
-        return res
-
-    def _unit_compute_inv(self, cr, uid, taxes, price_unit, product=None, partner=None):
-        taxes = self._applicable(cr, uid, taxes, price_unit,  product, partner)
+    def unit_compute_unified(self, cr, uid, taxes, price_unit, product=None, partner=None, force_excluded=False):
+        taxes = self._applicable(cr, uid, taxes, price_unit, product, partner)
         res = []
-        taxes.reverse()
+        # Set initial cur_price_unit to hand over to the first tax in sequence.
         cur_price_unit = price_unit
-
-        tax_parent_tot = 0.0
-        for tax in taxes:
-            if (tax.type=='percent') and not tax.include_base_amount:
-                tax_parent_tot += tax.amount
-
-        for tax in taxes:
-            if (tax.type=='fixed') and not tax.include_base_amount:
-                cur_price_unit -= tax.amount
 
         for tax in taxes:
             if tax.type=='percent':
-                if tax.include_base_amount:
-                    amount = cur_price_unit - (cur_price_unit / (1 + tax.amount))
+                if not tax.price_include or force_excluded:
+                    amount = cur_price_unit * tax.amount
                 else:
-                    amount = (cur_price_unit / (1 + tax_parent_tot)) * tax.amount
+                    amount = cur_price_unit * (1 - (1 / (1 + tax.amount)))
 
             elif tax.type=='fixed':
+                # This case has no diffeentation when *caluclating* the tax amount.
                 amount = tax.amount
 
             elif tax.type=='code':
+                # We must assume, that python code makes adequat differentiation at the moment of calculation.
                 localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
+
             elif tax.type=='balance':
+                # There is no differentiation in this type. This seems a helper tax for rounding.
+                # This is an assumption without further investigation.
+                # TODO: Revision, Test & Debuggnig.
                 amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
 
-            if tax.include_base_amount:
-                cur_price_unit -= amount
-                todo = 0
+            cleanup = 0
+            if not tax.price_include or force_excluded:
+            # Tax is NOT included in price. (x*(1+r))
+                if tax.include_base_amount:
+                # Case: Tax should be included in base amount (cur_price_unite) of next tax.
+                    cur_price_unit += amount
+                    # As this writes to res we flag it (1) and cleanup at the end
+                    cleanup = 1
             else:
-                todo = 1
+            # Tax is included in price. (x*(1 - 1/(1+r)))
+                if tax.include_base_amount:
+                # Tax should be included in base amount (cur_price_unite) of next tax.
+                    # As this writes to res we flag it (1) and cleanup at the end
+                    # (Base = Price - Tax in this case), so we only have to correct the base afterwards.
+                    cleanup = 1
+                else:
+                    # Correct the base (Base = Price - Tax in this case) for next tax to draw on.
+                    cur_price_unit -= amount
+
             res.append({
                 'id': tax.id,
-                'todo': todo,
+                'todo': cleanup,
                 'name': tax.name,
                 'amount': amount,
                 'account_collected_id': tax.account_collected_id.id,
@@ -2206,25 +2112,25 @@ class account_tax(osv.osv):
                 'price_unit': cur_price_unit,
                 'tax_code_id': tax.tax_code_id.id,
                 'ref_tax_code_id': tax.ref_tax_code_id.id,
+                'price_include': tax.price_include,
             })
             if tax.child_ids:
+                child_price_unite=price_unit
                 if tax.child_depend:
+                    child_price_unite=amount
                     del res[-1]
-                    amount = price_unit
+                child_tax = self.unit_compute_unified(cr, uid, tax.child_ids, child_price_unite, product=None, partner=None, force_excluded=False)
+                res.extend(child_tax)
 
-            parent_tax = self._unit_compute_inv(cr, uid, tax.child_ids, amount, product, partner)
-            res.extend(parent_tax)
-
-        total = 0.0
         for r in res:
+            correct = 0.0
             if r['todo']:
-                total += r['amount']
-        for r in res:
-            r['price_unit'] -= total
-            r['todo'] = 0
+                correct += r['amount']
+                r['price_unit'] -= correct
+                r['todo'] = 0
         return res
 
-    def compute_inv(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None):
+    def compute_unified(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, precision=None, force_excluded=False):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
         Price Unit is a Tax included price
@@ -2236,7 +2142,7 @@ class account_tax(osv.osv):
         """
         if not precision:
             precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        res = self._unit_compute_inv(cr, uid, taxes, price_unit, product, partner=None)
+        res = self.unit_compute_unified(cr, uid, taxes, price_unit, product=None, partner=None, force_excluded=False)
         total = 0.0
         for r in res:
             if r.get('balance',False):
