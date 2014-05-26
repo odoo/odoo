@@ -1145,10 +1145,6 @@ instance.web.Client = instance.web.Widget.extend({
 });
 
 instance.web.WebClient = instance.web.Client.extend({
-    // _template: 'WebClient',
-    events: {
-        'click .oe_logo_edit_admin': 'logo_edit'
-    },
     init: function(parent, client_options) {
         this._super(parent);
         if (client_options) {
@@ -1163,6 +1159,11 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
+
+        this.$el.parents('body').find('.oe_webclient .oe_logo_edit').click(function(ev) {
+            self.logo_edit(ev);
+        });
+
         return $.when(this._super()).then(function() {
             if (jQuery.deparam !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 self.to_kitten();
@@ -1250,6 +1251,7 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     logo_edit: function(ev) {
         var self = this;
+        ev.preventDefault();
         self.alive(new instance.web.Model("res.users").get_func("read")(this.session.uid, ["company_id"])).then(function(res) {
             self.rpc("/web/action/load", { action_id: "base.action_res_company_form" }).done(function(result) {
                 result.res_id = res['company_id'][0];
@@ -1309,7 +1311,6 @@ instance.web.WebClient = instance.web.Client.extend({
         return this.session.session_reload().then(function () {
             instance.session.load_modules(true).then(
                 self.menu.proxy('do_reload')); });
-
     },
     do_notify: function() {
         var n = this.notification;
