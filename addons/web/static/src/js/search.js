@@ -830,7 +830,6 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
         var filters_ready = this.searchview.fields_view_get
                                 .then(this.proxy('prepare_filters'));
         return $.when(this._super(), filters_ready).then(function () {
-            self.$el.show();
             var defaults = arguments[1][0];
             self.ready.resolve.apply(null, defaults);
         });
