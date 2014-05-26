@@ -1732,20 +1732,18 @@
     </dl>
 </div>
 
- <div t-name="SearchView.SaveFilter">
-    <div class="oe_searchview_custom">
-        <h4>Save current filter</h4>
-        <form class="oe_form">
-            <p class="oe_form_required"><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
-            <p>
-                <input id="oe_searchview_custom_public" type="checkbox"/>
-                <label for="oe_searchview_custom_public">Share with all users</label>
-                <input id="oe_searchview_custom_default" type="checkbox"/>
-                <label for="oe_searchview_custom_default">Use by default</label>
-            </p>
-            <button>Save</button>
-        </form>
-    </div>
+ <div t-name="SearchView.SaveFilter" class="oe_searchview_custom">
+    <h4>Save current filter</h4>
+    <form class="oe_form">
+        <p class="oe_form_required"><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+        <p>
+            <input id="oe_searchview_custom_public" type="checkbox"/>
+            <label for="oe_searchview_custom_public">Share with all users</label>
+            <input id="oe_searchview_custom_default" type="checkbox"/>
+            <label for="oe_searchview_custom_default">Use by default</label>
+        </p>
+        <button>Save</button>
+    </form>
 </div>
 
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">
