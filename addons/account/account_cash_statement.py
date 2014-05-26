@@ -130,7 +130,7 @@ class account_cash_statement(osv.osv):
 
     def _get_cash_open_box_lines(self, cr, uid, context=None):
         res = []
-        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        curr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
             dct = {
                 'pieces': rs,
@@ -150,7 +150,7 @@ class account_cash_statement(osv.osv):
 
     def _get_default_cash_close_box_lines(self, cr, uid, context=None):
         res = []
-        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        curr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
             dct = {
                 'pieces': rs,
@@ -161,7 +161,7 @@ class account_cash_statement(osv.osv):
 
     def _get_cash_close_box_lines(self, cr, uid, context=None):
         res = []
-        curr = [1, 2, 5, 10, 20, 50, 100, 500]
+        curr = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 500]
         for rs in curr:
             dct = {
                 'pieces': rs,
