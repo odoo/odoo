@@ -13,7 +13,7 @@ for customization purpose.
     'depends': ['web'],
     'installable': True,
     'auto_install': False,
-    'data': [],
+    'data': ['views/base_import_module.xml'],
     'qweb': [],
     'test': [],
 }
