@@ -296,7 +296,7 @@
             });
         },
         company: function () {
-            return $('body').attr('data-oe-company-name');
+            return $('html').attr('data-oe-company-name');
         },
         bodyText: function () {
             return $('body').children().not('.js_seo_configuration').text();
