@@ -4224,12 +4224,14 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var view = this.get_active_view();
         var was_editing = false;
         if (view && view.type == 'list' && view.controller.editor.is_editing()) {
-            was_editing = true;
             // TODO: make shelve, unshelve work
+            // was_editing = true;
             // view.controller.editor.shelve();
 
             // Meanwhile ...
-            view.controller.cancel_edition();
+            view.controller.cancel_edition(true);
+            view.controller.start_edition();
+            return;
         }
         this.dataset.reset_ids([]);
         var ids;
