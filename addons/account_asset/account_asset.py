@@ -528,7 +528,7 @@ class account_asset_depreciation_line(osv.osv):
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sales' else False,
                 'date': depreciation_date,
-                'asset_id': line.asset_id.id if category_id == 'sales' else False
+                'asset_id': line.asset_id.id if categ_type == 'sales' else False
             })
             move_line_obj.create(cr, uid, {
                 'name': asset_name or reference,
