@@ -63,8 +63,7 @@ class view(osv.osv):
         if options:
             todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
         # Keep options in a determinitic order whatever their enabled disabled status
-        todo.sort(lambda x,y:cmp(x.id,y.id))
-        for child_view in todo:
+        for child_view in sorted(todo, key=lambda v: v.id):
             for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False):
                 if r not in result:
                     result.append(r)
