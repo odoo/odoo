@@ -39,6 +39,12 @@ class view(osv.osv):
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
     def _views_get(self, cr, uid, view_id, options=True, context=None, root=True):
+        """ For a given view ``view_id``, should return:
+
+        * the view itself
+        * all views inheriting from it, enabled or not
+        * all views called from it (via t-call)
+        """
         try:
             view = self._view_obj(cr, uid, view_id, context=context)
         except ValueError:
@@ -53,18 +59,23 @@ class view(osv.osv):
         node = etree.fromstring(view.arch)
         for child in node.xpath("//t[@t-call]"):
             try:
-                call_view = self._view_obj(cr, uid, child.get('t-call'), context=context)
+                called_view = self._view_obj(cr, uid, child.get('t-call'), context=context)
             except ValueError:
                 continue
-            if call_view not in result:
-                result += self._views_get(cr, uid, call_view, options=options, context=context)
+            if called_view not in result:
+                result += self._views_get(cr, uid, called_view, options=options, context=context)
 
-        todo = view.inherit_children_ids
+        todo = set(view.inherit_children_ids)
         if options:
-            todo += filter(lambda x: not x.inherit_id, view.inherited_option_ids)
-        # Keep options in a determinitic order whatever their enabled disabled status
+            todo.update(view.inherited_option_ids)
+
+        # Keep options in a deterministic order regardless of their applicability
         for child_view in sorted(todo, key=lambda v: v.id):
-            for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False):
+            for r in self._views_get(
+                    cr, uid, child_view,
+                    # only return optional grandchildren if this child is enabled
+                    options=bool(child_view.inherit_id),
+                    context=context, root=False):
                 if r not in result:
                     result.append(r)
         return result
