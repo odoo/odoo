@@ -264,7 +264,7 @@ class view(osv.osv):
     # default view selection
     def default_view(self, cr, uid, model, view_type, context=None):
         """ Fetches the default view for the provided (model, view_type) pair:
-         view with no parent (inherit_id=Fase) with the lowest priority.
+         primary view with the lowest priority.
 
         :param str model:
         :param int view_type:
@@ -274,7 +274,7 @@ class view(osv.osv):
         domain = [
             ['model', '=', model],
             ['type', '=', view_type],
-            ['inherit_id', '=', False],
+            ['mode', '=', 'primary'],
         ]
         ids = self.search(cr, uid, domain, limit=1, context=context)
         if not ids:

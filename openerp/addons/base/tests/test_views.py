@@ -14,6 +14,12 @@ class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
         self.addTypeEqualityFunc(ET._Element, self.assertTreesEqual)
+        self.Views = self.registry('ir.ui.view')
+
+    def browse(self, id, context=None):
+        return self.Views.browse(self.cr, self.uid, id, context=context)
+    def create(self, value, context=None):
+        return self.Views.create(self.cr, self.uid, value, context=context)
 
     def assertTreesEqual(self, n1, n2, msg=None):
         self.assertEqual(n1.tag, n2.tag)
@@ -372,13 +378,6 @@ class TestApplyInheritanceSpecs(ViewCase):
 
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
-    """
-
-class TestViewCombined(ViewCase):
-    """
-    Test fallback operations of View.read_combined:
-    * defaults mapping
-    * ?
     """
 
 class TestNoModel(ViewCase):
@@ -812,15 +811,6 @@ class ViewModeField(ViewCase):
     classes, integrating the test (or not) of the mode field to regular cases
     """
 
-    def setUp(self):
-        super(ViewModeField, self).setUp()
-        self.Views = self.registry('ir.ui.view')
-
-    def browse(self, id, context=None):
-        return self.Views.browse(self.cr, self.uid, id, context=context)
-    def create(self, value, context=None):
-        return self.Views.create(self.cr, self.uid, value, context=context)
-
     def testModeImplicitValue(self):
         """ mode is auto-generated from inherit_id:
         * inherit_id -> mode=extendion
@@ -892,6 +882,62 @@ class ViewModeField(ViewCase):
         }))
 
         view.write({'mode': 'primary'})
+
+class TestDefaultView(ViewCase):
+    def testDefaultViewBase(self):
+        self.create({
+            'inherit_id': False,
+            'priority': 10,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+        v2 = self.create({
+            'inherit_id': False,
+            'priority': 1,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+
+        default = self.Views.default_view(self.cr, self.uid, False, 'qweb')
+        self.assertEqual(
+            default, v2,
+            "default_view should get the view with the lowest priority for "
+            "a (model, view_type) pair"
+        )
+
+    def testDefaultViewPrimary(self):
+        v1 = self.create({
+            'inherit_id': False,
+            'priority': 10,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+        self.create({
+            'inherit_id': False,
+            'priority': 5,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+        v3 = self.create({
+            'inherit_id': v1,
+            'priority': 1,
+            'mode': 'primary',
+            'arch': '<qweb/>',
+        })
+
+        default = self.Views.default_view(self.cr, self.uid, False, 'qweb')
+        self.assertEqual(
+            default, v3,
+            "default_view should get the view with the lowest priority for "
+            "a (model, view_type) pair in all the primary tables"
+        )
+
+class TestViewCombined(ViewCase):
+    """
+    Test fallback operations of View.read_combined:
+    * defaults mapping
+    * ?
+    """
 
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):
