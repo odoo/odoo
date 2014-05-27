@@ -14,7 +14,6 @@
                 id: this.$target.data('id'),
                 fields: ['name', 'alias_id'],
             }).always(function (data) {
-                console.log(data);
                 self.is_user = data.is_user;
                 self.$target.find('.js_mg_email').attr('href', 'mailto:' + data.alias_id[1]);
                 self.$target.find('.js_mg_link').attr('href', '/groups/' + data.id);
