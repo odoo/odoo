@@ -12,7 +12,7 @@
 -
   !record {model: res.users, id: res_users_eventmanager}:
     groups_id:
-      - event.group_event_manager
+      - base.group_tool_manager
 -
   Create a user as 'Event user'
 -
@@ -27,4 +27,4 @@
 -
   !record {model: res.users, id: res_users_eventuser}:
     groups_id:
-      - event.group_event_user
+      - base.group_tool_user

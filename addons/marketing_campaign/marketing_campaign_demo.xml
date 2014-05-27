@@ -1,6 +1,6 @@
 <openerp>
     <data>
-        <!-- Email tempalte -->
+        <!-- Email template -->
         <record id="email_template_1" model="email.template">
             <field name="name">welcome new partner</field>
             <field name="email_from">info@openerp.com</field>
@@ -36,8 +36,7 @@
             <field name="mode">active</field>
         </record>
 
-            <!-- Activity -->
-
+    <!-- Activity -->
         <record id="marketing_campaign_activity_0" model="marketing.campaign.activity">
             <field name="name">New Partner</field>
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
@@ -86,6 +85,11 @@
             <field name="sync_mode">create_date</field>
             <field name="ir_filter_id" ref="filter0"/>
             <field name="campaign_id" ref="marketing_campaign_openerppartnerchannel"/>
+        </record>
+
+    <!-- If demo data than gives the marketing_campaign user rights -->
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_marketing_user'))]" name="groups_id"/>
         </record>
 
     </data>

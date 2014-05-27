@@ -6180,6 +6180,38 @@ instance.web.form.StatInfo = instance.web.form.AbstractField.extend({
 
 });
 
+instance.web.form.ActiveWidgetButton = instance.web.form.AbstractField.extend({
+    template: 'ActiveWidgetButton',
+    render_value: function() {
+        this._super();
+        this.$("button:first")
+            .toggleClass("btn-success", this.get_value())
+            .toggleClass("btn-danger", !this.get_value());
+        this.$('ul.dropdown-menu li a.js_publish_btn')
+            .toggleClass("active", this.get_value())
+            .toggleClass("deactive", !this.get_value());
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.$("button:first")
+            .on("click", function () {
+                if(self.get_value()){
+                    if (!confirm(_t("Do you really want to deactive user?"))) { return false; }
+                }
+                self.set_value(!!$(this).hasClass("btn-danger"));
+                return self.view.recursive_save();
+        });
+        this.$('ul.dropdown-menu li a.js_publish_btn')
+            .on("click", function () {
+                if(self.get_value()){
+                    if (!confirm(_t("Do you really want to deactive user?"))) { return false; }
+                }
+                self.set_value(!!$(this).hasClass("deactive"));
+                return self.view.recursive_save();
+        });
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -6224,6 +6256,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'priority':'instance.web.form.Priority',
     'kanban_state_selection':'instance.web.form.KanbanSelection',
     'statinfo': 'instance.web.form.StatInfo',
+    'active_deactive_button': 'instance.web.form.ActiveWidgetButton',
 });
 
 /**

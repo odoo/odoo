@@ -2018,5 +2018,25 @@
     <a href="javascript:void(0)"><t t-esc="text"/></a>
 </t>
 <t t-name="StatInfo">
-    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/></t>
+    <strong><t t-esc="value"/></strong><br/><t t-esc="text"/>
+</t>
+<t t-name="ActiveWidgetButton">
+    <div class="btn-group oe_ActiveWidgetButton">
+        <button class="btn btn-sm btn-success">
+            <span class="oe_deactivated">Deactivated</span>
+            <span class="oe_activated">Activated</span>
+        </button>
+        <button type="button" t-attf-class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a href="#" class="js_publish_btn active">
+                    <span class="oe_activated">Deactivate</span>
+                    <span class="oe_deactivated">Activate</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</t>
 </templates>

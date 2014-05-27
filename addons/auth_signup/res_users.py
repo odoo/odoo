@@ -175,7 +175,10 @@ class res_users(osv.Model):
     def _get_state(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for user in self.browse(cr, uid, ids, context):
-            res[user.id] = ('active' if user.login_date else 'new')
+            if user.login_date and user.active:
+                res[user.id] = 'active'
+            else:
+                res[user.id] = ('new' if not user.login_date else '')
         return res
 
     _columns = {
