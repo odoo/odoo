@@ -1824,7 +1824,7 @@
                            name="%(product_open_quants)d"
                            icon="fa-building-o"
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                    <div>Stock</div>
+                    <div><field name="qty_in_stock"/></div>
                     </button>
                    <button string="Moves" class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" 
                            attrs="{'invisible':[('type', '=', 'service')]}"
