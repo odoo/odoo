@@ -668,6 +668,7 @@ class account_invoice(Model):
 
     @multi
     def _get_analytic_lines(self):
+        """ Return a list of dict for creating analytic lines for self[0] """
         company_currency = self.company_id.currency_id
         sign = 1 if self.type in ('out_invoice', 'in_refund') else -1
 

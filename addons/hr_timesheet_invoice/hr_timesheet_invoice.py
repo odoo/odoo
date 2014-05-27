@@ -328,10 +328,10 @@ class hr_analytic_timesheet(osv.osv):
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _get_analytic_lines(self, cr, uid, id, context=None):
-        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id, context=context)
+    def _get_analytic_lines(self, cr, uid, ids, context=None):
+        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, ids, context=context)
 
-        inv = self.browse(cr, uid, [id], context=context)[0]
+        inv = self.browse(cr, uid, ids, context=context)[0]
         if inv.type == 'in_invoice':
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:

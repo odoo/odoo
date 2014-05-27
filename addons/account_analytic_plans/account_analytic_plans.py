@@ -380,8 +380,8 @@ class account_invoice(osv.osv):
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
-    def _get_analytic_lines(self, cr, uid, id, context=None):
-        inv = self.browse(cr, uid, [id])[0]
+    def _get_analytic_lines(self, cr, uid, ids, context=None):
+        inv = self.browse(cr, uid, ids)[0]
         cur_obj = self.pool.get('res.currency')
         invoice_line_obj = self.pool.get('account.invoice.line')
         acct_ins_obj = self.pool.get('account.analytic.plan.instance')
