@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent cd98e5752eedca2780da80387ac01c8cd166940f
+# Parent 5d765a23763f5a54d8dbca1cbd6dbaa2c483e9c2
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -63,19 +63,24 @@ new file mode 100644
 diff --git a/models/academy.py b/models/academy.py
 --- a/models/academy.py
 +++ b/models/academy.py
-@@ -8,3 +8,12 @@ class TeachingAssistants(orm.Model):
-         'name': fields.char(),
-         'biography': fields.html(),
-     }
+@@ -1,9 +1,16 @@
+ # -*- coding: utf-8 -*-
+ from openerp import Model
+-from openerp import Char, Html
++from openerp import Char, Html, Date
+ 
+ class TeachingAssistants(Model):
+     _name = "academy.tas"
+ 
+     name = Char()
+     biography = Html()
 +
-+class Lectures(orm.Model):
++class Lectures(Model):
 +    _name = 'academy.lectures'
 +    _order = 'date ASC'
 +
-+    _columns = {
-+        'name': fields.char(required=True),
-+        'date': fields.date(required=True),
-+    }
++    name = Char(required=True)
++    date = Date(required=True)
 diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
 --- a/security/ir.model.access.csv
 +++ b/security/ir.model.access.csv
