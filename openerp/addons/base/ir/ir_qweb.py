@@ -871,7 +871,7 @@ class Contact(orm.AbstractModel):
 
         id = getattr(record, field_name).id
         field_browse = self.pool[column._obj].browse(cr, openerp.SUPERUSER_ID, id, context={"show_address": True})
-        value = field_browse.name_get()[0][1]
+        value = field_browse.display_name
 
         val = {
             'name': value.split("\n")[0],
@@ -880,7 +880,7 @@ class Contact(orm.AbstractModel):
             'mobile': field_browse.mobile,
             'fax': field_browse.fax,
             'city': field_browse.city,
-            'country_id': field_browse.country_id and field_browse.country_id.name_get()[0][1],
+            'country_id': field_browse.country_id.display_name,
             'website': field_browse.website,
             'email': field_browse.email,
             'fields': opf,
