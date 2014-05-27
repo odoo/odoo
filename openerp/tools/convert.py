@@ -898,6 +898,8 @@ form: module.record_id""" % (xml_id,)
             record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
         if el.attrib.pop('page', None) == 'True':
             record.append(Field(name="page", eval="True"))
+        if el.get('primary') == 'True':
+            record.append(Field('primary', name='mode'))
 
         return self._tag_record(cr, record, data_node)
 
