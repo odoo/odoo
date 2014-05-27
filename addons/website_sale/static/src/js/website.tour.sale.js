@@ -78,7 +78,7 @@
             {
                 title:     "Pay Now",
                 waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
-                element:   '.oe_sale_acquirer_button .btn[name="submit"]:visible',
+                element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
             },
             {
                 title:     "finish",
