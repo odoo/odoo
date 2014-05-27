@@ -24,23 +24,26 @@ class view(osv.osv):
         'page': False,
     }
 
+
+    def _view_obj(self, cr, uid, view_id, context=None):
+        if isinstance(view_id, basestring):
+            return self.pool['ir.model.data'].xmlid_to_object(
+                cr, uid, view_id, raise_if_not_found=True, context=context
+            )
+        elif isinstance(view_id, (int, long)):
+            return self.browse(cr, uid, view_id, context=context)
+
+        # assume it's already a view object (WTF?)
+        return view_id
+
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view, options=True, context=None, root=True):
+    def _views_get(self, cr, uid, view_id, options=True, context=None, root=True):
         if not context:
             context = {}
 
-        def view_obj(view):
-            if isinstance(view, basestring):
-                mod_obj = self.pool.get("ir.model.data")
-                m, n = view.split('.')
-                view = mod_obj.get_object(cr, uid, m, n, context=context)
-            elif isinstance(view, (int, long)):
-                view = self.pool.get("ir.ui.view").browse(cr, uid, view, context=context)
-            return view
-
         try:
-            view = view_obj(view)
+            view = self._view_obj(cr, uid, view_id, context=context)
         except ValueError:
             # Shall we log that ?
             return []
@@ -53,7 +56,7 @@ class view(osv.osv):
         node = etree.fromstring(view.arch)
         for child in node.xpath("//t[@t-call]"):
             try:
-                call_view = view_obj(child.get('t-call'))
+                call_view = self._view_obj(cr, uid, child.get('t-call'), context=context)
             except ValueError:
                 continue
             if call_view not in result:
