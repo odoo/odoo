@@ -3139,8 +3139,7 @@ class BaseModel(object):
             if invalid_fields:
                 _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                     operation, user, self._name, ', '.join(invalid_fields))
-                raise except_orm(
-                    _('Access Denied'),
+                raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. '
                     'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                     (self._description, operation))
