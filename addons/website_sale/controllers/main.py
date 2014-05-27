@@ -356,8 +356,14 @@ class website_sale(http.Controller):
                 error[field_name] = 'missing'
 
         if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
+            if request.website.company_id.vat_check_vies:
+                # force full VIES online check
+                check_func = registry["res.partner"].vies_vat_check
+            else:
+                # quick and partial off-line checksum validation
+                check_func = registry["res.partner"].simple_vat_check
             vat_country, vat_number = registry["res.partner"]._split_vat(data.get("vat"))
-            if not registry["res.partner"].vies_vat_check(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
+            if not check_func(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
                 error["vat"] = 'error'
 
         if data.get("shipping_different"):
