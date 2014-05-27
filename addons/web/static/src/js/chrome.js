@@ -1119,6 +1119,10 @@ instance.web.Client = instance.web.Widget.extend({
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
+        self.notification = new instance.web.Notification(this);
+        self.notification.appendTo(self.$el);
+        self.loading = new instance.web.Loading(self);
+        self.loading.appendTo(self.$el);
         self.action_manager = new instance.web.ActionManager(self);
         self.action_manager.appendTo(this.$el.find('.oe_application'));
     },
@@ -1234,15 +1238,11 @@ instance.web.WebClient = instance.web.Client.extend({
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
         }
-        self.notification = new instance.web.Notification(this);
-        self.notification.appendTo(self.$el);
-        self.loading = new instance.web.Loading(self);
-        self.loading.appendTo(self.$el);
     },
     update_logo: function() {
         var img = this.session.url('/web/binary/company_logo');
-        this.$el.parents('body').find('.oe_logo img').attr('src', '').attr('src', img);
-        this.$el.parents('body').find('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
+        this.$('.oe_logo img').attr('src', '').attr('src', img);
+        this.$('.oe_logo_edit').toggleClass('oe_logo_edit_admin', this.session.uid === 1);
     },
     logo_edit: function(ev) {
         var self = this;
