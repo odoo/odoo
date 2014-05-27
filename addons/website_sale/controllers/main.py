@@ -126,19 +126,21 @@ class website_sale(http.Controller):
             domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
 
         attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
-        attrib = None
         if attrib_values:
+            attrib = None
+            ids = []
             for value in attrib_values:
                 if not attrib:
                     attrib = value[0]
-                    dom = [('variant_ids.value_ids', '=', value[1])]
+                    ids.append(value[1])
                 elif value[0] == attrib:
-                    dom = ['&'] + dom + [('variant_ids.value_ids', '=', value[1])]
+                    ids.append(value[1])
                 else:
-                    attrib = None
-                    domain += dom
+                    domain += [('variant_ids.value_ids', 'in', ids)]
+                    attrib = value[0]
+                    ids = [value[1]]
             if attrib:
-                domain += dom
+                domain += [('variant_ids.value_ids', 'in', ids)]
 
         attrib_set = set([v[1] for v in attrib_values])
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_set)
