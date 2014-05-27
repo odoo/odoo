@@ -3626,19 +3626,11 @@ class stock_package(osv.osv):
         return True
 
     def action_print(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        datas = {
-            'ids': context.get('active_id') and [context.get('active_id')] or ids,
-            'model': 'stock.quant.package',
-            'form': self.read(cr, uid, ids)[0]
-        }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'stock.quant.package.barcode',
-            'datas': datas
-        }
-
+        context = context or {}
+        context['active_ids'] = ids
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode', context=context)
+    
+    
     def unpack(self, cr, uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for package in self.browse(cr, uid, ids, context=context):
