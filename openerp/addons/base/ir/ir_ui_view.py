@@ -148,6 +148,7 @@ class view(osv.osv):
             required=True),
     }
     _defaults = {
+        'mode': 'primary',
         'priority': 16,
     }
     _order = "priority,name"
@@ -215,7 +216,9 @@ class view(osv.osv):
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
     def _compute_defaults(self, cr, uid, values, context=None):
-        values.setdefault('mode', 'extension' if values.get('inherit_id') else 'primary')
+        if 'inherit_id' in values:
+            values.setdefault(
+                'mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
     def create(self, cr, uid, values, context=None):
@@ -301,7 +304,6 @@ class view(osv.osv):
         user = self.pool['res.users'].browse(cr, 1, uid, context=context)
         user_groups = frozenset(user.groups_id or ())
 
-        check_view_ids = context and context.get('check_view_ids') or (0,)
         conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
         if self.pool._init:
             # Module init currently in progress, only consider views from
@@ -309,7 +311,7 @@ class view(osv.osv):
             conditions.extend([
                 '|',
                 ['model_ids.module', 'in', tuple(self.pool._init_modules)],
-                ['id', 'in', check_view_ids],
+                ['id', 'in', context and context.get('check_view_ids') or (0,)],
             ])
         view_ids = self.search(cr, uid, conditions, context=context)
 
@@ -465,7 +467,7 @@ class view(osv.osv):
         if context is None: context = {}
         if root_id is None:
             root_id = source_id
-        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model, context=context)
+        sql_inherit = self.pool['ir.ui.view'].get_inheriting_views_arch(cr, uid, source_id, model, context=context)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
@@ -488,7 +490,7 @@ class view(osv.osv):
 
         # if view_id is not a root view, climb back to the top.
         base = v = self.browse(cr, uid, view_id, context=context)
-        while v.inherit_id:
+        while v.mode != 'primary':
             v = v.inherit_id
         root_id = v.id
 
@@ -498,7 +500,16 @@ class view(osv.osv):
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
-        arch_tree = etree.fromstring(view['arch'].encode('utf-8'))
+        view_arch = etree.fromstring(view['arch'].encode('utf-8'))
+        if not v.inherit_id:
+            arch_tree = view_arch
+        else:
+            parent_view = self.read_combined(
+                cr, uid, v.inherit_id.id, fields=fields, context=context)
+            arch_tree = etree.fromstring(parent_view['arch'])
+            self.apply_inheritance_specs(
+                cr, uid, arch_tree, view_arch, parent_view['id'], context=context)
+
 
         if context.get('inherit_branding'):
             arch_tree.attrib.update({

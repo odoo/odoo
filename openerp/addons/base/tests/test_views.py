@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from functools import partial
+import itertools
 
 import unittest2
 
@@ -22,7 +23,7 @@ class ViewCase(common.TransactionCase):
         return self.Views.create(self.cr, self.uid, value, context=context)
 
     def assertTreesEqual(self, n1, n2, msg=None):
-        self.assertEqual(n1.tag, n2.tag)
+        self.assertEqual(n1.tag, n2.tag, msg)
         self.assertEqual((n1.text or '').strip(), (n2.text or '').strip(), msg)
         self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip(), msg)
 
@@ -30,8 +31,8 @@ class ViewCase(common.TransactionCase):
         # equality (!?!?!?!)
         self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
 
-        for c1, c2 in zip(n1, n2):
-            self.assertTreesEqual(c1, c2, msg)
+        for c1, c2 in itertools.izip_longest(n1, n2):
+            self.assertEqual(c1, c2, msg)
 
 
 class TestNodeLocator(common.TransactionCase):
@@ -934,10 +935,122 @@ class TestDefaultView(ViewCase):
 
 class TestViewCombined(ViewCase):
     """
-    Test fallback operations of View.read_combined:
-    * defaults mapping
-    * ?
+    * When asked for a view, instead of looking for the closest parent with
+      inherit_id=False look for mode=primary
+    * If root.inherit_id, resolve the arch for root.inherit_id (?using which
+      model?), then apply root's inheritance specs to it
+    * Apply inheriting views on top
     """
+
+    def setUp(self):
+        super(TestViewCombined, self).setUp()
+
+        self.a1 = self.create({
+            'model': 'a',
+            'arch': '<qweb><a1/></qweb>'
+        })
+        self.a2 = self.create({
+            'model': 'a',
+            'inherit_id': self.a1,
+            'priority': 5,
+            'arch': '<xpath expr="//a1" position="after"><a2/></xpath>'
+        })
+        self.a3 = self.create({
+            'model': 'a',
+            'inherit_id': self.a1,
+            'arch': '<xpath expr="//a1" position="after"><a3/></xpath>'
+        })
+
+        self.b1 = self.create({
+            'model': 'b',
+            'inherit_id': self.a3,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><b1/></xpath>'
+        })
+        self.b2 = self.create({
+            'model': 'b',
+            'inherit_id': self.b1,
+            'arch': '<xpath expr="//a1" position="after"><b2/></xpath>'
+        })
+
+        self.c1 = self.create({
+            'model': 'c',
+            'inherit_id': self.a1,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><c1/></xpath>'
+        })
+        self.c2 = self.create({
+            'model': 'c',
+            'inherit_id': self.c1,
+            'priority': 5,
+            'arch': '<xpath expr="//a1" position="after"><c2/></xpath>'
+        })
+        self.c3 = self.create({
+            'model': 'c',
+            'inherit_id': self.c2,
+            'priority': 10,
+            'arch': '<xpath expr="//a1" position="after"><c3/></xpath>'
+        })
+
+        self.d1 = self.create({
+            'model': 'd',
+            'inherit_id': self.b1,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><d1/></xpath>'
+        })
+
+    def read_combined(self, id):
+        return self.Views.read_combined(
+            self.cr, self.uid,
+            id, ['arch'],
+            context={'check_view_ids': self.Views.search(self.cr, self.uid, [])}
+        )
+
+    def test_basic_read(self):
+        arch = self.read_combined(self.a1)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_read_from_child(self):
+        arch = self.read_combined(self.a3)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_cross_model_simple(self):
+        arch = self.read_combined(self.c2)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.c3(),
+                E.c2(),
+                E.c1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_cross_model_double(self):
+        arch = self.read_combined(self.d1)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.d1(),
+                E.b2(),
+                E.b1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
 
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):
