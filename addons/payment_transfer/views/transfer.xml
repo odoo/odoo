@@ -11,7 +11,7 @@
                 <input type='hidden' name='amount' t-att-value='amount or "0.0"'/>
                 <input type='hidden' name='currency' t-att-value='currency.name'/>
                 <!-- submit -->
-                <button name="submit" width="100px"
+                <button type="submit" width="100px"
                     t-att-class="submit_class">
                     <img t-if="not submit_txt" src="/payment_transfer/static/src/img/transfer_icon.png"/>
                     <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
