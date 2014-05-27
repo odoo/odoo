@@ -52,8 +52,7 @@ class hr_recruitment_stage(osv.osv):
         'requirements': fields.text('Requirements'),
         'template_id': fields.many2one('email.template', 'Use template', help="If set, a message is posted on the applicant using the template when the applicant is set to the stage."),
         'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
-                               'there are no records in that stage to display.'),
+                               help="This stage is folded in the kanban view when there are no records in that stage to display."),
     }
     _defaults = {
         'sequence': 1,

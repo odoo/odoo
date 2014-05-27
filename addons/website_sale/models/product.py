@@ -58,7 +58,7 @@ class product_style(osv.Model):
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotional Code'),
+        'code': fields.char('Promotional Code', help="This is a code associated with a promotion that you can use to save money on the normal cost."),
     }
 
 class product_template(osv.Model):
@@ -85,7 +85,7 @@ class product_template(osv.Model):
         ),
         'website_published': fields.boolean('Available in the website'),
         'website_description': fields.html('Description for the website'),
-        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
+        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page as an alternative for the main product.'),
         'accessory_product_ids': fields.many2many('product.template','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
         'website_size_y': fields.integer('Size Y'),

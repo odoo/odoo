@@ -46,7 +46,7 @@ class crm_claim_stage(osv.osv):
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty',
-                        help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
+                        help="This stage will not be visible in status bar of a form view, when there are no records in that stage to display."),
     }
 
     _defaults = {
@@ -91,7 +91,7 @@ class crm_claim(osv.osv):
         'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'user_fault': fields.char('Trouble Responsible', size=64),
+        'user_fault': fields.char('Trouble Responsible', size=64, help="The actual problem description for which this claim is raised."),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help="Responsible sales team."\
                                 " Define Responsible user and Email account for"\

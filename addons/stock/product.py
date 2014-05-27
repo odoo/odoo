@@ -181,8 +181,6 @@ class product_product(osv.osv):
                  "In a context with a single Warehouse, this includes "
                  "goods stored in the Stock Location of this Warehouse, or any "
                  "of its children.\n"
-                 "stored in the Stock Location of the Warehouse of this Shop, "
-                 "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
         'virtual_available': fields.function(_product_available, multi='qty_available',
@@ -229,7 +227,7 @@ class product_product(osv.osv):
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
-                                    help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
+                                    help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought or manufactured.."),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

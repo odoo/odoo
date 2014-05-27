@@ -28,7 +28,7 @@ class res_partner(osv.osv):
           type='many2one',
           relation='delivery.carrier',
           string="Delivery Method",
-          help="This delivery method will be used when invoicing from picking."),
+          help="This delivery method will be used when 'Create Invoice' is based 'On Delivery Order' in sales order creation form for this customer."),
     }
 
 

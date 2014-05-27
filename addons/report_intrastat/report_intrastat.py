@@ -28,7 +28,7 @@ class res_country(osv.osv):
     _name = 'res.country'
     _inherit = 'res.country'
     _columns = {
-        'intrastat': fields.boolean('Intrastat member'),
+        'intrastat': fields.boolean('Intrastat member', help="Tick the check box if this country is a member if EU(European Union)."),
     }
     _defaults = {
         'intrastat': lambda *a: False,
@@ -40,7 +40,7 @@ class report_intrastat_code(osv.osv):
     _name = "report.intrastat.code"
     _description = "Intrastat code"
     _columns = {
-        'name': fields.char('Intrastat Code', size=16),
+        'name': fields.char('Intrastat Code', size=16, help="Intrastat is the system for collecting statistics on the trade in goods between EU(European Union) member states. Basically used for reporting purpose."),
         'description': fields.char('Description', size=64),
     }
 

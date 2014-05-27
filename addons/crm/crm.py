@@ -69,8 +69,7 @@ class crm_case_stage(osv.osv):
         'case_default': fields.boolean('Default to New Sales Team',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
-                               'there are no records in that stage to display.'),
+                               help="This stage is folded in the kanban view when there are no records in that stage to display."),
         'type': fields.selection([('lead', 'Lead'),
                                     ('opportunity', 'Opportunity'),
                                     ('both', 'Both')],

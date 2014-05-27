@@ -231,18 +231,18 @@ class res_partner(osv.osv):
             type='many2one',
             relation='account.fiscal.position',
             string="Fiscal Position",
-            help="The fiscal position will determine taxes and accounts used for the partner.",
+            help="The fiscal position will determine taxes and accounts used for the partner.In Sale Invoice - Tax have to be selected automatically based on Dispatch Location and Customer.\nIn some countries VAT is replaced with CST(type of tax) when we sell a product from company home state to other state. This field serves to solve these kind of scenarios.",
         ),
         'property_payment_term': fields.property(
             type='many2one',
             relation='account.payment.term',
             string ='Customer Payment Term',
-            help="This payment term will be used instead of the default one for sale orders and customer invoices"),
+            help="Terms and conditions for the payment the company is imposing on the customers to pay the money. This payment term will be used instead of the default one for sale orders and customer invoices. e.g. 30 Days , 60 Days."),
         'property_supplier_payment_term': fields.property(
              type='many2one',
              relation='account.payment.term',
              string ='Supplier Payment Term',
-             help="This payment term will be used instead of the default one for purchase orders and supplier invoices"),
+             help="Terms and conditions for the payment the supplier is imposing on the company to pay the money. This payment term will be used instead of the default one for purchase orders and supplier invoices. e.g. 30 Days , 60 Days."),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
         'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button "Nothing more to reconcile" during the manual reconciliation process.')

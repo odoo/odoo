@@ -148,7 +148,7 @@ class res_partner_title(osv.osv):
     _order = 'name'
     _columns = {
         'name': fields.char('Title', required=True, size=46, translate=True),
-        'shortcut': fields.char('Abbreviation', size=16, translate=True),
+        'shortcut': fields.char('Abbreviation', size=16, translate=True, help="Give shortened form of a word or phrase.\ne.g. Mr. Stands for Mister."),
         'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', required=True, size=24)
     }
     _defaults = {
@@ -243,7 +243,7 @@ class res_partner(osv.osv, format_address):
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'tz_offset': fields.function(_get_tz_offset, type='char', size=5, string='Timezone offset', invisible=True),
-        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact if any.'),
+        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact or company.'),
         'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
@@ -252,7 +252,7 @@ class res_partner(osv.osv, format_address):
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
+        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer. If it's not checked, sales people will not see it when encoding a sale order."),
         'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position', size=128),
