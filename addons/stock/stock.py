@@ -1992,7 +1992,7 @@ class stock_move(osv.osv):
             values = {
                 'origin': move.origin,
                 'company_id': move.company_id and move.company_id.id or False,
-                'move_type': move.group_id and move.group_id.move_type or 'one',
+                'move_type': move.group_id and move.group_id.move_type or 'direct',
                 'partner_id': move.partner_id.id or False,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }
