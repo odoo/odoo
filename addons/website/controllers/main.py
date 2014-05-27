@@ -378,7 +378,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         response = werkzeug.wrappers.Response()
         return request.registry['website']._image(
-                    request.cr, request.uid, model, id, field, response)
+                    request.cr, request.uid, model, id, field, response, max_width, max_height)
 
 
     #------------------------------------------------------

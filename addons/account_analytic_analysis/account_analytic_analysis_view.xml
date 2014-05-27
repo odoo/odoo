@@ -169,7 +169,7 @@
                     <div attrs="{'invisible': [('recurring_invoices','=',False)]}">
                         <field name="recurring_invoice_line_ids">
                             <tree string="Account Analytic Lines" editable="bottom">
-                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, name, parent.partner_id, price_unit, parent.pricelist_id, parent.company_id)"/>
+                                <field name="product_id" on_change="product_id_change(product_id, uom_id, quantity, False, parent.partner_id, False, parent.pricelist_id, parent.company_id)"/>
                                 <field name="name"/>
                                 <field name="quantity"/>
                                 <field name="uom_id"/>

@@ -541,7 +541,10 @@ class website(osv.osv):
         response.mimetype = Image.MIME[image.format]
 
         w, h = image.size
-        max_w, max_h = int(max_width), int(max_height)
+        try:
+            max_w, max_h = int(max_width), int(max_height)
+        except:
+            max_w, max_h = (maxint, maxint)
 
         if w < max_w and h < max_h:
             response.data = data

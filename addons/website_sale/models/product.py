@@ -65,6 +65,7 @@ class product_template(osv.Model):
     _inherit = ["product.template", "website.seo.metadata"]
     _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
+    _mail_post_access = 'read'
 
     def _website_url(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, '')
