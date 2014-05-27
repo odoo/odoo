@@ -141,6 +141,11 @@ class view(osv.osv):
         'model_ids': fields.one2many('ir.model.data', 'res_id', domain=[('model','=','ir.ui.view')], auto_join=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'write_date': fields.datetime('Last Modification Date', readonly=True),
+
+        'mode': fields.selection(
+            [('primary', "Base view"), ('extension', "Extension View")],
+            string="View inheritance mode",
+            required=True),
     }
     _defaults = {
         'priority': 16,
@@ -191,8 +196,16 @@ class view(osv.osv):
                         return False
         return True
 
+    def _check_mode(self, cr, uid, ids, context=None):
+        for v in self.read(cr, uid, ids, ['inherit_id', 'mode'], context=context):
+            if v['mode'] == 'extension' and not v['inherit_id']:
+                raise Exception(
+                    _("A view extending nothing can not be an extension view"))
+        return True
+
     _constraints = [
-        (_check_xml, 'Invalid view definition', ['arch'])
+        (_check_xml, 'Invalid view definition', ['arch']),
+        (_check_mode, "Invalid mode for inheritance", ['mode', 'inherit_id']),
     ]
 
     def _auto_init(self, cr, context=None):
@@ -200,6 +213,10 @@ class view(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
+
+    def _compute_defaults(self, cr, uid, values, context=None):
+        values.setdefault('mode', 'extension' if values.get('inherit_id') else 'primary')
+        return values
 
     def create(self, cr, uid, values, context=None):
         if 'type' not in values:
@@ -209,10 +226,13 @@ class view(osv.osv):
                 values['type'] = etree.fromstring(values['arch']).tag
 
         if not values.get('name'):
-            values['name'] = "%s %s" % (values['model'], values['type'])
+            values['name'] = "%s %s" % (values.get('model'), values['type'])
 
         self.read_template.clear_cache(self)
-        return super(view, self).create(cr, uid, values, context)
+        return super(view, self).create(
+            cr, uid,
+            self._compute_defaults(cr, uid, values, context=context),
+            context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
@@ -227,7 +247,10 @@ class view(osv.osv):
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
         self.read_template.clear_cache(self)
-        ret = super(view, self).write(cr, uid, ids, vals, context)
+        ret = super(view, self).write(
+            cr, uid, ids,
+            self._compute_defaults(cr, uid, vals, context=context),
+            context)
         return ret
 
     def copy(self, cr, uid, id, default=None, context=None):

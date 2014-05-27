@@ -628,6 +628,7 @@ class test_views(ViewCase):
     def _insert_view(self, **kw):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
+        kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
 
         keys = sorted(kw.keys())
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -804,6 +805,93 @@ class test_views(ViewCase):
                     E.button(name="action_next", type="object", string="New button")),
                 string="Replacement title", version="7.0"
             ))
+
+class ViewModeField(ViewCase):
+    """
+    This should probably, eventually, be folded back into other test case
+    classes, integrating the test (or not) of the mode field to regular cases
+    """
+
+    def setUp(self):
+        super(ViewModeField, self).setUp()
+        self.Views = self.registry('ir.ui.view')
+
+    def browse(self, id, context=None):
+        return self.Views.browse(self.cr, self.uid, id, context=context)
+    def create(self, value, context=None):
+        return self.Views.create(self.cr, self.uid, value, context=context)
+
+    def testModeImplicitValue(self):
+        """ mode is auto-generated from inherit_id:
+        * inherit_id -> mode=extendion
+        * not inherit_id -> mode=primary
+        """
+        view = self.browse(self.create({
+            'inherit_id': None,
+            'arch': '<qweb/>'
+        }))
+        self.assertEqual(view.mode, 'primary')
+
+        view2 = self.browse(self.create({
+            'inherit_id': view.id,
+            'arch': '<qweb/>'
+        }))
+        self.assertEqual(view2.mode, 'extension')
+
+    def testModeExplicit(self):
+        view = self.browse(self.create({
+            'inherit_id': None,
+            'arch': '<qweb/>'
+        }))
+        view2 = self.browse(self.create({
+            'inherit_id': view.id,
+            'mode': 'primary',
+            'arch': '<qweb/>'
+        }))
+        self.assertEqual(view.mode, 'primary')
+
+        with self.assertRaises(Exception):
+            self.create({
+                'inherit_id': None,
+                'mode': 'extension',
+                'arch': '<qweb/>'
+            })
+
+    def testPurePrimaryToExtension(self):
+        """
+        A primary view with inherit_id=None can't be converted to extension
+        """
+        view_pure_primary = self.browse(self.create({
+            'inherit_id': None,
+            'arch': '<qweb/>'
+        }))
+        with self.assertRaises(Exception):
+            view_pure_primary.write({'mode': 'extension'})
+
+    def testInheritPirmaryToExtension(self):
+        """
+        A primary view with an inherit_id can be converted to extension
+        """
+        base = self.create({'inherit_id': None, 'arch': '<qweb/>'})
+        view = self.browse(self.create({
+            'inherit_id': base,
+            'mode': 'primary',
+            'arch': '<qweb/>'
+        }))
+
+        view.write({'mode': 'extension'})
+
+    def testDefaultExtensionToPrimary(self):
+        """
+        An extension view can be converted to primary
+        """
+        base = self.create({'inherit_id': None, 'arch': '<qweb/>'})
+        view = self.browse(self.create({
+            'inherit_id': base,
+            'arch': '<qweb/>'
+        }))
+
+        view.write({'mode': 'primary'})
 
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):
