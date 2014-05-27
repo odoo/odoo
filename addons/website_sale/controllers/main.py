@@ -197,8 +197,8 @@ class website_sale(http.Controller):
         if category:
             category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
 
-        attrib_values = map(int,request.httprequest.args.getlist('attrib'))
-        attrib_set = set(attrib_values)
+        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_set = set([v[1] for v in attrib_values])
 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
 
@@ -214,6 +214,7 @@ class website_sale(http.Controller):
             'search': search,
             'category': category,
             'pricelist': self.get_pricelist(),
+            'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'keep': keep,
             'category_list': category_list,
