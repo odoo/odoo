@@ -222,7 +222,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
         view = request.registry["ir.ui.view"]
         views = view._views_get(request.cr, request.uid, xml_id, context=request.context)
-        done = {}
+        done = set()
         result = []
         for v in views:
             if not user_groups.issuperset(v.groups_id):
@@ -237,7 +237,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                         'header': True,
                         'active': False
                     })
-                    done[v.inherit_option_id.id] = True
+                    done.add(v.inherit_option_id.id)
                 result.append({
                     'name': v.name,
                     'id': v.id,
