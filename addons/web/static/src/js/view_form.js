@@ -3394,6 +3394,12 @@ instance.web.form.CompletionFieldMixin = {
                     classname: 'oe_m2o_dropdown_option'
                 });
             }
+            else if (values.length == 0)
+            	values.push({
+            		label: _t("No results to show..."),
+            		action: function() {},
+            		classname: 'oe_m2o_dropdown_option'
+            	});
 
             return values;
         });

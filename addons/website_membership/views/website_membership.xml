@@ -84,7 +84,7 @@
 </template>
 
 <template id="opt_index_country" name="Location"
-        inherit_option_id="website_membership.index" inherit_id="website_membership.index">
+        optional="enabled" inherit_id="website_membership.index">
     <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>Location</h3></li>
@@ -101,7 +101,7 @@
 
 <!-- Option: index: Left Google Map -->
 <template id="opt_index_google_map" name="Left World Map"
-        inherit_option_id="website_membership.index" inherit_id="website_membership.index">
+        optional="enabled" inherit_id="website_membership.index">
     <xpath expr="//div[@id='left_column']/ul[1]" position="before">
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>World Map</h3></li>
