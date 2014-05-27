@@ -71,6 +71,9 @@
                         <li t-att-class="searches.get('badges') and 'active' or '' ">
                             <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                         </li>
+                        <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or '' ">
+                            <a t-attf-href="/forum/#{ slug(forum) }/user/#{user.id}">My Profile</a>
+                        </li>
                     </ul>
                     <form class="navbar-form navbar-right" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
                         <div class="form-group">
@@ -96,12 +99,23 @@
                 </div>
                 <div class="col-sm-3" id="right-column">
                     <a t-if="not header.get('ask_hide')" class="btn btn-primary btn-lg btn-block mb16" t-attf-href="/forum/#{slug(forum)}/ask">Ask a Question</a>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Keep Informed</h3>
+                        </div>
+                        <div class="panel-body">
+                            <t t-call="website_mail.follow">
+                                <t t-set="email" t-value="user.email"/>
+                                <t t-set="object" t-value="forum"/>
+                            </t>
+                        </div>
+                    </div>
                     <div class="panel panel-default" id="about_forum">
                         <div class="panel-heading">
                             <h3 class="panel-title">About This Forum</h3>
                         </div>
                         <div class="panel-body">
-                            <t t-raw="forum.description"/><br/>
+                            <t t-raw="forum.description"/>
                             <a t-if="not header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}/faq" class="fa fa-arrow-right"> Read Guidelines</a>
                             <a t-if="header.get('is_guidelines')" t-attf-href="/forum/#{slug(forum)}" class="fa fa-arrow-right"> Back to <span t-field="forum.name"/></a>
                         </div>
@@ -711,11 +725,8 @@
 
 <template id="users">
     <t t-call="website_forum.header">
-        <t t-foreach="users" t-as="user">
-            <t t-if="user_index % 3 == 0">
-                <div class="row"></div>
-            </t>
-            <div class="col-sm-4">
+        <div t-foreach="users" t-as="row_users" class="row mt16">
+            <div t-foreach="row_users" t-as="user" class="col-sm-4">
                 <img class="pull-left img img-circle img-avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
@@ -736,7 +747,7 @@
                     <t t-raw="0"/>
                 </div>
             </div>
-        </t>
+        </div>
         <div class="pull-left">
             <t t-call="website.pager"/>
         </div>
