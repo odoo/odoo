@@ -218,14 +218,14 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.cr, request.uid, 'website', 'theme')
 
         user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, request.context)
-        group_ids = [g.id for g in user.groups_id]
+        user_groups = set(user.groups_id)
 
-        view = request.registry.get("ir.ui.view")
+        view = request.registry["ir.ui.view"]
         views = view._views_get(request.cr, request.uid, xml_id, context=request.context)
         done = {}
         result = []
         for v in views:
-            if v.groups_id and [g for g in v.groups_id if g.id not in group_ids]:
+            if not user_groups.issuperset(v.groups_id):
                 continue
             if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
                 if v.inherit_option_id.id not in done:
