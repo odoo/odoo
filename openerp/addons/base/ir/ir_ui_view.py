@@ -206,16 +206,14 @@ class view(osv.osv):
                         return False
         return True
 
-    def _check_mode(self, cr, uid, ids, context=None):
-        for v in self.read(cr, uid, ids, ['inherit_id', 'mode'], context=context):
-            if v['mode'] == 'extension' and not v['inherit_id']:
-                raise Exception(
-                    _("A view extending nothing can not be an extension view"))
-        return True
-
+    _sql_constraints = [
+        ('inheritance_mode',
+         "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
+         "Invalid inheritance mode: if the mode is 'extension', the view must"
+         " extend an other view"),
+    ]
     _constraints = [
         (_check_xml, 'Invalid view definition', ['arch']),
-        (_check_mode, "Invalid mode for inheritance", ['mode', 'inherit_id']),
     ]
 
     def _auto_init(self, cr, context=None):

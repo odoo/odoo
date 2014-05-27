@@ -7,7 +7,10 @@ import unittest2
 from lxml import etree as ET
 from lxml.builder import E
 
+from psycopg2 import IntegrityError
+
 from openerp.tests import common
+import openerp.tools
 
 Field = E.field
 
@@ -829,6 +832,7 @@ class ViewModeField(ViewCase):
         }))
         self.assertEqual(view2.mode, 'extension')
 
+    @openerp.tools.mute_logger('openerp.sql_db')
     def testModeExplicit(self):
         view = self.browse(self.create({
             'inherit_id': None,
@@ -841,13 +845,14 @@ class ViewModeField(ViewCase):
         }))
         self.assertEqual(view.mode, 'primary')
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             self.create({
                 'inherit_id': None,
                 'mode': 'extension',
                 'arch': '<qweb/>'
             })
 
+    @openerp.tools.mute_logger('openerp.sql_db')
     def testPurePrimaryToExtension(self):
         """
         A primary view with inherit_id=None can't be converted to extension
@@ -856,7 +861,7 @@ class ViewModeField(ViewCase):
             'inherit_id': None,
             'arch': '<qweb/>'
         }))
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError):
             view_pure_primary.write({'mode': 'extension'})
 
     def testInheritPrimaryToExtension(self):
