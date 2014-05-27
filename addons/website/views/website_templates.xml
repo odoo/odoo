@@ -220,7 +220,7 @@
     </html>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" inherit_option_id="website.layout" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -304,7 +304,7 @@
     <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
 </template>
 
-<template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
+<template id="debugger" inherit_id="website.layout" optional="disabled" name="Debugger &amp; Tests">
     <xpath expr='//t[@name="layout_head"]' position="after">
         <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
     </xpath>
@@ -318,7 +318,7 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" optional="enabled" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider"/>
         <li>
@@ -329,7 +329,7 @@
     </xpath>
 </template>
 
-<template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
+<template id="footer_custom" inherit_id="website.layout" optional="disabled" name="Custom Footer">
     <xpath expr="//div[@id='footer_container']" position="before">
         <div class="oe_structure">
             <section data-snippet-id='three-columns' class="mt16 mb16">

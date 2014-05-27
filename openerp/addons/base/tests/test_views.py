@@ -25,6 +25,13 @@ class ViewCase(common.TransactionCase):
     def create(self, value, context=None):
         return self.Views.create(self.cr, self.uid, value, context=context)
 
+    def read_combined(self, id):
+        return self.Views.read_combined(
+            self.cr, self.uid,
+            id, ['arch'],
+            context={'check_view_ids': self.Views.search(self.cr, self.uid, [])}
+        )
+
     def assertTreesEqual(self, n1, n2, msg=None):
         self.assertEqual(n1.tag, n2.tag, msg)
         self.assertEqual((n1.text or '').strip(), (n2.text or '').strip(), msg)
@@ -632,6 +639,7 @@ class test_views(ViewCase):
         """Insert view into database via a query to passtrough validation"""
         kw.pop('id', None)
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
+        kw.setdefault('application', 'always')
 
         keys = sorted(kw.keys())
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
@@ -1012,13 +1020,6 @@ class TestViewCombined(ViewCase):
             'arch': '<xpath expr="//a1" position="after"><d1/></xpath>'
         })
 
-    def read_combined(self, id):
-        return self.Views.read_combined(
-            self.cr, self.uid,
-            id, ['arch'],
-            context={'check_view_ids': self.Views.search(self.cr, self.uid, [])}
-        )
-
     def test_basic_read(self):
         arch = self.read_combined(self.a1)['arch']
         self.assertEqual(
@@ -1075,6 +1076,94 @@ class TestViewCombined(ViewCase):
                 E.a3(),
                 E.a2(),
             ), arch)
+
+class TestOptionalViews(ViewCase):
+    """
+    Tests ability to enable/disable inherited views, formerly known as
+    inherit_option_id
+    """
+
+    def setUp(self):
+        super(TestOptionalViews, self).setUp()
+        self.v0 = self.create({
+            'model': 'a',
+            'arch': '<qweb><base/></qweb>',
+        })
+        self.v1 = self.create({
+            'model': 'a',
+            'inherit_id': self.v0,
+            'application': 'always',
+            'priority': 10,
+            'arch': '<xpath expr="//base" position="after"><v1/></xpath>',
+        })
+        self.v2 = self.create({
+            'model': 'a',
+            'inherit_id': self.v0,
+            'application': 'enabled',
+            'priority': 9,
+            'arch': '<xpath expr="//base" position="after"><v2/></xpath>',
+        })
+        self.v3 = self.create({
+            'model': 'a',
+            'inherit_id': self.v0,
+            'application': 'disabled',
+            'priority': 8,
+            'arch': '<xpath expr="//base" position="after"><v3/></xpath>'
+        })
+
+    def test_applied(self):
+        """ mandatory and enabled views should be applied
+        """
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+                E.v2(),
+            )
+        )
+
+    def test_applied_state_toggle(self):
+        """ Change application states of v2 and v3, check that the results
+        are as expected
+        """
+        self.browse(self.v2).write({'application': 'disabled'})
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+            )
+        )
+
+        self.browse(self.v3).write({'application': 'enabled'})
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+                E.v3(),
+            )
+        )
+
+        self.browse(self.v2).write({'application': 'enabled'})
+        arch = self.read_combined(self.v0)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.base(),
+                E.v1(),
+                E.v2(),
+                E.v3(),
+            )
+        )
+
+    def test_mandatory_no_disabled(self):
+        with self.assertRaises(Exception):
+            self.browse(self.v1).write({'application': 'disabled'})
 
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):

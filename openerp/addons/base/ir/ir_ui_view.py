@@ -155,9 +155,21 @@ class view(osv.osv):
   (<xpath/>) are applied, and the result is used as if it were this view's
   actual arch.
 """),
+        'application': fields.selection([
+                ('always', "Always applied"),
+                ('enabled', "Optional, enabled"),
+                ('disabled', "Optional, disabled"),
+            ],
+            required=True, string="Application status",
+            help="""If this view is inherited,
+* if always, the view always extends its parent
+* if enabled, the view currently extends its parent but can be disabled
+* if disabled, the view currently does not extend its parent but can be enabled
+             """),
     }
     _defaults = {
         'mode': 'primary',
+        'application': 'always',
         'priority': 16,
     }
     _order = "priority,name"
@@ -256,12 +268,35 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
+        if vals.get('application') == 'disabled':
+            from_always = self.search(
+                cr, uid, [('id', 'in', ids), ('application', '=', 'always')], context=context)
+            if from_always:
+                raise ValueError(
+                    "Can't disable views %s marked as always applied" % (
+                        ', '.join(map(str, from_always))))
+
         self.read_template.clear_cache(self)
         ret = super(view, self).write(
             cr, uid, ids,
             self._compute_defaults(cr, uid, vals, context=context),
             context)
         return ret
+
+    def toggle(self, cr, uid, ids, context=None):
+        """ Switches between enabled and disabled application statuses
+        """
+        for view in self.browse(cr, uid, ids, context=context):
+            if view.application == 'enabled':
+                view.write({'application': 'disabled'})
+            elif view.application == 'disabled':
+                view.write({'application': 'enabled'})
+            else:
+                raise ValueError(_("Can't toggle view %d with application %r") % (
+                    view.id,
+                    view.application,
+                ))
+
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -315,6 +350,7 @@ class view(osv.osv):
             ['inherit_id', '=', view_id],
             ['model', '=', model],
             ['mode', '=', 'extension'],
+            ['application', 'in', ['always', 'enabled']],
         ]
         if self.pool._init:
             # Module init currently in progress, only consider views from
