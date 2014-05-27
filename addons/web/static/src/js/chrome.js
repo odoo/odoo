@@ -344,7 +344,6 @@ instance.web.RedirectWarningHandler = instance.web.Dialog.extend(instance.web.Ex
                 }}
             ],
         }, QWeb.render('CrashManager.warning', {error: error})).open();
-        this.destroy();
     }
 });
 instance.web.crash_manager_registry.add('openerp.exceptions.RedirectWarning', 'instance.web.RedirectWarningHandler');
