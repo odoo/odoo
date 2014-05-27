@@ -28,15 +28,17 @@ class asset_asset_report(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year', size=16, required=False, readonly=True),
-        'purchase_date': fields.date('Purchase Date', readonly=True),
+        'date': fields.date('Purchase Date', readonly=True),
         'depreciation_date': fields.date('Depreciation Date', readonly=True),
         'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),
         'asset_category_id': fields.many2one('account.asset.category',string='Asset category'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', readonly=True),
         'depreciation_value': fields.float('Amount of Depreciation Lines', readonly=True),
+        'installment_value': fields.float('Amount of Installment Lines', readonly=True), 
         'move_check': fields.boolean('Posted', readonly=True),
-        'nbr': fields.integer('# of Depreciation Lines', readonly=True),
+        'installment_nbr': fields.integer('# of Installment Lines', readonly=True),
+        'depreciation_nbr': fields.integer('# of Depreciation Lines', readonly=True), 
         'gross_value': fields.float('Gross Amount', readonly=True),
         'posted_value': fields.float('Posted Amount', readonly=True),
         'unposted_value': fields.float('Unposted Amount', readonly=True),
@@ -51,14 +53,15 @@ class asset_asset_report(osv.osv):
                     min(dl.id) as id,
                     dl.name as name,
                     dl.depreciation_date as depreciation_date,
-                    a.purchase_date as purchase_date,
+                    a.date as date,
                     (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
                                 left join account_asset_asset as ac ON (ac.id=d.asset_id)
                                 where a.id=ac.id) = min(dl.id)
-                      THEN a.purchase_value
+                      THEN a.value
                       ELSE 0
                       END) as gross_value,
-                    dl.amount as depreciation_value, 
+                    dl.amount as depreciation_value,
+                    dl.amount as installment_value, 
                     (CASE WHEN dl.move_check
                       THEN dl.amount
                       ELSE 0
@@ -72,14 +75,15 @@ class asset_asset_report(osv.osv):
                     a.category_id as asset_category_id,
                     a.partner_id as partner_id,
                     a.state as state,
-                    count(dl.*) as nbr,
+                    count(dl.*) as installment_nbr,
+                    count(dl.*) as depreciation_nbr, 
                     a.company_id as company_id
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
                 group by 
                     dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
-                    a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
-                    a.purchase_value, a.id, a.salvage_value
+                    a.date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
+                    a.value, a.id, a.salvage_value
         )""")
 	
 

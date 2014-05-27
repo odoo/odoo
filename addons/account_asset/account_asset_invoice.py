@@ -41,6 +41,7 @@ class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _columns = {
         'asset_category_id': fields.many2one('account.asset.category', 'Asset Category'),
+        'recongnition_date': fields.date('Rev. Rec. Start Date'),
     }
     def asset_create(self, cr, uid, lines, context=None):
         context = context or {}
@@ -51,12 +52,12 @@ class account_invoice_line(osv.osv):
                     'name': line.name,
                     'code': line.invoice_id.number or False,
                     'category_id': line.asset_category_id.id,
-                    'purchase_value': line.price_subtotal,
-                    'period_id': line.invoice_id.period_id.id,
+                    'value': line.price_subtotal,
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,
-                    'purchase_date' : line.invoice_id.date_invoice,
+                    'date' : line.recongnition_date or line.invoice_id.date_invoice,
+                    'invoice_id': line.invoice_id.id,
                 }
                 changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
                 vals.update(changed_vals['value'])

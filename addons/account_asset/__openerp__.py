@@ -20,17 +20,21 @@
 ##############################################################################
 
 {
-    'name': 'Assets Management',
+    'name': 'Assets & Revenue Recognitions Management',
     'version': '1.0',
     'depends': ['account'],
     'author': 'OpenERP S.A.',
     'description': """
-Financial and accounting asset management.
+Assets management.
 ==========================================
 
-This Module manages the assets owned by a company or an individual. It will keep 
-track of depreciation's occurred on those assets. And it allows to create Move's 
-of the depreciation lines.
+It allows you to manage the assets owned by a company or a person.
+It keeps track of the depreciation occurred on those assets, and creates account moves for those depreciation lines.
+
+Revenue recognitions.
+===========================================
+It allows you to manage the revenue recognition on product's sale.
+It keeps track of the installments occurred on those revenue recognition, and creates account moves for those installment lines.
 
     """,
     'website': 'http://www.openerp.com',
@@ -41,6 +45,8 @@ of the depreciation lines.
         'test/account_asset_demo.yml',
         'test/account_asset.yml',
         'test/account_asset_wizard.yml',
+        'test/account_revenue_recognition_demo.yml',
+        'test/account_revenue_recognition.yml',
     ],
     'data': [
         'security/account_asset_security.xml',

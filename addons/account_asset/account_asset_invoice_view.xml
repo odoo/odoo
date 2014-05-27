@@ -9,7 +9,8 @@
             <field name="inherit_id" ref="account.view_invoice_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="after">
-                    <field name="asset_category_id"/>
+                    <field name="asset_category_id" domain="[('type','=','sales')]" string="Revenue Recognition Category"/>
+                    <field name="recongnition_date"/>
                 </field>
             </field>
         </record>
@@ -20,7 +21,19 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='invoice_line']/tree/field[@name='quantity']" position="before">
-                    <field name="asset_category_id"/>
+                    <field name="asset_category_id" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_customer_invoice_asset_category">
+            <field name="name">account.invoice.customer.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line']/tree/field[@name='quantity']" position="before">
+                    <field name="asset_category_id" domain="[('type','=','sales')]" string="Revenue Recognition Category"/>
+                    <field name="recongnition_date"/>
                 </xpath>
             </field>
         </record>

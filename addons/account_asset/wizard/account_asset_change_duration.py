@@ -22,6 +22,7 @@ import time
 from lxml import etree
 
 from openerp.osv import fields, osv
+from openerp.osv.orm import setup_modifiers
 
 class asset_modify(osv.osv_memory):
     _name = 'asset.modify'
@@ -51,16 +52,18 @@ class asset_modify(osv.osv_memory):
         asset_obj = self.pool.get('account.asset.asset')
         result = super(asset_modify, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         asset_id = context.get('active_id', False)
-        active_model = context.get('active_model', '')
+        active_model = context.get('active_model')
         if active_model == 'account.asset.asset' and asset_id:
             asset = asset_obj.browse(cr, uid, asset_id, context=context)
             doc = etree.XML(result['arch'])
-            if asset.method_time == 'number':
+            if asset.method_time == 'number' and doc.xpath("//field[@name='method_end']"):
                 node = doc.xpath("//field[@name='method_end']")[0]
                 node.set('invisible', '1')
-            elif asset.method_time == 'end':
+                setup_modifiers(node, result['fields']['method_end'])
+            elif asset.method_time == 'end' and doc.xpath("//field[@name='method_number']"):
                 node = doc.xpath("//field[@name='method_number']")[0]
                 node.set('invisible', '1')
+                setup_modifiers(node, result['fields']['method_number'])
             result['arch'] = etree.tostring(doc)
         return result
 

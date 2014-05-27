@@ -41,12 +41,15 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
 
     def asset_compute(self, cr, uid, ids, context):
         ass_obj = self.pool.get('account.asset.asset')
-        asset_ids = ass_obj.search(cr, uid, [('state','=','open')], context=context)
+        asset_ids = ass_obj.search(cr, uid, [('state', '=', 'open'),
+                                             ('category_id.type', '=', context.get('type',False))],
+                                             context=context)
         data = self.browse(cr, uid, ids, context=context)
         period_id = data[0].period_id.id
         created_move_ids = ass_obj._compute_entries(cr, uid, asset_ids, period_id, context=context)
+        asset_type = 'Asset' if context.get('type', False) == 'purchase' else 'Recognition'
         return {
-            'name': _('Created Asset Moves'),
+            'name': _('Created %s Moves') % asset_type,
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
