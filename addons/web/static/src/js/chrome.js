@@ -428,7 +428,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         instance.webclient.toggle_bars(true);
-        $('.oe_application').append(QWeb.render("DatabaseManager", { widget : self }));
+        $('.oe_application').html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
         $('ul.oe_secondary_submenu > li:first').addClass('active');
@@ -734,7 +734,6 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
-    template: 'EmptyTemplate',
     init: function() {
         var self = this;
         this._super.apply(this, arguments);
@@ -767,7 +766,6 @@ instance.web.Menu =  instance.web.Widget.extend({
     menu_loaded: function(data) {
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
-        this.$el = this.$el.parents().find('.nav.navbar-nav.navbar-left')
 
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
         instance.web.bus.on('resize', this, function() {
@@ -1086,9 +1084,6 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            // var $e = $(QWeb.render(self._template, {widget: self}));
-            // self.replaceElement($e);
-            // $e.openerpClass();
             self.bind_events();
             return self.show_common();
         });
@@ -1131,6 +1126,7 @@ instance.web.Client = instance.web.Widget.extend({
         this.crashmanager =  new instance.web.CrashManager();
         instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.action_manager = new instance.web.ActionManager(self);
+        self.action_manager.appendTo(this.$el.find('.oe_application'));
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
@@ -1226,17 +1222,20 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         self.toggle_bars(true);
         self.update_logo();
+
+        // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
-        self.menu.replace(this.$el.parents('body').find('.oe_menu_placeholder'));
+        self.menu.setElement(this.$el.find('.nav.navbar-nav.navbar-left'));
+        self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
+        
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.replace(this.$el.parents('body').find('.oe_user_menu_placeholder'));
+        self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
         self.check_timezone();
-        self.action_manager.appendTo(this.$el.parents('body').find('.oe_application'));
         if (self.client_options.action_post_login) {
             self.action_manager.do_action(self.client_options.action_post_login);
             delete(self.client_options.action_post_login);
