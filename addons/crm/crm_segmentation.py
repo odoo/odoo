@@ -57,8 +57,7 @@ added to partners that match the segmentation criterions after computation.'),
             @param ids: List of Process continue’s IDs"""
 
         partner_obj = self.pool.get('res.partner')
-        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id',\
-                                 'sales_purchase_active', 'profiling_active'])
+        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'sales_purchase_active'])
         for categ in categs:
             if start:
                 if categ['exclusif']:

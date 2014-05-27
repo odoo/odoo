@@ -782,7 +782,7 @@ class calendar_event(osv.Model):
             if data.count and data.count <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
 
-            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'month_list', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
+            data = self.read(cr, uid, id, ['id', 'byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list'], context=context)
             event = data['id']
             if data['recurrency']:
                 result[event] = self.compute_rule_string(data)
