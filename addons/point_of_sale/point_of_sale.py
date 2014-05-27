@@ -1353,8 +1353,8 @@ class pos_category(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
-        'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
+        'parent_id': fields.many2one('pos.category','Parent Category', select=True),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         
         # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
@@ -1366,7 +1366,7 @@ class pos_category(osv.osv):
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the category. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
@@ -1374,7 +1374,7 @@ class pos_category(osv.osv):
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized image", type="binary", multi="_get_image",
             store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the category. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
