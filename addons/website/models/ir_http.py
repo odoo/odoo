@@ -130,9 +130,9 @@ class ir_http(orm.AbstractModel):
             return super(ir_http, self)._handle_exception(exception)
         except Exception:
 
-        attach = self._serve_attachment()
-        if attach:
-            return attach
+            attach = self._serve_attachment()
+            if attach:
+                return attach
 
             if getattr(request, 'website_enabled', False) and request.website:
                 values = dict(
