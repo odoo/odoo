@@ -129,6 +129,31 @@ HDD SH-1</field>
             <field name="default_code">PCSC234</field>
         </record>
 
+        <!-- -->
+
+        <record id="product_attribute_1" model="product.attribute">
+            <field name="name">Memory</field>
+        </record>
+        <record id="product_attribute_value_1" model="product.attribute.value">
+            <field name="name">16 Go</field>
+            <field name="attribute_id" ref="product_attribute_1"/>
+        </record>
+        <record id="product_attribute_value_2" model="product.attribute.value">
+            <field name="name">32 Go</field>
+            <field name="attribute_id" ref="product_attribute_1"/>
+        </record>
+
+        <record id="product_attribute_2" model="product.attribute">
+            <field name="name">Color</field>
+        </record>
+        <record id="product_attribute_value_3" model="product.attribute.value">
+            <field name="name">White</field>
+            <field name="attribute_id" ref="product_attribute_2"/>
+        </record>
+        <record id="product_attribute_value_4" model="product.attribute.value">
+            <field name="name">Black</field>
+            <field name="attribute_id" ref="product_attribute_2"/>
+        </record>
 
         <record id="product_product_4" model="product.product">
             <field name="name">iPad Retina Display</field>
@@ -142,8 +167,46 @@ HDD SH-1</field>
 Dual-core A5 with quad-core graphics
 FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="default_code">A2323</field>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
+        </record>
+        <record id="product_product_4b" model="product.product">
+            <field name="default_code">A2324</field>
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_4')])]"/>
+        </record>
+        <record id="product_product_4c" model="product.product">
+            <field name="default_code">A2325</field>
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_3')])]"/>
+        </record>
+        <record id="product_product_4d" model="product.product">
+            <field name="default_code">A2326</field>
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_4')])]"/>
         </record>
 
+        <record id="product_attribute_line_1" model="product.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="attribute_id" ref="product_attribute_1"/>
+            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
+        </record>
+        <record id="product_attribute_line_2" model="product.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="attribute_id" ref="product_attribute_2"/>
+            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
+        </record>
+
+        <record id="product_product_4_product_template" model="product.template">
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2')])]"/>
+        </record>
+        
+        <record id="product_attribute_price_1" model="product.attribute.price">
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="value_id" ref="product_attribute_value_2"/>
+            <field name="price_extra">50.40</field>
+        </record>
+
+        <!-- -->
 
         <record id="product_product_5" model="product.product">
             <field name="name">Bose Mini Bluetooth Speaker</field>
@@ -216,18 +279,6 @@ FaceTime HD Camera, 1.2 MP Photos</field>
 
         <!-- -->
 
-        <record id="product_attribute_1" model="product.attribute">
-            <field name="name">Memory</field>
-        </record>
-        <record id="product_attribute_value_1" model="product.attribute.value">
-            <field name="name">16 Go</field>
-            <field name="attribute_id" ref="product_attribute_1"/>
-        </record>
-        <record id="product_attribute_value_2" model="product.attribute.value">
-            <field name="name">32 Go</field>
-            <field name="attribute_id" ref="product_attribute_1"/>
-        </record>
-
         <record id="product_product_11" model="product.product">
             <field name="name">iPod</field>
             <field name="categ_id" ref="ipod"/>
@@ -245,17 +296,17 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
         </record>
 
-        <record id="product_attribute_line_1" model="product.attribute.line">
+        <record id="product_attribute_line_3" model="product.attribute.line">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
 
         <record id="product_product_11_product_template" model="product.template">
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_1')])]"/>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_3')])]"/>
         </record>
         
-        <record id="product_attribute_price_1" model="product.attribute.price">
+        <record id="product_attribute_price_2" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>
             <field name="price_extra">6.40</field>
