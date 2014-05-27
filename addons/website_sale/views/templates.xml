@@ -430,7 +430,7 @@
   </div>
 </template>
 
-<template id="product_variants" inherit_id="website_sale.product" inherit_option_id="website_sale.product" name="Product Variants">
+<template id="product_variants" inherit_id="website_sale.product" optional="enabled" name="Product Variants">
   <xpath expr="//form[@action='/shop/cart/update']" position="replace">
     <form action="/shop/cart/update" class="js_add_cart_variants" method="POST" t-att-data-variant_ids="product.available_variant_ids">
         <input type="hidden" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
