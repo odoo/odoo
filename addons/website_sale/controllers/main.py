@@ -78,8 +78,8 @@ class table_compute(object):
         index = 0
         maxy = 0
         for p in products:
-            x = p.website_size_x
-            y = p.website_size_y
+            x = min(max(p.website_size_x, 1), PPR)
+            y = min(max(p.website_size_y, 1), PPR)
             if index>PPG:
                 x = y = 1
 
