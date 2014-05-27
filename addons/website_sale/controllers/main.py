@@ -355,6 +355,11 @@ class website_sale(http.Controller):
             if not data.get(field_name):
                 error[field_name] = 'missing'
 
+        if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
+            vat_country, vat_number = registry["res.partner"]._split_vat(data.get("vat"))
+            if not registry["res.partner"].vies_vat_check(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
+                error["vat"] = 'error'
+
         if data.get("shipping_different"):
             for field_name in self.mandatory_shipping_fields:
                 field_name = 'shipping_' + field_name
