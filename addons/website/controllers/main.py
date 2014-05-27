@@ -212,7 +212,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         return True
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, optional=True):
+    def customize_template_get(self, xml_id, full=False):
+        """ Lists the templates customizing ``xml_id``. By default, only
+        returns optional templates (which can be toggled on and off), if
+        ``full=True`` returns all templates customizing ``xml_id``
+        """
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
@@ -227,7 +231,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         for v in views:
             if not user_groups.issuperset(v.groups_id):
                 continue
-            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
+            if full or v.inherit_option_id and v.inherit_option_id.id != view_theme_id:
                 if v.inherit_option_id.id not in done:
                     result.append({
                         'name': v.inherit_option_id.name,
@@ -244,7 +248,7 @@ class Website(openerp.addons.web.controllers.main.Home):
                     'xml_id': v.xml_id,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
-                    'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
+                    'active': (v.inherit_id.id == v.inherit_option_id.id) or (full and v.inherit_id.id)
                 })
         return result
 

@@ -43,6 +43,7 @@ class view(osv.osv):
 
         * the view itself
         * all views inheriting from it, enabled or not
+          - but not the optional children of a non-enabled child
         * all views called from it (via t-call)
         """
         try:
@@ -65,16 +66,16 @@ class view(osv.osv):
             if called_view not in result:
                 result += self._views_get(cr, uid, called_view, options=options, context=context)
 
-        todo = set(view.inherit_children_ids)
+        extensions = set(view.inherit_children_ids)
         if options:
-            todo.update(view.inherited_option_ids)
+            extensions.update(view.inherited_option_ids)
 
         # Keep options in a deterministic order regardless of their applicability
-        for child_view in sorted(todo, key=lambda v: v.id):
+        for extension in sorted(extensions, key=lambda v: v.id):
             for r in self._views_get(
-                    cr, uid, child_view,
+                    cr, uid, extension,
                     # only return optional grandchildren if this child is enabled
-                    options=bool(child_view.inherit_id),
+                    options=bool(extension.inherit_id),
                     context=context, root=False):
                 if r not in result:
                     result.append(r)
