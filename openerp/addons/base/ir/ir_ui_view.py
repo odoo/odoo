@@ -144,8 +144,17 @@ class view(osv.osv):
 
         'mode': fields.selection(
             [('primary', "Base view"), ('extension', "Extension View")],
-            string="View inheritance mode",
-            required=True),
+            string="View inheritance mode", required=True,
+            help="""Only applies if this view inherits from an other one (inherit_id is not False/Null).
+
+* if extension (default), if this view is requested the closest primary view
+  is looked up (via inherit_id), then all views inheriting from it with this
+  view's model are applied
+* if primary, the closest primary view is fully resolved (even if it uses a
+  different model than this one), then this view's inheritance specs
+  (<xpath/>) are applied, and the result is used as if it were this view's
+  actual arch.
+"""),
     }
     _defaults = {
         'mode': 'primary',
