@@ -965,6 +965,14 @@ class TestViewCombined(ViewCase):
             'inherit_id': self.a1,
             'arch': '<xpath expr="//a1" position="after"><a3/></xpath>'
         })
+        # mode=primary should be an inheritance boundary in both direction,
+        # even within a model it should not extend the parent
+        self.a4 = self.create({
+            'model': 'a',
+            'inherit_id': self.a1,
+            'mode': 'primary',
+            'arch': '<xpath expr="//a1" position="after"><a4/></xpath>',
+        })
 
         self.b1 = self.create({
             'model': 'b',
@@ -1027,6 +1035,17 @@ class TestViewCombined(ViewCase):
             ET.fromstring(arch),
             E.qweb(
                 E.a1(),
+                E.a3(),
+                E.a2(),
+            ), arch)
+
+    def test_read_from_child_primary(self):
+        arch = self.read_combined(self.a4)['arch']
+        self.assertEqual(
+            ET.fromstring(arch),
+            E.qweb(
+                E.a1(),
+                E.a4(),
                 E.a3(),
                 E.a2(),
             ), arch)

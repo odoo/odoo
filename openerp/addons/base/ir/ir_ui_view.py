@@ -311,7 +311,11 @@ class view(osv.osv):
         user = self.pool['res.users'].browse(cr, 1, uid, context=context)
         user_groups = frozenset(user.groups_id or ())
 
-        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
+        conditions = [
+            ['inherit_id', '=', view_id],
+            ['model', '=', model],
+            ['mode', '=', 'extension'],
+        ]
         if self.pool._init:
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
