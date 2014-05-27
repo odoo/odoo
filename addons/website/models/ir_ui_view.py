@@ -13,8 +13,6 @@ from openerp.osv import osv, fields
 class view(osv.osv):
     _inherit = "ir.ui.view"
     _columns = {
-        'inherit_option_id': fields.many2one('ir.ui.view','Optional Inheritancy'),
-        'inherited_option_ids': fields.one2many('ir.ui.view','inherit_option_id','Optional Inheritancies'),
         'page': fields.boolean("Whether this view is a web page template (complete)"),
         'website_meta_title': fields.char("Website meta title", size=70, translate=True),
         'website_meta_description': fields.text("Website meta description", size=160, translate=True),
@@ -66,16 +64,18 @@ class view(osv.osv):
             if called_view not in result:
                 result += self._views_get(cr, uid, called_view, options=options, context=context)
 
-        extensions = set(view.inherit_children_ids)
-        if options:
-            extensions.update(view.inherited_option_ids)
+        extensions = view.inherit_children_ids
+        if not options:
+            # only active children
+            extensions = (v for v in view.inherit_children_ids
+                          if v.application in ('always', 'enabled'))
 
         # Keep options in a deterministic order regardless of their applicability
         for extension in sorted(extensions, key=lambda v: v.id):
             for r in self._views_get(
                     cr, uid, extension,
                     # only return optional grandchildren if this child is enabled
-                    options=bool(extension.inherit_id),
+                    options=extension.application in ('always', 'enabled'),
                     context=context, root=False):
                 if r not in result:
                     result.append(r)

@@ -273,6 +273,21 @@ class view(osv.osv):
             context)
         return ret
 
+    def toggle(self, cr, uid, ids, context=None):
+        """ Switches between enabled and disabled application statuses
+        """
+        for view in self.browse(cr, uid, ids, context=context):
+            if view.application == 'enabled':
+                view.write({'application': 'disabled'})
+            elif view.application == 'disabled':
+                view.write({'application': 'enabled'})
+            else:
+                raise ValueError(_("Can't toggle view %d with application %r") % (
+                    view.id,
+                    view.application,
+                ))
+
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
