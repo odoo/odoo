@@ -1,5 +1,6 @@
 import logging
 import sys
+import os
 
 import openerp
 from openerp import tools
@@ -25,10 +26,13 @@ class Command(object):
         pass
 
 class Help(Command):
+    """Display the list of available commands"""
     def run(self, args):
         print "Available commands:\n"
+        padding = max([len(k) for k in commands.keys()]) + 2
         for k, v in commands.items():
-            print "    %s" % k
+            print "    %s%s" % (k.ljust(padding, ' '), v.__doc__ or '')
+        print "\nUse '%s <command> --help' for individual command help." % sys.argv[0].split(os.path.sep)[-1]
 
 import server
 import deploy
