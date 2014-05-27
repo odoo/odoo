@@ -740,7 +740,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.has_been_loaded = $.Deferred();
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
-        this.on("menu_loaded", this, function (menu_data) {
+        this.on("menu_loaded", this, function() {
             self.reflow();
             // launch the fetch of needaction counters, asynchronous
             $all_menus = self.$el.parents('.oe_webclient').find('[data-menu]');
@@ -756,14 +756,9 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        // return this.rpc("/web/menu/load", {}).done(function(r) {
-        //     self.menu_loaded(r);
-        // });
-        return $.when().done(function(r) {
-            self.menu_loaded(null);
-        });
+        self.menu_loaded();
     },
-    menu_loaded: function(data) {
+    menu_loaded: function() {
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
 
@@ -772,14 +767,13 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.$el.height(0);
             lazyreflow();
         });
-
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
-        this.trigger('menu_loaded', data);
+        this.trigger('menu_loaded');
         this.has_been_loaded.resolve();
     },
     do_load_needaction: function (menu_ids) {
@@ -1356,9 +1350,8 @@ instance.web.WebClient = instance.web.Client.extend({
             var state = event.getState(true);
             if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
-                    self.menu.do_reload().done(function() {
-                        self.menu.menu_click(state.menu_id);
-                    });
+                    self.menu.do_reload();
+                    self.menu.menu_click(state.menu_id);
                 });
             } else {
                 state._push_me = false;  // no need to push state back...
