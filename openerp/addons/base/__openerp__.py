@@ -63,7 +63,6 @@ The kernel of OpenERP, needed for all installation.
         'module/module_view.xml',
         'module/module_data.xml',
         'module/module_report.xml',
-        'module/wizard/base_module_import_view.xml',
         'module/wizard/base_module_update_view.xml',
         'module/wizard/base_language_install_view.xml',
         'module/wizard/base_import_language_view.xml',
