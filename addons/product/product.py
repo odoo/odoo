@@ -663,7 +663,8 @@ class product_template(osv.osv):
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
-        self.create_variant_ids(cr, uid, [product_template_id], context=context)
+        if not context or "create_product_product" not in context:
+            self.create_variant_ids(cr, uid, [product_template_id], context=context)
         self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
         return product_template_id
 
@@ -1044,6 +1045,12 @@ class product_product(osv.osv):
                 'view_mode': 'form',
                 'res_id': product.product_tmpl_id.id,
                 'target': 'new'}
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        context.update(create_product_product=True)
+        return super(product_product, self).create(cr, uid, vals, context=context)
 
 
 class product_packaging(osv.osv):

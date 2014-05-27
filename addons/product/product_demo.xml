@@ -155,6 +155,14 @@ HDD SH-1</field>
             <field name="attribute_id" ref="product_attribute_2"/>
         </record>
 
+        <record id="product_attribute_3" model="product.attribute">
+            <field name="name">Wi-Fi</field>
+        </record>
+        <record id="product_attribute_value_5" model="product.attribute.value">
+            <field name="name">2.4 GHz</field>
+            <field name="attribute_id" ref="product_attribute_3"/>
+        </record>
+
         <record id="product_product_4" model="product.product">
             <field name="name">iPad Retina Display</field>
             <field name="categ_id" ref="ipad"/>
@@ -195,9 +203,14 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="attribute_id" ref="product_attribute_2"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_3'), ref('product.product_attribute_value_4')])]"/>
         </record>
+        <record id="product_attribute_line_3" model="product.attribute.line">
+            <field name="product_tmpl_id" ref="product_product_4_product_template"/>
+            <field name="attribute_id" ref="product_attribute_3"/>
+            <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_5')])]"/>
+        </record>
 
         <record id="product_product_4_product_template" model="product.template">
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2')])]"/>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
         </record>
         
         <record id="product_attribute_price_1" model="product.attribute.price">
@@ -296,14 +309,14 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
         </record>
 
-        <record id="product_attribute_line_3" model="product.attribute.line">
+        <record id="product_attribute_line_4" model="product.attribute.line">
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
             <field name="attribute_id" ref="product_attribute_1"/>
             <field name="value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_2')])]"/>
         </record>
 
         <record id="product_product_11_product_template" model="product.template">
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_3')])]"/>
+            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_4')])]"/>
         </record>
         
         <record id="product_attribute_price_2" model="product.attribute.price">
