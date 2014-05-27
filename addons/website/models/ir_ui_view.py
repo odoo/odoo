@@ -26,11 +26,9 @@ class view(osv.osv):
 
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
-    def _views_get(self, cr, uid, view, options=True, context=None, root=True, stack_result=None):
+    def _views_get(self, cr, uid, view, options=True, context=None, root=True):
         if not context:
             context = {}
-        if not stack_result:
-            stack_result = []
 
         def view_obj(view):
             if isinstance(view, basestring):
@@ -59,7 +57,7 @@ class view(osv.osv):
             except ValueError:
                 continue
             if call_view not in result:
-                result += self._views_get(cr, uid, call_view, options=options, context=context, stack_result=result)
+                result += self._views_get(cr, uid, call_view, options=options, context=context)
 
         todo = view.inherit_children_ids
         if options:
@@ -67,7 +65,7 @@ class view(osv.osv):
         # Keep options in a determinitic order whatever their enabled disabled status
         todo.sort(lambda x,y:cmp(x.id,y.id))
         for child_view in todo:
-            for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False, stack_result=result):
+            for r in self._views_get(cr, uid, child_view, options=bool(child_view.inherit_id), context=context, root=False):
                 if r not in result:
                     result.append(r)
         return result
