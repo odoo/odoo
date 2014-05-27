@@ -531,14 +531,11 @@
   <xpath expr="//p[@t-field='product.description_sale']" position="after">
     <hr t-if="product.variant_ids"/>
     <p class="text-muted">
-      <t t-set="inc" t-value="0"/>
       <t t-foreach="product.variant_ids" t-as="variant_id">
+        <t t-set="inc" t-value="0"/>
         <span t-field="variant_id.attribute_id"/>: 
-        <t t-foreach="variant_id.value_ids" t-as="value_id">
-          <t t-if="inc">,</t> <span t-field="value_id.name"/>
-        </t>
+        <t t-foreach="variant_id.value_ids" t-as="value_id"><t t-if="inc">,</t> <span t-field="value_id.name"/><t t-set="inc" t-value="inc+1"/></t>
         <br/>
-        <t t-set="inc" t-value="inc+1"/>
       </t>
     </p>
   </xpath>
