@@ -162,7 +162,7 @@
               price_min_margin: 2
               price_max_margin: 5
               product_id: product_fifo_icecream
-              base: -2
+              base: !eval (ref('product.standard_price'))
 - 
   Purchase order in usd
 - 
