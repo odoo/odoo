@@ -2481,6 +2481,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this.$('.select_records').on('click', self.on_click);
     },
     on_click: function(ev) {
+        event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
@@ -2499,15 +2500,14 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
                 });
             }
             else {
-                var domain = ["id", "in", element_ids];
+                var domain = [["id", "in", element_ids]];
                 var domain_done = $.Deferred().resolve(domain);
             }
             $.when(domain_done).then(function (domain) {
                 var domain = self.pop.dataset.domain.concat(domain || []);
-                self.set_value(JSON.stringify(domain))
+                self.set_value(domain);
             });
         });
-        event.preventDefault();
     },
 });
 
