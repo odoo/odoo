@@ -3230,7 +3230,9 @@ class BaseModel(object):
         assert self in records and field.name in fnames
         try:
             result = records.read(list(fnames), load='_classic_write')
-        except except_orm as e:
+        except AccessError as e:
+            # update cache with the exception
+            records._cache[field] = FailedValue(e)
             result = []
 
         # check the cache, and update it if necessary
