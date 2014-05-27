@@ -148,12 +148,16 @@ class view(osv.osv):
             required=True),
 
         'application': fields.selection([
-            ('always', "Always applied"),
-            ('enabled', "Optional, enabled"),
-            ('disabled', "Optional, disabled"),
-        ], required=True, string="If this view is inherited, whether it can be"
-                                 " toggled off, and whether it is currently"
-                                 " enabled"),
+                ('always', "Always applied"),
+                ('enabled', "Optional, enabled"),
+                ('disabled', "Optional, disabled"),
+            ],
+            required=True, string="Application status",
+            help="""If this view is inherited,
+* if always, the view always extends its parent
+* if enabled, the view currently extends its parent but can be disabled
+* if disabled, the view currently does not extend its parent but can be enabled
+             """),
     }
     _defaults = {
         'mode': 'primary',
