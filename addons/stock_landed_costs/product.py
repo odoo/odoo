@@ -29,8 +29,8 @@ SPLIT_METHOD = [
     ('by_volume', 'By Volume'),
 ]
 
-class product_product(osv.osv):
-    _inherit = "product.product"
+class product_template(osv.osv):
+    _inherit = "product.template"
 
     _columns = {
         'landed_cost_ok': fields.boolean('Can constitute a landed cost'),
