@@ -93,7 +93,7 @@ class CountryState(osv.osv):
         'name': fields.char('State Name', size=64, required=True, 
                             help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton'),
         'code': fields.char('State Code', size=3,
-            help='The state code in max. three chars.', required=True),
+            help='Abbreviation for the State Code.It can be maximum of three characters.', required=True),
     }
     _order = 'code'
 

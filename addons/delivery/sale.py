@@ -41,7 +41,7 @@ class sale_order(osv.Model):
     _columns = {
         'carrier_id': fields.many2one(
             "delivery.carrier", string="Delivery Method",
-            help="Complete this field if you plan to invoice the shipping based on picking."),
+            help="This delivery method will be used when 'Create Invoice' is based 'On Delivery Order' in sales order creation form for this customer."),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):

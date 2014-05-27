@@ -42,8 +42,7 @@ class project_task_type(osv.osv):
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
         'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
-                               'there are no records in that stage to display.'),
+                               help="This stage is folded in the kanban view when there are no records in that stage to display."),
     }
 
     def _get_default_project_ids(self, cr, uid, ctx={}):

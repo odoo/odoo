@@ -33,7 +33,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
 
     _columns = {
-        'landed_cost_ok': fields.boolean('Can constitute a landed cost'),
+        'landed_cost_ok': fields.boolean('Can constitute a landed cost', help="Specify if the product can be selected in Warehouse Management System as a landed cost product."),
         'split_method': fields.selection(SPLIT_METHOD, 'Split Method'),
     }
 

@@ -99,7 +99,7 @@ class res_bank(osv.osv):
         return results
         
     _columns = {
-        'rib_code': fields.char('RIB Bank Code', size=64),
+        'rib_code': fields.char('RIB Bank Code', size=64, help="RIB stands for Relevé d’Identité Bancaire. It is a series of numbers personal to you which allow banks to recognise your account and make transfers, pay direct debits etc. (French word means Bank Details)."),
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

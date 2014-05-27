@@ -83,7 +83,7 @@ class pos_config(osv.osv):
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
-            help="This sequence is automatically created by OpenERP but you can change it "\
+            help="This sequence is automatically created by odoo but you can change it "
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),

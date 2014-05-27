@@ -39,7 +39,7 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            help="This account will be used to value outgoing stock using cost price."),
+            help="This account will be used to value incoming stock using cost price."),
 
     }
 
@@ -62,7 +62,7 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            help="This account will be used to value outgoing stock using cost price."),
+            help="This account will be used to value incoming stock using cost price."),
 
     }
 

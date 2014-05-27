@@ -35,7 +35,7 @@ class sale_quote_template(osv.osv):
         'quote_line': fields.one2many('sale.quote.line', 'quote_id', 'Quote Template Lines'),
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines'),
-        'number_of_days': fields.integer('Quote Duration', help='Number of days for the validaty date computation of the quotation'),
+        'number_of_days': fields.integer('Quote Duration', help="Number of days to compute 'validity date' field of the quotation."),
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -111,7 +111,7 @@ class sale_order(osv.osv):
 
     _columns = {
         'access_token': fields.char('Security Token', size=256, required=True),
-        'template_id': fields.many2one('sale.quote.template', 'Quote Template'),
+        'template_id': fields.many2one('sale.quote.template', 'Quote Template', help="A template which helps user to add multiple needed products at one go which reduces the time to add product line by line.User can also add products other then template products if he/she wants to in sales order line to make final quotation."),
         'website_description': fields.html('Description'),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines'),
         'validity_date': fields.date('Validity Date'),

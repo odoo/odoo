@@ -66,10 +66,10 @@ class crm_case_section(osv.osv):
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
-        'code': fields.char('Code', size=8),
+        'code': fields.char('Code', size=8, help="Short form for a team name which helps in searching a team e.g. DM for Direct Marketing."),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
-        'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
+        'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team either from lead or opportunity, it will override the salesman in that lead or opportunity with the team leader of this team."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids': fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
