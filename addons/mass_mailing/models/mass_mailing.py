@@ -4,10 +4,9 @@ from datetime import datetime
 from dateutil import relativedelta
 import json
 import random
-import urllib
-import urlparse
 
 from openerp import tools
+from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
@@ -61,6 +60,12 @@ class MassMailingContact(osv.Model):
             name = email
         rec_id = self.create(cr, uid, {'name': name, 'email': email}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
+
+    def message_get_default_recipients(self, cr, uid, ids, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = {'partner_ids': [], 'email_to': record.email, 'email_cc': False}
+        return res
 
 
 class MassMailingList(osv.Model):
@@ -549,6 +554,8 @@ class MassMailing(osv.Model):
         for mailing in self.browse(cr, uid, ids, context=context):
             # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
+            if not res_ids:
+                raise Warning('Please select recipients.')
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
