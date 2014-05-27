@@ -146,9 +146,18 @@ class view(osv.osv):
             [('primary', "Base view"), ('extension', "Extension View")],
             string="View inheritance mode",
             required=True),
+
+        'application': fields.selection([
+            ('always', "Always applied"),
+            ('enabled', "Optional, enabled"),
+            ('disabled', "Optional, disabled"),
+        ], required=True, string="If this view is inherited, whether it can be"
+                                 " toggled off, and whether it is currently"
+                                 " enabled"),
     }
     _defaults = {
         'mode': 'primary',
+        'application': 'always',
         'priority': 16,
     }
     _order = "priority,name"
@@ -304,7 +313,11 @@ class view(osv.osv):
         user = self.pool['res.users'].browse(cr, 1, uid, context=context)
         user_groups = frozenset(user.groups_id or ())
 
-        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
+        conditions = [
+            ['inherit_id', '=', view_id],
+            ['model', '=', model],
+            ['application', 'in', ['always', 'enabled']],
+        ]
         if self.pool._init:
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
