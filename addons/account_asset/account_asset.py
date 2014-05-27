@@ -96,12 +96,12 @@ class account_asset_asset(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_category_type(self, cr, uid, ids, context=None):
-        type = self.browse(cr, uid, ids[0], context=context).category_id.type
-        res = {'name': 'Installment', 'type': 'Recongnition'} if type == 'sales' else {'name': 'Depreciation', 'type': 'Asset'}
+        type = self.browse(cr, uid, ids, context=context)[0].category_id.type
+        res = {'name': 'Installment', 'type': 'Recognition'} if type == 'sales' else {'name': 'Depreciation', 'type': 'Asset'}
         return res
 
     def unlink(self, cr, uid, ids, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
+        record = self.browse(cr, uid, ids, context=context)[0]
         res = self._get_category_type(cr, uid, ids, context=context)
         if record.state in ['open', 'close']:
             raise osv.except_osv(_('Error!'), _('You cannot delete an %s which is in %s state.') % (res.get('type'), record.state))
@@ -218,7 +218,8 @@ class account_asset_asset(osv.osv):
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
                 company_currency = asset.company_id.currency_id.id
                 current_currency = asset.currency_id.id
-                residual_amount -= round(amount, 2)
+                amount = currency_obj.round(cr, uid, asset.currency_id, amount)
+                residual_amount -= amount
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
@@ -305,7 +306,7 @@ class account_asset_asset(osv.osv):
         'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),
         'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
-        'value': fields.float('Value', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'value': fields.float('Value', required=True, readonly=True, digits_compute=dp.get_precision('Account'), states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'note': fields.text('Note'),
@@ -471,7 +472,7 @@ class account_asset_depreciation_line(osv.osv):
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
-        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
+        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True, track_visibility='always')
     }
 
     def create_move(self, cr, uid, ids, context=None):
