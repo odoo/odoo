@@ -613,24 +613,25 @@ class BaseModel(object):
                 cls._add_field(name, field)
 
         # this field 'id' must override any other column or field
-        cls._add_field('id', fields2.Id())
+        cls._add_field('id', fields2.Id(generated=True))
 
         add('display_name', fields2.Char(string='Name', store=False,
             compute='_compute_display_name', inverse='_inverse_display_name',
-            search='_search_display_name'))
+            search='_search_display_name', generated=True))
 
         if cls._log_access:
-            add('create_uid', fields2.Many2one('res.users', string='Created by'))
-            add('create_date', fields2.Datetime(string='Created on'))
-            add('write_uid', fields2.Many2one('res.users', string='Last Updated by'))
-            add('write_date', fields2.Datetime(string='Last Updated on'))
+            add('create_uid', fields2.Many2one('res.users', string='Created by', generated=True))
+            add('create_date', fields2.Datetime(string='Created on', generated=True))
+            add('write_uid', fields2.Many2one('res.users', string='Last Updated by', generated=True))
+            add('write_date', fields2.Datetime(string='Last Updated on', generated=True))
             last_modified_name = 'compute_concurrency_field_with_access'
         else:
             last_modified_name = 'compute_concurrency_field'
 
         # this field must override any other column or field
         cls._add_field(cls.CONCURRENCY_CHECK_FIELD, fields2.Datetime(
-            string='Last Modified on', store=False, compute=last_modified_name))
+            string='Last Modified on', store=False,
+            compute=last_modified_name, generated=True))
 
     @api.one
     def compute_concurrency_field(self):
@@ -1487,12 +1488,12 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         view = etree.Element('form', string=self._description)
-        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-        for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
-            if descriptor['type'] in ('one2many', 'many2many'):
+        for fname, field in self._fields.iteritems():
+            if field.generated or field.type in ('one2many', 'many2many'):
                 continue
-            etree.SubElement(view, 'field', name=field)
-            if descriptor['type'] == 'text':
+
+            etree.SubElement(view, 'field', name=fname)
+            if field.type == 'text':
                 etree.SubElement(view, 'newline')
         return view
 
