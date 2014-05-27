@@ -27,6 +27,9 @@
                     <title>OpenERP Player</title>
                     <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
 
+                    <link href="/web/css/web.assets_common" rel="stylesheet"/>
+                    <script type="text/javascript" src="/web/js/web.assets_common"></script>
+
                     <link href="/web/css/web.assets_backend" rel="stylesheet"/>
                     <script type="text/javascript" src="/web/js/web.assets_backend"></script>
                     <!--
@@ -65,11 +68,13 @@
 
                             var player = new instance.im_screenshare.Player(treeMirror);//, cursorMirror);
 
-                            var params = <t t-esc="params" />
+                            var params = <t t-raw="params" />
                             console.log(params);
                             if(params.id &amp;&amp; params.db){
+                                console.log("DB reciever");
                                 window.receiver = new instance.im_screenshare.DbReceiver(params.id, params.db, player);
                             }else{
+                                console.log("screenshare reciever");
                                 window.receiver = new instance.im_screenshare.BusListener(params.uuid, player);
                             }
                         });

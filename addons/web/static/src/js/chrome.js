@@ -369,6 +369,7 @@ instance.web.Loading = instance.web.Widget.extend({
         this.on_rpc_event(-1);
     },
     on_rpc_event : function(increment) {
+        return;
         var self = this;
         if (!this.count && increment === 1) {
             // Block UI after 3s

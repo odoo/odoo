@@ -47,7 +47,7 @@ class Controller(openerp.addons.im.im.Controller):
     @openerp.http.route('/im_screenshare/share', type="json", auth="none")
     def share(self, uuid, message):
         registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
-        return self.pool['im.bus'].sendone(cr, (request.cr.dbname,'im_screenshare', uuid), message)
+        return registry.get('im.bus').sendone(cr, uid, (request.cr.dbname,'im_screenshare', uuid), message)
 
     @openerp.http.route(['/im_screenshare/player/<string:uuid>','/im_screenshare/player/<int:id>/<string:dbname>'], type='http', auth='none')
     def player(self, uuid=None, id=None, dbname=None):

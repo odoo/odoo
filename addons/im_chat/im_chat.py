@@ -117,18 +117,15 @@ class im_chat_session(osv.Model):
             #users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
             info = {
                 'uuid': session.uuid,
-                #'name': session.fullname,
                 'users': session.user_list,
                 'state': 'open',
             }
-            print "########## sessino_info as ", uid
             # add uid_state if available
             if uid:
                 domain = [('user_id','=',uid), ('session_id','=',session.id)]
                 uid_state = self.pool['im_chat.session_res_users_rel'].search_read(cr, uid, domain, ['state'], context=context)
                 if uid_state:
                     info['state'] = uid_state[0]['state']
-            print info
             return info
 
     def session_get(self, cr, uid, user_to, context=None):
@@ -161,11 +158,12 @@ class im_chat_session(osv.Model):
                 # notify the all the channel users and anonymous channel
                 notifications = []
                 for channel_user_id in session.user_ids:
-                    info = self.session_info(cr, channel_user_id.id, [session.id])
+                    info = self.session_info(cr, channel_user_id.id, [session.id], context=context)
                     notifications.append([(cr.dbname, 'im_chat.session', channel_user_id.id), info])
-            # TODO make it work !!
-            #info = self.session_info(cr, None, [session.id], context=context)
-            #notifications.append([session.uuid, info])
+                # TODO make it work !!
+                # Anonymous are not notified when a new user is added : cannot exec session_info as anonymous
+                #info = self.session_info(cr, None, [session.id], context=context)
+                #notifications.append([session.uuid, info])
                 self.pool['im.bus'].sendmany(cr, uid, notifications)
                 # send a message to the conversation
                 user = self.pool['res.users'].read(cr, uid, user_id, ['name'], context=context)
@@ -205,7 +203,6 @@ class im_chat_message(osv.Model):
         """ get unread messages and old messages received less than AWAY_TIMER
             ago and the session_info for open or folded window
         """
-        print "############### init message :", uid
         threshold = datetime.datetime.now() - datetime.timedelta(seconds=AWAY_TIMER)
         threshold = threshold.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -229,7 +226,6 @@ class im_chat_message(osv.Model):
 
     def post(self, cr, uid, from_uid, uuid, message_type, message_content, context=None):
         """ post and broadcast a message, return the message id """
-        print "########## POST from_uid ", from_uid, " as ", uid
         message_id = False
         Session = self.pool['im_chat.session']
         session_ids = Session.search(cr, uid, [('uuid','=',uuid)], context=context)
@@ -246,7 +242,6 @@ class im_chat_message(osv.Model):
             message_id = self.create(cr, uid, vals, context=context)
             # broadcast it to channel (anonymous users) and users_ids
             data = self.read(cr, uid, [message_id], ['from_id','to_id','create_date','type','message'], context=context)[0]
-            print "############################## post : ",data
             notifications.append([uuid, data])
             for user in session.user_ids:
                 notifications.append([(cr.dbname, 'im_chat.session', user.id), data])

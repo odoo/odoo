@@ -89,6 +89,7 @@
             }
         },
         handleMessage: function(msg) {
+            console.log(msg);
             if (msg.clear) {
                 //console.log("msg.clear");
                 this.clearPage();
@@ -263,11 +264,10 @@
         // override functions (stop_recording don't need to be)
         start_record: function(){
             // send the invitation
-            var invit = {
-                'url' : openerp.session.server + '/im_screenshare/player/' + this.conv.get("session").uuid,
-                'descr' : 'Screensharing with you !'
-            };
-            this.conv.send_message(JSON.stringify(invit), 'invitation');
+            var invit = "Screensharing with you, follow the link : "
+            + openerp.session.server + '/im_screenshare/player/' + this.conv.get("session").uuid;
+
+            this.conv.send_message(invit, 'meta');
             // start recording
             this._super();
         },
@@ -280,6 +280,7 @@
                 "session" : this.conv.get("session").uuid
             }
             this.count++;
+            console.log("SHARE msg : ", JSON.stringify(message));
             return openerp.session.rpc("/im_screenshare/share", {uuid: this.conv.get("session").uuid, message : message});
         },
     });
@@ -291,21 +292,24 @@
             this.channel = channel;
             this.bus = openerp.im.bus;
             this.bus.add_channel(channel);
-            this.bus.on("im_bus_notification", this, this.on_notification);
+            this.bus.on("notification", this, this.on_notification);
             this.bus.start_polling();
         },
         on_notification: function(notification){
             var self = this;
-            var channel = notification[1];
-            var message = notification[2];
+            var channel = notification[0];
+            var message = notification[1];
+
+            console.log("NUM : ", message);
 
             // Concern im_screenshare : only the im_screenshare message matters. It avoid messages send to the private "uuid" channel of the session
             if((Array.isArray(channel) && (channel[1] == 'im_screenshare'))){
+                //console.log("RECEIVE : ", JSON.stringify(message));
                 if(message.type === 'finish'){
-                    window.close();
+                   // window.close();
                 }else{
                     _.each(message.mutations, function(m){
-                        console.log(JSON.stringify(m));
+                       //console.log(JSON.stringify(m));
                         try{
                             self.player.handleMessage(m);
                         }catch(e){

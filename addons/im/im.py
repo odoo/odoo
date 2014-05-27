@@ -50,7 +50,6 @@ class ImBus(osv.Model):
         self.unlink(cr, uid, ids)
 
     def sendmany(self, cr, uid, notifications):
-        print notifications
         channels = set()
         for channel, message in notifications:
             channels.add(channel)
@@ -59,8 +58,8 @@ class ImBus(osv.Model):
                 "message" : json_dump(message)
             }
             self.pool['im.bus'].create(cr, uid, values)
-            if random.random() < 0.01:
-                self.gc(cr, uid)
+            #if random.random() < 0.01:
+            #    self.gc(cr, uid)
         if channels:
             with openerp.sql_db.db_connect('postgres').cursor() as cr2:
                 cr2.execute("notify imbus, %s", (json_dump(list(channels)),))
@@ -69,13 +68,18 @@ class ImBus(osv.Model):
         self.sendmany(cr, uid, [[channel, message]])
 
     def poll(self, cr, uid, channels, last=0):
-        # first polll returns the last_id
+        # first poll returns the last_id
+        # first poll return the notification in the 'buffer'
         if last == 0:
-            cr.execute('SELECT COALESCE(MAX(id),0)+1 FROM ' + self._table)
-            return [{'id': cr.fetchone()[0]}]
-        # else returns the unread notifications
+            #cr.execute('SELECT COALESCE(MAX(id),0)+1 FROM ' + self._table)
+            #return [{'id': cr.fetchone()[0]}]
+            timeout_ago = datetime.datetime.now()-datetime.timedelta(seconds=TIMEOUT)
+            domain = [('create_date', '>', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
+        else:
+            # else returns the unread notifications
+            domain = [('id','>',last)]
         channels = [json_dump(c) for c in channels]
-        domain = [('id','>',last), ('channel','in',channels)]
+        domain.append(('channel','in',channels))
         notifications = self.search_read(cr, uid, domain)
         return [{"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
 
@@ -181,6 +185,7 @@ class Controller(openerp.http.Controller):
         if not dispatch:
             raise Exception("im.Bus unavailable")
         if [c for c in channels if not isinstance(c, basestring)]:
+            print channels
             raise Exception("im.Bus only string channels are allowed.")
         return self._poll(request.db, channels, last, options)
 
