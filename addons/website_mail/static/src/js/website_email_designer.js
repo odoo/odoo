@@ -1,4 +1,13 @@
 (function () {
+    'use strict';
+    var website = openerp.website;
+
+    website.snippet.BuildingBlock.include({
+        _get_snippet_url: function () {
+            return '/website_mail/snippets';
+        }
+    });
+
     // Copy the template to the body of the email
     $(document).ready(function () {
         $('.js_template_set').click(function(ev) {

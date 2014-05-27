@@ -111,6 +111,8 @@
             <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
           </t>
           <link rel='stylesheet' href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css"/>
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
           <t t-raw="head or ''"/>
       </t>
       <t t-set="additional_title">Shop</t>
@@ -302,18 +304,14 @@
 </template>
 
 <!-- /shop/product product page -->
-<template id="website_sale_frontend" inherit_id="website.assets_frontend" name="Website Sale Frontend">
-    <xpath expr="." position="inside">
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
-        <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
-        <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
-        <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
-    </xpath>
-</template>
 
 <template id="product" name="Product">
   <t t-call="website.layout">
+      <t t-set="head">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_mail.css'/>
+      </t>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
 
@@ -486,6 +484,11 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
+      <t t-set="head">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+          <t t-raw="head or ''"/>
+      </t>
       <div id="wrap">
         <div class="container oe_website_sale">
 
@@ -668,6 +671,11 @@
 
 <template id="checkout">
   <t t-call="website.layout">
+    <t t-set="head">
+        <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+        <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+        <t t-raw="head or ''"/>
+    </t>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -824,6 +832,12 @@
 
 <template id="payment">
   <t t-call="website.layout">
+      <t t-set="head">
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+          <t t-raw="head or ''"/>
+      </t>
       <t t-set="additional_title">Shop - Select Payment Mode</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -942,6 +956,11 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
+      <t t-set="head">
+          <link rel='stylesheet' href='/website_sale/static/src/css/website_sale.css'/>
+          <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
+          <t t-raw="head or ''"/>
+      </t>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">
