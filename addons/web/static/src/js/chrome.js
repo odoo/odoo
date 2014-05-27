@@ -428,7 +428,8 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_render: function() {
         var self = this;
         instance.webclient.toggle_bars(true);
-        $('.oe_application').html(QWeb.render("DatabaseManager", { widget : self }));
+        self.$el = $('.oe_application');
+        self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
         $('ul.oe_secondary_submenu > li:first').addClass('active');
@@ -440,15 +441,15 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
             event.preventDefault();
         });
         $('#back-to-login').click(self.do_exit);
-        $('.oe_application').find("td").addClass("oe_form_group_cell");
-        $('.oe_application').find("tr td:first-child").addClass("oe_form_group_cell_label");
-        $('.oe_application').find("label").addClass("oe_form_label");
-        $('.oe_application').find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
-        $('.oe_application').find("form[name=duplicate_db_form]").validate({ submitHandler: self.do_duplicate });
-        $('.oe_application').find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
-        $('.oe_application').find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
-        $('.oe_application').find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
-        $('.oe_application').find("form[name=change_pwd_form]").validate({
+        self.$el.find("td").addClass("oe_form_group_cell");
+        self.$el.find("tr td:first-child").addClass("oe_form_group_cell_label");
+        self.$el.find("label").addClass("oe_form_label");
+        self.$el.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+        self.$el.find("form[name=duplicate_db_form]").validate({ submitHandler: self.do_duplicate });
+        self.$el.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
+        self.$el.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
+        self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
+        self.$el.find("form[name=change_pwd_form]").validate({
             messages: {
                 old_pwd: _t("Please enter your previous password"),
                 new_pwd: _t("Please enter your new password"),
