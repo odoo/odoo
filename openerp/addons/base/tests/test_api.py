@@ -228,7 +228,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(p.env, self.env)
 
         # create record instances attached to demo_env
-        demo_partners = partners.sudo(user=demo)
+        demo_partners = partners.sudo(demo)
         self.assertEqual(demo_partners.env, demo_env)
         for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
             self.assertEqual(x.env, demo_env)

@@ -506,7 +506,7 @@ class Field(object):
                         self.compute_value(recs.exists())
                     # HACK: if result is in the wrong cache, copy values
                     if recs.env != env:
-                        for source, target in zip(recs, recs._attach_env(env)):
+                        for source, target in zip(recs, recs.with_env(env)):
                             try:
                                 values = target._convert_to_cache({
                                     f.name: source[f.name] for f in self.computed_fields
@@ -570,7 +570,7 @@ class Field(object):
                 target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
-                    target._attach_env(records.env)._recompute_todo(field)
+                    target.with_env(records.env)._recompute_todo(field)
             else:
                 spec.append((field, None))
 
@@ -875,7 +875,7 @@ class Reference(Selection):
     def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name in self.get_values(env) and len(value) <= 1:
-                return value._attach_env(env) or False
+                return value.with_env(env) or False
         elif isinstance(value, basestring):
             res_model, res_id = value.split(',')
             return env[res_model].browse(int(res_id))
@@ -958,7 +958,7 @@ class Many2one(_Relational):
     def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name and len(value) <= 1:
-                return value._attach_env(env)
+                return value.with_env(env)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
             return env[self.comodel_name].browse(value[0])
@@ -1006,7 +1006,7 @@ class _RelationalMulti(_Relational):
     def convert_to_cache(self, value, env):
         if isinstance(value, BaseModel):
             if value._name == self.comodel_name:
-                return value._attach_env(env)
+                return value.with_env(env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
             result = env[self.comodel_name]

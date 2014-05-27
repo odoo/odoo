@@ -71,7 +71,7 @@ class ir_ui_menu(osv.osv):
             else:
                 # retrieve all menus, and determine which ones are visible
                 context = {'ir.ui.menu.full_list': True}
-                menus = self.sudo(context=context).search([])
+                menus = self.with_context(context).search([])
 
                 # first discard all menus with groups the user does not have
                 menus = menus.filter(

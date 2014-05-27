@@ -83,18 +83,16 @@ class Environment(object):
         """ return a given model """
         return self.registry[model_name]._browse(self, ())
 
-    def __call__(self, cr=None, user=None, context=None, **kwargs):
+    def __call__(self, cr=None, user=None, context=None):
         """ Return an environment based on `self` with modified parameters.
 
             :param cr: optional database cursor to change the current cursor
             :param user: optional user/user id to change the current user
             :param context: optional context dictionary to change the current context
-            :param kwargs: a set of key-value pairs to update the context
         """
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
-        context = dict(context, **kwargs)
         return Environment(cr, uid, context)
 
     def ref(self, xml_id, raise_if_not_found=True):

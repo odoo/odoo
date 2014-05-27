@@ -15,7 +15,7 @@
   I confirm event from wizard.
 -
   !python {model: event.confirm, id: False}: |
-    wizard = self.sudo(event_ids=[ref("event_2")]).create({})
+    wizard = self.with_context(event_ids=[ref("event_2")]).create({})
     wizard.confirm()
 -
   I call close registration process.

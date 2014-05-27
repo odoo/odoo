@@ -1052,7 +1052,7 @@ class BaseModel(object):
         """
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         if raw_data:
-            self = self.sudo(export_raw_data=True)
+            self = self.with_context(export_raw_data=True)
         return {'datas': self.__export_rows(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
@@ -5196,27 +5196,28 @@ class BaseModel(object):
             return self
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    def _attach_env(self, env):
+    @api.new
+    def with_env(self, env):
         """ Return an instance equivalent to `self` attached to `env`.
         """
         return self._browse(env, self._ids)
 
     @api.new
-    def sudo(self, cr=None, user=None, context=None, **kwargs):
+    def sudo(self, user=SUPERUSER_ID):
         """ Return an instance equivalent to `self` attached to an environment
-            based on `self.env` and modified by parameters.
-
-            :param cr: an optional cursor object
-            :param user: a user record or id
-            :param context: an optional context dictionary
-            :param kwargs: key-value pairs to modify the context
-
-            When called without parameters, ``self.sudo()`` is equivalent to
-            ``self.sudo(user=SUPERUSER_ID)``.
+            based on `self.env` with the given `user`.
         """
-        if (cr, user, context) == (None, None, None) and not kwargs:
-            user = SUPERUSER_ID
-        return self._attach_env(self.env(cr, user, context, **kwargs))
+        return self.with_env(self.env(user=user))
+
+    @api.new
+    def with_context(self, *args, **kwargs):
+        """ Return an instance equivalent to `self` attached to an environment
+            based on `self.env` with another context. The context is given by
+            `self._context` or the positional argument if given, and modified by
+            `kwargs`.
+        """
+        context = dict(args[0] if args else self._context, **kwargs)
+        return self.with_env(self.env(context=context))
 
     def _convert_to_cache(self, values):
         """ Convert the `values` dictionary into cached values. """
@@ -5571,7 +5572,7 @@ class BaseModel(object):
                         values = rec._convert_to_write({
                             f.name: rec[f.name] for f in field.computed_fields
                         })
-                        rec.sudo(recompute=False)._write(values)
+                        rec.with_context(recompute=False)._write(values)
                     except MissingError:
                         pass
                 # mark the computed fields as done

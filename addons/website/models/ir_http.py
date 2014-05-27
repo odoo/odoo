@@ -99,7 +99,7 @@ class ir_http(orm.AbstractModel):
         for key, val in arguments.items():
             # Replace uid placeholder by the current request.uid
             if isinstance(val, orm.BaseModel) and isinstance(val._uid, RequestUID):
-                arguments[key] = val.sudo(user=request.uid)
+                arguments[key] = val.sudo(request.uid)
 
         try:
             _, path = rule.build(arguments)

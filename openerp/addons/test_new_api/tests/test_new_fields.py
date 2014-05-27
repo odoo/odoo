@@ -213,7 +213,7 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(message.discussion.env, self.env)
 
         # "migrate" message into demo_env, and check again
-        demo_message = message.sudo(user=demo)
+        demo_message = message.sudo(demo)
         self.assertEqual(demo_message.env, demo_env)
         self.assertEqual(demo_message.discussion.env, demo_env)
 

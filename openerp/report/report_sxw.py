@@ -160,7 +160,8 @@ class rml_parse(object):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         # re-evaluate self.objects in a different environment
-        self.objects = self.objects.sudo(self.cr, self.uid, self.localcontext)
+        env = self.objects.env(self.cr, self.uid, self.localcontext)
+        self.objects = self.objects.with_env(env)
 
     def _get_lang_dict(self):
         pool_lang = self.pool['res.lang']

@@ -124,7 +124,7 @@ class account_invoice(Model):
                     self.residual += line.amount_residual_currency
                 else:
                     # ahem, shouldn't we use line.currency_id here?
-                    from_currency = line.company_id.currency_id.sudo(date=line.date)
+                    from_currency = line.company_id.currency_id.with_context(date=line.date)
                     self.residual += from_currency.compute(line.amount_residual, self.currency_id)
                 # we check if the invoice is partially reconciled and if there
                 # are other invoices involved in this partial reconciliation
@@ -512,7 +512,7 @@ class account_invoice(Model):
     def onchange_company_id(self, company_id, part_id, type, invoice_line, currency_id):
         # TODO: add the missing context parameter when forward-porting in trunk
         # so we can remove this hack!
-        self = self.sudo(context=self.env['res.users'].context_get())
+        self = self.with_context(self.env['res.users'].context_get())
 
         values = {}
         domain = {}
@@ -652,7 +652,7 @@ class account_invoice(Model):
             for taxe in account_invoice_tax.compute(invoice).values():
                 account_invoice_tax.create(taxe)
         # dummy write on self to trigger recomputations
-        return self.sudo(context=ctx).write({'invoice_line': []})
+        return self.with_context(ctx).write({'invoice_line': []})
 
     @multi
     def button_compute(self, set_total=False):
@@ -682,13 +682,13 @@ class account_invoice(Model):
                 if not self.journal_id.analytic_journal_id:
                     raise except_orm(_('No Analytic Journal!'),
                         _("You have to define an analytic journal on the '%s' journal!") % (self.journal_id.name,))
+                currency = self.currency_id.with_context(date=self.date_invoice)
                 il['analytic_lines'] = [(0,0, {
                     'name': il['name'],
                     'date': self.date_invoice,
                     'account_id': il['account_analytic_id'],
                     'unit_amount': il['quantity'],
-                    'amount': self.currency_id.sudo(date=self.date_invoice) \
-                                .compute(il['price'], company_currency) * sign,
+                    'amount': currency.compute(il['price'], company_currency) * sign,
                     'product_id': il['product_id'],
                     'product_uom_id': il['uos_id'],
                     'general_account_id': il['account_id'],
@@ -746,7 +746,7 @@ class account_invoice(Model):
         total_currency = 0
         for line in invoice_move_lines:
             if self.currency_id != company_currency:
-                currency = self.currency_id.sudo(date=self.date_invoice or Date.today())
+                currency = self.currency_id.with_context(date=self.date_invoice or Date.today())
                 line['currency_id'] = currency.id
                 line['amount_currency'] = line['price']
                 line['price'] = currency.compute(line['price'], company_currency)
@@ -811,7 +811,7 @@ class account_invoice(Model):
 
             ctx = dict(self._context, lang=inv.partner_id.lang)
             if not inv.date_invoice:
-                inv.sudo(context=ctx).date_invoice = Date.context_today(self)
+                inv.with_context(ctx).date_invoice = Date.context_today(self)
 
             company_currency = inv.company_id.currency_id
             # create the analytical lines, one move line per invoice line
@@ -847,18 +847,18 @@ class account_invoice(Model):
 
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
-            total, total_currency, iml = inv.sudo(context=ctx).compute_invoice_totals(company_currency, ref, iml)
+            total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, ref, iml)
 
             name = inv.name or inv.supplier_invoice_number or '/'
             totlines = []
             if inv.payment_term:
-                totlines = inv.sudo(context=ctx).payment_term.compute(total, inv.date_invoice)[0]
+                totlines = inv.with_context(ctx).payment_term.compute(total, inv.date_invoice)[0]
             if totlines:
                 res_amount_currency = total_currency
                 ctx['date'] = inv.date_invoice
                 for i, t in enumerate(totlines):
                     if inv.currency_id != company_currency:
-                        amount_currency = company_currency.sudo(context=ctx).compute(t[1], inv.currency_id)
+                        amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
                     else:
                         amount_currency = False
 
@@ -896,7 +896,7 @@ class account_invoice(Model):
             line = [(0, 0, self.line_get_convert(l, part.id, date)) for l in iml]
             line = inv.group_lines(iml, line)
 
-            journal = inv.journal_id.sudo(context=ctx)
+            journal = inv.journal_id.with_context(ctx)
             if journal.centralisation:
                 raise except_orm(_('User Error!'),
                         _('You cannot create an invoice on a centralized journal. Uncheck the centralized counterpart box in the related journal from the configuration menu.'))
@@ -914,16 +914,16 @@ class account_invoice(Model):
             ctx['company_id'] = inv.company_id.id
             period = inv.period_id
             if not period:
-                period = period.sudo(context=ctx).find(inv.date_invoice)[:1]
+                period = period.with_context(ctx).find(inv.date_invoice)[:1]
             if period:
                 move_vals['period_id'] = period.id
                 for i in line:
                     i[2]['period_id'] = period.id
 
             ctx['invoice'] = inv
-            move = account_move.sudo(context=ctx).create(move_vals)
+            move = account_move.with_context(ctx).create(move_vals)
             # make the invoice point to that move
-            inv.sudo(context=ctx).write({
+            inv.with_context(ctx).write({
                 'move_id': move.id,
                 'period_id': period.id,
                 'move_name': move.name,
@@ -1309,7 +1309,7 @@ class account_invoice_line(Model):
             context=None, company_id=None):
         context = context or {}
         company_id = company_id if company_id is not None else context.get('company_id', False)
-        self = self.sudo(company_id=company_id, force_company=company_id)
+        self = self.with_context(company_id=company_id, force_company=company_id)
 
         if not partner_id:
             raise except_orm(_('No Partner Defined!'), _("You must first select a partner!"))
@@ -1325,7 +1325,7 @@ class account_invoice_line(Model):
         fpos = self.env['account.fiscal.position'].browse(fposition_id)
 
         if part.lang:
-            self = self.sudo(lang=part.lang)
+            self = self.with_context(lang=part.lang)
         product = self.env['product.product'].browse(product)
 
         values['name'] = product.partner_ref
@@ -1377,7 +1377,7 @@ class account_invoice_line(Model):
             fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         context = context or {}
         company_id = company_id if company_id != None else context.get('company_id', False)
-        self = self.sudo(company_id=company_id)
+        self = self.with_context(company_id=company_id)
 
         result = self.product_id_change(product, uom, qty, name, type, partner_id,
             fposition_id, price_unit, currency_id, context=context)
@@ -1400,7 +1400,7 @@ class account_invoice_line(Model):
     @model
     def move_line_get(self, invoice_id):
         inv = self.env['account.invoice'].browse(invoice_id)
-        currency = inv.currency_id.sudo(date=inv.date_invoice)
+        currency = inv.currency_id.with_context(date=inv.date_invoice)
         company_currency = inv.company_id.currency_id
 
         res = []
@@ -1516,7 +1516,7 @@ class account_invoice_tax(Model):
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.sudo(date=date_invoice or Date.today())
+            currency = currency.with_context(date=date_invoice or Date.today())
             base = currency.compute(base * factor, company.currency_id, round=False)
         return {'value': {'base_amount': base}}
 
@@ -1526,14 +1526,14 @@ class account_invoice_tax(Model):
         company = self.env['res.company'].browse(company_id)
         if currency_id and company.currency_id:
             currency = self.env['res.currency'].browse(currency_id)
-            currency = currency.sudo(date=date_invoice or Date.today())
+            currency = currency.with_context(date=date_invoice or Date.today())
             amount = currency.compute(amount * factor, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
     @api.new
     def compute(self, invoice):
         tax_grouped = {}
-        currency = invoice.currency_id.sudo(date=invoice.date_invoice or Date.today())
+        currency = invoice.currency_id.with_context(date=invoice.date_invoice or Date.today())
         company_currency = invoice.company_id.currency_id
         for line in invoice.invoice_line:
             taxes = line.invoice_line_tax_id.compute_all(
@@ -1638,7 +1638,7 @@ class mail_compose_message(Model):
         if context.get('default_model') == 'account.invoice' and \
                 context.get('default_res_id') and context.get('mark_invoice_as_sent'):
             invoice = self.env['account.invoice'].browse(context['default_res_id'])
-            invoice = invoice.sudo(mail_post_autofollow=True)
+            invoice = invoice.with_context(mail_post_autofollow=True)
             self.write({'sent': True})
             self.message_post(body=_("Invoice sent"))
         return super(mail_compose_message, self).send_mail()
