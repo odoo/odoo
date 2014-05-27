@@ -1125,7 +1125,7 @@ instance.web.Client = instance.web.Widget.extend({
         self.loading = new instance.web.Loading(self);
         self.loading.appendTo(self.$el);
         self.action_manager = new instance.web.ActionManager(self);
-        self.action_manager.appendTo(this.$el.find('.oe_application'));
+        self.action_manager.appendTo(self.$('.oe_application'));
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.navbar),.oe_leftbar').toggle(value);
@@ -1150,10 +1150,6 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
-
-        this.$el.parents('body').find('.oe_webclient .oe_logo_edit').click(function(ev) {
-            self.logo_edit(ev);
-        });
 
         this.$el = this.$el.parents('body').find('.oe_webclient');
 
@@ -1220,7 +1216,11 @@ instance.web.WebClient = instance.web.Client.extend({
     show_application: function() {
         var self = this;
         self.toggle_bars(true);
+
         self.update_logo();
+        this.$el.find('.oe_logo_edit_admin').click(function(ev) {
+            self.logo_edit(ev);
+        });
 
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
