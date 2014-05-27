@@ -729,7 +729,6 @@ class BaseModel(object):
     _all_columns = {}
 
     _table = None
-    _invalids = set()
     _log_create = False
     _sql_constraints = []
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
@@ -1543,9 +1542,6 @@ class BaseModel(object):
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
-    def get_invalid_fields(self, cr, uid):
-        return list(self._invalids)
-
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
         lng = context.get('lang')
@@ -1579,11 +1575,8 @@ class BaseModel(object):
                 error_msgs.append(
                         _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
-                self._invalids.update(fields)
         if error_msgs:
             raise except_orm('ValidateError', '\n'.join(error_msgs))
-        else:
-            self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
         """
