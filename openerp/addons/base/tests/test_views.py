@@ -814,7 +814,7 @@ class ViewModeField(ViewCase):
 
     def testModeImplicitValue(self):
         """ mode is auto-generated from inherit_id:
-        * inherit_id -> mode=extendion
+        * inherit_id -> mode=extension
         * not inherit_id -> mode=primary
         """
         view = self.browse(self.create({
@@ -859,7 +859,7 @@ class ViewModeField(ViewCase):
         with self.assertRaises(Exception):
             view_pure_primary.write({'mode': 'extension'})
 
-    def testInheritPirmaryToExtension(self):
+    def testInheritPrimaryToExtension(self):
         """
         A primary view with an inherit_id can be converted to extension
         """
