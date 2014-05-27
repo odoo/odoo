@@ -31,6 +31,7 @@ class Help(Command):
             print "    %s" % k
 
 import server
+import deploy
 
 def main():
     args = sys.argv[1:]
