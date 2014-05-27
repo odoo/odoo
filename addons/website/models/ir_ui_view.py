@@ -39,9 +39,6 @@ class view(osv.osv):
     # Returns all views (called and inherited) related to a view
     # Used by translation mechanism, SEO and optional templates
     def _views_get(self, cr, uid, view_id, options=True, context=None, root=True):
-        if not context:
-            context = {}
-
         try:
             view = self._view_obj(cr, uid, view_id, context=context)
         except ValueError:
