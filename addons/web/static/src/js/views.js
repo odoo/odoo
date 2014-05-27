@@ -607,7 +607,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
   
-
         return this.switch_mode(default_view, null, this.flags[default_view] && this.flags[default_view].options);
       
         
@@ -705,6 +704,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             self.trigger("controller_inited",view_type,controller);
         });
     },
+
     /**
      * @returns {Number|Boolean} the view id of the given type, false if not found
      */
@@ -1071,6 +1071,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 view_manager: self
             }));
             self.set_title();
+            self.searchview.adjust_view_top();
         });
     },
     do_create_view: function(view_type) {
