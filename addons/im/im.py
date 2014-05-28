@@ -57,6 +57,7 @@ class ImBus(osv.Model):
                 "channel" : json_dump(channel),
                 "message" : json_dump(message)
             }
+            cr.commit()
             self.pool['im.bus'].create(cr, uid, values)
             #if random.random() < 0.01:
             #    self.gc(cr, uid)

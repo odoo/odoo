@@ -27,7 +27,6 @@ class Controller(openerp.addons.im.im.Controller):
         if request.session.uid:
             registry, cr, uid, context = request.registry, request.cr, request.session.uid, request.context
             registry.get('im_chat.presence').update(cr, uid, ('im_presence' in options), context=context)
-            cr.commit()
             # listen to connection and disconnections
             channels.append((request.db,'im_chat.presence'))
             # channel to receive message
@@ -114,7 +113,6 @@ class im_chat_session(osv.Model):
     def session_info(self, cr, uid, ids, context=None):
         """ get the session info/header of a given session """
         for session in self.browse(cr, uid, ids, context=context):
-            #users_infos = self.pool["res.users"].read(cr, uid, [u.id for u in session.user_ids], ['id','name', 'im_status'], context=context)
             info = {
                 'uuid': session.uuid,
                 'users': session.user_list,
@@ -141,12 +139,19 @@ class im_chat_session(osv.Model):
                 session_id = self.create(cr, uid, { 'user_ids': [(6,0, (user_to, uid))] }, context=context)
         return self.session_info(cr, uid, [session_id], context=context)
 
-    def update_state(self, cr, uid, uuid, state, context=None):
+    def update_state(self, cr, uid, uuid, state=None, context=None):
         """ modify the fold_state of the given session, and broadcast to himself (e.i. : to sync multiple tabs) """
         domain = [('user_id','=',uid), ('session_id.uuid','=',uuid)]
         ids = self.pool['im_chat.session_res_users_rel'].search(cr, uid, domain, context=context)
-        self.pool['im_chat.session_res_users_rel'].write(cr, uid, ids, {'state': state}, context=context)
         for sr in self.pool['im_chat.session_res_users_rel'].browse(cr, uid, ids, context=context):
+            if not state:
+                state = sr.state
+                if sr.state == 'open':
+                    state = 'folded'
+                elif sr.state == 'folded':
+                    state = 'open'
+            self.pool['im_chat.session_res_users_rel'].write(cr, uid, ids, {'state': state}, context=context)
+            cr.commit()
             self.pool['im.bus'].sendone(cr, uid, (cr.dbname, 'im_chat.session', uid), sr.session_id.session_info())
 
     def add_user(self, cr, uid, uuid, user_id, context=None):
@@ -203,25 +208,35 @@ class im_chat_message(osv.Model):
         """ get unread messages and old messages received less than AWAY_TIMER
             ago and the session_info for open or folded window
         """
-        threshold = datetime.datetime.now() - datetime.timedelta(seconds=AWAY_TIMER)
-        threshold = threshold.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-        domain = [('to_id.user_ids', 'in', [uid]), ('create_date','>',threshold)]
+        # get the message since the last poll of the user
+        domain = [('to_id.user_ids', 'in', [uid])]
+        presence_ids = self.pool['im_chat.presence'].search(cr, uid, [('user_id', '=', uid)], context=context)
+        if presence_ids:
+            presence = self.pool['im_chat.presence'].browse(cr, uid, presence_ids, context=context)[0]
+            threshold = presence.last_poll
+            domain.append(('create_date','>',threshold))
         messages = self.search_read(cr, uid, domain, ['from_id','to_id','create_date','type','message'], order='id asc', context=context)
-        # get the session of the messages
-        session_ids = map(lambda m: m['to_id'][0], messages)
 
+        # get the session of the messages and the not-closed ones
+        session_ids = map(lambda m: m['to_id'][0], messages)
         domain = [('user_id','=',uid), '|', ('state','!=','closed'), ('session_id', 'in', session_ids)]
         session_rels_ids = self.pool['im_chat.session_res_users_rel'].search(cr, uid, domain, context=context)
+        # re-open the session where a message have been recieve recently
+        #self.pool['im_chat.session_res_users_rel'].write(cr, uid, session_rels_ids, {'state': 'open'}, context=context)
         session_rels = self.pool['im_chat.session_res_users_rel'].browse(cr, uid, session_rels_ids, context=context)
 
+        reopening_session = []
         notifications = []
         for sr in session_rels:
             si = sr.session_id.session_info()
             si['state'] = sr.state
+            if sr.state == 'closed':
+                si['state'] = 'folded'
+                reopening_session.append(sr.id)
             notifications.append([(cr.dbname,'im_chat.session', uid), si])
         for m in messages:
             notifications.append([(cr.dbname,'im_chat.session', uid), m])
+        self.pool['im_chat.session_res_users_rel'].write(cr, uid, reopening_session, {'state': 'folded'}, context=context)
         return notifications
 
     def post(self, cr, uid, from_uid, uuid, message_type, message_content, context=None):
@@ -270,6 +285,7 @@ class im_chat_presence(osv.Model):
 
     def update(self, cr, uid, presence=True, context=None):
         """ register the poll, and change its im status if necessary. It also notify the Bus if the status has changed. """
+        cr.commit()
         presence_ids = self.search(cr, uid, [('user_id', '=', uid)], context=context)
         presences = self.browse(cr, uid, presence_ids, context=context)
         # set the default values

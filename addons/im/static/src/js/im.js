@@ -22,6 +22,7 @@
             var data = {'channels': self.channels, 'last': self.last, 'options' : self.options};
             console.log("########### POLL : ", JSON.stringify(data));
             openerp.jsonRpc('/longpolling/poll', 'call', data).then(function(result) {
+                console.log("result", JSON.stringify(result));
                 _.each(result, _.bind(self.on_notification, self));
                 self.poll();
             }, function(unused, e) {

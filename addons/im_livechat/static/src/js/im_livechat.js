@@ -9,6 +9,40 @@
     var im_livechat = {};
     openerp.im_livechat = im_livechat;
 
+/*
+// TODO : for anonymous conv, they have to keep their own state since they have no im_chat_session_res_users_rel
+// but problem to create a im_livechat.Conversation in the c_manager
+    im_livechat.Conversation = openerp.im_chat.extend({
+        init: function(parent, c_manager, session, options) {
+            this._super(parent, c_manager, session, options);
+            this.shown = false;
+        }
+        show: function(){
+            this.$().animate({
+                height: this.full_height
+            });
+            this.set("pending", 0);
+        },
+        hide: function(){
+            this.$().animate({
+                height: this.$(".oe_im_chatview_header").outerHeight()
+            });
+        },
+        click_header: function(){
+            this.update_fold_state();
+        },
+        update_fold_state: function(state){
+            if(!this.options["anonymous_mode"]){
+                return new openerp.Model("im_chat.session").call("update_state", [], {"uuid" : this.get("session").uuid, "state" : state});
+            }else{
+                if(state === 'closed'){
+                    this.destroy();
+                }
+            }
+        }
+    });
+*/
+
     im_livechat.LiveSupport = openerp.Widget.extend({
         init: function(server_url, db, channel, options) {
             options = options || {};

@@ -89,7 +89,6 @@
             }
         },
         handleMessage: function(msg) {
-            console.log(msg);
             if (msg.clear) {
                 //console.log("msg.clear");
                 this.clearPage();
@@ -128,10 +127,8 @@
         },
         click: function(){
             if(this.is_recording()){
-                console.log("STOP RecordButton");
                 this.stop_record();
             }else{
-                console.log("START RecordButton");
                 this.start_record();
             }
             this.$el.html(this.generate_button());
@@ -205,12 +202,10 @@
         },
         load: function(){
             var self = this;
-            console.log(this.counter);
             var next_event_delay = 0;
             var current = this.sre_msglist[this.counter];
             if (this.counter < this.sre_msglist.length-1) {
                 var next = this.sre_msglist[this.counter+1];
-                console.log(next);
                 next_event_delay = next.timestamp - current.timestamp;
                 window.setTimeout(function(){self.load();}, next_event_delay);
             }
@@ -280,7 +275,6 @@
                 "session" : this.conv.get("session").uuid
             }
             this.count++;
-            console.log("SHARE msg : ", JSON.stringify(message));
             return openerp.session.rpc("/im_screenshare/share", {uuid: this.conv.get("session").uuid, message : message});
         },
     });
