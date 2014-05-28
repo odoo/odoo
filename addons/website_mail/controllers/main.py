@@ -83,6 +83,7 @@ class WebsiteMail(http.Controller):
             'is_user': uid != public_id,
             'email': email,
             'is_follower': False,
+            'alias_name': False,
         }
 
         if not obj:
@@ -97,8 +98,22 @@ class WebsiteMail(http.Controller):
                             ('res_id', '=', obj_ids[0]),
                             ('partner_id', '=', partner_id.id)
                         ], context=context)) == 1
-            if post.get('fields'):
-                record = obj.read(cr, SUPERUSER_ID, obj_ids[0], fields=post.get('fields'), context=context)
-                values.update(record)
+
+        return values
+
+    @http.route(['/website_mail/get_alias_info'], type='json', auth='public', website=True)
+    def get_alias_info(self, model, id, **post):
+        id = int(id)
+        cr, uid, context = request.cr, request.uid, request.context
+        obj = request.registry.get(model)
+
+        values = {'alias_name': False}
+
+        if not obj:
+            return values
+        obj_ids = obj.exists(cr, SUPERUSER_ID, [id], context=context)
+        if obj_ids and 'alias_id' in obj._all_columns:
+            alias_id = obj.browse(cr, SUPERUSER_ID, obj_ids[0], context=context).alias_id
+            values['alias_name'] = alias_id and alias_id.alias_domain and '%s@%s' % (alias_id.alias_name, alias_id.alias_domain) or False
 
         return values
