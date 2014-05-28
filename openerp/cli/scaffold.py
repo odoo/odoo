@@ -33,21 +33,16 @@ class Scaffold(Command):
 
         dest = directory(args.dest)
         if args.init:
-            module_name = snake(args.init)
-            module = functools.partial(os.path.join, dest, module_name)
+            args.module = snake(args.init)
+            module = functools.partial(os.path.join, dest, args.module)
             if os.path.exists(module()):
                 die("Can't initialize module in `%s`: Directory already exists." % module())
+            if self.get_module_root(dest):
+                die("Can't init a new module in another module, you probably want to run this "
+                    "command from your project's root")
         else:
-            module_name = dest.split(os.path.sep)[-1]
-            # find the module's root directory
-            while not os.path.exists(os.path.join(dest, '%s.py' % self.manifest)):
-                new_dest = os.path.abspath(os.path.join(dest, os.pardir))
-                if dest == new_dest:
-                    die("Can't find module directory. Please `cd` to it's path or use --dest")
-                module_name = dest.split(os.path.sep)[-1]
-                dest = new_dest
+            args.module, dest = self.get_module_root(dest)
             module = functools.partial(os.path.join, dest)
-        args.module = module_name
 
         if args.init:
             self.dump('%s.jinja2' % self.manifest, module('%s.py' % self.manifest), config=args)
@@ -72,6 +67,17 @@ class Scaffold(Command):
             args.has_model = self.has_import(module('models', '__init__.py'), controller_module)
             self.add_init_import(module('controllers', '__init__.py'), controller_module)
             self.dump('controllers.jinja2', module('controllers', controller_file), config=args)
+
+    def get_module_root(self, path):
+        module_name = path.split(os.path.sep)[-1]
+        # find the module's root directory
+        while not os.path.exists(os.path.join(path, '%s.py' % self.manifest)):
+            new_path = os.path.abspath(os.path.join(path, os.pardir))
+            if path == new_path:
+                return None
+            module_name = path.split(os.path.sep)[-1]
+            path = new_path
+        return (module_name, path)
 
     def has_import(self, initfile, module):
         with open(initfile, 'r') as f:
