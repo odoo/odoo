@@ -306,8 +306,8 @@ class mrp_bom(osv.osv):
             if set(map(int,bom_line_id.property_ids or [])) - set(properties or []):
                 continue
             # all bom_line_id variant values must be in the product
-            if bom_line_id.variants_ids:
-                if not product or (set(map(int,bom_line_id.variants_ids or [])) - set(map(int,product.variant_ids))):
+            if bom_line_id.variant_ids:
+                if not product or (set(map(int,bom_line_id.variant_ids or [])) - set(map(int,product.variant_ids))):
                     continue
 
             if bom_line_id.product_id.id in all_prod:
@@ -393,7 +393,7 @@ class mrp_bom_line(osv.osv):
         'property_ids': fields.many2many('mrp.property', string='Properties'),
 
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True, required=True),
-        'variants_ids': fields.many2many('product.attribute.value', string='Variants', help="BOM Product Variants needed form apply this line."),
+        'variant_ids': fields.many2many('product.attribute.value', string='Variants', help="BOM Product Variants needed form apply this line."),
     }
 
     def _get_uom_id(self, cr, uid, *args):

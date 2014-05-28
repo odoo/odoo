@@ -628,7 +628,7 @@ class product_template(osv.osv):
                     all_variants = temp_variants
 
             # check product
-            variants_ids_to_active = []
+            variant_ids_to_active = []
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
@@ -637,11 +637,11 @@ class product_template(osv.osv):
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))
                     if not product_id.active:
-                        variants_ids_to_active.append(product_id.id)
+                        variant_ids_to_active.append(product_id.id)
                 else:
                     variants_inactive.append(product_id)
-            if variants_ids_to_active:
-                product_obj.write(cr, uid, variants_ids_to_active, {'active': True}, context=ctx)
+            if variant_ids_to_active:
+                product_obj.write(cr, uid, variant_ids_to_active, {'active': True}, context=ctx)
 
             # create new product
             for variant_ids in all_variants:
