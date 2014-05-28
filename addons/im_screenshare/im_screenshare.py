@@ -21,6 +21,7 @@
 import openerp
 import logging
 import simplejson
+import uuid
 import openerp.addons.im.im
 
 from openerp.osv import osv, fields
@@ -35,19 +36,17 @@ _logger = logging.getLogger(__name__)
 
 class Controller(openerp.addons.im.im.Controller):
 
-    def _poll(self, cr, channels, last, options):
-        # private user channel to receive screenshare message
-        channels.append((request.db, 'im_screenshare', request.session.uid))
-        # for all the public channels, add the screenshare channel
-        for c in channels:
-            if isinstance(c, basestring):
-                channels.append((request.db, 'im_screenshare', c))
-        return super(Controller, self)._poll(cr, channels, last, options)
+    @openerp.http.route('/im_screenshare/start', type="json", auth="none")
+    def start(self, **kwargs):
+        tmp = '%s' % uuid.uuid4()
+        print "###################"
+        print tmp
+        return tmp
 
     @openerp.http.route('/im_screenshare/share', type="json", auth="none")
     def share(self, uuid, message):
         registry, cr, context, uid = request.registry, request.cr, request.context, request.session.uid
-        return registry.get('im.bus').sendone(cr, uid, (request.cr.dbname,'im_screenshare', uuid), message)
+        return registry.get('im.bus').sendone(cr, uid, uuid, message)
 
     @openerp.http.route(['/im_screenshare/player/<string:uuid>','/im_screenshare/player/<int:id>/<string:dbname>'], type='http', auth='none')
     def player(self, uuid=None, id=None, dbname=None):

@@ -220,7 +220,7 @@
             var self = this;
             this.update_promise.then(function() {
                 var button = new instance.im_screenshare.DbRecordHandler(this);
-                button.appendTo(openerp.webclient.$el.find('.oe_systray'));
+//                button.appendTo(openerp.webclient.$el.find('.oe_systray'));
             });
             return this._super.apply(this, arguments);
         },
@@ -237,34 +237,39 @@
             this._super();
             this.conv = conv;
             this.count = 0;
+            this.uuid = false;
         },
         start: function() {
             this.$el.html('<button class="oe_im_screenshare_button" title="Share your screen"><i class="fa fa-caret-square-o-right"></i></button>');//this.generate_button());
             this.$el.on('click','button',_.bind(this.click,this));
         },
         click: function(event){
+            var self = this;
             event.stopPropagation();
             if(this.is_recording()){
                 this.stop_record();
                 this.send_record("[]", "finish");
-                this.$('.oe_im_screenshare_button').css('color','black');
+                this.$('.oe_im_screenshare_button').css('color','Gray');
                 this.$('.oe_im_screenshare_button').css('title','Share your screen');
             }else{
-                this.start_record();
-                this.count = 0;
-                this.$('.oe_im_screenshare_button').css('color','red');
-                this.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
+                openerp.session.rpc("/im_screenshare/start").then(function(uuid){
+                    self.uuid = uuid;
+                    self.start_record();
+                    self.count = 0;
+                    self.$('.oe_im_screenshare_button').css('color','red');
+                    self.$('.oe_im_screenshare_button').css('title','Stop sharing screen');
+                });
             }
         },
         // override functions (stop_recording don't need to be)
         start_record: function(){
             // send the invitation
-            var invit = "Screensharing with you, follow the link : "
-            + openerp.session.server + '/im_screenshare/player/' + this.conv.get("session").uuid;
+            var self = this;
+                var invit = "Screensharing with you, follow the link : " + openerp.session.server + '/im_screenshare/player/' + self.uuid;
+                self.conv.send_message(invit, 'meta');
+                // start recording
+                self._super();
 
-            this.conv.send_message(invit, 'meta');
-            // start recording
-            this._super();
         },
         send_record: function(json_mutations, type){
             var type = type || "base";
@@ -272,16 +277,17 @@
                 "num" : this.count,
                 "mutations" : JSON.parse(json_mutations),
                 "type" : JSON.parse(json_mutations)[0] ? JSON.parse(json_mutations)[0].f : type,
-                "session" : this.conv.get("session").uuid
+                "uuid" : this.uuid
             }
             this.count++;
-            return openerp.session.rpc("/im_screenshare/share", {uuid: this.conv.get("session").uuid, message : message});
+            return openerp.session.rpc("/im_screenshare/share", {uuid: this.uuid, message : message});
         },
     });
 
     // Class listening the bus, and keeping the im_screenshare messages to send them to the player
     instance.im_screenshare.BusListener = openerp.Class.extend({
         init: function(channel, player){
+            console.log("channel", channel);
             this.player = player;
             this.channel = channel;
             this.bus = openerp.im.bus;
@@ -294,13 +300,10 @@
             var channel = notification[0];
             var message = notification[1];
 
-            console.log("NUM : ", message);
-
-            // Concern im_screenshare : only the im_screenshare message matters. It avoid messages send to the private "uuid" channel of the session
-            if((Array.isArray(channel) && (channel[1] == 'im_screenshare'))){
-                //console.log("RECEIVE : ", JSON.stringify(message));
+            if(channel === this.channel){
+                console.log("RECEIVE : ", JSON.stringify(message));
                 if(message.type === 'finish'){
-                   // window.close();
+                   //window.close();
                 }else{
                     _.each(message.mutations, function(m){
                        //console.log(JSON.stringify(m));
@@ -320,7 +323,7 @@
         start: function() {
             this._super();
             var b = new instance.im_screenshare.IMSenderButton(this);
-            b.appendTo(this.$('.oe_im_chatview_right'));
+            b.prependTo(this.$('.oe_im_chatview_right'));
         },
     });
 
