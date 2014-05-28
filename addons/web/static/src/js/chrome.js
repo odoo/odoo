@@ -101,9 +101,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             autoOpen: false,
             position: [false, 40],
             buttons: null,
-            beforeClose: function () {
-                self.trigger("closing");
-            },
             resizeStop: function() {
                 self.trigger("resized");
             },
@@ -204,8 +201,9 @@ instance.web.Dialog = instance.web.Widget.extend({
     /**
         Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
-    close: function() {
+    close: function(reason) {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
+            this.trigger("closing", reason);
             this.$el.dialog('close');
         }
     },
@@ -221,14 +219,14 @@ instance.web.Dialog = instance.web.Widget.extend({
     /**
         Destroys the popup, also closes it.
     */
-    destroy: function () {
+    destroy: function (reason) {
         this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
         if (! this.__tmp_dialog_closing) {
             this.__tmp_dialog_destroying = true;
-            this.close();
+            this.close(reason);
             this.__tmp_dialog_destroying = undefined;
         }
         if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
