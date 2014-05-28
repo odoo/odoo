@@ -22,7 +22,7 @@ class Website(orm.Model):
     # ***********************************************************
 
     def ecommerce_get_pricelist_id(self, cr, uid, ids, context=None):
-        if not request.httprequest.session.get('ecommerce_pricelist'):
+        if not request.httprequest.session.get('ecommerce_pricelist') or request.httprequest.session.get('ecommerce_pricelist_uid') != uid:
             self._ecommerce_change_pricelist(cr, uid, None, context=context)
         return request.httprequest.session.get('ecommerce_pricelist')
 
@@ -41,6 +41,7 @@ class Website(orm.Model):
             pricelist_id = self.pool.get('sale.order').onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value']['pricelist_id']
 
         request.httprequest.session['ecommerce_pricelist'] = pricelist_id
+        request.httprequest.session['ecommerce_pricelist_uid'] = uid
 
         order = self.ecommerce_get_current_order(cr, uid, context=context)
         if order:
