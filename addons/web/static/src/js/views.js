@@ -22,9 +22,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this._super.apply(this, arguments);
         this.$el.on('click', 'a.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
-    dialog_stop: function () {
+    dialog_stop: function (reason) {
         if (this.dialog) {
-            this.dialog.destroy();
+            this.dialog.destroy(reason);
         }
         this.dialog = null;
     },
@@ -376,7 +376,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
             }
-            this.dialog_stop();
+            this.dialog_stop(executor.action);
             this.dialog = new instance.web.Dialog(this, {
                 dialogClass: executor.klass,
             });
@@ -394,7 +394,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.dialog.open();
             return initialized;
         } else  {
-            this.dialog_stop();
+            this.dialog_stop(executor.action);
             this.inner_action = executor.action;
             this.inner_widget = widget;
             executor.post_process(widget);
