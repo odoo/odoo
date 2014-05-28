@@ -35,6 +35,7 @@ import tempfile
 import lxml.html
 import cStringIO
 import subprocess
+import re
 from distutils.version import LooseVersion
 try:
     from pyPdf import PdfFileWriter, PdfFileReader
@@ -57,7 +58,7 @@ else:
     out, err = process.communicate()
     version = out.splitlines()
     version = version[1] if len(version) > 1 else version[0]
-    version = version.strip().split(' ')[1]
+    version = re.search('(\d{1,}.){2}\w{1,}', version).group(0)
     if LooseVersion(version) < LooseVersion('0.12.0'):
         _logger.warning('Upgrade wkhtmltopdf to (at least) 0.12.0')
         wkhtmltopdf_state = 'upgrade'
