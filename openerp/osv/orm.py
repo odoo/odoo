@@ -370,7 +370,8 @@ IdType = (int, long, basestring, NewId)
 
 
 # special columns automatically created by the ORM
-MAGIC_COLUMNS = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']
+LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
+MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 class BaseModel(object):
     """ Base class for OpenERP models.
