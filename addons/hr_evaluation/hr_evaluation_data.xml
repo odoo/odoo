@@ -57,6 +57,54 @@
            <field eval="'run_employee_evaluation'" name="function" />
            <field eval="'(False,)'" name="args" />
         </record>
-     </data>
 
+        <!-- Holidays-related subtypes for messaging / Chatter -->
+        <record id="mt_appraisal_started" model="mail.message.subtype">
+            <field name="name">Appraisal Started</field>
+            <field name="res_model">hr_evaluation.evaluation</field>
+            <field name="default" eval="False"/>
+            <field name="description">Appraisal started</field>
+        </record>
+        <record id="mt_appraisal_done" model="mail.message.subtype">
+            <field name="name">Appraisal Done</field>
+            <field name="res_model">hr_evaluation.evaluation</field>
+            <field name="default" eval="False"/>
+            <field name="description">Appraisal done</field>
+        </record>
+        <record id="mt_interview_done" model="mail.message.subtype">
+            <field name="name">Interview Request Done</field>
+            <field name="res_model">hr.evaluation.interview</field>
+            <field name="description">Interview request done</field>
+        </record>
+        <record id="mt_interview_request" model="mail.message.subtype">
+            <field name="name">Interview Request</field>
+            <field name="res_model">hr.evaluation.interview</field>
+            <field name="description">Interview request</field>
+        </record>
+        
+        <!-- Department related subtypes for messaging / Chatter -->
+        <record id="mt_department_appraisal_started" model="mail.message.subtype">
+            <field name="name">Appraisals Started</field>
+            <field name="res_model">hr.department</field>
+            <field name="parent_id" eval="ref('mt_appraisal_started')"/>
+            <field name="relation_field">employee_id.department_id</field>
+            <field name="sequence" eval="2"/>
+        </record>
+        <record id="mt_department_appraisal_done" model="mail.message.subtype">
+            <field name="name">Appraisals Done</field>
+            <field name="res_model">hr.department</field>
+            <field name="parent_id" eval="ref('mt_appraisal_done')"/>
+            <field name="relation_field">employee_id.department_id</field>
+            <field name="sequence" eval="3"/>
+        </record>
+        <record id="mt_department_interview_done" model="mail.message.subtype">
+            <field name="name">Interview Requests Done</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_interview_done')"/>
+            <field name="relation_field">user_to_review_id.department_id</field>
+            <field name="sequence" eval="4"/>
+        </record>
+
+    </data>
 </openerp>

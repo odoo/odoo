@@ -991,5 +991,4 @@ class hr_employee(osv.osv):
         'payslip_count': fields.function(_payslip_count, type='integer', string='Payslips'),
     }
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

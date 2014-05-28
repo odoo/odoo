@@ -81,6 +81,9 @@ class hr_applicant(osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
+        'emp_id': {
+            'hr_recruitment.mt_applicant_employee': lambda self, cr, uid, obj, ctx=None: obj.emp_id,
+        },
         'stage_id': {
             # this is only an heuristics; depending on your particular stage configuration it may not match all 'new' stages
             'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence <= 1,
@@ -230,7 +233,7 @@ class hr_applicant(osv.Model):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
-        'emp_id': fields.many2one('hr.employee', string='Employee', help='Employee linked to the applicant.'),
+        'emp_id': fields.many2one('hr.employee', string='Employee', track_visibility='onchange', help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_number': fields.function(_get_attachment_number, string='Number of Attachments', type="integer"),
     }
@@ -404,6 +407,12 @@ class hr_applicant(osv.Model):
                 cr, uid, [applicant.job_id.id],
                 body=_('New application from %s') % name,
                 subtype="hr_recruitment.mt_job_applicant_new", context=context)
+
+        if applicant.department_id:
+            self.pool.get('hr.department').message_post(cr, uid, [applicant.department_id.id],
+                                body=_('New applicant created'),
+                                subtype="hr_recruitment.mt_department_new",
+                                context=context)
         return obj_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -509,6 +518,12 @@ class hr_job(osv.osv):
     _name = "hr.job"
     _inherits = {'mail.alias': 'alias_id'}
 
+    _track = {
+        'state': {
+            'hr_recruitment.mt_job_new': lambda self, cr, uid, obj, ctx=None: obj.state == 'open'
+        },
+    }
+
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         attachment_obj = self.pool.get('ir.attachment')
@@ -561,6 +576,9 @@ class hr_job(osv.osv):
             'hr.applicant', self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        context['mail_create_nolog'] = True
         alias_context = dict(context, alias_model_name='hr.applicant', alias_parent_model_name=self._name)
         job_id = super(hr_job, self).create(cr, uid, vals, context=alias_context)
         job = self.browse(cr, uid, job_id, context=context)
@@ -600,5 +618,5 @@ class applicant_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
-
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

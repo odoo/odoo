@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -135,8 +135,17 @@ class hr_employee(osv.Model):
 
 class hr_evaluation(osv.Model):
     _name = "hr_evaluation.evaluation"
-    _inherit = "mail.thread"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Employee Appraisal"
+    _rec_name = 'employee_id'
+
+    _track = {
+        'state': {
+            'hr_evaluation.mt_appraisal_started': lambda self, cr, uid, obj, ctx=None: obj.state == 'wait',
+            'hr_evaluation.mt_appraisal_done': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+        },
+    }
+
     _columns = {
         'date': fields.date("Appraisal Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
@@ -152,12 +161,12 @@ class hr_evaluation(osv.Model):
         'survey_request_ids': fields.one2many('hr.evaluation.interview', 'evaluation_id', 'Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
-            ('draft', 'New'),
-            ('cancel', 'Cancelled'),
-            ('wait', 'Plan In Progress'),
-            ('progress', 'Waiting Appreciation'),
-            ('done', 'Done'),
-        ], 'Status', required=True, readonly=True),
+            ('draft','New'),
+            ('cancel','Cancelled'),
+            ('wait','Plan In Progress'),
+            ('progress','Waiting Appreciation'),
+            ('done','Done'),
+        ], 'Status', required=True, readonly=True, track_visibility='onchange'),
         'date_close': fields.date('Ending Date', select=True),
     }
     _defaults = {
@@ -279,9 +288,17 @@ class hr_evaluation(osv.Model):
 
 class hr_evaluation_interview(osv.Model):
     _name = 'hr.evaluation.interview'
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _rec_name = 'user_to_review_id'
     _description = 'Appraisal Interview'
+
+    _track = {
+        'state': {
+            'hr_evaluation.mt_interview_done': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+            'hr_evaluation.mt_interview_request': lambda self, cr, uid, obj, ctx=None: obj.state == 'waiting_answer',
+        },
+    }
+
     _columns = {
         'request_id': fields.many2one('survey.user_input', 'Survey Request', ondelete='cascade', readonly=True),
         'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Appraisal Plan', required=True),
@@ -336,6 +353,8 @@ class hr_evaluation_interview(osv.Model):
         request_obj = self.pool.get('survey.user_input')
         for interview in self.browse(cr, uid, ids, context=context):
             request_obj.action_survey_resent(cr, uid, [interview.id], context=context)
+            if interview.user_id:
+                self.message_subscribe_users(cr, uid, [interview.id], user_ids=[interview.user_id.id])
             self.write(cr, uid, interview.id, {'state': 'waiting_answer'}, context=context)
         return True
 
