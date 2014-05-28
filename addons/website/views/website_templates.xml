@@ -444,17 +444,7 @@
 
 <template id="backend_integration" inherit_id="website.layout" groups="base.group_user">
     <xpath expr="//body/div['id=wrawrap']" position="before">
-        <style type="text/css">
-            <![CDATA[
-            .navbar-nav > li > a {
-                padding: 4px 12px 4px 12px !important;
-            }
-            .navbar {
-                min-height:32px !important;
-            }
-            ]]>
-        </style>
-        <nav class="navbar navbar-inverse" role="navigation">
+        <nav id="backend_menu" class="navbar navbar-inverse" role="navigation">
             <t t-call="web.menu"/>
         </nav>
     </xpath>
