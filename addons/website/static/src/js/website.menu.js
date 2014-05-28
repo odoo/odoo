@@ -4,6 +4,22 @@
     var website = openerp.website;
     var _t = openerp._t;
 
+    website.Menu =  openerp.Widget.extend({
+        start: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+
+            if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo(this.$el);
+            if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo(this.$el);
+        },
+    });
+
+    website.ready().done(function () {
+        var self = this;
+        self.menu = new website.Menu(self);
+        self.menu.setElement($('.nav.navbar-nav.navbar-left'));
+        self.menu.start();
+    });
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */
     website.EditorBar = openerp.Widget.extend({
@@ -37,8 +53,6 @@
             if (website.MobilePreview) this.$menu.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
             if (website.seo) this.$menu.append(openerp.qweb.render('website.editorbar.menu.promote'));
             if (website.EditorBarContent) new website.EditorBarContent(this).appendTo(this.$menu);
-            if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo(this.$menu);
-            if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo(this.$menu);
 
             // end
 

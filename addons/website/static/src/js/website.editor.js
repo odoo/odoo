@@ -433,7 +433,7 @@
     website.EditorBarHelp = openerp.Widget.extend({
         template: 'website.editorbar.menu.help',
         events: {
-            'click a.dropdown-toggle': 'load_menu',
+            'mousedown a.dropdown-toggle': 'load_menu',
         },
         load_menu: function () {
         }
@@ -442,7 +442,7 @@
     website.EditorBarCustomize = openerp.Widget.extend({
         template: 'website.editorbar.menu.customize',
         events: {
-            'click a.dropdown-toggle': 'load_menu',
+            'mousedown a.dropdown-toggle': 'load_menu',
             'click ul a[data-action!=ace]': 'do_customize',
         },
         start: function() {
