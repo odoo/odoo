@@ -858,8 +858,20 @@ class product_product(osv.osv):
             product.product_tmpl_id.write({'image': image}, context=context)
         return res
 
+    def _get_price_extra(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for product in self.browse(cr, uid, ids, context=context):
+            price_extra = 0.0
+            for variant_id in product.variant_ids:
+                for price_id in variant_id.price_ids:
+                    if price_id.product_tmpl_id.id == product.product_tmpl_id.id:
+                        price_extra += price_id.price_extra
+            result[product.id] = price_extra
+        return result
+
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Sum of Variant Price Extra'),
         'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
