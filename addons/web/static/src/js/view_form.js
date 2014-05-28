@@ -2596,6 +2596,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         this.$('.select_records').on('click', self.on_click);
     },
     on_click: function(ev) {
+        event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
         this.pop = new instance.web.form.SelectCreatePopup(this);
@@ -2614,15 +2615,14 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
                 });
             }
             else {
-                var domain = ["id", "in", element_ids];
+                var domain = [["id", "in", element_ids]];
                 var domain_done = $.Deferred().resolve(domain);
             }
             $.when(domain_done).then(function (domain) {
                 var domain = self.pop.dataset.domain.concat(domain || []);
-                self.set_value(JSON.stringify(domain))
+                self.set_value(domain);
             });
         });
-        event.preventDefault();
     },
 });
 
@@ -3394,6 +3394,12 @@ instance.web.form.CompletionFieldMixin = {
                     classname: 'oe_m2o_dropdown_option'
                 });
             }
+            else if (values.length == 0)
+            	values.push({
+            		label: _t("No results to show..."),
+            		action: function() {},
+            		classname: 'oe_m2o_dropdown_option'
+            	});
 
             return values;
         });
@@ -4457,7 +4463,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             else
                 return $.when();
         }).done(function () {
-            if (!self.o2m.options.reload_on_button) {
+            var ds = self.o2m.dataset;
+            var cached_records = _.any([ds.to_create, ds.to_delete, ds.to_write], function(value) {
+                return value.length;
+            });
+            if (!self.o2m.options.reload_on_button && !cached_records) {
                 self.handle_button(name, id, callback);
             }else {
                 self.handle_button(name, id, function(){

@@ -97,7 +97,7 @@
             var viewId = $(document.documentElement).data('view-xmlid');
             openerp.jsonRpc('/website/customize_template_get', 'call', {
                 'xml_id': viewId,
-                'optional': false,
+                'full': true,
             }).then(function (views) {
                 self.loadViews.call(self, views);
                 self.open.call(self);
