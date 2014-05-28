@@ -620,7 +620,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>            
             <field name="type">normal</field>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
             <field name="bom_id" ref="mrp_bom_11"/>
         </record>
         <record id="mrp_bom_line_33" model="mrp.bom.line">
@@ -629,7 +629,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
             <field name="type">normal</field>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
             <field name="bom_id" ref="mrp_bom_11"/>
         </record>
         <record id="mrp_bom_line_34" model="mrp.bom.line">

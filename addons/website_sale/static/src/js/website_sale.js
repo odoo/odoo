@@ -64,7 +64,7 @@ $(document).ready(function () {
     });
 
     var $form_var = $('form.js_add_cart_variants');
-    var variant_ids = $form_var.data("variant_ids");
+    var variant_ids = $form_var.data("attribute_value_ids");
     $form_var.on('change', 'input, select', function (ev) {
         var values = [];
         $form_var.find("label").removeClass("text-muted css_not_available");

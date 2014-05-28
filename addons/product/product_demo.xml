@@ -175,22 +175,22 @@ HDD SH-1</field>
 Dual-core A5 with quad-core graphics
 FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="default_code">A2323</field>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_3')])]"/>
         </record>
         <record id="product_product_4b" model="product.product">
             <field name="default_code">A2324</field>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_4')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1'), ref('product.product_attribute_value_4')])]"/>
         </record>
         <record id="product_product_4c" model="product.product">
             <field name="default_code">A2325</field>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_3')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_3')])]"/>
         </record>
         <record id="product_product_4d" model="product.product">
             <field name="default_code">A2326</field>
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_4')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2'), ref('product.product_attribute_value_4')])]"/>
         </record>
 
         <record id="product_attribute_line_1" model="product.attribute.line">
@@ -210,7 +210,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_product_4_product_template" model="product.template">
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
+            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
         </record>
         
         <record id="product_attribute_price_1" model="product.attribute.price">
@@ -301,12 +301,12 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="default_code">A6678</field>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
         </record>
         <record id="product_product_11b" model="product.product">
             <field name="default_code">A6679</field>
             <field name="product_tmpl_id" ref="product_product_11_product_template"/>
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
+            <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
         </record>
 
         <record id="product_attribute_line_4" model="product.attribute.line">
@@ -316,7 +316,7 @@ FaceTime HD Camera, 1.2 MP Photos</field>
         </record>
 
         <record id="product_product_11_product_template" model="product.template">
-            <field name="variant_ids" eval="[(6,0,[ref('product.product_attribute_line_4')])]"/>
+            <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_4')])]"/>
         </record>
         
         <record id="product_attribute_price_2" model="product.attribute.price">

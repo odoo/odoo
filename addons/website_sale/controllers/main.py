@@ -136,11 +136,11 @@ class website_sale(http.Controller):
                 elif value[0] == attrib:
                     ids.append(value[1])
                 else:
-                    domain += [('variant_ids.value_ids', 'in', ids)]
+                    domain += [('attribute_line_ids.value_ids', 'in', ids)]
                     attrib = value[0]
                     ids = [value[1]]
             if attrib:
-                domain += [('variant_ids.value_ids', 'in', ids)]
+                domain += [('attribute_line_ids.value_ids', 'in', ids)]
 
         attrib_set = set([v[1] for v in attrib_values])
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_set)

@@ -115,7 +115,7 @@ class product_template(osv.Model):
         result = dict.fromkeys(ids, [])
         for obj in self.browse(cr, uid, ids, context=context):
             for p in obj.product_variant_ids:
-                result[obj.id].append([p.id, map(int,p.variant_ids), p.price])
+                result[obj.id].append([p.id, map(int,p.attribute_value_ids), p.price])
         return result
 
     _columns = {

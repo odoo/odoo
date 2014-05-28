@@ -548,7 +548,7 @@ class product_template(osv.osv):
         'color': fields.integer('Color Index'),
         'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
 
-        'variant_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Variants'),
+        'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Variants'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
         'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='Product Variant Number'),
 
@@ -623,7 +623,7 @@ class product_template(osv.osv):
 
             # list of values combination
             all_variants = [[]]
-            for variant_id in tmpl_id.variant_ids:
+            for variant_id in tmpl_id.attribute_line_ids:
                 if len(variant_id.value_ids) > 1:
                     temp_variants = []
                     for value_id in variant_id.value_ids:
@@ -636,7 +636,7 @@ class product_template(osv.osv):
             variants_active_ids = []
             variants_inactive = []
             for product_id in tmpl_id.product_variant_ids:
-                variants = map(int,product_id.variant_ids)
+                variants = map(int,product_id.attribute_value_ids)
                 if variants in all_variants:
                     variants_active_ids.append(product_id.id)
                     all_variants.pop(all_variants.index(variants))
@@ -651,7 +651,7 @@ class product_template(osv.osv):
             for variant_ids in all_variants:
                 values = {
                     'product_tmpl_id': tmpl_id.id,
-                    'variant_ids': [(6, 0, variant_ids)]
+                    'attribute_value_ids': [(6, 0, variant_ids)]
                 }
                 id = product_obj.create(cr, uid, values, context=ctx)
                 variants_active_ids.append(id)
@@ -688,7 +688,7 @@ class product_template(osv.osv):
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
         res = super(product_template, self).write(cr, uid, ids, vals, context=context)
-        if 'variant_ids' in vals or vals.get('active'):
+        if 'attribute_line_ids' in vals or vals.get('active'):
             self.create_variant_ids(cr, uid, ids, context=context)
         if 'active' in vals and not vals.get('active'):
             ctx = context and context.copy() or {}
@@ -800,7 +800,7 @@ class product_product(osv.osv):
             else:
                 res[product.id] = product.list_price
             price_extra = 0.0
-            for variant_id in product.variant_ids:
+            for variant_id in product.attribute_value_ids:
                 price_extra += variant_id.price_extra
             res[product.id] =  (res[product.id] or 0.0) + price_extra
         return res
@@ -862,7 +862,7 @@ class product_product(osv.osv):
         result = dict.fromkeys(ids, False)
         for product in self.browse(cr, uid, ids, context=context):
             price_extra = 0.0
-            for variant_id in product.variant_ids:
+            for variant_id in product.attribute_value_ids:
                 for price_id in variant_id.price_ids:
                     if price_id.product_tmpl_id.id == product.product_tmpl_id.id:
                         price_extra += price_id.price_extra
@@ -884,7 +884,7 @@ class product_product(osv.osv):
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
-        'variant_ids': fields.many2many('product.attribute.value',  id1='prod_id', id2='att_id', string='Variants', readonly=True),
+        'attribute_value_ids': fields.many2many('product.attribute.value',  id1='prod_id', id2='att_id', string='Variants', readonly=True),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",
@@ -967,7 +967,7 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            variant = ", ".join([v.name for v in product.variant_ids])
+            variant = ", ".join([v.name for v in product.attribute_value_ids])
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_id:
