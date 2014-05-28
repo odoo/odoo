@@ -129,3 +129,9 @@ class MailGroup(http.Controller):
             'replies_per_page': self._replies_per_page,
         }
         return request.registry['ir.ui.view'].render(request.cr, request.uid, 'website_mail_group.messages_short', values, engine='ir.qweb', context=request.context)
+
+    @http.route("/groups/<model('mail.group'):group>/get_alias_info", type='json', auth='public', website=True)
+    def get_alias_info(self, group, **post):
+        return {
+            'alias_name': group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain and '%s@%s' % (group.alias_id.alias_name, group.alias_id.alias_domain) or False
+        }

@@ -65,7 +65,7 @@ class res_partner(osv.osv):
         'date_review_next' : fields.date('Next Partner Review'),
         # customer implementation
         'assigned_partner_id': fields.many2one(
-            'res.partner', 'Implementedy by',
+            'res.partner', 'Implemented by',
         ),
         'implemented_partner_ids': fields.one2many(
             'res.partner', 'assigned_partner_id',
