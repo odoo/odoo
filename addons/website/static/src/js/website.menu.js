@@ -5,12 +5,26 @@
     var _t = openerp._t;
 
     website.Menu =  openerp.Widget.extend({
+        events: {
+            'click a[data-action=show-mobile-preview]': 'mobilePreview',
+            'click a[data-action=promote-current-page]': 'launchSeo',
+        },
+        mobilePreview: function () {
+            (new website.MobilePreview()).appendTo($(document.body));
+        },
+        launchSeo: function () {
+            (new website.seo.Configurator(this)).appendTo($(document.body));
+        },
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
 
             if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo(this.$el);
             if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo(this.$el);
+            if (website.MobilePreview) this.$el.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
+            if (website.seo) this.$el.append(openerp.qweb.render('website.editorbar.menu.promote'));
+            if (website.EditorBarContent) new website.EditorBarContent(this).appendTo(this.$el);
+            this.$el.append(openerp.qweb.render('website.editorbar.edit'));
         },
     });
 
@@ -25,56 +39,42 @@
     website.EditorBar = openerp.Widget.extend({
         template: 'website.editorbar',
         events: {
-            'click button[data-action=edit]': 'edit',
             'click button[data-action=save]': 'save',
             'click a[data-action=cancel]': 'cancel',
-            'click a[data-action=show-mobile-preview]': 'mobilePreview',
-            'click a[data-action=promote-current-page]': 'launchSeo',
         },
-        container: 'body',
-        start: function() {
-            // remove placeholder editor bar
-            var fakebar = document.getElementById('website-top-navbar-placeholder');
-            if (fakebar) {
-                fakebar.parentNode.removeChild(fakebar);
-            }
 
+        start: function() {
             var self = this;
             this.saving_mutex = new openerp.Mutex();
 
             this.$('#website-top-edit').hide();
-            this.$('#website-top-view').show();
+            this.$el.parents().find('#website-top-view').show();
 
-            $('.dropdown-toggle').dropdown();
-
-            // display menu
-
-            this.$menu = this.$("#website-top-view-menu");
-            if (website.MobilePreview) this.$menu.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
-            if (website.seo) this.$menu.append(openerp.qweb.render('website.editorbar.menu.promote'));
-            if (website.EditorBarContent) new website.EditorBarContent(this).appendTo(this.$menu);
-
-            // end
+            // $('.dropdown-toggle').dropdown();
 
             this.$buttons = {
-                edit: this.$('button[data-action=edit]'),
+                edit: this.$el.parents().find('button[data-action=edit]'),
                 save: this.$('button[data-action=save]'),
                 cancel: this.$('button[data-action=cancel]'),
             };
+
+            this.$buttons.edit.click(function(ev) {
+                self.edit();
+            });
 
             this.rte = new website.RTE(this);
             this.rte.on('change', this, this.proxy('rte_changed'));
             this.rte.on('rte:ready', this, function () {
                 self.setup_hover_buttons();
                 self.trigger('rte:ready');
-                self.check_height();
+                // self.check_height();
             });
 
             $(window).on('resize', _.debounce(this.check_height.bind(this), 50));
             this.check_height();
 
             if (website.is_editable_button) {
-                this.$("button[data-action=edit]").removeClass("hidden");
+                this.$buttons.edit.removeClass("hidden");
             }
 
             return $.when(
@@ -84,22 +84,17 @@
                 self.check_height();
             });
         },
-        mobilePreview: function () {
-            (new website.MobilePreview()).appendTo($(document.body));
-        },
-        launchSeo: function () {
-            (new website.seo.Configurator(this)).appendTo($(document.body));
-        },
         check_height: function () {
-            var editor_height = this.$el.outerHeight();
-            if (this.get('height') != editor_height) {
-                $(document.body).css('padding-top', editor_height);
-                this.set('height', editor_height);
-            }
+            // var editor_height = this.$el.outerHeight();
+            // if (this.get('height') != editor_height) {
+            //     $(document.body).css('padding-top', editor_height);
+            //     this.set('height', editor_height);
+            // }
         },
         edit: function () {
             this.$buttons.edit.prop('disabled', true);
             this.$('#website-top-view').hide();
+            this.$el.show();
             this.$('#website-top-edit').show();
             $('.css_non_editable_mode_hidden').removeClass("css_non_editable_mode_hidden");
 
@@ -112,7 +107,7 @@
         save: function () {
             var self = this;
 
-            observer.disconnect();
+            website.editor.observer.disconnect();
             var editor = this.rte.editor;
             var root = editor.element && editor.element.$;
             editor.destroy();
@@ -270,6 +265,19 @@
             function is_icons_widget(element) {
                 var w = editor.widgets.getByElement(element);
                 return w && w.name === 'icons';
+            }
+
+            // TODO sle: duplicate from website.editor.js
+            /**
+             * Checks that both the element's content *and the element itself* are
+             * editable: an editing host is considered non-editable because its content
+             * is editable but its attributes should not be considered editable
+             */
+            function is_editable_node(element) {
+                return !(element.data('oe-model') === 'ir.ui.view'
+                      || element.data('cke-realelement')
+                      || (is_editing_host(element) && element.getAttribute('attributeEditable') !== 'true')
+                      || element.isReadOnly());
             }
 
             // previous is the state of the button-trigger: it's the

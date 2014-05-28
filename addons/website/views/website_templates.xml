@@ -230,18 +230,6 @@
 </template>
 
 <template id="editor_head" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
-    <xpath expr="//body" position="attributes">
-        <attribute name="style">padding-top: 51px;</attribute>
-    </xpath>
-    <xpath expr="//body" position="inside">
-        <div id="website-top-navbar-placeholder" class="navbar navbar-inverse navbar-fixed-top hidden-xs">
-            <div class="navbar-header">
-                <form class="navbar-form navbar-left">
-                    <button type="button" class="btn btn-primary">Edit</button>
-                </form>
-            </div>
-        </div>
-    </xpath>
     <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
         <t t-call-assets="website.assets_editor"/>
     </xpath>

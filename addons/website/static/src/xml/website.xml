@@ -3,27 +3,6 @@
 -->
 <templates id="template" xml:space="preserve">
 
-    <t t-name="website.editorbar">
-        <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top">
-            <div id="website-top-view">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-edit-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <form class="navbar-form navbar-left">
-                        <button type="button" data-action="edit" class="btn btn-primary hidden">Edit</button>
-                    </form>
-                </div>
-                <div class="collapse navbar-collapse navbar-edit-collapse">
-                    <ul id="website-top-view-menu" class="nav navbar-nav navbar-right">
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </t>
     <t t-name="website.editorbar.menu.mobile_preview">
         <li><a data-action="show-mobile-preview" href="#"><span title="Mobile preview"><i class="fa fa-mobile"/></span></a></li>
     </t>

@@ -12,7 +12,7 @@
             website.ready().then(website.init_editor);
         } else {
             // remove padding of fake editor bar
-            document.body.style.padding = 0;
+            // document.body.style.padding = 0;
         }
 
         $(document).on('click', 'a.js_link2post', function (ev) {
@@ -684,7 +684,7 @@
                         node.contentEditable = true;
                     }
 
-                    observer.observe(node, OBSERVER_CONFIG);
+                    website.editor.observer.observe(node, OBSERVER_CONFIG);
                     $node.one('content_changed', function () {
                         $node.addClass('oe_dirty');
                         self.trigger('change');
@@ -1722,7 +1722,7 @@
         subtree: true,
         attributeOldValue: true,
     };
-    var observer = new website.Observer(function (mutations) {
+    website.editor.observer = new website.Observer(function (mutations) {
         // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
         //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
         //       will not mark dirty on attribute changes (@class, img/@src,
