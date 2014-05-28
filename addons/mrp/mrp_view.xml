@@ -27,10 +27,11 @@
             <field name="model">mrp.property.group</field>
             <field name="arch" type="xml">
                 <form string="Properties categories" version="7.0">
-                    <label for="name"/>
-                    <field name="name"/>
-                    <label for="description"/>
-                    <field name="description"/>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -84,8 +85,8 @@
                         <field name="group_id"/>
                         <field name="composition"/>
                     </group>
-                    <label for="description"/>
-                    <field name="description"/>
+                    <separator string="Description"/>
+                    <field name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -198,8 +199,8 @@
                                     <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                 </group>
                             </group>
-                            <label for="note"/>
-                            <field name="note"/>
+                            <separator string="Description"/>
+                            <field name="note" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -347,7 +348,7 @@
                 <form string="Bill of Material" version="7.0">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" class="oe_inline"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="onchange_product_id(product_id, name, product_qty, context)"/>
@@ -380,7 +381,7 @@
                         <page string="Components">
                             <field name="bom_lines" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+                                    <field name="product_id" context="{'default_supply_method':'produce'}" on_change="onchange_product_id(product_id, name)"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="name" invisible="1"/>
