@@ -218,7 +218,7 @@ class account_asset_asset(osv.osv):
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
                 company_currency = asset.company_id.currency_id.id
                 current_currency = asset.currency_id.id
-                amount = currency_obj.round(cr, uid, asset.currency_id, amount)
+                amount = currency_obj.round(cr, uid, asset.currency_id, amount, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -306,7 +306,7 @@ class account_asset_asset(osv.osv):
         'entry_count': fields.function(_entry_count, string='# Asset Entries', type='integer'),
         'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
-        'value': fields.float('Value', required=True, readonly=True, digits_compute=dp.get_precision('Account'), states={'draft':[('readonly',False)]}),
+        'value': fields.float('Gross Value', required=True, readonly=True, digits_compute=dp.get_precision('Account'), states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'note': fields.text('Note'),
@@ -499,9 +499,9 @@ class account_asset_depreciation_line(osv.osv):
             reference = line.name
             seq_num = obj_sequence.next_by_id(cr, uid, line.asset_id.category_id.journal_id.sequence_id.id, context)
             move_vals = {
-                'name': seq_num,
+                'name': asset_name,
                 'date': depreciation_date,
-                'ref': seq_num,
+                'ref': reference,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
@@ -517,7 +517,7 @@ class account_asset_depreciation_line(osv.osv):
                 credit_acount = line.asset_id.category_id.account_income_recognition_id.id
             move_line_obj.create(cr, uid, {
                 'name': asset_name or reference,
-                'ref': seq_num,
+                'ref': reference,
                 'move_id': move_id,
                 'account_id': credit_acount,
                 'debit': 0.0,
@@ -532,7 +532,7 @@ class account_asset_depreciation_line(osv.osv):
             })
             move_line_obj.create(cr, uid, {
                 'name': asset_name or reference,
-                'ref': seq_num,
+                'ref': reference,
                 'move_id': move_id,
                 'account_id': debit_account,
                 'credit': 0.0,
@@ -549,7 +549,7 @@ class account_asset_depreciation_line(osv.osv):
             created_move_ids.append(move_id)
             asset_ids.append(line.asset_id.id)
             partner_name = line.asset_id.partner_id.name
-            currency_name = line.asset_id.company_id.currency_id.name
+            currency_name = line.asset_id.currency_id.name
             msg_data = ['Depreciation','Supplier'] if categ_type == 'purchase' else ['Installment','Customer']
             msg=_("%s line posted. <br/> <b>&nbsp;&nbsp;&nbsp;"
                 "&bull; Currency:</b> %s <br/> <b>&nbsp;&nbsp;&nbsp;"

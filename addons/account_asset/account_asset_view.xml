@@ -161,7 +161,7 @@
                         </group>
                         <group>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="value" string="Sale Value" widget="monetary" options="{'currency_field': 'currency_id'}" help="Sale value of revenue recognition"/>
+                            <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" help="Sale value of revenue recognition"/>
                             <field name="partner_id" string="Customer"/>
                             <field name="invoice_id" string="Sale Invoice" domain="[('invoice_line.asset_category_id.type','=','sales')]"/>
                         </group>
@@ -231,7 +231,7 @@
                 <field name="category_id" string="Category"/>
                 <field name="date" string="Sale Date"/>
                 <field name="partner_id" string="Customer"/>
-                <field name="value" string="Sale Value"/>
+                <field name="value"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
@@ -279,7 +279,7 @@
                 <field name="category_id" string="Category"/>
                 <field name="code"/>
                 <field name="date" string="Sales Date"/>
-                <field name="value" string="Sales value"/>
+                <field name="value"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
@@ -323,7 +323,7 @@
                         </group>
                         <group>
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(value, salvage_value)" string="Gross Value" help="Gross value of asset"/>
+                            <field name="value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(value, salvage_value)" help="Gross value of asset"/>
                             <field name="salvage_value" widget="monetary" options="{'currency_field': 'currency_id'}" on_change="onchange_purchase_salvage_value(value, salvage_value)"/>
                             <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="partner_id" string="Supplier"/>
@@ -406,7 +406,7 @@
                 <field name="category_id" string="Category"/>
                 <field name="date" string="Purchase Date"/>
                 <field name="partner_id" string="Supplier"/>
-                <field name="value" string="Gross Value"/>
+                <field name="value"/>
                 <field name="value_residual"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -436,7 +436,7 @@
                 <field name="code"/>
                 <field name="category_id" string="Asset Category"/>
                 <field name="date" string="Purchase Date"/>
-                <field name="value" string="Gross Value"/>
+                <field name="value"/>
                 <field name="value_residual"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
