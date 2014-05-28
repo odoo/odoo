@@ -67,7 +67,7 @@ class Deploy(Command):
     def run(self, args):
         parser = argparse.ArgumentParser(
             prog="%s deploy" % sys.argv[0].split(os.path.sep)[-1],
-            description='Deploy a module on an Odoo server.'
+            description=self.__doc__
         )
         parser.add_argument('path', help="Path of the module to deploy")
         parser.add_argument('url', nargs='?', help='Url of the server (default=http://localhost:8069)', default="http://localhost:8069")
