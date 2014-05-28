@@ -930,6 +930,8 @@ def start(preload=None, stop=False):
         autoreload = AutoReload(server)
         autoreload.run()
 
+    openerp.http.load_root()
+
     rc = server.run(preload, stop)
 
     # like the legend of the phoenix, all ends with beginnings

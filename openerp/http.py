@@ -1374,7 +1374,12 @@ class CommonController(Controller):
         return nsession.sid
 
 # register main wsgi handler
-root = Root()
-openerp.service.wsgi_server.register_wsgi_handler(root)
+root = None
+
+
+def load_root():
+    global root
+    root = Root()
+    openerp.service.wsgi_server.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:

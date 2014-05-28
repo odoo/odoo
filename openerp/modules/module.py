@@ -43,7 +43,7 @@ MANIFEST = '__openerp__.py'
 _logger = logging.getLogger(__name__)
 
 # addons path as a list
-ad_paths = [tools.config.addons_data_dir]
+ad_paths = []
 hooked = False
 
 # Modules already loaded
