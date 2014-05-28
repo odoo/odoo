@@ -34,10 +34,10 @@ class account_coda_import(osv.osv_memory):
     _name = 'account.coda.import'
     _description = 'Import CODA File'
     _columns = {
-        'coda_data': fields.binary('CODA File', required=True),
+        'coda_data': fields.binary('CODA File', required=True, help="Select here the CODA file that bank has sent."),
         'coda_fname': fields.char('CODA Filename', size=128, required=True),
         'note': fields.text('Log'),
-        'temporary_account_id': fields.many2one('account.account', 'Temporary Account', domain="[('type','!=','view')]", help="It acts as a temporary account for general amount", required=True),
+        'temporary_account_id': fields.many2one('account.account', 'Temporary Account', domain="[('type','!=','view')]", help="It acts as a temporary account for general amount.", required=True),
     }
 
     def _get_default_tmp_account(self, cr, uid, context):

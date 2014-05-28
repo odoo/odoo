@@ -59,7 +59,7 @@ class account_config_settings(osv.osv_memory):
         'purchase_tax': fields.many2one("account.tax.template", "Default purchase tax"),
         'sale_tax_rate': fields.float('Sales tax (%)'),
         'purchase_tax_rate': fields.float('Purchase tax (%)'),
-        'complete_tax_set': fields.boolean('Complete set of taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
+        'complete_tax_set': fields.boolean('Complete set of taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This list choice assumes that the set of tax defined on this template is complete.'),
 
         'has_fiscal_year': fields.boolean('Company has a fiscal year'),
         'date_start': fields.date('Start date', required=True),

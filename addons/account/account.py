@@ -707,7 +707,7 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance'),
+        'with_last_closing_balance' : fields.boolean('Opening With Last Closing Balance', help="Last closing balance will become an opening balance for new entry."),
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Checks'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
@@ -1874,7 +1874,7 @@ class account_tax(osv.osv):
         'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For taxes of type percentage, enter % ratio between 0-1."),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the tax without removing it."),
         'type': fields.selection( [('percent','Percentage'), ('fixed','Fixed Amount'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True,
-            help="The computation method for the tax amount."),
+            help="The Computation method for the tax amount."),
         'applicable_type': fields.selection( [('true','Always'), ('code','Given by Python Code')], 'Applicability', required=True,
             help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
@@ -1894,15 +1894,15 @@ class account_tax(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code', 'Account Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code', 'Account Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'base_sign': fields.float('Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
+        'tax_sign': fields.float('Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1.", digits_compute=get_precision_tax()),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received.", digits_compute=get_precision_tax()),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code'),
@@ -2514,7 +2514,7 @@ class account_account_template(osv.osv):
             help="These types are defined according to your country. The type contains more information "\
             "about the account and its specificities."),
         'financial_report_ids': fields.many2many('account.financial.report', 'account_template_financial_report', 'account_template_id', 'report_line_id', 'Financial Reports'),
-        'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
+        'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account(normally receivables and payables)."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
         'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade', domain=[('type','=','view')]),
@@ -2751,7 +2751,7 @@ class account_chart_template(osv.osv):
         'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
-        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This last choice assumes that the set of tax defined on this template is complete'),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This list choice assumes that the set of tax defined on this template is complete.'),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
@@ -2799,15 +2799,15 @@ class account_tax_template(osv.osv):
         #
         'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the tax declaration."),
         'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the tax declaration."),
-        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'base_sign': fields.float('Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
+        'tax_sign': fields.float('Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
 
         # Same fields for refund invoices
 
         'ref_base_code_id': fields.many2one('account.tax.code.template', 'Refund Base Code', help="Use this code for the tax declaration."),
         'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Refund Tax Code', help="Use this code for the tax declaration."),
-        'ref_base_sign': fields.float('Refund Base Code Sign', help="Usually 1 or -1."),
-        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Usually 1 or -1."),
+        'ref_base_sign': fields.float('Refund Base Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
+        'ref_tax_sign': fields.float('Refund Tax Code Sign', help="Input Tax implied when we purchase something and Output Tax implied when we sell something. So put -1 when we are configuring input tax and 1 when output tax. Helps to calculate how much tax we paid/received."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
         'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
@@ -3003,7 +3003,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sales Tax(%)'),
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
-        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
+        'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list of taxes. This list choice assumes that the set of tax defined on this template is complete.'),
     }
 
 

@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 TAX_CODE_COLUMNS = {
                     'domain':fields.char('Domain', size=32, 
                                          help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-                    'tax_discount': fields.boolean('Discount this Tax in Prince', 
+                    'tax_discount': fields.boolean('Discount this Tax in Price', 
                                                    help="Mark it for (ICMS, PIS, COFINS and others taxes included)."),
                     }
 
@@ -102,7 +102,7 @@ class account_tax_template(osv.osv):
     _inherit = 'account.tax.template'
     
     _columns = {
-               'tax_discount': fields.boolean('Discount this Tax in Prince', 
+               'tax_discount': fields.boolean('Discount this Tax in Price', 
                                               help="Mark it for (ICMS, PIS e etc.)."),
                'base_reduction': fields.float('Redution', required=True, 
                                               digits_compute=get_precision_tax(), 
@@ -116,7 +116,7 @@ class account_tax_template(osv.osv):
                                          ('code','Python Code'), 
                                          ('balance','Balance'), 
                                          ('quantity','Quantity')], 'Tax Type', required=True,
-                                        help="The computation method for the tax amount."),
+                                        help="The Computation method for the tax amount."),
                }
     _defaults = TAX_DEFAULTS
     
@@ -168,7 +168,7 @@ class account_tax(osv.osv):
     _inherit = 'account.tax'
     
     _columns = {
-               'tax_discount': fields.boolean('Discount this Tax in Prince', 
+               'tax_discount': fields.boolean('Discount this Tax in Price', 
                                               help="Mark it for (ICMS, PIS e etc.)."),
                'base_reduction': fields.float('Redution', required=True, 
                                               digits_compute=get_precision_tax(), 
@@ -182,7 +182,7 @@ class account_tax(osv.osv):
                                          ('code','Python Code'), 
                                          ('balance','Balance'), 
                                          ('quantity','Quantity')], 'Tax Type', required=True,
-                                        help="The computation method for the tax amount."),
+                                        help="The Computation method for the tax amount."),
                }
     _defaults = TAX_DEFAULTS
     
