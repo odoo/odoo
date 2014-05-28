@@ -484,6 +484,7 @@ class account_asset_depreciation_line(osv.osv):
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
+        obj_sequence = self.pool.get('ir.sequence')
         created_move_ids = []
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
@@ -496,7 +497,6 @@ class account_asset_depreciation_line(osv.osv):
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' or line.asset_id.category_id.journal_id.type == 'sale' and 1) or -1
             asset_name = line.asset_id.name
             reference = line.name
-            obj_sequence = self.pool.get('ir.sequence')
             seq_num = obj_sequence.next_by_id(cr, uid, line.asset_id.category_id.journal_id.sequence_id.id, context)
             move_vals = {
                 'name': seq_num,
@@ -528,7 +528,6 @@ class account_asset_depreciation_line(osv.osv):
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sales' else False,
-                'date': depreciation_date,
                 'asset_id': line.asset_id.id if categ_type == 'sales' else False
             })
             move_line_obj.create(cr, uid, {
@@ -544,7 +543,6 @@ class account_asset_depreciation_line(osv.osv):
                 'currency_id': company_currency != current_currency and  current_currency or False,
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
-                'date': depreciation_date,
                 'asset_id': line.asset_id.id if categ_type == 'purchase' else False
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
@@ -573,7 +571,7 @@ class account_asset_depreciation_line(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
-            name = 'Depreciation' if record.asset_id.category_id.type == 'purchase' else 'installment'
+            name = 'depreciation' if record.asset_id.category_id.type == 'purchase' else 'installment'
             if record.move_check:
                 raise osv.except_osv(_('Error!'), _("You cannot delete posted %s lines.") % name)
         return super(account_asset_depreciation_line, self).unlink(cr, uid, ids, context=context)
