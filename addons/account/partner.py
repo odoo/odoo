@@ -231,7 +231,7 @@ class res_partner(osv.osv):
             type='many2one',
             relation='account.fiscal.position',
             string="Fiscal Position",
-            help="The fiscal position will determine taxes and accounts used for the partner.",
+            help="The fiscal position will determine taxes and accounts used for the partner. In Sale Invoice - Tax have to be selected automatically based on Dispatch Location and Customer. In some countries VAT is replaced with CST(type of tax) when we sell a product from company home state to other state. This field serves to solve these kind of scenarios.",
         ),
         'property_payment_term': fields.property(
             type='many2one',
