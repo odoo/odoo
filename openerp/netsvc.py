@@ -77,26 +77,22 @@ class PostgreSQLHandler(logging.Handler):
         ct_db = getattr(ct, 'dbname', None)
         ct_uid = getattr(ct, 'uid', None)
         dbname = tools.config['log_db'] or ct_db
-        if dbname:
-            cr = None
-            try:
-                cr = sql_db.db_connect(dbname).cursor()
-                msg = unicode(record.msg)
-                traceback = getattr(record, 'exc_text', '')
-                if traceback:
-                    msg = "%s\n%s" % (msg, traceback)
-                level = logging.getLevelName(record.levelno)
-                val = (ct_uid, ct_uid, 'server', ct_db, record.name, level, msg, record.pathname, record.lineno, record.funcName)
-                cr.execute("""
-                    INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
-                    VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, val )
-                cr.commit()
-            except Exception, e:
-                pass
-            finally:
-                if cr:
-                    cr.close()
+        if not dbname:
+            return
+        with tools.ignore(Exception), sql_db.db_connect(dbname).cursor() as cr:
+            msg = tools.ustr(record.msg)
+            if record.args:
+                msg = msg % record.args
+            traceback = getattr(record, 'exc_text', '')
+            if traceback:
+                msg = "%s\n%s" % (msg, traceback)
+            # we do not use record.levelname because it may have been changed by ColoredFormatter.
+            levelname = logging.getLevelName(record.levelno)
+            val = (ct_uid, ct_uid, 'server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
+            cr.execute("""
+                INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
+                VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, val)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30

@@ -15,6 +15,7 @@ import urllib2
 import urlparse
 import re
 
+import werkzeug.urls
 import werkzeug.utils
 from dateutil import parser
 from lxml import etree, html
@@ -265,10 +266,19 @@ class Image(orm.AbstractModel):
         if options is None: options = {}
         classes = ['img', 'img-responsive'] + options.get('class', '').split()
 
-        return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?model=%s&field=%s&id=%s"/>' % (
+        url_params = {
+            'model': record._model._name,
+            'field': field_name,
+            'id': record.id,
+        }
+        for options_key in ['max_width', 'max_height']:
+            if options.get(options_key):
+                url_params[options_key] = options[options_key]
+
+        return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?%s"/>' % (
             ' '.join(itertools.imap(werkzeug.utils.escape, classes)),
-            record._model._name,
-            field_name, record.id))
+            werkzeug.urls.url_encode(url_params)
+        ))
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
     def from_html(self, cr, uid, model, column, element, context=None):

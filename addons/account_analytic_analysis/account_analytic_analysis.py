@@ -69,7 +69,7 @@ class account_analytic_invoice_line(osv.osv):
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
             if part.lang:
-                context.update({'lang': part.lang})
+                local_context.update({'lang': part.lang})
 
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
@@ -79,7 +79,12 @@ class account_analytic_invoice_line(osv.osv):
             price = res.price
         else:
             price = res.list_price
-        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
+        if not name:
+            name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
+            if res.description_sale:
+                name += '\n'+res.description_sale
+
+        result.update({'name': name or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
 
         res_final = {'value':result}
         if result['uom_id'] != res.uom_id.id:

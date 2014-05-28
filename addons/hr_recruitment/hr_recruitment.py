@@ -114,6 +114,15 @@ class hr_applicant(osv.Model):
                 return int(department_ids[0][0])
         return None
 
+    def _get_default_company_id(self, cr, uid, department_id=None, context=None):
+        company_id = False
+        if department_id:
+            department = self.pool['hr.department'].browse(cr,  uid, department_id, context=context)
+            company_id = department.company_id.id if department and department.company_id else False
+        if not company_id:
+            company_id = self.pool['res.company']._company_default_get(cr, uid, 'hr.applicant', context=context)
+        return company_id            
+
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         access_rights_uid = access_rights_uid or uid
         stage_obj = self.pool.get('hr.recruitment.stage')
@@ -231,7 +240,7 @@ class hr_applicant(osv.Model):
         'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
+        'company_id': lambda s, cr, uid, c: s._get_default_company_id(cr, uid, s._get_default_department_id(cr, uid, c), c),
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }

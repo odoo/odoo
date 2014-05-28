@@ -27,15 +27,14 @@ Miscellaneous tools used by OpenERP.
 
 from functools import wraps
 import cProfile
+from contextlib import contextmanager
 import subprocess
 import logging
 import os
-import pdb
 import socket
 import sys
 import threading
 import time
-import types
 import zipfile
 from collections import defaultdict, Mapping
 from datetime import datetime
@@ -1128,11 +1127,6 @@ class CountingStream(object):
             raise StopIteration()
         return val
 
-def post_mortem(info=None):
-    if info is None: info = sys.exc_info()
-    if config['debug_mode'] and isinstance(info[2], types.TracebackType):
-        pdb.post_mortem(info[2])
-
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
     strip_args = sorted(set(strip_args) | set(['-s', '--save', '-d', '--database', '-u', '--update', '-i', '--init']))
@@ -1216,7 +1210,6 @@ def dumpstacks(sig=None, frame=None):
 
     _logger.info("\n".join(code))
 
-
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -1234,5 +1227,11 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
 
+@contextmanager
+def ignore(*exc):
+    try:
+        yield
+    except exc:
+        pass
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

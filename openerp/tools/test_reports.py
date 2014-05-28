@@ -87,8 +87,7 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
                 if ('[[' in line) or ('[ [' in line):
                     _logger.error("Report %s may have bad expression near: \"%s\".", rname, line[80:])
             # TODO more checks, what else can be a sign of a faulty report?
-    elif res_format == 'foobar':
-        # TODO
+    elif res_format == 'html':
         pass
     else:
         _logger.warning("Report %s produced a \"%s\" chunk, cannot examine it", rname, res_format)
