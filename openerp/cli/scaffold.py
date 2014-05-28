@@ -68,6 +68,8 @@ class Scaffold(Command):
             if os.path.exists(controller_file):
                 die("Controller `%s` already exists !" % controller_file)
             self.add_init_import(module('__init__.py'), 'controllers')
+            # Check if the controller name correspond to a model and expose result to templates
+            args.has_model = self.has_import(module('models', '__init__.py'), controller_module)
             self.add_init_import(module('controllers', '__init__.py'), controller_module)
             self.dump('controllers.jinja2', module('controllers', controller_file), config=args)
 
