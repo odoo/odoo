@@ -31,7 +31,6 @@ class product_template(osv.osv):
             nb = Bom.search_count(cr, uid, [('product_tmpl_id', '=', product_tmpl_id)], context=context)
             res[product_tmpl_id] = {
                 'bom_count': nb,
-                'bom_strct': nb,
             }
         return res
 
@@ -44,7 +43,6 @@ class product_template(osv.osv):
     _columns = {
         "bom_ids": fields.one2many('mrp.bom', 'product_tmpl_id','Bill of Materials'),
         'bom_count': fields.function(_bom_orders_count, string='# Bill of Material', type='integer', multi="_bom_order_count"),
-        'bom_strct': fields.function(_bom_orders_count, string='# Bill of Material Structure', type='integer', multi="_bom_order_count"),
         'mo_count': fields.function(_bom_orders_count_mo, string='# Manufacturing Orders', type='integer'),
     }
     def copy(self, cr, uid, id, default=None, context=None):

@@ -274,7 +274,7 @@ class product_category(osv.osv):
 
 
     _defaults = {
-        'type' : lambda *a : 'normal',
+        'type' : 'normal',
     }
 
     _parent_name = "parent_id"
@@ -372,7 +372,7 @@ class product_attribute_value(osv.osv):
         ('value_company_uniq', 'unique (name,attribute_id)', 'This attribute value already exists !')
     ]
     _defaults = {
-        'price_extra': lambda *a: 0.0,
+        'price_extra': 0.0,
     }
 
 class product_attribute_price(osv.osv):
@@ -410,12 +410,16 @@ class product_template(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
     def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
+        return self.is_product_variant(cr, uid, ids, name, arg, context=context)
+
+    def is_product_variant(self, cr, uid, ids, name, arg, context=None):
         prod = self.pool.get('product.product')
         res = dict.fromkeys(ids, False)
         ctx = dict(context, active_test=True)
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = prod.search(cr, uid, [('product_tmpl_id','=',product.id)], context=ctx, count=True) == 1
         return res
+
 
     def _product_template_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
@@ -713,7 +717,7 @@ class product_template(osv.osv):
         'mes_type': 'fixed',
         'categ_id' : _default_category,
         'type' : 'consu',
-        'active': lambda *a: 1,
+        'active': True,
     }
 
     def _check_uom(self, cursor, user, ids, context=None):
@@ -829,7 +833,7 @@ class product_product(osv.osv):
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
         return res
 
-    def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
+    def is_product_variant(self, cr, uid, ids, name, arg, context=None):
         return dict.fromkeys(ids, True)
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
@@ -854,20 +858,8 @@ class product_product(osv.osv):
             product.product_tmpl_id.write({'image': image}, context=context)
         return res
 
-    def _get_price_extra(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for product in self.browse(cr, uid, ids, context=context):
-            price_extra = 0.0
-            for variant_id in product.variant_ids:
-                for price_id in variant_id.price_ids:
-                    if price_id.product_tmpl_id.id == product.product_tmpl_id.id:
-                        price_extra += price_id.price_extra
-            result[product.id] = price_extra
-        return result
-
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Sum of Variant Price Extra'),
         'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
@@ -875,7 +867,6 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
         'packaging': fields.one2many('product.packaging', 'product_id', 'Packaging', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
@@ -900,7 +891,7 @@ class product_product(osv.osv):
     }
 
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
         'color': 0,
     }
 
@@ -1053,8 +1044,8 @@ class product_product(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        context.update(create_product_product=True)
-        return super(product_product, self).create(cr, uid, vals, context=context)
+        ctx = dict(context or {}, create_product_product=True)
+        return super(product_product, self).create(cr, uid, vals, context=ctx)
 
 
 class product_packaging(osv.osv):
@@ -1103,8 +1094,8 @@ class product_packaging(osv.osv):
         return (res and res[0]) or False
 
     _defaults = {
-        'rows' : lambda *a : 3,
-        'sequence' : lambda *a : 1,
+        'rows' : 3,
+        'sequence' : 1,
         'ul' : _get_1st_ul,
     }
 
@@ -1144,9 +1135,9 @@ class product_supplierinfo(osv.osv):
         'company_id':fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
-        'qty': lambda *a: 0.0,
-        'sequence': lambda *a: 1,
-        'delay': lambda *a: 1,
+        'qty': 0.0,
+        'sequence': 1,
+        'delay': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
     }
     def price_get(self, cr, uid, supplier_ids, product_id, product_qty=1, context=None):
