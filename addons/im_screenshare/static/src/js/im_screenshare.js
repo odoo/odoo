@@ -249,7 +249,7 @@
             if(this.is_recording()){
                 this.stop_record();
                 this.send_record("[]", "finish");
-                this.$('.oe_im_screenshare_button').css('color','Gray');
+                this.$('.oe_im_screenshare_button').css('color','gray');
                 this.$('.oe_im_screenshare_button').css('title','Share your screen');
             }else{
                 openerp.session.rpc("/im_screenshare/start").then(function(uuid){
