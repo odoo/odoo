@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import argparse
+import ast
 import functools
 import keyword
 import os
@@ -59,6 +60,7 @@ class Scaffold(Command):
             self.add_init_import(module('__init__.py'), 'models')
             self.add_init_import(module('models', '__init__.py'), model_module)
             self.dump('models.jinja2', model_file, config=args)
+            self.dump('ir.model.access.jinja2', module('security', 'ir.model.access.csv'), config=args)
 
         if args.controller:
             controller_module = snake(args.controller)
@@ -69,31 +71,29 @@ class Scaffold(Command):
             self.add_init_import(module('controllers', '__init__.py'), controller_module)
             self.dump('controllers.jinja2', module('controllers', controller_file), config=args)
 
-        # self.dump('ir.model.access.jinja2', module('security', 'ir.model.access.csv'), config=args)
-        return
+    def has_import(self, initfile, module):
+        with open(initfile, 'r') as f:
+            for imp in ast.parse(f.read()).body:
+                if isinstance(imp, ast.Import):
+                    if module in [mod.name for mod in imp.names]:
+                        return True
+        return False
 
-    def add_init_import(self, path, module):
-        if not os.path.exists(path):
-            self.dump('__init__.jinja2', path, modules=[module])
-        else:
-            with open(path, "r") as f:
-                lines = f.readlines()
-                # TODO: regex
-                if ('import %s' % module) in lines:
-                    return
-            with open(path, "a") as f:
-                f.write('\nimport %s' % module)
+    def add_init_import(self, initfile, module):
+        if not(os.path.exists(initfile) and self.has_import(initfile, module)):
+            self.dump('__init__.jinja2', initfile, modules=[module])
 
     def dump(self, template, dest, **kwargs):
         outdir = os.path.dirname(dest)
+        kwargs['create'] = not os.path.exists(dest)
         if not os.path.exists(outdir):
             os.makedirs(outdir)
-        self.env.get_template(template).stream(**kwargs).dump(dest)
-        # add trailing newline which jinja removes
+        content = self.env.get_template(template).render(**kwargs)
         with open(dest, 'a') as f:
-            f.write('\n')
+            f.write(content)
 
     def run(self, args):
+        # TODO: bash completion file
         parser = argparse.ArgumentParser(
             prog="%s scaffold" % sys.argv[0].split(os.path.sep)[-1],
             description=self.__doc__

@@ -1,4 +1,4 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+{% if create -%}id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink{%- endif %}
 {% if config.model -%}
 access_{{ config.module|snake }}_{{ config.model|snake }},{{- '' -}}
 access_{{ config.module|snake }}_{{ config.model|snake }},{{- '' -}}
