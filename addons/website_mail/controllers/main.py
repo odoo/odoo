@@ -100,20 +100,3 @@ class WebsiteMail(http.Controller):
                         ], context=context)) == 1
 
         return values
-
-    @http.route(['/website_mail/get_alias_info'], type='json', auth='public', website=True)
-    def get_alias_info(self, model, id, **post):
-        id = int(id)
-        cr, uid, context = request.cr, request.uid, request.context
-        obj = request.registry.get(model)
-
-        values = {'alias_name': False}
-
-        if not obj:
-            return values
-        obj_ids = obj.exists(cr, SUPERUSER_ID, [id], context=context)
-        if obj_ids and 'alias_id' in obj._all_columns:
-            alias_id = obj.browse(cr, SUPERUSER_ID, obj_ids[0], context=context).alias_id
-            values['alias_name'] = alias_id and alias_id.alias_domain and '%s@%s' % (alias_id.alias_name, alias_id.alias_domain) or False
-
-        return values

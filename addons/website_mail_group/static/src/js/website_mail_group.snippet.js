@@ -33,6 +33,7 @@
             return;
         },
         on_click: function () {
+            event.preventDefault();
             var self = this;
             var $email = this.$target.find(".js_follow_email");
 
@@ -69,11 +70,17 @@
         },
         get_alias_info: function() {
             var self = this;
-            return openerp.jsonRpc('/website_mail/get_alias_info', 'call', {
-                model: this.$target.data('object'),
-                id: this.$target.data('id'),
-            }).then(function (data) {
-                self.$target.find('.js_mg_email').attr('href', 'mailto:' + data.alias_name);
+            if (! this.$target.data('id')) {
+                return $.Deferred().resolve();
+            }
+            return openerp.jsonRpc('/groups/' + this.$target.data('id') + '/get_alias_info', 'call', {}).then(function (data) {
+                if (data.alias_name) {
+                    self.$target.find('.js_mg_email').attr('href', 'mailto:' + data.alias_name);
+                    self.$target.find('.js_mg_email').removeClass('hidden');
+                }
+                else {
+                    self.$target.find('.js_mg_email').addClass('hidden');
+                }
             });
         }
     });

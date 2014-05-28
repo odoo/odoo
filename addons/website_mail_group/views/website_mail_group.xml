@@ -8,6 +8,13 @@
     </xpath>
 </template>
 
+<template id="head" inherit_id="website.layout" name="Mail Group Customization">
+    <xpath expr="//head" position="inside">
+        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.editor.js" groups="base.group_website_publisher"></script>
+        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.snippet.js"></script>
+    </xpath>
+</template>
+
 <template id="mail_groups" name="Mailing Lists">
     <t t-call="website.layout">
         <div id="wrap" class="oe_structure oe_empty">
@@ -23,8 +30,10 @@
                 <div class="col-md-3">
                     <img t-att-src="'/website/image?model=mail.group&amp;field=image_small&amp;id='+str(group['id'])" class="pull-left"/>
                     <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
-                    <i class='fa fa-envelope-o'/>
-                    <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
+                    <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
+                        <i class='fa fa-envelope-o'/>
+                        <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
+                    </t>
                 </div>
                 <div class="col-md-4">
                     <div t-esc="group.description" class="text-muted"/>
@@ -59,7 +68,7 @@
             <div class="row">
                 <h1 class="text-center">
                     <t t-esc="group.name"/> mailing list archives
-                </h1><h4 class="text-center text-muted">
+                </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
                     <i class='fa fa-envelope-o'/>
                     <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                 </h4>
@@ -123,7 +132,7 @@
             <div class="row">
                 <h1 class="text-center">
                     <t t-esc="group.name"/> mailing list archives
-                </h1><h4 class="text-center text-muted">
+                </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
                     <i class='fa fa-envelope-o'/>
                     <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                 </h4>
