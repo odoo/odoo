@@ -513,42 +513,40 @@ def cr_uid_ids_context(method):
     return make_wrapper(method, method, new_api)
 
 
-def old(method):
-    """ Decorate `method` so that it accepts the old-style api only. The
-        returned wrapper provides a decorator `new` for the corresponding
-        new-style api implementation; the result combines both implementations.
-        This is useful to provide explicitly both implementations of a method.::
+def v7(new_method):
+    """ Define manually the mapping between api's by decorating the old-style
+        implementation of a new-style method.::
 
-            @old
-            def stuff(self, cr, uid, context=None):
-                ...
-
-            @stuff.new
-            def stuff(self):
-                ...
-    """
-    wrapper = make_wrapper(method, method, None)
-    wrapper.new = lambda new_api: make_wrapper(method, method, new_api)
-    return wrapper
-
-
-def new(method):
-    """ Decorate `method` so that it accepts the new-style api only. The
-        returned wrapper provides a decorator `old` for the corresponding
-        old-style api implementation; the result combines both implementations.
-        This is useful to provide explicitly both implementations of a method.::
-
-            @new
             def stuff(self):
                 ...
 
-            @stuff.old
+            @api.v7(stuff)
             def stuff(self, cr, uid, context=None):
                 ...
+
+        The method name, doc, etc. are copied from `new_method` to the result.
+        This is convenient for keeping backward compatibility with methods that
+        do not follow the predefined mappings.
     """
-    wrapper = make_wrapper(method, None, method)
-    wrapper.old = lambda old_api: make_wrapper(method, old_api, method)
-    return wrapper
+    return lambda old_method: make_wrapper(new_method, old_method, new_method)
+
+
+def v8(old_method):
+    """ Define manually the mapping between api's by decorating the new-style
+        implementation of an old-style method.::
+
+            def stuff(self, cr, uid, context=None):
+                ...
+
+            @api.v8(stuff)
+            def stuff(self):
+                ...
+
+        The method name, doc, etc. are copied from `old_method` to the result.
+        This is convenient for keeping backward compatibility with methods that
+        do not follow the predefined mappings.
+    """
+    return lambda new_method: make_wrapper(old_method, old_method, new_method)
 
 
 def noguess(method):

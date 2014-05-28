@@ -2082,7 +2082,6 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
-    @api.old
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of
@@ -2133,7 +2132,7 @@ class account_tax(osv.osv):
             'taxes': tin + tex
         }
 
-    @compute_all.new
+    @api.v8(compute_all)
     def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
         return self._model.compute_all(
             self._cr, self._uid, self, price_unit, quantity,

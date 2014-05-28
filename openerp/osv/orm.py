@@ -1404,7 +1404,6 @@ class BaseModel(object):
         # retrieve defaults from record's cache
         return self._convert_to_write(record._cache)
 
-    @api.new
     def add_default_value(self, field):
         """ Set the default value of `field` to the new record `self`.
             The value must be assigned to `self`.
@@ -3147,7 +3146,6 @@ class BaseModel(object):
         return fields
 
     # new-style implementation of read(); old-style is defined below
-    @api.new
     def read(self, fields=None, load='_classic_read'):
         """ Read the given fields for the records in `self`.
 
@@ -3193,7 +3191,7 @@ class BaseModel(object):
         return result
 
     # add explicit old-style implementation to read()
-    @read.old
+    @api.v7(read)
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         records = self.browse(cr, user, ids, context)
         result = BaseModel.read(records, fields, load=load)
@@ -5150,7 +5148,6 @@ class BaseModel(object):
         env.prefetch[cls._name].update(ids)
         return records
 
-    @api.new
     def browse(self, arg=None):
         """ Return an instance corresponding to `arg` and attached to
             `self.env`; `arg` is either a record id, or a collection of record ids.
@@ -5162,7 +5159,7 @@ class BaseModel(object):
         assert all(isinstance(id, IdType) for id in ids), "Browsing invalid ids: %s" % ids
         return self._browse(self.env, ids)
 
-    @browse.old
+    @api.v7(browse)
     def browse(self, cr, uid, arg=None, context=None):
         if isinstance(arg, Iterable) and not isinstance(arg, basestring):
             ids = tuple(arg)
@@ -5197,20 +5194,17 @@ class BaseModel(object):
             return self
         raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    @api.new
     def with_env(self, env):
         """ Return an instance equivalent to `self` attached to `env`.
         """
         return self._browse(env, self._ids)
 
-    @api.new
     def sudo(self, user=SUPERUSER_ID):
         """ Return an instance equivalent to `self` attached to an environment
             based on `self.env` with the given `user`.
         """
         return self.with_env(self.env(user=user))
 
-    @api.new
     def with_context(self, *args, **kwargs):
         """ Return an instance equivalent to `self` attached to an environment
             based on `self.env` with another context. The context is given by
@@ -5535,7 +5529,6 @@ class BaseModel(object):
 
         self.env.invalidate(spec)
 
-    @api.new
     def _recompute_check(self, field):
         """ If `field` must be recomputed on some record in `self`, return the
             corresponding records that must be recomputed.
@@ -5544,13 +5537,11 @@ class BaseModel(object):
             if env.todo.get(field) and env.todo[field] & self:
                 return env.todo[field]
 
-    @api.new
     def _recompute_todo(self, field):
         """ Mark `field` to be recomputed. """
         todo = self.env.todo
         todo[field] = (todo.get(field) or self.browse()) | self
 
-    @api.new
     def _recompute_done(self, field):
         """ Mark `field` as being recomputed. """
         todo = self.env.todo

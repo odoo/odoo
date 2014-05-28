@@ -138,12 +138,11 @@ class res_currency(osv.osv):
         reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name'])) for x in reads]
 
-    @api.new
     def round(self, amount):
         """ Return `amount` rounded according to currency `self`. """
         return float_round(amount, precision_rounding=self.rounding)
 
-    @round.old
+    @api.v7(round)
     def round(self, cr, uid, currency, amount):
         """Return ``amount`` rounded  according to ``currency``'s
            rounding rules.
@@ -154,7 +153,6 @@ class res_currency(osv.osv):
         """
         return float_round(amount, precision_rounding=currency.rounding)
 
-    @api.new
     def compare_amounts(self, amount1, amount2):
         """ Compare `amount1` and `amount2` after rounding them according to
             `self`'s precision. An amount is considered lower/greater than
@@ -169,7 +167,7 @@ class res_currency(osv.osv):
         """
         return float_compare(amount1, amount2, precision_rounding=self.rounding)
 
-    @compare_amounts.old
+    @api.v7(compare_amounts)
     def compare_amounts(self, cr, uid, currency, amount1, amount2):
         """Compare ``amount1`` and ``amount2`` after rounding them according to the
            given currency's precision..
@@ -191,7 +189,6 @@ class res_currency(osv.osv):
         """
         return float_compare(amount1, amount2, precision_rounding=currency.rounding)
 
-    @api.new
     def is_zero(self, amount):
         """ Return true if `amount` is small enough to be treated as zero
             according to currency `self`'s rounding rules.
@@ -203,7 +200,7 @@ class res_currency(osv.osv):
         """
         return float_is_zero(amount, precision_rounding=self.rounding)
 
-    @is_zero.old
+    @api.v7(is_zero)
     def is_zero(self, cr, uid, currency, amount):
         """Returns true if ``amount`` is small enough to be treated as
            zero according to ``currency``'s rounding rules.
@@ -239,7 +236,6 @@ class res_currency(osv.osv):
                     'at the date: %s') % (currency_symbol, date))
         return to_currency.rate/from_currency.rate
 
-    @api.new
     def compute(self, from_amount, to_currency, round=True):
         """ Convert `from_amount` from currency `self` to `to_currency`. """
         assert self, "compute from unknown currency"
@@ -252,7 +248,7 @@ class res_currency(osv.osv):
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
-    @compute.old
+    @api.v7(compute)
     def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
                 round=True, currency_rate_type_from=False, currency_rate_type_to=False, context=None):
         context = dict(context or {})

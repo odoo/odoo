@@ -1120,7 +1120,6 @@ class account_invoice(Model):
             new_invoices += self.create(values)
         return new_invoices
 
-    @api.new
     def pay_and_reconcile(self, pay_amount, pay_account_id, period_id, pay_journal_id,
                           writeoff_acc_id, writeoff_period_id, writeoff_journal_id, name=''):
         # TODO check if we can use different period for payment and the writeoff line
@@ -1204,7 +1203,7 @@ class account_invoice(Model):
         # Update the stored value (fields.function), so we write to trigger recompute
         return self.write({})
 
-    @pay_and_reconcile.old
+    @api.v7(pay_and_reconcile)
     def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id,
                           writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context=None, name=''):
         recs = self.browse(cr, uid, ids, context)
@@ -1530,7 +1529,6 @@ class account_invoice_tax(Model):
             amount = currency.compute(amount * factor, company.currency_id, round=False)
         return {'value': {'tax_amount': amount}}
 
-    @api.new
     def compute(self, invoice):
         tax_grouped = {}
         currency = invoice.currency_id.with_context(date=invoice.date_invoice or Date.today())
@@ -1580,7 +1578,7 @@ class account_invoice_tax(Model):
 
         return tax_grouped
 
-    @compute.old
+    @api.v7(compute)
     def compute(self, cr, uid, invoice_id, context=None):
         recs = self.browse(cr, uid, [], context)
         invoice = recs.env['account.invoice'].browse(invoice_id)
