@@ -35,7 +35,7 @@ class TestMoveExplode(common.TransactionCase):
         self.mrp_bom = self.registry('mrp.bom')
 
         #product that has a phantom bom
-        self.product_bom_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_4')[1]
+        self.product_bom_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_3')[1]
         #bom with that product
         self.bom_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_9')[1]
         #partner agrolait
