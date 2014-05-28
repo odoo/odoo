@@ -742,7 +742,6 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.maximum_visible_links = 'auto'; // # of menu to show. 0 = do not crop, 'auto' = algo
         this.data = {data:{children:[]}};
         this.on("menu_loaded", this, function() {
-            self.reflow();
             // launch the fetch of needaction counters, asynchronous
             $all_menus = self.$el.parents('.oe_webclient').find('[data-menu]');
             all_menu_ids = $.map($all_menus, function (menu) {return parseInt($(menu).attr('data-menu'));});
@@ -994,6 +993,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
+
+                self.getParent().menu.reflow();
             });
         };
         this.update_promise = this.update_promise.then(fct, fct);
