@@ -445,10 +445,10 @@ class WebsiteForum(http.Controller):
         User = request.registry['res.users']
 
         step = 30
-        tag_count = User.search(cr, SUPERUSER_ID, [('website_published', '=', True)], count=True, context=context)
+        tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], count=True, context=context)
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
 
-        obj_ids = User.search(cr, SUPERUSER_ID, [('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
+        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
         # put the users in block of 3 to display them as a table
         users = [[] for i in range(len(obj_ids)/3+1)]
         for index, user in enumerate(User.browse(cr, SUPERUSER_ID, obj_ids, context=context)):
