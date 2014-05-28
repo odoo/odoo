@@ -165,6 +165,9 @@ class event_event(osv.osv):
                                                               ['seats_max', 'registration_ids'], 20),
                                               'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
                                            }),
+        'badge_back': fields.html('Badge Back', readonly=False, translate=True, states={'done': [('readonly', True)]}),
+        'badge_innerleft': fields.html('Badge Innner Left', readonly=False, translate=True, states={'done': [('readonly', True)]}),
+        'badge_innerright': fields.html('Badge Inner Right', readonly=False, translate=True, states={'done': [('readonly', True)]}),
     }
     _defaults = {
         'event_ticket_ids': _get_tickets
