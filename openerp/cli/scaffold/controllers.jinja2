@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-
 from openerp import http
 from openerp.addons.web.controllers import main
 
 class {{ config.controller }}(main.Home):
-    @http.route('/', auth='none')
+    @http.route('/{{ config.module }}/{{ config.controller }}', auth='public')
     def index(self):
         return "Hello, world!"
+{% if config.model %}
+    @http.route('/{{ config.module }}/{{ config.controller }}/{{ config.model }}/<model("{{ config.module }}.{{ config.model }}"):{{ config.model }}>'], type='http', auth='public')
+    def {{ config.model }}(self, {{ config.model }}, **kw):
+        return "Hello, %r!" % {{ config.model }}
+{% endif %}
