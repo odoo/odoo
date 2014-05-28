@@ -115,6 +115,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         item.show(subindex);
         this.inner_widget = item.widget;
         this.inner_action = item.action;
+        item.widget.searchview.adjust_view_top();
         return true;
     },
     clear_breadcrumbs: function() {
