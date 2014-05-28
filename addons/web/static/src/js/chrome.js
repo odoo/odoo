@@ -849,7 +849,7 @@ instance.web.Menu =  instance.web.Widget.extend({
 
         // Activate current main menu
         this.$el.find('.active').removeClass('active');
-        $main_menu.addClass('active');
+        $main_menu.parent().addClass('active');
 
         // Show current sub menu
         this.$secondary_menus.find('.oe_secondary_menu').hide();
