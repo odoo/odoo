@@ -61,8 +61,10 @@
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
           t-att-data-view-xmlid="xmlid if editable else None"
-          t-att-data-main-object="repr(main_object) if editable else None">
+          t-att-data-main-object="repr(main_object) if editable else None"
+          t-att-data-oe-company-name="res_company.name">
         <head>
+            <meta charset="utf-8" />
             <t t-if="main_object and 'website_meta_title' in main_object">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
@@ -73,10 +75,9 @@
                 <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
             </t>
             <meta name="viewport" content="initial-scale=1"/>
-            <meta name="openerp.company" t-att-value="res_company.name"/>
-            <meta name="description" t-att-value="main_object and 'website_meta_description' in main_object
+            <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
-            <meta name="keywords" t-att-value="main_object and 'website_meta_keywords' in main_object
+            <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <title><t t-esc="title"/></title>
 
@@ -137,14 +138,14 @@
                 <footer>
                     <div class="container hidden-print" id="footer_container">
                         <div class="row">
-                            <div class="col-md-3" name="product">
+                            <div class="col-md-3">
                                 <h4>Our products &amp; Services</h4>
                                 <ul class="list-unstyled" name="products">
                                     <li><a href="/">Home</a></li>
                                 </ul>
                             </div>
                             <div class="col-md-3" name="info">
-                                <h4 name="info_title">Connect with us</h4>
+                                <h4>Connect with us</h4>
                                 <ul class="list-unstyled">
                                     <li><a href="/page/website.contactus">Contact us</a></li>
                                 </ul>
@@ -161,7 +162,7 @@
                                     <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
                                 </h2>
                             </div>
-                            <div class="col-md-5 col-lg-offset-1" name="about_us">
+                            <div class="col-md-5 col-lg-offset-1">
                                 <div>
                                     <h4>
                                         <span t-field="res_company.name">Your Company</span>
@@ -220,7 +221,7 @@
     </html>
 </template>
 
-<template id="layout_logo_show" inherit_id="website.layout" inherit_option_id="website.layout" name="Show Logo">
+<template id="layout_logo_show" inherit_id="website.layout" optional="enabled" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
             <img src="/logo.png"/>
@@ -304,9 +305,9 @@
     <script type="text/javascript" src="/website/static/src/js/jQuery.transfo.js"></script>
 </template>
 
-<template id="debugger" inherit_option_id="website.layout" name="Debugger &amp; Tests">
+<template id="debugger" inherit_id="website.layout" optional="disabled" name="Debugger &amp; Tests">
     <xpath expr='//t[@name="layout_head"]' position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
+        <t t-set="debugger_hook" t-value="1" />
     </xpath>
 </template>
 
@@ -318,7 +319,7 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" inherit_option_id="website.layout" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" optional="enabled" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
     <xpath expr="//ul[@id='top_menu']" position="inside">
         <li class="divider"/>
         <li>
@@ -329,7 +330,7 @@
     </xpath>
 </template>
 
-<template id="footer_custom" inherit_option_id="website.layout" name="Custom Footer">
+<template id="footer_custom" inherit_id="website.layout" optional="disabled" name="Custom Footer">
     <xpath expr="//div[@id='footer_container']" position="before">
         <div class="oe_structure">
             <section data-snippet-id='three-columns' class="mt16 mb16">

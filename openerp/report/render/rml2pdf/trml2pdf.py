@@ -107,7 +107,7 @@ class NumberedCanvas(canvas.Canvas):
         self.setFont("Helvetica", 8)
         self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             " %(this)i / %(total)i" % {
-               'this': self._pageNumber+1,
+               'this': self._pageNumber,
                'total': page_count,
             }
         )

@@ -158,22 +158,25 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/website/theme_change', type='http', auth="user", website=True)
     def theme_change(self, theme_id=False, **kwargs):
         imd = request.registry['ir.model.data']
-        view = request.registry['ir.ui.view']
+        Views = request.registry['ir.ui.view']
 
-        view_model, view_option_id = imd.get_object_reference(
+        _, theme_template_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
-        views = view.search(
-            request.cr, request.uid, [('inherit_id', '=', view_option_id)],
-            context=request.context)
-        view.write(request.cr, request.uid, views, {'inherit_id': False},
-                   context=request.context)
+        views = Views.search(request.cr, request.uid, [
+            ('inherit_id', '=', theme_template_id),
+            ('application', '=', 'enabled'),
+        ], context=request.context)
+        Views.write(request.cr, request.uid, views, {
+            'application': 'disabled',
+        }, context=request.context)
 
         if theme_id:
             module, xml_id = theme_id.split('.')
-            view_model, view_id = imd.get_object_reference(
+            _, view_id = imd.get_object_reference(
                 request.cr, request.uid, module, xml_id)
-            view.write(request.cr, request.uid, [view_id],
-                       {'inherit_id': view_option_id}, context=request.context)
+            Views.write(request.cr, request.uid, [view_id], {
+                'application': 'enabled'
+            }, context=request.context)
 
         return request.render('website.themes', {'theme_changed': True})
 
@@ -197,54 +200,45 @@ class Website(openerp.addons.web.controllers.main.Home):
         module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
         return request.redirect(redirect)
 
-    @http.route('/website/customize_template_toggle', type='json', auth='user', website=True)
-    def customize_template_set(self, view_id):
-        view_obj = request.registry.get("ir.ui.view")
-        view = view_obj.browse(request.cr, request.uid, int(view_id),
-                               context=request.context)
-        if view.inherit_id:
-            value = False
-        else:
-            value = view.inherit_option_id and view.inherit_option_id.id or False
-        view_obj.write(request.cr, request.uid, [view_id], {
-            'inherit_id': value
-        }, context=request.context)
-        return True
-
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, xml_id, optional=True):
+    def customize_template_get(self, xml_id, full=False):
+        """ Lists the templates customizing ``xml_id``. By default, only
+        returns optional templates (which can be toggled on and off), if
+        ``full=True`` returns all templates customizing ``xml_id``
+        """
         imd = request.registry['ir.model.data']
         view_model, view_theme_id = imd.get_object_reference(
             request.cr, request.uid, 'website', 'theme')
 
-        user = request.registry['res.users'].browse(request.cr, request.uid, request.uid, request.context)
-        group_ids = [g.id for g in user.groups_id]
+        user = request.registry['res.users']\
+            .browse(request.cr, request.uid, request.uid, request.context)
+        user_groups = set(user.groups_id)
 
-        view = request.registry.get("ir.ui.view")
-        views = view._views_get(request.cr, request.uid, xml_id, context=request.context)
-        done = {}
+        views = request.registry["ir.ui.view"]\
+            ._views_get(request.cr, request.uid, xml_id, context=request.context)
+        done = set()
         result = []
         for v in views:
-            if v.groups_id and [g for g in v.groups_id if g.id not in group_ids]:
+            if not user_groups.issuperset(v.groups_id):
                 continue
-            if v.inherit_option_id and v.inherit_option_id.id != view_theme_id or not optional:
-                if v.inherit_option_id.id not in done:
+            if full or (v.application != 'always' and v.inherit_id.id != view_theme_id):
+                if v.inherit_id not in done:
                     result.append({
-                        'name': v.inherit_option_id.name,
+                        'name': v.inherit_id.name,
                         'id': v.id,
                         'xml_id': v.xml_id,
                         'inherit_id': v.inherit_id.id,
                         'header': True,
                         'active': False
                     })
-                    done[v.inherit_option_id.id] = True
+                    done.add(v.inherit_id)
                 result.append({
                     'name': v.name,
                     'id': v.id,
                     'xml_id': v.xml_id,
                     'inherit_id': v.inherit_id.id,
                     'header': False,
-                    'active': (v.inherit_id.id == v.inherit_option_id.id) or (not optional and v.inherit_id.id)
+                    'active': v.application in ('always', 'enabled'),
                 })
         return result
 
@@ -384,7 +378,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         """
         response = werkzeug.wrappers.Response()
         return request.registry['website']._image(
-                    request.cr, request.uid, model, id, field, response)
+                    request.cr, request.uid, model, id, field, response, max_width, max_height)
 
 
     #------------------------------------------------------

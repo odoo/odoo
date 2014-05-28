@@ -156,8 +156,8 @@ class WebKitParser(report_sxw):
         """Call webkit in order to generate pdf"""
         if not webkit_header:
             webkit_header = report_xml.webkit_header
-        tmp_dir = tempfile.gettempdir()
-        out_filename = tempfile.mktemp(suffix=".pdf", prefix="webkit.tmp.")
+        fd, out_filename = tempfile.mkstemp(suffix=".pdf",
+                                            prefix="webkit.tmp.")
         file_to_del = [out_filename]
         if comm_path:
             command = [comm_path]
@@ -168,25 +168,15 @@ class WebKitParser(report_sxw):
         # default to UTF-8 encoding.  Use <meta charset="latin-1"> to override.
         command.extend(['--encoding', 'utf-8'])
         if header :
-            head_file = file( os.path.join(
-                                  tmp_dir,
-                                  str(time.time()) + '.head.html'
-                                 ),
-                                'w'
-                            )
-            head_file.write(self._sanitize_html(header.encode('utf-8')))
-            head_file.close()
+            with tempfile.NamedTemporaryFile(suffix=".head.html",
+                                             delete=False) as head_file:
+                head_file.write(self._sanitize_html(header.encode('utf-8')))
             file_to_del.append(head_file.name)
             command.extend(['--header-html', head_file.name])
         if footer :
-            foot_file = file(  os.path.join(
-                                  tmp_dir,
-                                  str(time.time()) + '.foot.html'
-                                 ),
-                                'w'
-                            )
-            foot_file.write(self._sanitize_html(footer.encode('utf-8')))
-            foot_file.close()
+            with tempfile.NamedTemporaryFile(suffix=".foot.html",
+                                             delete=False) as foot_file:
+                foot_file.write(self._sanitize_html(footer.encode('utf-8')))
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
 
@@ -204,10 +194,10 @@ class WebKitParser(report_sxw):
             command.extend(['--page-size', str(webkit_header.format).replace(',', '.')])
         count = 0
         for html in html_list :
-            html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
-            count += 1
-            html_file.write(self._sanitize_html(html.encode('utf-8')))
-            html_file.close()
+            with tempfile.NamedTemporaryFile(suffix="%d.body.html" %count,
+                                             delete=False) as html_file:
+                count += 1
+                html_file.write(self._sanitize_html(html.encode('utf-8')))
             file_to_del.append(html_file.name)
             command.append(html_file.name)
         command.append(out_filename)
@@ -227,9 +217,9 @@ class WebKitParser(report_sxw):
             if status :
                 raise except_osv(_('Webkit error' ),
                                  _("The command 'wkhtmltopdf' failed with error code = %s. Message: %s") % (status, error_message))
-            pdf_file = open(out_filename, 'rb')
-            pdf = pdf_file.read()
-            pdf_file.close()
+            with open(out_filename, 'rb') as pdf_file:
+                pdf = pdf_file.read()
+            os.close(fd)
         finally:
             if stderr_fd is not None:
                 os.close(stderr_fd)
