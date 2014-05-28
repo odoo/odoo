@@ -1,0 +1,194 @@
+<openerp>
+    <data>
+        <!--account.journal kanban view-->
+        <record id="view_account_journal_kanban_view" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="arch" type="xml">
+                <kanban create="false">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="kanban_graph"/>
+                    <field name="kanban_dashboard"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
+                            <t t-value="record.type.raw_value" t-set="journal_type"/>
+                            <t t-value="dashboard.draft_invoice_amount or dashboard.overdue_invoice_amount or dashboard.todo_payment_amount or dashboard.paid_invoice_amount" t-set="is_invoice_stats"/>
+                            <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_card oe_journal_card">
+                                <div class="row">
+                                    <t t-call="JournalTop" />
+                                </div>
+                                <div class="row">
+                                    <t t-call="JournalDetails"/>
+                                </div>
+                                <div class="row">
+                                    <t t-call="JournalBottom"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="JournalTop">
+                                    
+                            <div class="col-md-6 oe_journal_card_title">
+                                <a class="mt0" style="font-size: 16px;" t-att-title="record.name.raw_value"><strong><field name="name"/></strong></a>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="pull-right">
+                                    <div t-if="is_invoice_stats">
+                                        <a t-if="journal_type == 'sale' or journal_type == 'purchase'" type="object" name="open_action">All Invoices</a>
+                                        <a t-if="journal_type == 'purchase_refund' or journal_type == 'sale_refund'" type="object" name="open_action">All Refunds</a>
+                                        <t t-if="dashboard.draft_invoice_amount">
+                                            <a> | </a>
+                                            <a t-if="journal_type == 'sale'" type="object" name="open_action" context="{'search_default_state':'draft','action_name':'action_invoice_tree'}">Invoices to Validate</a>
+                                            <a t-if="journal_type == 'purchase'" type="object" name="open_action" context="{'search_default_state':'draft','action_name':'action_invoice_tree'}">Control Invoices</a>
+                                            <a t-if="journal_type == 'sale_refund'" type="object" name="open_action" context="{'search_default_state':'draft'}">Refunds to Validate</a>
+                                            <a t-if="journal_type == 'purchase_refund'" type="object" name="open_action" context="{'search_default_state':'draft'}">Control Refunds</a>
+                                        </t>
+                                    </div>
+                                    <div t-if="!is_invoice_stats">
+                                        <a t-if="journal_type == 'sale' or journal_type == 'purchase'" type="object" name="open_action">No Invoices yet, click to create.</a>
+                                        <a t-if="journal_type == 'purchase_refund' or journal_type == 'sale_refund'" type="object" name="open_action">No Refunds yet, click to create.</a>
+                                    </div>
+                                </div>
+                                <div t-if="dashboard.last_statement_amount" class="pull-right">
+                                    <a t-if="journal_type == 'bank' or journal_type == 'cash'" type="object" name="open_action">Statements</a>
+                                </div>
+                                <div t-if="!dashboard.last_statement_amount" class="pull-right">
+                                    <a t-if="journal_type == 'bank' or journal_type == 'cash'" type="object" name="open_action">No Statements yet, click to create.</a>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="JournalDetails">
+                            <div class="col-md-4">
+                                <div t-if="dashboard.draft_invoice_amount > 0">
+                                    <div class="oe_journal_title">
+                                        <h4 t-if="journal_type == 'sale' or journal_type == 'purchase'">Draft Invoices</h4>
+                                        <h4 t-if="journal_type == 'sale_refund' or journal_type == 'purchase_refund'">Draft Refunds</h4>
+                                    </div>
+                                    <div class="oe_journal_data">
+                                        <span t-esc="dashboard.draft_invoice_amount"/>
+                                        <p t-esc="dashboard.currency_symbol"/>
+                                    </div>
+                                </div>
+                                <div t-if="dashboard.todo_payment_amount">
+                                    <div class="oe_journal_title">
+                                        <h4 t-if="journal_type == 'sale'">Receivable</h4>
+                                        <h4 t-if="journal_type == 'sale_refund'">Refunds to Pay</h4>
+                                        <h4 t-if="journal_type == 'purchase'">Payable</h4>
+                                        <h4 t-if="journal_type == 'purchase_refund'">Refunds to Receive</h4>
+                                    </div>
+                                    <div class="oe_journal_data">
+                                        <span t-esc="dashboard.todo_payment_amount"/>
+                                        <p t-esc="dashboard.currency_symbol"/>
+                                    </div>
+                                </div>
+                                <div t-if="dashboard.paid_invoice_amount">
+                                    <div class="oe_journal_title">
+                                        <h4 t-if="journal_type == 'sale' or journal_type == 'purchase'">Paid Invoices</h4>
+                                        <h4 t-if="journal_type == 'sale_refund' or journal_type == 'purchase_refund'">Paid Refunds</h4>
+                                    </div>
+                                    <div class="oe_journal_data">
+                                        <span t-esc="dashboard.paid_invoice_amount"/>
+                                        <p t-esc="dashboard.currency_symbol"/>
+                                    </div>
+                                </div>
+                                <div t-if="dashboard.overdue_invoice_amount or dashboard.overdue_invoice_amount_month">
+                                    <div class="oe_journal_title">
+                                        <h4 t-if="journal_type == 'sale' or journal_type == 'purchase'">Overdue Invoices</h4>
+                                        <h4 t-if="journal_type == 'sale_refund' or journal_type == 'purchase_refund'">Overdue Refunds</h4>
+                                    </div>
+                                    <div class="oe_journal_data">
+                                        <i class="fa fa-clock-o" title="Overdue Invoices till today" style="color:red">
+                                            <span t-esc="dashboard.overdue_invoice_amount"/>
+                                            <p t-esc="dashboard.currency_symbol"/>
+                                        </i>
+                                        <i class="fa fa-clock-o" title="Overdue Invoices till the end of this month" style="color:#ee7700;">
+                                            <span t-esc="dashboard.overdue_invoice_amount_month"/>
+                                            <p t-esc="dashboard.currency_symbol"/>
+                                        </i>
+                                    </div>
+                                </div>
+                                <div t-if="journal_type == 'cash' or journal_type == 'bank'">
+                                    <div t-if="dashboard.last_statement_amount">
+                                        <div class="oe_journal_title">
+                                            <h4 t-if="dashboard.last_statement_date">Last Statement, <div t-esc='dashboard.last_statement_date'/></h4>
+                                        </div>
+                                        <div class="oe_journal_data">
+                                            <span t-esc="dashboard.last_statement_amount"/>
+                                            <p t-esc="dashboard.currency_symbol"/>
+                                        </div>
+                                    </div>
+                                    <div t-att-class="dashboard.credit_account_balance == dashboard.last_statement_amount ? 'oe_amount' : ''" t-if="dashboard.credit_account_balance">
+                                        <div class="oe_journal_title">
+                                            <h4>Account <div t-esc="dashboard.credit_account_name"/></h4>
+                                        </div>
+                                        <div class="oe_journal_data">
+                                            <span t-esc="dashboard.credit_account_balance"/>
+                                            <p t-esc="dashboard.currency_symbol"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="text-center">
+                                    <h4 t-if="journal_type == 'bank'"> Bank Payments </h4>
+                                    <h4 t-if="journal_type == 'cash'"> Cash Payments </h4>
+                                    <h4 t-if="journal_type == 'sale'"> Aged Balance </h4>
+                                    <h4 t-if="journal_type == 'purchase'"> Invoices Per Month </h4>
+                                    <h4 t-if="journal_type == 'sale_refund' or journal_type == 'purchase_refund'"> Refunds Per Month </h4>
+                                </div>
+                                <div class="oe_graph">
+                                    <field name="kanban_graph" t-att-graph_type="_.contains(['cash','bank'],journal_type) ? 'line' : 'bar'" widget="dashboard_graph"></field>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="JournalBottom">
+                            <div class="col-md-12">
+                                <div t-if="journal_type == 'sale'" name="sale_journal_bottom">
+                                </div>
+                                <div t-if="journal_type == 'purchase'">
+                                    <a t-attf-href="{dashboard.open_action}" type="object" name="open_action" context="{'search_default_state':'open'}">Invoices to Pay</a>
+                                </div>
+                                <div t-if="journal_type == 'bank' or journal_type == 'cash' and dashboard.total_reconcile_amount gt 0">
+                                    <a t-if="dashboard.total_reconcile_amount == 1" type="object" name="open_action" context="{'search_default_unreconciled':1,'view_mode':1,'action_name':'action_account_manual_reconcile'}" t-esc="dashboard.total_reconcile_amount"> Item to Reconcile</a>
+                                    <a t-if="dashboard.total_reconcile_amount gt 1" type="object" name="open_action" context="{'search_default_unreconciled':1,'view_mode':1,'action_name':'action_account_manual_reconcile'}" t-esc="dashboard.total_reconcile_amount"> Items to Reconcile</a>
+                                </div>
+                            </div>
+                        </t>
+                </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_journal_search_inherit" model="ir.ui.view">
+            <field name="name">account.journal.search.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="view_account_journal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="before">
+                    <filter domain="[]" string="Current Year" name="fiscal_year" context="{'current_year':1}"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="open_account_journal_kanban" model="ir.actions.act_window">
+            <field name="name">Journals</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban</field>
+            <field name="usage">menu</field>
+            <field name="search_view_id" ref="view_account_journal_search_inherit"/>
+            <field name="context">{'search_default_fiscal_year':1}</field>
+            <field name="domain">[('type','not in',['general','situation'])]</field>
+            <field name="help" type="html">
+                <p style="margin-left: -90px;">
+                    To track activities in your bank accounts and analyse your sales and purchase journals, install the <a type="action" name="%(account.open_account_charts_modules)d" class="oe_link">chart of account matching your country</a> or <a type="action" name="%(account.action_account_configuration_installer)d" class="oe_link">configure the custom chart of accounts.</a>
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_finance_journal_board" name="Journals" parent="menu_finance" sequence="1"/>
+        <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_kanban" parent="menu_finance_journal_board" sequence="1"/>
+
+    </data>
+</openerp>

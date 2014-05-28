@@ -159,5 +159,32 @@
         <menuitem id="base.menu_sales_followup" parent="base.menu_base_partner" name="Payment Follow-up" groups="account.group_account_invoice" sequence="2"/>
         <menuitem id="menu_sale_followup" parent="base.menu_sales_followup" sequence="10" 
                   action="action_customer_my_followup"  groups="account.group_account_invoice"/>
+
+        <!--account.journal kanban view-->
+
+        <record id="action_customer_followup" model="ir.actions.act_window">
+            <field name="name">Follow-Ups</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('payment_amount_due', '>', 0.0)]</field>
+            <field name="context">{'Followupfirst':True, 'search_default_todo': True} </field>
+            <field name="search_view_id" ref="customer_followup_search_view"/>
+        </record>
+
+        <record id="view_account_journal_kanban_view_followup" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban.followup</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='sale_journal_bottom']" position="inside">
+                    <a type='action' name='%(account_followup.action_account_followup_print)d'>Automated Follow-Ups</a>
+                    <a> | </a>
+                    <a type='action' name='%(action_customer_followup)d'>Manual Follow-Ups</a>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

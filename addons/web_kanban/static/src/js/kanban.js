@@ -511,6 +511,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         this.$el.css("position", "relative");
         $(QWeb.render('KanbanView.nocontent', { content : this.options.action.get_empty_list_help || this.options.action.help})).insertBefore(this.$('table:first'));
+        this.$el.find('.oe_view_nocontent a').click(function(ev) {
+            if ($(ev.target).attr('type')) {
+                self.do_execute_action({type: $(ev.target).attr('type'),'name':$(ev.target).attr('name')}, self.dataset);
+            }
+        });
         this.$el.find('.oe_view_nocontent').click(function() {
             self.$buttons.openerpBounce();
         });
@@ -1072,7 +1077,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).done(function(records) {
+        return this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).done(function(records) {
              _.each(self.sub_widgets, function(el) {
                  el.destroy();
              });

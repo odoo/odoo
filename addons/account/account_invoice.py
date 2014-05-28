@@ -22,6 +22,7 @@
 import itertools
 from lxml import etree
 
+from datetime import datetime, date, timedelta
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm, Warning, RedirectWarning
 import openerp.addons.decimal_precision as dp
@@ -86,6 +87,9 @@ class account_invoice(models.Model):
     @api.returns('account.analytic.journal')
     def _get_journal_analytic(self, inv_type):
         """ Return the analytic journal corresponding to the given invoice type. """
+        context = self._context
+        if context.get('default_journal_id'):
+            return context.get('default_journal_id')
         journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
         journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
         if not journal:
@@ -510,11 +514,10 @@ class account_invoice(models.Model):
         return {'value': {}}
 
     @api.multi
-    def onchange_company_id(self, company_id, part_id, type, invoice_line, currency_id):
+    def onchange_company_id(self, company_id, part_id, type, invoice_line, currency_id,context):
         # TODO: add the missing context parameter when forward-porting in trunk
         # so we can remove this hack!
         self = self.with_context(self.env['res.users'].context_get())
-
         values = {}
         domain = {}
 
@@ -570,6 +573,8 @@ class account_invoice(models.Model):
             journals = self.env['account.journal'].search([('type', '=', journal_type), ('company_id', '=', company_id)])
             if journals:
                 values['journal_id'] = journals[0].id
+                if context.get('default_journal_id') in journals:
+                    values['journal_id'] = context.get('default_journal_id')
             journal_defaults = self.env['ir.values'].get_defaults_dict('account.invoice', 'type=%s' % type)
             if 'journal_id' in journal_defaults:
                 values['journal_id'] = journal_defaults['journal_id']

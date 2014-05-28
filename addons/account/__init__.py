@@ -37,5 +37,6 @@ import company
 import res_currency
 import edi
 import res_config
+import account_journal_dashboard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
