@@ -11,7 +11,9 @@
                     <field name="iso_code"/>
                     <field name="direction"/>
                     <field name="translatable"/>
-                    <field name="active"/>
+                    <field name="no_of_user"/>
+                    <field name="active" invisible="1"/>
+                    <button name="set_status" type="object" widget="lang_activation"/>
                     <button name="%(base.action_wizard_update_translations)d"
                     string="Update Terms" type="action" icon="gtk-ok" help="Update Languague Terms"/>
                 </tree>
@@ -23,6 +25,9 @@
             <field name="arch" type="xml">
                 <form string="Languages">
                    <sheet>
+                    <div class="oe_right oe_button_box">
+                        <field name="active" widget="lang_activation_button"/>
+                    </div>
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="code" />
@@ -36,8 +41,8 @@
                         <field name="decimal_point"/>
                         <field name="thousands_sep"/>
                         <newline/>
-                        <field name="active" />
                         <field name="translatable"/>
+                        <field name="no_of_user"/>
                     </group>
                     <separator colspan="4" string="Legends for supported Date and Time Formats"/>
                     <group col="4" colspan="4">

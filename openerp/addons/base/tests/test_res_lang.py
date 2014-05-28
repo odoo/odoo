@@ -1,7 +1,7 @@
 import unittest2
 
 import openerp.tests.common as common
-
+from openerp.osv.orm import except_orm
 class test_res_lang(common.TransactionCase):
 
     def test_00_intersperse(self):
@@ -39,3 +39,69 @@ class test_res_lang(common.TransactionCase):
         assert intersperse("abc12", [3], '.') == ('abc12', 0)
         assert intersperse("abc12", [2], '.') == ('abc12', 0)
         assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
+
+    def test_00_language_translation(self):
+        cr, uid = self.cr, self.uid
+        #usefull models
+        base_lang_obj = self.registry('base.language.install')
+        lang_obj = self.registry('res.lang')
+        user_obj = self.registry('res.users')
+        translation_obj = self.registry('ir.translation')
+        ir_values = self.registry['ir.values']
+        ir_values.set_default(cr, uid, 'res.partner', 'lang', 'en_US')
+        user_lang = user_obj.browse(cr, uid, uid, context=None).lang
+        context = {'uid': uid, 'lang': user_lang}
+        #Check only one language is enabled.
+        lang_count = lang_obj.search(cr, uid, [('active', '=', True)], count=True)
+        assert lang_count <= 1, "More then one language are enabled"
+
+        """Test case for load new language and deactive and Check constraint for at least one language should be enabled """
+        #Load new French language from base language wizard
+        lang_id = base_lang_obj.create(cr, uid, {'lang': 'fr_BE'})
+        lang_obj.create(cr, uid, {'name': 'French', 'code': 'fr_BE'}, context=context)
+        base_lang_obj.lang_install(cr, uid, [lang_id], context=context)
+        base_lang_obj.reload_lang(cr, uid, [lang_id], context=context)
+
+        #Check status of french language
+        fr_lang_id = lang_obj.search(cr, uid, [('code', '=', 'fr_BE')], context=context)
+        lang = lang_obj.browse(cr, uid, fr_lang_id, context=context)
+        lang_obj.write(cr, uid, fr_lang_id, {'active': True}, context=context)
+
+        #Deactive French language
+        lang_obj.set_status(cr, uid, fr_lang_id, context=context)
+
+        #Try to Deactive English language
+        en_lang_id = lang_obj.search(cr, uid, [('code', '=', 'en_US')], context=context)
+        with self.assertRaises(except_orm):
+            lang_obj.set_status(cr, uid, en_lang_id, context=context)
+
+        """Test case for Check translation term if multiple language enabled"""
+        lang_count = lang_obj.search(cr, uid, [('active', '=', True)], count=True)
+        assert lang_count <= 1, "More then one language are enabled"
+
+        #Active french language for check translation term
+        lang_obj.set_status(cr, uid, fr_lang_id, context=context)
+        term = translation_obj.search(cr, uid, [('lang', '=', 'fr_BE')], count=True)
+        #assert term > 0,"No any translation term for french language"
+
+        """Test case for deactive source language and set new language in source """
+        lang_obj.set_status(cr, uid, en_lang_id, context=context)
+        base_lang = ir_values.get_default(cr, uid, 'res.partner', 'lang')
+        user = user_obj.browse(cr, uid, uid, context=context)
+
+        #Load new Gujarati language from base language wizard
+        lang_id = base_lang_obj.create(cr, uid, {'lang': 'gu_IN'})
+        base_lang_obj.lang_install(cr, uid, [lang_id], context=context)
+        base_lang_obj.reload_lang(cr, uid, [lang_id], context=context)
+        lang_obj.create(cr, uid, {'name': 'Gujarati', 'code': 'gu_IN'}, context=context)
+        #change user language and deactive source language
+        user_obj.write(cr, uid, uid, {'lang': 'fr_BE'})
+        lang_obj.set_status(cr, uid, en_lang_id, context=context)
+
+        #now check base language should be gu_IN
+        base_lang = ir_values.get_default(cr, uid, 'res.partner', 'lang')
+        assert base_lang == 'gu_IN', "Base language should be gujarati"
+
+        #now reactive language for check it should be active
+        lang_obj.set_status(cr, uid, en_lang_id, context=context)
+        en_lang = lang_obj.browse(cr, uid, en_lang_id, context=context)

@@ -88,7 +88,6 @@ class ir_translation_import_cursor(object):
             # non-QWeb views do not need a matching res_id -> force to 0 to avoid dropping them
             elif params['res_id'] is None:
                 params['res_id'] = 0
-
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
                                     %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s)""" % self._table_name,
@@ -364,6 +363,8 @@ class ir_translation(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        if not vals.get('res_id'):
+            vals.update({'res_id': context.get('res_id', None)})
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
         self._get_source.clear_cache(self)
         self._get_ids.clear_cache(self)
@@ -440,7 +441,8 @@ class ir_translation(osv.osv):
         if field:
             f = trans_model._fields[field]
             action['context'] = {
-                'search_default_name': "%s,%s" % (f.base_field.model_name, field)
+                'search_default_name': "%s,%s" % (f.base_field.model_name, field),
+                'res_id': id
             }
         return action
 
@@ -489,3 +491,10 @@ class ir_translation(osv.osv):
                     _logger.info('module %s: loading extra translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_extra_file, lang, verbose=False, module_name=module_name, context=context)
         return True
+
+    def fields_get(self, cr, uid, fields=None, context=None):
+        res = super(ir_translation, self).fields_get(cr, uid, fields, context)
+        lang = self.pool['res.lang'].search(cr, uid, [('code', '=', 'en_US'), ('active', '=', True)], limit=1)
+        if lang:
+            res['source'].update(string=_('Source (English US)'))
+        return res

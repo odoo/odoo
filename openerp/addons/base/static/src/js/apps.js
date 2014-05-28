@@ -3,7 +3,7 @@ openerp.base = function(instance) {
     instance.base.apps_client = null;
 
     var _t = instance.web._t;
-
+    openerp.base.language(instance);
     instance.base.Apps = instance.web.Widget.extend({
         template: 'EmptyComponent',
         remote_action_tag: 'loempia.embed',

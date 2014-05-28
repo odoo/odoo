@@ -771,6 +771,30 @@
         t-att-class="disabled ? 'oe_list_button_disabled' : ''"
         ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
         t-att-alt="widget.string"/></button>
+<button t-name="ListView.row.buttonwidget" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="invisible ? 'oe_form_invisible' : ''"
+        ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+        t-att-alt="widget.string"/></button>
+<t t-name="LangActivationButton">
+    <div class="btn-group oe_lang_activation_button">
+        <button class="btn btn-sm btn-success">
+            <span class="oe_disabled">Disabled</span>
+            <span class="oe_enabled">Enabled</span>
+        </button>
+        <button type="button" t-attf-class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a href="#" class="js_publish_btn active">
+                    <span class="oe_enabled" title="Click here to disable language">Disabled</span>
+                    <span class="oe_disabled" title="Click here to enable language">Enabled</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</t>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is
@@ -1074,7 +1098,7 @@
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
-            /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+            /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate and !widget.session.user_context.translation_flag" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
         <t t-if="widget.get('effective_readonly')">
             <span class="oe_form_char_content"></span>
@@ -1146,7 +1170,7 @@
                 t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
                 t-att-maxlength="widget.field.size"
             ></textarea><img class="oe_field_translate oe_input_icon"
-                            t-if="widget.field.translate and !widget.get('effective_readonly')"
+                            t-if="widget.field.translate and !widget.get('effective_readonly') and !widget.session.user_context.translation_flag"
                             t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
             />            
         </t>
@@ -1976,6 +2000,12 @@
     <div>
         <p class="oe_grey"/>
         Name: <input class="oe_form_m2o_input_name" type="text"/>
+    </div>
+</t>
+<t t-name="alertbox">
+    <div id="alertbox" class="alert alert-warning" style="line-height:0px;margin-bottom:3px;">You have updated the <b><t t-esc="widget.string"/></b> for <b><t t-esc="widget.get_value()"/></b> in <b> <t t-esc="lang"/></b>. 
+        <a href="#">Update translations</a>
+        <a class="close" data-dismiss="alert" href="#" aria-hidden="true" style=" line-height: 0px;">x</a>
     </div>
 </t>
 <t t-name="M2ODialog.buttons">

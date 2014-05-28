@@ -161,6 +161,10 @@ class res_users(osv.osv):
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
 
+    def _no_of_lang_enable(self, cr, uid, ids, arg, karg, context=None):
+        val = self.pool['res.lang'].check_single_lang_enable(cr, uid, context=context)
+        return dict.fromkeys(ids, val)
+
     _columns = {
         'id': fields.integer('ID'),
         'login_date': fields.datetime('Latest connection', select=1, copy=False),
@@ -186,6 +190,11 @@ class res_users(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help='The company this user is currently working for.', context={'user_preference': True}),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
+
+        # backward compatibility fields
+        'user_email': fields.related('email', type='char',
+            deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
+        'translation_flag': fields.function(_no_of_lang_enable, type='boolean', string='One language Enable'),
     }
 
     # overridden inherited fields to bypass access rights, in case you have
@@ -380,7 +389,7 @@ class res_users(osv.osv):
         for k in self._fields:
             if k.startswith('context_'):
                 context_key = k[8:]
-            elif k in ['lang', 'tz']:
+            elif k in ['lang', 'tz','translation_flag']:
                 context_key = k
             else:
                 context_key = False
