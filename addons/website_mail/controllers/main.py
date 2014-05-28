@@ -81,6 +81,7 @@ class WebsiteMail(http.Controller):
             'is_user': uid != public_id,
             'email': email,
             'is_follower': False,
+            'alias_name': False,
         }
 
         if not obj:
@@ -95,8 +96,5 @@ class WebsiteMail(http.Controller):
                             ('res_id', '=', obj_ids[0]),
                             ('partner_id', '=', partner_id.id)
                         ], context=context)) == 1
-            if post.get('fields'):
-                record = obj.read(cr, SUPERUSER_ID, obj_ids[0], fields=post.get('fields'), context=context)
-                values.update(record)
 
         return values
