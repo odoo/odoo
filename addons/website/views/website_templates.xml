@@ -239,22 +239,6 @@
                     <button type="button" class="btn btn-primary">Edit</button>
                 </form>
             </div>
-            <div class="collapse navbar-collapse navbar-edit-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" onclick="return false;"><i class="fa fa-mobile" title="Mobile preview"/></a></li>
-                    <li class="divider-vertical"/>
-                    <li><a href="#" onclick="return false;"><span title="Promote page on the web">Promote</span></a></li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Content <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Customize <span class="caret"/></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" onclick="return false;">Help <span class="caret"/></a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </xpath>
     <xpath expr='//t[@t-call-assets="website.assets_frontend"]' position="after">
@@ -291,8 +275,9 @@
     <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
 
     <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.editor.newpage.js"></script> <!-- groups="base.group_website_designer" -->
-    <script type="text/javascript" src="/website/static/src/js/website.menu.js"></script> <!-- groups="base.group_website_designer" -->
+    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script> <!-- groups="base.group_website_designer" -->
     <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
