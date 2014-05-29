@@ -2,12 +2,12 @@
 from openerp import http
 from openerp.addons.web.controllers import main
 
-class {{ config.controller }}(main.Home):
-    @http.route('/{{ config.module }}/{{ config.controller }}', auth='public')
+class {{ controller }}(main.Home):
+    @http.route('/{{ module_name }}/{{ controller }}', auth='public')
     def index(self):
         return "Hello, world!"
-{% if config.has_model %}
-    @http.route('/{{ config.module }}/{{ config.controller }}/<model("{{ config.module }}.{{ config.controller }}"):{{ config.controller }}>'], type='http', auth='public')
-    def {{ config.controller }}(self, {{ config.controller }}, **kw):
-        return "Hello, %r!" % {{ config.controller }}
+{% if has_model %}
+    @http.route('/{{ module_name }}/{{ controller }}/<model("{{ module_name }}.{{ controller }}"):{{ controller }}>'], type='http', auth='public')
+    def {{ controller }}(self, {{ controller }}, **kw):
+        return "Hello, %r!" % {{ controller }}
 {% endif %}
