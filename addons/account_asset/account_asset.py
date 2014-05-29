@@ -96,6 +96,16 @@ class account_asset_asset(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_category_type(self, cr, uid, ids, context=None):
+        """
+            Returns a dictionary containing type, name.
+            result format: {'name':name,'type':type}
+
+            @param cr: A database cursor
+            @param user: ID of the user currently logged in
+            @param ids: ids of a account.asset.asset objects
+            @param context: context arguments, like lang, time zone
+            @return: Returns a dictionary of name and type for given asset ids.
+        """
         type = self.browse(cr, uid, ids, context=context)[0].category_id.type
         res = {'name': 'Installment', 'type': 'Recognition'} if type == 'sales' else {'name': 'Depreciation', 'type': 'Asset'}
         return res
