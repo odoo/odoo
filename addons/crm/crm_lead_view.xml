@@ -334,20 +334,20 @@
                     <separator/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]"
-                            help="No salesperson"/>
+                            help="Leads with no salesperson assigned."/>
                     <filter string="My Leads"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
-                            help="Leads that are assigned to me"/>
+                            help="Leads that are assigned to me (i.e.Current Logged In user)."/>
                     <filter string="My Team(s)" groups="base.group_multi_salesteams"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Leads that are assigned to any sales teams I am member of"/>
+                            help="Teams where leads are assgined where I am one of the member of the team."/>
                     <filter string="Dead" name="dead"
-                            domain="[('probability', '=', '0'), ('stage_id.fold', '=', True)]"/>
+                            domain="[('probability', '=', '0'), ('stage_id.fold', '=', True)]" help="Leads which are in dead stage."/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator />
                     <filter string="Available for mass mailing"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
-                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                            help="Leads that agreed to be included in mass mailing campaigns."/>
                     <separator />
                     <group expand="0" string="Group By...">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
@@ -562,13 +562,13 @@
                     <filter string="Lost" name="lost"
                             domain="[('probability', '=', 0), ('stage_id.fold', '=', True)]"/>
                     <filter string="Unassigned" name="unassigned"
-                            domain="[('user_id','=', False)]" help="No salesperson"/>
+                            domain="[('user_id','=', False)]" help="Opportunities with no salesperson assigned."/>
                     <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to me"/>
+                            help="Opportunities that are assigned to me (i.e.Current Logged In user)."/>
                     <filter string="My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Opportunities that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
+                            help="Teams where opportunities are assgined where I am one of the member of the team." groups="base.group_multi_salesteams"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <group expand="0" string="Group By..." colspan="16">

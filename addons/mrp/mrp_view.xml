@@ -519,7 +519,7 @@
              <field name="arch" type="xml">
                  <xpath expr="//filter[@string='Consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]"/>
+                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]" help="Products that are used as raw materials for a final product in Manufacturing."/>
                  </xpath>
              </field>
         </record>
