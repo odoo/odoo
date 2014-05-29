@@ -15,6 +15,40 @@
         launchSeo: function () {
             (new website.seo.Configurator(this)).appendTo($(document.body));
         },
+        unflow: function() {
+            var self = this;
+            var $more_container = this.$('#menu_more_container').hide();
+            var $more = this.$('#menu_more');
+            var $websitetopview = this.$el.find('#website-top-view li')
+            $more.children('li').insertBefore($more_container);
+            var $toplevel_items = this.$el.find('li').not($websitetopview).not($more_container).show();
+        },
+        reflow: function() {
+            var self = this;
+            var $more_container = this.$('#menu_more_container').hide();
+            var $more = this.$('#menu_more');
+            var $websitetopview = this.$el.find('#website-top-view li')
+            $more.children('li').insertBefore($more_container);
+            var $toplevel_items = this.$el.find('li').not($websitetopview).not($more_container).hide();
+            $toplevel_items.each(function() {
+                var remaining_space = self.$el.parent().width() - $more_container.outerWidth() - 50;
+                self.$el.children(':visible').each(function() {
+                    remaining_space -= $(this).outerWidth();
+                });
+
+                if ($(this).width() > remaining_space) {
+                    return false;
+                }
+                $(this).show();
+            });
+            $more.append($toplevel_items.filter(':hidden').show());
+            $more_container.toggle(!!$more.children().length);
+            // Hide toplevel item if there is only one
+            var $toplevel = this.$el.children("li:visible");
+            if ($toplevel.length === 1) {
+                $toplevel.hide();
+            }
+        },
         start: function() {
             var self = this;
             this._super.apply(this, arguments);
@@ -29,7 +63,14 @@
             if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($topview);
             
             // Active the 'Website' menu item
-            this.$el.find('[data-menu="113"]').parent().addClass('active');
+            // this.$el.find('[data-menu="113"]').parent().addClass('active');
+
+            $(window).on('resize', function() {
+                self.reflow();
+                if (parseInt(self.$el.css('width')) < 768 ) {
+                    self.unflow();
+                }                
+            });
         },
     });
 
@@ -37,8 +78,8 @@
         var self = this;
         self.menu = new website.Menu(self);
         self.menu.setElement($('#navbar_edit'));
-        // self.menu.setElement($('nav.navbar.navbar-inverse'));
         self.menu.start();
+        self.menu.reflow()
     });
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */

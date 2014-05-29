@@ -1086,6 +1086,7 @@ instance.web.Client = instance.web.Widget.extend({
     },
     bind_events: function() {
         var self = this;
+        $('.oe_systray').show();
         this.$el.on('mouseenter', '.oe_systray > div:not([data-toggle=tooltip])', function() {
             $(this).attr('data-toggle', 'tooltip').tooltip().trigger('mouseenter');
         });
