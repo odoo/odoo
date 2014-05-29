@@ -39,7 +39,7 @@ This module consists :
     'website': 'http://www.innopen.eu',
     'license': 'AGPL-3',
     'depends': ['account','account_chart'],
-    'update_xml': [
+    'data': [
         'data/account.account.template.csv',
         'data/account.tax.code.template.csv',
         'data/account.chart.template.csv',
