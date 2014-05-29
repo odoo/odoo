@@ -35,8 +35,8 @@ class table_compute(object):
         index = 0
         maxy = 0
         for p in products:
-            x = p.website_size_x
-            y = p.website_size_y
+            x = min(max(p.website_size_x, 1), PPR)
+            y = min(max(p.website_size_y, 1), PPR)
             if index>PPG:
                 x = y = 1
 
@@ -310,7 +310,7 @@ class website_sale(http.Controller):
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-    optional_billing_fields = ["street2", "state_id"]
+    optional_billing_fields = ["street2", "state_id", "vat"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
     optional_shipping_fields = ["state_id"]
 
@@ -354,6 +354,17 @@ class website_sale(http.Controller):
         for field_name in self.mandatory_billing_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
+
+        if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
+            if request.website.company_id.vat_check_vies:
+                # force full VIES online check
+                check_func = registry["res.partner"].vies_vat_check
+            else:
+                # quick and partial off-line checksum validation
+                check_func = registry["res.partner"].simple_vat_check
+            vat_country, vat_number = registry["res.partner"]._split_vat(data.get("vat"))
+            if not check_func(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
+                error["vat"] = 'error'
 
         if data.get("shipping_different"):
             for field_name in self.mandatory_shipping_fields:

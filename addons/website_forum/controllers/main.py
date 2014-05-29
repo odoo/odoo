@@ -330,13 +330,12 @@ class WebsiteForum(http.Controller):
         cr, uid, context = request.cr, request.uid, request.context
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
-            if request.registry['res.users'].has_group(cr, uid, 'website_mail.group_comment'):
-                request.registry['forum.post'].message_post(
-                    cr, uid, post.id,
-                    body=kwargs.get('comment'),
-                    type='comment',
-                    subtype='mt_comment',
-                    context=dict(context, mail_create_nosubcribe=True))
+            request.registry['forum.post'].message_post(
+                cr, uid, post.id,
+                body=kwargs.get('comment'),
+                type='comment',
+                subtype='mt_comment',
+                context=dict(context, mail_create_nosubcribe=True))
         return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
