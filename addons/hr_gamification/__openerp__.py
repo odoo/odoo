@@ -31,7 +31,6 @@ This allow the user to send badges to employees instead of simple users.
 Badge received are displayed on the user profile.
 """,
     'data': [
-        'security/gamification_security.xml',
         'wizard/grant_badge.xml',
         'views/gamification.xml',
         'views/hr_gamification.xml',

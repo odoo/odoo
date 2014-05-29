@@ -23,7 +23,7 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Ressources',
-    'depends': ['mail', 'email_template', 'web_kanban_gauge', 'hr'],
+    'depends': ['mail', 'email_template', 'web_kanban_gauge'],
     'description': """
 Gamification process
 ====================
