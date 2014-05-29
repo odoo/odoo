@@ -1,6 +1,6 @@
 graft debian
 graft doc
-graft install
+graft setup
 graft openerp
 graft tests
 graft win32
@@ -8,6 +8,6 @@ include README
 include LICENSE
 include MANIFEST.in
 include gunicorn.conf.py
-include openerp-server
+include openerp-*
 include setup*
 global-exclude *pyc *~    # Exclude possible garbage from previous graft.
