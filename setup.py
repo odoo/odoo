@@ -174,7 +174,6 @@ setuptools.setup(
           'python-openid',
           'pytz',
           'pyusb >= 1.0.0b1',
-          'pywebdav < 0.9.8',
           'pyyaml',
           'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab

@@ -25,7 +25,7 @@ GIT_HOOKS_PRE_PUSH = """
 import re
 import sys
 if re.search('github.com[:/]odoo/odoo.git$', sys.argv[2]):
-    print "Pushing to /odoo/odoo.git is forbidden, please push to odoo-dev, use -f to override"
+    print "Pushing to /odoo/odoo.git is forbidden, please push to odoo-dev, use --no-verify to override"
     sys.exit(1)
 """
 
@@ -50,9 +50,11 @@ def git_locate():
     while path != '/':
         gitconfig_path = os.path.join(path, '.git/config')
         if os.path.isfile(gitconfig_path):
-            content = open(gitconfig_path).read()
-            if re.search('github.com[:/]odoo/odoo.git', content):
-                break
+            setup_py = os.path.join(path, 'setup.py')
+            if os.path.isfile(setup_py):
+                content = open(setup_py).read()
+                if content.find('release.py') != -1:
+                    break
         path = os.path.dirname(path)
     if path == '/':
         path = None
@@ -64,7 +66,8 @@ def cmd_setup_git_init():
         printf('git repo found at %s',git_dir)
     else:
         run("git", "init", "odoo")
-        git_dir = os.path.join(os.getcwd(), 'odoo')
+        os.chdir('odoo')
+        git_dir = os.getcwd()
     if git_dir:
         # sane push config for git < 2.0
         run('git','config','push.default','simple')
@@ -92,7 +95,7 @@ def cmd_setup_git_init():
     else:
         printf('no git repo found')
 
-def cmd_setup_git_odoo_dev():
+def cmd_setup_git_dev():
     git_dir = git_locate()
     if git_dir:
         # setup odoo-dev remote
@@ -102,7 +105,7 @@ def cmd_setup_git_odoo_dev():
         run('git','config','--add','remote.odoo-dev.fetch','+refs/pull/*:refs/remotes/odoo-dev/pull/*')
         run('git','remote','update')
 
-def cmd_setup_git_odoo_review():
+def cmd_setup_git_review():
     git_dir = git_locate()
     if git_dir:
         # setup odoo-dev remote
@@ -113,7 +116,7 @@ def cmd_setup_git_odoo_review():
         run('git','config','--add','remote.odoo.fetch','+refs/pull/*:refs/remotes/odoo/pull/*')
 
 def setup_deps_debian(git_dir):
-    debian_control_path = os.path.join(git_dir, 'debian/control')
+    debian_control_path = os.path.join(git_dir, 'setup/debian/control')
     debian_control = open(debian_control_path).read()
     debs = re.findall('python-[0-9a-z]+',debian_control)
     proc = subprocess.Popen(['sudo','apt-get','install'] + debs, stdin=open('/dev/tty'))

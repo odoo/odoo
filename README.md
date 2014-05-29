@@ -1,31 +1,22 @@
-About Odoo
-==========
-
-Odoo is a suite of open source Business apps.  More info at http://www.odoo.com
-
-Evaluating Odoo
----------------
-
-The easiest way to test Odoo is the free trial, NO email registration is
-required, select "skip this step" to skip it.
-
-    https://www.odoo.com/page/start
+Odoo is a suite of web based open source business apps.  More info at http://www.odoo.com
 
 
-Getting starting with Odoo developement
----------------------------------------
+Testing Odoo
+-------------
 
-If you are a developer type the following command at your terminal:
+The easiest way to test it is the <a href="https://www.odoo.com/page/start">Odoo free trial</a>, email registration is NOT required, you may click "skip this step" to skip it. 
+
+
+Getting started with Odoo developement
+--------------------------------------
+
+If you are a developer type the following command at your terminal [1]:
 
     wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
 
-Then follow the tutorial here:
+Then follow <a href="https://doc.openerp.com/trunk/server/howto/howto_website/">the developer tutorial</a>
 
-    https://doc.openerp.com/trunk/server/howto/howto_website/
-
-If you are an Odoo employee type the following to add the odoo-dev remote
-
-    $ cd odoo; ./odoo.py setup_git_dev
+[1] You may want to check the content of the <a href="https://raw.githubusercontent.com/odoo/odoo/master/odoo.py">odoo.py file</a> before executing it.
 
 
 Packages, tarballs and installers
@@ -42,7 +33,19 @@ Packages, tarballs and installers
         $ sudo apt-get update
         $ sudo apt-get install odoo
 
-* Source tarballs http://nightly.openerp.com/
-* Windows installer http://nightly.openerp.com/
-* RPM package http://nightly.openerp.com/
+* <a href="http://nightly.openerp.com/">Source tarballs</a>
+* <a href="http://nightly.openerp.com/">Windows installer</a>
+* <a href="http://nightly.openerp.com/">RPM package</a>
+
+
+For Odoo employees
+------------------
+
+To add the odoo-dev remote use this command:
+
+    $ ./odoo.py setup_git_dev
+
+To fetch odoo merge pull requests refs use this command:
+
+    $ ./odoo.py setup_git_review
 
