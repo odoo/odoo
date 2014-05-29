@@ -19,19 +19,24 @@
             var self = this;
             this._super.apply(this, arguments);
 
-            if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo(this.$el);
-            if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo(this.$el);
-            if (website.MobilePreview) this.$el.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
-            if (website.seo) this.$el.append(openerp.qweb.render('website.editorbar.menu.promote'));
-            if (website.EditorBarContent) new website.EditorBarContent(this).appendTo(this.$el);
             this.$el.append(openerp.qweb.render('website.editorbar.edit'));
+            var $topview = this.$el.find('#website-top-view');
+            
+            if (website.seo) $topview.prepend(openerp.qweb.render('website.editorbar.menu.promote'));
+            if (website.MobilePreview) $topview.prepend(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
+            if (website.EditorBarContent) new website.EditorBarContent(this).appendTo($topview);
+            if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo($topview);
+            if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($topview);
+            
+            // Active the 'Website' menu item
+            this.$el.find('[data-menu="113"]').parent().addClass('active');
         },
     });
 
     website.ready().done(function () {
         var self = this;
         self.menu = new website.Menu(self);
-        self.menu.setElement($('.nav.navbar-nav.navbar-left'));
+        self.menu.setElement($('nav.navbar.navbar-inverse'));
         self.menu.start();
     });
 
