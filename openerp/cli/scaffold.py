@@ -4,16 +4,19 @@ import argparse
 import ast
 import functools
 import keyword
+import logging
 import os
 import re
+import simplejson
 import sys
 
 import jinja2
 
 from . import Command
-from openerp.modules.module import get_module_root
 
-MANIFEST = '__openerp__'
+from openerp.modules.module import (get_module_root, MANIFEST,
+     load_information_from_description_file as load_manifest)
+
 
 class Scaffold(Command):
     "Generate an Odoo module skeleton."
@@ -58,6 +61,7 @@ class Scaffold(Command):
                      "Forgot to `--init` ?" % dest)
              dest = mroot
 
+        logging.disable(logging.CRITICAL)
         scaffold = ScaffoldModule(dest)
         if args.model:
             scaffold.add_model(args.model)
@@ -80,12 +84,10 @@ class ScaffoldModule(object):
         self.path = functools.partial(os.path.join, directory(path))
         self.created = not os.path.exists(self.path())
         directory(path, create=True)
+        self.module_name = self.path().split(os.path.sep)[-1]
         if self.created:
-            self.module_name = self.path().split(os.path.sep)[-1]
-            self.render_file('%s.jinja2' % MANIFEST, self.path('%s.py' % MANIFEST))
-        else:
-            # TODO: get this information from manifest
-            self.module_name = self.path().split(os.path.sep)[-1]
+            manifest_base = os.path.splitext(MANIFEST)[0]
+            self.render_file('%s.jinja2' % manifest_base, self.path('%s.py' % manifest_base))
 
     def add_model(self, model):
         model_module = snake(model)
@@ -111,6 +113,7 @@ class ScaffoldModule(object):
                          has_model=has_model)
 
     def add_webclient_structure(self):
+        self.append_manifest_list('depends', 'web')
         prefix = '%s.%%s' % self.module_name
         for ext in ('js', 'css', 'xml'):
             self.render_file('webclient_%s.jinja2' % ext,
@@ -124,13 +127,32 @@ class ScaffoldModule(object):
                         return True
         return False
 
-    def ensure_dependency_to(self, module):
-        # TODO: update dependencies according to --web and --theme
-        # if args.web:
-        #     args.dependency = 'web'
-        # elif args.theme:
-        #     args.dependency = 'website'
-        pass
+    def get_manifest(self, key=None, default=None):
+        manifest = load_manifest(self.module_name, self.path())
+        if key:
+            return manifest.get(key, default)
+        else:
+            return manifest
+
+    def append_manifest_list(self, key, value, unique=True):
+        vals = self.get_manifest(key, [])
+        if unique and value in vals:
+            return
+        vals.append(value)
+        self.change_manifest_key(key, vals)
+
+    def change_manifest_key(self, key, value):
+        value = simplejson.dumps(value)
+        with open(self.path(MANIFEST), 'r') as f:
+            data = f.read()
+        sdata = re.split('["\']%s["\']\s?:\s?\[[^\]]*\]' % key, data)
+        add = "'%s': %s" % (key, value)
+        if len(sdata) != 2:
+            warn("Could not update `%s` key in manifest. You should add this by yourself:"
+                 "\n\n%s\n" % (key, add))
+        else:
+            with open(self.path(MANIFEST), 'w') as f:
+                f.write(add.join(sdata))
 
     def add_init_import(self, initfile, module):
         if not(os.path.exists(initfile) and self.has_import(initfile, module)):
@@ -142,7 +164,7 @@ class ScaffoldModule(object):
             if if_exists == 'replace':
                 mode = 'w'
             elif if_exists != 'append':
-                print "File `%s` already exists. Skipping it..." % dest
+                warn("File `%s` already exists. Skipping it..." % dest)
                 return
         else:
             kwargs['file_created'] = True
@@ -185,3 +207,8 @@ def directory(p, create=False):
 def die(message, code=1):
     print >>sys.stderr, message
     sys.exit(code)
+
+def warn(message):
+    # ASK: shall we use logger ?
+    print "WARNING: " + message
+
