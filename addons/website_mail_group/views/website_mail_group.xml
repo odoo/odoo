@@ -8,10 +8,15 @@
     </xpath>
 </template>
 
-<template id="head" inherit_id="website.layout" name="Mail Group Customization">
-    <xpath expr="//head" position="inside">
-        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.editor.js" groups="base.group_website_publisher"></script>
+<template id="head" inherit_id="website.assets_frontend" name="Mail Group Snippet">
+    <xpath expr="/t" position="inside">
         <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.snippet.js"></script>
+    </xpath>
+</template>
+
+<template id="editor" inherit_id="website.assets_editor" name="Mail Group Editor">
+    <xpath expr="/t" position="inside">
+        <script type="text/javascript" src="/website_mail_group/static/src/js/website_mail_group.editor.js" groups="base.group_website_publisher"></script>
     </xpath>
 </template>
 
