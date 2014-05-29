@@ -11,6 +11,7 @@ import sys
 import jinja2
 
 from . import Command
+from openerp.modules.module import get_module_root
 
 MANIFEST = '__openerp__'
 
@@ -180,22 +181,6 @@ def directory(p, create=False):
     if create and not os.path.isdir(expanded):
         die("%s exists but is not a directory" % p)
     return expanded
-
-def get_module_root(path):
-    """
-    Get closest module's root begining from path
-
-    @param path: Path from which the lookup should start
-
-    @return:  Module root path
-    """
-    # find the module's root directory
-    while not os.path.exists(os.path.join(path, '%s.py' % MANIFEST)):
-        new_path = os.path.abspath(os.path.join(path, os.pardir))
-        if path == new_path:
-            return None
-        path = new_path
-    return path
 
 def die(message, code=1):
     print >>sys.stderr, message
