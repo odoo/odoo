@@ -248,12 +248,12 @@
                     <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
-                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
-                    <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
+                    <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Orders that are not confirmed yet."/>
+                    <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]" help="Confirmed Sale Orders."/>
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <filter icon="terp-dolar_ok!" string="Done" domain="[('state','=','done')]" help="Sales Order done"/>
                     <separator/>
-                    <filter string="My" domain="[('user_id','=',uid)]" help="My Sales Orders" icon="terp-personal" name="my_sale_orders_filter"/>
+                    <filter string="My" domain="[('user_id','=',uid)]" help="Sales Orders where I am assigned as a salesperson." icon="terp-personal" name="my_sale_orders_filter"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
                     <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>

@@ -82,9 +82,9 @@
 	        <field name="model">sale_layout.category</field>
 	        <field name="arch" type="xml">
                 <search string="Search Name">
-                    <filter string="Total" domain="[('subtotal','=','True')]"/>
-                    <filter string="Separator" domain="[('separator','=','True')]"/>
-                    <filter string="Break" domain="[('pagebreak','=','True')]"/>
+                    <filter string="Total" domain="[('subtotal','=','True')]" help="Report Layout with 'Add Subtotal' checkbox True."/>
+                    <filter string="Separator" domain="[('separator','=','True')]" help="Report Layout with 'Add Separator' checkbox True."/>
+                    <filter string="Break" domain="[('pagebreak','=','True')]" help="Report Layout with 'Add Pagebreak' checkbox True."/>
                     <group string="Group By Name">
                         <filter string="Name"  context="{'group_by' : 'name'}"/>
                     </group>

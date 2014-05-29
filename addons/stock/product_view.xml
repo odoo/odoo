@@ -13,10 +13,10 @@
                 </field>
                 <field name="categ_id" position="before">
                     <separator/>
-                    <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
-                    <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]"/>
-                    <filter name="real_stock_negative" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
-                    <filter name="virtual_stock_negative" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]" help="Quantity On Hand of these products are greater than 0(Zero)."/>
+                    <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]" help="Forecast Quantity of these products are greater than 0(Zero)."/>
+                    <filter name="real_stock_negative" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]" help="Quantity On Hand of these products are less than or equal to 0(Zero)."/>
+                    <filter name="virtual_stock_negative" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]" help="Forecast Quantity of these products are less than or equal to 0(Zero)."/>
                     
                 </field>
             </field>

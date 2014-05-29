@@ -176,7 +176,7 @@
                <separator/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
                <separator/>
-               <filter string="Unassigned Phonecalls" icon="terp-personal-" domain="[('user_id','=',False)]" help="Unassigned Phonecalls"/>
+               <filter string="Unassigned Phonecalls" icon="terp-personal-" domain="[('user_id','=',False)]" help="Phonecalls with no responsible assigned."/>
                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                <separator/>
                <filter string="Phone Calls Assigned to Me or My Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('user_id', '=', uid)]"
