@@ -334,8 +334,8 @@
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
                    <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                    <separator/>
-                   <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>
-                   <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
+                   <filter string="Persons" name="type_person" domain="[('is_company','=',0)]" help="The people who are contacts of the company, 'Is Company' check box is unchecked."/>
+                   <filter string="Companies" name="type_company" domain="[('is_company','=',1)]" help="Companies which acts as our customers, 'Is Company' check box is checked."/>
                    <separator/>
                    <filter string="Customers" name="customer" domain="[('customer','=',1)]" help="Customer Partners"/>
                    <filter string="Suppliers" name="supplier" domain="[('supplier','=',1)]" help="Supplier Partners"/>
