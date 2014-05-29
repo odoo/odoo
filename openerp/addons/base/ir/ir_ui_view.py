@@ -722,6 +722,10 @@ class view(osv.osv):
                                 'fields': xfields
                             }
                     attrs = {'views': views}
+                    Relation = self.pool.get(field.comodel_name)
+                    if Relation and field.type in ('many2one', 'many2many'):
+                        node.set('can_create', 'true' if Relation.check_access_rights(cr, user, 'create', raise_exception=False) else 'false')
+                        node.set('can_write', 'true' if Relation.check_access_rights(cr, user, 'write', raise_exception=False) else 'false')
                 fields[node.get('name')] = attrs
 
                 field = model_fields.get(node.get('name'))
