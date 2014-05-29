@@ -1,10 +1,9 @@
+Odoo
+----
+
 Odoo is a suite of web based open source business apps.  More info at http://www.odoo.com
 
-
-Testing Odoo
--------------
-
-The easiest way to test it is the <a href="https://www.odoo.com/page/start">Odoo free trial</a>, email registration is NOT required, you may click "skip this step" to skip it. 
+The easiest way to play with it is the <a href="https://www.odoo.com/page/start">Odoo free trial</a>, email registration is NOT required, use the "skip this step" link on the registration page to skip it.
 
 
 Getting started with Odoo developement
@@ -34,7 +33,9 @@ Packages, tarballs and installers
         $ sudo apt-get install odoo
 
 * <a href="http://nightly.openerp.com/">Source tarballs</a>
+
 * <a href="http://nightly.openerp.com/">Windows installer</a>
+
 * <a href="http://nightly.openerp.com/">RPM package</a>
 
 

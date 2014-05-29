@@ -1,12 +1,9 @@
 graft debian
 graft doc
-graft install
+graft setup
 graft openerp
-graft win32
-include README
+include README.md
 include LICENSE
-include MANIFEST.in
 include openerp-*
-include oe*
-include setup*
+include odoo*
 global-exclude *pyc *~    # Exclude possible garbage from previous graft.
