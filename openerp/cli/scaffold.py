@@ -62,6 +62,8 @@ class Scaffold(Command):
             scaffold.add_model(args.model)
         if args.controller:
             scaffold.add_controller(args.controller)
+        if args.web:
+            scaffold.add_webclient_structure()
 
 class ScaffoldModule(object):
     """
@@ -79,7 +81,7 @@ class ScaffoldModule(object):
         directory(path, create=True)
         if self.created:
             self.module_name = self.path().split(os.path.sep)[-1]
-            self.dump('%s.jinja2' % MANIFEST, self.path('%s.py' % MANIFEST))
+            self.render_file('%s.jinja2' % MANIFEST, self.path('%s.py' % MANIFEST))
         else:
             # TODO: get this information from manifest
             self.module_name = self.path().split(os.path.sep)[-1]
@@ -91,8 +93,9 @@ class ScaffoldModule(object):
             die("Model `%s` already exists !" % model_file)
         self.add_init_import(self.path('__init__.py'), 'models')
         self.add_init_import(self.path('models', '__init__.py'), model_module)
-        self.dump('models.jinja2', model_file, model=model)
-        self.dump('ir.model.access.jinja2', self.path('security', 'ir.model.access.csv'), model=model)
+        self.render_file('models.jinja2', model_file, model=model)
+        self.render_file('ir.model.access.jinja2', self.path('security', 'ir.model.access.csv'),
+                         if_exists='append', model=model)
 
     def add_controller(self, controller):
         controller_module = snake(controller)
@@ -103,8 +106,14 @@ class ScaffoldModule(object):
         # Check if the controller name correspond to a model and expose result to templates
         has_model = self.has_import(self.path('models', '__init__.py'), controller_module)
         self.add_init_import(self.path('controllers', '__init__.py'), controller_module)
-        self.dump('controllers.jinja2', self.path('controllers', controller_file),
-                  controller=controller, has_model=has_model)
+        self.render_file('controllers.jinja2', controller_file, controller=controller,
+                         has_model=has_model)
+
+    def add_webclient_structure(self):
+        prefix = '%s.%%s' % self.module_name
+        for ext in ('js', 'css', 'xml'):
+            self.render_file('webclient_%s.jinja2' % ext,
+                             self.path('static', 'src', ext, prefix % ext))
 
     def has_import(self, initfile, module):
         with open(initfile, 'r') as f:
@@ -124,15 +133,23 @@ class ScaffoldModule(object):
 
     def add_init_import(self, initfile, module):
         if not(os.path.exists(initfile) and self.has_import(initfile, module)):
-            self.dump('__init__.jinja2', initfile, modules=[module])
+            self.render_file('__init__.jinja2', initfile, if_exists='append', modules=[module])
 
-    def dump(self, template, dest, **kwargs):
+    def render_file(self, template, dest, if_exists='skip', **kwargs):
+        mode = 'a'
+        if os.path.exists(dest):
+            if if_exists == 'replace':
+                mode = 'w'
+            elif if_exists != 'append':
+                print "File `%s` already exists. Skipping it..." % dest
+                return
+        else:
+            kwargs['file_created'] = True
         outdir = os.path.dirname(dest)
-        kwargs['file_created'] = not os.path.exists(dest)
         if not os.path.exists(outdir):
             os.makedirs(outdir)
         content = self.env.get_template(template).render(module_name=self.module_name, **kwargs)
-        with open(dest, 'a') as f:
+        with open(dest, mode) as f:
             f.write(content)
 
 def snake(s):
@@ -179,7 +196,6 @@ def get_module_root(path):
             return None
         path = new_path
     return path
-
 
 def die(message, code=1):
     print >>sys.stderr, message
