@@ -170,6 +170,7 @@ setuptools.setup(
           'python-openid',
           'pytz',
           'pywebdav < 0.9.8',
+          'pyusb >= 1.0.0b1',
           'pyyaml',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
