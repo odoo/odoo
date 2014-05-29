@@ -36,7 +36,8 @@
     website.ready().done(function () {
         var self = this;
         self.menu = new website.Menu(self);
-        self.menu.setElement($('nav.navbar.navbar-inverse'));
+        self.menu.setElement($('#navbar_edit'));
+        // self.menu.setElement($('nav.navbar.navbar-inverse'));
         self.menu.start();
     });
 
