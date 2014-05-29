@@ -14,6 +14,7 @@ Contains the installer for marketing-related modules.
     """,
     'website': 'http://www.openerp.com',
     'data': [
+        'security/marketing_security.xml',
         'marketing_view.xml',
         'res_config_view.xml',
     ],
