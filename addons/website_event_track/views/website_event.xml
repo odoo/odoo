@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<template name="Sponsors" id="event_sponsor" inherit_option_id="website_event.layout" inherit_id="website_event.layout">
+<template name="Sponsors" id="event_sponsor" optional="enabled" inherit_id="website_event.layout">
     <xpath expr="//t[@t-call='website.layout']" position="inside">
         <t t-set="head">
             <link rel='stylesheet' href='/website_event_track/static/src/css/website_event_track.css'/>
@@ -85,8 +85,8 @@
                                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
                                             <span t-esc="track and track.name"/>
                                         </a>
-                                        <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
-                                            <small t-esc="speaker.display_name"/>
+                                        <div class="text-muted">
+                                            <small t-esc="speakers[track.id]"/>
                                         </div>
                                     </t>
                                 </td>
@@ -98,11 +98,11 @@
                     <t t-set="track" t-value="dt[1][False][0]"/>
                     <td t-att-colspan="len(locations)-1" t-attf-class="text-center event_color_#{track.color} #{track and 'event_track' or ''}">
                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
-                            <span t-esc="track.name"/><br/>
-                            <div class="text-muted" t-foreach="track.speaker_ids" t-as="speaker">
-                                <small t-esc="speaker.display_name"/>
-                            </div>
+                            <span t-esc="track.name"/>
                         </a>
+                        <div class="text-muted">
+                            <small t-esc="speakers[track.id]"/>
+                        </div>
                     </td>
                 </t>
             </tr>
@@ -157,7 +157,7 @@
     </t>
 </template>
 
-<template id="tracks_filter" inherit_id="website_event_track.tracks" inherit_option_id="website_event_track.tracks" name="Filter on Tags">
+<template id="tracks_filter" inherit_id="website_event_track.tracks" optional="enabled" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked">
             <li t-att-class="'' if searches.get('tag') else 'active'"><a t-attf-href="/event/#{ slug(event) }/track">All Tags</a></li>
@@ -246,7 +246,7 @@
     </t>
 </template>
 
-<template id="event_track_social" name="Social Widgets" inherit_option_id="website_event_track.track_view">
+<template id="event_track_social" name="Social Widgets" inherit_id="website_event_track.track_view" optional="disabled">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="panel panel-default">
             <div class="panel-heading">

@@ -866,7 +866,7 @@ form: module.record_id""" % (xml_id,)
         if '.' not in full_tpl_id:
             full_tpl_id = '%s.%s' % (self.module, tpl_id)
         # set the full template name for qweb <module>.<id>
-        if not (el.get('inherit_id') or el.get('inherit_option_id')):
+        if not el.get('inherit_id'):
             el.set('t-name', full_tpl_id)
             el.tag = 't'
         else:
@@ -889,15 +889,18 @@ form: module.record_id""" % (xml_id,)
         record.append(Field("qweb", name='type'))
         record.append(Field(el.get('priority', "16"), name='priority'))
         record.append(Field(el, name="arch", type="xml"))
-        for field_name in ('inherit_id','inherit_option_id'):
-            value = el.attrib.pop(field_name, None)
-            if value: record.append(Field(name=field_name, ref=value))
+        if 'inherit_id' in el.attrib:
+            record.append(Field(name='inherit_id', ref=el.get('inherit_id')))
         groups = el.attrib.pop('groups', None)
         if groups:
             grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))
             record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
         if el.attrib.pop('page', None) == 'True':
             record.append(Field(name="page", eval="True"))
+        if el.get('primary') == 'True':
+            record.append(Field('primary', name='mode'))
+        if el.get('optional'):
+            record.append(Field(el.get('optional'), name='application'))
 
         return self._tag_record(cr, record, data_node)
 

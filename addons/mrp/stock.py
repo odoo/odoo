@@ -55,13 +55,14 @@ class StockMove(osv.osv):
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         #doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
         #without giving him the right to read the boms.
-        return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, [
-            ('product_id', '=', move.product_id.id),
-            ('bom_id', '=', False),
+        domain = [
+            '|', ('product_id', '=', move.product_id.id),
+            '&', ('product_id', '=', False), ('product_tmpl_id.product_variant_ids', '=', move.product_id.id),
             ('type', '=', 'phantom'),
             '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
-            ('company_id', '=', user_company)], context=context)
+            ('company_id', '=', user_company)]
+        return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, domain, context=context)
 
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
@@ -76,7 +77,7 @@ class StockMove(osv.osv):
         if bis:
             factor = move.product_qty
             bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis[0], context=context)
-            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, factor, [])
+            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, [])
             state = 'confirmed'
             if move.state == 'assigned':
                 state = 'assigned'
