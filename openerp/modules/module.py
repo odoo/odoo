@@ -42,7 +42,8 @@ MANIFEST = '__openerp__.py'
 _logger = logging.getLogger(__name__)
 
 # addons path as a list
-ad_paths = []
+ad_paths = [tools.config.addons_data_dir]
+hooked = False
 
 # Modules already loaded
 loaded = []
@@ -85,17 +86,21 @@ def initialize_sys_path():
     PYTHONPATH.
     """
     global ad_paths
-    if ad_paths:
-        return
+    global hooked
 
-    ad_paths = [tools.config.addons_data_dir]
-    ad_paths += map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
+    for ad in tools.config['addons_path'].split(','):
+        ad = os.path.abspath(tools.ustr(ad.strip()))
+        if ad not in ad_paths:
+            ad_paths.append(ad)
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    ad_paths += [base_path]
+    if base_path not in ad_paths:
+        ad_paths.append(base_path)
 
-    sys.meta_path.append(AddonsImportHook())
+    if not hooked:
+        sys.meta_path.append(AddonsImportHook())
+        hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
