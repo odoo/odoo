@@ -436,7 +436,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         get_image_url: function(category){
-            return window.location.origin + '/web/binary/image?model=product.public.category&field=image_medium&id='+category.id;
+            return window.location.origin + '/web/binary/image?model=pos.category&field=image_medium&id='+category.id;
         },
 
         render_category: function( category, with_image ){

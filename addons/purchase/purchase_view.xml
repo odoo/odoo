@@ -117,6 +117,32 @@
         </field>
     </record>
 
+
+    <record id="product_normal_action_puchased" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{"search_default_filter_to_purchase":1}</field>
+        <field name="view_id" ref="product.product_kanban_view"/>
+        <field name="search_view_id" ref="product.product_search_form_view"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to define a new product.
+          </p><p>
+            You must define a product for everything you purchase, whether
+            it's a physical product, a consumable or services you buy to
+            subcontractants.
+          </p><p>
+            The product form contains detailed information to improve the
+            purchase process: prices, procurement logistics, accounting data,
+            available suppliers, etc.
+          </p>
+        </field>
+    </record>
+
+
      <menuitem
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
@@ -130,7 +156,7 @@
       <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
            parent="menu_procurement_management_product" sequence="10"/>
 
-      <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
+      <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product_normal_action_puchased"
           parent="menu_procurement_management_product"/>
 
         <record model="ir.ui.view" id="purchase_order_calendar">
@@ -562,25 +588,23 @@
         <!-- Product Suppliers-->
         
         <record id="view_product_supplier_inherit" model="ir.ui.view">
-            <field name="name">product.normal.supplier.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="name">product.template.supplier.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <field name="purchase_ok" attrs="{'readonly': [('is_only_child', '=', False)]}"/>
-                    <label for="purchase_ok"/>
+                    <div>
+                        <field name="purchase_ok" attrs="{'readonly': [('is_product_variant', '=', False)]}"/>
+                        <label for="purchase_ok"/>
+                    </div>
                 </div>
-                <group name="procurement" position="after">
-                     <separator string="Suppliers"/>
-                     <field name="seller_ids" context="{'uom_id': uom_id}"/>
-                </group>
             </field>
         </record>
 
-        <record id="product_search_form_view_purchase" model="ir.ui.view">
-            <field name="name">product.search.purchase.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_search_form_view"/>
+        <record id="product_template_search_view_purchase" model="ir.ui.view">
+            <field name="name">product.template.search.purchase.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
                 <filter name="filter_to_sell" position="before">
                     <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
@@ -591,38 +615,17 @@
             </field>
         </record>
 
-        <record id="product_template_search_view_purchase" model="ir.ui.view">
-            <field name="name">product.template.search.purchase</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_search_view"/>
-            <field name="arch" type="xml">
-                <filter name="filter_to_sell" position="after">
-                    <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
-                </filter>
-            </field>
-        </record>
-
-        <record id="view_template_purchase_ok_form" model="ir.ui.view">
-            <field name="name">product.template.purchase.ok.form.inherit</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <div name="options" position="inside">
-                    <field name="purchase_ok"/>
-                    <label for="purchase_ok"/>
-                </div>
-            </field>
-        </record>
         <record model="ir.actions.act_window" id="action_purchase_line_product_tree">
             <field name="context">{'search_default_product_id': active_id, 'default_product_id': active_id}</field>
             <field name="name">Purchases</field>
             <field name="res_model">purchase.order.line</field>
             <field name="view_id" ref="purchase_order_line_tree"/>
         </record>
+
         <record id="view_product_account_purchase_ok_form" model="ir.ui.view">
-            <field name="name">product.account.purchase.ok.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="account.product_normal_form_view"/>
+            <field name="name">product.template.account.purchase.ok.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_inline oe_stat_button" name="%(action_purchase_line_product_tree)d" type="action" 
