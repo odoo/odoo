@@ -49,7 +49,6 @@ This module manages:
         'security/ir.model.access.csv',
         'account_voucher_sequence.xml',
         'account_voucher_workflow.xml',
-        'wizard/account_statement_from_invoice_view.xml',
         'account_voucher_view.xml',
         'voucher_payment_receipt_view.xml',
         'voucher_sales_purchase_view.xml',

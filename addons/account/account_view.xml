@@ -489,6 +489,13 @@
            src_model="account.journal"/>
 
         <!-- Bank statement -->
+        
+        <record id="action_bank_reconcile_bank_statements" model="ir.actions.client">
+            <field name="name">Reconciliation on Bank Statements</field>
+            <field name="tag">bank_statement_reconciliation_view</field>
+            <field name="context">{'statement_id': active_id}</field>
+        </record>
+        
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
             <field name="name">account.cash.statement.select</field>
             <field name="model">account.bank.statement</field>
@@ -525,6 +532,7 @@
                 </tree>
             </field>
         </record>
+        
         <record id="view_bank_statement_search" model="ir.ui.view">
             <field name="name">account.bank.statement.search</field>
             <field name="model">account.bank.statement</field>
@@ -544,6 +552,7 @@
                 </search>
             </field>
         </record>
+        
         <record id="view_bank_statement_form" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
@@ -551,14 +560,21 @@
             <field name="arch" type="xml">
                 <form string="Bank Statement" version="7.0">
                 <header>
-                    <button name="button_confirm_bank" states="draft" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="button_dummy" states="draft" string="Compute" type="object" class="oe_highlight"/>
+                    <field name="all_lines_reconciled" invisible="1" />
+                    <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
+                        <button name="%(action_bank_reconcile_bank_statements)d" states="draft" string="Reconcile" type="action" class="oe_highlight"/>
+                    </span>
+                    <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
+                        <button name="button_confirm_bank" states="draft" string="Close" type="object" class="oe_highlight"/>
+                    </span>
                     <button name="button_cancel" states="confirm" string="Cancel Statement" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box" name="import_buttons">
-                       <!-- Put here related buttons -->
+                        <button class="oe_inline oe_stat_button" name="%(action_view_account_statement_from_invoice_lines)d"
+                            string="Import Invoice" type="action"
+                            attrs="{'invisible':[('state','=','confirm')]}" widget="statinfo" icon="fa-pencil-square-o"/>
                     </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -581,41 +597,30 @@
                     <notebook>
                         <page string="Transactions" name="statement_line_ids">
                             <field name="line_ids" context="{'date':date}">
-                                <tree editable="bottom" string="Statement lines">
+                                <tree editable="bottom" string="Statement lines" colors="grey:journal_entry_id!=False">
                                     <field name="sequence" readonly="1" invisible="1"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[
+                                    <field name="journal_entry_id" invisible="1"/>
+                                    <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="ref" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="partner_id" domain="[
                                         '&amp;',
                                             '|',('parent_id','=',False),('is_company','=',True),
-                                            '|',('customer','=',True),('supplier','=',True)]" context="{'default_supplier': 1}"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
-                                    <field name="amount"/>
+                                            '|',('customer','=',True),('supplier','=',True)]"
+                                         context="{'default_supplier': 1}"
+                                         attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
+                                    <field name="bank_account_id" groups="base.group_no_one"/>
                                 </tree>
-                                <form string="Statement lines" version="7.0">
-                                    <group col="4">
-                                        <field name="date"/>
-                                        <field name="name"/>
-                                        <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                        <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                        <field name="account_id" domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]"/>
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
-                                        <field name="amount"/>
-                                        <field name="sequence" readonly="0"/>
-                                    </group>
-                                    <separator string="Notes"/>
-                                    <field name="note"/>
-                                </form>
                             </field>
                         </page>
                     </notebook>
                     <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
                         <div class="oe_subtotal_footer_separator oe_inline">
                             <label for="balance_end" />
+                            <button name="button_dummy" states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
                         </div>
                         <field name="balance_end" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                     </group>
@@ -682,6 +687,85 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>
         </record>
+        
+        <record id="action_bank_reconcile" model="ir.actions.client">
+            <field name="name">Reconciliation on Bank Statements</field>
+            <field name="res_model">account.bank.statement.line</field>
+            <field name="tag">bank_statement_reconciliation_view</field>
+        </record>
+        
+        <!-- because of the needaction badge, groups needs to be specified -->
+        <menuitem id="menu_bank_reconcile_bank_statements" name="Reconciliation on Bank Statements" parent="account.periodical_processing_reconciliation" groups="group_account_user" action="action_bank_reconcile" sequence="20"/>
+
+        <record id="view_account_statement_operation_template_form" model="ir.ui.view">
+            <field name="name">account.statement.operation.template.form</field>
+            <field name="model">account.statement.operation.template</field>
+            <field name="arch" type="xml">
+                <form string="Statement Operation Templates" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="account_id"/>
+                                <field name="amount_type"/>
+                                <field name="tax_id"/>
+                            </group>
+                            <group>
+                                <field name="label"/>
+                                <label for="amount"/>
+                                <div>
+                                    <field name="amount" class="oe_inline" />
+                                    <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','not in',('percentage_of_total', 'percentage_of_balance'))]}" />
+                                </div>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_statement_operation_template_tree" model="ir.ui.view">
+            <field name="name">account.statement.operation.template.tree</field>
+            <field name="model">account.statement.operation.template</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Reconciliation Move Presets">
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="amount_type"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_statement_operation_template_search" model="ir.ui.view">
+            <field name="name">account.statement.operation.template.search</field>
+            <field name="model">account.statement.operation.template</field>
+            <field name="arch" type="xml">
+                <search string="Bank Reconciliation Move preset">
+                        <filter string="With tax" domain="[('tax_id','!=',False)]"/>
+                        <field name="amount_type"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_account_statement_operation_template" model="ir.actions.act_window">
+            <field name="name">Statement Operation Templates</field>
+            <field name="res_model">account.statement.operation.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_statement_operation_template_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a statement operation template.
+              </p><p>
+                Those can be used to quickly create a move line when reconciling
+                your bank statements.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_account_statement_operation_template" id="menu_action_account_statement_operation_template" parent="menu_configuration_misc" name="Statement Operation Templates" sequence="22"/>
 
         <!-- Account Types -->
         <record id="view_account_type_search" model="ir.ui.view">
@@ -1602,11 +1686,11 @@
                 <form string="Payment Term" version="7.0">
                     <group>
                         <group string="Amount Computation">
-	                        <field name="value"/>
-	                        <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
-	                        <div attrs="{'invisible':[('value','=','balance')]}">
-	                            <field name="value_amount" class="oe_inline"/>
-	                        </div>
+                            <field name="value"/>
+                            <label for="value_amount" string="Amount To Pay"  attrs="{'invisible':[('value','=','balance')]}"/>
+                            <div attrs="{'invisible':[('value','=','balance')]}">
+                                <field name="value_amount" class="oe_inline"/>
+                            </div>
                         </group>
                         <group string="Due Date Computation">
                             <field name="days"/>
@@ -2258,7 +2342,13 @@
             <field name="arch" type="xml">
                 <form string="Statement" version="7.0">
                 <header>
-                    <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
+                    <field name="all_lines_reconciled" invisible="1" />
+                    <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
+                        <button name="%(action_bank_reconcile_bank_statements)d" states="open" string="Reconcile" type="action" class="oe_highlight"/>
+                    </span>
+                    <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
+                        <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
+                    </span>
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
                     <button name="button_cancel" states="confirm,open" string="Cancel CashBox" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
@@ -2288,10 +2378,7 @@
                                     <field name="date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
+                                    <field name="partner_id"/>
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines" version="7.0">
@@ -2299,10 +2386,7 @@
                                         <field name="date"/>
                                         <field name="name"/>
                                         <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                        <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                        <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
-                                        <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
+                                        <field name="partner_id"/>
                                         <field name="amount"/>
                                         <field name="sequence"/>
                                     </group>
