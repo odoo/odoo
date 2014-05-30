@@ -347,22 +347,17 @@
                 <form string="Bill of Material" version="7.0">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, product_qty, context)" class="oe_inline"/>
+                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_id"/>
+                            <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="onchange_product_id(product_id, name, product_qty, context)"/>
-                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                            </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos" >
-                                <field name="product_uos_qty"
-                                    class="oe_inline"/>
-                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
-                                <field name="product_uos" class="oe_inline"/>
+                                <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
                             </div>
                             <label for="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <div groups="mrp.group_mrp_routings">
-                            	<field name="routing_id" class="oe_inline"/>
+                                <field name="routing_id" class="oe_inline"/>
                             </div>
                         </group>
                         <group>
@@ -378,14 +373,19 @@
                     </group>
                     <notebook>
                         <page string="Components">
-                            <field name="bom_lines" widget="one2many_list">
+                            <field name="bom_line_ids" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
+                                    <field name="type"/>
                                     <field name="product_qty"/>
+                                    <field name="product_rounding"/>
+                                    <field name="product_efficiency"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                                    <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
+                                    <field name="routing_id"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags"/>
                                 </tree>
                             </field>
                         </page>
@@ -393,7 +393,6 @@
                             <group>
                                 <group>
                                     <field name="position"/>
-                                    <field name="bom_id"/>
                                     <field name="sequence"/>
                                     <field name="active"/>
                                 </group>
@@ -422,11 +421,11 @@
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
                     <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <field name="bom_lines" string="Components"/>
-                    <field name="product_id"/>
+                    <field name="bom_line_ids" string="Components"/>
+                    <field name="product_tmpl_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
@@ -439,13 +438,13 @@
        <record id="mrp_bom_tree_view" model="ir.ui.view">
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
-            <field name="field_parent">child_complete_ids</field>
+            <!--field name="field_parent">child_complete_ids</field-->
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
                     <field name="name" invisible="1"/>
+                    <field name="product_tmpl_id"/>
                     <field name="product_id"/>
-                    <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="code"/>
                     <field name="type"/>
@@ -455,32 +454,12 @@
                 </tree>
             </field>
         </record>
-       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
-            <field name="name">mrp.bom.component.tree</field>
-            <field name="model">mrp.bom</field>
-            <field name="field_parent">child_complete_ids</field>
-            <field name="arch" type="xml">
-                <tree string="BoM Structure">
-                    <field name="sequence" invisible="1"/>
-                    <field name="name" groups="base.group_no_one"/>
-                    <field name="code"/>
-                    <field name="product_id"/>
-                    <field name="bom_id" groups="product.group_mrp_properties"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom" groups="product.group_uom"/>
-                    <field name="type"/>
-                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="date_start" groups="product.group_mrp_properties"/>
-                    <field name="date_stop" groups="product.group_mrp_properties"/>
-                </tree>
-            </field>
-        </record>
+
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
             <field name="name">Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -495,13 +474,56 @@
               </p>
             </field>
         </record>
+
+       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
+            <field name="name">mrp.bom.component.tree</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <tree string="Components" editable="top">
+                    <field name="sequence" widget="handle"/>
+                    <field name="bom_id"/>
+                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                    <field name="type"/>
+                    <field name="product_qty"/>
+                    <field name="product_rounding"/>
+                    <field name="product_efficiency"/>
+                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="routing_id"/>
+                    <field name="attribute_value_ids" widget="many2many_tags"/>
+                    <field name="property_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_mrp_bom_line_filter" model="ir.ui.view">
+            <field name="name">mrp.bom.line.select</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Bill Of Material Components">
+                    <field name="bom_id"/>
+                    <field name="product_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Bill Of Material" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'bom_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
+                        <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Material Components</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="mrp_bom_component_tree_view"/>
-            <field name="domain">[]</field>
+            <field name="res_model">mrp.bom.line</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
@@ -512,46 +534,31 @@
               </p>
             </field>
         </record>
-        <record id="product_search_form_view_procurment" model="ir.ui.view">
-             <field name="name">product.search.bom</field>
-             <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_search_form_view"/>
+
+        <record id="product_template_search_view_procurment" model="ir.ui.view">
+             <field name="name">product.template.search.bom</field>
+             <field name="model">product.template</field>
+             <field name="inherit_id" ref="product.product_template_search_view"/>
              <field name="arch" type="xml">
                  <xpath expr="//filter[@string='Consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[]),('bom_ids.bom_id','!=',False)]"/>
+                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[])]"/>
                  </xpath>
              </field>
         </record>
         
         <record id="product_template_form_view_inherit" model="ir.ui.view">
-             <field name="name">product.template.form.view.inherited</field>
+             <field name="name">product.product.form.view.inherited</field>
              <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_template_form_view"/>
+             <field name="inherit_id" ref="product.product_normal_form_view"/>
              <field name="arch" type="xml">
-                  <xpath expr="//field[@name='warranty']" position="before">
-                    <label for="produce_delay"/>
-                    <div>
+                <group name="sale_condition" position="inside">
+                    <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                    <div attrs="{'invisible':[('type','=','service')]}">
                         <field name="produce_delay" class="oe_inline"/> days
                     </div>
-                </xpath>
+                </group>
              </field>
-        </record>
-        
-        <record id="view_normal_procurement_locations_form_inherited" model="ir.ui.view">
-            <field name="name">product.normal.procurement.locations.inherited</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='procurement_uom']" position="after">
-                    <group name="delay" string="Delays" attrs="{'invisible':[('type','=','service')]}">
-                        <label for="produce_delay" />
-                        <div attrs="{'invisible':[('type','=','service')]}">
-                            <field name="produce_delay" class="oe_inline" style="vertical-align:baseline"/> days
-                        </div>                        
-                    </group>                
-                </xpath>
-            </field>
         </record>
 
         <record id="view_mrp_product_form_inherited" model="ir.ui.view">
@@ -686,7 +693,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.bom_id','=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" class="oe_inline" context='{"default_type": "product"}'/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline" on_change="product_id_change(product_id, product_qty)"/>
@@ -980,7 +987,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="//field[@name='origin']" position="before">
-                    <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                    <field name="bom_id" domain="[('product_id','=',product_id)]"/>
                     <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
@@ -991,7 +998,6 @@
                </data>
             </field>
         </record>
-
 
         <!-- Menu for Resource for MRP-->
 
@@ -1027,16 +1033,9 @@
                 id="menu_mrp_production_order_action" name="Order Planning"
                 parent="menu_mrp_planning" sequence="1"/>
 
-        <record id="act_product_mrp_bom_open" model="ir.actions.act_window">
-            <field name="name">BoM Structure</field>
-            <field name="context">{'default_product_id': active_id}</field>
-            <field name="domain">[('product_id', 'in', active_ids),('bom_id','=',False)]</field>
-            <field name="res_model">mrp.bom</field>
-        </record>
         <record model="ir.actions.act_window" id="product_open_bom">
-            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
             <field name="name">Bill of Materials</field>
-            <field name="domain">[('bom_id','=',False)]</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
         </record>
@@ -1046,25 +1045,21 @@
             <field name="res_model">mrp.production</field>
             <field name="view_id" ref="mrp_production_tree_view"/>
         </record>
-        <record model="ir.ui.view" id="product_form_view_bom_button">
-            <field name="name">product.product.procurement</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <record model="ir.ui.view" id="product_template_form_view_bom_button">
+            <field name="name">product.template.procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
+                <div name="buttons" position="inside">
                     <button class="oe_inline oe_stat_button" name="%(product_open_bom)d" type="action" 
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
-                    </button>
-                    <button class="oe_inline oe_stat_button" name="%(act_product_mrp_bom_open)d" type="action" 
-                        groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
-                        <field string="BoM Structure" name="bom_strct" widget="statinfo" />
                     </button>
                     <button class="oe_inline oe_stat_button" name="%(act_product_mrp_production)d" type="action" 
                         groups="mrp.group_mrp_user" attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
-                </xpath>
+                </div>
             </field>
         </record>
         
