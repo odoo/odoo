@@ -365,7 +365,10 @@
             <field name="arch" type="xml">
                 <form string="Stock Location" version="7.0">
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button string="Current Stock" name="%(location_open_quants)d" type="action"/>
+                        <button string="Current Stock" 
+                                class="oe_stat_button" 
+                                icon="fa-building-o" name="%(location_open_quants)d" type="action"
+                                context="{'search_default_internal_loc': 1}"/>
                     </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -560,7 +563,11 @@
                 <form string="Warehouse" version="7.0">
                     <sheet>
                         <div class="oe_right oe_button_box">                        
-                            <button name="view_all_routes_for_wh" string="View Warehouse Routes" type="object"/> 
+                            <button name="view_all_routes_for_wh" 
+                                    string="Routes"
+                                    icon="fa-refresh"
+                                    class="oe_stat_button" 
+                                    type="object"/> 
                         </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -1784,7 +1791,7 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
-            <field name="context">{'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
+            <field name="context">{'search_default_internal_loc': 1, 'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
         </record>
@@ -1828,10 +1835,18 @@
                 </xpath>
                 
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Current Stock" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
-                   <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
+                   <button class="oe_stat_button"
+                           name="%(product_open_quants)d"
+                           icon="fa-building-o"
+                           type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+                    <div><field name="qty_in_stock"/></div>
+                    </button>
+                   <button string="Moves" class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" 
+                           attrs="{'invisible':[('type', '=', 'service')]}"
+                           icon="fa-arrows-v" 
+                           groups="stock.group_stock_user"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest" string="Reordering Rules"/>
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
                 </xpath>
                 
                 <xpath expr="//group[@string='Sale Conditions']" position="inside">
@@ -2074,7 +2089,11 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="action_view_routes" string="Routes" type="object"  />
+                    <button name="action_view_routes"
+                            class="oe_stat_button" 
+                            icon="fa-arrows-alt"
+                            string="Routes" 
+                            type="object"/>
                 </xpath>
             </field>
         </record>
