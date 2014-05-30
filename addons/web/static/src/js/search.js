@@ -1819,7 +1819,7 @@ instance.web.search.CustomReports = instance.web.search.Input.extend({
                         $filter.remove();
                         delete self.$filters[key];
                         delete self.filters[key];
-                        if (!Object.keys(self.filters).length) {
+                        if (_.isEmpty(self.filters)) {
                             self.hide();
                         }
                     });
