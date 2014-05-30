@@ -208,13 +208,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
-                    return self.fetch('product.public.category', ['id','name','parent_id','child_id','image'])
+                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
                 }).then(function(categories){
                     self.db.add_categories(categories);
 
                     return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','public_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'default_code', 'variants',
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.pricelist.id} // context for price

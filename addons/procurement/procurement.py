@@ -27,6 +27,8 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import openerp
 
+PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+
 class procurement_group(osv.osv):
     '''
     The procurement group class is used to group products together
@@ -113,7 +115,7 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
-        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True, track_visibility='onchange'),
+        'priority': fields.selection(PROCUREMENT_PRIORITIES, 'Priority', required=True, select=True, track_visibility='onchange'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=True, track_visibility='onchange'),
 
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),

@@ -18,10 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from datetime import timedelta
 
-from openerp import Model, constrains, depends, onchange, multi, one, _
+import pytz
+
+from openerp import Model, constrains, depends, onchange, multi, one, model, _
 from openerp import Boolean, Integer, Char, Html, Datetime, Selection, Many2one, One2many
 from openerp.exceptions import Warning
 
@@ -109,6 +110,39 @@ class event_event(Model):
         readonly=True, states={'draft': [('readonly', False)]})
     date_end = Datetime(string='End Date', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
+
+    @model
+    def _tz_get(self):
+        return [(x, x) for x in pytz.all_timezones]
+
+    date_tz = Selection('_tz_get', string='Timezone',
+                        default=lambda self: self._context.get('tz', 'UTC'))
+
+    @one
+    @depends('date_tz', 'date_begin')
+    def _compute_date_begin_tz(self):
+        if self.date_begin:
+            in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
+            date_begin = Datetime.from_string(self.date_begin)
+            self.date_begin_located = Datetime.to_string(Datetime.context_timestamp(in_tz, date_begin))
+        else:
+            self.date_begin_located = False
+
+    @one
+    @depends('date_tz', 'date_end')
+    def _compute_date_end_tz(self):
+        if self.date_end:
+            in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
+            date_end = Datetime.from_string(self.date_end)
+            self.date_end_located = Datetime.to_string(Datetime.context_timestamp(in_tz, date_end))
+        else:
+            self.date_end_located = False
+
+    date_begin_located = Datetime(string='Start Date Located', compute='_compute_date_begin_tz',
+                                  readonly=True, store=False)
+    date_end_located = Datetime(string='End Date Located', compute='_compute_date_end_tz',
+                                readonly=True, store=False)
+
     state = Selection([
             ('draft', 'Unconfirmed'),
             ('cancel', 'Cancelled'),
