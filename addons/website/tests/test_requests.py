@@ -41,6 +41,9 @@ class CrawlSuite(unittest2.TestSuite):
     starting the crawl
     """
 
+    at_install = False
+    post_install = True
+
     def __init__(self, user=None, password=None):
         super(CrawlSuite, self).__init__()
 
@@ -108,14 +111,23 @@ class CrawlSuite(unittest2.TestSuite):
                 for link in doc.xpath('//a[@href]'):
                     href = link.get('href')
 
+                    parts = urlparse.urlsplit(href)
+                    # href with any fragment removed
+                    href = urlparse.urlunsplit((
+                        parts.scheme,
+                        parts.netloc,
+                        parts.path,
+                        parts.query,
+                        ''
+                    ))
+
                     # avoid repeats, even for links we won't crawl no need to
                     # bother splitting them if we've already ignored them
                     # previously
                     if href in seen: continue
                     seen.add(href)
 
-                    parts = urlparse.urlsplit(href)
-
+                    # FIXME: handle relative link (not parts.path.startswith /)
                     if parts.netloc or \
                         not parts.path.startswith('/') or \
                         parts.path == '/web' or\

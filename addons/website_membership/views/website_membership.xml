@@ -59,14 +59,17 @@
                             <t t-set="current_membership_id" t-value="membership_line_id.membership_id.id"/>
                             <h3 class="text-center"><span t-field="membership_line_id.membership_id"/></h3>
                         </t>
-                        <t t-set="partner_data" t-value="partners_data[membership_line_id.partner.id]"/>
+                        <t t-set="partner" t-value="partners[membership_line_id.partner.id]"/>
                         <div class="media">
-                            <a class="pull-left" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }">
-                                <img class="media-object" t-attf-src="data:image/png;base64,#{partner_data.get('image_small')}"/>
-                            </a>
+                            <a class="pull-left" t-attf-href="/members/#{slug(partner)}"
+                               t-field="partner.image_small"
+                               t-field-options='{"widget": "image", "class": "media-object"}'
+                            ></a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/members/#{ slug([partner_data.get('id'), partner_data.get('name')]) }"><t t-if="partner_data.get('parent_id')"><span t-esc="partner_data.get('parent_id')[1]"/></t> <span t-esc="partner_data.get('name')"/></a>
-                                <div t-raw="partner_data.get('website_short_description')"/>
+                                <a class="media-heading" t-attf-href="/members/#{slug(partner)}">
+                                    <span t-field="partner.display_name"/>
+                                </a>
+                                <div t-field="partner.website_short_description"/>
                             </div>
                         </div>
                     </t>

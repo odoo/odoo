@@ -28,7 +28,7 @@ class WebsiteCertifiedPartners(http.Controller):
 
     @http.route(['/certifications',
                  '/certifications/<model("certification.type"):cert_type>'], type='http', auth='public',
-                website=True, multilang=True)
+                website=True)
     def certified_partners(self, cert_type=None, **post):
         cr, uid, context = request.cr, request.uid, request.context
         certification_obj = request.registry['certification.certification']

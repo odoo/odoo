@@ -49,7 +49,7 @@
                     <t t-foreach="posts" t-as="post">
                       <div class="col-md-4">
                         <h4>
-                            <a t-attf-href="#{blog_url('', ['blogpost'], blogpost=post)}" t-field="post.name"></a>
+                            <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
                                 &amp;nbsp;
                                 <span class="fa fa-warning" title="Not published"/>
@@ -187,6 +187,7 @@
                     <span class="fa fa-times"/>
                 </a>
             </div>
+            <div class="cover-storage oe_hidden"></div> 
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>
