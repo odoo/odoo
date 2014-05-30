@@ -69,6 +69,8 @@ class Scaffold(Command):
             scaffold.add_controller(args.controller)
         if args.web:
             scaffold.add_webclient_structure()
+        if args.theme:
+            scaffold.add_theme_structure()
 
 class ScaffoldModule(object):
     """
@@ -102,7 +104,7 @@ class ScaffoldModule(object):
                          if_exists='append', model=model)
         self.append_manifest_list('data', 'security/ir.model.access.csv')
 
-        demo_file = '%s_demo.xml' % self.module
+        demo_file = 'data/%s_demo.xml' % self.module
         self.append_xml_data('record.jinja2', self.path(demo_file),
                              model=model)
         self.append_manifest_list('demo', demo_file)
@@ -125,6 +127,13 @@ class ScaffoldModule(object):
         for ext in ('js', 'css', 'xml'):
             self.render_file('webclient_%s.jinja2' % ext,
                              self.path('static', 'src', ext, prefix % ext))
+
+    def add_theme_structure(self):
+        self.append_manifest_list('depends', 'website')
+        css_file = '%s_theme.css' % self.module
+        self.render_file('theme_css.jinja2', self.path('static', 'src', 'css', css_file))
+        theme_file = '%s_theme.xml' % self.module
+        self.append_xml_data('theme_xml.jinja2', self.path('views', theme_file), skip_if_exist=True)
 
     def has_import(self, initfile, module):
         with open(initfile, 'r') as f:
@@ -183,9 +192,11 @@ class ScaffoldModule(object):
         with open(dest, mode) as f:
             f.write(content)
 
-    def append_xml_data(self, template, dest, **kwargs):
+    def append_xml_data(self, template, dest, skip_if_exist=False, **kwargs):
         if not os.path.exists(dest):
             self.render_file('xmldata.jinja2', dest, **kwargs)
+        elif skip_if_exist:
+            warn("File `%s` already exists. Skipping it..." % dest)
         with open(dest, 'r') as f:
             data = f.read()
         m = re.search('(^\s*)?</data>', data, re.MULTILINE)

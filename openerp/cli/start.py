@@ -30,13 +30,15 @@ class Start(Command):
                          help="Specify the database name (default to project's directory name")
 
 
-        #openerp.tools.config.parse_config(args)
         args, unknown = parser.parse_known_args(args=cmdargs)
 
         project_path = os.path.abspath(os.path.expanduser(os.path.expandvars(args.path)))
         module_root = get_module_root(project_path)
+        db_name = None
         if module_root:
-            # go to the parent's directory of the module root if any
+            # started in a module so we choose this module name for database
+            db_name = project_path.split(os.path.sep)[-1]
+            # go to the parent's directory of the module root
             project_path = os.path.abspath(os.path.join(project_path, os.pardir))
 
         # check if one of the subfolders has at least one module
@@ -46,8 +48,7 @@ class Start(Command):
                 "in your project's directory or use `--path` argument" % project_path)
 
         if not args.db_name:
-            # Use the module's name if only one module found else the name of parent folder
-            args.db_name = mods[0] if len(mods) == 1 else project_path.split(os.path.sep)[-1]
+            args.db_name = db_name or project_path.split(os.path.sep)[-1]
             # TODO: forbid some database names ? eg template1, ...
             try:
                 _create_empty_database(args.db_name)
@@ -61,11 +62,12 @@ class Start(Command):
             cmdargs.append('--addons-path=%s' % project_path)
         if '--db-filter' not in cmdargs:
             cmdargs.append('--db-filter=^%s$' % args.db_name)
+        # Not sure we should auto install the module
+        # the user should use    $ odoo start -i <module>
         # if '-i' not in cmdargs and '--init' not in cmdargs:
         #     # Install all modules of projects even if already installed
         #     cmdargs.extend(('-i', ','.join(mods)))
 
-        # FIXME: how to redo config ?
         main(cmdargs)
 
 def die(message, code=1):
