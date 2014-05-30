@@ -120,8 +120,9 @@ def py2exe_options():
         }
     else:
         return {}
-
-execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
+sep = os.path.sep
+path = sep.join(os.path.dirname(__file__).split(sep)[:-1])
+execfile(os.path.join(path, 'openerp', 'release.py'))
 
 # Notes for OpenERP developer on windows:
 #
@@ -146,7 +147,9 @@ setuptools.setup(
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      scripts          = ['openerp-server', 'openerp-gevent', 'odoo.py'],
+      scripts          = [os.path.join(path, 'openerp-server'),
+                          os.path.join(path, 'openerp-gevent'),
+                          os.path.join(path, 'odoo.py')],
       data_files       = data(),
       packages         = setuptools.find_packages(),
       dependency_links = ['http://download.gna.org/pychart/'],
