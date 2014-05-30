@@ -649,7 +649,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     // divs).
     adjust_view_top: function () { 
         if (this.$view_manager_header.length) {
-            var height = this.$view_manager_header.height() + 1;
+            var height = this.$view_manager_header[0].offsetHeight + 1;
             this.$view_manager_header.next().css('top', height + 'px');
         }
     },
