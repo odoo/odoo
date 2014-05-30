@@ -832,6 +832,10 @@ instance.web.SearchViewDrawer = instance.web.Widget.extend({
 
     toggle: function (visibility) {
         this.$el.toggle(visibility);
+        var $view_manager_body = this.$el.closest('.oe_view_manager_body');
+        if ($view_manager_body.length) {
+            $view_manager_body.scrollTop(0);
+        }
     },
 
     start: function() {
