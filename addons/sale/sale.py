@@ -345,16 +345,14 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}        
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
         if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context)['value']
             vals = dict(defaults, **vals)
-        context.update({'mail_create_nolog': True})
-        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
+        ctx = dict(context or {}, mail_create_nolog=True)
+        new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
+        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
         return new_id
 
     def button_dummy(self, cr, uid, ids, context=None):
