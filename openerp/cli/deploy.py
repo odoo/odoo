@@ -64,7 +64,7 @@ class Deploy(Command):
             os.remove(temp)
             raise
 
-    def run(self, args):
+    def run(self, cmdargs):
         parser = argparse.ArgumentParser(
             prog="%s deploy" % sys.argv[0].split(os.path.sep)[-1],
             description=self.__doc__
@@ -75,10 +75,10 @@ class Deploy(Command):
         parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
         parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
         parser.add_argument('--no-ssl-check', dest='no_ssl_check', action='store_true', help='Do not check ssl cert')
-        if not args:
+        if not cmdargs:
             sys.exit(parser.print_help())
 
-        args = parser.parse_args(args=args)
+        args = parser.parse_args(args=cmdargs)
 
         if args.no_ssl_check:
             self.session.verify = False

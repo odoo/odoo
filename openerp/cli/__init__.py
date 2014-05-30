@@ -37,6 +37,7 @@ class Help(Command):
 import server
 import deploy
 import scaffold
+import start
 
 def main():
     args = sys.argv[1:]

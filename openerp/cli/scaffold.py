@@ -21,7 +21,7 @@ from openerp.modules.module import (get_module_root, MANIFEST,
 class Scaffold(Command):
     "Generate an Odoo module skeleton."
 
-    def run(self, args):
+    def run(self, cmdargs):
         # TODO: bash completion file
         parser = argparse.ArgumentParser(
             prog="%s scaffold" % sys.argv[0].split(os.path.sep)[-1],
@@ -42,9 +42,9 @@ class Scaffold(Command):
         parser.add_argument('--theme', action='store_true', default=False,
                          help="Generate structure for a Website theme")
 
-        if not args:
+        if not cmdargs:
             sys.exit(parser.print_help())
-        args = parser.parse_args(args=args)
+        args = parser.parse_args(args=cmdargs)
 
         dest = directory(args.dest)
         if args.init:
