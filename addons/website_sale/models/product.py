@@ -65,7 +65,7 @@ class product_public_category(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
@@ -75,7 +75,7 @@ class product_public_category(osv.osv):
         'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
         'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        
+
         # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
         # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
         # In this case, the default image is set by the js code.
@@ -153,34 +153,37 @@ class product_template(osv.Model):
         'website_published': False,
     }
 
-    def website_reorder(self, cr, uid, ids, operation=None, context=None):
-        if operation == "top":
-            cr.execute('SELECT MAX(website_sequence) FROM product_template')
-            seq = (cr.fetchone()[0] or 0) + 1
-        if operation == "bottom":
-            cr.execute('SELECT MIN(website_sequence) FROM product_template')
-            seq = (cr.fetchone()[0] or 0) -1
-        if operation == "up":
-            product = self.browse(cr, uid, ids[0], context=context)
-            cr.execute("""  SELECT id, website_sequence FROM product_template
-                            WHERE website_sequence > %s AND website_published = %s ORDER BY website_sequence ASC LIMIT 1""" % (product.website_sequence, product.website_published))
-            prev = cr.fetchone()
-            if prev:
-                self.write(cr, uid, [prev[0]], {'website_sequence': product.website_sequence}, context=context)
-                return self.write(cr, uid, [ids[0]], {'website_sequence': prev[1]}, context=context)
-            else:
-                return self.website_reorder(cr, uid, ids, operation='top', context=context)
-        if operation == "down":
-            product = self.browse(cr, uid, ids[0], context=context)
-            cr.execute("""  SELECT id, website_sequence FROM product_template
-                            WHERE website_sequence < %s AND website_published = %s ORDER BY website_sequence DESC LIMIT 1""" % (product.website_sequence, product.website_published))
-            next = cr.fetchone()
-            if next:
-                self.write(cr, uid, [next[0]], {'website_sequence': product.website_sequence}, context=context)
-                return self.write(cr, uid, [ids[0]], {'website_sequence': next[1]}, context=context)
-            else:
-                return self.website_reorder(cr, uid, ids, operation='bottom', context=context)
-        return self.write(cr, uid, ids, {'website_sequence': seq}, context=context)
+    def set_sequence_top(self, cr, uid, ids, context=None):
+        cr.execute('SELECT MAX(website_sequence) FROM product_template')
+        max_sequence = cr.fetchone()[0] or 0
+        return self.write(cr, uid, ids, {'website_sequence': max_sequence + 1}, context=context)
+
+    def set_sequence_bottom(self, cr, uid, ids, context=None):
+        cr.execute('SELECT MIN(website_sequence) FROM product_template')
+        min_sequence = cr.fetchone()[0] or 0
+        return self.write(cr, uid, ids, {'website_sequence': min_sequence -1}, context=context)
+
+    def set_sequence_up(self, cr, uid, ids, context=None):
+        product = self.browse(cr, uid, ids[0], context=context)
+        cr.execute("""  SELECT id, website_sequence FROM product_template
+                        WHERE website_sequence > %s AND website_published = %s ORDER BY website_sequence ASC LIMIT 1""" % (product.website_sequence, product.website_published))
+        prev = cr.fetchone()
+        if prev:
+            self.write(cr, uid, [prev[0]], {'website_sequence': product.website_sequence}, context=context)
+            return self.write(cr, uid, [ids[0]], {'website_sequence': prev[1]}, context=context)
+        else:
+            return self.set_sequence_top(cr, uid, ids, context=context)
+
+    def set_sequence_down(self, cr, uid, ids, context=None):
+        product = self.browse(cr, uid, ids[0], context=context)
+        cr.execute("""  SELECT id, website_sequence FROM product_template
+                        WHERE website_sequence < %s AND website_published = %s ORDER BY website_sequence DESC LIMIT 1""" % (product.website_sequence, product.website_published))
+        next = cr.fetchone()
+        if next:
+            self.write(cr, uid, [next[0]], {'website_sequence': product.website_sequence}, context=context)
+            return self.write(cr, uid, [ids[0]], {'website_sequence': next[1]}, context=context)
+        else:
+            return self.set_sequence_bottom(cr, uid, ids, context=context)
 
     def img(self, cr, uid, ids, field='image_small', context=None):
         return "/website/image?model=%s&field=%s&id=%s" % (self._name, field, ids[0])
