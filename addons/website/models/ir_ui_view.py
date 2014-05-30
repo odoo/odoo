@@ -6,6 +6,7 @@ import werkzeug
 
 from lxml import etree, html
 
+from openerp import SUPERUSER_ID
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
@@ -206,3 +207,7 @@ class view(osv.osv):
         self.write(cr, uid, res_id, {
             'arch': self._pretty_arch(arch)
         }, context=context)
+
+        view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
+        if view.model_data_id:
+            view.model_data_id.write({'noupdate': True})

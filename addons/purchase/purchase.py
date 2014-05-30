@@ -1358,8 +1358,14 @@ class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
     
+    def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        for template in self.browse(cr, uid, ids, context=context):
+            res[template.id] = sum([p.purchase_count for p in template.product_variant_ids])
+        return res
     _columns = {
         'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
+        'purchase_count': fields.function(_purchase_count, string='# Purchases', type='integer'),
     }
     _defaults = {
         'purchase_ok': 1,

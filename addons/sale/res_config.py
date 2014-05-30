@@ -30,33 +30,6 @@ _logger = logging.getLogger(__name__)
 class sale_configuration(osv.TransientModel):
     _inherit = 'sale.config.settings'
 
-    def set_group_product_variant(self, cr, uid, ids, context=None):
-        """ This method is automatically called by res_config as it begins
-            with set. It is used to implement the 'one group or another'
-            behavior. We have to perform some group manipulation by hand
-            because in res_config.execute(), set_* methods are called
-            after group_*; therefore writing on an hidden res_config file
-            could not work.
-            If group_product_variant is checked: remove group_product_mono
-            from group_user, remove the users. Otherwise, just add
-            group_product_mono in group_user.
-            The inverse logic about group_product_variant is managed by the
-            normal behavior of 'group_product_variant' field.
-        """
-        def ref(xml_id):
-            mod, xml = xml_id.split('.', 1)
-            return self.pool['ir.model.data'].get_object(cr, uid, mod, xml, context)
-
-        for obj in self.browse(cr, uid, ids, context=context):
-            config_group = ref('product.group_product_mono')
-            base_group = ref('base.group_user')
-            if obj.group_product_variant:
-                base_group.write({'implied_ids': [(3, config_group.id)]})
-                config_group.write({'users': [(3, u.id) for u in base_group.users]})
-            else:
-                base_group.write({'implied_ids': [(4, config_group.id)]})
-        return True
-
     _columns = {
         'group_invoice_so_lines': fields.boolean('Generate invoices based on the sales order lines',
             implied_group='sale.group_invoice_so_lines',
@@ -82,9 +55,6 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sales order line."),
-        'group_product_variant': fields.boolean("Support multiple variants per products  ",
-            implied_group='product.group_product_variant',
-            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help='Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n'
                  'Example: Product: this product is deprecated, do not purchase more than 5.\n'

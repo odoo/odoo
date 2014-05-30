@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-{% if config.model -%}
-access_{{ config.module|snake }}_{{ config.model|snake }},{{- '' -}}
-access_{{ config.module|snake }}_{{ config.model|snake }},{{- '' -}}
-model_{{ config.module|snake }}_{{ config.model|snake }},,1,0,0,0
-{%- endif %}
