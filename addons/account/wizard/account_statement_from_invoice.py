@@ -34,7 +34,6 @@ class account_statement_from_invoice_lines(osv.osv_memory):
     }
 
     def populate_statement(self, cr, uid, ids, context=None):
-        #TODO: can be moved in account module
         if context is None:
             context = {}
         statement_id = context.get('statement_id', False)
