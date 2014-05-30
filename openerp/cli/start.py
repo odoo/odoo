@@ -43,9 +43,8 @@ class Start(Command):
 
         # check if one of the subfolders has at least one module
         mods = self.get_module_list(project_path)
-        if not mods:
-            die("Directory `%s` does not contain any Odoo module.\nPlease start this command "
-                "in your project's directory or use `--path` argument" % project_path)
+        if mods and '--addons-path' not in cmdargs:
+            cmdargs.append('--addons-path=%s' % project_path)
 
         if not args.db_name:
             args.db_name = db_name or project_path.split(os.path.sep)[-1]
@@ -58,15 +57,8 @@ class Start(Command):
                 die("Could not create database `%s`. (%s)" % (args.db_name, e))
             cmdargs.extend(('-d', args.db_name))
 
-        if '--addons-path' not in cmdargs:
-            cmdargs.append('--addons-path=%s' % project_path)
         if '--db-filter' not in cmdargs:
             cmdargs.append('--db-filter=^%s$' % args.db_name)
-        # Not sure we should auto install the module
-        # the user should use    $ odoo start -i <module>
-        # if '-i' not in cmdargs and '--init' not in cmdargs:
-        #     # Install all modules of projects even if already installed
-        #     cmdargs.extend(('-i', ','.join(mods)))
 
         main(cmdargs)
 
