@@ -84,7 +84,7 @@ class ScaffoldModule(object):
         self.path = functools.partial(os.path.join, directory(path))
         self.created = not os.path.exists(self.path())
         directory(path, create=True)
-        self.module_name = self.path().split(os.path.sep)[-1]
+        self.module = self.path().split(os.path.sep)[-1]
         if self.created:
             manifest_base = os.path.splitext(MANIFEST)[0]
             self.render_file('%s.jinja2' % manifest_base, self.path('%s.py' % manifest_base))
@@ -96,10 +96,16 @@ class ScaffoldModule(object):
             die("Model `%s` already exists !" % model_file)
         self.add_init_import(self.path('__init__.py'), 'models')
         self.add_init_import(self.path('models', '__init__.py'), model_module)
+
         self.render_file('models.jinja2', model_file, model=model)
         self.render_file('ir.model.access.jinja2', self.path('security', 'ir.model.access.csv'),
                          if_exists='append', model=model)
         self.append_manifest_list('data', 'security/ir.model.access.csv')
+
+        demo_file = '%s_demo.xml' % self.module
+        self.append_xml_data('record.jinja2', self.path(demo_file),
+                             model=model)
+        self.append_manifest_list('demo', demo_file)
 
     def add_controller(self, controller):
         controller_module = snake(controller)
@@ -115,7 +121,7 @@ class ScaffoldModule(object):
 
     def add_webclient_structure(self):
         self.append_manifest_list('depends', 'web')
-        prefix = '%s.%%s' % self.module_name
+        prefix = '%s.%%s' % self.module
         for ext in ('js', 'css', 'xml'):
             self.render_file('webclient_%s.jinja2' % ext,
                              self.path('static', 'src', ext, prefix % ext))
@@ -129,7 +135,7 @@ class ScaffoldModule(object):
         return False
 
     def get_manifest(self, key=None, default=None):
-        manifest = load_manifest(self.module_name, self.path())
+        manifest = load_manifest(self.module, self.path())
         if key:
             return manifest.get(key, default)
         else:
@@ -173,9 +179,24 @@ class ScaffoldModule(object):
         outdir = os.path.dirname(dest)
         if not os.path.exists(outdir):
             os.makedirs(outdir)
-        content = self.env.get_template(template).render(module_name=self.module_name, **kwargs)
+        content = self.env.get_template(template).render(module=self.module, **kwargs)
         with open(dest, mode) as f:
             f.write(content)
+
+    def append_xml_data(self, template, dest, **kwargs):
+        if not os.path.exists(dest):
+            self.render_file('xmldata.jinja2', dest, **kwargs)
+        with open(dest, 'r') as f:
+            data = f.read()
+        m = re.search('(^\s*)?</data>', data, re.MULTILINE)
+        content = self.env.get_template(template).render(module=self.module, **kwargs)
+        if not m:
+            warn("Could not add data in `%s`. You should add this by yourself:"
+                 "\n\n%s\n" % (dest, content))
+        else:
+            data = data[:m.start()] + content + m.group() + data[m.end():]
+            with open(self.path(dest), 'w') as f:
+                f.write(data)
 
 def snake(s):
     """ snake cases ``s``
