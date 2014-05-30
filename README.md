@@ -1,73 +1,52 @@
-About Odoo
-==========
+Odoo
+----
 
-Odoo is a suite of open source Business apps. More info at http://www.odoo.com
+Odoo is a suite of web based open source business apps.  More info at http://www.odoo.com
 
-Installation
-============
-
-[Setup/migration guide for employees](https://github.com/odoo/odoo/blob/master/doc/git.rst)
+The easiest way to play with it is the <a href="https://www.odoo.com/page/start">Odoo free trial</a>, email registration is NOT required, use the "skip this step" link on the registration page to skip it.
 
 
-Migration from bazaar
-=====================
+Getting started with Odoo developement
+--------------------------------------
 
-If you have existing bazaar branches and want to move them to a git repository,
-there are several options:
+If you are a developer type the following command at your terminal [1]:
 
-* download http://nightly.openerp.com/move-branch.zip and run it with
-  `python move-branch.zip -h` (for the help). It should be able to convert
-  simple-enough branches for you (even if they have merge commits &al)
-* Extract the branch contents as patches and use `git apply` or `git am` to
-  rebuild a branch from them
-* Replay the branch by hand
+    wget -O- https://raw.githubusercontent.com/odoo/odoo/master/odoo.py | python
+
+Then follow <a href="https://doc.openerp.com/trunk/server/howto/howto_website/">the developer tutorial</a>
+
+[1] You may want to check the content of the <a href="https://raw.githubusercontent.com/odoo/odoo/master/odoo.py">odoo.py file</a> before executing it.
 
 
-System Requirements
--------------------
+Packages, tarballs and installers
+---------------------------------
 
-The dependencies are listed in setup.py
+* Debian packages
 
+    Add this apt repository to your /etc/apt/sources.list file
 
-Debian/Ubuntu
--------------
+        deb http://nightly.openerp.com/8.0/deb/ ./
 
-Add the apt repository
+    Then type:
 
-    deb http://nightly.openerp.com/7.0/deb/ ./
+        $ sudo apt-get update
+        $ sudo apt-get install odoo
 
-in your source.list and type:
+* <a href="http://nightly.openerp.com/">Source tarballs</a>
 
-    $ sudo apt-get update
-    $ sudo apt-get install openerp
+* <a href="http://nightly.openerp.com/">Windows installer</a>
 
-Or download the deb file and type:
-
-    $ sudo dpkg -i <openerp-deb-filename>
-    $ sudo apt-get install -f
-
-RedHat, Fedora, CentOS
-----------------------
-
-Install the required dependencies:
-
-    $ yum install python
-    $ easy_install pip
-    $ pip install .....
-
-Install the openerp rpm
-
-    $ rpm -i openerp-VERSION.rpm
-
-Windows
--------
-
-Check the notes in setup.py
+* <a href="http://nightly.openerp.com/">RPM package</a>
 
 
-Setting up your database
-------------------------
+For Odoo employees
+------------------
 
-Point your browser to http://localhost:8069/ and click "Manage Databases", the
-default master password is "admin".
+To add the odoo-dev remote use this command:
+
+    $ ./odoo.py setup_git_dev
+
+To fetch odoo merge pull requests refs use this command:
+
+    $ ./odoo.py setup_git_review
 
