@@ -412,7 +412,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         this.$el.toggleClass('oe_opened');
         if (! this.$el.hasClass('oe_opened'))
             return;
-        this.$("input").val(this.getParent().fields_view.name || "" );
+        this.$("input").val(this.view.fields_view.name || "" );
     }
 });
 
