@@ -64,7 +64,7 @@ class Scaffold(Command):
         logging.disable(logging.CRITICAL)
         scaffold = ScaffoldModule(dest)
         if args.model:
-            scaffold.add_model(args.model)
+            scaffold.add_model(snake(args.model))
         if args.controller:
             scaffold.add_controller(args.controller)
         if args.web:
@@ -99,6 +99,7 @@ class ScaffoldModule(object):
         self.render_file('models.jinja2', model_file, model=model)
         self.render_file('ir.model.access.jinja2', self.path('security', 'ir.model.access.csv'),
                          if_exists='append', model=model)
+        self.append_manifest_list('data', 'security/ir.model.access.csv')
 
     def add_controller(self, controller):
         controller_module = snake(controller)
@@ -135,6 +136,7 @@ class ScaffoldModule(object):
             return manifest
 
     def append_manifest_list(self, key, value, unique=True):
+        # TODO: append value without altering serialized formatting
         vals = self.get_manifest(key, [])
         if unique and value in vals:
             return
