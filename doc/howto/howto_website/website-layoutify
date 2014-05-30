@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 69c500d7634c0e5287508cfaffa14174cc47d800
+# Parent 22cbd107041dde59f904e94ea8c740fca5965fc0
 
 diff --git a/controllers/academy.py b/controllers/academy.py
 --- a/controllers/academy.py
@@ -8,17 +8,17 @@ diff --git a/controllers/academy.py b/controllers/academy.py
  ]
  
  class academy(main.Home):
--    @http.route('/', auth='none', website=True)
+-    @http.route('/', auth='none')
 +    @http.route('/', auth='public', website=True)
      def index(self):
-         return http.request.website.render('academy.index', {
+         return http.request.render('academy.index', {
              'tas': teaching_assistants,
          })
  
--    @http.route('/tas/<int:id>/', auth='none', website=True)
+-    @http.route('/tas/<int:id>/', auth='none')
 +    @http.route('/tas/<int:id>/', auth='public', website=True)
      def ta(self, id):
-         return http.request.website.render('academy.ta', teaching_assistants[id])
+         return http.request.render('academy.ta', teaching_assistants[id])
 diff --git a/views/templates.xml b/views/templates.xml
 --- a/views/templates.xml
 +++ b/views/templates.xml
@@ -29,7 +29,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 -    <html>
 -        <head>
 -            <title>AcademyAcademy</title>
--            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+-            <link href="/web/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
 -        </head>
 -        <body class="container">
 -            <h1>Introduction to a thing</h1>
@@ -83,7 +83,7 @@ diff --git a/views/templates.xml b/views/templates.xml
 -    <html>
 -        <head>
 -            <title>AcademyAcademy TA <t t-esc="name"/></title>
--            <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+-            <link href="/web/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
 -        </head>
 -        <body class="container">
 -            <h1><t t-esc="name"/></h1>

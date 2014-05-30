@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent 5d765a23763f5a54d8dbca1cbd6dbaa2c483e9c2
+# Parent 2465ec0266508489a92e23cc20d208f72edd5ffd
 
 diff --git a/__openerp__.py b/__openerp__.py
 --- a/__openerp__.py
@@ -25,7 +25,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
              http.request.cr, http.request.uid, context=http.request.context)
 +        lectures = Lectures.browse(
 +            cr, uid, Lectures.search(cr, uid, [], context=context), context=context)
-         return http.request.website.render('academy.index', {
+         return http.request.render('academy.index', {
              'tas': tas,
 +            'lectures': lectures,
          })

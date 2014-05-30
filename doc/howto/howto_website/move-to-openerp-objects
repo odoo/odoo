@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent fb6f6f68a73951a8566ada303ce2a3045e227ae9
+# Parent 31635a11b750982a00ae4afc9952b5e23f39c985
 
 diff --git a/__init__.py b/__init__.py
 --- a/__init__.py
@@ -51,7 +51,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +            Lectures.search(cr, uid, [('type', '=', lecture_type_id),], context=context),
 +            context=context)
 +
-         return http.request.website.render('academy.index', {
+         return http.request.render('academy.index', {
              'tas': tas,
              'lectures': lectures,
          })
@@ -59,7 +59,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 -    @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
 +    @http.route('/tas/<model("res.users"):ta>/', auth='public', website=True)
      def ta(self, ta):
-         return http.request.website.render('academy.ta', {
+         return http.request.render('academy.ta', {
              'ta': ta,
 diff --git a/data/views.xml b/data/views.xml
 deleted file mode 100644
