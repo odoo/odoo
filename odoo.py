@@ -50,11 +50,9 @@ def git_locate():
     while path != '/':
         gitconfig_path = os.path.join(path, '.git/config')
         if os.path.isfile(gitconfig_path):
-            setup_py = os.path.join(path, 'setup.py')
-            if os.path.isfile(setup_py):
-                content = open(setup_py).read()
-                if content.find('release.py') != -1:
-                    break
+            release_py = os.path.join(path, 'openerp/release.py')
+            if os.path.isfile(release_py):
+                break
         path = os.path.dirname(path)
     if path == '/':
         path = None
