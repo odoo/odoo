@@ -318,7 +318,7 @@ class produce_price_history(osv.osv):
 
 
 #----------------------------------------------------------
-# Attributes / Variants
+# Product Attributes
 #----------------------------------------------------------
 class product_attribute(osv.osv):
     _name = "product.attribute"
@@ -362,11 +362,11 @@ class product_attribute_value(osv.osv):
         'name': fields.char('Value', translate=True, required=True),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
         'product_ids': fields.many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Price Extra',
+        'price_extra': fields.function(_get_price_extra, type='float', string='Attribute Price Extra',
             fnct_inv=_set_price_extra,
             digits_compute=dp.get_precision('Product Price'),
             help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
-        'price_ids': fields.one2many('product.attribute.price', 'value_id', string='Variant Prices', readonly=True),
+        'price_ids': fields.one2many('product.attribute.price', 'value_id', string='Attribute Prices', readonly=True),
     }
     _sql_constraints = [
         ('value_company_uniq', 'unique (name,attribute_id)', 'This attribute value already exists !')
@@ -548,9 +548,9 @@ class product_template(osv.osv):
         'color': fields.integer('Color Index'),
         'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
 
-        'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Variants'),
+        'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
-        'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='Product Variant Number'),
+        'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
         'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='EAN13 Barcode'),
@@ -871,7 +871,7 @@ class product_product(osv.osv):
 
     _columns = {
         'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'price_extra': fields.function(_get_price_extra, type='float', string='Sum of Variant Price Extra'),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is le sum of the extra price of all attributes"),
         'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
@@ -884,7 +884,7 @@ class product_product(osv.osv):
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
-        'attribute_value_ids': fields.many2many('product.attribute.value',  id1='prod_id', id2='att_id', string='Variants', readonly=True),
+        'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True),
 
         # image: all image fields are base64 encoded and PIL-supported
         'image_variant': fields.binary("Variant Image",
