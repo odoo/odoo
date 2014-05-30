@@ -121,7 +121,7 @@ def py2exe_options():
     else:
         return {}
 sep = os.path.sep
-path = sep.join(os.path.dirname(__file__).split(sep)[:-1])
+path = os.path.dirname(os.path.dirname(__file__))
 execfile(os.path.join(path, 'openerp', 'release.py'))
 
 # Notes for OpenERP developer on windows:
