@@ -9,4 +9,18 @@ $(document).ready(function () {
         })
         .find("input[name='acquirer']:checked").click();
 
+    // When clicking on payment button: create the tx using json then continue to the acquirer
+    $('button[type="submit"]').on("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      var $form = $(ev.currentTarget).parents('form');
+      var acquirer_id = $(ev.currentTarget).parents('div.oe_sale_acquirer_button').first().data('id');
+      if (! acquirer_id) {
+        return false;
+      }
+      openerp.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+        $form.submit();
+      });
+   });
+
 });
