@@ -165,21 +165,16 @@
 	    <field name="arch" type="xml">
                 <form string="Landed Costs" version="7.0">
 		    <sheet>
-                        <field name="is_only_child" invisible="1"/>
-                        <field name="image_medium" widget="image" class="oe_avatar oe_left"
-                            attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" name='label_name' string="Product Name"
-                                    attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                <label for="name" name='label_name' string="Product Name"/>
                             </div>
                             <h1>
-                                <field name="name" class="oe_inline"
-                                    attrs="{'required': [('is_only_child', '=', True)],
-                                            'invisible': [('is_only_child', '=', False)]}"/>
+                                <field name="name" class="oe_inline"/>
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
-                            <h2><field name="categ_id" attrs="{'readonly': [('is_only_child', '=', False)]}"/></h2>
+                            <h2><field name="categ_id"/></h2>
                             <div name="options" groups="base.group_user">
 				<field name="landed_cost_ok" readonly="1"/>
 				<label for="landed_cost_ok"/>
@@ -196,13 +191,11 @@
                                         <field name="property_account_expense"/>
                                     </group>
                                     <group>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"
-                                            attrs="{'invisible': [('is_only_child', '=', False)]}"/>
-                                        <field name="type" attrs="{'invisible': [('is_only_child', '=', False)]}"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="type"/>
                                     </group>
                                 </group>
-                                <field name="description" placeholder="describe the product characteristics..."
-                                    attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                                <field name="description" placeholder="describe the product characteristics..."/>
                             </page>
                         </notebook>
                     </sheet>

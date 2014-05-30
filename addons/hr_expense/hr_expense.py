@@ -392,8 +392,8 @@ class hr_expense_expense(osv.osv):
         return result
 
 
-class product_product(osv.osv):
-    _inherit = "product.product"
+class product_template(osv.osv):
+    _inherit = "product.template"
     _columns = {
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }

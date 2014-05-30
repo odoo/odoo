@@ -191,13 +191,15 @@
 
 
         <record id="view_product_hr_expense_form" model="ir.ui.view">
-            <field name="name">product.product.expense.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="name">product.template.expense.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <field name="hr_expense_ok"/>
-                    <label for="hr_expense_ok"/>
+                    <div>
+                        <field name="hr_expense_ok"/>
+                        <label for="hr_expense_ok"/>
+                    </div>
                 </div>
             </field>
         </record>
