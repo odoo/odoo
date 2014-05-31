@@ -112,13 +112,6 @@ class product_template(osv.Model):
             res[product.id] = "/shop/product/%s" % (product.id,)
         return res
 
-    def _get_available_variant_ids(self, cr, uid, ids, name, arg, context=None):
-        result = dict.fromkeys(ids, [])
-        for obj in self.browse(cr, uid, ids, context=context):
-            for p in obj.product_variant_ids:
-                result[obj.id].append([p.id, map(int,p.attribute_value_ids), p.price])
-        return result
-
     _columns = {
         # TODO FIXME tde: when website_mail/mail_thread.py inheritance work -> this field won't be necessary
         'website_message_ids': fields.one2many(
@@ -137,7 +130,6 @@ class product_template(osv.Model):
         'website_style_ids': fields.many2many('product.style', string='Styles'),
         'website_sequence': fields.integer('Sequence', help="Determine the display order in the Website E-commerce"),
         'website_url': fields.function(_website_url, string="Website url", type="char"),
-        'available_variant_ids': fields.function(_get_available_variant_ids, string='Available Variants'),
         'public_categ_ids': fields.many2many('product.public.category', string='Public Category', help="Those categories are used to group similar products for e-commerce."),
     }
 

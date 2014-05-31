@@ -457,19 +457,13 @@ class pos_session(osv.osv):
                 if st.difference and st.journal_id.cash_control == True:
                     if st.difference > 0.0:
                         name= _('Point of Sale Profit')
-                        account_id = st.journal_id.profit_account_id.id
                     else:
-                        account_id = st.journal_id.loss_account_id.id
                         name= _('Point of Sale Loss')
-                    if not account_id:
-                        raise osv.except_osv( _('Error!'),
-                        _("Please set your profit and loss accounts on your payment method '%s'. This will allow OpenERP to post the difference of %.2f in your ending balance. To close this session, you can update the 'Closing Cash Control' to avoid any difference.") % (st.journal_id.name,st.difference))
                     bsl.create(cr, uid, {
                         'statement_id': st.id,
                         'amount': st.difference,
                         'ref': record.name,
                         'name': name,
-                        'account_id': account_id
                     }, context=context)
 
                 if st.journal_id.type == 'bank':
@@ -820,19 +814,8 @@ class pos_order(osv.osv):
             'amount': data['amount'],
             'date': data.get('payment_date', time.strftime('%Y-%m-%d')),
             'name': order.name + ': ' + (data.get('payment_name', '') or ''),
+            'partner_id': order.partner_id and order.partner_id.id or None,
         }
-
-        account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
-                             and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
-        args['partner_id'] = order.partner_id and order.partner_id.id or None
-
-        if not args['account_id']:
-            if not args['partner_id']:
-                msg = _('There is no receivable account defined to make payment.')
-            else:
-                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (order.partner_id.name, order.partner_id.id,)
-            raise osv.except_osv(_('Configuration Error!'), msg)
 
         context.pop('pos_session_id', False)
 
@@ -855,7 +838,6 @@ class pos_order(osv.osv):
             'statement_id' : statement_id,
             'pos_statement_id' : order_id,
             'journal_id' : journal_id,
-            'type' : 'customer',
             'ref' : order.session_id.name,
         })
 
