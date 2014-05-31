@@ -432,7 +432,7 @@
 
 <template id="product_variants" inherit_id="website_sale.product" optional="enabled" name="Product Variants">
   <xpath expr="//form[@action='/shop/cart/update']" position="replace">
-    <form action="/shop/cart/update" class="js_add_cart_variants" method="POST" t-att-data-attribute_value_ids="product.available_variant_ids">
+    <form action="/shop/cart/update" class="js_add_cart_variants" method="POST" t-att-data-attribute_value_ids="variants">
         <input type="hidden" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="product.attribute_line_ids" t-as="variant_id">
