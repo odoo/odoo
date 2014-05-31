@@ -1901,7 +1901,6 @@ class stock_move(osv.osv):
         result = {
                   'product_qty': 0.00
           }
-        warning = {}
 
         if (not product_id) or (product_uos_qty <=0.0):
             result['product_uos_qty'] = 0.0
@@ -1909,22 +1908,15 @@ class stock_move(osv.osv):
 
         product_obj = self.pool.get('product.product')
         uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
-        
-        # Warn if the quantity was decreased 
-        for move in self.read(cr, uid, ids, ['product_uos_qty']):
-            if product_uos_qty < move['product_uos_qty']:
-                warning.update({
-                   'title': _('Warning: No Back Order'),
-                   'message': _("By changing the quantity here, you accept the "
-                                "new quantity as complete: OpenERP will not "
-                                "automatically generate a Back Order.") })
-                break
+
+        # No warning if the quantity was decreased to avoid double warnings:
+        # The clients should call onchange_quantity too anyway
 
         if product_uos and product_uom and (product_uom != product_uos):
             result['product_qty'] = product_uos_qty / uos_coeff['uos_coeff']
         else:
             result['product_qty'] = product_uos_qty
-        return {'value': result, 'warning': warning}
+        return {'value': result}
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
                             loc_dest_id=False, partner_id=False):
