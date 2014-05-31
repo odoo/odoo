@@ -210,7 +210,7 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
             product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
 
-        variants = [(p.id, map(int, p.attribute_value_ids), p.price) for p in product.product_variant_ids]
+        variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
 
         values = {
             'search': search,
