@@ -619,8 +619,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (!field) { return; }
             field.node.attrs.domain = domain;
         });
-            
-        if (result.value) {
+
+        if (!_.isEmpty(result.value)) {
             this._internal_set_values(result.value, processed);
         }
         if (!_.isEmpty(result.warning)) {
@@ -4193,28 +4193,52 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     reload_current_view: function() {
         var self = this;
         self.is_loaded = self.is_loaded.then(function() {
-            var active_view = self.viewmanager.active_view;
-            var view = self.viewmanager.views[active_view].controller;
-            if(active_view === "list") {
-                return view.reload_content();
-            } else if (active_view === "form") {
+            var view = self.get_active_view();
+            if (view.type === "list") {
+                return view.controller.reload_content();
+            } else if (view.type === "form") {
                 if (self.dataset.index === null && self.dataset.ids.length >= 1) {
                     self.dataset.index = 0;
                 }
                 var act = function() {
-                    return view.do_show();
+                    return view.controller.do_show();
                 };
                 self.form_last_update = self.form_last_update.then(act, act);
                 return self.form_last_update;
-            } else if (view.do_search) {
-                return view.do_search(self.build_domain(), self.dataset.get_context(), []);
+            } else if (view.controller.do_search) {
+                return view.controller.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
         }, undefined);
         return self.is_loaded;
     },
+    get_active_view: function () {
+        /**
+         * Returns the current active view if any.
+         */
+        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+            this.viewmanager.views[this.viewmanager.active_view] &&
+            this.viewmanager.views[this.viewmanager.active_view].controller) {
+            return {
+                type: this.viewmanager.active_view,
+                controller: this.viewmanager.views[this.viewmanager.active_view].controller
+            };
+        }
+    },
     set_value: function(value_) {
         value_ = value_ || [];
         var self = this;
+        var view = this.get_active_view();
+        var was_editing = false;
+        if (view && view.type == 'list' && view.controller.editor.is_editing()) {
+            // TODO: make shelve, unshelve work
+            // was_editing = true;
+            // view.controller.editor.shelve();
+
+            // Meanwhile ...
+            view.controller.cancel_edition(true);
+            view.controller.start_edition();
+            return;
+        }
         this.dataset.reset_ids([]);
         var ids;
         if(value_.length >= 1 && value_[0] instanceof Array) {
@@ -4268,6 +4292,10 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         if (this.dataset.index === null && this.dataset.ids.length > 0) {
             this.dataset.index = 0;
         }
+        if (was_editing) {
+            // TODO: make shelve, unshelve work
+            // view.controller.editor.unshelve();
+        }
         this.trigger_on_change();
         if (this.is_started) {
             return self.reload_current_view();
@@ -4299,33 +4327,32 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         return this.save_any_view();
     },
     save_any_view: function() {
-        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-            this.viewmanager.views[this.viewmanager.active_view] &&
-            this.viewmanager.views[this.viewmanager.active_view].controller) {
-            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+        var view = this.get_active_view();
+        if (view) {
             if (this.viewmanager.active_view === "form") {
-                if (view.is_initialized.state() !== 'resolved') {
+                if (view.controller.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
-                return $.when(view.save());
+                return $.when(view.controller.save());
             } else if (this.viewmanager.active_view === "list") {
-                return $.when(view.ensure_saved());
+                return $.when(view.controller.ensure_saved());
             }
         }
         return $.when(false);
     },
     is_syntax_valid: function() {
-        if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
+        var view = this.get_active_view();
+        if (!view){
             return true;
-        var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+        }
         switch (this.viewmanager.active_view) {
         case 'form':
-            return _(view.fields).chain()
+            return _(view.controller.fields).chain()
                 .invoke('is_valid')
                 .all(_.identity)
                 .value();
         case 'list':
-            return view.is_valid();
+            return view.controller.is_valid();
         }
         return true;
     },
