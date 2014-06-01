@@ -5601,7 +5601,7 @@ class BaseModel(object):
             field_value = record._cache.pop(field_name, False)
 
             # attach `self` with a different context (for cache consistency)
-            record._origin = self.sudo(__onchange=True)
+            record._origin = self.with_context(__onchange=True)
 
         # at this point, the cache should be clean
         assert not env.dirty
