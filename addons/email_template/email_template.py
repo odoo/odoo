@@ -487,7 +487,7 @@ class email_template(osv.osv):
         partner_to = values.pop('partner_to', '')
         if partner_to:
             # placeholders could generate '', 3, 2 due to some empty field values
-            tpl_partner_ids = [pid for pid in partner_to.split(',') if pid]
+            tpl_partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
             values['recipient_ids'] += [(4, pid) for pid in self.pool['res.partner'].exists(cr, SUPERUSER_ID, tpl_partner_ids, context=context)]
 
         attachment_ids = values.pop('attachment_ids', [])
