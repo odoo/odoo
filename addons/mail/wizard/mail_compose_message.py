@@ -244,6 +244,8 @@ class mail_compose_message(osv.TransientModel):
     def get_mail_values(self, cr, uid, wizard, res_ids, context=None):
         """Generate the values that will be used by send_mail to create mail_messages
         or mail_mails. """
+        import pudb
+        pudb.set_trace()
         results = dict.fromkeys(res_ids, False)
         rendered_values, default_recipients = {}, {}
         mass_mail_mode = wizard.composition_mode == 'mass_mail'
