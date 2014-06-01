@@ -462,7 +462,7 @@ class Product(osv.osv):
         return super(Product,self).fields_view_get(cr, user, view_id, view_type, context, toolbar, submenu)
 
     '''Product'''
-    _inherit = 'product.product'
+    _inherit = 'product.template'
     _columns = {
         'membership': fields.boolean('Membership', help='Check if the product is eligible for membership.'),
         'membership_date_from': fields.date('Membership Start Date', help='Date from which membership becomes active.'),

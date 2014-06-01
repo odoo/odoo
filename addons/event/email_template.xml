@@ -9,7 +9,7 @@
         <field name="subject">Your registration at ${object.event_id.name}</field>
         <field name="body_html"><![CDATA[
         <p>Hello ${object.name},</p>
-        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}.
+        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.
         For any further information please contact our event department.</p>
         <p>Thank you for your participation!</p>
         <p>Best regards</p>]]></field>

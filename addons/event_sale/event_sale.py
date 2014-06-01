@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import depends, one, Integer, One2many
+from openerp import depends, one, Integer, One2many, Html
 from openerp.addons.event.event import event_event as Event
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -130,6 +130,10 @@ class event_event(osv.osv):
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
         store=True, readonly=True, compute='_compute_seats_max')
+
+    badge_back = Html('Badge Back', translate=True, states={'done': [('readonly', True)]})
+    badge_innerleft = Html('Badge Innner Left', translate=True, states={'done': [('readonly', True)]})
+    badge_innerright = Html('Badge Inner Right', translate=True, states={'done': [('readonly', True)]})
 
     @one
     def _default_tickets(self):

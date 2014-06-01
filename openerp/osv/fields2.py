@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP (<http://www.openerp.com>).
+#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -748,6 +748,34 @@ class Datetime(Field):
     @staticmethod
     def now(*args):
         return datetime.now().strftime(DATETIME_FORMAT)
+
+    @staticmethod
+    def context_timestamp(record, timestamp):
+        """Returns the given timestamp converted to the client's timezone.
+           This method is *not* meant for use as a _defaults initializer,
+           because datetime fields are automatically converted upon
+           display on client side. For _defaults you :meth:`fields.datetime.now`
+           should be used instead.
+
+           :param datetime timestamp: naive datetime value (expressed in UTC)
+                                      to be converted to the client timezone
+           :rtype: datetime
+           :return: timestamp converted to timezone-aware datetime in context
+                    timezone
+        """
+        assert isinstance(timestamp, datetime), 'Datetime instance expected'
+        tz_name = record._context.get('tz') or record.env.user.tz
+        if tz_name:
+            try:
+                utc = pytz.timezone('UTC')
+                context_tz = pytz.timezone(tz_name)
+                utc_timestamp = utc.localize(timestamp, is_dst=False)  # UTC = no DST
+                return utc_timestamp.astimezone(context_tz)
+            except Exception:
+                _logger.debug("failed to compute context/client-specific timestamp, "
+                              "using the UTC value",
+                              exc_info=True)
+        return timestamp
 
     @staticmethod
     def from_string(value):

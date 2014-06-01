@@ -120,19 +120,35 @@ class website_sale(http.Controller):
 
         domain = request.website.sale_product_domain()
         if search:
-            domain += ['|', ('name', 'ilike', search), ('description', 'ilike', search)]
+            domain += ['|', '|', '|', ('name', 'ilike', search), ('description', 'ilike', search),
+                ('description_sale', 'ilike', search), ('product_variant_ids.default_code', 'ilike', search)]
         if category:
-            domain += [('product_variant_ids.public_categ_id', 'child_of', int(category))]
+            domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
 
-        attrib_values = map(int,request.httprequest.args.getlist('attrib'))
+        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
         if attrib_values:
-            domain += [('attribute_lines.value_id', 'in', attrib_values)]
-        attrib_set = set(attrib_values) 
+            attrib = None
+            ids = []
+            for value in attrib_values:
+                if not attrib:
+                    attrib = value[0]
+                    ids.append(value[1])
+                elif value[0] == attrib:
+                    ids.append(value[1])
+                else:
+                    domain += [('attribute_line_ids.value_ids', 'in', ids)]
+                    attrib = value[0]
+                    ids = [value[1]]
+            if attrib:
+                domain += [('attribute_line_ids.value_ids', 'in', ids)]
+
+        attrib_set = set([v[1] for v in attrib_values])
         keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_set)
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
         product_obj = pool.get('product.template')
+
         product_count = product_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(url="/shop", total=product_count, page=page, step=PPG, scope=7, url_args=post)
         product_ids = product_obj.search(cr, uid, domain, limit=PPG+10, offset=pager['offset'], order='website_published desc, website_sequence desc', context=context)
@@ -154,6 +170,7 @@ class website_sale(http.Controller):
         values = {
             'search': search,
             'category': category and int(category),
+            'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
             'pricelist': self.get_pricelist(),
@@ -175,11 +192,13 @@ class website_sale(http.Controller):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
 
+        context.update(active_id=product.id)
+
         if category:
             category = category_obj.browse(request.cr, request.uid, int(category), context=request.context)
 
-        attrib_values = map(int,request.httprequest.args.getlist('attrib'))
-        attrib_set = set(attrib_values) 
+        attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_set = set([v[1] for v in attrib_values])
 
         keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
 
@@ -191,15 +210,19 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
             product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
 
+        variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
+
         values = {
             'search': search,
             'category': category,
             'pricelist': self.get_pricelist(),
+            'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'keep': keep,
             'category_list': category_list,
             'main_object': product,
             'product': product,
+            'variants': variants,
         }
         return request.website.render("website_sale.product", values)
 
@@ -310,7 +333,7 @@ class website_sale(http.Controller):
         return values
 
     mandatory_billing_fields = ["name", "phone", "email", "street", "city", "country_id", "zip"]
-    optional_billing_fields = ["street2", "state_id"]
+    optional_billing_fields = ["street2", "state_id", "vat"]
     mandatory_shipping_fields = ["name", "phone", "street", "city", "country_id", "zip"]
     optional_shipping_fields = ["state_id"]
 
@@ -354,6 +377,17 @@ class website_sale(http.Controller):
         for field_name in self.mandatory_billing_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
+
+        if data.get("vat") and hasattr(registry["res.partner"], "check_vat"):
+            if request.website.company_id.vat_check_vies:
+                # force full VIES online check
+                check_func = registry["res.partner"].vies_vat_check
+            else:
+                # quick and partial off-line checksum validation
+                check_func = registry["res.partner"].simple_vat_check
+            vat_country, vat_number = registry["res.partner"]._split_vat(data.get("vat"))
+            if not check_func(cr, uid, vat_country, vat_number, context=None): # simple_vat_check
+                error["vat"] = 'error'
 
         if data.get("shipping_different"):
             for field_name in self.mandatory_shipping_fields:
@@ -680,14 +714,10 @@ class website_sale(http.Controller):
         if not name:
             name = _("New Product")
         product_obj = request.registry.get('product.product')
-        product_id = product_obj.create(cr, uid, { 'name': name, 'public_categ_id': category }, context=context)
+        product_id = product_obj.create(cr, uid, { 'name': name, 'public_categ_ids': category }, context=context)
         product = product_obj.browse(cr, uid, product_id, context=context)
 
         return request.redirect("/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id))
-
-    @http.route(['/shop/reorder'], type='json', auth="public")
-    def reorder(self, product_id, operation):
-        request.registry['product.template'].website_reorder(request.cr, request.uid, [id], operation, context=request.context)
 
     @http.route(['/shop/change_styles'], type='json', auth="public")
     def change_styles(self, id, style_id):
@@ -710,6 +740,18 @@ class website_sale(http.Controller):
             product.write({'website_style_ids': [(4, style.id)]})
 
         return not active
+
+    @http.route(['/shop/change_sequence'], type='json', auth="public")
+    def change_sequence(self, id, sequence):
+        product_obj = request.registry.get('product.template')
+        if sequence == "top":
+            product_obj.set_sequence_top(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "bottom":
+            product_obj.set_sequence_bottom(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "up":
+            product_obj.set_sequence_up(request.cr, request.uid, [id], context=request.context)
+        elif sequence == "down":
+            product_obj.set_sequence_down(request.cr, request.uid, [id], context=request.context)
 
     @http.route(['/shop/change_size'], type='json', auth="public")
     def change_size(self, id, x, y):

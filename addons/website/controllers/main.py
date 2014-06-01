@@ -32,14 +32,16 @@ class Website(openerp.addons.web.controllers.main.Home):
         page = 'homepage'
         try:
             main_menu = request.registry['ir.model.data'].get_object(request.cr, request.uid, 'website', 'main_menu')
+        except Exception:
+            pass
+        else:
             first_menu = main_menu.child_id and main_menu.child_id[0]
             if first_menu:
                 if not (first_menu.url.startswith(('/page/', '/?', '/#')) or (first_menu.url=='/')):
                     return request.redirect(first_menu.url)
                 if first_menu.url.startswith('/page/'):
-                    page = first_menu[6:]
-        except:
-            pass
+                    page = first_menu.url[6:]
+
         return self.page(page)
 
     @http.route(website=True, auth="public")
@@ -245,7 +247,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
-        views = self.customize_template_get(xml_id, optional=False)
+        views = self.customize_template_get(xml_id, full=True)
         views_ids = [view.get('id') for view in views if view.get('active')]
         domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
         irt = request.registry.get('ir.translation')
