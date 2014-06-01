@@ -33,7 +33,6 @@
             return;
         },
         on_click: function () {
-            event.preventDefault();
             var self = this;
             var $email = this.$target.find(".js_follow_email");
 
