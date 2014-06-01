@@ -5303,9 +5303,7 @@ class BaseModel(object):
             initialized with the `values` dictionary. Such a record does not
             exist in the database.
         """
-        # if 'id' is present, browse the corresponding record
-        new_id = values.get('id') or NewId()
-        record = self.browse([new_id])
+        record = self.browse([NewId()])
         record._cache.update(self._convert_to_cache(values))
 
         if record.env.draft:
@@ -5601,6 +5599,9 @@ class BaseModel(object):
             record = self.new(values)
             record_values = dict(record._cache)
             field_value = record._cache.pop(field_name, False)
+
+            # attach `self` with a different context (for cache consistency)
+            record._origin = self.sudo(__onchange=True)
 
         # at this point, the cache should be clean
         assert not env.dirty
