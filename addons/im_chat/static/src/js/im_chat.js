@@ -94,16 +94,16 @@
         },
 
         apply_session: function(session, focus){
-            console.log("APPLY SESSION", JSON.stringify(session));
+            //console.log("APPLY SESSION", JSON.stringify(session));
             var self = this;
             var conv = this.sessions[session.uuid];
             if (! conv) {
                 if(session.state !== 'closed'){
-                    console.log("NEW CONV");
+                    //console.log("NEW CONV");
                     conv = new im_chat.Conversation(this, this, session, this.options);
                     conv.appendTo($("body"));
                     conv.on("destroyed", this, function() {
-                        console.log('DESTROY 2');
+                        //console.log('DESTROY 2');
                         delete this.sessions[session.uuid];
                         this.calc_positions();
                     });
@@ -111,7 +111,7 @@
                     this.calc_positions();
                 }
             }else{
-                console.log("SET SESSION");
+                //console.log("SET SESSION");
                 conv.set("session", session);
             }
             conv && this.trigger("im_session_activated", conv);
@@ -120,7 +120,7 @@
             return conv;
         },
         activate_session: function(session, focus) {
-            console.log("ACTIVATE SESSINO",JSON.stringify(session));
+            //console.log("ACTIVATE SESSINO",JSON.stringify(session));
             var self = this;
             var active_session = _.clone(session);
             active_session.state = 'open';
@@ -138,17 +138,17 @@
                 this.set("waiting_messages", this.get("waiting_messages") + 1);
             }
             var conv = this.sessions[uuid];
-            console.log("RECEIVE MESSAGE");
+            //console.log("RECEIVE MESSAGE");
             if(!conv){
                 // fetch the session, and init it with the message
                 var def_session = new openerp.Model("im_chat.session").call("session_info", [], {"ids" : [session_id]}).then(function(session){
-                    console.log("GET SESSINO INFO",JSON.stringify(session));
+                    //console.log("GET SESSINO INFO",JSON.stringify(session));
                     conv = self.activate_session(session, false);
                     conv.received_message(message);
                 });
-                console.log('SESSION NOT EXISTS');
+                //console.log('SESSION NOT EXISTS');
             }else{
-                console.log('SESSION EXISTS', JSON.stringify(conv.get('session')));
+                //console.log('SESSION EXISTS', JSON.stringify(conv.get('session')));
                 conv.received_message(message);
             }
         },
@@ -258,7 +258,7 @@
             this.$().css("bottom", this.get("bottom_position"));
         },
         update_session: function(){
-            console.log("UPDATE SESS : ", JSON.stringify(this.get("session")));
+            //console.log("UPDATE SESS : ", JSON.stringify(this.get("session")));
             // built the name
             var names = [];
             _.each(this.get("session").users, function(user){
@@ -399,7 +399,7 @@
             this.update_fold_state('closed');
         },
         destroy: function() {
-            console.log("DESTRIYED");
+            //console.log("DESTRIYED");
             this.trigger("destroyed");
             return this._super();
         }
@@ -478,7 +478,7 @@
             // fetch the unread message and the recent activity (e.i. to re-init in case of refreshing page)
             openerp.session.rpc("/im/init",{}).then(function(notifications) {
                 _.each(notifications, function(notif){
-                    console.log(JSON.stringify(notif));
+                    //console.log(JSON.stringify(notif));
                     self.c_manager.on_notification(notif);
                 });
                 // start polling
