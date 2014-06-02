@@ -665,13 +665,23 @@ class EndPoint(object):
 
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
+
+    def get_subclasses(k):
+        def valid(c):
+            return c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules
+        s = k.__subclasses__()
+        if not s:
+            return [k] if valid(k) else []
+        return [u for t in s if valid(t) for u in get_subclasses(t)]
+
+    uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
+
     for module in modules:
         if module not in controllers_per_module:
             continue
 
         for _, cls in controllers_per_module[module]:
-            subclasses = cls.__subclasses__()
-            subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules]
+            subclasses = uniq(c for c in get_subclasses(cls) if c is not cls)
             if subclasses:
                 name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
                 cls = type(name, tuple(reversed(subclasses)), {})
@@ -682,7 +692,6 @@ def routing_map(modules, nodb_only, converters=None):
                 if inspect.ismethod(mv) and hasattr(mv, 'routing'):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
-                    routing_type = None
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
