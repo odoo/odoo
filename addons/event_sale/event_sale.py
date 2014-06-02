@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp import depends, one, Integer, One2many, Html
+from openerp import depends, model, one, Integer, One2many, Html
 from openerp.addons.event.event import event_event as Event
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -125,7 +125,7 @@ class event_event(osv.osv):
     _inherit = 'event.event'
 
     event_ticket_ids = One2many('event.event.ticket', 'event_id', string='Event Ticket',
-        compute='_default_tickets')
+        default=lambda rec: rec._default_tickets())
     seats_max = Integer(string='Maximum Available Seats',
         help="The maximum registration level is equal to the sum of the maximum registration of event ticket. " +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
@@ -135,17 +135,17 @@ class event_event(osv.osv):
     badge_innerleft = Html('Badge Innner Left', translate=True, states={'done': [('readonly', True)]})
     badge_innerright = Html('Badge Inner Right', translate=True, states={'done': [('readonly', True)]})
 
-    @one
+    @model
     def _default_tickets(self):
         try:
             product = self.env.ref('event_sale.product_product_event')
-            self.event_ticket_ids = [{
+            return [{
                 'name': _('Subscription'),
                 'product_id': product.id,
                 'price': 0,
             }]
         except ValueError:
-            self.event_ticket_ids = self.env['event.event.ticket']
+            return self.env['event.event.ticket']
 
     @one
     @depends('event_ticket_ids.seats_max')
