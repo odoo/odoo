@@ -14,8 +14,7 @@ import jinja2
 
 from . import Command
 
-from openerp.modules.module import (get_module_root, MANIFEST,
-     load_information_from_description_file as load_manifest)
+from openerp.modules.module import (get_module_root, MANIFEST, load_information_from_description_file as load_manifest)
 
 
 class Scaffold(Command):
@@ -136,6 +135,8 @@ class ScaffoldModule(object):
         self.append_xml_data('theme_xml.jinja2', self.path('views', theme_file), skip_if_exist=True)
 
     def has_import(self, initfile, module):
+        if not os.path.isfile(initfile):
+            return False
         with open(initfile, 'r') as f:
             for imp in ast.parse(f.read()).body:
                 if isinstance(imp, ast.Import):
