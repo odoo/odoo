@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp import Model, Boolean
+from openerp import Model, fields
 
 
 class res_partner(Model):
     _inherit = 'res.partner'
 
-    speaker = Boolean(help="Check this box if this contact is a speaker.")
+    speaker = fields.Boolean(help="Check this box if this contact is a speaker.")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
