@@ -68,10 +68,13 @@ class OAuthLogin(Home):
         return providers
 
     def get_state(self, provider):
+        redirect = request.params.get('redirect', 'web')
+        if not redirect.startswith(('//', 'http://', 'https://')):
+            redirect = '%s%s' % (request.httprequest.url_root, redirect)
         state = dict(
             d=request.session.db,
             p=provider['id'],
-            r=request.httprequest.full_path
+            r=redirect,
         )
         token = request.params.get('token')
         if token:
@@ -142,8 +145,7 @@ class OAuthController(http.Controller):
                 menu = state.get('m')
                 redirect = state.get('r')
                 url = '/web'
-                if redirect and not redirect.startswith('/auth_oauth/signin') and \
-                (not redirect.startswith('/web/login') or 'redirect' in urlparse.urlsplit(redirect).query):
+                if redirect:
                     url = redirect
                 elif action:
                     url = '/web#action=%s' % action
