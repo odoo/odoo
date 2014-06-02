@@ -762,11 +762,11 @@ instance.web.Menu =  instance.web.Widget.extend({
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
 
-        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        instance.web.bus.on('resize', this, function() {
-            self.$el.height(0);
-            lazyreflow();
-        });
+        // var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        // instance.web.bus.on('resize', this, function() {
+        //     self.$el.height(0);
+        //     lazyreflow();
+        // });
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
@@ -803,28 +803,28 @@ instance.web.Menu =  instance.web.Widget.extend({
      */
     reflow: function() {
         var self = this;
-        this.$el.height('auto').show();
-        var $more_container = this.$('#menu_more_container').hide();
-        var $more = this.$('#menu_more');
-        $more.children('li').insertBefore($more_container);
-        var $toplevel_items = this.$el.children('li').not($more_container).hide();
-        $toplevel_items.each(function() {
-            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
-            self.$el.parent().children(':visible').each(function() {
-                remaining_space -= $(this).outerWidth();
-            });
-            if ($(this).width() > remaining_space) {
-                return false;
-            }
-            $(this).show();
-        });
-        $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length);
-        // Hide toplevel item if there is only one
-        var $toplevel = this.$el.children("li:visible");
-        if ($toplevel.length === 1) {
-            $toplevel.hide();
-        }
+        // this.$el.height('auto').show();
+        // var $more_container = this.$('#menu_more_container').hide();
+        // var $more = this.$('#menu_more');
+        // $more.children('li').insertBefore($more_container);
+        // var $toplevel_items = this.$el.children('li').not($more_container).hide();
+        // $toplevel_items.each(function() {
+        //     var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
+        //     self.$el.parent().children(':visible').each(function() {
+        //         remaining_space -= $(this).outerWidth();
+        //     });
+        //     if ($(this).width() > remaining_space) {
+        //         return false;
+        //     }
+        //     $(this).show();
+        // });
+        // $more.append($toplevel_items.filter(':hidden').show());
+        // $more_container.toggle(!!$more.children().length);
+        // // Hide toplevel item if there is only one
+        // var $toplevel = this.$el.children("li:visible");
+        // if ($toplevel.length === 1) {
+        //     $toplevel.hide();
+        // }
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -972,6 +972,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 f($(this));
             }
         });
+        this.$el.parent().show()
     },
     do_update: function () {
         var self = this;
@@ -1226,12 +1227,13 @@ instance.web.WebClient = instance.web.Client.extend({
 
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
-        self.menu.setElement(this.$el.find('.nav.navbar-nav.navbar-left'));
+        var $backend_menu = this.$el.parents().find('#backend_menu')
+        self.menu.setElement($backend_menu);
         self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
         
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
+        self.user_menu.appendTo($backend_menu.find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();

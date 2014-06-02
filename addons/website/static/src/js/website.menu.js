@@ -79,7 +79,9 @@
         self.menu = new website.Menu(self);
         self.menu.setElement($('#navbar_edit'));
         self.menu.start();
-        self.menu.reflow()
+        if (parseInt(self.menu.$el.css('width')) >= 768 ) {
+            self.menu.reflow();
+        }
     });
 
     /* ----- TOP EDITOR BAR FOR ADMIN ---- */

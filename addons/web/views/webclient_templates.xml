@@ -144,8 +144,8 @@
                 </li>
             </ul>
 
-            <div class="oe_user_menu_placeholder" style="display: None;"/>
-            <div class="oe_systray" style="display: None;"/>
+            <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
+            <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
         </template>
         <template id="web.menu_secondary">
             <a class="oe_logo" t-att-href="'/web/?debug' if debug else '/web'">
@@ -207,13 +207,20 @@
                     </script>
                 </t>
 
+                <nav id="backend_menu" class="navbar navbar-inverse" role="navigation">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>    
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <t t-call="web.menu"/>
+                    </div>
+                </nav>
                 <div class="openerp openerp_webclient_container">
                     <table class="oe_webclient">
-                        <tr>
-                            <td colspan="2" class="navbar navbar-inverse navbar-static-top oe_navbar" role="navigation">
-                                <t t-call="web.menu"/>
-                            </td>
-                        </tr>
                         <tr>
                             <td class="oe_leftbar" valign="top">
                                 <t t-call="web.menu_secondary"/>
