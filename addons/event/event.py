@@ -103,7 +103,7 @@ class event_event(Model):
     registration_ids = fields.One2many('event.registration', 'event_id', string='Registrations',
         readonly=False, states={'done': [('readonly', True)]})
     count_registrations = fields.Integer(string='Registrations',
-        store=False, readonly=True, compute='_count_registrations')
+        compute='_count_registrations')
 
     date_begin = fields.Datetime(string='Start Date', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
@@ -137,10 +137,8 @@ class event_event(Model):
         else:
             self.date_end_located = False
 
-    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz',
-                                  readonly=True, store=False)
-    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz',
-                                readonly=True, store=False)
+    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
+    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 
     state = fields.Selection([
             ('draft', 'Unconfirmed'),
@@ -170,7 +168,7 @@ class event_event(Model):
         default=lambda self: self.env.user.company_id.partner_id)
 
     is_subscribed = fields.Boolean(string='Subscribed',
-        store=False, readonly=True, compute='_compute_subscribe')
+        compute='_compute_subscribe')
 
     @api.one
     @api.depends('registration_ids')
@@ -304,13 +302,13 @@ class event_registration(Model):
     date_open = fields.Datetime(string='Registration Date', readonly=True)
     date_closed = fields.Datetime(string='Attended Date', readonly=True)
     reply_to = fields.Char(string='Reply-to Email', related='event_id.reply_to',
-        store=False, readonly=True)
+        readonly=True)
     log_ids = fields.One2many('mail.message', 'res_id', string='Logs',
         domain=[('model', '=', _name)])
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin',
-        store=False, readonly=True)
+        readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end',
-        store=False, readonly=True)
+        readonly=True)
     user_id = fields.Many2one('res.users', string='User', states={'done': [('readonly', True)]})
     company_id = fields.Many2one('res.company', string='Company', related='event_id.company_id',
         store=True, readonly=True, states={'draft':[('readonly', False)]})

@@ -50,8 +50,7 @@ class Category(Model):
 
     name = Char(required=True)
     parent = Many2one('test_new_api.category')
-    display_name = Char(store=False, readonly=True,
-        compute='_compute_display_name', inverse='_inverse_display_name')
+    display_name = Char(compute='_compute_display_name', inverse='_inverse_display_name')
 
     @one
     @depends('name', 'parent.display_name')     # this definition is recursive
@@ -100,15 +99,11 @@ class Message(Model):
     discussion = Many2one('test_new_api.discussion', ondelete='cascade')
     body = Text()
     author = Many2one('res.users', default=lambda self: self.env.user)
-    name = Char(string='Title', store=True, readonly=True,
-        compute='_compute_name')
-    display_name = Char(string='Abstract', store=False, readonly=True,
-        compute='_compute_display_name')
-    size = Integer(store=False, readonly=True,
-        compute='_compute_size', search='_search_size')
-    double_size = Integer(store=False, readonly=True,
-        compute='_compute_double_size')
-    discussion_name = Char(related='discussion.name', store=False, readonly=True)
+    name = Char(string='Title', compute='_compute_name', store=True)
+    display_name = Char(string='Abstract', compute='_compute_display_name')
+    size = Integer(compute='_compute_size', search='_search_size')
+    double_size = Integer(compute='_compute_double_size')
+    discussion_name = Char(related='discussion.name', readonly=True)
 
     @one
     @constrains('author', 'discussion')

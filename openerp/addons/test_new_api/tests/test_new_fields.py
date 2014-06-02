@@ -23,6 +23,17 @@ class TestNewFields(common.TransactionCase):
         values = discussion.read(['name'])[0]
         self.assertEqual(values['name'], discussion.name)
 
+    def test_10_computed(self):
+        """ check definition of computed fields """
+        # by default function fields are not stored and readonly
+        field = self.env['test_new_api.message']._fields['size']
+        self.assertFalse(field.store)
+        self.assertTrue(field.readonly)
+
+        field = self.env['test_new_api.message']._fields['name']
+        self.assertTrue(field.store)
+        self.assertTrue(field.readonly)
+
     def test_10_non_stored(self):
         """ test non-stored fields """
         # find messages
@@ -245,6 +256,11 @@ class TestNewFields(common.TransactionCase):
         """ test related fields. """
         message = self.env.ref('test_new_api.message_0_0')
         discussion = message.discussion
+
+        # by default related fields are not stored
+        field = message._fields['discussion_name']
+        self.assertFalse(field.store)
+        self.assertTrue(field.readonly)
 
         # check value of related field
         self.assertEqual(message.discussion_name, discussion.name)

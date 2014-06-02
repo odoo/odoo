@@ -787,10 +787,8 @@ class module_dependency(osv.Model):
     module_id = fields2.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the dependency, and its status
-    depend_id = fields2.Many2one('ir.module.module', 'Dependency',
-        compute='_compute_depend', readonly=True, store=False)
-    state = fields2.Selection(DEP_STATES, string='Status',
-        compute='_compute_state', readonly=True, store=False)
+    depend_id = fields2.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
+    state = fields2.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
     @api.multi
     @api.depends('name')

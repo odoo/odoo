@@ -616,7 +616,7 @@ class BaseModel(object):
         # this field 'id' must override any other column or field
         cls._add_field('id', fields2.Id(automatic=True))
 
-        add('display_name', fields2.Char(string='Name', store=False,
+        add('display_name', fields2.Char(string='Name',
             compute='_compute_display_name', inverse='_inverse_display_name',
             search='_search_display_name', automatic=True))
 
@@ -631,8 +631,7 @@ class BaseModel(object):
 
         # this field must override any other column or field
         cls._add_field(cls.CONCURRENCY_CHECK_FIELD, fields2.Datetime(
-            string='Last Modified on', store=False,
-            compute=last_modified_name, automatic=True))
+            string='Last Modified on', compute=last_modified_name, automatic=True))
 
     @api.one
     def compute_concurrency_field(self):
@@ -3017,8 +3016,7 @@ class BaseModel(object):
         for parent_model, parent_field in reversed(cls._inherits.items()):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
-                    new_field = field.copy(related=(parent_field, attr),
-                                           store=False, _origin=field)
+                    new_field = field.copy(related=(parent_field, attr), _origin=field)
                     cls._add_field(attr, new_field)
 
         cls._inherits_reload_src()

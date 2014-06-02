@@ -113,6 +113,12 @@ class Field(object):
     def __init__(self, string=None, **kwargs):
         self._free_attrs = []
         kwargs['string'] = string
+        # by default, computed fields are not stored and readonly
+        if 'compute' in kwargs:
+            kwargs['store'] = kwargs.get('store', False)
+            kwargs['readonly'] = kwargs.get('readonly', 'inverse' not in kwargs)
+        if 'related' in kwargs:
+            kwargs['store'] = kwargs.get('store', False)
         for attr, value in kwargs.iteritems():
             if not hasattr(self, attr):
                 self._free_attrs.append(attr)

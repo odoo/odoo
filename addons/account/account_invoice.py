@@ -292,12 +292,12 @@ class account_invoice(Model):
         readonly=True, states={'draft': [('readonly', False)]})
 
     move_lines = Many2many('account.move.line', string='Entry Lines',
-        store=False, readonly=True, compute='_compute_move_lines')
+        compute='_compute_move_lines')
     residual = Float(string='Balance', digits=dp.get_precision('Account'),
-        store=True, readonly=True, compute='_compute_residual',
+        compute='_compute_residual', store=True,
         help="Remaining amount due.")
     payment_ids = Many2many('account.move.line', string='Payments',
-            store=False, readonly=True, compute='_compute_payments')
+        compute='_compute_payments')
     move_name = Char(string='Journal Entry',
         readonly=True, states={'draft': [('readonly', False)]})
     user_id = Many2one('res.users', string='Salesperson', track_visibility='onchange',
@@ -1505,9 +1505,9 @@ class account_invoice_tax(Model):
     company_id = Many2one('res.company', string='Company',
         related='account_id.company_id', store=True, readonly=True)
     factor_base = Float(string='Multipication factor for Base code',
-        store=False, readonly=True, compute='_compute_factors')
+        compute='_compute_factors')
     factor_tax = Float(string='Multipication factor Tax code',
-        store=False, readonly=True, compute='_compute_factors')
+        compute='_compute_factors')
 
     @multi
     def base_change(self, base, currency_id=False, company_id=False, date_invoice=False):
