@@ -3871,11 +3871,15 @@ class stock_pack_operation(osv.osv):
             self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
+            picking_obj = self.pool.get("stock.picking")
+            picking = picking_obj.browse(cr, uid, picking_id, context=context)
             values = {
                 'picking_id': picking_id,
                 'product_qty': 0,
+                'location_id': picking.location_id.id, 
+                'location_dest_id': picking.location_dest_id.id,
                 'qty_done': 1,
-            }
+                }
             for key in domain:
                 var_name, dummy, value = key
                 uom_id = False
