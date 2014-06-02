@@ -930,14 +930,14 @@ class BaseModel(object):
     @classmethod
     def _init_onchange_methods(cls):
         # collect onchange methods
-        cls._onchange_methods = {}
+        cls._onchange_methods = defaultdict(list)
         for attr in dir(cls):
             value = getattr(cls, attr)
             if callable(value) and hasattr(value, '_onchange'):
                 if not all(name in cls._fields for name in value._onchange):
                     _logger.warning("@onchange parameters must be field names: %r", value._onchange)
                 for name in value._onchange:
-                    cls._onchange_methods[name] = value
+                    cls._onchange_methods[name].append(value)
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
@@ -5610,11 +5610,14 @@ class BaseModel(object):
             # apply the change on the record
             record[field_name] = field_value
 
-            # invoke field-specific onchange method if present
-            if field_name in self._onchange_methods:
-                result = self._onchange_methods[field_name](record)
-            else:
-                result = None
+            # invoke field-specific onchange methods
+            result = {}
+            for method in self._onchange_methods.get(field_name, ()):
+                method_res = method(record)
+                if 'domain' in method_res:
+                    result.setdefault('domain', {}).update(method_res['domain'])
+                if 'warning' in method_res:
+                    result['warning'] = method_res['warning']
 
             # compute function fields on secondary records (one2many, many2many)
             for field_seq in (tocheck or ()):
@@ -5628,7 +5631,6 @@ class BaseModel(object):
                     subfields[name].add(subname)
 
             # add changed values to result, and return it
-            result = result or {}
             changed = result.setdefault('value', {})
             for name, oldval in record_values.iteritems():
                 newval = record[name]
