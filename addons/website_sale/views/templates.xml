@@ -727,14 +727,14 @@
               <tr t-foreach="suggested_products" t-as="product">
 
                   <td>
-                      <a t-attf-href="/shop/product/#{ slug(product) }">
+                      <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
                           <span t-field="product.image_small"
                                 t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                       </a>
                   </td>
                   <td>
                       <div>
-                          <a t-attf-href="/shop/product/#{ slug(product) }">
+                          <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
                               <strong t-field="product.name"/>
                           </a>
                       </div>
