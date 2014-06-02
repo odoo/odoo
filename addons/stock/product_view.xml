@@ -202,13 +202,13 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button class="oe_stat_button"
                            name="%(product_open_quants)d"
-                           icon="fa-bank"
+                           icon="fa-building-o"
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                    <div><field name="qty_in_stock"/></div>
+                    <div><field name="qty_available_text"/></div>
                     </button>
                    <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest" string="Reordering Rules"/>
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
                 </xpath>
             </field>
         </record>
