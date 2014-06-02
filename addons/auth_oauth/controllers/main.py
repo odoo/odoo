@@ -11,6 +11,7 @@ from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.http import request
 from openerp.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
+from openerp.addons.auth_signup.controllers.main import AuthSignupHome as Home
 from openerp.modules.registry import RegistryManager
 from openerp.tools.translate import _
 
@@ -44,7 +45,7 @@ def fragment_to_query_string(func):
 #----------------------------------------------------------
 # Controller
 #----------------------------------------------------------
-class OAuthLogin(openerp.addons.web.controllers.main.Home):
+class OAuthLogin(Home):
     def list_providers(self):
         try:
             provider_obj = request.registry.get('auth.oauth.provider')
