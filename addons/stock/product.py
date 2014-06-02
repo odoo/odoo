@@ -277,6 +277,12 @@ class product_product(osv.osv):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
         return res
 
+
+    def action_view_routes(self, cr, uid, ids, context=None):
+        template_obj = self.pool.get("product.template")
+        templ_ids = list(set([x.product_tmpl_id.id for x in self.browse(cr, uid, ids, context=context)]))
+        return template_obj.action_view_routes(cr, uid, templ_ids, context=context)
+
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
