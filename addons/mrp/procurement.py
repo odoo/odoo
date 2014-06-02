@@ -62,7 +62,8 @@ class procurement_order(osv.osv):
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             properties = [x.id for x in procurement.property_ids]
-            bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
+            bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_uom.id,
+                product_id=procurement.product_id.id, properties=properties)
             if not bom_id:
                 return False
         return True
@@ -83,7 +84,8 @@ class procurement_order(osv.osv):
                     routing_id = procurement.bom_id.routing_id.id
                 else:
                     properties = [x.id for x in procurement.property_ids]
-                    bom_id = bom_obj._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
+                    bom_id = bom_obj._bom_find(cr, uid, procurement.product_uom.id,
+                        product_id=procurement.product_id.id, properties=properties)
                     bom = bom_obj.browse(cr, uid, bom_id, context=context)
                     routing_id = bom.routing_id.id
 

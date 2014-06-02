@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
                 <field name="product_manager" position="after">
                     <field name="intrastat_id"
-                        attrs="{'readonly': [('is_only_child', '=', False)]}"/>
+                        attrs="{'readonly': [('is_product_variant', '=', False)]}"/>
                 </field>
             </field>
         </record>

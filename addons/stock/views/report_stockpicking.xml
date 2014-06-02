@@ -7,7 +7,7 @@
                     <t t-call="report.external_layout">
                         <div class="page">
                             <div class="row"><div class="col-xs-4 pull-right">
-                            <img t-att-src="'/report/barcode/Standard39/%s' % o.name"/>
+                            <img t-att-src="'/report/barcode/Code128/%s' % o.name"/>
                             </div></div>
                              <div t-if="o.picking_type_id.code=='incoming'">
                                  <span><strong>Supplier Address:</strong></span>
@@ -104,13 +104,13 @@
                                     </t>
                                     <td>
                                         <span t-if="pack_operation.lot_id">
-                                            <img t-att-src="'/report/barcode/Standard39/%s' % pack_operation.lot_id.name"/>
+                                            <img t-att-src="'/report/barcode/Code128/%s' % pack_operation.lot_id.name"/>
                                         </span>
                                         <span t-if="pack_operation.product_id and not pack_operation.lot_id and pack_operation.product_id.ean13">
                                             <img t-att-src="'/report/barcode/EAN13/%s' % pack_operation.product_id.ean13"/>
                                         </span>
                                         <span t-if="pack_operation.package_id and not pack_operation.product_id">
-                                            <img t-att-src="'/report/barcode/Standard39/%s' % pack_operation.package_id.name"/>
+                                            <img t-att-src="'/report/barcode/Code128/%s' % pack_operation.package_id.name"/>
                                         </span>
                                     </td>
                                     <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="pack_operation.location_dest_id"/>

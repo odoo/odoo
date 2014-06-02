@@ -281,8 +281,6 @@ class stock_move(osv.osv):
             #adapt standard price on incomming moves if the product cost_method is 'average'
             if (move.location_id.usage == 'supplier') and (move.product_id.cost_method == 'average'):
                 product = move.product_id
-                company_currency_id = move.company_id.currency_id.id
-                ctx = {'currency_id': company_currency_id}
                 product_avail = product.qty_available
                 if product.qty_available <= 0:
                     new_std_price = move.price_unit
