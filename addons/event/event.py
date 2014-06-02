@@ -121,9 +121,9 @@ class event_event(Model):
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
         if self.date_begin:
-            in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
+            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
             date_begin = fields.Datetime.from_string(self.date_begin)
-            self.date_begin_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(in_tz, date_begin))
+            self.date_begin_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_begin))
         else:
             self.date_begin_located = False
 
@@ -131,9 +131,9 @@ class event_event(Model):
     @api.depends('date_tz', 'date_end')
     def _compute_date_end_tz(self):
         if self.date_end:
-            in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
+            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
             date_end = fields.Datetime.from_string(self.date_end)
-            self.date_end_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(in_tz, date_end))
+            self.date_end_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_end))
         else:
             self.date_end_located = False
 
