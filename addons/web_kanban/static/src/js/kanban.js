@@ -779,9 +779,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-        form.on("on_button_cancel", am.dialog, am.dialog.close);
+        form.on("on_button_cancel", am.dialog, function() { return am.dialog.$dialog_box.modal('hide'); });
         form.on('record_saved', self, function() {
-            am.dialog.close();
+            am.dialog.$dialog_box.modal('hide');
             self.view.do_reload();
         });
     },
