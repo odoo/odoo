@@ -171,7 +171,7 @@ openerp.account = function (instance) {
             deferred_promises.push(self.model_bank_statement
                 .call("get_format_currency_js_function", [self.statement_id])
                 .then(function(data){
-                    self.formatCurrency = new Function("amount", data);
+                    self.formatCurrency = new Function("amount, currency_id", data);
                 })
             );
     
@@ -1099,8 +1099,8 @@ openerp.account = function (instance) {
             } else {
                 self.$(".button_ok").removeClass("oe_highlight");
                 self.$(".button_ok").text("Keep open");
-                var debit = (balance > 0 ? self.formatCurrency(balance) : "");
-                var credit = (balance < 0 ? self.formatCurrency(-1*balance) : "");
+                var debit = (balance > 0 ? self.formatCurrency(balance, self.st_line.currency_id) : "");
+                var credit = (balance < 0 ? self.formatCurrency(-1*balance, self.st_line.currency_id) : "");
                 var $line = $(QWeb.render("bank_statement_reconciliation_line_open_balance", {debit: debit, credit: credit, account_code: self.map_account_id_code[self.st_line.open_balance_account_id]}));
                 self.$(".tbody_open_balance").append($line);
             }
@@ -1198,6 +1198,8 @@ openerp.account = function (instance) {
             var self = this;
             var line_created_being_edited = self.get("line_created_being_edited");
             line_created_being_edited[0][elt.corresponding_property] = val.newValue;
+             
+            line_created_being_edited[0].currency_id = self.st_line.currency_id;
     
             // Specific cases
             if (elt === self.account_id_field)
@@ -1215,7 +1217,7 @@ openerp.account = function (instance) {
                             var tax = data.taxes[0];
                             var tax_account_id = (amount > 0 ? tax.account_collected_id : tax.account_paid_id)
                             line_created_being_edited[0].amount = (data.total.toFixed(3) === amount.toFixed(3) ? amount : data.total);
-                            line_created_being_edited[1] = {id: line_created_being_edited[0].id, account_id: tax_account_id, account_num: self.map_account_id_code[tax_account_id], label: tax.name, amount: tax.amount, no_remove_action: true};
+                            line_created_being_edited[1] = {id: line_created_being_edited[0].id, account_id: tax_account_id, account_num: self.map_account_id_code[tax_account_id], label: tax.name, amount: tax.amount, no_remove_action: true, currency_id: self.st_line.currency_id};
                         }
                     );
                 } else {
@@ -1227,11 +1229,11 @@ openerp.account = function (instance) {
     
             $.when(deferred_tax).then(function(){
                 // Format amounts
+                debugger;
                 if (line_created_being_edited[0].amount)
-                    line_created_being_edited[0].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[0].amount));
+                    line_created_being_edited[0].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[0].amount), line_created_being_edited[0].currency_id);
                 if (line_created_being_edited[1] && line_created_being_edited[1].amount)
-                    line_created_being_edited[1].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[1].amount));
-
+                    line_created_being_edited[1].amount_str = self.formatCurrency(Math.abs(line_created_being_edited[1].amount), line_created_being_edited[0].currency_id);
                 self.set("line_created_being_edited", line_created_being_edited);
                 self.createdLinesChanged(); // TODO For some reason, previous line doesn't trigger change handler
             });
@@ -1268,10 +1270,10 @@ openerp.account = function (instance) {
             line.initial_amount = line.debit !== 0 ? line.debit : -1 * line.credit;
             if (balance < 0) {
                 line.debit -= balance;
-                line.debit_str = self.formatCurrency(line.debit);
+                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit -= balance;
-                line.credit_str = self.formatCurrency(line.credit);
+                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = false;
             line.partial_reconcile = true;
@@ -1291,12 +1293,13 @@ openerp.account = function (instance) {
         },
     
         unpartialReconcileLine: function(line) {
+            var self = this;
             if (line.initial_amount > 0) {
                 line.debit = line.initial_amount;
-                line.debit_str = this.formatCurrency(line.debit);
+                line.debit_str = self.formatCurrency(line.debit, self.st_line.currency_id);
             } else {
                 line.credit = -1 * line.initial_amount;
-                line.credit_str = this.formatCurrency(line.credit);
+                line.credit_str = self.formatCurrency(line.credit, self.st_line.currency_id);
             }
             line.propose_partial_reconcile = true;
             line.partial_reconcile = false;
