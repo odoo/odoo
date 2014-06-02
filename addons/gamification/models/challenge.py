@@ -380,10 +380,6 @@ class gamification_challenge(osv.Model):
 
     ##### Automatic actions #####
 
-    def generate_goals_from_challenge(self, cr, uid, ids, context=None):
-        _logger.warning("Deprecated, use private method _generate_goals_from_challenge(...) instead.")
-        return self._generate_goals_from_challenge(cr, uid, ids, context=context)
-
     def _generate_goals_from_challenge(self, cr, uid, ids, context=None):
         """Generate the goals for each line and user.
 
