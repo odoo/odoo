@@ -3016,7 +3016,8 @@ class BaseModel(object):
         for parent_model, parent_field in reversed(cls._inherits.items()):
             for attr, field in cls.pool[parent_model]._fields.iteritems():
                 if attr not in cls._fields:
-                    new_field = field.copy(related=(parent_field, attr), _origin=field)
+                    new_field = field.copy(related=(parent_field, attr),
+                                           _origin=field, store=False)
                     cls._add_field(attr, new_field)
 
         cls._inherits_reload_src()
