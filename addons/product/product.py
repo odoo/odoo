@@ -202,6 +202,8 @@ class product_uom(osv.osv):
         return {}
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
@@ -677,7 +679,7 @@ class product_template(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if isinstance(id, (int, long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         if 'uom_po_id' in vals:
             new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
