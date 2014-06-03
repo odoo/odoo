@@ -37,10 +37,13 @@ import openerp.tools as tools
 import openerp.release as release
 from openerp.tools.safe_eval import safe_eval as eval
 
+MANIFEST = '__openerp__.py'
+
 _logger = logging.getLogger(__name__)
 
 # addons path as a list
-ad_paths = []
+ad_paths = [tools.config.addons_data_dir]
+hooked = False
 
 # Modules already loaded
 loaded = []
@@ -83,17 +86,21 @@ def initialize_sys_path():
     PYTHONPATH.
     """
     global ad_paths
-    if ad_paths:
-        return
+    global hooked
 
-    ad_paths = [tools.config.addons_data_dir]
-    ad_paths += map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
+    for ad in tools.config['addons_path'].split(','):
+        ad = os.path.abspath(tools.ustr(ad.strip()))
+        if ad not in ad_paths:
+            ad_paths.append(ad)
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    ad_paths += [base_path]
+    if base_path not in ad_paths:
+        ad_paths.append(base_path)
 
-    sys.meta_path.append(AddonsImportHook())
+    if not hooked:
+        sys.meta_path.append(AddonsImportHook())
+        hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
@@ -169,6 +176,33 @@ def get_module_icon(module):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
 
+def get_module_root(path):
+    """
+    Get closest module's root begining from path
+
+        # Given:
+        # /foo/bar/module_dir/static/src/...
+
+        get_module_root('/foo/bar/module_dir/static/')
+        # returns '/foo/bar/module_dir'
+
+        get_module_root('/foo/bar/module_dir/')
+        # returns '/foo/bar/module_dir'
+
+        get_module_root('/foo/bar')
+        # returns None
+
+    @param path: Path from which the lookup should start
+
+    @return:  Module root path or None if not found
+    """
+    while not os.path.exists(os.path.join(path, MANIFEST)):
+        new_path = os.path.abspath(os.path.join(path, os.pardir))
+        if path == new_path:
+            return None
+        path = new_path
+    return path
+
 def load_information_from_description_file(module, mod_path=None):
     """
     :param module: The name of the module (sale, purchase, ...)
@@ -177,7 +211,7 @@ def load_information_from_description_file(module, mod_path=None):
 
     if not mod_path:
         mod_path = get_module_path(module)
-    terp_file = mod_path and opj(mod_path, '__openerp__.py') or False
+    terp_file = mod_path and opj(mod_path, MANIFEST) or False
     if terp_file:
         info = {}
         if os.path.isfile(terp_file):
@@ -219,7 +253,7 @@ def load_information_from_description_file(module, mod_path=None):
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
-    _logger.debug('module %s: no __openerp__.py file found.', module)
+    _logger.debug('module %s: no %s file found.', module, MANIFEST)
     return {}
 
 def init_module_models(cr, module_name, obj_list):
@@ -291,7 +325,7 @@ def get_modules():
             return name
 
         def is_really_module(name):
-            manifest_name = opj(dir, name, '__openerp__.py')
+            manifest_name = opj(dir, name, MANIFEST)
             zipfile_name = opj(dir, name)
             return os.path.isfile(manifest_name)
         return map(clean, filter(is_really_module, os.listdir(dir)))

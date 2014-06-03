@@ -202,6 +202,8 @@ class product_uom(osv.osv):
         return {}
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
@@ -344,6 +346,8 @@ class product_attribute_value(osv.osv):
         return result
 
     def _set_price_extra(self, cr, uid, id, name, value, args, context=None):
+        if context is None:
+            context = {}
         if 'active_id' not in context:
             return None
         p_obj = self.pool['product.attribute.price']
@@ -351,7 +355,7 @@ class product_attribute_value(osv.osv):
         if p_ids:
             p_obj.write(cr, uid, p_ids, {'price_extra': value}, context=context)
         else:
-            p_obj.create(cr, uid, p_ids, {
+            p_obj.create(cr, uid, {
                     'product_tmpl_id': context['active_id'],
                     'value_id': id,
                     'price_extra': value,
@@ -458,6 +462,8 @@ class product_template(osv.osv):
 
     def _set_standard_price(self, cr, uid, product_tmpl_id, value, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
+        if context is None:
+            context = {}
         price_history_obj = self.pool['product.price.history']
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         company_id = context.get('force_company', user_company)
@@ -532,10 +538,10 @@ class product_template(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-
-        'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units',
-            help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-        
+        'packaging_ids': fields.one2many(
+            'product.packaging', 'product_tmpl_id', 'Logistical Units',
+            help="Gives the different ways to package the same product. This has no impact on "
+                 "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
         'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
             help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
@@ -676,7 +682,7 @@ class product_template(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if isinstance(id, (int, long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         if 'uom_po_id' in vals:
             new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
@@ -879,7 +885,6 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
-        'packaging': fields.one2many('product.packaging', 'product_id', 'Packaging', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -1075,7 +1080,7 @@ class product_packaging(osv.osv):
         'ul_container': fields.many2one('product.ul', 'Pallet Logistic Unit'),
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
-        'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),
+        'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
         'ean' : fields.char('EAN', size=14, help="The EAN code of the package unit."),
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',

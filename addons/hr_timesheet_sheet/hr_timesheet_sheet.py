@@ -141,7 +141,7 @@ class hr_timesheet_sheet(osv.osv):
         return {
             sheet_id: {
                 'timesheet_activity_count': Timesheet.search_count(cr,uid, [('sheet_id','=', sheet_id)], context=context),
-                'attendance_count': Attendance.search_count(cr,uid, [('sheed_id', '=', sheet_id)], context=context)
+                'attendance_count': Attendance.search_count(cr,uid, [('sheet_id', '=', sheet_id)], context=context)
             }
             for sheet_id in ids
         }

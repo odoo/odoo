@@ -126,10 +126,10 @@
                         <field name="use_leads"/><label for="use_leads" string="Leads"/>
                         <field name="use_opportunities" class="oe_inline"/><label for="use_opportunities"/>
                     </xpath>
-                    <xpath expr="//group/field[@name='active']" position="inside">
+                    <xpath expr="//group[@name='left']" position="after">
                         <group>
                             <label for="alias_name" string="Email Alias"
-                                    attrs="p'invisible': [('alias_domain', '=', False)]}"/>
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                             <div name="alias_def"
                                     attrs="{'invisible': [('alias_domain', '=', False)]}">
                                 <field name="alias_id" class="oe_read_only oe_inline"

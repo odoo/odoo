@@ -10,8 +10,8 @@
 </template>
 
 <!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.layout" name="Footer News Blog Link">
-    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer News Blog Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
         <li><a t-attf-href="/blog/%(website_blog.blog_blog_1)d">News</a></li>
     </xpath>
 </template>
@@ -187,7 +187,7 @@
                     <span class="fa fa-times"/>
                 </a>
             </div>
-            <div class="cover-storage oe_hidden"></div> 
+            <div class="cover-storage oe_hidden"></div>
             <t t-call="website.publish_management">
                 <t t-set="object" t-value="blog_post"/>
                 <t t-set="publish_edit" t-value="True"/>

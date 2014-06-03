@@ -58,7 +58,7 @@ def git_locate():
         path = None
     return path
 
-def cmd_setup_git_init():
+def cmd_setup_git():
     git_dir = git_locate()
     if git_dir:
         printf('git repo found at %s',git_dir)
@@ -67,12 +67,16 @@ def cmd_setup_git_init():
         os.chdir('odoo')
         git_dir = os.getcwd()
     if git_dir:
-        # sane push config for git < 2.0
+        # push sane config for git < 2.0, and hooks
         run('git','config','push.default','simple')
+        # alias
+        run('git','config','alias.st','status')
         # merge bzr style
         run('git','config','merge.ff','no')
         run('git','config','merge.commit','no')
-        # push hooks
+        # pull let me choose between merge or rebase only works in git > 2.0, use an alias for 1
+        run('git','config','pull.ff','only')
+        run('git','config','alias.pl','pull --ff-only')
         pre_push_path = os.path.join(git_dir, '.git/hooks/pre-push')
         open(pre_push_path,'w').write(GIT_HOOKS_PRE_PUSH.strip())
         os.chmod(pre_push_path, 0755)
@@ -137,7 +141,7 @@ def cmd_setup_pg():
             setup_pg_debian(git_dir)
 
 def cmd_setup():
-    cmd_setup_git_init()
+    cmd_setup_git()
     cmd_setup_deps()
     cmd_setup_pg()
 
