@@ -1164,7 +1164,14 @@ class mail_thread(osv.AbstractModel):
         body = u''
         if save_original:
             attachments.append(('original_email.eml', message.as_string()))
-        if not message.is_multipart() or 'text/' in message.get('content-type', ''):
+
+        # Be careful, content-type may contain tricky content like in the
+        # following example so test the MIME type with startswith()
+        #
+        # Content-Type: multipart/related;
+        #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
+        #   type="text/html"
+        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')
