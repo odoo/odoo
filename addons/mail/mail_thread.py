@@ -889,9 +889,10 @@ class mail_thread(osv.AbstractModel):
         thread_references = references or in_reply_to
 
         # 1. message is a reply to an existing message (exact match of message_id)
+        ref_match = thread_references and tools.reference_re.search(thread_references)
         msg_references = thread_references.split()
         mail_message_ids = mail_msg_obj.search(cr, uid, [('message_id', 'in', msg_references)], context=context)
-        if mail_message_ids:
+        if ref_match and mail_message_ids:
             original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
             model, thread_id = original_msg.model, original_msg.res_id
             route = self.message_route_verify(
@@ -905,7 +906,6 @@ class mail_thread(osv.AbstractModel):
                 return [route]
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
-        ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
             reply_thread_id = int(ref_match.group(1))
             reply_model = ref_match.group(2) or fallback_model
@@ -945,8 +945,9 @@ class mail_thread(osv.AbstractModel):
                                 (mail_message.model, mail_message.res_id, custom_values, uid, None),
                                 update_author=True, assert_model=True, create_fallback=True, allow_private=True, context=context)
                 if route:
-                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                                 email_from, email_to, message_id, mail_message.id, custom_values, uid)
+                    _logger.info(
+                        'Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
+                        email_from, email_to, message_id, mail_message.id, custom_values, uid)
                     return [route]
 
         # 3. Look for a matching mail.alias entry
@@ -975,11 +976,12 @@ class mail_thread(osv.AbstractModel):
                         user_id = uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
                     route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
-                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
-                                email_from, email_to, message_id, route)
                     route = self.message_route_verify(cr, uid, message, message_dict, route,
                                 update_author=True, assert_model=True, create_fallback=True, context=context)
                     if route:
+                        _logger.info(
+                            'Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
+                            email_from, email_to, message_id, route)
                         routes.append(route)
                 return routes
 
@@ -993,15 +995,16 @@ class mail_thread(osv.AbstractModel):
                 thread_id = int(thread_id)
             except:
                 thread_id = False
-        _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                    email_from, email_to, message_id, fallback_model, thread_id, custom_values, uid)
         route = self.message_route_verify(cr, uid, message, message_dict,
                         (fallback_model, thread_id, custom_values, uid, None),
                         update_author=True, assert_model=True, context=context)
         if route:
+            _logger.info(
+                'Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                email_from, email_to, message_id, fallback_model, thread_id, custom_values, uid)
             return [route]
 
-        # AssertionError if no routes found and if no bounce occured
+        # ValueError if no routes found and if no bounce occured
         raise ValueError(
                 'No possible route found for incoming message from %s to %s (Message-Id %s:). '
                 'Create an appropriate mail.alias or force the destination model.' %
@@ -1171,7 +1174,14 @@ class mail_thread(osv.AbstractModel):
         body = u''
         if save_original:
             attachments.append(('original_email.eml', message.as_string()))
-        if not message.is_multipart() or 'text/' in message.get('content-type', ''):
+
+        # Be careful, content-type may contain tricky content like in the
+        # following example so test the MIME type with startswith()
+        #
+        # Content-Type: multipart/related;
+        #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
+        #   type="text/html"
+        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')

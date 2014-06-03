@@ -159,7 +159,11 @@ class event_event(osv.osv):
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
             type='integer',
-            readonly=True),
+            readonly=True,
+            store={
+              'event.event': (lambda self, cr, uid, ids, c = {}: ids, ['event_ticket_ids'], 20),
+              'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
+            }),
         'seats_available': fields.function(Event._get_seats, oldname='register_avail', string='Available Seats',
                                            type='integer', multi='seats_reserved',
                                            store={
