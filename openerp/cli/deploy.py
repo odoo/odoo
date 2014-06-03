@@ -84,7 +84,7 @@ class Deploy(Command):
             self.session.verify = False
 
         try:
-            if not args.url.startswith('http://'):
+            if not args.url.startswith(('http://', 'https://')):
                 args.url = 'https://%s' % args.url
             result = self.deploy_module(args.path, args.url, args.login, args.password, args.db)
             print(result)
