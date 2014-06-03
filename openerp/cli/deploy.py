@@ -74,17 +74,17 @@ class Deploy(Command):
         parser.add_argument('--db', dest='db', help='Database to use if server does not use db-filter.')
         parser.add_argument('--login', dest='login', default="admin", help='Login (default=admin)')
         parser.add_argument('--password', dest='password', default="admin", help='Password (default=admin)')
-        parser.add_argument('--no-ssl-check', dest='no_ssl_check', action='store_true', help='Do not check ssl cert')
+        parser.add_argument('--verify-ssl', action='store_true', help='Verify SSL certificate')
         if not cmdargs:
             sys.exit(parser.print_help())
 
         args = parser.parse_args(args=cmdargs)
 
-        if args.no_ssl_check:
+        if not args.verify_ssl:
             self.session.verify = False
 
         try:
-            if not args.url.startswith('http://'):
+            if not args.url.startswith(('http://', 'https://')):
                 args.url = 'https://%s' % args.url
             result = self.deploy_module(args.path, args.url, args.login, args.password, args.db)
             print(result)
