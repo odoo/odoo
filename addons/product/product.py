@@ -344,6 +344,8 @@ class product_attribute_value(osv.osv):
         return result
 
     def _set_price_extra(self, cr, uid, id, name, value, args, context=None):
+        if context is None:
+            context = {}
         if 'active_id' not in context:
             return None
         p_obj = self.pool['product.attribute.price']
