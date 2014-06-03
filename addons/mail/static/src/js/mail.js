@@ -1996,7 +1996,7 @@ openerp.mail = function (session) {
         template:'mail.ComposeMessageTopButton',
 
         start: function () {
-            this.$('button').on('click', this.on_compose_message );
+            this.$el.on('click', this.on_compose_message );
             this._super();
         },
 
