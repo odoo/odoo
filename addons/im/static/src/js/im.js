@@ -25,7 +25,7 @@
                 im.appendTo(instance.client.$el);
                 var button = new instance.im.ImTopButton(this);
                 button.on("clicked", im, im.switch_display);
-                button.appendTo(instance.webclient.$el.find('.oe_systray'));
+                button.appendTo(window.$('.oe_systray'));
             });
             return this._super.apply(this, arguments);
         },
