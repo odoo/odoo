@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from lxml import etree
 from openerp.tools.translate import _
 
@@ -154,6 +154,7 @@ class res_partner(osv.osv):
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
 
+    @api.cr_uid_ids_context
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
         #partner_ids -> res.partner
         for partner in self.browse(cr, uid, partner_ids, context=context):
@@ -190,6 +191,7 @@ class res_partner(osv.osv):
         }
         return self.pool['report'].get_action(cr, uid, [], 'account_followup.report_followup', data=datas, context=context)
 
+    @api.cr_uid_ids_context
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
         if context is None:
             context = {}
@@ -268,7 +270,7 @@ class res_partner(osv.osv):
                     if date <= current_date and aml['balance'] > 0:
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
-                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + (aml['ref'] or '') + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
 
                 total = reduce(lambda x, y: x+y['balance'], currency_dict['line'], 0.00)
 

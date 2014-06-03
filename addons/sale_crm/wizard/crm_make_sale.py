@@ -46,7 +46,7 @@ class crm_make_sale(osv.osv_memory):
         if not active_id:
             return False
 
-        lead = lead_obj.read(cr, uid, active_id, ['partner_id'], context=context)
+        lead = lead_obj.read(cr, uid, [active_id], ['partner_id'], context=context)[0]
         return lead['partner_id'][0] if lead['partner_id'] else False
 
     def view_init(self, cr, uid, fields_list, context=None):

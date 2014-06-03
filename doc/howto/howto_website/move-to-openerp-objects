@@ -1,5 +1,5 @@
 # HG changeset patch
-# Parent ade038cd6dfd855f1d423cffb3d4e242404c28f0
+# Parent 31635a11b750982a00ae4afc9952b5e23f39c985
 
 diff --git a/__init__.py b/__init__.py
 --- a/__init__.py
@@ -51,7 +51,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 +            Lectures.search(cr, uid, [('type', '=', lecture_type_id),], context=context),
 +            context=context)
 +
-         return http.request.website.render('academy.index', {
+         return http.request.render('academy.index', {
              'tas': tas,
              'lectures': lectures,
          })
@@ -59,7 +59,7 @@ diff --git a/controllers/academy.py b/controllers/academy.py
 -    @http.route('/tas/<model("academy.tas"):ta>/', auth='public', website=True)
 +    @http.route('/tas/<model("res.users"):ta>/', auth='public', website=True)
      def ta(self, ta):
-         return http.request.website.render('academy.ta', {
+         return http.request.render('academy.ta', {
              'ta': ta,
 diff --git a/data/views.xml b/data/views.xml
 deleted file mode 100644
@@ -227,39 +227,36 @@ diff --git a/models/academy.py b/models/academy.py
 deleted file mode 100644
 --- a/models/academy.py
 +++ /dev/null
-@@ -1,19 +0,0 @@
+@@ -1,16 +0,0 @@
 -# -*- coding: utf-8 -*-
--from openerp.osv import orm, fields
+-from openerp import Model
+-from openerp import Char, Html, Date
 -
--class TeachingAssistants(orm.Model):
+-class TeachingAssistants(Model):
 -    _name = "academy.tas"
 -
--    _columns = {
--        'name': fields.char(),
--        'biography': fields.html(),
--    }
+-    name = Char()
+-    biography = Html()
 -
--class Lectures(orm.Model):
+-class Lectures(Model):
 -    _name = 'academy.lectures'
 -    _order = 'date ASC'
 -
--    _columns = {
--        'name': fields.char(required=True, string="Name"),
--        'date': fields.date(required=True, string="Date"),
--    }
+-    name = Char(required=True, string="Name")
+-    date = Date(required=True, string="Date")
 diff --git a/models/res_partner.py b/models/res_partner.py
 new file mode 100644
 --- /dev/null
 +++ b/models/res_partner.py
 @@ -0,0 +1,8 @@
-+from openerp.osv import orm, fields
++from openerp import Model
++from openerp import Html
 +
-+class Partner(orm.Model):
++class Partner(Model):
 +    _inherit = 'res.partner'
 +
-+    _columns = {
-+        'biography': fields.html(),
-+    }
++    biography = Html()
++
 diff --git a/security/ir.model.access.csv b/security/ir.model.access.csv
 deleted file mode 100644
 --- a/security/ir.model.access.csv

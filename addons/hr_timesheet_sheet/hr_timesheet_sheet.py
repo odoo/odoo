@@ -123,7 +123,7 @@ class hr_timesheet_sheet(osv.osv):
             self.check_employee_attendance_state(cr, uid, sheet.id, context=context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
-                self.signal_confirm(cr, uid, [sheet.id])
+                sheet.signal_workflow('confirm')
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True

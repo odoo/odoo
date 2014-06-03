@@ -291,6 +291,7 @@ class account_analytic_line(osv.osv):
                         curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                     invoice_line_obj.create(cr, uid, curr_line, context=context)
                     cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+                    self.invalidate_cache(cr, uid, ['invoice_id'], ids, context=context)
 
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
@@ -327,10 +328,10 @@ class hr_analytic_timesheet(osv.osv):
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _get_analytic_lines(self, cr, uid, id, context=None):
-        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, id, context=context)
+    def _get_analytic_lines(self, cr, uid, ids, context=None):
+        iml = super(account_invoice, self)._get_analytic_lines(cr, uid, ids, context=context)
 
-        inv = self.browse(cr, uid, [id], context=context)[0]
+        inv = self.browse(cr, uid, ids, context=context)[0]
         if inv.type == 'in_invoice':
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:

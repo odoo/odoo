@@ -67,9 +67,7 @@ def registry(database_name):
 # Imports
 #----------------------------------------------------------
 import addons
-import cli
 import conf
-import http
 import loglevels
 import modules
 import netsvc
@@ -82,5 +80,22 @@ import sql_db
 import tools
 import workflow
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+#----------------------------------------------------------
+# Model classes, fields, api decorators, and environment
+#----------------------------------------------------------
+from openerp.osv.orm import BaseModel, AbstractModel, Model, TransientModel
+from openerp.osv import fields2 as fields
+from openerp.osv.fields2 import Boolean, Integer, Float, Char, Text, Html, \
+    Date, Datetime, Binary, Selection, Reference, Many2one, One2many, Many2many
+from openerp.osv import api
+from openerp.osv.api import model, multi, one, constrains, depends, onchange, returns
+from openerp.osv.env import Environment
+from openerp.tools.translate import _
 
+#----------------------------------------------------------
+# Other imports, which may require stuff from above
+#----------------------------------------------------------
+import cli
+import http
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

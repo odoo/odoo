@@ -163,19 +163,19 @@ class product_pricelist(osv.osv):
         "currency_id": _get_currency
     }
 
-    def price_get_multi(self, cr, uid, pricelist_ids, products_by_qty_by_partner, context=None):
+    def price_get_multi(self, cr, uid, ids, products_by_qty_by_partner, context=None):
         """multi products 'price_get'.
-           @param pricelist_ids:
+           @param ids:
            @param products_by_qty:
            @param partner:
            @param context: {
              'date': Date of the pricelist (%Y-%m-%d),}
            @return: a dict of dict with product_id as key and a dict 'price by pricelist' as value
         """
-        if not pricelist_ids:
-            pricelist_ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
+        if not ids:
+            ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
         results = {}
-        for pricelist in self.browse(cr, uid, pricelist_ids, context=context):
+        for pricelist in self.browse(cr, uid, ids, context=context):
             subres = self._price_get_multi(cr, uid, pricelist, products_by_qty_by_partner, context=context)
             for product_id,price in subres.items():
                 results.setdefault(product_id, {})
@@ -243,14 +243,14 @@ class product_pricelist(osv.osv):
                 if rule.min_quantity and qty<rule.min_quantity:
                     continue
                 if is_product_template:
-                    if rule.product_tmpl_id and product.id<>rule.product_tmpl_id.id:
+                    if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
                     if rule.product_id:
                         continue
                 else:
-                    if rule.product_tmpl_id and product.product_tmpl_id.id<>rule.product_tmpl_id.id:
+                    if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id and product.id<>rule.product_id.id:
+                    if rule.product_id and product.id != rule.product_id.id:
                         continue
 
                 if rule.categ_id:
@@ -275,7 +275,7 @@ class product_pricelist(osv.osv):
                                 context=context)
                 elif rule.base == -2:
                     for seller in product.seller_ids:
-                        if (not partner) or (seller.name.id<>partner):
+                        if (not partner) or (seller.name.id != partner):
                             continue
                         qty_in_seller_uom = qty
                         from_uom = context.get('uom') or product.uom_id.id
@@ -321,7 +321,7 @@ class product_pricelist(osv.osv):
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
-        res_multi = self.price_get_multi(cr, uid, pricelist_ids=ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
+        res_multi = self.price_get_multi(cr, uid, ids, products_by_qty_by_partner=[(product, qty, partner)], context=context)
         res = res_multi[prod_id]
         return res
 

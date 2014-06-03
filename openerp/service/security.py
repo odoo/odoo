@@ -23,7 +23,7 @@ import openerp
 
 def login(db, login, password):
     res_users = openerp.registry(db)['res.users']
-    return res_users.login(db, login, password)
+    return res_users._login(db, login, password)
 
 def check_super(passwd):
     if passwd == openerp.tools.config['admin_passwd']:

@@ -223,14 +223,14 @@ class im_session(osv.osv):
             session_id = self.create(cr, openerp.SUPERUSER_ID, {
                 'user_ids': [(6, 0, users)]
             }, context=context)
-        return self.read(cr, uid, session_id, context=context)
+        return self.read(cr, uid, [session_id], context=context)[0]
 
     def get_session_users(self, cr, uid, session_id, context=None):
         return self.read(cr, openerp.SUPERUSER_ID, session_id, ['user_ids'], context=context)
 
     def add_to_session(self, cr, uid, session_id, user_id, uuid=None, context=None):
         my_id = self.pool.get("im.user").get_my_id(cr, uid, uuid, context=context)
-        session = self.read(cr, uid, session_id, context=context)
+        session = self.read(cr, uid, [session_id], context=context)[0]
         if my_id not in session.get("user_ids"):
             raise Exception("Not allowed to modify a session when you are not in it.")
         self.write(cr, uid, session_id, {"user_ids": [(4, user_id)]}, context=context)
@@ -289,7 +289,7 @@ class im_user(osv.osv):
     def _im_change_status(self, cr, uid, new_one, uuid=None, context=None):
         assert_uuid(uuid)
         id = self.get_my_id(cr, uid, uuid, context=context)
-        current_status = self.read(cr, openerp.SUPERUSER_ID, id, ["im_status"], context=None)["im_status"]
+        current_status = self.read(cr, openerp.SUPERUSER_ID, [id], ["im_status"], context=None)[0]["im_status"]
         self.write(cr, openerp.SUPERUSER_ID, id, {"im_last_status": new_one, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         if current_status != new_one:

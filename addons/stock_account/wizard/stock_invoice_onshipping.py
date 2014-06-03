@@ -24,31 +24,19 @@ from openerp.tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
-        res = self._get_journal_id(cr, uid, context=context)
-        if res:
-            return res[0][0]
-        return False
-
-    def _get_journal_id(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        journal_obj = self.pool.get('account.journal')
-        value = journal_obj.search(cr, uid, [('type', 'in',('sale','sale_Refund'))])
-        vals = []
-        for jr_type in journal_obj.browse(cr, uid, value, context=context):
-            t1 = jr_type.id,jr_type.name
-            if t1 not in vals:
-                vals.append(t1)
-        return vals
+        journal_obj = self.pool['account.journal']
+        journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale','sale_refund'))], limit=1)
+        return journal_ids[0] if journal_ids else False
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
     _columns = {
-        'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
+        'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True, domain=[('type', 'in', ('sale','sale_refund'))]),
         'group': fields.boolean("Group by partner"),
         'inv_type': fields.selection([('out_invoice','Create Invoice'),('out_refund','Refund Invoice')], "Invoice Type"),
         'invoice_date': fields.date('Invoice Date'),
     }
+
     _defaults = {
         'journal_id' : _get_journal,
         'inv_type': lambda self,cr,uid,ctx: ctx.get('inv_type', 'out_invoice')
@@ -75,8 +63,8 @@ class stock_invoice_onshipping(osv.osv_memory):
         if not invoice_ids:
             raise osv.except_osv(_('Error!'), _('No invoice created!'))
 
-        onshipdata_obj = self.read(cr, uid, ids, ['journal_id', 'group', 'invoice_date', 'inv_type'])
-        inv_type = onshipdata_obj[0]['inv_type']
+        wizard = self.browse(cr, uid, ids[0], context=context)
+        inv_type = wizard.inv_type
 
         action_model = False
         action = {}
@@ -95,21 +83,18 @@ class stock_invoice_onshipping(osv.osv_memory):
         return True
 
     def create_invoice(self, cr, uid, ids, context=None):
-        context = context or {}
         picking_pool = self.pool.get('stock.picking')
-        onshipdata_obj = self.read(cr, uid, ids, ['journal_id', 'group', 'invoice_date', 'inv_type'])
+        wizard = self.browse(cr, uid, ids[0], context=context)
 
-        context['date_inv'] = onshipdata_obj[0]['invoice_date']
-        inv_type = onshipdata_obj[0]['inv_type']
-        context['inv_type'] = inv_type
+        context = dict(context or {})
+        context['date_inv'] = wizard.invoice_date
+        context['inv_type'] = wizard.inv_type
 
         active_ids = context.get('active_ids', [])
-        if isinstance(onshipdata_obj[0]['journal_id'], tuple):
-            onshipdata_obj[0]['journal_id'] = onshipdata_obj[0]['journal_id'][0]
         res = picking_pool.action_invoice_create(cr, uid, active_ids,
-              journal_id = onshipdata_obj[0]['journal_id'],
-              group = onshipdata_obj[0]['group'],
-              type = inv_type,
+              journal_id=wizard.journal_id.id,
+              group=wizard.group,
+              type=wizard.inv_type,
               context=context)
         return res
 

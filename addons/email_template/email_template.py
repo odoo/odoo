@@ -30,7 +30,7 @@ import urlparse
 import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp import tools
+from openerp import tools, api
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
 
@@ -151,6 +151,7 @@ class email_template(osv.osv):
         """
         if context is None:
             context = {}
+        res_ids = filter(None, res_ids)         # to avoid browsing [None] below
         results = dict.fromkeys(res_ids, u"")
 
         # try to load the template
@@ -505,6 +506,7 @@ class email_template(osv.osv):
 
         return results
 
+    @api.cr_uid_id_context
     def send_mail(self, cr, uid, template_id, res_id, force_send=False, raise_exception=False, context=None):
         """Generates a new mail message for the given template and record,
            and schedules it for delivery through the ``mail`` module's scheduler.

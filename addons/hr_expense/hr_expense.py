@@ -209,9 +209,7 @@ class hr_expense_expense(osv.osv):
             c: account_move_lines potentially modified
         '''
         cur_obj = self.pool.get('res.currency')
-        if context is None:
-            context={}
-        context.update({'date': exp.date_confirm or time.strftime('%Y-%m-%d')})
+        context = dict(context or {}, date=exp.date_confirm or time.strftime('%Y-%m-%d'))
         total = 0.0
         total_currency = 0.0
         for i in account_move_lines:

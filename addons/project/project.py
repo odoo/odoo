@@ -699,21 +699,30 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default or {}
-        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
+        
+        default.update(
+            work_ids=[],
+            date_start=False,
+            date_end=False,
+            date_deadline=False
+        )
+
+        current = self.browse(cr, uid, id, context=context)
+        
         if not default.get('remaining_hours', False):
-            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
+            default['remaining_hours'] = float(current.planned_hours)
+        
         default['active'] = True
+        
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name or ''
-            if not context.get('copy',False):
-                new_name = _("%s (copy)") % (default.get('name', ''))
-                default.update({'name':new_name})
+            default['name'] = current.name or ''
+            if not context.get('copy', False):
+                new_name = _("%s (copy)") % (default['name'])
+                default.update(name=new_name)
+        
         return super(task, self).copy_data(cr, uid, id, default, context)
     
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         if not context.get('copy', False):
@@ -1147,24 +1156,29 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
-    def create(self, cr, uid, vals, *args, **kwargs):
+    def create(self, cr, uid, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'task_id' in vals:
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+            self.pool.get('project.task').invalidate_cache(cr, uid, ['remaining_hours'], [vals['task_id']], context=context)
+        return super(project_work,self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'hours' in vals:
+            task_obj = self.pool.get('project.task')
             for work in self.browse(cr, uid, ids, context=context):
                 cr.execute('update project_task set remaining_hours=remaining_hours - %s + (%s) where id=%s', (vals.get('hours',0.0), work.hours, work.task_id.id))
+                task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        task_obj = self.pool.get('project.task')
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
+            task_obj.invalidate_cache(cr, uid, ['remaining_hours'], [work.task_id.id], context=context)
         return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
 
 

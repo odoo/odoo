@@ -323,14 +323,14 @@ class ir_actions_act_window(osv.osv):
             }
             for res in results:
                 model = res.get('res_model')
-                if model and self.pool.get(model):
+                if model in self.pool:
                     try:
                         with tools.mute_logger("openerp.tools.safe_eval"):
                             eval_context = eval(res['context'] or "{}", eval_dict) or {}
                     except Exception:
                         continue
                     custom_context = dict(context, **eval_context)
-                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+                    res['help'] = self.pool[model].get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
         if ids_int:
             return results[0]
         return results
@@ -346,7 +346,7 @@ class ir_actions_act_window(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.read(cr, uid, res_id, [], context)
+        return self.read(cr, uid, [res_id], [], context)[0]
 
 VIEW_TYPES = [
     ('tree', 'Tree'),
@@ -566,7 +566,7 @@ class ir_actions_server(osv.osv):
         'sequence': 5,
         'code': """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
-#  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
+#  - object: Record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
 #  - cr: database cursor
 #  - uid: current user id
@@ -822,7 +822,7 @@ class ir_actions_server(osv.osv):
     def run_action_client_action(self, cr, uid, action, eval_context=None, context=None):
         if not action.action_id:
             raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
-        return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
+        return self.pool[action.action_id.type].read(cr, uid, [action.action_id.id], context=context)[0]
 
     def run_action_code_multi(self, cr, uid, action, eval_context=None, context=None):
         eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
@@ -1084,10 +1084,10 @@ Launch Manually Once: after having been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+        act_type = wizard.action_id.type
 
-        res = self.pool[act_type['type']].read(cr, uid, wizard.action_id.id, [], context=context)
-        if act_type['type'] != 'ir.actions.act_window':
+        res = self.pool[act_type].read(cr, uid, [wizard.action_id.id], [], context=context)[0]
+        if act_type != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')
         res['nodestroy'] = True

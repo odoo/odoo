@@ -66,7 +66,7 @@ class share_wizard(osv.TransientModel):
             model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)
         except ValueError:
             return False
-        return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
+        return group_id in self.pool.get('res.users').read(cr, uid, [uid], ['groups_id'], context=context)[0]['groups_id']
 
     def has_share(self, cr, uid, unused_param, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
@@ -103,9 +103,7 @@ class share_wizard(osv.TransientModel):
         return result
 
     def _generate_embedded_code(self, wizard, options=None):
-        cr = wizard._cr
-        uid = wizard._uid
-        context = wizard._context
+        cr, uid, context = self.env.args
         if options is None:
             options = {}
 
@@ -204,7 +202,7 @@ class share_wizard(osv.TransientModel):
             raise osv.except_osv(_('No email address configured'),
                                  _('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
-        action = self.pool[model].read(cr, uid, res_id, context=context)
+        action = self.pool[model].read(cr, uid, [res_id], context=context)[0]
         action['res_id'] = ids[0]
         action.pop('context', '')
         return action

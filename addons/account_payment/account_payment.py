@@ -132,7 +132,7 @@ class payment_order(osv.osv):
 
     def set_done(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'date_done': time.strftime('%Y-%m-%d')})
-        self.signal_done(cr, uid, [ids[0]])
+        self.signal_workflow(cr, uid, ids, 'done')
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):

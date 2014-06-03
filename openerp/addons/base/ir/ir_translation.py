@@ -168,11 +168,11 @@ class ir_translation(osv.osv):
             else:
                 model_name, field = record.name.split(',')
                 model = self.pool.get(model_name)
-                if model and model.exists(cr, uid, record.res_id, context=context):
+                if model is not None:
                     # Pass context without lang, need to read real stored field, not translation
                     context_no_lang = dict(context, lang=None)
-                    result = model.read(cr, uid, record.res_id, [field], context=context_no_lang)
-                    res[record.id] = result[field] if result else False
+                    result = model.read(cr, uid, [record.res_id], [field], context=context_no_lang)
+                    res[record.id] = result[0][field] if result else False
         return res
 
     def _set_src(self, cr, uid, id, name, value, args, context=None):

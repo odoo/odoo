@@ -43,8 +43,15 @@ class one2many_mod2(fields.one2many):
                 ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids),('analytic_account_id','child_of',[acc_id])], limit=self._limit)
         if ids2 is None:
             ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
-        for r in obj.pool[self._obj]._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+
+        for r in obj.pool[self._obj].read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            key = r[self._fields_id]
+            if isinstance(key, tuple):
+                # Read return a tuple in the case where the field is a many2one
+                # but we want to get the id of this field.
+                key = key[0]
+
+            res[key].append( r['id'] )
         return res
 
 class account_analytic_line(osv.osv):
@@ -373,8 +380,8 @@ class account_invoice(osv.osv):
         res['analytics_id'] = x.get('analytics_id', False)
         return res
 
-    def _get_analytic_lines(self, cr, uid, id, context=None):
-        inv = self.browse(cr, uid, [id])[0]
+    def _get_analytic_lines(self, cr, uid, ids, context=None):
+        inv = self.browse(cr, uid, ids)[0]
         cur_obj = self.pool.get('res.currency')
         invoice_line_obj = self.pool.get('account.invoice.line')
         acct_ins_obj = self.pool.get('account.analytic.plan.instance')

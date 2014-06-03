@@ -86,8 +86,8 @@
                             </group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="type" on_change="onchange_event_type(type,context)" />
-                                <field name="date_begin" on_change="onchange_start_date(date_begin,date_end)"/>
+                                <field name="type"/>
+                                <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
                             </group>
@@ -117,7 +117,7 @@
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </tree>
                                     <form string="Registration">
-                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)" />
+                                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                         <field name="name"/>
                                         <group colspan="4" col="4">
                                         <field name="email"/>
@@ -366,7 +366,7 @@
                         </h1>
                         <group>
                             <group>
-                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" on_change="onchange_partner_id(partner_id, context)"/>
+                                <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <label for="email"/>

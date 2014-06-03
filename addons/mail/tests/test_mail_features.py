@@ -655,7 +655,7 @@ class test_mail(TestMail):
             {
                 'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]
             }, context={
-                'default_composition_mode': 'reply',
+                'default_composition_mode': 'comment',
                 'default_res_id': self.group_pigs_id,
                 'default_parent_id': message.id
             })
@@ -773,7 +773,6 @@ class test_mail(TestMail):
     def test_30_needaction(self):
         """ Tests for mail.message needaction. """
         cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
-        group_pigs_demo = self.mail_group.browse(cr, self.user_raoul_id, self.group_pigs_id)
         na_admin_base = self.mail_message._needaction_count(cr, uid, domain=[])
         na_demo_base = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
 
@@ -788,8 +787,9 @@ class test_mail(TestMail):
         # Do: post 2 message on group_pigs as admin, 3 messages as demo user
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
+        raoul_pigs = group_pigs.sudo(user_raoul)
         for dummy in range(3):
-            group_pigs_demo.message_post(body='My Demo Body', subtype='mt_comment')
+            raoul_pigs.message_post(body='My Demo Body', subtype='mt_comment')
 
         # Test: admin has 3 new notifications (from demo), and 3 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [

@@ -28,7 +28,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
-from openerp.osv.orm import browse_record, browse_null
+from openerp.osv.orm import browse_record_list, browse_record, browse_null
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
 class purchase_order(osv.osv):
@@ -66,6 +66,7 @@ class purchase_order(osv.osv):
                         (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
             cr.execute("""update purchase_order set
                     minimum_planned_date=%s where id=%s""", (value, po.id))
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
@@ -597,8 +598,7 @@ class purchase_order(osv.osv):
         :return: ID of created invoice.
         :rtype: int
         """
-        if context is None:
-            context = {}
+        context = dict(context or {})
         
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
@@ -620,7 +620,7 @@ class purchase_order(osv.osv):
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
-                po_line.write({'invoice_lines': [(4, inv_line_id)]}, context=context)
+                po_line.write({'invoice_lines': [(4, inv_line_id)]})
 
             # get invoice data and create invoice
             inv_data = self._prepare_invoice(cr, uid, order, inv_lines, context=context)
@@ -630,7 +630,7 @@ class purchase_order(osv.osv):
             inv_obj.button_compute(cr, uid, [inv_id], context=context, set_total=True)
 
             # Link this new invoice to related purchase order
-            order.write({'invoice_ids': [(4, inv_id)]}, context=context)
+            order.write({'invoice_ids': [(4, inv_id)]})
             res = inv_id
         return res
 
@@ -851,7 +851,7 @@ class purchase_order(osv.osv):
                     field_val = field_val.id
                 elif isinstance(field_val, browse_null):
                     field_val = False
-                elif isinstance(field_val, list):
+                elif isinstance(field_val, browse_record_list):
                     field_val = ((6, 0, tuple([v.id for v in field_val])),)
                 list_key.append((field, field_val))
             list_key.sort()

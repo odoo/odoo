@@ -21,8 +21,7 @@
 
 import time
 
-from openerp.osv import osv, fields
-from openerp.osv.orm import browse_record, browse_null
+from openerp.osv import osv, orm, fields
 from openerp.tools.misc import attrgetter
 
 # -------------------------------------------------------------------------
@@ -97,7 +96,7 @@ class ir_property(osv.osv):
             raise osv.except_osv('Error', 'Invalid type')
 
         if field == 'value_reference':
-            if isinstance(value, browse_record):
+            if isinstance(value, orm.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
@@ -132,7 +131,7 @@ class ir_property(osv.osv):
             return record.value_binary
         elif record.type == 'many2one':
             if not record.value_reference:
-                return browse_null()
+                return False
             model, resource_id = record.value_reference.split(',')
             return self.pool.get(model).browse(cr, uid, int(resource_id), context=context)
         elif record.type == 'datetime':

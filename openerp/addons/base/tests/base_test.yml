@@ -277,7 +277,7 @@
             rate_id = res_currency_rate.create(cr, 1, {'name':'2000-01-01',
                                                        'rate': value,
                                                        'currency_id': currency.id})
-            rate = res_currency_rate.read(cr, 1, rate_id, ['rate'])['rate']
+            rate = res_currency_rate.read(cr, 1, [rate_id], ['rate'])[0]['rate']
             assert rate == expected, 'Roundtrip error: got %s back from db, expected %s' % (rate, expected)
         # res.currency.rate uses 6 digits of precision by default
         try_roundtrip(2.6748955, 2.674896)

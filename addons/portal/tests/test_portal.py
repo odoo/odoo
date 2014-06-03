@@ -90,7 +90,7 @@ class test_portal(TestMail):
         # Do: Chell replies to a Pigs message using the composer
         compose_id = mail_compose.create(cr, self.user_chell_id,
             {'subject': 'Subject', 'body': 'Body text'},
-            {'default_composition_mode': 'reply', 'default_parent_id': pigs_msg_id})
+            {'default_composition_mode': 'comment', 'default_parent_id': pigs_msg_id})
         mail_compose.send_mail(cr, self.user_chell_id, [compose_id])
 
         # Do: Chell browses PigsPortal -> ok because groups security, ko for partners (no read permission)

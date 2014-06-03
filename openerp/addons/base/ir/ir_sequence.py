@@ -234,15 +234,15 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
-    def _next(self, cr, uid, seq_ids, context=None):
-        if not seq_ids:
+    def _next(self, cr, uid, ids, context=None):
+        if not ids:
             return False
         if context is None:
             context = {}
         force_company = context.get('force_company')
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        sequences = self.read(cr, uid, seq_ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
+        sequences = self.read(cr, uid, ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
         preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
         seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
@@ -251,6 +251,7 @@ class ir_sequence(openerp.osv.osv.osv):
         else:
             cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
             cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
+            self.invalidate_cache(cr, uid, ['number_next'], [seq['id']], context=context)
         d = self._interpolation_dict()
         try:
             interpolated_prefix = self._interpolate(seq['prefix'], d)

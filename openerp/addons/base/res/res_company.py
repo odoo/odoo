@@ -84,7 +84,7 @@ class res_company(osv.osv):
             if company.partner_id:
                 address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['default'])
                 if address_data['default']:
-                    address = part_obj.read(cr, openerp.SUPERUSER_ID, address_data['default'], field_names, context=context)
+                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['default']], field_names, context=context)[0]
                     for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
@@ -176,6 +176,7 @@ class res_company(osv.osv):
             res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
 
         return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
+
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
             return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
@@ -209,8 +210,7 @@ class res_company(osv.osv):
         return res
 
     def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
