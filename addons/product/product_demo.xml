@@ -213,6 +213,10 @@ FaceTime HD Camera, 1.2 MP Photos</field>
             <field name="attribute_line_ids" eval="[(6,0,[ref('product.product_attribute_line_1'), ref('product.product_attribute_line_2'), ref('product.product_attribute_line_3')])]"/>
         </record>
         
+        <record id="product_product_4d" model="product.product">
+            <field name="active" eval="False"/>
+        </record>
+        
         <record id="product_attribute_price_1" model="product.attribute.price">
             <field name="product_tmpl_id" ref="product_product_4_product_template"/>
             <field name="value_id" ref="product_attribute_value_2"/>

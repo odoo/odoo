@@ -270,7 +270,7 @@
                 </form>
                 <field name="name" position="replace">
                     <field name="name" attrs="{'invisible': [('id', '!=', False)]}"/>
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
                 </field>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <field name="attribute_value_ids" widget="many2many_tags"/>

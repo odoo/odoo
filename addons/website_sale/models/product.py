@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import tools
 from openerp.osv import osv, fields
 
 class product_style(osv.Model):
