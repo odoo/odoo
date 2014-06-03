@@ -499,6 +499,8 @@ class purchase_order(osv.osv):
         if not len(ids):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
+        for purchase in self.browse(cr, uid, ids, context=context):
+            self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line], {'state': 'draft'})
         wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
@@ -596,6 +598,8 @@ class purchase_order(osv.osv):
                         _('You must first cancel all receptions related to this purchase order.'))
                 if inv:
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
+            self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line],
+                    {'state': 'cancel'})
         self.write(cr,uid,ids,{'state':'cancel'})
 
         for (id, name) in self.name_get(cr, uid, ids):
@@ -901,6 +905,8 @@ class purchase_order_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         procurement_ids_to_cancel = []
         for line in self.browse(cr, uid, ids, context=context):
+            if line.state not in ['draft', 'cancel']:
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             if line.move_dest_id:
                 procurement_ids_to_cancel.extend(procurement.id for procurement in line.move_dest_id.procurements)
         if procurement_ids_to_cancel:
