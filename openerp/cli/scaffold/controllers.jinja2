@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from openerp import http
-from openerp.addons.web.controllers import main
 
-class {{ controller }}(main.Home):
-    @http.route('/{{ module }}/{{ controller }}', auth='public')
+class {{ controller }}(http.Controller):
+    @http.route('/{{ module }}/{{ controller }}', auth='public', website=True)
     def index(self):
         return "Hello, world!"
 {% if has_model %}
-    @http.route('/{{ module }}/{{ controller }}/<model("{{ module }}.{{ controller }}"):{{ controller }}>'], type='http', auth='public')
+    @http.route('/{{ module }}/{{ controller }}/<model("{{ module }}.{{ controller }}"):{{ controller }}>'], type='http', auth='public', website=True)
     def {{ controller }}(self, {{ controller }}, **kw):
         return "Hello, %r!" % {{ controller }}
 {% endif %}
