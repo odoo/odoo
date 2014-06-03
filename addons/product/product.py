@@ -351,7 +351,7 @@ class product_attribute_value(osv.osv):
         if p_ids:
             p_obj.write(cr, uid, p_ids, {'price_extra': value}, context=context)
         else:
-            p_obj.create(cr, uid, p_ids, {
+            p_obj.create(cr, uid, {
                     'product_tmpl_id': context['active_id'],
                     'value_id': id,
                     'price_extra': value,
