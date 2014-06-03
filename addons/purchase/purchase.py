@@ -503,6 +503,8 @@ class purchase_order(osv.osv):
         if not len(ids):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
+        for purchase in self.browse(cr, uid, ids, context=context):
+            self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line], {'state': 'draft'})
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
             self.delete_workflow(cr, uid, [p_id]) # TODO is it necessary to interleave the calls?
@@ -598,6 +600,8 @@ class purchase_order(osv.osv):
                         _('You must first cancel all receptions related to this purchase order.'))
             self.pool.get('account.invoice') \
                 .signal_invoice_cancel(cr, uid, map(attrgetter('id'), purchase.invoice_ids))
+            self.pool['purchase.order.line'].write(cr, uid, [l.id for l in  purchase.order_line],
+                    {'state': 'cancel'})
         self.write(cr,uid,ids,{'state':'cancel'})
 
         self.signal_purchase_cancel(cr, uid, ids)
@@ -908,6 +912,8 @@ class purchase_order_line(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         procurement_ids_to_cancel = []
         for line in self.browse(cr, uid, ids, context=context):
+            if line.state not in ['draft', 'cancel']:
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
             if line.move_dest_id:
                 procurement_ids_to_cancel.extend(procurement.id for procurement in line.move_dest_id.procurements)
         if procurement_ids_to_cancel:
