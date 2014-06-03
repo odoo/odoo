@@ -5612,6 +5612,8 @@ class BaseModel(object):
             result = {}
             for method in self._onchange_methods.get(field_name, ()):
                 method_res = method(record)
+                if not method_res:
+                    continue
                 if 'domain' in method_res:
                     result.setdefault('domain', {}).update(method_res['domain'])
                 if 'warning' in method_res:
