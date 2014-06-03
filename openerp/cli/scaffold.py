@@ -89,6 +89,8 @@ class ScaffoldModule(object):
         if self.created:
             manifest_base = os.path.splitext(MANIFEST)[0]
             self.render_file('%s.jinja2' % manifest_base, self.path('%s.py' % manifest_base))
+            # Create an empty __init__.py so the module can be imported
+            open(self.path('__init__.py'), 'a').close()
 
     def add_model(self, model):
         model_module = snake(model)
@@ -131,8 +133,8 @@ class ScaffoldModule(object):
         self.append_manifest_list('depends', 'website')
         css_file = '%s_theme.css' % self.module
         self.render_file('theme_css.jinja2', self.path('static', 'src', 'css', css_file))
-        theme_file = '%s_theme.xml' % self.module
-        self.append_xml_data('theme_xml.jinja2', self.path('views', theme_file), skip_if_exist=True)
+        self.append_xml_data('theme_xml.jinja2', self.path('views', 'templates.xml'), skip_if_exist=True)
+        self.append_manifest_list('data', 'views/templates.xml')
 
     def has_import(self, initfile, module):
         if not os.path.isfile(initfile):
