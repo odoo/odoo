@@ -538,7 +538,10 @@ class product_template(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'packaging_ids' : fields.one2many('product.packaging', 'product_tmpl_id', 'Logistical Units',
+        'packaging_ids': fields.one2many(
+            'product.packaging', 'product_tmpl_id', 'Logistical Units',
+            help="Gives the different ways to package the same product. This has no impact on "
+                 "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
         'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
             help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
