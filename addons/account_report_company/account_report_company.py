@@ -31,7 +31,7 @@ class res_partner(osv.Model):
         return dict(self.name_get(cr, uid, ids, context=context))
 
     _display_name_store_triggers = {
-        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
                         ['parent_id', 'is_company', 'name'], 10)
     }
 
