@@ -137,6 +137,11 @@ class event_event(osv.osv):
             pass
         return []
 
+    def _get_ticket_events(self, cr, uid, ids, context=None):
+        # `self` is the event.event.ticket model when called by ORM! 
+        return list(set(ticket.event_id.id
+                            for ticket in self.browse(cr, uid, ids, context)))
+
     _columns = {
         'event_ticket_ids': fields.one2many('event.event.ticket', "event_id", "Event Ticket"),
         'seats_max': fields.function(_get_seats_max,
@@ -144,7 +149,11 @@ class event_event(osv.osv):
             help="The maximum registration level is equal to the sum of the maximum registration of event ticket." +
             "If you have too much registrations you are not able to confirm your event. (0 to ignore this rule )",
             type='integer',
-            readonly=True)
+            readonly=True,
+            store={
+              'event.event': (lambda self, cr, uid, ids, c = {}: ids, ['event_ticket_ids'], 20),
+              'event.event.ticket': (_get_ticket_events, ['seats_max'], 10),
+            }),
     }
     _defaults = {
         'event_ticket_ids': _get_tickets
