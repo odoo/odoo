@@ -62,6 +62,11 @@ $(document).ready(function () {
         var dec = value % 1;
         $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
     });
+    // hightlight selected color
+    $('.css_attribute_color input').on('change', function (ev) {
+        $('.css_attribute_color').removeClass("active");
+        $('.css_attribute_color:has(input:checked)').addClass("active");
+    });
 
     var $form_var = $('form.js_add_cart_variants');
     var variant_ids = $form_var.data("attribute_value_ids");

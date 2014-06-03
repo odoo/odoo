@@ -532,8 +532,12 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def get_recipients(self, cr, uid, mailing, context=None):
-        domain = eval(mailing.mailing_domain)
-        res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+        if mailing.mailing_domain:
+            domain = eval(mailing.mailing_domain)
+            res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+        else:
+            res_ids = []
+            domain = [('id', 'in', res_ids)]
 
         # randomly choose a fragment
         if mailing.contact_ab_pc < 100:
@@ -567,6 +571,7 @@ class MassMailing(osv.Model):
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
+                'same_thread': mailing.reply_to_mode == 'thread',
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to

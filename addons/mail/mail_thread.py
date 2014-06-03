@@ -714,7 +714,7 @@ class mail_thread(osv.AbstractModel):
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
         return filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, tools.email_split(s), context=context))
 
-    def message_route_verify(self, cr, uid, message, message_dict, route, update_author=True, assert_model=True, create_fallback=True, context=None):
+    def message_route_verify(self, cr, uid, message, message_dict, route, update_author=True, assert_model=True, create_fallback=True, allow_private=False, context=None):
         """ Verify route validity. Check and rules:
             1 - if thread_id -> check that document effectively exists; otherwise
                 fallback on a message_new by resetting thread_id
@@ -835,6 +835,9 @@ class mail_thread(osv.AbstractModel):
             _create_bounce_email()
             return ()
 
+        if not model and not thread_id and not alias and not allow_private:
+            return ()
+
         return (model, thread_id, route[2], route[3], route[4])
 
     def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
@@ -891,14 +894,15 @@ class mail_thread(osv.AbstractModel):
         if mail_message_ids:
             original_msg = mail_msg_obj.browse(cr, SUPERUSER_ID, mail_message_ids[0], context=context)
             model, thread_id = original_msg.model, original_msg.res_id
-            _logger.info(
-                'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                email_from, email_to, message_id, model, thread_id, custom_values, uid)
             route = self.message_route_verify(
                 cr, uid, message, message_dict,
                 (model, thread_id, custom_values, uid, None),
-                update_author=True, assert_model=True, create_fallback=True, context=context)
-            return route and [route] or []
+                update_author=True, assert_model=False, create_fallback=True, context=context)
+            if route:
+                _logger.info(
+                    'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                    email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                return [route]
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
         ref_match = thread_references and tools.reference_re.search(thread_references)
@@ -919,14 +923,15 @@ class mail_thread(osv.AbstractModel):
                             ('res_id', '=', thread_id),
                         ], context=context)
                     if compat_mail_msg_ids and model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
-                        _logger.info(
-                            'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                            email_from, email_to, message_id, model, thread_id, custom_values, uid)
                         route = self.message_route_verify(
                             cr, uid, message, message_dict,
                             (model, thread_id, custom_values, uid, None),
                             update_author=True, assert_model=True, create_fallback=True, context=context)
-                        return route and [route] or []
+                        if route:
+                            _logger.info(
+                                'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                                email_from, email_to, message_id, model, thread_id, custom_values, uid)
+                            return [route]
 
         # 2. Reply to a private message
         if in_reply_to:
@@ -936,12 +941,13 @@ class mail_thread(osv.AbstractModel):
                             ], limit=1, context=context)
             if mail_message_ids:
                 mail_message = mail_msg_obj.browse(cr, uid, mail_message_ids[0], context=context)
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
-                                email_from, email_to, message_id, mail_message.id, custom_values, uid)
                 route = self.message_route_verify(cr, uid, message, message_dict,
                                 (mail_message.model, mail_message.res_id, custom_values, uid, None),
-                                update_author=True, assert_model=True, create_fallback=True, context=context)
-                return route and [route] or []
+                                update_author=True, assert_model=True, create_fallback=True, allow_private=True, context=context)
+                if route:
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
+                                 email_from, email_to, message_id, mail_message.id, custom_values, uid)
+                    return [route]
 
         # 3. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
