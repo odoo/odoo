@@ -460,7 +460,10 @@ class product_template(osv.osv):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
         price_history_obj = self.pool['product.price.history']
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        company_id = context.get('force_company', user_company)
+        if context:
+            company_id = context.get('force_company', user_company)
+        else:
+            company_id = user_company
         price_history_obj.create(cr, uid, {
             'product_template_id': product_tmpl_id,
             'cost': value,
