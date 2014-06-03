@@ -43,10 +43,15 @@ class MailComposeMessage(osv.TransientModel):
                     }, context=context)
                 mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
             for res_id in res_ids:
-                res[res_id]['mailing_id'] = mass_mailing.id
-                res[res_id]['statistics_ids'] = [(0, 0, {
-                    'model': wizard.model,
-                    'res_id': res_id,
-                    'mass_mailing_id': mass_mailing.id,
-                })]
+                res[res_id].update({
+                    'mailing_id':  mass_mailing.id,
+                    'statistics_ids': [(0, 0, {
+                        'model': wizard.model,
+                        'res_id': res_id,
+                        'mass_mailing_id': mass_mailing.id,
+                    })],
+                    # email-mode: keep original message for routing
+                    'notification': mass_mailing.reply_to_mode == 'thread',
+                    'auto_delete': True,
+                })
         return res
