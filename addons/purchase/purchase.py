@@ -859,7 +859,7 @@ class purchase_order(osv.osv):
         key_list.sort()
         return tuple(key_list)
 
-    def _can_merge(self, order):
+    def _can_be_merged(self, order):
         """Can the order be considered for merging with others?
 
         This method can be surcharged in other modules.
@@ -1023,7 +1023,7 @@ class purchase_order(osv.osv):
 
         """
         input_orders = self.browse(cr, uid, ids, context=context)
-        mergeable_orders = filter(self._can_merge, input_orders)
+        mergeable_orders = filter(self._can_be_merged, input_orders)
         grouped_orders = self._group_orders(mergeable_orders)
 
         new_old_rel = self._create_new_orders(cr, uid, grouped_orders,
