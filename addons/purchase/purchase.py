@@ -983,10 +983,16 @@ class purchase_order(osv.osv):
         new_order_id: [old_order_1_id, old_order_2_id]
 
         """
+        if context is None:
+            context = {}
+
+        context.update({'mail_create_nolog': True})
         new_old_rel = {}
         for key in grouped_orders:
             new_order_data, old_order_ids = grouped_orders[key]
             new_id = self.create(cr, uid, new_order_data, context=context)
+            self.message_post(
+                cr, uid, [new_id], body=_("RFQ created"), context=context)
             new_old_rel[new_id] = old_order_ids
         return new_old_rel
 
