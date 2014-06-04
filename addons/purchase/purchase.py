@@ -1008,7 +1008,7 @@ class purchase_order(osv.osv):
                 self.redirect_workflow(cr, uid, [(old_id, new_order_id)])
                 self.signal_purchase_cancel(cr, uid, [old_id])
 
-    def do_merge(self, cr, uid, input_order_ids, context=None):
+    def do_merge(self, cr, uid, ids, context=None):
         """Merge Purchase Orders.
 
         This method replaces the original one in the purchase module because
@@ -1022,7 +1022,7 @@ class purchase_order(osv.osv):
         New orders are created, and old orders are deleted.
 
         """
-        input_orders = self.browse(cr, uid, input_order_ids, context=context)
+        input_orders = self.browse(cr, uid, ids, context=context)
         mergeable_orders = filter(self._can_merge, input_orders)
         grouped_orders = self._group_orders(mergeable_orders)
 
