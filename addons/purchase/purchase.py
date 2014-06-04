@@ -862,7 +862,7 @@ class purchase_order(osv.osv):
     def _can_be_merged(self, order):
         """Can the order be considered for merging with others?
 
-        This method can be surcharged in other modules.
+        This method can be overridden in other modules.
         """
         return order.state == 'draft'
 
