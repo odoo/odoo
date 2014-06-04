@@ -1132,13 +1132,13 @@ class stock_picking(osv.osv):
             if not inv_type:
                 inv_type = self._get_invoice_type(picking)
 
+            invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
             if group and partner.id in invoices_group:
                 invoice_id = invoices_group[partner.id]
                 invoice = invoice_obj.browse(cr, uid, invoice_id)
                 invoice_vals_group = self._prepare_invoice_group(cr, uid, picking, partner, invoice, context=context)
                 invoice_obj.write(cr, uid, [invoice_id], invoice_vals_group, context=context)
             else:
-                invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
                 invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
