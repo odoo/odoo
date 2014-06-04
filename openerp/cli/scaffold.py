@@ -79,7 +79,7 @@ class ScaffoldModule(object):
     """
     def __init__(self, path):
         env = jinja2.Environment(loader=jinja2.PackageLoader(
-            'openerp.cli', 'scaffold'))
+            'openerp.cli', 'scaffold'), keep_trailing_newline=True)
         env.filters['snake'] = snake
         self.env = env
         self.path = functools.partial(os.path.join, directory(path))
