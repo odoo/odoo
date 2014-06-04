@@ -873,7 +873,7 @@ class purchase_order(osv.osv):
             'date_order': order.date_order,
             'partner_id': order.partner_id.id,
             'dest_address_id': order.dest_address_id.id,
-            'warehouse_id': order.warehouse_id.id,
+            'picking_type_id': order.picking_type_id.id,
             'location_id': order.location_id.id,
             'pricelist_id': order.pricelist_id.id,
             'state': 'draft',
