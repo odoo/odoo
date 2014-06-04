@@ -480,9 +480,14 @@ class MassMailing(osv.Model):
     def on_change_model_and_list(self, cr, uid, ids, mailing_model, list_ids, context=None):
         value = {}
         if mailing_model == 'mail.mass_mailing.contact':
-            list_ids = map(lambda item: item if isinstance(item, (int, long)) else [lid for lid in item[2]], list_ids)
-            if list_ids:
-                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list_ids
+            mailing_list_ids = set()
+            for item in list_ids:
+                if isinstance(item, (int, long)):
+                    mailing_list_ids.add(item)
+                elif len(item) == 3:
+                    mailing_list_ids |= set(item[2])
+            if mailing_list_ids:
+                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
