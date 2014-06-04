@@ -26,7 +26,7 @@ from operator import itemgetter
 import time
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp import tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
@@ -633,16 +633,16 @@ class account_account(osv.osv):
 
     def _check_moves(self, cr, uid, ids, method, context=None):
         line_obj = self.pool.get('account.move.line')
-        account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        account_ids = self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
-        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
             if method == 'write':
                 raise osv.except_osv(_('Error!'), _('You cannot deactivate an account that contains journal items.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error!'), _('You cannot remove an account that contains journal items.'))
         #Checking whether the account is set as a property to any Partner or not
-        value = 'account.account,' + str(ids[0])
-        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
+        values = ['account.account,%s' % (account_id,) for account_id in ids]
+        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','in', values)], context=context)
         if partner_prop_acc:
             raise osv.except_osv(_('Warning!'), _('You cannot remove/deactivate an account which is set on a customer or supplier.'))
         return True
@@ -684,10 +684,10 @@ class account_account(osv.osv):
 
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)], context=context)
             if move_lines:
                 # Allow the write if the value is the same
-                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
+                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'], context=context)]:
                     if vals['company_id']!=i:
                         raise osv.except_osv(_('Warning!'), _('You cannot change the owner company of an account that already contains journal items.'))
         if 'active' in vals and not vals['active']:
@@ -992,12 +992,14 @@ class account_period(osv.osv):
         (_check_year_limit, 'Error!\nThe period is invalid. Either some periods are overlapping or the period\'s dates are not matching the scope of the fiscal year.', ['date_stop'])
     ]
 
+    @api.returns('self')
     def next(self, cr, uid, period, step, context=None):
         ids = self.search(cr, uid, [('date_start','>',period.date_start)])
         if len(ids)>=step:
             return ids[step-1]
         return False
 
+    @api.returns('self')
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
@@ -1021,13 +1023,14 @@ class account_period(osv.osv):
 
         return result
 
-    def action_draft(self, cr, uid, ids, *args):
+    def action_draft(self, cr, uid, ids, context=None):
         mode = 'draft'
         for period in self.browse(cr, uid, ids):
             if period.fiscalyear_id.state == 'done':
                 raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -1302,6 +1305,7 @@ class account_move(osv.osv):
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
+        self.invalidate_cache(cr, uid, context=context)
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -1328,6 +1332,7 @@ class account_move(osv.osv):
             cr.execute('UPDATE account_move '\
                        'SET state=%s '\
                        'WHERE id IN %s', ('draft', tuple(ids),))
+            self.invalidate_cache(cr, uid, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1440,6 +1445,7 @@ class account_move(osv.osv):
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
         currency_obj = self.pool.get('res.currency')
+        account_move_line_obj = self.pool.get('account.move.line')
         if context is None:
             context = {}
 
@@ -1466,7 +1472,7 @@ class account_move(osv.osv):
             line_id = res[0]
         else:
             context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-            line_id = self.pool.get('account.move.line').create(cr, uid, {
+            line_id = account_move_line_obj.create(cr, uid, {
                 'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'partner_id': False,
@@ -1491,6 +1497,7 @@ class account_move(osv.osv):
         cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
+        account_move_line_obj.invalidate_cache(cr, uid, [mode2], [line_id], context=context)
 
         #adjust also the amount in currency if needed
         cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
@@ -1503,9 +1510,10 @@ class account_move(osv.osv):
                 res = cr.fetchone()
                 if res:
                     cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
+                    account_move_line_obj.invalidate_cache(cr, uid, ['amount_currency', 'account_id'], [res[0]], context=context)
                 else:
                     context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
-                    line_id = self.pool.get('account.move.line').create(cr, uid, {
+                    line_id = account_move_line_obj.create(cr, uid, {
                         'name': _('Currency Adjustment'),
                         'centralisation': 'currency',
                         'partner_id': False,
@@ -1811,7 +1819,7 @@ class account_tax_code(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+        reads = self.read(cr, uid, ids, ['name','code'], context=context, load='_classic_write')
         return [(x['id'], (x['code'] and (x['code'] + ' - ') or '') + x['name']) \
                 for x in reads]
 
@@ -1861,10 +1869,9 @@ class account_tax(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        name = self.read(cr, uid, id, ['name'], context=context)['name']
-        default = default.copy()
-        default.update({'name': name + _(' (Copy)')})
-        return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
+        this = self.browse(cr, uid, id, context=context)
+        tmp_default = dict(default, name=_("%s (Copy)") % this.name)
+        return super(account_tax, self).copy_data(cr, uid, id, default=tmp_default, context=context)
 
     _name = 'account.tax'
     _description = 'Tax'
@@ -2129,6 +2136,12 @@ class account_tax(osv.osv):
             'total_included': totalin,
             'taxes': tin + tex
         }
+
+    @api.v8(compute_all)
+    def compute_all(self, price_unit, quantity, product=None, partner=None, force_excluded=False):
+        return self._model.compute_all(
+            self._cr, self._uid, self, price_unit, quantity,
+            product=product, partner=partner, force_excluded=force_excluded)
 
     def compute(self, cr, uid, taxes, price_unit, quantity,  product=None, partner=None):
         _logger.warning("Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included.")
@@ -2735,7 +2748,7 @@ class account_tax_code_template(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+        reads = self.read(cr, uid, ids, ['name','code'], context=context, load='_classic_write')
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
 

@@ -222,7 +222,7 @@
     <section id="comments" class="read_width">
         <hr/>
         <ul class="media-list" id="comments-list">
-            <li t-foreach="blog_post.website_message_ids" t-as="message" class="media">
+            <li t-foreach="comments" t-as="message" class="media">
                 <span class="pull-left">
                     <img class="media-object img img-circle" t-att-src="'/website/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
                 </span>

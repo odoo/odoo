@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 import werkzeug
 
 import openerp
+from openerp import Environment
 from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
@@ -105,6 +106,7 @@ class TransactionCase(BaseCase):
         self.registry = RegistryManager.get(DB)
         self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
+        self.env = Environment(self.cr, self.uid, {})
 
     def tearDown(self):
         self.cr.rollback()
@@ -122,6 +124,7 @@ class SingleTransactionCase(BaseCase):
         cls.registry = RegistryManager.get(DB)
         cls.cr = cls.registry.cursor()
         cls.uid = openerp.SUPERUSER_ID
+        cls.env = Environment(cls.cr, cls.uid, {})
 
     @classmethod
     def tearDownClass(cls):

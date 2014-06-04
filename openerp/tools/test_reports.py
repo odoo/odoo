@@ -286,7 +286,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
             raise Exception("Cannot handle action of type %s" % act_model)
 
     log_test("will be using %s action %s #%d", act_model, act_xmlid, act_id)
-    action = registry[act_model].read(cr, uid, act_id, context=context)
+    action = registry[act_model].read(cr, uid, [act_id], context=context)[0]
     assert action, "Could not read action %s[%s]" %(act_model, act_id)
     loop = 0
     while action:

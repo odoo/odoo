@@ -70,15 +70,21 @@ As we can see below in the purple zone of the screen, there is also a way to dis
 On Change
 +++++++++
 
-The on_change attribute defines a method that is called when the content of a view field has changed.
+The on_change attribute defines a method that is called when the
+content of a view field has changed.
 
-This method takes at least arguments: cr, uid, ids, which are the three classical arguments and also the context dictionary. You can add parameters to the method. They must correspond to other fields defined in the view, and must also be defined in the XML with fields defined this way::
+This method takes at least arguments: cr, uid, ids, which are the
+three classical arguments and also the context dictionary. You can add
+parameters to the method. They must correspond to other fields defined
+in the view, and must also be defined in the XML with fields defined
+this way::
 
         <field name="name_of_field" on_change="name_of_method(other_field'_1_', ..., other_field'_n_')"/> 
 
 The example below is from the sale order view.
 
-You can use the 'context' keyword to access data in the context that can be used as params of the function.::
+You can use the 'context' keyword to access data in the context that
+can be used as params of the function.::
 
         <field name="shop_id" on_change="onchange_shop_id(shop_id)"/>
 
@@ -100,7 +106,10 @@ You can use the 'context' keyword to access data in the context that can be used
             return {'value':v} 
 
 
-When editing the shop_id form field, the onchange_shop_id method of the sale_order object is called and returns a dictionary where the 'value' key contains a dictionary of the new value to use in the 'project_id', 'pricelist_id' and 'payment_default_id' fields.
+When editing the shop_id form field, the onchange_shop_id method of
+the sale_order object is called and returns a dictionary where the
+'value' key contains a dictionary of the new value to use in the
+'project_id', 'pricelist_id' and 'payment_default_id' fields.
 
 Note that it is possible to change more than just the values of
 fields. For example, it is possible to change the value of some fields

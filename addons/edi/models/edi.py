@@ -65,7 +65,7 @@ def last_update_for(record):
     """Returns the last update timestamp for the given record,
        if available, otherwise False
     """
-    if record._model._log_access:
+    if record._log_access:
         record_log = record.perm_read()[0]
         return record_log.get('write_date') or record_log.get('create_date') or False
     return False

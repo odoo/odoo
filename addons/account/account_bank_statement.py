@@ -382,24 +382,17 @@ class account_bank_statement(osv.osv):
         return {'value': res}
 
     def unlink(self, cr, uid, ids, context=None):
-        stat = self.read(cr, uid, ids, ['state'], context=context)
-        unlink_ids = []
-        for t in stat:
-            if t['state'] in ('draft'):
-                unlink_ids.append(t['id'])
-            else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
-        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-        return True
+        for item in self.browse(cr, uid, ids, context=context):
+            if item.state != 'draft':
+                raise osv.except_osv(
+                    _('Invalid Action!'), 
+                    _('In order to delete a bank statement, you must first cancel it to delete related journal items.')
+                )
+        return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if default is None:
-            default = {}
-        if context is None:
-            context = {}
-        default = default.copy()
-        default['move_line_ids'] = []
-        return super(account_bank_statement, self).copy(cr, uid, id, default, context=context)
+        default_values = dict(default or {}, move_line_ids=[])
+        return super(account_bank_statement, self).copy(cr, uid, id, default_values, context=context)
 
     def button_journal_entries(self, cr, uid, ids, context=None):
         ctx = (context or {}).copy()

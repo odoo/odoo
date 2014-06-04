@@ -461,21 +461,18 @@ class ir_mail_server(osv.osv):
                 mdir.add(message.as_string(True))
                 return message_id
 
+            smtp = None
             try:
                 smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                try:
-                    # Close Connection of SMTP Server
+                if smtp is not None:
                     smtp.quit()
-                except Exception:
-                    # ignored, just a consequence of the previous exception
-                    pass
         except Exception, e:
             msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
-            _logger.exception(msg)
+            _logger.error(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 

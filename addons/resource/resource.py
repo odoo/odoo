@@ -801,11 +801,10 @@ class resource_calendar_leaves(osv.osv):
     }
 
     def check_dates(self, cr, uid, ids, context=None):
-         leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
-         if leave['date_from'] and leave['date_to']:
-             if leave['date_from'] > leave['date_to']:
-                 return False
-         return True
+        for leave in self.browse(cr, uid, ids, context=context):
+            if leave.date_from and leave.date_to and leave.date_from > leave.date_to:
+                return False
+        return True
 
     _constraints = [
         (check_dates, 'Error! leave start-date must be lower then leave end-date.', ['date_from', 'date_to'])

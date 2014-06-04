@@ -1,0 +1,47 @@
+/*custom upload elements*/
+.customfile-input { position: absolute; left: -999em; background: transparent; border: 0; opacity: 0; -moz-opacity: 0; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);}
+
+.customfile { cursor: pointer; width: auto; display: inline-block; position: relative; }
+.customfile.input-append .customfile-feedback { border-radius: 3px 0 0 3px;  }
+.customfile.input-prepend .customfile-feedback { border-radius: 0 3px 3px 0; }
+.customfile.input-prepend .add-on, .customfile.input-append .add-on{
+  color:#333;
+  cursor: pointer;
+  display: inline-block;
+  background-color: #e6e6e6;
+  background-repeat: no-repeat;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+  background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
+  background-image: -ms-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+  background-image: -o-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+  background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+}
+.customfile-disabled { opacity: .5; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0); cursor: default;  }
+.customfile-feedback { border: 1px solid #CCCCCC; color: #808080; display: inline-block; font-size: 13px; line-height: 18px; padding: 4px; 
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+
+}
+/* IE7 hack */
+*+html .customfile-feedback { margin-top: 1px;}
+/* EO Hack */
+.customfile-feedback-populated { padding-left: 25px; background: url(../images/icon-generic.gif) 5px center no-repeat; white-space: nowrap; text-overflow: ellipsis; -o-text-overflow: ellipsis; overflow: hidden; }
+
+.customfile-button { /* IE7 and bellow hack*/ *margin-top: -1px; /* EO Hack */}
+.customfile:hover .customfile-button, .customfile-focus .customfile-button  { background-position: 0 -15px; color: #333; text-decoration: none;}
+.customfile-focus .customfile-button {}
+
+
+/*file type icons*/
+.customfile-ext-jpg, .customfile-ext-gif, .customfile-ext-png, .customfile-ext-jpeg, .customfile-ext-bmp { background-image: url(../images/icon-image.gif);}
+.customfile-ext-mp3, .customfile-ext-mp4, .customfile-ext-mov, .customfile-ext-swf, .customfile-ext-wav, .customfile-ext-m4v { background-image: url(../images/icon-media.gif);}
+.customfile-ext-zip, .customfile-ext-tar, .customfile-ext-sit { background-image: url(../images/icon-zip.gif);}
+

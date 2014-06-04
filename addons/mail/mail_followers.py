@@ -48,6 +48,25 @@ class mail_followers(osv.Model):
             help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."),
     }
 
+    #
+    # Modifying followers change access rights to individual documents. As the
+    # cache may contain accessible/inaccessible data, one has to refresh it.
+    #
+    def create(self, cr, uid, vals, context=None):
+        res = super(mail_followers, self).create(cr, uid, vals, context=context)
+        self.invalidate_cache(cr, uid, context=context)
+        return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(mail_followers, self).write(cr, uid, ids, vals, context=context)
+        self.invalidate_cache(cr, uid, context=context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(mail_followers, self).unlink(cr, uid, ids, context=context)
+        self.invalidate_cache(cr, uid, context=context)
+        return res
+
 
 class mail_notification(osv.Model):
     """ Class holding notifications pushed to partners. Followers and partners
@@ -86,7 +105,7 @@ class mail_notification(osv.Model):
         """
         notify_pids = []
         for notification in self.browse(cr, uid, ids, context=context):
-            if notification.read:
+            if notification['read']:
                 continue
             partner = notification.partner_id
             # Do not send to partners without email address defined

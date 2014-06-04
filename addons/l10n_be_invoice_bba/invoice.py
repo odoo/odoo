@@ -21,6 +21,7 @@
 ##############################################################################
 
 import re, time, random
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import logging
@@ -35,6 +36,7 @@ account.invoice object:
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
 
+    @api.cr_uid_context
     def _get_reference_type(self, cursor, user, context=None):
         """Add BBA Structured Communication Type and change labels from 'reference' into 'communication' """
         res = super(account_invoice, self)._get_reference_type(cursor, user,

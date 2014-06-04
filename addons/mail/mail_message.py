@@ -26,7 +26,7 @@ from openerp import tools
 
 from email.header import decode_header
 from openerp import SUPERUSER_ID
-from openerp.osv import osv, orm, fields
+from openerp.osv import osv, orm, fields, api
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 from HTMLParser import HTMLParser
@@ -211,8 +211,9 @@ class mail_message(osv.Model):
 
     def download_attachment(self, cr, uid, id_message, attachment_id, context=None):
         """ Return the content of linked attachments. """
-        message = self.browse(cr, uid, id_message, context=context)
-        if attachment_id in [attachment.id for attachment in message.attachment_ids]:
+        # this will fail if you cannot read the message
+        message_values = self.read(cr, uid, [id_message], ['attachment_ids'], context=context)[0]
+        if attachment_id in message_values['attachment_ids']:
             attachment = self.pool.get('ir.attachment').browse(cr, SUPERUSER_ID, attachment_id, context=context)
             if attachment.datas and attachment.datas_fname:
                 return {
@@ -225,6 +226,7 @@ class mail_message(osv.Model):
     # Notification API
     #------------------------------------------------------
 
+    @api.cr_uid_ids_context
     def set_message_read(self, cr, uid, msg_ids, read, create_missing=True, context=None):
         """ Set messages as (un)read. Technically, the notifications related
             to uid are set to (un)read. If for some msg_ids there are missing
@@ -257,6 +259,7 @@ class mail_message(osv.Model):
         notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
         return len(notif_ids)
 
+    @api.cr_uid_ids_context
     def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
@@ -500,6 +503,7 @@ class mail_message(osv.Model):
 
         return True
 
+    @api.cr_uid_context
     def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
                         thread_level=0, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a list of structured
@@ -669,7 +673,7 @@ class mail_message(osv.Model):
                 - uid has write or create access on the related document if model, res_id
                 - otherwise: raise
         """
-        def _generate_model_record_ids(msg_val, msg_ids=[]):
+        def _generate_model_record_ids(msg_val, msg_ids):
             """ :param model_record_ids: {'model': {'res_id': (msg_id, msg_id)}, ... }
                 :param message_values: {'msg_id': {'model': .., 'res_id': .., 'author_id': ..}}
             """
@@ -794,7 +798,7 @@ class mail_message(osv.Model):
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
-                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1])
+                sanitized_doc_name = re.sub(r'[^\w+.]+', '-', document_name[1] or '')
                 # generate reply to
                 email_reply_to = _('"Followers of %s" <%s>') % (sanitized_doc_name, email_reply_to)
 
@@ -810,8 +814,7 @@ class mail_message(osv.Model):
         return message_id
 
     def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
+        context = dict(context or {})
         default_starred = context.pop('default_starred', False)
 
         if 'email_from' not in values:  # needed to compute reply_to

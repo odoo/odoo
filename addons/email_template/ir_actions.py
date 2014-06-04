@@ -63,7 +63,7 @@ class actions_server(osv.Model):
         """ Render the raw template in the server action fields. """
         fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to']
         if template_id:
-            template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
+            template_values = self.pool.get('email.template').read(cr, uid, [template_id], fields, context)[0]
             values = dict((field, template_values[field]) for field in fields if template_values.get(field))
             if not values.get('email_from'):
                 return {'warning': {'title': 'Incomplete template', 'message': 'Your template should define email_from'}, 'value': values}

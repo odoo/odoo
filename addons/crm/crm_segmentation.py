@@ -57,13 +57,13 @@ added to partners that match the segmentation criterions after computation.'),
             @param ids: List of Process continue’s IDs"""
 
         partner_obj = self.pool.get('res.partner')
-        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id',\
-                                 'sales_purchase_active', 'profiling_active'])
+        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'sales_purchase_active'])
         for categ in categs:
             if start:
                 if categ['exclusif']:
                     cr.execute('delete from res_partner_res_partner_category_rel \
                             where category_id=%s', (categ['categ_id'][0],))
+                    partner_obj.invalidate_cache(cr, uid, ['category_id'])
 
             id = categ['id']
 
@@ -86,6 +86,7 @@ added to partners that match the segmentation criterions after computation.'),
                 if categ['categ_id'][0] not in category_ids:
                     cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) \
                             values (%s,%s)', (categ['categ_id'][0], partner.id))
+                    partner_obj.invalidate_cache(cr, uid, ['category_id'], [partner.id])
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True

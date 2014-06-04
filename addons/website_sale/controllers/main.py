@@ -521,7 +521,7 @@ class website_sale(http.Controller):
         #     acquirer_ids = [tx.acquirer_id.id]
         # else:
         acquirer_ids = payment_obj.search(cr, SUPERUSER_ID, [('website_published', '=', True)], context=context)
-        values['acquirers'] = payment_obj.browse(cr, uid, acquirer_ids, context=context)
+        values['acquirers'] = list(payment_obj.browse(cr, uid, acquirer_ids, context=context))
         render_ctx = dict(context, submit_class='btn btn-primary', submit_txt='Pay Now')
         for acquirer in values['acquirers']:
             acquirer.button = payment_obj.render(

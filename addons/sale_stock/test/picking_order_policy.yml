@@ -42,7 +42,7 @@
 - 
   I set an explicit invoicing partner that is different from the main SO Customer
 -
-  !python {model: sale.order, id: sale_order_service}: |
+  !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("sale_order_service"))
     order.write({'partner_invoice_id': ref('base.res_partner_address_29')})
 -
@@ -124,11 +124,11 @@
   Now, I dispatch delivery order.
 -
   !python {model: stock.picking}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_service"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_service"), context=context)
     for pick in order.picking_ids:
         data = pick.force_assign()
         if data == True:
-          pick.do_transfer(context=context)
+          pick.do_transfer()
 -
   I run the scheduler.
 -

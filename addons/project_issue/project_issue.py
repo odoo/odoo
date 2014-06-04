@@ -307,7 +307,7 @@ class project_issue(osv.Model):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        issue = self.read(cr, uid, id, ['name'], context=context)
+        issue = self.read(cr, uid, [id], ['name'], context=context)[0]
         if not default:
             default = {}
         default = default.copy()

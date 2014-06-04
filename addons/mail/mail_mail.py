@@ -28,7 +28,7 @@ from urlparse import urljoin
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -96,6 +96,7 @@ class mail_mail(osv.Model):
     def cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
+    @api.cr_uid
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
            message is sent - this is not transactional and should
@@ -296,8 +297,9 @@ class mail_mail(osv.Model):
 
                 # /!\ can't use mail.state here, as mail.refresh() will cause an error
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
+                if mail_sent:
+                    _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                 self._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)
-                _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed

@@ -41,12 +41,6 @@
             <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
         </record>
 
-        <!-- Set accesses to menu -->
-        <record model="ir.ui.menu" id="base.menu_administration">
-            <field name="name">Settings</field>
-            <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
-        </record>
-
         <record model="ir.rule" id="res_partner_rule">
             <field name="name">res.partner company</field>
             <field name="model_id" ref="model_res_partner"/>

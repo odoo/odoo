@@ -438,12 +438,50 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
         }
     },
+    parse_on_change_v8: function (onchange, widget) {
+        // onchange V8: call onchange(field_values, field_name, tocheck)
+        var field_values = this.get_fields_values();
+        if (field_values.id.toString().match(instance.web.BufferedDataSet.virtual_id_regex)) {
+            delete field_values.id;
+        }
+        if (this.dataset.parent_view) {
+            // this belongs to a parent view: add parent field if possible
+            var parent_view = this.dataset.parent_view;
+            var child_name = this.dataset.child_name;
+            var parent_name = parent_view.get_field_desc(child_name).relation_field;
+            if (parent_name) {
+                // consider all fields except the inverse of the parent field
+                var parent_values = parent_view.get_fields_values();
+                delete parent_values[child_name];
+                field_values[parent_name] = parent_values;
+            }
+        }
+        // add all known subfields in views into tocheck
+        var tocheck = [];
+        _.each(this.fields, function(field, name) {
+            _.each(field.field.views, function(view) {
+                _.each(view.fields, function(subfield, subname) {
+                    tocheck.push(name + "." + subname);
+                });
+            });
+        });
+        return {
+            method: "onchange",
+            args: [field_values, widget.name, tocheck]
+        };
+    },
     parse_on_change: function (on_change, widget) {
         var self = this;
         var onchange = _.str.trim(on_change);
-        var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+        var call = onchange.match(/^(\w+)\((.*?)\)$/);
         if (!call) {
-            throw new Error(_.str.sprintf( _t("Wrong on change format: %s"), onchange ));
+            if (onchange === "1" || onchange === "true") {
+                return this.parse_on_change_v8(onchange, widget);
+            }
+            if (onchange === "0" || onchange === "false") {
+                return {};
+            }
+            throw new Error(_.str.sprintf(_t("Wrong on change format: %s"), onchange));
         }
 
         var method = call[1];
@@ -515,21 +553,21 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var widget = on_change_obj.widget;
         var processed = on_change_obj.processed;
         try {
-            var def;
+            var def = $.when({});
             processed = processed || [];
             processed.push(widget.name);
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                var ids = [];
-                if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
-                    // In case of a o2m virtual id, we should pass an empty ids list
-                    ids.push(self.datarecord.id);
+                if (change_spec.method) {
+                    var ids = [];
+                    if (self.datarecord.id && !instance.web.BufferedDataSet.virtual_id_regex.test(self.datarecord.id)) {
+                        // In case of a o2m virtual id, we should pass an empty ids list
+                        ids.push(self.datarecord.id);
+                    }
+                    def = self.alive(new instance.web.Model(self.dataset.model).call(
+                        change_spec.method, [ids].concat(change_spec.args)));
                 }
-                def = self.alive(new instance.web.Model(self.dataset.model).call(
-                    change_spec.method, [ids].concat(change_spec.args)));
-            } else {
-                def = $.when({});
             }
             return def.then(function(response) {
                 if (widget.field['change_default']) {
@@ -581,8 +619,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (!field) { return; }
             field.node.attrs.domain = domain;
         });
-            
-        if (result.value) {
+
+        if (!_.isEmpty(result.value)) {
             this._internal_set_values(result.value, processed);
         }
         if (!_.isEmpty(result.warning)) {
@@ -4155,28 +4193,52 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     reload_current_view: function() {
         var self = this;
         self.is_loaded = self.is_loaded.then(function() {
-            var active_view = self.viewmanager.active_view;
-            var view = self.viewmanager.views[active_view].controller;
-            if(active_view === "list") {
-                return view.reload_content();
-            } else if (active_view === "form") {
+            var view = self.get_active_view();
+            if (view.type === "list") {
+                return view.controller.reload_content();
+            } else if (view.type === "form") {
                 if (self.dataset.index === null && self.dataset.ids.length >= 1) {
                     self.dataset.index = 0;
                 }
                 var act = function() {
-                    return view.do_show();
+                    return view.controller.do_show();
                 };
                 self.form_last_update = self.form_last_update.then(act, act);
                 return self.form_last_update;
-            } else if (view.do_search) {
-                return view.do_search(self.build_domain(), self.dataset.get_context(), []);
+            } else if (view.controller.do_search) {
+                return view.controller.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
         }, undefined);
         return self.is_loaded;
     },
+    get_active_view: function () {
+        /**
+         * Returns the current active view if any.
+         */
+        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+            this.viewmanager.views[this.viewmanager.active_view] &&
+            this.viewmanager.views[this.viewmanager.active_view].controller) {
+            return {
+                type: this.viewmanager.active_view,
+                controller: this.viewmanager.views[this.viewmanager.active_view].controller
+            };
+        }
+    },
     set_value: function(value_) {
         value_ = value_ || [];
         var self = this;
+        var view = this.get_active_view();
+        var was_editing = false;
+        if (view && view.type == 'list' && view.controller.editor.is_editing()) {
+            // TODO: make shelve, unshelve work
+            // was_editing = true;
+            // view.controller.editor.shelve();
+
+            // Meanwhile ...
+            view.controller.cancel_edition(true);
+            view.controller.start_edition();
+            return;
+        }
         this.dataset.reset_ids([]);
         var ids;
         if(value_.length >= 1 && value_[0] instanceof Array) {
@@ -4230,6 +4292,10 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         if (this.dataset.index === null && this.dataset.ids.length > 0) {
             this.dataset.index = 0;
         }
+        if (was_editing) {
+            // TODO: make shelve, unshelve work
+            // view.controller.editor.unshelve();
+        }
         this.trigger_on_change();
         if (this.is_started) {
             return self.reload_current_view();
@@ -4261,33 +4327,32 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         return this.save_any_view();
     },
     save_any_view: function() {
-        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-            this.viewmanager.views[this.viewmanager.active_view] &&
-            this.viewmanager.views[this.viewmanager.active_view].controller) {
-            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+        var view = this.get_active_view();
+        if (view) {
             if (this.viewmanager.active_view === "form") {
-                if (view.is_initialized.state() !== 'resolved') {
+                if (view.controller.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
-                return $.when(view.save());
+                return $.when(view.controller.save());
             } else if (this.viewmanager.active_view === "list") {
-                return $.when(view.ensure_saved());
+                return $.when(view.controller.ensure_saved());
             }
         }
         return $.when(false);
     },
     is_syntax_valid: function() {
-        if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
+        var view = this.get_active_view();
+        if (!view){
             return true;
-        var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+        }
         switch (this.viewmanager.active_view) {
         case 'form':
-            return _(view.fields).chain()
+            return _(view.controller.fields).chain()
                 .invoke('is_valid')
                 .all(_.identity)
                 .value();
         case 'list':
-            return view.is_valid();
+            return view.controller.is_valid();
         }
         return true;
     },

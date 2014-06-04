@@ -26,7 +26,7 @@ from datetime import datetime
 from datetime import timedelta
 from dateutil import relativedelta
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, api
 from openerp import tools
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -90,6 +90,7 @@ class hr_payroll_structure(osv.osv):
             company_id=self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
+    @api.cr_uid_ids_context
     def get_all_rules(self, cr, uid, structure_ids, context=None):
         """
         @param structure_ids: list of structure
@@ -101,6 +102,7 @@ class hr_payroll_structure(osv.osv):
             all_rules += self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, struct.rule_ids, context=context)
         return all_rules
 
+    @api.cr_uid_ids_context
     def _get_parent_structure(self, cr, uid, struct_ids, context=None):
         if not struct_ids:
             return []
@@ -138,6 +140,7 @@ class hr_contract(osv.osv):
         'schedule_pay': 'monthly',
     }
 
+    @api.cr_uid_ids_context
     def get_all_structures(self, cr, uid, contract_ids, context=None):
         """
         @param contract_ids: list of contracts
@@ -205,8 +208,14 @@ class one2many_mod2(fields.one2many):
         for id in ids:
             res[id] = []
         ids2 = obj.pool[self._obj].search(cr, user, [(self._fields_id,'in',ids), ('appears_on_payslip', '=', True)], limit=self._limit)
-        for r in obj.pool[self._obj]._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+        for r in obj.pool[self._obj].read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            key = r[self._fields_id]
+            if isinstance(key, tuple):
+                # Read return a tuple in the case where the field is a many2one
+                # but we want to get the id of this field.
+                key = key[0]
+
+            res[key].append( r['id'] )
         return res
 
 class hr_payslip_run(osv.osv):
@@ -340,8 +349,8 @@ class hr_payslip(osv.osv):
         for payslip in self.browse(cr, uid, ids, context=context):
             id_copy = self.copy(cr, uid, payslip.id, {'credit_note': True, 'name': _('Refund: ')+payslip.name}, context=context)
             self.compute_sheet(cr, uid, [id_copy], context=context)
-            self.signal_hr_verify_sheet(cr, uid, [id_copy])
-            self.signal_process_sheet(cr, uid, [id_copy])
+            self.signal_workflow(cr, uid, [id_copy], 'hr_verify_sheet')
+            self.signal_workflow(cr, uid, [id_copy], 'process_sheet')
             
         form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
         form_res = form_id and form_id[1] or False
@@ -842,6 +851,7 @@ result = rules.NET > categories.NET * 0.10''',
         'quantity': '1.0',
      }
 
+    @api.cr_uid_ids_context
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record

@@ -345,16 +345,14 @@ class sale_order(osv.osv):
         return {'value': val}
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}        
         if vals.get('name', '/') == '/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
         if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context)['value']
             vals = dict(defaults, **vals)
-        context.update({'mail_create_nolog': True})
-        new_id = super(sale_order, self).create(cr, uid, vals, context=context)
-        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=context)
+        ctx = dict(context or {}, mail_create_nolog=True)
+        new_id = super(sale_order, self).create(cr, uid, vals, context=ctx)
+        self.message_post(cr, uid, [new_id], body=_("Quotation created"), context=ctx)
         return new_id
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -436,7 +434,7 @@ class sale_order(osv.osv):
         This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
         '''
         assert len(ids) == 1, 'This option should only be used for a single id at a time'
-        self.signal_quotation_sent(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'quotation_sent')
         return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def manual_invoice(self, cr, uid, ids, context=None):
@@ -447,7 +445,7 @@ class sale_order(osv.osv):
         
         # create invoices through the sales orders' workflow
         inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        self.signal_manual_invoice(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'manual_invoice')
         inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
         # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
@@ -544,6 +542,7 @@ class sale_order(osv.osv):
                     origin_ref += (o.origin or o.name) + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                    self.invalidate_cache(cr, uid, ['invoice_ids'], [o.id], context=context)
                 #remove last '|' in invoice_ref
                 if len(invoice_ref) >= 1:
                     invoice_ref = invoice_ref[:-1]
@@ -556,6 +555,7 @@ class sale_order(osv.osv):
                     invoice_ids.append(res)
                     self.write(cr, uid, [order.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
+                    self.invalidate_cache(cr, uid, ['invoice_ids'], [order.id], context=context)
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
@@ -582,8 +582,7 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Cannot cancel this sales order!'),
                         _('First cancel all invoices attached to this sales order.'))
-            for r in self.read(cr, uid, ids, ['invoice_ids']):
-                account_invoice_obj.signal_invoice_cancel(cr, uid, r['invoice_ids'])
+                inv.signal_workflow('invoice_cancel')
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
@@ -591,7 +590,7 @@ class sale_order(osv.osv):
 
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        self.signal_order_confirm(cr, uid, ids)
+        self.signal_workflow(cr, uid, ids, 'order_confirm')
 
         # redisplay the record as a sales order
         view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
@@ -1212,7 +1211,7 @@ class mail_compose_message(osv.Model):
         context = context or {}
         if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             context = dict(context, mail_post_autofollow=True)
-            self.pool.get('sale.order').signal_quotation_sent(cr, uid, [context['default_res_id']])
+            self.pool.get('sale.order').signal_workflow(cr, uid, [context['default_res_id']], 'quotation_sent')
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 
