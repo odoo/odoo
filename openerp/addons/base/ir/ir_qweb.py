@@ -355,32 +355,29 @@ class QWeb(orm.AbstractModel):
         expr = template_attributes["foreach"]
         enum = self.eval_object(expr, qwebcontext)
         if enum is not None:
-            var = template_attributes.get('as', expr).replace('.', '_')
+            varname = template_attributes['as'].replace('.', '_')
             copy_qwebcontext = qwebcontext.copy()
             size = -1
             if isinstance(enum, (list, tuple)):
                 size = len(enum)
             elif hasattr(enum, 'count'):
                 size = enum.count()
-            copy_qwebcontext["%s_size" % var] = size
-            copy_qwebcontext["%s_all" % var] = enum
+            copy_qwebcontext["%s_size" % varname] = size
+            copy_qwebcontext["%s_all" % varname] = enum
             index = 0
             ru = []
             for i in enum:
-                copy_qwebcontext["%s_value" % var] = i
-                copy_qwebcontext["%s_index" % var] = index
-                copy_qwebcontext["%s_first" % var] = index == 0
-                copy_qwebcontext["%s_even" % var] = index % 2
-                copy_qwebcontext["%s_odd" % var] = (index + 1) % 2
-                copy_qwebcontext["%s_last" % var] = index + 1 == size
+                copy_qwebcontext[varname] = i
+                copy_qwebcontext["%s_value" % varname] = i
+                copy_qwebcontext["%s_index" % varname] = index
+                copy_qwebcontext["%s_first" % varname] = index == 0
+                copy_qwebcontext["%s_even" % varname] = index % 2
+                copy_qwebcontext["%s_odd" % varname] = (index + 1) % 2
+                copy_qwebcontext["%s_last" % varname] = index + 1 == size
                 if index % 2:
-                    copy_qwebcontext["%s_parity" % var] = 'odd'
+                    copy_qwebcontext["%s_parity" % varname] = 'odd'
                 else:
-                    copy_qwebcontext["%s_parity" % var] = 'even'
-                if 'as' in template_attributes:
-                    copy_qwebcontext[var] = i
-                elif isinstance(i, dict):
-                    copy_qwebcontext.update(i)
+                    copy_qwebcontext["%s_parity" % varname] = 'even'
                 ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
                 index += 1
             return "".join(ru)
