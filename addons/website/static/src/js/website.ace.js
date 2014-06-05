@@ -65,12 +65,13 @@
     website.ace.ViewOption = openerp.Widget.extend({
         template: 'website.ace_view_option',
         init: function (parent, options) {
-            var indent = "- ";
             this.view_id = options.id;
             this.view_name = options.name;
-            for (var i = 0; i<options.level; i++) {
-                this.view_name = indent + this.view_name;
-            }
+
+            var indent = _.str.repeat("- ", options.level);
+            this.view_name = _.str.sprintf(
+                "%s%s (%s)",
+                indent, options.name, options.xml_id);
             this._super(parent);
         },
     });
@@ -162,15 +163,13 @@
             resizeEditorHeight(this.getParent().get('height'));
         },
         loadViews: function (views) {
-            var self = this;
-            var $viewList = self.$('#ace-view-list');
-            var views = this.buildViewGraph(views);
-            _.each(views, function (view) {
-                if (view.id) {
-                    new website.ace.ViewOption(self, view).appendTo($viewList);
-                    self.loadView(view.id);
-                }
-            });
+            var $viewList = this.$('#ace-view-list');
+            _(this.buildViewGraph(views)).each(function (view) {
+                if (!view.id) { return; }
+
+                new website.ace.ViewOption(this, view).appendTo($viewList);
+                this.loadView(view.id);
+            }.bind(this));
         },
         buildViewGraph: function (views) {
             var activeViews = _.uniq(_.filter(views, function (view) {
