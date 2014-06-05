@@ -838,7 +838,7 @@ class purchase_order(osv.osv):
         This function can be extended by other modules to modify the list.
         """
         return ('name', 'date_planned', 'taxes_id', 'price_unit', 'product_id',
-                'move_dest_id', 'account_analytic_id')
+                'account_analytic_id')
 
     def _make_key_for_grouping(self, cr, uid, order, fields, context=None):
         """From an order, return a tuple to be used as a key.
