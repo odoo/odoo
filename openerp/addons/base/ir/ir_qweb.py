@@ -364,9 +364,8 @@ class QWeb(orm.AbstractModel):
                 size = enum.count()
             copy_qwebcontext["%s_size" % varname] = size
             copy_qwebcontext["%s_all" % varname] = enum
-            index = 0
             ru = []
-            for item in enum:
+            for index, item in enumerate(enum):
                 copy_qwebcontext.update({
                     varname: item,
                     '%s_value' % varname: item,
@@ -387,7 +386,6 @@ class QWeb(orm.AbstractModel):
                         '%s_odd' % varname: False,
                     })
                 ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
-                index += 1
             return "".join(ru)
         else:
             template = qwebcontext.get('__template__')
