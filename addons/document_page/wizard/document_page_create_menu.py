@@ -70,7 +70,7 @@ class document_page_create_menu(osv.osv_memory):
         value['domain'] = "[('parent_id','=',%d)]" % (page.id)
         value['res_id'] = page.id
 
-        action_id = obj_action.create(cr, uid, value)
+        action_id = obj_action.create(cr, SUPERUSER_ID, value)
         # only the super user is allowed to create menu due to security rules on ir.values
         menu_id = obj_menu.create(cr, SUPERUSER_ID, {
                         'name': data.menu_name,
