@@ -840,7 +840,7 @@ class purchase_order(osv.osv):
         return ('name', 'date_planned', 'taxes_id', 'price_unit', 'product_id',
                 'move_dest_id', 'account_analytic_id')
 
-    def _make_key_for_grouping(self, order, fields):
+    def _make_key_for_grouping(self, cr, uid, order, fields, context=None):
         """From an order, return a tuple to be used as a key.
 
         If two orders have the same key, they can be merged.
@@ -859,14 +859,14 @@ class purchase_order(osv.osv):
         key_list.sort()
         return tuple(key_list)
 
-    def _can_be_merged(self, order):
+    def _can_be_merged(self, cr, uid, order, context=None):
         """Can the order be considered for merging with others?
 
         This method can be overridden in other modules.
         """
         return order.state == 'draft'
 
-    def _initial_merged_order_data(self, order):
+    def _initial_merged_order_data(self, cr, uid, order, context=None):
         """Build the initial values of a merged order."""
         return {
             'origin': order.origin,
@@ -884,7 +884,8 @@ class purchase_order(osv.osv):
             ),
         }
 
-    def _update_merged_order_data(self, merged_data, order):
+    def _update_merged_order_data(self, cr, uid, merged_data, order,
+                                  context=None):
         if order.date_order < merged_data['date_order']:
             merged_data['date_order'] = order.date_order
         if order.notes:
@@ -914,26 +915,34 @@ class purchase_order(osv.osv):
             return {}
 
         for input_order in input_orders:
-            key = self._make_key_for_grouping(input_order, key_fields)
+            key = self._make_key_for_grouping(cr, uid, input_order, key_fields,
+                                              context=context)
             if key in grouped_orders:
                 grouped_orders[key] = (
                     self._update_merged_order_data(
+                        cr,
+                        uid,
                         grouped_orders[key][0],
-                        input_order
+                        input_order,
+                        context=context,
                     ),
                     grouped_orders[key][1] + [input_order.id]
                 )
             else:
                 grouped_orders[key] = (
-                    self._initial_merged_order_data(input_order),
+                    self._initial_merged_order_data(
+                        cr, uid, input_order, context),
                     [input_order.id]
                 )
             grouped_order_data = grouped_orders[key][0]
 
             for input_line in input_order.order_line:
                 line_key = self._make_key_for_grouping(
+                    cr,
+                    uid,
                     input_line,
-                    self._key_fields_for_grouping_lines(cr, uid, context)
+                    self._key_fields_for_grouping_lines(cr, uid, context),
+                    context=context
                 )
                 o_line = grouped_order_data['order_line'].setdefault(
                     line_key, {}
@@ -1023,7 +1032,8 @@ class purchase_order(osv.osv):
 
         """
         input_orders = self.browse(cr, uid, ids, context=context)
-        mergeable_orders = filter(self._can_be_merged, input_orders)
+        mergeable_orders = [self._can_be_merged(cr, uid, order, context)
+                            for order in input_orders]
         grouped_orders = self._group_orders(cr, uid, mergeable_orders,
                                             context=context)
 
@@ -1236,7 +1246,7 @@ class purchase_order_line(osv.osv):
         return res
 
     product_id_change = onchange_product_id
-    product_uom_change = onchange_product_uom 
+    product_uom_change = onchange_product_uom
 
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
@@ -1471,7 +1481,7 @@ class mail_mail(osv.Model):
 class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
-    
+
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for template in self.browse(cr, uid, ids, context=context):
@@ -1488,11 +1498,11 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _name = 'product.product'
     _inherit = 'product.product'
-    
+
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         Purchase = self.pool['purchase.order']
         return {
-            product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context) 
+            product_id: Purchase.search_count(cr,uid, [('order_line.product_id', '=', product_id)], context=context)
             for product_id in ids
         }
 
