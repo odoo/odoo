@@ -268,14 +268,6 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        if vals.get('application') == 'disabled':
-            from_always = self.search(
-                cr, uid, [('id', 'in', ids), ('application', '=', 'always')], context=context)
-            if from_always:
-                raise ValueError(
-                    "Can't disable views %s marked as always applied" % (
-                        ', '.join(map(str, from_always))))
-
         self.read_template.clear_cache(self)
         ret = super(view, self).write(
             cr, uid, ids,
