@@ -366,18 +366,26 @@ class QWeb(orm.AbstractModel):
             copy_qwebcontext["%s_all" % varname] = enum
             index = 0
             ru = []
-            for i in enum:
-                copy_qwebcontext[varname] = i
-                copy_qwebcontext["%s_value" % varname] = i
-                copy_qwebcontext["%s_index" % varname] = index
-                copy_qwebcontext["%s_first" % varname] = index == 0
-                copy_qwebcontext["%s_even" % varname] = index % 2
-                copy_qwebcontext["%s_odd" % varname] = (index + 1) % 2
-                copy_qwebcontext["%s_last" % varname] = index + 1 == size
+            for item in enum:
+                copy_qwebcontext.update({
+                    varname: item,
+                    '%s_value' % varname: item,
+                    '%s_index' % varname: index,
+                    '%s_first' % varname: index == 0,
+                    '%s_last' % varname: index + 1 == size,
+                })
                 if index % 2:
-                    copy_qwebcontext["%s_parity" % varname] = 'odd'
+                    copy_qwebcontext.update({
+                        '%s_parity' % varname: 'odd',
+                        '%s_even' % varname: False,
+                        '%s_odd' % varname: True,
+                    })
                 else:
-                    copy_qwebcontext["%s_parity" % varname] = 'even'
+                    copy_qwebcontext.update({
+                        '%s_parity' % varname: 'even',
+                        '%s_even' % varname: True,
+                        '%s_odd' % varname: False,
+                    })
                 ru.append(self.render_element(element, template_attributes, generated_attributes, copy_qwebcontext))
                 index += 1
             return "".join(ru)
