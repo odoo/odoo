@@ -358,10 +358,8 @@ class QWeb(orm.AbstractModel):
             varname = template_attributes['as'].replace('.', '_')
             copy_qwebcontext = qwebcontext.copy()
             size = -1
-            if isinstance(enum, (list, tuple)):
+            if isinstance(enum, collections.Sized):
                 size = len(enum)
-            elif hasattr(enum, 'count'):
-                size = enum.count()
             copy_qwebcontext["%s_size" % varname] = size
             copy_qwebcontext["%s_all" % varname] = enum
             ru = []
