@@ -297,7 +297,7 @@ class base_action_rule(osv.osv):
                 if not record_dt:
                     continue
                 action_dt = self._check_delay(cr, uid, action, record, record_dt, context=context)
-                if last_run and (last_run <= action_dt < now) or (action_dt < now):
+                if last_run and (last_run <= action_dt) or (action_dt < now):
                     try:
                         self._process(cr, uid, action, [record.id], context=context)
                     except Exception:
