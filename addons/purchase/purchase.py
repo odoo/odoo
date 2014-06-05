@@ -966,7 +966,8 @@ class purchase_order(osv.osv):
                         and input_line.product_uom.factor
                         or 1.0)
 
-        return self._cleanup_merged_line_data(grouped_orders)
+        return self._cleanup_merged_line_data(cr, uid, grouped_orders,
+                                              context=context)
 
     def _cleanup_merged_line_data(self, cr, uid, grouped_orders, context=None):
         """Remove keys from merged lines, and merges of 1 order."""
@@ -1032,8 +1033,8 @@ class purchase_order(osv.osv):
 
         """
         input_orders = self.browse(cr, uid, ids, context=context)
-        mergeable_orders = [self._can_be_merged(cr, uid, order, context)
-                            for order in input_orders]
+        mergeable_orders = [order for order in input_orders
+                            if self._can_be_merged(cr, uid, order, context)]
         grouped_orders = self._group_orders(cr, uid, mergeable_orders,
                                             context=context)
 

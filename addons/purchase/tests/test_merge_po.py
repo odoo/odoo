@@ -24,16 +24,19 @@ class TestGroupOrders(BaseCase):
         # use the class constructor because that is modified to return nothing.
         self.registry = RegistryManager.get(DB)
         self.po = self.registry('purchase.order')
+        # we do not actually use the database
+        self.cr = None
+        self.uid = None
 
     def test_no_orders(self):
         """Group an empty list of orders as an empty dictionary."""
 
-        grouped = self.po._group_orders([])
+        grouped = self.po._group_orders(self.cr, self.uid, [])
         self.assertEquals(grouped, {})
 
     def test_one_order(self):
         """A single order will not be grouped."""
-        grouped = self.po._group_orders([self.order1])
+        grouped = self.po._group_orders(self.cr, self.uid, [self.order1])
         self.assertEquals(grouped, {})
 
     def test_two_similar_orders(self):
@@ -51,7 +54,8 @@ class TestGroupOrders(BaseCase):
         self.order1.id = 51
         self.order2.id = 52
 
-        grouped = self.po._group_orders([self.order1, self.order2])
+        grouped = self.po._group_orders(self.cr, self.uid,
+                                        [self.order1, self.order2])
         expected_key = (('location_id', 2), ('partner_id', 1),
                         ('pricelist_id', 3))
         self.assertEquals(grouped.keys(), [expected_key])
@@ -71,7 +75,8 @@ class TestGroupOrders(BaseCase):
         self.order1.pricelist_id = self.order2.pricelist_id = Mock(
             spec=browse_record, id=3)
 
-        grouped = self.po._group_orders([self.order1, self.order2])
+        grouped = self.po._group_orders(
+            self.cr, self.uid, [self.order1, self.order2])
 
         expected_key = (('location_id', 2), ('partner_id', 1),
                         ('pricelist_id', 3))
