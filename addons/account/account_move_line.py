@@ -754,8 +754,8 @@ class account_move_line(osv.osv):
         context = context or {}
         domain = context.get('domain', [])
         cr.execute(
-             """SELECT id FROM (
-                SELECT MAX(l.id) AS id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
+             """SELECT partner_id FROM (
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
@@ -766,8 +766,9 @@ class account_move_line(osv.osv):
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
-        line_ids = [x[0] for x in cr.fetchall()]
-        line_ids = self.search(cr, uid, [('id', 'in', line_ids)]+domain, context=context)
+
+        partner_ids = [x[0] for x in cr.fetchall()]
+        line_ids = self.search(cr, uid, [('partner_id', 'in', partner_ids)]+domain, context=context)
         line_res = self.browse(cr, uid, line_ids, context=context)
         ids = [x.partner_id.id for x in line_res]
         if not ids:
