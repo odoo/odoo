@@ -216,12 +216,21 @@ class ir_cron(osv.osv):
             lock_cr = db.cursor()
             try:
                 # Try to grab an exclusive lock on the job row from within the task transaction
+                # Restrict to the same conditions as for the search since the job may have already
+                # been run by an other thread when cron is running in multi thread
                 lock_cr.execute("""SELECT *
                                    FROM ir_cron
-                                   WHERE id=%s
+                                   WHERE numbercall != 0
+                                      AND active
+                                      AND nextcall <= (now() at time zone 'UTC')
+                                      AND id=%s
                                    FOR UPDATE NOWAIT""",
                                (job['id'],), log_exceptions=False)
 
+                locked_job = lock_cr.fetchone()
+                if not locked_job:
+                    _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['name'])
+                    continue
                 # Got the lock on the job row, run its code
                 _logger.debug('Starting job `%s`.', job['name'])
                 job_cr = db.cursor()
