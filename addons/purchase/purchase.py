@@ -820,7 +820,7 @@ class purchase_order(osv.osv):
         })
         return super(purchase_order, self).copy(cr, uid, id, default, context)
 
-    def _key_fields_for_grouping(self):
+    def _key_fields_for_grouping(self, cr, uid, context=None):
         """Return a list of fields used to identify orders that can be merged.
 
         Orders that have this fields equal can be merged.
@@ -829,7 +829,7 @@ class purchase_order(osv.osv):
         """
         return ('partner_id', 'location_id', 'pricelist_id')
 
-    def _key_fields_for_grouping_lines(self):
+    def _key_fields_for_grouping_lines(self, cr, uid, context=None):
         """Return a list of fields used to identify order lines that can be
         merged.
 
@@ -901,13 +901,13 @@ class purchase_order(osv.osv):
                 )
         return merged_data
 
-    def _group_orders(self, input_orders):
+    def _group_orders(self, cr, uid, input_orders, context=None):
         """Return a dictionary where each element is in the form:
 
         tuple_key: (dict_of_new_order_data, list_of_old_order_ids)
 
         """
-        key_fields = self._key_fields_for_grouping()
+        key_fields = self._key_fields_for_grouping(cr, uid, context)
         grouped_orders = {}
 
         if len(input_orders) < 2:
@@ -933,7 +933,7 @@ class purchase_order(osv.osv):
             for input_line in input_order.order_line:
                 line_key = self._make_key_for_grouping(
                     input_line,
-                    self._key_fields_for_grouping_lines()
+                    self._key_fields_for_grouping_lines(cr, uid, context)
                 )
                 o_line = grouped_order_data['order_line'].setdefault(
                     line_key, {}
@@ -959,7 +959,7 @@ class purchase_order(osv.osv):
 
         return self._cleanup_merged_line_data(grouped_orders)
 
-    def _cleanup_merged_line_data(self, grouped_orders):
+    def _cleanup_merged_line_data(self, cr, uid, grouped_orders, context=None):
         """Remove keys from merged lines, and merges of 1 order."""
         result = {}
         for order_key, (order_data, old_ids) in grouped_orders.iteritems():
@@ -996,7 +996,7 @@ class purchase_order(osv.osv):
             new_old_rel[new_id] = old_order_ids
         return new_old_rel
 
-    def _fix_workflow(self, cr, uid, new_old_rel):
+    def _fix_workflow(self, cr, uid, new_old_rel, context=None):
         """Fix the workflow of the old and new orders.
 
         Specifically, cancel the old ones and assign workflows to the new ones.
@@ -1024,7 +1024,8 @@ class purchase_order(osv.osv):
         """
         input_orders = self.browse(cr, uid, ids, context=context)
         mergeable_orders = filter(self._can_be_merged, input_orders)
-        grouped_orders = self._group_orders(mergeable_orders)
+        grouped_orders = self._group_orders(cr, uid, mergeable_orders,
+                                            context=context)
 
         new_old_rel = self._create_new_orders(cr, uid, grouped_orders,
                                               context=context)
