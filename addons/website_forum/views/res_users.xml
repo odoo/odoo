@@ -14,7 +14,7 @@
                 <xpath expr="//div[contains(@class, 'oe_right oe_button_box')]" position="inside">
                     <br/>
                     <field name="website_url" invisible="1"/>
-                    <field name="website_published" class="pull-right" widget="website_button"/>
+                    <field name="website_published" class="pull-right" widget="website_button" readonly="0"/>
                 </xpath>
             </field>
         </record>
@@ -28,7 +28,7 @@
                 <group name="preferences" position="before">
                     <div style="margin-top: 19px;">
                         <field name="website_url" invisible="1"/>
-                        <field name="website_published" class="pull-right" widget="website_button"/>
+                        <field name="website_published" class="pull-right" widget="website_button" readonly="0"/>
                     </div>
                 </group>
             </field>
