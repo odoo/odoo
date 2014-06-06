@@ -78,15 +78,19 @@ $(document).ready(function () {
         $form_var.find('input:checked, select').each(function () {
             values.push(+$(this).val());
         });
-        var available = false;
+        var product_id = false;
         for (var k in variant_ids) {
             if (_.isEqual(variant_ids[k][1], values)) {
                 var dec = variant_ids[k][2] % 1;
-                $('input[name="product_id"]').val(variant_ids[k][0]);
+                product_id = variant_ids[k][0];
+                $('input[name="product_id"]').val(product_id);
                 $price.html(variant_ids[k][2] + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
-                available = true;
                 break;
             }
+        }
+
+        if (product_id) {
+            $("#product_detail .product_detail_img").attr("src", "/website/image?field=image&model=product.product&id="+product_id);
         }
 
         $form_var.find("input:radio, select").each(function () {
@@ -105,7 +109,7 @@ $(document).ready(function () {
             $(this).find("option[value='" + id + "']").addClass("css_not_available");
         });
 
-        if (available) {
+        if (product_id) {
             $(".oe_price_h4").removeClass("hidden");
             $(".oe_not_available").addClass("hidden");
         } else {
