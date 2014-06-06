@@ -1142,9 +1142,17 @@ class function(_column):
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
-        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        multi = self._multi
+        # if we already have a value, don't recompute it.
+        # This happen if case of stored many2one fields
+        if values and not multi and name in values[0]:
+            result = {v['id']: v[name] for v in values}
+        elif values and multi and all(n in values[0] for n in name):
+            result = {v['id']: dict({n: v[n]} for n in name) for v in values}
+        else:
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         for id in ids:
-            if self._multi and id in result:
+            if multi and id in result:
                 for field, value in result[id].iteritems():
                     if value:
                         result[id][field] = self.postprocess(cr, uid, obj, field, value, context)
