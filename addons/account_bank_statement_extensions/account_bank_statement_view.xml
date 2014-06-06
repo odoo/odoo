@@ -42,18 +42,9 @@
       <field name="inherit_id" ref="account.view_bank_statement_form"/>
       <field name="arch" type="xml">
         <data>
-          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="after">
-            <field name="val_date" invisible="1"/>
-          </xpath> 
           <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+            <field name="val_date" invisible="1"/>
             <field name="globalisation_id" string="Glob. Id" invisible="1"/>
-            <field name="state" invisible="1"/>
-          </xpath>
-          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='date']" position="after">
-            <field name="val_date"/>
-          </xpath>
-          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
-            <field name="globalisation_id"/>
             <field name="state" invisible="1"/>
           </xpath>
         </data>
@@ -74,10 +65,7 @@
           <field name="name"/>
           <field name="statement_id"/>
           <field name="ref" readonly="1"/>
-          <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-          <field name="type" on_change="onchange_type(partner_id, type)"/>
-          <field name="account_id"/>
-          <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type', '&lt;&gt;', 'view')]"/>
+          <field name="partner_id"/>
           <field name="amount" readonly="1" sum="Total Amount"/>
           <field name="globalisation_id" string="Glob. Id"/>
           <field name="globalisation_amount" string="Glob. Am."/>
@@ -98,10 +86,7 @@
               <field name="val_date"/>
               <field name="name"/>
               <field name="ref" readonly="0"/>
-              <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-              <field name="type" on_change="onchange_type(partner_id, type)"/>
-              <field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
-              <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type', '&lt;&gt;', 'view')]"/>
+              <field name="partner_id"/>
               <field name="amount"/>
               <field name="globalisation_id"/>
               <field name="sequence" readonly="0"/>
@@ -129,7 +114,6 @@
                 <field name="statement_id"/>
                 <field name="globalisation_id" string="Glob. Id"/>
                 <group string="Extended Filters..." expand="0">
-                    <field name="account_id"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
                     <field name="globalisation_amount" string="Glob. Amount"/>
@@ -138,7 +122,6 @@
                 <group string="Group By..." expand="1">
                     <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-green"/>
                     <filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
-                    <filter string="Fin.Account" context="{'group_by':'account_id'}" icon="terp-folder-yellow"/>
                 </group>
             </search>
         </field>

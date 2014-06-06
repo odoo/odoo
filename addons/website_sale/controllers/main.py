@@ -210,6 +210,8 @@ class website_sale(http.Controller):
             context['pricelist'] = int(self.get_pricelist())
             product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
 
+        variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
+
         values = {
             'search': search,
             'category': category,
@@ -220,6 +222,7 @@ class website_sale(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
+            'variants': variants,
         }
         return request.website.render("website_sale.product", values)
 

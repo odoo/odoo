@@ -216,7 +216,7 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit = ['mail.thread']
     _description = 'Invoice'
-    _order = "id desc"
+    _order = "number desc, id desc"
     _track = {
         'type': {
         },

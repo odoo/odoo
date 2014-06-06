@@ -10,7 +10,7 @@
             return website.prompt({
                 id: "editor_new_subscribe_button",
                 window_title: _t("Add a Subscribe Button"),
-                select: _t("Mailing List"),
+                select: _t("Discussion List"),
                 init: function (field) {
                     return website.session.model('mail.group')
                             .call('name_search', ['', [['public','=','public']]], { context: website.get_context() });

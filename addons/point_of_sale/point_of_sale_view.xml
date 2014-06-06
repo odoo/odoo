@@ -68,13 +68,6 @@
                                     <field name="statement_id"/>
                                     <field name="amount"/>
                                 </tree>
-                                <form string="Statement lines" version="7.0">
-                                    <group col="4">
-                                        <field name="account_id"/>
-                                        <field name="amount"/>
-                                        <field name="statement_id" domain="[('company_id','=',parent.company_id),('state','=','open')]"/>
-                                    </group>
-                                </form>
                             </field>
                         </page>
                         <page string="Extra Info">

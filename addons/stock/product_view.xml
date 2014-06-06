@@ -200,8 +200,13 @@
                     </group>
                 </group>
                 <xpath expr="//div[@name='buttons']" position="inside">
-                   <button class="oe_inline oe_stat_button" string="Current Stock" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations" icon="fa-bank"/>
-                   <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-h"/>
+                   <button class="oe_stat_button"
+                           name="%(product_open_quants)d"
+                           icon="fa-bank"
+                           type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+                    <div><field name="qty_in_stock"/></div>
+                    </button>
+                   <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
                         attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest" string="Reordering Rules"/>
                 </xpath>

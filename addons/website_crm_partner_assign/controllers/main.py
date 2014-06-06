@@ -146,7 +146,7 @@ class WebsiteCrmPartnerAssign(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, partner_name='', **post):
-        mo = re.search('-([-0-9]+)$', str(partner_id))
+        mo = re.search('([-0-9]+)$', str(partner_id))
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
         country_id = post.get('country_id')

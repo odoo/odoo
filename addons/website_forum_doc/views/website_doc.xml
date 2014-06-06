@@ -3,9 +3,9 @@
     <data>
 
         <!-- Layout add nav and footer -->
-        <template id="header_footer_custom" inherit_id="website.layout"
+        <template id="header_footer_custom" inherit_id="website.footer_default"
             name="Footer Documentation Link">
-            <xpath expr="//footer//ul[@name='products']" position="inside">
+            <xpath expr="//ul[@id='products']" position="inside">
                 <li><a href="/forum/how-to">Documentation</a></li>
             </xpath>
         </template>

@@ -14,9 +14,9 @@
 </template>
 
 <!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.layout"
+<template id="header_footer_custom" inherit_id="website.footer_default"
     name="Footer Questions Link">
-    <xpath expr="//footer//ul[@name='products']" position="inside">
+    <xpath expr="//ul[@id='products']" position="inside">
         <li><a t-attf-href="/forum/%(website_forum.forum_help)d">Q&amp;A</a></li>
         <li><a href="/forum">Forums</a></li>
     </xpath>
@@ -134,7 +134,7 @@
                             <div class="panel-heading text-center">
                                 <h3 class="panel-title ">Stats</h3>
                             </div>
-                            <div class="panel-body"> 
+                            <div class="panel-body">
                                 <table class="table">
                                     <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-field-options='{"format":"short"}'/></strong></td></tr></thead>
                                     <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
@@ -181,7 +181,7 @@
                     style="display: inline-block;"/>
                 on <span t-field="question.write_date" t-field-options='{"format":"short"}'/>
                 with <b t-field="question.views"/> views
-                <span t-if="question.vote_count&gt;0"> and 
+                <span t-if="question.vote_count&gt;0"> and
                     <b t-esc="question.vote_count or 0"/>
                     <t t-if="question.vote_count&gt;1">votes</t>
                     <t t-if="question.vote_count==1">vote</t>
@@ -414,10 +414,10 @@
 
 <template id="vote">
     <div t-attf-class="box oe_grey">
-        <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''}" 
+        <a t-attf-class="vote_up fa fa-thumbs-up no-decoration #{post.user_vote == 1 and 'text-success' or ''}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/upvote"/>
         <span id="vote_count" t-esc="post.vote_count"/>
-        <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}" 
+        <a t-attf-class="vote_down fa fa-thumbs-down no-decoration #{post.user_vote == -1 and 'text-warning' or ''}"
             t-attf-data-href="/forum/#{slug(post.forum_id)}/post/#{slug(post)}/downvote"/>
         <div t-if="vote_count &gt; 1" class="subtitle">
             votes
@@ -654,7 +654,7 @@
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}" class="badge">
                     <span t-field="tag.name"/>
                 </a>
-                <span> 
+                <span>
                     X <t t-esc="tag.posts_count"/>
                 </span>
             </div>
@@ -694,7 +694,7 @@
 
 <template id="badge_user">
     <t t-call="website_forum.header">
-        <h3 class="mt32 mb32"> 
+        <h3 class="mt32 mb32">
             <b>Badge "<span t-field="badge.name"/>"</b>
         </h3>
         <div>
@@ -765,7 +765,7 @@
                 <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
                 <div class="col-md-7 mb16">
                     <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name}"/>
-                </div> 
+                </div>
                 <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
                 <div class="col-md-7 mb16">
                     <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
@@ -790,7 +790,7 @@
                 <!--Note: using website_description fiels instead of using commnt firld of partner-->
                 <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
                 <div class="col-md-7 mb16">
-                    <textarea name="description" style="min-height: 120px" required="True" 
+                    <textarea name="description" style="min-height: 120px" required="True"
                         class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
                 </div>
                 <div class="col-sm-offset-4 col-md-4 mb16">
@@ -835,7 +835,7 @@
                         <span t-if="user.city and user.country_id">, </span>
                         <span t-field="user.country_id"/>
                         <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/></t>
-                        
+
                     </td>
                 </tr>
                 <tr>
@@ -919,7 +919,7 @@
                         <span t-field="activity.date" t-field-options='{"format": "short"}'/>
                         <span t-esc="activity.subtype_id.name" class="label label-info"/>
                         <t t-set="post" t-value="posts[activity.res_id]"/>
-                        <span t-if="post[1]"> 
+                        <span t-if="post[1]">
                             <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
                                 <span t-esc="post[0].name"/>
                             </a>
