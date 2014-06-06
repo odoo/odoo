@@ -73,7 +73,7 @@ $(document).ready(function () {
     $form_var.on('change', 'input, select', function (ev) {
         var values = [];
         $form_var.find("label").removeClass("text-muted css_not_available");
-        $form_var.find(".a-submit").removeProp("disabled");
+        $form_var.find(".a-submit").removeAttr("disabled");
 
         $form_var.find('input:checked, select').each(function () {
             values.push(+$(this).val());
@@ -116,10 +116,9 @@ $(document).ready(function () {
             $(".oe_price_h4").addClass("hidden");
             $(".oe_not_available").removeClass("hidden");
             $form_var.find('input[name="product_id"]').val(0);
-            $form_var.find(".a-submit").prop("disabled", "disabled");
+            $form_var.find(".a-submit").attr("disabled", "disabled");
         }
     });
     $form_var.find("input:first").trigger('change');
-
 
 });
