@@ -42,4 +42,14 @@ class purchase_order(osv.osv):
 
 purchase_order()
 
+class stock_picking(osv.osv):
+    _name='stock.picking'
+    _inherit='stock.picking'
+
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=None):
+        res = super(stock_picking, self)._prepare_invoice_line(cr, uid, group, picking, move_line, invoice_id, invoice_vals, context=context)
+        if move_line.purchase_line_id and move_line.purchase_line_id.analytics_id:
+            res['analytics_id'] = move_line.purchase_line_id.analytics_id.id
+        return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
