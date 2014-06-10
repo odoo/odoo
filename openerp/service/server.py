@@ -38,6 +38,7 @@ from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
 from openerp.tools.misc import stripped_sys_argv, dumpstacks
+from openerp.tools.osutil import getppid
 
 _logger = logging.getLogger(__name__)
 
@@ -365,9 +366,9 @@ class GeventServer(CommonServer):
 
     def watch_parent(self, beat=4):
         import gevent
-        ppid = os.getppid()
+        ppid = getppid()
         while True:
-            if ppid != os.getppid():
+            if ppid != getppid():
                 pid = os.getpid()
                 _logger.info("LongPolling (%s) Parent changed", pid)
                 # suicide !!
@@ -664,7 +665,7 @@ class Worker(object):
         if resource is None:
             return
         # If our parent changed sucide
-        if self.ppid != os.getppid():
+        if self.ppid != getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
             self.alive = False
         # check for lifetime
