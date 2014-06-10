@@ -1318,14 +1318,6 @@ class mail_thread(osv.AbstractModel):
     # Note specific
     #------------------------------------------------------
 
-    def log(self, cr, uid, id, message, secondary=False, context=None):
-        _logger.warning("log() is deprecated. As this module inherit from "\
-                        "mail.thread, the message will be managed by this "\
-                        "module instead of by the res.log mechanism. Please "\
-                        "use mail_thread.message_post() instead of the "\
-                        "now deprecated res.log.")
-        self.message_post(cr, uid, [id], message, context=context)
-
     def _message_add_suggested_recipient(self, cr, uid, result, obj, partner=None, email=None, reason='', context=None):
         """ Called by message_get_suggested_recipients, to add a suggested
             recipient in the result dictionary. The form is :
