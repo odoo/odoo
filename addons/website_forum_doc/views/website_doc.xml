@@ -126,7 +126,7 @@
                                 <ul>
                                     <t t-foreach="toc.post_ids" t-as="topic">
                                         <li t-if="post.id != topic.id">
-                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="post.name"/>
+                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="topic.name"/>
                                         </li>
                                     </t>
                                 </ul>
