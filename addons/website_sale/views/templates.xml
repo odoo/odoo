@@ -297,8 +297,8 @@
                       </t>
                       <t t-if="a.type == 'color'">
                         <t t-foreach="a.value_ids" t-as="v">
-                          <label class="css_attribute_color"
-                              t-attf-style="background-color:#{v.color or v.name}">
+                          <label t-attf-style="background-color:#{v.color or v.name}"
+                              t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
                               <input type="checkbox"
                                   name="attrib"
                                   t-att-value="'%s,%s' % (a.id,v.id)"
@@ -432,7 +432,7 @@
 
 <template id="product_variants" inherit_id="website_sale.product" optional="enabled" name="Product Variants">
   <xpath expr="//form[@action='/shop/cart/update']" position="replace">
-    <form action="/shop/cart/update" class="js_add_cart_variants" method="POST" t-att-data-attribute_value_ids="product.available_variant_ids">
+    <form action="/shop/cart/update" class="js_add_cart_variants" method="POST" t-att-data-attribute_value_ids="variants">
         <input type="hidden" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="product.attribute_line_ids" t-as="variant_id">
@@ -481,8 +481,8 @@
                   <ul class="nav nav-pills nav-stacked">
                       <t t-set="inc" t-value="0"/>
                       <t t-foreach="variant_id.value_ids" t-as="value_id">
-                          <label class="css_attribute_color"
-                              t-attf-style="background-color:#{value_id.color or value_id.name}">
+                          <label t-attf-style="background-color:#{value_id.color or value_id.name}"
+                              t-attf-class="css_attribute_color #{'active' if not inc else ''}">
                             <input type="radio"
                               t-att-checked="'checked' if not inc else ''"
                               t-att-name="'attribute-%s' % variant_id.attribute_id.id"
@@ -529,13 +529,12 @@
 
 <template id="product_attributes" inherit_id="website_sale.product" optional="enabled" name="Product attributes">
   <xpath expr="//p[@t-field='product.description_sale']" position="after">
-    <hr t-if="product.attribute_line_ids"/>
+    <hr t-if="sum([(1 if len(l.value_ids)==1 else 0) for l in product.attribute_line_ids])"/>
     <p class="text-muted">
       <t t-foreach="product.attribute_line_ids" t-as="variant_id">
-        <t t-set="inc" t-value="0"/>
-        <span t-field="variant_id.attribute_id"/>: 
-        <t t-foreach="variant_id.value_ids" t-as="value_id"><t t-if="inc">,</t> <span t-field="value_id.name"/><t t-set="inc" t-value="inc+1"/></t>
-        <br/>
+        <t t-if="len(variant_id.value_ids)==1">
+          <span t-field="variant_id.attribute_id"/>: <span t-field="variant_id.value_ids[0].name"/><br/>
+        </t>
       </t>
     </p>
   </xpath>
@@ -727,14 +726,14 @@
               <tr t-foreach="suggested_products" t-as="product">
 
                   <td>
-                      <a t-attf-href="/shop/product/#{ slug(product) }">
+                      <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
                           <span t-field="product.image_small"
                                 t-field-options='{"widget": "image", "class": "img-rounded"}'/>
                       </a>
                   </td>
                   <td>
                       <div>
-                          <a t-attf-href="/shop/product/#{ slug(product) }">
+                          <a t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
                               <strong t-field="product.name"/>
                           </a>
                       </div>

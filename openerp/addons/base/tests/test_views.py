@@ -1161,10 +1161,6 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-    def test_mandatory_no_disabled(self):
-        with self.assertRaises(Exception):
-            self.browse(self.v1).write({'application': 'disabled'})
-
 class TestXPathExtentions(common.BaseCase):
     def test_hasclass(self):
         tree = E.node(
