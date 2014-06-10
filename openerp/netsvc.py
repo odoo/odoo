@@ -75,7 +75,6 @@ class PostgreSQLHandler(logging.Handler):
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
-        ct_uid = getattr(ct, 'uid', None)
         dbname = tools.config['log_db'] or ct_db
         if dbname:
             cr = None
@@ -86,10 +85,10 @@ class PostgreSQLHandler(logging.Handler):
                 if traceback:
                     msg = "%s\n%s" % (msg, traceback)
                 level = logging.getLevelName(record.levelno)
-                val = (ct_uid, ct_uid, 'server', ct_db, record.name, level, msg, record.pathname, record.lineno, record.funcName)
+                val = ('server', ct_db, record.name, level, msg, record.pathname, record.lineno, record.funcName)
                 cr.execute("""
-                    INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
-                    VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
+                    VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
                 """, val )
                 cr.commit()
             except Exception, e:
