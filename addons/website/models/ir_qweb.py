@@ -25,6 +25,7 @@ import openerp.modules
 import openerp
 from openerp.osv import orm, fields
 from openerp.tools import ustr, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import html_escape as escape
 from openerp.addons.web.http import request
 from openerp.addons.base.ir import ir_qweb
 
@@ -276,7 +277,7 @@ class Image(orm.AbstractModel):
                 url_params[options_key] = options[options_key]
 
         return ir_qweb.HTMLSafe('<img class="%s" src="/website/image?%s"/>' % (
-            ' '.join(itertools.imap(werkzeug.utils.escape, classes)),
+            ' '.join(itertools.imap(escape, classes)),
             werkzeug.urls.url_encode(url_params)
         ))
 
