@@ -1,7 +1,8 @@
 <openerp>
     <data>
         <!-- Delivery Carriers -->
-        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" groups="base.group_no_one" sequence="50"/>
+        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" groups="base.group_no_one"
+                  sequence="50"/>
 
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
@@ -38,20 +39,23 @@
                             <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
                             <label for="free_if_more_than"/>
                             <div>
-                                <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
-                                <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
+                                <field name="free_if_more_than"
+                                       attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
+                                <field name="amount"
+                                       attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
                             </div>
                             <field name="use_detailed_pricelist"/>
                         </group>
                     </group>
 
-                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
+                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}"
+                           mode="tree">
                         <tree string="Delivery grids">
-                              <field name="sequence"/>
-                              <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="name"/>
                         </tree>
                         <form string="Delivery grids" version="7.0">
-                             <group>
+                            <group>
                                 <group>
                                     <field name="name"/>
                                 </group>
@@ -59,10 +63,10 @@
                                     <field name="active"/>
                                     <field name="sequence"/>
                                 </group>
-                             </group>
-                             <notebook>
+                            </group>
+                            <notebook>
                                 <page string="Grid definition">
-                                   <field name="line_ids"/>
+                                    <field name="line_ids"/>
                                 </page>
                                 <page string="Destination">
                                     <group>
@@ -82,7 +86,7 @@
                                 </page>
                             </notebook>
                         </form>
-                   </field>
+                    </field>
                 </form>
             </field>
         </record>
@@ -94,21 +98,24 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new deliver method. 
-              </p><p>
-                Each carrier (e.g. UPS) can have several delivery methods (e.g.
-                UPS Express, UPS Standard) with a set of pricing rules attached
-                to each method.
-              </p><p>
-                These methods allow to automatically compute the delivery price
-                according to your settings; on the sales order (based on the
-                quotation) or the invoice (based on the delivery orders).
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to define a new deliver method.
+                </p>
+                <p>
+                    Each carrier (e.g. UPS) can have several delivery methods (e.g.
+                    UPS Express, UPS Standard) with a set of pricing rules attached
+                    to each method.
+                </p>
+                <p>
+                    These methods allow to automatically compute the delivery price
+                    according to your settings; on the sales order (based on the
+                    quotation) or the invoice (based on the delivery orders).
+                </p>
             </field>
         </record>
 
-        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="stock.menu_stock_configuration" sequence="15"/>
+        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form"
+                  parent="stock.menu_stock_configuration" sequence="15"/>
 
         <!-- Delivery Grids -->
         <record id="view_delivery_grid_tree" model="ir.ui.view">
@@ -159,15 +166,16 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a delivery price list for a specific region.
-              </p><p>
-                The delivery price list allows you to compute the cost and
-                sales price of the delivery according to the weight of the
-                products and other criteria. You can define several price lists
-                for each delivery method: per country or a zone in a specific
-                country defined by a postal code range.
-              </p>
+                <p class="oe_view_nocontent_create">
+                    Click to create a delivery price list for a specific region.
+                </p>
+                <p>
+                    The delivery price list allows you to compute the cost and
+                    sales price of the delivery according to the weight of the
+                    products and other criteria. You can define several price lists
+                    for each delivery method: per country or a zone in a specific
+                    country defined by a postal code range.
+                </p>
             </field>
         </record>
         <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery"/>
@@ -192,8 +200,10 @@
                             <label for="price_type"/>
                             <div>
                                 <field name="price_type" class="oe_inline"/>
-                                <label string=" in Function of " class="oe_inline" attrs="{'invisible':[('price_type','=','fixed')]}"/>
-                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}" class="oe_inline"/>
+                                <label string=" in Function of " class="oe_inline"
+                                       attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"
+                                       class="oe_inline"/>
                             </div>
                         </group>
                         <group>
@@ -209,7 +219,7 @@
             <field name="model">delivery.grid.line</field>
             <field name="arch" type="xml">
                 <tree string="Grid Lines">
-                    <field name="sequence" widget="handle" />
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="operator"/>
@@ -226,22 +236,22 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
-                <separator string="Carrier Information"/>
-                <group>
+                    <separator string="Carrier Information"/>
                     <group>
-                        <field name="carrier_id"/>
-                        <field name="carrier_tracking_ref"/>
+                        <group>
+                            <field name="carrier_id"/>
+                            <field name="carrier_tracking_ref"/>
+                        </group>
+                        <group>
+                            <label for="weight" string="Weight"/>
+                            <div>
+                                <field name="weight" class="oe_inline"/>
+                                <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                                <field name="number_of_packages"/>
+                            </div>
+                            <field name="weight_net" groups="base.group_no_one"/>
+                        </group>
                     </group>
-                    <group>
-                        <label for="weight" string="Weight"/>
-                        <div>
-                            <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                            <field name="number_of_packages"/>
-                        </div>
-                        <field name="weight_net" groups="base.group_no_one"/>
-                    </group>
-                </group>
                 </xpath>
             </field>
         </record>
@@ -254,7 +264,9 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
             <field name="filter" eval="True"/>
-            <field name="context">{'default_invoice_state': '2binvoiced', 'default_type': 'out', 'contact_display': 'partner'}</field>
+            <field name="context">{'default_invoice_state': '2binvoiced', 'default_type': 'out', 'contact_display':
+                'partner'}
+            </field>
             <field name="search_view_id" eval="False"/>
         </record>
 
@@ -276,12 +288,17 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='main_grp']" position="inside">
-                    <label for="weight" string="Weight"/>
-                    <div>
-                        <field name="weight" class="oe_inline"/>
-                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                    </div>
-                    <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
+                    <group>
+                        <group>
+                            <label for="weight" string="Weight"/>
+                            <div>
+                                <field name="weight" class="oe_inline"/>
+                                <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                            </div>
+                            <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
+                        </group>
+                        <group></group>
+                    </group>
                 </xpath>
             </field>
         </record>
@@ -297,12 +314,12 @@
                         <div>
                             <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
                             <button name="delivery_set" string="Add in Quote" type="object"
-                                class="oe_edit_only"
-                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                                    class="oe_edit_only"
+                                    attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
                             <br/>
                             <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
-                                class="oe_edit_only"
-                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                                   class="oe_edit_only"
+                                   attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
                         </div>
                     </group>
                 </xpath>
