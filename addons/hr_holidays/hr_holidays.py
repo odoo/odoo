@@ -70,6 +70,9 @@ class hr_holidays_status(osv.osv):
                 status_dict['leaves_tag'] = '%s (%d/%d)' % (holiday.holiday_status_id.name, status_dict.get('leaves_taken'), status_dict.get('max_leaves',0.0))
         return result
 
+    #backward compatibility for v7
+    get_days = get_stats
+
     def _user_left_days(self, cr, uid, ids, name, args, context=None):
         return self.get_stats(cr, uid, ids, context=context)
 
@@ -106,9 +109,6 @@ class hr_holidays_status(osv.osv):
             res.append((record.id, name))
         return res
 
-    #backward compatibility for v7
-    get_days = get_stats
-
 
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
@@ -122,7 +122,6 @@ class hr_holidays(osv.osv):
             'hr_holidays.mt_holidays_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirm',
         },
     }
-
 
     def _employee_get(self, cr, uid, context=None):        
         emp_id = context.get('default_employee_id', False)
