@@ -5,6 +5,63 @@ import datetime
 import errno
 import logging
 import os
+# http://pydev.blogspot.com/2013/01/python-get-parent-process-id-pid-in.html
+if not hasattr(os, 'getppid'):
+    import ctypes
+
+    TH32CS_SNAPPROCESS = 0x02L
+    CreateToolhelp32Snapshot = ctypes.windll.kernel32.CreateToolhelp32Snapshot
+    GetCurrentProcessId = ctypes.windll.kernel32.GetCurrentProcessId
+
+    MAX_PATH = 260
+
+    _kernel32dll = ctypes.windll.Kernel32
+    CloseHandle = _kernel32dll.CloseHandle
+
+    class PROCESSENTRY32(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", ctypes.c_ulong),
+            ("cntUsage", ctypes.c_ulong),
+            ("th32ProcessID", ctypes.c_ulong),
+            ("th32DefaultHeapID", ctypes.c_int),
+            ("th32ModuleID", ctypes.c_ulong),
+            ("cntThreads", ctypes.c_ulong),
+            ("th32ParentProcessID", ctypes.c_ulong),
+            ("pcPriClassBase", ctypes.c_long),
+            ("dwFlags", ctypes.c_ulong),
+
+            ("szExeFile", ctypes.c_wchar * MAX_PATH)
+        ]
+
+    Process32First = _kernel32dll.Process32FirstW
+    Process32Next = _kernel32dll.Process32NextW
+
+    def getppid():
+        '''
+        :return: The pid of the parent of this process.
+        '''
+        pe = PROCESSENTRY32()
+        pe.dwSize = ctypes.sizeof(PROCESSENTRY32)
+        mypid = GetCurrentProcessId()
+        snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+
+        result = 0
+        try:
+            have_record = Process32First(snapshot, ctypes.byref(pe))
+
+            while have_record:
+                if mypid == pe.th32ProcessID:
+                    result = pe.th32ParentProcessID
+                    break
+
+                have_record = Process32Next(snapshot, ctypes.byref(pe))
+
+        finally:
+            CloseHandle(snapshot)
+
+        return result
+
+    os.getppid = getppid
 import os.path
 import platform
 import psutil
