@@ -1789,7 +1789,7 @@ class stock_move(osv.osv):
             'move_dest_id': move.id,
             'group_id': group_id,
             'route_ids': [(4, x.id) for x in move.route_ids],
-            'warehouse_id': move.warehouse_id and move.warehouse_id.id or False,
+            'warehouse_id': move.warehouse_id.id or (move.picking_type_id and move.picking_type_id.warehouse_id.id or False),
             'priority': move.priority,
         }
 
