@@ -36,7 +36,7 @@ class MailThread(orm.AbstractModel):
         ),
     }
 
-    def copy(self, cr, uid, _id, default=None, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         """
         ====
         copy
