@@ -5,7 +5,7 @@
     'version': '1.0',
     'description': """
 OpenERP Sale Quote Roller
-==================
+=========================
 
         """,
     'author': 'OpenERP SA',
