@@ -417,6 +417,10 @@ class procurement_order(osv.osv):
         warehouse_obj = self.pool.get('stock.warehouse')
         if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
             warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
+            prod_name = procurement.product_id.name_get()[0][1]
+            if procurement.product_id:
+                prod_name += '\n' + prod.description_purchase
+
             requisition_id = requisition_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'date_end': procurement.date_planned,
@@ -426,8 +430,8 @@ class procurement_order(osv.osv):
                 'line_ids': [(0, 0, {
                     'product_id': procurement.product_id.id,
                     'product_uom_id': procurement.product_uom.id,
-                    'product_qty': procurement.product_qty
-
+                    'product_qty': procurement.product_qty,
+                    'name': prod_name,
                 })],
             })
             self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
