@@ -167,6 +167,7 @@ class purchase_requisition(osv.osv):
             supplier.id, date_order=date_order, fiscal_position_id=supplier.property_account_position, date_planned=requisition_line.schedule_date,
             name=False, price_unit=False, state='draft', context=context)['value']
         vals.update({
+            'name': requisition_line.name,
             'order_id': purchase_id,
             'product_id': product.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
@@ -326,7 +327,7 @@ class purchase_requisition_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             prod_name = prod.name_get()[0][1]
             if prod.description_purchase:
-            	prod_name += '\n' + prod.description_purchase
+                prod_name += '\n' + prod.description_purchase
             value = {'product_uom_id': prod.uom_id.id, 'product_qty': 1.0, 'name': prod_name}
         if not analytic_account:
             value.update({'account_analytic_id': parent_analytic_account})
