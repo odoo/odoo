@@ -498,7 +498,7 @@ class WebsiteForum(http.Controller):
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
         values = self._prepare_forum_values(forum=forum, **post)
-        if not user.website_published and (user_id != request.session.uid):
+        if not user.exists() or (not user.website_published and (user_id != request.session.uid)):
             return request.website.render("website_forum.private_profile", values)
 
         # questions and answers by user

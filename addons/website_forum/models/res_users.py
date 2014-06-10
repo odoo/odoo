@@ -25,13 +25,6 @@ class Users(osv.Model):
             }
         return result
 
-    def _website_url(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, '')
-        forum = self.pool["ir.model.data"].get_object(cr, uid, 'website_forum', 'forum_help')
-        for user in ids:
-            res[user] = "/forum/%s/user/%s" % (slug(forum), user)
-        return res
-
     _columns = {
         'create_date': fields.datetime('Create Date', select=True, readonly=True),
         'karma': fields.integer('Karma'),
@@ -40,7 +33,6 @@ class Users(osv.Model):
         'silver_badge': fields.function(_get_user_badge_level, string="Number of silver badges", type='integer', multi='badge_level'),
         'bronze_badge': fields.function(_get_user_badge_level, string="Number of bronze badges", type='integer', multi='badge_level'),
         'website_published': fields.boolean('Publish', help="Publish user on the website."),
-        'website_url': fields.function(_website_url, string="Website url", type="char"),
     }
 
     _defaults = {
