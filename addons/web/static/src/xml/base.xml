@@ -1504,8 +1504,9 @@
     <t t-if="! widget.options.disable_multiple_selection">
         <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
+    <t t-if="!widget.options.no_create">
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
-    or <a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+    or </t><a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! readonly">
