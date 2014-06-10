@@ -20,6 +20,7 @@
 ##############################################################################
 
 import copy
+import pytz
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from time import strftime
@@ -677,7 +678,10 @@ class survey_response(osv.osv):
         reads = self.read(cr, uid, ids, ['user_id','date_create'], context=context)
         res = []
         for record in reads:
-            name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
+            timezone = pytz.timezone(context.get('tz') or 'UTC')
+            create_date = pytz.UTC.localize(datetime.strptime(record['date_create'].split('.')[0], tools.DEFAULT_SERVER_DATETIME_FORMAT)) 
+            localized_create_date = create_date.astimezone(timezone)
+            name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + localized_create_date.strftime("%Y-%m-%d %H:%M:%S") + ')'
             res.append((record['id'], name))
         return res
 

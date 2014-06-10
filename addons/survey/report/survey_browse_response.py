@@ -22,6 +22,8 @@
 
 import time
 
+import pytz
+from datetime import datetime
 from openerp import pooler, tools
 from openerp.report import report_sxw
 from openerp.report.interface import report_rml
@@ -204,7 +206,9 @@ class survey_browse_response(report_rml):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
                 colwidth =  "2.5cm,4.8cm," + str(tbl_width - 15.0) +"cm,3.2cm,4.5cm"
-                resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
+                timezone = pytz.timezone(context.get('tz') or 'UTC')
+                create_date = pytz.UTC.localize(datetime.strptime(response.date_create.split('.')[0], tools.DEFAULT_SERVER_DATETIME_FORMAT))
+                resp_create = create_date.astimezone(timezone).strftime("%Y-%m-%d %H:%M:%S") #Converting date to user's timezone
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
                             <td><para style="terp_default_9_Bold">""" + _('Print Date : ') + """</para></td>
