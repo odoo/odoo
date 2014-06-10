@@ -84,7 +84,7 @@ class WebsiteCustomer(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
-        mo = re.search('-([-0-9]+)$', str(partner_id))
+        mo = re.search('([-0-9]+)$', str(partner_id))
         if mo:
             partner_id = int(mo.group(1))
             partner = request.registry['res.partner'].browse(request.cr, SUPERUSER_ID, partner_id, context=request.context)

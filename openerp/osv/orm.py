@@ -2449,7 +2449,7 @@ class BaseModel(object):
         fetched_data = cr.dictfetchall()
 
         if not groupby_fields:
-            return {r.pop('id'): r for r in fetched_data}
+            return fetched_data
 
         many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
         if many2onefields:

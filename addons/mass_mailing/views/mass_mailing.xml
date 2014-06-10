@@ -186,11 +186,17 @@
                 <form string="Mass Mailing" version="7.0">
                     <header>
                         <button name="action_test_mailing" type="object"
-                            class="oe_highlight" string="Test Mailing" states="draft"/>
-                        <button name="send_mail" type="object" states="draft,test"
+                            class="oe_highlight" string="Test Mailing"
+                            attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('body_html', '=', False)]}"/>
+                        <button name="action_test_mailing" type="object"
+                            attrs="{'invisible': ['&amp;', ('state', '=', 'draft'), ('body_html', '!=', False)]}"
+                            string="Test Mailing"/>
+                        <button name="send_mail" type="object"
+                            attrs="{'invisible': ['|', ('state', '=', 'done'), ('body_html', '=', False)]}"
                             class="oe_highlight" string="Send to All"/>
-                        <button name="action_test_mailing" type="object" states="test,done"
-                            string="Send Test Sample"/>
+                        <button name="send_mail" type="object"
+                            attrs="{'invisible': ['&amp;', ('state', '!=', 'done'), ('body_html', '!=', False)]}"
+                            string="Send to All"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('scheduled', '=', 0)]}">
@@ -250,9 +256,11 @@
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight" states="draft"/>
-                                <button name="action_edit_html" type="object" string="Change Email Design" states="test"/>
-                                <div attrs="{'invisible' : ['|', '|', ('state', '=', 'done'), ('body_html','!=',False), ('mailing_domain', '=', False)]}" class="oe_view_nocontent oe_clear">
+                                <button name="action_edit_html" type="object" string="Design Email" class="oe_highlight"
+                                    attrs="{'invisible': [('body_html', '!=', False)]}"/>
+                                <button name="action_edit_html" type="object" string="Change Email Design"
+                                    attrs="{'invisible': [('body_html', '=', False)]}"/>
+                                <div attrs="{'invisible' : ['|', ('state', '=', 'done'), ('body_html','!=',False)]}" class="oe_view_nocontent oe_clear">
                                     <p class="oe_view_nocontent_create oe_edit_only">
                                         Click to design your email.
                                     </p>
