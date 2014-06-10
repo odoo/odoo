@@ -18,11 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from openerp.osv import osv, fields
-
+from openerp.osv import orm, fields
 # TODO for trunk, remove me
-class MailThread(osv.Model):
+
+
+class MailThread(orm.AbstractModel):
     _inherit = 'mail.thread'
 
     _columns = {
@@ -37,5 +37,16 @@ class MailThread(osv.Model):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
+        """
+        ====
+        copy
+        ====
+        Initialize key ``default['website_message_ids']`` with empty list
+        Then call super
+        @type default: {}
+        """
+        if default is None:
+            default = {}
         default['website_message_ids'] = []
         return super(MailThread, self).copy(cr, uid, id, default=default, context=context)
+
