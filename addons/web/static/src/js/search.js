@@ -406,8 +406,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         this.query = new my.SearchQuery()
                 .on('add change reset remove', this.proxy('do_search'))
                 .on('change', this.proxy('renderChangedFacets'))
-                .on('add reset remove', this.proxy('renderFacets'))
-                .on('add change reset remove', this.proxy('adjust_view_top'));
+                .on('add reset remove', this.proxy('renderFacets'));
 
         if (this.options.hidden) {
             this.$el.hide();
@@ -441,7 +440,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             view_manager.on('switch_mode', this, function (e) {
                 self.drawer.toggle(e === 'graph');
             });
-            $(window).resize(this.proxy("adjust_view_top"));
         }
         return $.when(p, this.ready);
     },
@@ -640,18 +638,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
             input_to_focus.$el.focus();
         });
-    },
-
-    // hack to adjust the top of the view body to the actual header height
-    // the best way would be to do that with pure css, but this cannot be done
-    // without giving up IE9 support (flexbox/grid) or without reworking the 
-    // full client structure (switching from tables to a sane responsive layout with
-    // divs).
-    adjust_view_top: function () { 
-        if (this.$view_manager_header.length) {
-            var height = this.$view_manager_header[0].offsetHeight + 1;
-            this.$view_manager_header.next().css('top', height + 'px');
-        }
     },
 
     search_view_loaded: function(data) {

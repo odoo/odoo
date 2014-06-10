@@ -115,7 +115,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
         item.show(subindex);
         this.inner_widget = item.widget;
         this.inner_action = item.action;
-        item.widget.searchview.adjust_view_top();
         return true;
     },
     clear_breadcrumbs: function() {
@@ -647,7 +646,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
-                    var container = self.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_name);
+                    var container = self.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_name);
                     if (view_name === view_type) {
                         container.show();
                         controller.do_show(view_options || {});
@@ -690,7 +689,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.on('switch_mode', self, this.switch_mode);
         controller.on('previous_view', self, this.prev_view);
         
-        var container = this.$el.find("> .oe_view_manager_body > .oe_view_manager_view_" + view_type);
+        var container = this.$el.find("> div > div > .oe_view_manager_body > .oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
@@ -1085,7 +1084,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 view_manager: self
             }));
             self.set_title();
-            self.searchview.adjust_view_top();
         });
     },
     do_create_view: function(view_type) {

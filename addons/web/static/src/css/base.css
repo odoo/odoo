@@ -1147,13 +1147,21 @@
   position: relative;
   height: 100%;
 }
-.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_body {
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper {
+  display: table-row;
+  height: 100%;
+}
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div {
+  position: relative;
+  height: 100%;
+}
+.openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
   position: absolute;
-  overflow: auto;
-  top: 66px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  overflow: auto;
 }
 .openerp .oe_application .oe_breadcrumb_item:not(:last-child) {
   max-width: 7em;
@@ -1352,6 +1360,7 @@
   height: 100%;
 }
 .openerp .oe_view_manager_current > .oe_view_manager_header {
+  display: table-row;
   border-bottom: 1px solid #cacaca;
   background-color: #ededed;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
