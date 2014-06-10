@@ -4858,7 +4858,8 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         pop.select_element(
             this.model,
             {
-                title: _t("Add: ") + this.m2m_field.string
+                title: _t("Add: ") + this.m2m_field.string,
+                no_create: this.m2m_field.options.no_create,
             },
             new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context()

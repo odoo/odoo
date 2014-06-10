@@ -334,10 +334,10 @@ class QWeb(orm.AbstractModel):
             att, val = attribute_name[7:], self.eval_format(attribute_value, qwebcontext)
         elif attribute_name.startswith("t-att-"):
             att, val = attribute_name[6:], self.eval(attribute_value, qwebcontext)
-            if isinstance(val, unicode):
-                val = val.encode("utf8")
         else:
             att, val = self.eval_object(attribute_value, qwebcontext)
+        if val and not isinstance(val, str):
+            val = unicode(val).encode("utf8")
         return att, val
 
     # Tags

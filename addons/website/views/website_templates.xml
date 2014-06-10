@@ -156,7 +156,8 @@
                     e=o.createElement(i);r=o.getElementsByTagName(i)[0];
                     e.src='//www.google-analytics.com/analytics.js';
                     r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-                    ga('create','<t t-esc="website.google_analytics_key"/>');ga('send','pageview');
+                    ga('create',_.str.trim('<t t-esc="website.google_analytics_key"/>'));
+                    ga('send','pageview');
                 </script>
             </t>
         </body>

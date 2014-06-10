@@ -1261,8 +1261,16 @@ class function(_column):
         return new_values
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
-        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
-        if self._multi:
+        multi = self._multi
+        # if we already have a value, don't recompute it.
+        # This happen if case of stored many2one fields
+        if values and not multi and name in values[0]:
+            result = {v['id']: v[name] for v in values}
+        elif values and multi and all(n in values[0] for n in name):
+            result = {v['id']: dict({n: v[n]} for n in name) for v in values}
+        else:
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        if multi:
             swap = {}
             for rid, values in result.iteritems():
                 for f, v in values.iteritems():
