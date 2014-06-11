@@ -37,15 +37,36 @@ class MassMailingCampaign(osv.Model):
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
         """ Compute statistics of the mass mailing campaign """
-        results = dict.fromkeys(ids, False)
-        for campaign in self.browse(cr, uid, ids, context=context):
-            results[campaign.id] = {
-                'sent': len(campaign.statistics_ids),
+        results = dict.fromkeys(ids, {
+                'sent': 0,
+                'delivered': 0,
+                'opened': 0,
+                'replied': 0,
+                'bounced': 0,
+            })
+        cr.execute("""
+            SELECT
+                mass_mailing_id,
+                COUNT(id) AS sent,
+                COUNT(CASE WHEN bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN bounced is not null THEN 1 ELSE null END) AS bounced
+            FROM
+                mail_mail_statistics
+            WHERE
+                mass_mailing_id IN %s
+            GROUP BY
+                 mass_mailing_id
+        """, (tuple(ids), ))
+        for (campaign_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
+            results[campaign_id] = {
+                'sent': sent,
                 # delivered: shouldn't be: all mails - (failed + bounced) ?
-                'delivered': len([stat for stat in campaign.statistics_ids if not stat.bounced]),  # stat.state == 'sent' and
-                'opened': len([stat for stat in campaign.statistics_ids if stat.opened]),
-                'replied': len([stat for stat in campaign.statistics_ids if stat.replied]),
-                'bounced': len([stat for stat in campaign.statistics_ids if stat.bounced]),
+                'delivered': delivered,
+                'opened': opened,
+                'replied': replied,
+                'bounced': bounced,
             }
         return results
 
@@ -53,14 +74,14 @@ class MassMailingCampaign(osv.Model):
         """ Gather data about mass mailings to display them in kanban view as
         nested kanban views is not possible currently. """
         results = dict.fromkeys(ids, '')
-        for campaign in self.browse(cr, uid, ids, context=context):
+        for campaign_id in ids:
             mass_mailing_results = []
-            for mass_mailing in campaign.mass_mailing_ids[:self._kanban_mailing_nbr]:
-                mass_mailing_object = {}
-                for attr in ['name', 'sent', 'delivered', 'opened', 'replied', 'bounced']:
-                    mass_mailing_object[attr] = getattr(mass_mailing, attr)
-                mass_mailing_results.append(mass_mailing_object)
-            results[campaign.id] = mass_mailing_results
+            mass_mailing_results = self.pool['mail.mass_mailing'].search_read(cr, uid,
+                            domain=[('mass_mailing_campaign_id', '=', campaign_id)],
+                            fields=['name', 'sent', 'delivered', 'opened', 'replied', 'bounced'],
+                            limit=self._kanban_mailing_nbr,
+                            context=context)
+            results[campaign_id] = mass_mailing_results
         return results
 
     _columns = {
@@ -195,15 +216,37 @@ class MassMailing(osv.Model):
         return res
 
     def _get_statistics(self, cr, uid, ids, name, arg, context=None):
-        """ Compute statistics of the mass mailing campaign """
-        results = dict.fromkeys(ids, False)
-        for mass_mailing in self.browse(cr, uid, ids, context=context):
-            results[mass_mailing.id] = {
-                'sent': len(mass_mailing.statistics_ids),
-                'delivered': len([stat for stat in mass_mailing.statistics_ids if not stat.bounced]),  # mail.state == 'sent' and
-                'opened': len([stat for stat in mass_mailing.statistics_ids if stat.opened]),
-                'replied': len([stat for stat in mass_mailing.statistics_ids if stat.replied]),
-                'bounced': len([stat for stat in mass_mailing.statistics_ids if stat.bounced]),
+        """ Compute statistics of the mass mailing """
+        results = dict.fromkeys(ids, {
+                'sent': 0,
+                'delivered': 0,
+                'opened': 0,
+                'replied': 0,
+                'bounced': 0,
+            })
+        cr.execute("""
+            SELECT
+                mass_mailing_id,
+                COUNT(id) AS sent,
+                COUNT(CASE WHEN bounced is null THEN 1 ELSE null END) AS delivered,
+                COUNT(CASE WHEN opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN replied is not null THEN 1 ELSE null END) AS replied ,
+                COUNT(CASE WHEN bounced is not null THEN 1 ELSE null END) AS bounced
+            FROM
+                mail_mail_statistics
+            WHERE
+                mass_mailing_id IN %s
+            GROUP BY
+                 mass_mailing_id
+        """, (tuple(ids), ))
+        for (campaign_id, sent, delivered, opened, replied, bounced) in cr.fetchall():
+            results[campaign_id] = {
+                'sent': sent,
+                # delivered: shouldn't be: all mails - (failed + bounced) ?
+                'delivered': delivered,
+                'opened': opened,
+                'replied': replied,
+                'bounced': bounced,
             }
         return results
 
