@@ -235,7 +235,10 @@ class base_action_rule(osv.osv):
         action_ids = self.search(cr, uid, action_dom, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
-            last_run = get_datetime(action.last_run) if action.last_run else False
+            if action.last_run:
+                last_run = get_datetime(action.last_run)
+            else:
+                last_run = datetime.utcfromtimestamp(0)
 
             # retrieve all the records that satisfy the action's condition
             model = self.pool.get(action.model_id.model)
@@ -268,7 +271,7 @@ class base_action_rule(osv.osv):
                 if not record_dt:
                     continue
                 action_dt = get_datetime(record_dt) + delay
-                if last_run and (last_run <= action_dt < now) or (action_dt < now):
+                if last_run <= action_dt < now:
                     try:
                         self._process(cr, uid, action, [record.id], context=context)
                     except Exception:
