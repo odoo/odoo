@@ -82,7 +82,7 @@
             <title><t t-esc="title"/></title>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request.website_multilang">
+            <t t-if="request and request.website_multilang">
                 <t t-foreach="languages" t-as="lg">
                     <t t-set="force_lang" t-value="lg[0] if website and lg[0] != website.default_lang_code else None"/>
                     <link rel="alternate" t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=force_lang)" t-att-hreflang="lg[0].replace('_', '-').lower()" />
@@ -109,7 +109,7 @@
                                 <a class="navbar-brand" href="/" t-field="res_company.name"/>
                             </div>
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                <ul class="nav navbar-nav navbar-right" id="top_menu" t-if="website">
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
@@ -154,12 +154,24 @@
                                     <li t-ignore="true"><i class="fa fa-envelope"></i>  <span t-field="res_company.email"></span></li>
                                 </ul>
                                 <h2>
-                                    <a t-att-href="website.social_facebook" t-if="website and website.social_facebook"><i class="fa fa-facebook-square"/></a>
-                                    <a t-att-href="website.social_twitter" t-if="website and website.social_twitter"><i class="fa fa-twitter"/></a>
-                                    <a t-att-href="website.social_linkedin" t-if="website and website.social_linkedin"><i class="fa fa-linkedin"/></a>
-                                    <a t-att-href="website.social_youtube" t-if="website and website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                                    <a t-att-href="website.social_googleplus" t-if="website and website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
-                                    <a t-att-href="website.social_github" t-if="website and website.social_github"><i class="fa fa-github"/></a>
+                                    <t t-if="website and website.social_facebook">
+                                        <a t-att-href="website.social_facebook"><i class="fa fa-facebook-square"/></a>
+                                    </t>
+                                    <t t-if="website and website.social_twitter">
+                                        <a t-att-href="website.social_twitter"><i class="fa fa-twitter"/></a>
+                                    </t>
+                                    <t t-if="website and website.social_linkedin">
+                                        <a t-att-href="website.social_linkedin"><i class="fa fa-linkedin"/></a>
+                                    </t>
+                                    <t t-if="website and website.social_youtube">
+                                        <a t-att-href="website.social_youtube"><i class="fa fa-youtube-play"/></a>
+                                    </t>
+                                    <t t-if="website and website.social_googleplus">
+                                        <a t-att-href="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                                    </t>
+                                    <t t-if="website and website.social_github">
+                                        <a t-att-href="website.social_github"><i class="fa fa-github"/></a>
+                                    </t>
                                 </h2>
                             </div>
                             <div class="col-md-5 col-lg-offset-1">
@@ -178,7 +190,7 @@
                                         their performance.
                                     </p>
                                 </div>
-                                <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
+                                <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and editable)">
                                     <li t-foreach="languages" t-as="lg">
                                         <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
                                            t-att-data-default-lang="editable and 'true' if website and lg[0] == website.default_lang_code else None">
@@ -207,7 +219,7 @@
                     </div>
                 </footer>
             </div>
-            <t t-if="website.google_analytics_key">
+            <t t-if="website and website.google_analytics_key">
                 <script>
                     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
                     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
