@@ -34,6 +34,7 @@ class ImportModule(Controller):
 
     @route('/base_import_module/upload', type='http', auth='user', methods=['POST'])
     @webservice
-    def upload(self, mod_file=None, **kw):
+    def upload(self, mod_file=None, force='', **kw):
         self.check_user()
-        return request.registry['ir.module.module'].import_zipfile(request.cr, request.uid, mod_file, context=request.context)[0]
+        force = True if force == '1' else False
+        return request.registry['ir.module.module'].import_zipfile(request.cr, request.uid, mod_file, force=force, context=request.context)[0]
