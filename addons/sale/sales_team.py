@@ -39,12 +39,13 @@ class crm_case_section(osv.osv):
     _columns = {
         'use_quotations': fields.boolean('Opportunities', help="Check this box to manage quotations in this sales team."),
         'invoiced_forecast': fields.integer(string='Invoice Forecast',
-            help="Forecast of revenue for the current month. This is the amount the sales \n"
-                    "team should invoice this month. It is used to compute the progression ratio \n"
-                    "of the current and forecasted revenue on the kanban view."),
+            help="Forecast of revenue for the current month. This is the amount\n"
+                    "the sales team should invoice this month.\n"
+                    "It is used to compute the progression ratio of the current and \n"
+                    "forecasted revenue on the kanban view."),
         'invoiced_target': fields.integer(string='Invoice Target',
-            help="Target of revenue for the current month. This is the amount the sales \n"
-                    "team estimates to be able to invoice this month."),
+            help="Target of revenue for the current month. This is the amount\n"
+                    "the sales team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
             type='string', readonly=True, multi='_get_sale_orders_data',
             string='Rate of created quotation per duration'),

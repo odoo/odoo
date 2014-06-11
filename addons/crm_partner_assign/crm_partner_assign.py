@@ -59,7 +59,7 @@ class res_partner(osv.osv):
         'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
             'Assigned Opportunities'),
         'grade_id': fields.many2one('res.partner.grade', 'Grade'),
-        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
+        'activation' : fields.many2one('res.partner.activation', 'Activation', select=1, help="Indicates that this customer is activated as a partner, means this customer already got the lead through geolocalization.\nWhen any customer becomes a partner sales team wants that new partner to get activated as early as possible."),
         'date_partnership' : fields.date('Partnership Date'),
         'date_review' : fields.date('Latest Partner Review'),
         'date_review_next' : fields.date('Next Partner Review'),

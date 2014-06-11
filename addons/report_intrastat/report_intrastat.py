@@ -50,7 +50,7 @@ class product_template(osv.osv):
     _name = "product.template"
     _inherit = "product.template"
     _columns = {
-        'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
+        'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', help="Intrastat is the system for collecting statistics on the trade in goods between EU(European Union) member states. Basically used for reporting purpose."),
     }
 
 
