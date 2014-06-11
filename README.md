@@ -1,6 +1,6 @@
 <a href="http://runbot.odoo.com/runbot"><img src="http://runbot.odoo.com/runbot/badge/1/master.svg"/></a>
 
-Odoo
+Odoo-Denis
 ----
 
 Odoo is a suite of web based open source business apps.  More info at http://www.odoo.com
