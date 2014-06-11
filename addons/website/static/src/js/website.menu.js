@@ -325,7 +325,7 @@
             function is_editable_node(element) {
                 return !(element.data('oe-model') === 'ir.ui.view'
                       || element.data('cke-realelement')
-                      || (is_editing_host(element) && element.getAttribute('attributeEditable') !== 'true')
+                      || (element.getAttribute('contentEditable') === 'true' && element.getAttribute('attributeEditable') !== 'true')
                       || element.isReadOnly());
             }
 
