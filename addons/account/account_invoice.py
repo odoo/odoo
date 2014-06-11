@@ -319,7 +319,7 @@ class account_invoice(osv.osv):
         'payment_ids': fields.function(_compute_lines, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Journal Entry', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True, track_visibility='onchange', states={'draft':[('readonly',False)]}),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]}),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]}, help="The fiscal position will determine taxes and accounts used for the partner. In Sale Invoice - Tax have to be selected\nautomatically based on Dispatch Location and Customer. In some countries VAT is replaced with CST(type of tax) when we sell a product from company home state to other state. This field serves to solve these kind of scenarios."),
         'commercial_partner_id': fields.related('partner_id', 'commercial_partner_id', string='Commercial Entity', type='many2one',
                                                 relation='res.partner', store=True, readonly=True,
                                                 help="The commercial entity that will be used on Journal Entries for this invoice")
