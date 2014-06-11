@@ -280,3 +280,7 @@ class base_action_rule(osv.osv):
                         _logger.error(traceback.format_exc())
 
             action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+
+            if automatic:
+                # auto-commit for batch processing
+                cr.commit()
