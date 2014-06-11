@@ -754,49 +754,63 @@
     </t>
 </template>
 
+<!--Private profile-->
+<template id="private_profile">
+    <t t-call="website_forum.header">
+        <h1 class="mt32">This profile is private!</h1>
+        <p>
+            <a t-attf-href="/forum/#{slug(forum)}">Return to the question list.</a>
+        </p>
+    </t>
+</template>
+
 <template id="edit_profile">
     <t t-call="website_forum.header">
-        <h3>Edit Profile </h3>
-            <div class="col-md-2">
-                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+        <h3>Edit Profile
+            <t t-call="website.publish_management">
+              <t t-set="object" t-value="user"/>
+            </t>
+        </h3>
+        <div class="col-md-2">
+            <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+        </div>
+        <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
+            <input name="user_id" t-att-value="user.id" type="hidden"/>
+            <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
+            <div class="col-md-7 mb16">
+                <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name}"/>
+            </div> 
+            <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
+            <div class="col-md-7 mb16">
+                <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
             </div>
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal">
-                <input name="user_id" t-att-value="user.id" type="hidden"/>
-                <label class="col-md-2 control-label mb16" for="user.name">Real name</label>
-                <div class="col-md-7 mb16">
-                    <input type="text" class="col-md-7 mb16 form-control" name="name" required="True" t-attf-value="#{user.name}"/>
-                </div>
-                <label class="col-md-2 control-label mb16" for="user.partner_id.website">Website</label>
-                <div class="col-md-7 mb16">
-                    <input type="text" class="form-control" name="website" t-attf-value="#{user.partner_id.website or ''}"/>
-                </div>
-                <label class="col-md-4 control-label mb16" for="user.partner_id.email">Email</label>
-                <div class="col-md-7 mb16">
-                    <input type="text" class="form-control" name="email" required="True" t-attf-value="#{user.partner_id.email}"/>
-                </div>
-                <label class="col-md-4 control-label mb16" for="user.partner_id.city">City</label>
-                <div class="col-md-7  mb16">
-                    <input type="text" class="form-control" name="city" t-attf-value="#{user.partner_id.city or ''}"/>
-                </div>
-                <label class="col-md-4 control-label mb16" for="contact_name">Country</label>
-                <div class="col-md-7 mb16">
-                    <select class="form-control" name="country">
-                        <option value="">Country...</option>
-                        <t t-foreach="countries or []" t-as="country">
-                            <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
-                        </t>
-                     </select>
-                </div>
-                <!--Note: using website_description fiels instead of using commnt firld of partner-->
-                <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
-                <div class="col-md-7 mb16">
-                    <textarea name="description" style="min-height: 120px" required="True"
-                        class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
-                </div>
-                <div class="col-sm-offset-4 col-md-4 mb16">
-                    <button class="btn btn-primary btn-lg">Update</button>
-                </div>
-            </form>
+            <label class="col-md-4 control-label mb16" for="user.partner_id.email">Email</label>
+            <div class="col-md-7 mb16">
+                <input type="text" class="form-control" name="email" required="True" t-attf-value="#{user.partner_id.email}"/>
+            </div>
+            <label class="col-md-4 control-label mb16" for="user.partner_id.city">City</label>
+            <div class="col-md-7  mb16">
+                <input type="text" class="form-control" name="city" t-attf-value="#{user.partner_id.city or ''}"/>
+            </div>
+            <label class="col-md-4 control-label mb16" for="contact_name">Country</label>
+            <div class="col-md-7 mb16">
+                <select class="form-control" name="country">
+                    <option value="">Country...</option>
+                    <t t-foreach="countries or []" t-as="country">
+                        <option t-att-value="country.id" t-att-selected="country.id == user.partner_id.country_id.id"><t t-esc="country.name"/></option>
+                    </t>
+                 </select>
+            </div>
+            <!--Note: using website_description fiels instead of using commnt firld of partner-->
+            <label class="col-md-4 control-label mb16" for="user.partner_id.website_description">Biography</label>
+            <div class="col-md-7 mb16">
+                <textarea name="description" style="min-height: 120px" required="True" 
+                    class="form-control"><t t-esc="user.partner_id.website_description"/></textarea>
+            </div>
+            <div class="col-sm-offset-4 col-md-4 mb16">
+                <button class="btn btn-primary btn-lg">Update</button>
+            </div>
+        </form>
     </t>
 </template>
 
@@ -805,6 +819,9 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
+            <t t-call="website.publish_management" groups="base.group_website_publisher">
+                <t t-set="object" t-value="user"/>
+            </t>
         </h1>
         <div class="row">
             <div class="col-sm-2">
