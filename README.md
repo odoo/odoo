@@ -1,3 +1,5 @@
+<a href="http://runbot.odoo.com/runbot"><img src="http://runbot.odoo.com/runbot/badge/1/master.svg"/></a>
+
 Odoo
 ----
 
