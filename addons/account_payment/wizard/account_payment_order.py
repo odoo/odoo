@@ -46,17 +46,6 @@ class payment_order_create(osv.osv_memory):
          'duedate': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if not context: context = {}
-        res = super(payment_order_create, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        if context and 'line_ids' in context:
-            doc = etree.XML(res['arch'])
-            nodes = doc.xpath("//field[@name='entries']")
-            for node in nodes:
-                node.set('domain', '[("id", "in", '+ str(context['line_ids'])+')]')
-            res['arch'] = etree.tostring(doc)
-        return res
-
     def create_payment(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('payment.order')
         line_obj = self.pool.get('account.move.line')
@@ -92,33 +81,15 @@ class payment_order_create(osv.osv_memory):
                     'date': date_to_pay,
                     'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
                 }, context=context)
+            
         return {'type': 'ir.actions.act_window_close'}
 
-    def search_entries(self, cr, uid, ids, context=None):
-        line_obj = self.pool.get('account.move.line')
-        mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        data = self.browse(cr, uid, ids, context=context)[0]
-        search_due_date = data.duedate
-#        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
-
-        # Search for move line to pay:
-        domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('credit', '>', 0), ('account_id.reconcile', '=', True)]
-        domain = domain + ['|', ('date_maturity', '<=', search_due_date), ('date_maturity', '=', False)]
-        line_ids = line_obj.search(cr, uid, domain, context=context)
-        context.update({'line_ids': line_ids})
-        model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {'name': _('Entry Lines'),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'payment.order.create',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-        }
-
+    def onchange_duedate(self, cr, uid, ids, due_date, context=None):
+        res = {}
+        if due_date:
+            domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('credit', '>', 0), ('account_id.reconcile', '=',  True), '|', ('date_maturity', '<=', due_date), ('date_maturity', '=', False)]
+            line_ids = self.pool.get('account.move.line').search(cr, uid, domain, context=context)
+            res['domain'] = {'entries':  [('id', 'in', line_ids)]}
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

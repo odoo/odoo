@@ -84,64 +84,14 @@
                         </group>
                         <group>
                             <field name="date_prefered"/>
-                            <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
+                            <field name="date_scheduled" attrs="{'invisible':['|',('date_prefered','=','now'),('date_prefered','=','due')]}"/>
                             <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                         </group>
+                        <p attrs="{'invisible':[('state','=','done')]}" style="font-size: 13px; font-weight: bold;">Payment Schedule <button name="%(action_create_payment_order)d" string="(Import unpaid Journal Items)"
+                               type="action" attrs="{'invisible':[('state','=','done')]}" class="oe_inline oe_link" colspan="0"/>
+                        </p>
                     </group>
-                    <field name="line_ids" context="{'order_id': active_id or False}" >
-                        <form string="Payment Line" version="7.0">
-                            <notebook>
-                                <page string="Payment">
-                                    <group col="4">
-                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)] "/>
-                                        <separator colspan="4" string="Transaction Information"/>
-                                        <field name="date"/>
-                                        <label for="amount_currency" groups="base.group_multi_currency"/>
-                                        <div groups="base.group_multi_currency">
-                                            <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
-                                            <field name="currency" nolabel="1" class="oe_inline"/>
-                                        </div>
-                                        <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)"/>
-                                        <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
-                                        <separator colspan="2" string="Owner Account"/>
-                                        <separator colspan="2" string="Destination Account"/>
-                                        <field colspan="2" name="info_owner" nolabel="1"/>
-                                        <field colspan="2" name="info_partner" nolabel="1"/>
-                                        <field colspan="4" name="communication"/>
-                                        <field colspan="4" name="communication2"/>
-                                        <field name="name"/>
-                                        <field name="state"/>
-                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                    </group>
-                                </page>
-                                <page string="Information">
-                                    <group col="4" string="General Information">
-                                        <label for="amount" groups="base.group_multi_currency"/>
-                                        <div groups="base.group_multi_currency">
-                                            <field name="amount" class="oe_inline"/>
-                                            <field name="company_currency" class="oe_inline"/>
-                                        </div>
-                                        <separator colspan="4" string="Entry Information"/>
-                                        <field name="create_date" readonly="1"/>
-                                        <field name="ml_maturity_date"/>
-                                        <field name="ml_inv_ref"/>
-                                    </group>
-                                </page>
-                            </notebook>
-                        </form>
-                        <tree string="Payment Line">
-                            <field name="ml_inv_ref" />
-                            <field name="partner_id"/>
-                            <field name="communication"/>
-                            <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
-                            <field name="ml_maturity_date"/>
-                            <field name="date"/>
-                            <field name="amount_currency" string="Amount" groups="base.group_multi_currency"/>
-                            <field name="currency" groups="base.group_multi_currency"/>
-                            <field name="name"/>
-                            <field name="amount" sum="Total in Company Currency" invisible="1"/>
-                        </tree>
-                    </field>
+                    <field name="line_ids"/>
                     </sheet>
                 </form>
             </field>
@@ -215,46 +165,48 @@
             <field name="model">payment.line</field>
             <field name="arch" type="xml">
                 <form string="Payment Line" version="7.0">
-                    <notebook>
-                        <page string="Payment">
-                            <group col="4">
-                                <field name="order_id"/>
-                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)]"/>
-                                <separator colspan="4" string="Transaction Information"/>
+                    <sheet string="Payment">
+                        <div class="oe_title">
+                            <label for="move_line_id" class="oe_edit_only"/>
+                            <h1><field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_residual','>',0)] "/></h1>
+                        </div>
+                        <group>
+                            <group>
                                 <field name="date"/>
-                                <label for="amount_currency" groups="base.group_multi_currency"/>
-                                <div groups="base.group_multi_currency">
-                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
-                                    <field name="currency" class="oe_inline"/>
-                                </div>
-                                <field name="partner_id" on_change="onchange_partner(partner_id, False)"/>
-                                <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
-                                <separator colspan="2" string="Owner Account"/>
-                                <separator colspan="2" string="Desitination Account"/>
-                                <field colspan="2" name="info_owner" nolabel="1"/>
-                                <field colspan="2" name="info_partner" nolabel="1"/>
-
-                                <field colspan="4" name="communication"/>
-                                <field colspan="4" name="communication2"/>
-                                <field name="name"/>
-                                <field name="state"/>
-                            </group>
-                        </page>
-                        <page string="Information">
-                            <group col="4" string="General Information">
-                                <label for="amoun"/>
+                                <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)" string="Supplier"/>
+                                <field name="ml_inv_ref" string="Supplier Invoice"/>
+                                <label for="amount_currency"/>
                                 <div>
+                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                    <field name="currency" nolabel="1" class="oe_inline oe_no_button" groups="base.group_multi_currency"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="ml_maturity_date"/>
+                                <field domain="[('partner_id','=',partner_id)]" name="bank_id" string="Supplier Bank Account"/>
+                                <field name="name"/>
+                                <label for="amount" groups="base.group_multi_currency"/>
+                                <div groups="base.group_multi_currency">
                                     <field name="amount" class="oe_inline"/>
                                     <field name="company_currency" class="oe_inline"/>
                                 </div>
                             </group>
-                            <group col="4" string="Entry Information">
-                                <field name="create_date"/>
-                                <field name="ml_maturity_date"/>
-                                <field name="ml_inv_ref"/>
+                            <group>
+                                <separator string="Owner Account" colspan="2"/>
+                                <field name="info_owner" nolabel="1"/>
                             </group>
-                        </page>
-                    </notebook>
+                            <group>
+                                <separator string="Supplier Account" colspan="2"/>
+                                <field name="info_partner" nolabel="1"/>
+                            </group>
+                        </group>
+                        <separator string="Communications"/>
+                        <group>
+                            <field name="state"/>
+                            <field name="communication" string="Communication Note"/>
+                            <field name="communication2" string="Second Communication Note"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -264,17 +216,14 @@
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Payment Line">
-                    <field name="order_id"/>
                     <field name="ml_inv_ref" />
-                    <field name="ml_maturity_date"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Supplier"/>
                     <field name="communication"/>
-                    <field name="amount" sum="Amount Total"/>
-                    <field name="amount_currency" sum="Currency Amount Total" groups="base.group_multi_currency"/>
-                    <field name="currency" groups="base.group_multi_currency"/>
                     <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
-                    <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>
-                    <field name="create_date"/>
+                    <field name="ml_maturity_date"/>
+                    <field name="date"/>
+                    <field name="amount_currency" groups="base.group_multi_currency" />
+                    <field name="currency" groups="base.group_multi_currency"/>
                     <field name="name"/>
                 </tree>
             </field>
