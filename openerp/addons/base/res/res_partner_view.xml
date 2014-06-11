@@ -83,7 +83,6 @@
                     <field name="email"/>
                     <field name="user_id" invisible="1"/>
                     <field name="is_company" invisible="1"/>
-                    <field name="country" invisible="1"/>
                     <field name="country_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>
@@ -399,9 +398,9 @@
                                         <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
                                         <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
                                         <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                        <li t-if="record.city.raw_value and !record.country.raw_value"><field name="city"/></li>
-                                        <li t-if="!record.city.raw_value and record.country.raw_value"><field name="country"/></li>
-                                        <li t-if="record.city.raw_value and record.country.raw_value"><field name="city"/>, <field name="country"/></li>
+                                        <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+                                        <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
                                         <li t-if="record.email.raw_value"><a t-attf-href="mailto:#{record.email.raw_value}"><field name="email"/></a></li>
                                     </ul>
                                 </div>

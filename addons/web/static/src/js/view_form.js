@@ -2595,7 +2595,7 @@ instance.web.form.FieldCharDomain = instance.web.form.AbstractField.extend(insta
         };
         this.$('.select_records').on('click', self.on_click);
     },
-    on_click: function(ev) {
+    on_click: function(event) {
         event.preventDefault();
         var self = this;
         var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
@@ -4858,7 +4858,8 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         pop.select_element(
             this.model,
             {
-                title: _t("Add: ") + this.m2m_field.string
+                title: _t("Add: ") + this.m2m_field.string,
+                no_create: this.m2m_field.options.no_create,
             },
             new instance.web.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
             this.m2m_field.build_context()
