@@ -27,7 +27,7 @@
             var self = this;
             var $more_container = this.$('#menu_more_container').hide();
             var $more = this.$('#menu_more');
-            var $websitetopview = this.$el.find('#website-top-view li')
+            var $websitetopview = this.$el.find('#website-top-view li');
             $more.children('li').insertBefore($more_container);
             var $toplevel_items = this.$el.find('li').not($websitetopview).not($more_container).hide();
             $toplevel_items.each(function() {
@@ -56,9 +56,9 @@
             this.$el.append(openerp.qweb.render('website.editorbar.edit'));
             var $topview = this.$el.find('#website-top-view');
             
-            if (website.seo) $topview.prepend(openerp.qweb.render('website.editorbar.menu.promote'));
-            if (website.MobilePreview) $topview.prepend(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
+            if (website.MobilePreview) $topview.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
             if (website.EditorBarContent) new website.EditorBarContent(this).appendTo($topview);
+            if (website.seo) this.$('ul.oe_content_menu').prepend(openerp.qweb.render('website.editorbar.menu.promote'));
             if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo($topview);
             if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($topview);
             
@@ -69,7 +69,7 @@
                 self.reflow();
                 if (parseInt(self.$el.css('width')) < 768 ) {
                     self.unflow();
-                }                
+                }
             });
         },
     });

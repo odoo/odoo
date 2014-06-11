@@ -432,8 +432,12 @@
 
     website.EditorBarHelp = openerp.Widget.extend({
         template: 'website.editorbar.menu.help',
-        events: {
-            'mousedown a.dropdown-toggle': 'load_menu',
+        start: function () {
+            var self = this;
+            website.ready().then(function () {
+                self.load_menu();
+            });
+            this._super();
         },
         load_menu: function () {
         }
