@@ -1546,7 +1546,7 @@ class account_invoice_line(osv.osv):
         context = dict(context)
         context.update({'company_id': company_id})
         warning = {}
-        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context)
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context=context, company_id=company_id)
         if not uom:
             res['value']['price_unit'] = 0.0
         if product and uom:
