@@ -214,6 +214,13 @@
                         string="Readonly"
                         domain="[('readonly', '=', True)]"/>
                     <separator/>
+                    <filter 
+                        string="Custom"
+                        domain="[('state', '=', 'manual')]"/>
+                    <filter 
+                        string="Base"
+                        domain="[('state', '=', 'base')]"/>
+                    <separator/>
                     <filter icon="terp-translate"
                         string="Translate"
                         domain="[('translate', '=', True)]"/>
