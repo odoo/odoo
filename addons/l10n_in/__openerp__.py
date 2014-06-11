@@ -20,15 +20,15 @@
 ##############################################################################
 
 {
-    'name': 'Indian - Accounting',
+    'name': 'Indian Chart of Account',
     'version': '1.0',
     'description': """
-Indian Accounting: Chart of Account.
-====================================
+Indian Chart of Account
+=======================
 
 Indian accounting chart and localization.
     """,
-    'author': ['OpenERP SA', 'Axelor'],
+    'author': ['OpenERP SA'],
     'category': 'Localization/Account Charts',
     'depends': [
         'account',
@@ -37,10 +37,8 @@ Indian accounting chart and localization.
     'demo': [],
     'data': [
         'l10n_in_tax_code_template.xml',
-        'l10n_in_public_chart.xml',
-        'l10n_in_public_tax_template.xml',
-        'l10n_in_private_chart.xml',
-        'l10n_in_private_tax_template.xml',
+        'l10n_in_standard_chart.xml',
+        'l10n_in_standard_tax_template.xml',        
         'l10n_in_wizard.xml',
     ],
     'auto_install': False,
