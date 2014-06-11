@@ -120,23 +120,8 @@ class sale_order(osv.osv):
         'quote_viewed': fields.boolean('Quotation Viewed'),
     }
 
-    def _default_template(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'template_id' in context and context['template_id']:
-            return context['template_id']
-        model_obj = self.pool.get('ir.model.data')
-        res = False
-        try:
-            res = model_obj.get_object_reference(cr, uid, 'website_quote', 'website_quote_template_1')[1]
-        except ValueError:
-            res = False
-        return res
-
-
     _defaults = {
         'access_token': lambda self, cr, uid, ctx={}: str(uuid.uuid4()),
-        'template_id': _default_template,
         'quote_viewed': False
     }
 
