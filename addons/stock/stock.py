@@ -1248,6 +1248,7 @@ class stock_picking(osv.osv):
         '''
         move_obj = self.pool.get('stock.move')
         operation_obj = self.pool.get('stock.pack.operation')
+        moves = []
         for op in picking.pack_operation_ids:
             for product_id, remaining_qty in operation_obj._get_remaining_prod_quantities(cr, uid, op, context=context).items():
                 if remaining_qty > 0:
@@ -1260,9 +1261,12 @@ class stock_picking(osv.osv):
                         'product_uom': product.uom_id.id,
                         'product_uom_qty': remaining_qty,
                         'name': _('Extra Move: ') + product.name,
-                        'state': 'confirmed',
+                        'state': 'draft',
                     }
-                    move_obj.create(cr, uid, vals, context=context)
+                    moves.append(move_obj.create(cr, uid, vals, context=context))
+        if moves:
+            move_obj.action_confirm(cr, uid, moves, context=context)
+        return moves
 
     def rereserve_quants(self, cr, uid, picking, move_ids=[], context=None):
         """ Unreserve quants then try to reassign quants."""
@@ -1289,11 +1293,13 @@ class stock_picking(osv.osv):
             else:
                 need_rereserve, all_op_processed = self.picking_recompute_remaining_quantities(cr, uid, picking, context=context)
                 #create extra moves in the picking (unexpected product moves coming from pack operations)
+                todo_move_ids = []
                 if not all_op_processed:
-                    self._create_extra_moves(cr, uid, picking, context=context)
+                    todo_move_ids += self._create_extra_moves(cr, uid, picking, context=context)
+                    
                 picking.refresh()
                 #split move lines eventually
-                todo_move_ids = []
+                
                 toassign_move_ids = []
                 for move in picking.move_lines:
                     remaining_qty = move.remaining_qty
@@ -3521,7 +3527,6 @@ class stock_location_path(osv.osv):
 # -------------------------
 
 from openerp.report import report_sxw
-report_sxw.report_sxw('report.stock.quant.package.barcode', 'stock.quant.package', 'addons/stock/report/package_barcode.rml')
 
 class stock_package(osv.osv):
     """
@@ -3869,11 +3874,15 @@ class stock_pack_operation(osv.osv):
             self.write(cr, uid, [operation_id], {'qty_done': qty}, context=context)
         else:
             #no existing operation found for the given domain and picking => create a new one
+            picking_obj = self.pool.get("stock.picking")
+            picking = picking_obj.browse(cr, uid, picking_id, context=context)
             values = {
                 'picking_id': picking_id,
                 'product_qty': 0,
+                'location_id': picking.location_id.id, 
+                'location_dest_id': picking.location_dest_id.id,
                 'qty_done': 1,
-            }
+                }
             for key in domain:
                 var_name, dummy, value = key
                 uom_id = False

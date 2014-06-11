@@ -1363,6 +1363,10 @@ class product_template(osv.Model):
     _name = 'product.template'
     _inherit = 'product.template'
     
+    def _get_buy_route(self, cr, uid, context=None):
+        buy_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
+        return [buy_route]
+
     def _purchase_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         for template in self.browse(cr, uid, ids, context=context):
@@ -1374,6 +1378,7 @@ class product_template(osv.Model):
     }
     _defaults = {
         'purchase_ok': 1,
+        'route_ids': _get_buy_route,
     }
 
 class product_product(osv.Model):
@@ -1451,15 +1456,9 @@ class account_invoice_line(osv.Model):
             readonly=True),
     }
 
-class product_product(osv.osv):
-    _inherit = "product.product"
+class product_template(osv.osv):
+    _inherit = "product.template"
 
-    def _get_buy_route(self, cr, uid, context=None):
-        buy_route = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'route_warehouse0_buy')[1]
-        return [buy_route]
 
-    _defaults = {
-        'route_ids': _get_buy_route,
-    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
