@@ -88,10 +88,10 @@
     <xpath expr="//div[@id='left_column']/ul[1]" position="after">
         <ul class="nav nav-pills nav-stacked mt16">
             <li class="nav-header"><h3>Location</h3></li>
-            <t t-foreach="countries">
-                <li t-if="country_id" t-att-class="country_id[0] == current_country_id and 'active' or ''">
-                    <a t-attf-href="/members#{ membership and '/association/%s' % membership.id or '' }#{ country_id[0] and '/country/%s' % slug(country_id) or '' }#{ search }"><t t-esc="country_id[1]"/>
-                        <span class="badge pull-right"><t t-esc="country_id_count or '0'"/></span>
+            <t t-foreach="countries" t-as="country">
+                <li t-if="country['country_id']" t-att-class="country['country_id'][0] == current_country_id and 'active' or ''">
+                    <a t-attf-href="/members#{ membership and '/association/%s' % membership.id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"><t t-esc="country['country_id'][1]"/>
+                        <span class="badge pull-right"><t t-esc="country['country_id_count'] or '0'"/></span>
                     </a>
                 </li>
             </t>
