@@ -103,6 +103,8 @@ def slugify(s, max_length=None):
             return slugify_lib.slugify(s, max_length=max_length)
         except TypeError:
             pass
+    if isinstance(s, str):
+        s = s.decode('utf-8')
     uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
     spaceless = re.sub('[\W_]', ' ', uni).strip().lower()
     specialless = re.sub('[-\s]+', '-', spaceless)

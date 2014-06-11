@@ -275,6 +275,18 @@ class TestTitleToSlug(unittest2.TestCase):
             slugify(u"o!#d{|\o/@~o&%^?")
         )
 
+    def test_str_to_unicode(self):
+        self.assertEqual(
+            "espana",
+            slugify("España")
+        )
+
+    def test_numbers(self):
+        self.assertEqual(
+            "article-1",
+            slugify(u"Article 1")
+        )
+
     def test_all(self):
         self.assertEqual(
             "do-you-know-martine-a-la-plage",
