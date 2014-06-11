@@ -273,6 +273,7 @@ class base_action_rule(osv.osv):
                 action_dt = get_datetime(record_dt) + delay
                 if last_run <= action_dt < now:
                     try:
+                        context = dict(context or {}, action=True)
                         self._process(cr, uid, action, [record.id], context=context)
                     except Exception:
                         import traceback
