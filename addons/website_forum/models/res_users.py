@@ -9,7 +9,7 @@ class Users(osv.Model):
         init_res = super(Users, self).__init__(pool, cr) 
         self.SELF_WRITEABLE_FIELDS = list(set(
                 self.SELF_WRITEABLE_FIELDS + \
-                ['country_id', 'city', 'website', 'website_description']))
+                ['country_id', 'city', 'website', 'website_description', 'website_published']))
         return init_res
 
     def _get_user_badge_level(self, cr, uid, ids, name, args, context=None):
@@ -31,10 +31,12 @@ class Users(osv.Model):
         'gold_badge': fields.function(_get_user_badge_level, string="Number of gold badges", type='integer', multi='badge_level'),
         'silver_badge': fields.function(_get_user_badge_level, string="Number of silver badges", type='integer', multi='badge_level'),
         'bronze_badge': fields.function(_get_user_badge_level, string="Number of bronze badges", type='integer', multi='badge_level'),
+        'website_published': fields.boolean('Publish', help="Publish user on the website."),
     }
 
     _defaults = {
         'karma': 0,
+        'website_published': False,
     }
 
     def add_karma(self, cr, uid, ids, karma, context=None):
