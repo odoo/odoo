@@ -116,6 +116,28 @@ class sale_order(osv.Model):
             product_ids = random.sample(s, min(len(s),3))
             return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
 
+    def _cart_optional_products(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            products = {}
+            for l in order.website_order_line:
+                opt = {}
+                for o in l.product_id.optional_product_ids:
+                    if not opt.get(o.product_tmpl_id.id):
+                        opt[o.product_tmpl_id.id] = {
+                            'product_tmpl_id': o.product_tmpl_id,
+                            'product_ids': []
+                        }
+                    if o not in opt[o.product_tmpl_id.id]:
+                        opt[o.product_tmpl_id.id]['product_ids'].append(o)
+
+                if opt:
+                    products[l.id] = {
+                        'order_line_id': l,
+                        'optional_product_tmpl': opt
+                    }
+
+            return products
+
 class website(orm.Model):
     _inherit = 'website'
 

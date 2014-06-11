@@ -50,6 +50,13 @@ $(document).ready(function () {
         $(this).closest("form").submit();
     });
 
+    // modal to select optional product in my cart
+    $("#modal_optional_products label").mousedown(function(event) {
+        $(event.currentTarget).parents('li.optional_product_tmpl:first').find("input[type=checkbox]").each(function () {
+            if($(this).parent()[0] != event.currentTarget) $(this).removeAttr('checked');
+        });
+    });
+
     // change price when they are variants
     var $price = $(".oe_price .oe_currency_value");
     $('form.js_add_cart_json label').on('mouseup', function (ev) {
@@ -70,12 +77,12 @@ $(document).ready(function () {
 
     var $form_var = $('form.js_add_cart_variants');
     var variant_ids = $form_var.data("attribute_value_ids");
-    $form_var.on('change', 'input, select', function (ev) {
+    $form_var.on('change', 'input.js_variant_change, select.js_variant_change', function (ev) {
         var values = [];
         $form_var.find("label").removeClass("text-muted css_not_available");
         $form_var.find(".a-submit").removeProp("disabled");
 
-        $form_var.find('input:checked, select').each(function () {
+        $form_var.find('input.js_variant_change:checked, select').each(function () {
             values.push(+$(this).val());
         });
         var available = false;
@@ -89,10 +96,10 @@ $(document).ready(function () {
             }
         }
 
-        $form_var.find("input:radio, select").each(function () {
+        $form_var.find("input.js_variant_change:radio, select.js_variant_change").each(function () {
             var id = +$(this).val();
             var values = [id];
-            $form_var.find(">ul>li:not(:has(input[value='" + id + "'])) input:checked, select").each(function () {
+            $form_var.find(">ul>li:not(:has(input.js_variant_change[value='" + id + "'])) input.js_variant_change:checked, select").each(function () {
                 values.push(+$(this).val());
             });
             for (var k in variant_ids) {
@@ -112,10 +119,9 @@ $(document).ready(function () {
             $(".oe_price_h4").addClass("hidden");
             $(".oe_not_available").removeClass("hidden");
             $form_var.find('input[name="product_id"]').val(0);
-            $form_var.find(".a-submit").prop("disabled", "disabled");
+            $form_var.find(".js_check_product").prop("disabled", "disabled");
         }
     });
-    $form_var.find("input:first").trigger('change');
-
+    $form_var.find("input.js_variant_change:first").trigger('change');
 
 });

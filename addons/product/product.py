@@ -802,10 +802,8 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            price_extra = 0.0
-            for variant_id in product.attribute_value_ids:
-                price_extra += variant_id.price_extra
-            res[product.id] =  (res[product.id] or 0.0) + price_extra
+            res[product.id] =  res[product.id] + product.price_extra
+
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
@@ -864,6 +862,8 @@ class product_product(osv.osv):
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for product in self.browse(cr, uid, ids, context=context):
+            ctx = context.copy()
+            ctx.update(active_id=product.product_tmpl_id.id)
             price_extra = 0.0
             for variant_id in product.attribute_value_ids:
                 for price_id in variant_id.price_ids:

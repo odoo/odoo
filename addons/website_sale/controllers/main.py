@@ -212,6 +212,17 @@ class website_sale(http.Controller):
 
         variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
 
+
+        optional_products = {}
+        for o in product.optional_product_ids:
+            if not optional_products.get(o.product_tmpl_id.id):
+                optional_products[o.product_tmpl_id.id] = {
+                    'product_tmpl_id': o.product_tmpl_id,
+                    'product_ids': []
+                }
+            if o not in optional_products[o.product_tmpl_id.id]:
+                optional_products[o.product_tmpl_id.id]['product_ids'].append(o)
+
         values = {
             'search': search,
             'category': category,
@@ -223,6 +234,7 @@ class website_sale(http.Controller):
             'main_object': product,
             'product': product,
             'variants': variants,
+            'optional_products': optional_products
         }
         return request.website.render("website_sale.product", values)
 
@@ -240,21 +252,31 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order()
+
         values = {
             'order': order,
-            'suggested_products': [],
+            'suggested_products': []
         }
         if order:
-            if not request.context.get('pricelist'):
-                request.context['pricelist'] = order.pricelist_id.id
-            values['suggested_products'] = order._cart_accessories(context=request.context)
+            if not context.get('pricelist'):
+                context['pricelist'] = order.pricelist_id.id
+            values['suggested_products'] = order._cart_accessories(context=context)
+
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        cr, uid, context = request.cr, request.uid, request.context
-        request.website.sale_get_order(force_create=1)._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
+        order = request.website.sale_get_order(force_create=1)
+
+        print kw
+        for key,val in kw.items():
+            if 'option-' in key:
+                order._cart_update(product_id=int(key.split("-")[1]), add_qty=1)
+
+        order._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
@@ -445,7 +467,7 @@ class website_sale(http.Controller):
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True)
     def checkout(self, **post):
-        cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
+        cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
 
         order = request.website.sale_get_order(force_create=1, context=context)
 
