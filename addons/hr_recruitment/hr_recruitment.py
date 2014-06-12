@@ -45,6 +45,27 @@ class hr_recruitment_stage(osv.osv):
     _name = "hr.recruitment.stage"
     _description = "Stage of Recruitment"
     _order = 'sequence'
+
+    def _get_tooltips(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        for rec in self.read(cr, uid, ids, ['legend_star1','legend_star2','legend_star3','legend_star4','requirements'], context=context):
+            value = ""
+            img = "<img src='/web/static/src/img/icons/star-on.png'/>"
+            if rec['legend_star1']:
+                value += img +' '+ rec['legend_star1'] + "<br/>"
+            if rec['legend_star2']:
+                value += img + img +' '+ rec['legend_star2'] + "<br/>"
+            if rec['legend_star3']:
+                value += img + img + img +' '+ rec['legend_star3'] + "<br/>"
+            if rec['legend_star4']:
+                value += img + img + img + img +' '+ rec['legend_star4'] + "<br/>"
+            if rec['requirements']:
+                value += rec['requirements']
+            tooltip = {'tooltip': value}
+            tooltip.update(rec)
+            res[rec['id']] = tooltip
+        return res
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
@@ -54,6 +75,11 @@ class hr_recruitment_stage(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
+        'kanban_column_tooltip': fields.function(_get_tooltips, string='Tooltips', type="char", help="This tooltips will display on kanban stage header" ),
+        'legend_star1':fields.char('Legend Star', help='This tooltip will appear on kanban view column header.'),
+        'legend_star2':fields.char('Legend Star2', help='This tooltip will appear on kanban view column header.'),
+        'legend_star3':fields.char('Legend Star3', help='This tooltip will appear on kanban view column header.'),
+        'legend_star4':fields.char('Legend Star4', help='This tooltip will appear on kanban view column header.'),
     }
     _defaults = {
         'sequence': 1,

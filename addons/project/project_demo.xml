@@ -67,6 +67,7 @@
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">employees</field>
             <field name="members" eval="[(4, ref('base.user_root')), (4, ref('base.user_demo'))]"/>
+            <field name="task_label">Trainings</field>
         </record>
 
         <record id="project_project_3" model="project.project">
@@ -82,6 +83,7 @@
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">employees</field>
             <field name="members" eval="[(4, ref('base.user_root')), (4,ref('base.user_demo'))]"/>
+            <field name="task_label">Designs</field>
         </record>
 
         <record id="project_project_4" model="project.project">
@@ -98,6 +100,7 @@
             <field name="members" eval="[(6, 0, [
                     ref('base.user_root'),
                     ref('base.user_demo')])]"/>
+            <field name="task_label">Databases</field>
         </record>
 
         <record id="project_project_5" model="project.project">
