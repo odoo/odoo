@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.project.tests.test_project_base import TestProjectBase
+from openerp.addons.project.tests.common import TestProject
 from openerp.exceptions import AccessError
 from openerp.tools import mute_logger
 
@@ -49,7 +49,7 @@ Raoul Boitempoils
 Integrator at Agrolait"""
 
 
-class TestProjectFlow(TestProjectBase):
+class TestProjectFlow(TestProject):
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
     def test_00_project_process(self):

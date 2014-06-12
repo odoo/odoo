@@ -22,10 +22,10 @@
 from openerp.addons.mail.tests.common import TestMail
 
 
-class TestProjectBase(TestMail):
+class TestProject(TestMail):
 
     def setUp(self):
-        super(TestProjectBase, self).setUp()
+        super(TestProject, self).setUp()
         cr, uid = self.cr, self.uid
 
         # Usefull models

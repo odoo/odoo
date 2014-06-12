@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, date
+from datetime import date, datetime
 from lxml import etree
 import time
 
@@ -180,6 +180,7 @@ class project(osv.osv):
         res = {}
         attachment = self.pool.get('ir.attachment')
         task = self.pool.get('project.task')
+        context['active_test'] = False
         for id in ids:
             project_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', '=', id)], context=context, count=True)
             task_ids = task.search(cr, uid, [('project_id', '=', id)], context=context)
@@ -187,9 +188,16 @@ class project(osv.osv):
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
-        for tasks in self.browse(cr, uid, ids, context):
-            res[tasks.id] = len(tasks.task_ids)
+        """ :deprecated: this method will be removed with OpenERP v8. Use tasks
+                         fields instead. """
+        if context is None:
+            context = {}
+        res = dict.fromkeys(ids, 0)
+        ctx = context.copy()
+        ctx['active_test'] = False
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)], context=ctx)
+        for task in self.pool.get('project.task').browse(cr, uid, task_ids, context):
+            res[task.project_id.id] += 1
         return res
     def _get_alias_models(self, cr, uid, context=None):
         """ Overriden in project_issue to offer more options """
@@ -202,7 +210,10 @@ class project(osv.osv):
                 ('followers', 'Private project: followers Only')]
 
     def attachment_tree_view(self, cr, uid, ids, context):
-        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        if context is None:
+            context = {}
+        context['active_test'] = False
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)], context=context)
         domain = [
              '|',
              '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
@@ -217,7 +228,7 @@ class project(osv.osv):
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
             'limit': 80,
-            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+            'context': "{'default_res_model': '%s','default_res_id': %d, 'active_test': False}" % (self._name, res_id)
         }
 
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
@@ -253,9 +264,8 @@ class project(osv.osv):
             }),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'task_count': fields.function(_task_count, type='integer', string="Tasks",),
-        'task_ids': fields.one2many('project.task', 'project_id',
-                                    domain=[('stage_id.fold', '=', False)]),
+        'task_count': fields.function(_task_count, type='integer', string="Open Tasks",
+                                      deprecated="This field will be removed in OpenERP v8. Use tasks one2many field instead."),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized"
@@ -307,7 +317,7 @@ class project(osv.osv):
     ]
 
     def set_template(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=False, context=context)
+        return self.set_template_state(cr, uid, ids, True, context=context)
 
     def set_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
@@ -322,104 +332,117 @@ class project(osv.osv):
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def reset_project(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=True, context=context)
+        return self.set_template_state(cr, uid, ids, False, context=context)
 
-    def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
-        """ copy and map tasks from old to new project """
-        if context is None:
-            context = {}
-        map_task_id = {}
-        task_obj = self.pool.get('project.task')
-        proj = self.browse(cr, uid, old_project_id, context=context)
-        for task in proj.tasks:
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
-        self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
-        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
-        return True
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        current_project = self.browse(cr, uid, id, context=context)
+        default['line_ids'] = []
+        # update name
+        if not default.get('name'):
+            default.update(name=_("%s (copy %s)") % (current_project.name, fields.datetime.now()))
+            
+        # handle tasks
+        if current_project.state == 'template':
+            default['tasks'] = self.pool['project.task'].duplicate_task(cr, uid, current_project.tasks, context=context)
+        else:
+            default['tasks'] = []
+        return super(project, self).copy_data(cr, uid, id, default, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
-        if default is None:
-            default = {}
-
         context['active_test'] = False
-        default['state'] = 'open'
-        default['line_ids'] = []
-        default['tasks'] = []
-
-        # Don't prepare (expensive) data to copy children (analytic accounts),
-        # they are discarded in analytic.copy(), and handled in duplicate_template() 
-        default['child_ids'] = []
-
-        proj = self.browse(cr, uid, id, context=context)
-        if not default.get('name', False):
-            default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
-        self.map_tasks(cr, uid, id, res, context=context)
+        current_project = self.browse(cr, uid, id, context=context)
+        # handle attachments: copy them instead of just keeping the links
+        if current_project.state == 'template':
+            attach_obj = self.pool['ir.attachment']
+            attach_ids = attach_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', id)], context=context)
+            for attach in attach_obj.browse(cr, uid, attach_ids, context=context):
+                attach_obj.copy(cr, uid, attach.id, {
+                    'name': '%s %s' % (attach.name, fields.datetime.now()),
+                    'res_id': res,
+                    'res_model': 'project.project',
+                    'res_name': default['name']
+                }, context=context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
+        return self.create_from_template(cr, uid, ids, context=context)
+
+    def create_from_template(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        context['copy'] = True  # compatibility with some old ugly code in account
         data_obj = self.pool.get('ir.model.data')
-        result = []
-        for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id', False)
-            context.update({'analytic_project_copy': True})
-            new_date_start = time.strftime('%Y-%m-%d')
-            new_date_end = False
-            if proj.date_start and proj.date:
-                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
-                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
-                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            context.update({'copy':True})
-            new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name':_("%s (copy)") % (proj.name),
-                                    'state':'open',
-                                    'date_start':new_date_start,
-                                    'date':new_date_end,
-                                    'parent_id':parent_id}, context=context)
-            result.append(new_id)
 
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
-            parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
+        new_projects = []
+        for template in self.browse(cr, uid, ids, context=context):
+            date_start = date.today()
+            date_end = False
+            if template.date and template.date_start:
+                date_end = date_start + (datetime.strptime(template.date, tools.DEFAULT_SERVER_DATETIME_FORMAT).date() - datetime.strptime(template.date_start, tools.DEFAULT_SERVER_DATETIME_FORMAT).date())
+            project_id = self.copy(cr, uid, template.id, default={
+                'state': 'open',
+                'date_start': date_start,
+                'date': date_end,
+                'parent_id': context.get('parent_id', False),
+            }, context=context)
+            new_projects.append(project_id)
+
+            child_ids = self.search(cr, uid, [('parent_id', '=', template.analytic_account_id.id)], context=context)
             if child_ids:
-                self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
+                project_account_id = self.browse(cr, uid, project_id, ['analytic_account_id'], context=context).analytic_account_id.id
+                self.duplicate_template(cr, uid, child_ids, context={'parent_id': project_account_id})
 
-        if result and len(result):
-            res_id = result[0]
-            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
-            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
-            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
-            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
-            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
+        if new_projects:
+            try:
+                form_view_id = data_obj.get_object_reference(cr, uid, 'project', 'edit_project')[1]
+            except ValueError:
+                form_view_id = False
+            try:
+                tree_view_id = data_obj.get_object_reference(cr, uid, 'project', 'view_project')[1]
+            except ValueError:
+                tree_view_id = False
+            try:
+                search_view_id = data_obj.get_object_reference(cr, uid, 'project', 'view_project_project_filter')[1]
+            except ValueError:
+                search_view_id = False
             return {
                 'name': _('Projects'),
                 'view_type': 'form',
                 'view_mode': 'form,tree',
                 'res_model': 'project.project',
                 'view_id': False,
-                'res_id': res_id,
-                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
+                'res_id': new_projects[0],
+                'views': [(form_view_id, 'form'), (tree_view_id, 'tree')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': search_view['res_id'],
+                'search_view_id': search_view_id,
                 'nodestroy': True
             }
+        return False
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context=None):
-        task_obj = self.pool.get('project.task')
-        for proj in self.browse(cr, uid, ids, context=None):
-            self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
-            cr.execute('select id from project_task where project_id=%s', (proj.id,))
-            tasks_id = [x[0] for x in cr.fetchall()]
-            if tasks_id:
-                task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)])
-            if child_ids:
-                self.setActive(cr, uid, child_ids, value, context=None)
+        return self.set_template_state(cr, uid, ids, not value, context=context)
+
+    def set_template_state(self, cr, uid, ids, template_state=False, context=None):
+        """ (Re)set the project as template.
+            :param boolean template_state: True => 'template', False => 'open'
+        """
+        if context is None:
+            context = {}
+        active_ctx = dict({'active_test': False})
+        state = 'template' if template_state else 'open'
+        self.write(cr, uid, ids, {'state': state}, context=context)
+        task_ids = self.pool['project.task'].search(cr, uid, [('project_id', 'in', ids)], context=active_ctx)  # search instead of browse because of active_flag - active_test context key seems buggy with cache
+        self.pool['project.task'].write(cr, uid, task_ids, {'active': state == 'open'}, context=context)
+        parent_ids = [project.analytic_account_id.id for project in self.browse(cr, uid, ids, context=context)]
+        child_project_ids = self.search(cr, uid, [('parent_id', 'in', parent_ids)], context=context)
+        if child_project_ids:
+            return self.set_template_state(cr, uid, child_project_ids, state, context=context)
         return True
 
     def _schedule_header(self, cr, uid, ids, force_members=True, context=None):
@@ -685,39 +708,58 @@ class task(osv.osv):
         return {'value': vals}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
-        mapper = lambda t: map_ids.get(t.id, t.id)
-        for task in self.browse(cr, uid, map_ids.values(), context):
-            new_child_ids = set(map(mapper, task.child_ids))
-            new_parent_ids = set(map(mapper, task.parent_ids))
-            if new_child_ids or new_parent_ids:
-                task.write({'parent_ids': [(6,0,list(new_parent_ids))],
-                            'child_ids':  [(6,0,list(new_child_ids))]})
+        mapping = {}
+        task_obj = self.pool['project.task']
+        for task in map_ids:
+            mapping[task.id] = task_obj.copy(cr, uid, task.id, context=context)
+            task_obj.update_parents_and_childs(cr, uid, mapping.values(), mapping, context=context)
+        return [(6, 0, mapping.values())]
+
+    def update_parents_and_childs(self, cr, uid, ids, mapping, context=None):
+        for task in self.browse(cr, uid, ids, context=context):
+            new_parent_ids = [mapping[parent.id] for parent in task.parent_ids if parent.id in mapping]
+            new_parent_ids += [parent.id for parent in task.parent_ids if parent.id not in mapping and parent.id not in mapping.values()]
+            new_child_ids = [mapping[child.id] for child in task.child_ids if child.id in mapping]
+            new_child_ids += [child.id for child in task.child_ids if child.id not in mapping and child.id not in mapping.values()]
+            self.write(cr, uid, [task.id], {'parent_ids': [(6, 0, new_parent_ids)], 'child_ids': [(6, 0, new_child_ids)]}, context=context)
+        return True
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default or {}
-        default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
-        if not default.get('remaining_hours', False):
-            default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
-        default['active'] = True
-        if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name or ''
-            if not context.get('copy',False):
-                new_name = _("%s (copy)") % (default.get('name', ''))
-                default.update({'name':new_name})
+
+        if default and 'description_pad' in default:
+            default.pop('description_pad')
+
+        current_task = self.browse(cr, uid, id, context=context)
+        if not 'stage' in default:
+            default['stage_id'] = self._get_default_stage_id(cr, uid, context=context)
+        default.update({
+            'active': True,
+            'work_ids': [],
+            'date_start': False,
+            'date_end': False,
+            'date_deadline': False,
+        })
+        if 'remaining_hours' not in default:
+            default['remaining_hours'] = float(current_task.planned_hours)
+        if not default.get('name'):
+            default['name'] = _("%s (copy)") % current_task.name
         return super(task, self).copy_data(cr, uid, id, default, context)
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if default is None:
-            default = {}
-        if not context.get('copy', False):
-            stage = self._get_default_stage_id(cr, uid, context=context)
-            if stage:
-                default['stage_id'] = stage
-        return super(task, self).copy(cr, uid, id, default, context)
+        res = super(task, self).copy(cr, uid, id, default, context)
+        # handle attachments: copy them instead of just keeping the links
+        attach_obj = self.pool['ir.attachment']
+        attach_ids = attach_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', id)], context=context)
+        for attach in attach_obj.browse(cr, uid, attach_ids, context=context):
+            attach_obj.copy(cr, uid, attach.id, {
+                'name': '%s %s' % (attach.name, fields.datetime.now()),
+                'res_id': res,
+                'res_model': 'project.task',
+                'res_name': self.browse(cr, uid, res, context=context).name,
+            }, context=context)
+        return res
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -1178,6 +1220,7 @@ class account_analytic_account(osv.osv):
     _columns = {
         'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null'),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
@@ -1199,15 +1242,19 @@ class account_analytic_account(osv.osv):
         This function is called at the time of analytic account creation and is used to create a project automatically linked to it if the conditions are meet.
         '''
         project_pool = self.pool.get('project.project')
-        project_id = project_pool.search(cr, uid, [('analytic_account_id','=', analytic_account_id)])
+        project_id = project_pool.search(cr, uid, [('analytic_account_id', '=', analytic_account_id)])
         if not project_id and self._trigger_project_creation(cr, uid, vals, context=context):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,
-                'type': vals.get('type','contract'),
+                'type': vals.get('type', 'contract'),
+                'state': 'template' if vals.get('type') == 'template' else 'open',
             }
+            template_project = project_pool.search(cr, uid, [('analytic_account_id','=', vals.get('template_id'))], context=context)
+            if template_project:
+                return project_pool.copy(cr, uid, template_project[0], project_values, context=context)
             return project_pool.create(cr, uid, project_values, context=context)
-        return False
+        return project_id and project_id[0]
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -1215,7 +1262,8 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         analytic_account_id = super(account_analytic_account, self).create(cr, uid, vals, context=context)
-        self.project_create(cr, uid, analytic_account_id, vals, context=context)
+        project_id = self.project_create(cr, uid, analytic_account_id, vals, context=context)
+        self.write(cr, uid, [analytic_account_id], {'project_id': project_id})
         return analytic_account_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1227,7 +1275,7 @@ class account_analytic_account(osv.osv):
                 vals_for_project['name'] = account.name
             if not vals.get('type'):
                 vals_for_project['type'] = account.type
-            self.project_create(cr, uid, account.id, vals_for_project, context=context)
+            vals['project_id'] = self.project_create(cr, uid, account.id, vals_for_project, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):

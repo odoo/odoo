@@ -246,7 +246,7 @@
                     <field name="date"/>
                     <field name="color"/>
                     <field name="task_count"/>
-                    <field name="task_ids"/>
+                    <field name="tasks"/>
                     <field name="alias_id"/>
                     <field name="doc_count"/>
                     <templates>
@@ -267,7 +267,7 @@
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.task_ids.raw_value.length"/> Tasks
+                                            <t t-raw="record.tasks.raw_value.length"/> Tasks
                                         </a>
                                     </div>
                                     <div class="oe_kanban_project_list">
@@ -613,6 +613,12 @@
                     <field name="use_tasks"/>
                     <label for="use_tasks"/>
                 </xpath>
+                <field name="company_id" position="after">
+                    <p attrs="{'invisible': [('project_id','=',False)]}" colspan="4">
+                        To manage tasks and/or issues, go to the related project:
+                        <field name="project_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
+                    </p>
+                </field>
             </field>
         </record>
 
