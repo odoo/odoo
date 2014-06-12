@@ -1296,7 +1296,7 @@ instance.web.WebClient = instance.web.Client.extend({
                         return false;
                     });
                 });
-                $icon.appendTo(self.$('.oe_systray'));
+                $icon.prependTo(window.$('.oe_systray'));
             }
         });
     },
