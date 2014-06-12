@@ -220,7 +220,8 @@
                     <field name="manager_id"/>
                     <field name="parent_id"/>
                     <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>
-                    <filter name="pending" string="To Renew" domain="[('state','=','pending')]" help="Pending contracts"/>
+                    <filter name="pending" string="To Renew" domain="['|', ('state','=','pending'),'|', ('date', '!=', False), ('quantity_max', '!=', 0.00)]" 
+                        help="Pending contracts"/>
                     <filter name="closed" string="Closed" domain="[('state','=','close')]" help="Closed contracts"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]" help="Cancelled contracts"/>
                     <separator/>
