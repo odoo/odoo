@@ -17,6 +17,20 @@
             </data>
             </field>
         </record>
+        
+        <!-- add search view -->
+        
+        <record id="sale_crm_case_section_salesteams_search" model="ir.ui.view">
+            <field name="name">Case Sections - Search</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='personal']" position="after">
+                    <filter name="invoiced_amount_less" string="Under Performing" domain="[('is_under_performing','=',True)]"  help="Sales team(s) that have revenue of invoices hasn't reached to the forecast."/>
+                    <filter name="invoiced_amount_greater" string="Proactive" domain="[('is_under_performing','=',False)]" help="Sales team(s) that have revenue of invoices reached or exceeded the forecast."/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="crm_case_section_salesteams_view_kanban" model="ir.ui.view">
             <field name="name">crm.case.section.kanban</field>
