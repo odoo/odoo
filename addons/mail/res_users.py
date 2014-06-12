@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+import openerp
 
 
 class res_users(osv.Model):
@@ -68,7 +69,9 @@ class res_users(osv.Model):
 
     def create(self, cr, uid, data, context=None):
         if not data.get('login', False):
-            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user. To create new users, you should use the "Settings > Users" menu.'))
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'action_res_users')
+            msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
+            raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))
         if context is None:
             context = {}
 
