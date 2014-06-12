@@ -40,6 +40,7 @@ class final_invoice_create(osv.osv_memory):
         'name': fields.boolean('Log of Activity', help='Display detail of work in the invoice line.'),
         'price': fields.boolean('Cost', help='Display cost of the item you reinvoice'),
         'product': fields.many2one('product.product', 'Product', help='The product that will be used to invoice the remaining amount'),
+        'group_by_partner': fields.boolean('Group by Partner', help="If this box is checked, the system will group invoices by customer."),
     }
 
     def do_create(self, cr, uid, ids, context=None):
