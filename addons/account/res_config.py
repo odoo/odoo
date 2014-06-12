@@ -37,7 +37,7 @@ class account_config_settings(osv.osv_memory):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'has_default_company': fields.boolean('Has default company', readonly=True),
         'expects_chart_of_accounts': fields.related('company_id', 'expects_chart_of_accounts', type='boolean',
-            string='This company has its own chart of accounts',
+            string='There is no chart of accounts installed for this company, select an existing one or install a new one.',
             help="""Check this box if this company is a legal entity."""),
         'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', required=True,
             string='Default company currency', help="Main currency of the company."),
@@ -46,9 +46,9 @@ class account_config_settings(osv.osv_memory):
         'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
             string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
-        'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
+        'has_chart_of_accounts': fields.boolean('This company has a chart of accounts installed already.'),
         'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
-        'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
+        'code_digits': fields.integer('# of Digits', help="Number of digits to use for account code"),
         'tax_calculation_rounding_method': fields.related('company_id',
             'tax_calculation_rounding_method', type='selection', selection=[
             ('round_per_line', 'Round per line'),
@@ -172,6 +172,7 @@ class account_config_settings(osv.osv_memory):
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
+        'code_digits': 6,
     }
 
     def create(self, cr, uid, values, context=None):
@@ -311,11 +312,17 @@ class account_config_settings(osv.osv_memory):
                 'currency_id': config.currency_id.id,
             }, context)
             wizard.execute(cr, uid, [wizard_id], context)
+            install_wiz = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'account_configuration_installer_todo')
+            if install_wiz.state == 'open':
+                install_wiz.write({'state': 'done'})
+            multichart_wiz = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'action_wizard_multi_chart_todo')
+            if multichart_wiz.state == 'open':
+                multichart_wiz.write({'state': 'done'})
 
     def set_fiscalyear(self, cr, uid, ids, context=None):
         """ create a fiscal year for the given company (if necessary) """
         config = self.browse(cr, uid, ids[0], context)
-        if config.has_chart_of_accounts or config.chart_template_id:
+        if not config.has_fiscal_year:
             fiscalyear = self.pool.get('account.fiscalyear')
             fiscalyear_count = fiscalyear.search_count(cr, uid,
                 [('date_start', '<=', config.date_start), ('date_stop', '>=', config.date_stop),
@@ -338,6 +345,7 @@ class account_config_settings(osv.osv_memory):
                     fiscalyear.create_period(cr, uid, [fiscalyear_id])
                 elif config.period == '3months':
                     fiscalyear.create_period3(cr, uid, [fiscalyear_id])
+                config.write({'has_fiscal_year': True})
 
     def get_default_dp(self, cr, uid, fields, context=None):
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
