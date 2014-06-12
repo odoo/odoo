@@ -191,6 +191,7 @@ class website_sale(http.Controller):
     def product(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
+        template_obj = pool['product.template']
 
         context.update(active_id=product.id)
 
@@ -208,20 +209,13 @@ class website_sale(http.Controller):
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
-            product = request.registry.get('product.template').browse(request.cr, request.uid, int(product), context=context)
+            product = template_obj.browse(request.cr, request.uid, int(product), context=context)
 
-        variants = [[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]
-
-
-        optional_products = {}
-        for o in product.optional_product_ids:
-            if not optional_products.get(o.product_tmpl_id.id):
-                optional_products[o.product_tmpl_id.id] = {
-                    'product_tmpl_id': o.product_tmpl_id,
-                    'product_ids': []
-                }
-            if o not in optional_products[o.product_tmpl_id.id]:
-                optional_products[o.product_tmpl_id.id]['product_ids'].append(o)
+        optional_product_ids = []
+        for p in product.optional_product_ids:
+            ctx = context.copy()
+            ctx.update(active_id=p.id)
+            optional_product_ids.append(template_obj.browse(cr, uid, p.id, context=ctx))
 
         values = {
             'search': search,
@@ -233,8 +227,7 @@ class website_sale(http.Controller):
             'category_list': category_list,
             'main_object': product,
             'product': product,
-            'variants': variants,
-            'optional_products': optional_products
+            'optional_product_ids': optional_product_ids
         }
         return request.website.render("website_sale.product", values)
 
@@ -270,19 +263,16 @@ class website_sale(http.Controller):
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order(force_create=1)
-
-        print kw
-        for key,val in kw.items():
-            if 'option-' in key:
-                order._cart_update(product_id=int(key.split("-")[1]), add_qty=1)
-
-        order._cart_update(product_id=int(product_id), add_qty=add_qty, set_qty=set_qty)
+        if add_qty or set_qty:
+            order._cart_update(product_id=int(product_id), add_qty=int(add_qty), set_qty=int(set_qty))
         return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
-    def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None):
+    def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
         quantity = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        if not display:
+            return None
         return {
             'quantity': quantity,
             'cart_quantity': order.cart_quantity,

@@ -387,11 +387,14 @@
 
                     <t t-call="website_sale.product_price"/>
 
-                    <a t-if="not optional_products" class="btn btn-primary btn-lg mt8 a-submit js_check_product">Add to Cart</a>
-                    <a t-if="optional_products" class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
+                    <t t-name="button">
+                      <a t-if="not optional_product_ids" class="btn btn-primary btn-lg mt8 a-submit js_check_product">Add to Cart</a>
+                      <a t-if="optional_product_ids" class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
 
-                    <t t-call="website_sale.product_modal_optional_products"/>
-
+                      <t t-if="optional_products">
+                        <t t-call="website_sale.product_modal_optional_products"/>
+                      </t>
+                    </t>
                 </form>
 
                 <hr t-if="product.description_sale"/>
@@ -411,45 +414,113 @@
   </t>
 </template>
 
+<template id="product_preview" inherit_id="website_sale.product" optional="enabled" name="Product Preview">
+  <xpath expr="//t[@t-name='button']" position="replace">
+    <a t-if="optional_products" class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
+    
+    <t t-call="website_sale.product_modal_optional_products"/>
+  </xpath>
+</template>
+
 <template id="product_modal_optional_products">
-  <div t-if="optional_products" id="modal_optional_products" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div id="modal_optional_products" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-          <h4 class="modal-title" id="myModalLabel">Choose your optional products</h4>
+          <h4 class="modal-title" id="myModalLabel">Product to add to your shopping cart</h4>
         </div>
         <div class="modal-body">
-          <ul>
-            <li class="optional_product_tmpl" t-foreach="optional_products" t-as="t">
-              <t t-set="o_tmpl" t-value="optional_products[t]"/>
-
-              <t t-if="len(o_tmpl['product_ids']) == 1">
-                <label><input t-att-name="'option-%s' % o_tmpl['product_ids'][0].id" type="checkbox"/> <span t-field="o_tmpl['product_tmpl_id'].name"/></label>
-
-                <span class="badge" t-if="o_tmpl['product_ids'][0].price">
-                    + <span t-field="o_tmpl['product_ids'][0].price" t-field-options='{
-                           "widget": "monetary",
-                           "display_currency": "website.pricelist_id.currency_id"
-                      }'/>
-                </span>
-              </t>
-              <t t-if="len(o_tmpl['product_ids']) > 1">
-                <span t-field="o_tmpl['product_tmpl_id'].name"/>
-                <ul>
-                  <li t-foreach="o_tmpl['product_ids']" t-as="product_id">
-                    <label><input t-att-name="'option-%s' % product_id.id" type="checkbox"/> <span t-esc="', '.join([value_id.name for value_id in product_id.attribute_value_ids])"/></label>
-                    <span class="badge" t-if="product_id.price">
-                      + <span t-field="product_id.price" t-field-options='{
-                             "widget": "monetary",
-                             "display_currency": "website.pricelist_id.currency_id"
-                        }'/>
+          <div class="row">
+              <div class="col-xs-2">
+                <strong t-field="product.name"/>
+                <span t-field="product.image_medium" t-field-options='{"widget": "image", "class": "img-rounded shadow" }'/>
+              </div>
+              <div class="col-xs-6">
+              </div>
+              <div class="col-xs-2">
+                <strong>Price</strong><br/>
+                <t t-if="product.lst_price != product.price">
+                <span class="text-danger" style="text-decoration: line-through;"
+                  t-field="product.lst_price"
+                  t-field-options='{
+                     "widget": "monetary",
+                     "display_currency": "website.pricelist_id.currency_id"
+                 }'/><br/>
+                </t>
+                <span class="oe_price"
+                  t-field="product.price"
+                  t-field-options='{
+                     "widget": "monetary",
+                     "display_currency": "website.pricelist_id.currency_id"
+                 }'/>
+              </div>
+              <div class="col-xs-2">
+                <strong>Number</strong><br/>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <a t-attf-href="#" class="mb8 js_add_cart_json">
+                            <i class="fa fa-minus"></i>
+                        </a>
                     </span>
-                  </li>
-                </ul>
-              </t>
-            </li>
-          </ul>
+                    <input type="text" class="js_quantity form-control" name="add_qty" value="1"/>
+                    <span class="input-group-addon">
+                        <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </span>
+                </div>
+              </div>
+          </div>
+          <hr/>
+
+          <t t-set="option_inc" t-value="0"/>
+          <div class="js_product" t-foreach="optional_product_ids" t-as="product">
+            <strong class="media-heading" t-field="product.name"/>
+            <div class="row">
+              <div class="col-xs-2">
+                <span t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow" }'/>
+              </div>
+              <div class="col-xs-6">
+                <input type="hidden" class="optional_product_id" t-attf-name="optional-product-#{option_inc}" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
+                <t t-call="website_sale.variants"/>
+              </div>
+              <div class="col-xs-2">
+                <strong>Price</strong><br/>
+                <t t-if="product.lst_price != product.price">
+                <span class="text-danger" style="text-decoration: line-through;"
+                  t-field="product.lst_price"
+                  t-field-options='{
+                     "widget": "monetary",
+                     "display_currency": "website.pricelist_id.currency_id"
+                 }'/><br/>
+                </t>
+                <span class="oe_price"
+                  t-field="product.price"
+                  t-field-options='{
+                     "widget": "monetary",
+                     "display_currency": "website.pricelist_id.currency_id"
+                 }'/>
+              </div>
+              <div class="col-xs-2">
+                <strong>Number</strong><br/>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <a t-attf-href="#" class="mb8 js_add_cart_json">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </span>
+                    <input type="text" class="js_quantity form-control" t-attf-name="optional-quantity-#{option_inc}" value="0"/>
+                    <span class="input-group-addon">
+                        <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <a class="btn btn-primary a-submit">Continue</a>
@@ -480,86 +551,96 @@
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
           <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
       </h4>
-      <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
   </div>
 </template>
 
 <template id="product_variants" inherit_id="website_sale.product" optional="enabled" name="Product Variants">
   <xpath expr="//form[@action='/shop/cart/update']" position="replace">
-    <form action="/shop/cart/update" class="js_add_cart_variants" method="POST" t-att-data-attribute_value_ids="variants">
-        <input type="hidden" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
-        <ul class="nav nav-pills nav-stacked">
-            <t t-foreach="product.attribute_line_ids" t-as="variant_id">
-              <li t-if="len(variant_id.value_ids) > 1">
+    <form action="/shop/cart/update" class="js_add_cart_variants" method="POST">
 
-                <strong t-field="variant_id.attribute_id.name"/>
+        <t t-call="website_sale.product_modal_optional_products"/>
 
-                <t t-if="variant_id.attribute_id.type == 'select'">
-                  <select class="form-control js_variant_change" t-att-name="'attribute-%s' % variant_id.attribute_id.id">
-                    <t t-foreach="variant_id.value_ids" t-as="value_id">
-                      <option t-att-value="value_id.id">
+        <div class="js_product">
+          <input type="hidden" class="product_id" name="product_id" t-att-value="int(product.product_variant_ids[0]) if len(product.product_variant_ids) == 1 else '0'"/>
+          <t t-call="website_sale.variants">
+            <t t-set="ul_class" t-value="'nav-stacked'"/>
+          </t>
+
+          <t t-call="website_sale.product_price"/>
+
+          <p class="hidden oe_not_available bg-danger" style="padding: 15px;">Product not available</p>
+
+          <a t-if="not optional_product_ids" disabled="disabled" class="btn btn-primary btn-lg mt8 a-submit js_check_product">Add to Cart</a>
+          <a t-if="optional_product_ids" disabled="disabled" class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
+        </div>
+    </form>
+  </xpath>
+</template>
+
+<template id="variants">
+  <ul t-attf-class="nav nav-pills js_add_cart_variants #{ul_class}" t-att-data-attribute_value_ids="[[p.id, map(int, p.attribute_value_ids), p.price] for p in product.product_variant_ids]">
+    <t t-foreach="product.attribute_line_ids" t-as="variant_id">
+      <li t-if="len(variant_id.value_ids) > 1">
+
+        <strong t-field="variant_id.attribute_id.name"/>
+
+        <t t-if="variant_id.attribute_id.type == 'select'">
+          <select class="form-control js_variant_change" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
+            <t t-foreach="variant_id.value_ids" t-as="value_id">
+              <option t-att-value="value_id.id">
+                  <span t-field="value_id.name"/>
+                  <span t-if="value_id.price_extra">
+                      <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" t-field-options='{
+                               "widget": "monetary",
+                               "display_currency": "website.pricelist_id.currency_id"
+                           }'/>
+                  </span>
+              </option>
+            </t>
+          </select>
+        </t>
+
+        <t t-if="variant_id.attribute_id.type == 'radio'">
+          <ul class="list-unstyled">
+              <t t-set="inc" t-value="0"/>
+              <t t-foreach="variant_id.value_ids" t-as="value_id">
+                  <li t-if="value_id.product_ids" class="form-group js_attribute_value" style="margin: 0;">
+                      <label class="control-label" style="margin: 0 20px;">
+                          <input type="radio" class="js_variant_change" t-att-checked="'checked' if not inc else ''" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
                           <span t-field="value_id.name"/>
-                          <span t-if="value_id.price_extra">
+                          <span class="badge" t-if="value_id.price_extra">
                               <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" t-field-options='{
                                            "widget": "monetary",
                                            "display_currency": "website.pricelist_id.currency_id"
                                        }'/>
                           </span>
-                      </option>
-                    </t>
-                  </select>
-                </t>
+                      </label>
+                  </li>
+                  <t t-set="inc" t-value="inc+1"/>
+              </t>
+          </ul>
+        </t>
 
-                <t t-if="variant_id.attribute_id.type == 'radio'">
-                  <ul class="nav nav-pills nav-stacked">
-                      <t t-set="inc" t-value="0"/>
-                      <t t-foreach="variant_id.value_ids" t-as="value_id">
-                          <li t-if="value_id.product_ids" class="form-group js_attribute_value" style="margin: 0;">
-                              <label class="control-label" style="margin: 0 20px;">
-                                  <input type="radio" class="js_variant_change" t-att-checked="'checked' if not inc else ''" t-att-name="'attribute-%s' % variant_id.attribute_id.id" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
-                                  <span t-field="value_id.name"/>
-                                  <span class="badge" t-if="value_id.price_extra">
-                                      <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" t-field-options='{
-                                                   "widget": "monetary",
-                                                   "display_currency": "website.pricelist_id.currency_id"
-                                               }'/>
-                                  </span>
-                              </label>
-                          </li>
-                          <t t-set="inc" t-value="inc+1"/>
-                      </t>
-                  </ul>
-                </t>
-
-                <t t-if="variant_id.attribute_id.type == 'color'">
-                  <ul class="nav nav-pills nav-stacked">
-                      <t t-set="inc" t-value="0"/>
-                      <t t-foreach="variant_id.value_ids" t-as="value_id">
-                          <label t-attf-style="background-color:#{value_id.color or value_id.name}"
-                              t-attf-class="css_attribute_color #{'active' if not inc else ''}">
-                            <input type="radio" class="js_variant_change"
-                              t-att-checked="'checked' if not inc else ''"
-                              t-att-name="'attribute-%s' % variant_id.attribute_id.id"
-                              t-att-value="value_id.id"
-                              t-att-title="value_id.name"/>
-                          </label>
-                          <t t-set="inc" t-value="inc+1"/>
-                      </t>
-                  </ul>
-                </t>
-
+        <t t-if="variant_id.attribute_id.type == 'color'">
+          <ul class="list-inline">
+              <t t-set="inc" t-value="0"/>
+              <li t-foreach="variant_id.value_ids" t-as="value_id">
+                  <label t-attf-style="background-color:#{value_id.color or value_id.name}"
+                      t-attf-class="css_attribute_color #{'active' if not inc else ''}">
+                    <input type="radio" class="js_variant_change"
+                      t-att-checked="'checked' if not inc else ''"
+                      t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
+                      t-att-value="value_id.id"
+                      t-att-title="value_id.name"/>
+                  </label>
+                  <t t-set="inc" t-value="inc+1"/>
               </li>
-            </t>
-        </ul>
+          </ul>
+        </t>
 
-        <t t-call="website_sale.product_price"/>
-
-        <a t-if="not optional_products" class="btn btn-primary btn-lg mt8 a-submit">Add to Cart</a>
-        <a t-if="optional_products" class="btn btn-primary btn-lg mt8 " href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
-
-        <t t-call="website_sale.product_modal_optional_products"/>
-    </form>
-  </xpath>
+      </li>
+    </t>
+  </ul>
 </template>
 
 <template id="recommended_products" inherit_id="website_sale.product" optional="enabled" name="Alternative Products">
