@@ -38,21 +38,23 @@
       <field name="name">Vat Listing</field>
       <field name="model">partner.vat.list</field>
       <field name="arch" type="xml">
-        <form string="Annual Listing of VAT-Subjected Customers" version="6.1">
-          <notebook colspan="4">
-            <page string="Customer List">
-              <separator string="Customers" colspan="4"/>
-              <field name="partner_ids" colspan="4" nolabel="1" default_focus="1" height="300" width="500" readonly="1"/>
-            </page>
-            <page string="Comments">
-              <separator string="Free Comments to be Added to the Declaration" colspan="4"/>
-              <field name="comments" colspan="4" nolabel="1"/>
-            </page>
-          </notebook>
-          <separator colspan="4"/>
-          <group colspan="4">
-            <button colspan="2" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
-            <button colspan="2" name="print_vatlist" string="Print" type="object"  icon="gtk-print"/>
+        <form string="Annual Listing of VAT-Subjected Customers">
+          <group col="4">
+              <notebook colspan="4">
+                <page string="Customer List">
+                  <separator string="Customers" colspan="4"/>
+                  <field name="partner_ids" colspan="4" nolabel="1" default_focus="1" height="300" width="500" readonly="1"/>
+                </page>
+                <page string="Comments">
+                  <separator string="Free Comments to be Added to the Declaration" colspan="4"/>
+                  <field name="comments" colspan="4" nolabel="1"/>
+                </page>
+              </notebook>
+              <separator colspan="4"/>
+              <group colspan="4">
+                <button colspan="2" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
+                <button colspan="2" name="print_vatlist" string="Print" type="object"  icon="gtk-print"/>
+              </group>
           </group>
         </form>
       </field>
@@ -82,11 +84,13 @@
       <field name="name">step.vat.listing</field>
       <field name="model">vat.listing.clients</field>
       <field name="arch" type="xml">
-        <form string="VAT listing" version="6.1">
-          <field name="name"/>
-          <field name="vat"/>
-          <field name="turnover"/>
-          <field name="vat_amount"/>
+        <form string="VAT listing">
+          <group col="4">
+            <field name="name"/>
+            <field name="vat"/>
+            <field name="turnover"/>
+            <field name="vat_amount"/>
+          </group>
         </form>
       </field>
     </record>

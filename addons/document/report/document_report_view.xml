@@ -5,13 +5,15 @@
             <field name="name">report.document.user.form</field>
             <field name="model">report.document.user</field>
             <field name="arch" type="xml">
-                <form string="Files" version="6.1">
-                    <field name="name"/>
-                    <field name="user"/>
-                    <field name="directory"/>
-                    <field name="datas_fname"/>
-                    <field name="file_size"/>
-                    <field name="create_date"/>
+                <form string="Files">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="user"/>
+                        <field name="directory"/>
+                        <field name="datas_fname"/>
+                        <field name="file_size"/>
+                        <field name="create_date"/>
+                    </group>
                 </form>
             </field>
         </record>
