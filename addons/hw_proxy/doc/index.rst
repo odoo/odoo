@@ -133,11 +133,24 @@ Step By Step Setup Guide
 Extra dependencies
 ~~~~~~~~~~~~~~~~~~
 
+Because Odoo is running on Python 2, you need to check which version of pip you need to use.
+
+    $ sudo pip --version
+    
+If it returns something like :
+   pip 1.5.6 from /usr/local/lib/python3.3/dist-packages/pip-1.5.6-py3.3.egg (python 3.3)
+You need to try pip2 instead
+
+If it returns something like :
+   pip 1.4.1 from /usr/lib/python2.7/dist-packages (python 2.7)
+You can use pip
+
 The driver modules requires the installation of new python modules::
 
     $ sudo pip install pyserial
     $ sudo pip install --pre pyusb
-
+    $ sudo pip install qrcode
+    
 Database Setup
 ~~~~~~~~~~~~~~
 
@@ -180,7 +193,7 @@ Check that everything works
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Plug all your hardware to your machine's USB ports, and go to
-``http://localhost/hw_proxy/status`` refresh the page a few times and
+``http://localhost:8069/hw_proxy/status`` refresh the page a few times and
 see if all your devices are indicated as *Connected*. Possible source of
 errors are: The paths on the distribution differ from the paths expected
 by the drivers, another process has grabbed exclusive access to the
@@ -303,7 +316,7 @@ following steps:
    separated by a colon.
 -  Edit ``~/openerp/addons/hw_escpos/escpos/supported_devices.py`` and
    add an entry for your printer.
--  Restar The PosBox.
+-  Restart the PosBox.
 -  If everything works properly you can send your printer's name and
    vendor ID to ``support@openerp.com`` and we'll add it to the list of
    supported devices.
