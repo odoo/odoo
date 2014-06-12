@@ -994,24 +994,22 @@
   background: #f0eeee;
   border-right: 1px solid #afafb6;
   text-shadow: none;
-  padding-bottom: 16px;
 }
 .openerp .oe_leftbar > div {
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.openerp a.oe_logo {
-  position: relative;
+  display: table;
   width: 220px;
-  display: block;
+  position: relative;
+}
+.openerp .oe_leftbar > div a.oe_logo {
+  display: table-row;
   text-align: center;
 }
-.openerp a.oe_logo img {
+.openerp .oe_leftbar > div a.oe_logo img {
   margin: 14px 0;
   border: 0;
 }
-.openerp a.oe_logo .oe_logo_edit {
+.openerp .oe_leftbar > div a.oe_logo .oe_logo_edit {
   margin: 14px 0;
   position: absolute;
   top: 1px;
@@ -1026,22 +1024,35 @@
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
-.openerp a.oe_logo:hover .oe_logo_edit_admin {
+.openerp .oe_leftbar > div a.oe_logo:hover .oe_logo_edit_admin {
   display: block;
 }
-.openerp .oe_footer {
-  position: fixed;
+.openerp .oe_leftbar > div > div {
+  display: table-row;
+  height: 100%;
+}
+.openerp .oe_leftbar > div > div > div {
+  position: relative;
+  height: 100%;
+}
+.openerp .oe_leftbar > div > div > div > div.oe_secondary_menus_container {
+  position: absolute;
+  top: 0;
   bottom: 0;
-  padding: 4px 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.openerp .oe_leftbar > div .oe_footer {
   background: #f0eeee;
-  width: 220px;
   text-align: center;
 }
-.openerp .oe_footer a {
+.openerp .oe_leftbar > div .oe_footer a {
   font-weight: bold;
   color: black;
 }
-.openerp .oe_footer a span {
+.openerp .oe_leftbar > div .oe_footer a span {
   color: #a24689;
 }
 .openerp .oe_secondary_menu_section {

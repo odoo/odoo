@@ -844,44 +844,52 @@ $sheet-padding: 16px
         background: #f0eeee
         border-right: 1px solid $tag-border
         text-shadow: none
-        padding-bottom: 16px
         > div
             height: 100%
-            overflow-y: auto
-            overflow-x: hidden
-    a.oe_logo
-        position: relative
-        width: 220px
-        display: block
-        text-align: center
-        img
-            margin: 14px 0
-            border: 0
-        .oe_logo_edit
-            margin: 14px 0
-            position: absolute
-            top: 1px
-            padding: 4px
-            width: 100%
-            display: none
-            text-align: center
-            color: #eee
-            background: rgba(37,37,37,0.9)
-            @include box-sizing(border)
-        &:hover .oe_logo_edit_admin
-            display: block
-    .oe_footer
-        position: fixed
-        bottom: 0
-        padding: 4px 0
-        background: #f0eeee
-        width: 220px
-        text-align: center
-        a
-            font-weight: bold
-            color: black
-            span
-                color: #a24689
+            display: table
+            width: 220px
+            position: relative
+            a.oe_logo
+                display: table-row
+                text-align: center
+                img
+                    margin: 14px 0
+                    border: 0
+                .oe_logo_edit
+                    margin: 14px 0
+                    position: absolute
+                    top: 1px
+                    padding: 4px
+                    width: 100%
+                    display: none
+                    text-align: center
+                    color: #eee
+                    background: rgba(37,37,37,0.9)
+                    @include box-sizing(border)
+                &:hover .oe_logo_edit_admin
+                    display: block
+            > div
+                display: table-row
+                height: 100%
+                > div
+                    position: relative
+                    height: 100%
+                    > div.oe_secondary_menus_container
+                        position: absolute
+                        top: 0
+                        bottom: 0
+                        left: 0
+                        right: 0
+                        overflow-x: hidden
+                        overflow-y: auto
+            .oe_footer
+                background: #f0eeee
+                text-align: center
+                a
+                    font-weight: bold
+                    color: black
+                    span
+                        color: #a24689
     // }}}
     // Webclient.leftbar items {{{
 
