@@ -2075,6 +2075,11 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
+    def compute_for_bank_reconciliation(self, cr, uid, tax_id, amount, context=None):
+        """ Called by RPC by the bank statement reconciliation widget """
+        tax = self.browse(cr, uid, tax_id, context=context)
+        return self.compute_all(cr, uid, [tax], amount, 1) # TOCHECK may use force_exclude parameter
+
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
         """
         :param force_excluded: boolean used to say that we don't want to consider the value of field price_include of

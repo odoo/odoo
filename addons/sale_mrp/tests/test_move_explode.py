@@ -35,9 +35,9 @@ class TestMoveExplode(common.TransactionCase):
         self.mrp_bom = self.registry('mrp.bom')
 
         #product that has a phantom bom
-        self.product_bom_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_4')[1]
+        self.product_bom_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_3')[1]
         #bom with that product
-        self.bom_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_24')[1]
+        self.bom_id = self.ir_model_data.get_object_reference(cr, uid, 'mrp', 'mrp_bom_9')[1]
         #partner agrolait
         self.partner_id = self.ir_model_data.get_object_reference(cr, uid, 'base', 'res_partner_1')[1]
 
@@ -55,5 +55,5 @@ class TestMoveExplode(common.TransactionCase):
         move_ids = [x.id for x in browse_move_ids]
         #we should have same amount of move as the component in the phatom bom
         bom = self.mrp_bom.browse(cr, uid, self.bom_id, context=context)
-        bom_component_length = self.mrp_bom._bom_explode(cr, uid, bom, 1, [])
+        bom_component_length = self.mrp_bom._bom_explode(cr, uid, bom, self.product_bom_id, 1, [])
         self.assertEqual(len(move_ids), len(bom_component_length[0]))

@@ -4,10 +4,9 @@ from datetime import datetime
 from dateutil import relativedelta
 import json
 import random
-import urllib
-import urlparse
 
 from openerp import tools
+from openerp.exceptions import Warning
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.osv import osv, fields
@@ -61,6 +60,12 @@ class MassMailingContact(osv.Model):
             name = email
         rec_id = self.create(cr, uid, {'name': name, 'email': email}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
+
+    def message_get_default_recipients(self, cr, uid, ids, context=None):
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            res[record.id] = {'partner_ids': [], 'email_to': record.email, 'email_cc': False}
+        return res
 
 
 class MassMailingList(osv.Model):
@@ -475,9 +480,14 @@ class MassMailing(osv.Model):
     def on_change_model_and_list(self, cr, uid, ids, mailing_model, list_ids, context=None):
         value = {}
         if mailing_model == 'mail.mass_mailing.contact':
-            list_ids = map(lambda item: item if isinstance(item, (int, long)) else [lid for lid in item[2]], list_ids)
-            if list_ids:
-                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list_ids
+            mailing_list_ids = set()
+            for item in list_ids:
+                if isinstance(item, (int, long)):
+                    mailing_list_ids.add(item)
+                elif len(item) == 3:
+                    mailing_list_ids |= set(item[2])
+            if mailing_list_ids:
+                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
@@ -527,8 +537,12 @@ class MassMailing(osv.Model):
     #------------------------------------------------------
 
     def get_recipients(self, cr, uid, mailing, context=None):
-        domain = eval(mailing.mailing_domain)
-        res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+        if mailing.mailing_domain:
+            domain = eval(mailing.mailing_domain)
+            res_ids = self.pool[mailing.mailing_model].search(cr, uid, domain, context=context)
+        else:
+            res_ids = []
+            domain = [('id', 'in', res_ids)]
 
         # randomly choose a fragment
         if mailing.contact_ab_pc < 100:
@@ -549,6 +563,8 @@ class MassMailing(osv.Model):
         for mailing in self.browse(cr, uid, ids, context=context):
             # instantiate an email composer + send emails
             res_ids = self.get_recipients(cr, uid, mailing, context=context)
+            if not res_ids:
+                raise Warning('Please select recipients.')
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
@@ -560,6 +576,7 @@ class MassMailing(osv.Model):
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
+                'same_thread': mailing.reply_to_mode == 'thread',
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to

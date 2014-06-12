@@ -493,48 +493,5 @@
 
 </template>
 
-
-<template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
-
-    <xpath expr="//div[@id='snippet_content']" position="inside">
-        <div>
-            <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/block_button.png"/>
-                <span class="oe_snippet_thumbnail_title">Subscribe Button</span>
-            </div>
-
-            <div class="oe_snippet_body input-group js_follow"
-                      data-id="0"
-                      data-object="mail.group"
-                      data-follow="off">
-                <input
-                      type="email"
-                      name="email"
-                      class="js_follow_email form-control"
-                      placeholder="your email..."/>
-                <span class="input-group-btn">
-                    <a href="#" class="btn btn-default js_unfollow_btn">Unsubscribe</a>
-                    <a href="#" class="btn btn-primary js_follow_btn">Subscribe</a>
-                </span>
-                <div class="alert alert-success hidden">thanks for your subscription!</div>
-            </div>
-
-        </div>
-    </xpath>
-
-
-    <xpath expr="//div[@id='snippet_options']" position="inside">
-        <div data-snippet-option-id='subscribe'
-            data-selector=".js_follow"
-            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
-           >
-            <li>
-                <a href="#" class="button js_mailing_list">Change mailing list</a>
-            </li>
-        </div>
-    </xpath>
-
-</template>
-
 </data>
 </openerp>

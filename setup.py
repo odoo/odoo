@@ -71,7 +71,7 @@ def py2exe_options():
         return {
             "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("install","openerp-icon.ico"))], },
                           { "script": "openerp-gevent" },
-                          { "script": "oe" },
+                          { "script": "odoo.py" },
             ],
             'options' : {
                 "py2exe": {
@@ -146,7 +146,7 @@ setuptools.setup(
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      scripts          = ['openerp-server', 'openerp-gevent', 'oe'],
+      scripts          = ['openerp-server', 'openerp-gevent', 'odoo.py'],
       data_files       = data(),
       packages         = setuptools.find_packages(),
       dependency_links = ['http://download.gna.org/pychart/'],
@@ -174,7 +174,6 @@ setuptools.setup(
           'python-openid',
           'pytz',
           'pyusb >= 1.0.0b1',
-          'pywebdav < 0.9.8',
           'pyyaml',
           'qrcode',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab

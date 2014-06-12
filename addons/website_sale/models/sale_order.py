@@ -114,7 +114,7 @@ class sale_order(osv.Model):
             s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
             s -= set(l.product_id.id for l in order.order_line)
             product_ids = random.sample(s, min(len(s),3))
-            return self.pool['product.template'].browse(cr, uid, product_ids, context=context)
+            return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
 
 class website(orm.Model):
     _inherit = 'website'

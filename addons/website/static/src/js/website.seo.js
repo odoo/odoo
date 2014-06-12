@@ -264,21 +264,21 @@
         },
         description: function () {
             var $description = $('meta[name=description]');
-            return ($description.length > 0) && ($description.attr('value') && $description.attr('value').trim());
+            return ($description.length > 0) && ($description.attr('content') && $description.attr('content').trim());
         },
         changeDescription: function (description) {
             // TODO create tag if missing
-            $('meta[name=description]').attr('value', description);
+            $('meta[name=description]').attr('content', description);
             this.trigger('description-changed', description);
         },
         keywords: function () {
             var $keywords = $('meta[name=keywords]');
-            var parsed = ($keywords.length > 0) && $keywords.attr('value') && $keywords.attr('value').split(",");
+            var parsed = ($keywords.length > 0) && $keywords.attr('content') && $keywords.attr('content').split(",");
             return (parsed && parsed[0]) ? parsed: [];
         },
         changeKeywords: function (keywords) {
             // TODO create tag if missing
-            $('meta[name=keywords]').attr('value', keywords.join(","));
+            $('meta[name=keywords]').attr('content', keywords.join(","));
             this.trigger('keywords-changed', keywords);
         },
         headers: function (tag) {
@@ -296,7 +296,7 @@
             });
         },
         company: function () {
-            return $('meta[name="openerp.company"]').attr('value');
+            return $('html').attr('data-oe-company-name');
         },
         bodyText: function () {
             return $('body').children().not('.js_seo_configuration').text();

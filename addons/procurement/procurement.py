@@ -27,6 +27,8 @@ import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 import openerp
 
+PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+
 class procurement_group(osv.osv):
     '''
     The procurement group class is used to group products together
@@ -113,7 +115,7 @@ class procurement_order(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
-        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True, track_visibility='onchange'),
+        'priority': fields.selection(PROCUREMENT_PRIORITIES, 'Priority', required=True, select=True, track_visibility='onchange'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=True, track_visibility='onchange'),
 
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
@@ -274,7 +276,8 @@ class procurement_order(osv.osv):
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
-        @param use_new_cursor: False or the dbname
+        @param use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
+            This is appropriate for batch jobs only.
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
@@ -282,7 +285,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp.registry(use_new_cursor).cursor()
+                cr = openerp.registry(cr.dbname).cursor()
 
             # Run confirmed procurements
             while True:

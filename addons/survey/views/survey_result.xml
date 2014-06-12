@@ -14,8 +14,8 @@
             <div class="container">
                 <div class="jumbotron mt32">
                     <t t-set="survey" t-value="survey_dict['survey']"/>
-                    <h1><span t-field="survey.title"></span> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
-                    <h2><span t-field="survey.description"></span></h2>
+                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right "/></h1>
+                    <div t-field="survey.description" class="oe_no_empty" />
                 </div>
                 <div class="panel panel-default hidden-print">
                     <div class="panel-heading"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>

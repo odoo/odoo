@@ -445,11 +445,7 @@ class module(osv.osv):
         including the deletion of all database structures created by the module:
         tables, columns, constraints, etc."""
         ir_model_data = self.pool.get('ir.model.data')
-        ir_model_constraint = self.pool.get('ir.model.constraint')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
-        modules_to_remove_ids = [m.id for m in self.browse(cr, uid, ids, context)]
-        constraint_ids = ir_model_constraint.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
-        ir_model_constraint._module_data_uninstall(cr, uid, constraint_ids, context)
         ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
         return True

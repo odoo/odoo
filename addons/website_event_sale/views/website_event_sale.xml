@@ -3,7 +3,7 @@
 <data>
 
 <template id="debugger" inherit_id="website.debugger" name="Event Debugger">
-    <xpath expr="//script[last()]" position="after">
+    <xpath expr='//t[@t-set="debugger_hook"]' position="after">
         <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
     </xpath>
 </template>
@@ -26,7 +26,7 @@
     </xpath>
 </template>
 
-<template id="event_description_full" inherit_id="website_event.event_description_full" inherit_option_id="website_event.event_description_full" name="Event's Ticket form">
+<template id="event_description_full" inherit_id="website_event.event_description_full" optional="enabled" name="Event's Ticket form">
     <xpath expr="//div[@t-field='event.description']" position="before">
         <form t-attf-action="/event/cart/update?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
             <table itemprop="offers" class="table table-striped">

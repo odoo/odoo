@@ -1273,7 +1273,7 @@ class calendar_event(osv.Model):
         if data.get('count'):
             data['end_type'] = 'count'
         else:
-            data['end_type'] = 'final_date'
+            data['end_type'] = 'end_date'
         return data
 
     def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from openerp.osv import fields,osv
 from openerp.tools.translate import _
 
@@ -165,34 +164,6 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result =  super(stock_picking, self).onchange_partner_in(cr, uid, ids, partner_id, context)
-        if result.get('warning',False):
-            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
-            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
-
-        return {'value': result.get('value',{}), 'warning':warning}
-
-
-class stock_picking(osv.osv):
-    _inherit = 'stock.picking'
-
-    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
-        if not partner_id:
-            return {}
-        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        warning = {}
-        title = False
-        message = False
-        if partner.picking_warn != 'no-message':
-            title = _("Warning for %s") % partner.name
-            message = partner.picking_warn_msg
-            warning = {
-                'title': title,
-                'message': message
-            }
-            if partner.picking_warn == 'block':
-                return {'value': {'partner_id': False}, 'warning': warning}
-
         result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, ids, partner_id, context)
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
@@ -202,7 +173,7 @@ class stock_picking(osv.osv):
 
 
 class product_product(osv.osv):
-    _inherit = 'product.product'
+    _inherit = 'product.template'
     _columns = {
          'sale_line_warn' : fields.selection(WARNING_MESSAGE,'Sales Order Line', help=WARNING_HELP, required=True),
          'sale_line_warn_msg' : fields.text('Message for Sales Order Line'),
