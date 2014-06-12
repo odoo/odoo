@@ -165,13 +165,15 @@ class crm_lead(base_stage, format_address, osv.osv):
         return result, fold
 
     def _get_view_id(self, cr, uid, type):
-        """Get the view id suiting the given type
-        
-        @param type: the lead type as a string
-        @return: view i, or False if no view found
+        """Get the view id suiting the given type.
+
+        :param type: the lead type as a string.
+        :type type: str.
+        :returns: str or bool -- returns the view or False.
         """
-        view_lead_xml_id = (type == 'opportunity' and 'crm_case_form_view_oppor' or 'crm_case_form_view_leads')
-        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
+        view_lead_xml_id = 'crm_case_form_view_oppor' if type == 'opportunity' \
+            else 'crm_case_form_view_leads'
+        res = self.pool['ir.model.data'].get_object_reference(cr, uid, 
             'crm', view_lead_xml_id)
         return res and res[1] or False
 
