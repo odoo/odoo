@@ -30,7 +30,6 @@ if (website.EditorBarHelp) {
         tours: [],
         load_menu: function () {
             var self = this;
-            self.$('ul').empty();
             _.each(T.tours, function (tour) {
                 if (tour.mode === "test") {
                     return;
