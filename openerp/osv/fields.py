@@ -1267,7 +1267,7 @@ class function(_column):
         if values and not multi and name in values[0]:
             result = {v['id']: v[name] for v in values}
         elif values and multi and all(n in values[0] for n in name):
-            result = {v['id']: dict({n: v[n]} for n in name) for v in values}
+            result = {v['id']: dict((n, v[n]) for n in name) for v in values}
         else:
             result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         if multi:
