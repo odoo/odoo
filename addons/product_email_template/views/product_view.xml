@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="product_normal_form_view_template" model="ir.ui.view">
-            <field name="name">product.normal.procurement.locations.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
                     <field name="email_template_id"
@@ -15,7 +15,7 @@
                             'default_subject': name,
                             'default_name': name,
                         }"
-                        attrs="{'invisible': [('is_only_child', '=', False)]}"
+                        attrs="{'invisible': [('is_product_variant', '=', False)]}"
                     />
                 </field>
             </field>

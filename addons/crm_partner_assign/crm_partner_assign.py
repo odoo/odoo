@@ -65,7 +65,7 @@ class res_partner(osv.osv):
         'date_review_next' : fields.date('Next Partner Review'),
         # customer implementation
         'assigned_partner_id': fields.many2one(
-            'res.partner', 'Implementedy by',
+            'res.partner', 'Implemented by',
         ),
         'implemented_partner_ids': fields.one2many(
             'res.partner', 'assigned_partner_id',
@@ -191,7 +191,7 @@ class crm_lead(osv.osv):
                         ('partner_weight','>', 0),
                         ('partner_latitude','>', latitude - 8), ('partner_latitude','<', latitude + 8),
                         ('partner_longitude','>', longitude - 8), ('partner_longitude','<', longitude + 8),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 5. fifth way: anywhere in same country

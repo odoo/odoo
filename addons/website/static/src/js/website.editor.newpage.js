@@ -47,7 +47,7 @@
                     }
                 }).then(function (val, field, $dialog) {
                     if (val) {
-                        var url = '/website/add/' + encodeURI(val);
+                        var url = '/website/add/' + encodeURIComponent(val);
                         if ($dialog.find('input[type="checkbox"]').is(':checked')) url +="?add_menu=1";
                         document.location = url;
                     }

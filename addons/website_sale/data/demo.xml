@@ -6,6 +6,10 @@
             <field name="image" type="base64" file="website/static/description/website_edit.png"/>
         </record>
 
+        <record id="product.product_attribute_2" model="product.attribute">
+            <field name="type">color</field>
+        </record>
+
         <record id="product.product_product_4" model="product.product">
             <field name="website_published" eval="True"/>
             <field name="website_size_x">2</field>
@@ -536,13 +540,13 @@ Weight: 1.1 ounces</field>
                     </div>
                 </section>
             </field>
-            <field name="accessory_product_ids" eval="[(6, 0, [ref('product.product_template_7')])]"/>
+            <field name="accessory_product_ids" eval="[(6, 0, [ref('product.product_product_7')])]"/>
         </record>
 
         <record id="item1" model="product.pricelist.item">
             <field name="price_version_id" ref="product.ver0"/>
             <field name="base" ref="product.list_price"/>
-            <field name="product_id" ref="product.product_product_4"/>
+            <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
             <field name="name">Demo Discount</field>
             <field name="price_discount">-0.2000</field>
             <field name="sequence">1</field>
@@ -552,5 +556,260 @@ Weight: 1.1 ounces</field>
             <field name="member_ids" eval="[(4, ref('base.user_root'), ref('base.user_demo'))]"/>
         </record>
         
+
+
+    <!-- product.public.category -->
+
+        <record id="product.computers" model="product.public.category">
+          <field name="name">Computers</field>
+        </record>
+        
+        <record id="product.Components" model="product.public.category">
+          <field name="parent_id" ref="product.computers"/>
+          <field name="name">Components</field>
+        </record>
+
+        <record id="product.case" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Case</field>
+        </record>
+        <record id="product.HDD" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Hard Drive</field>
+        </record>
+        <record id="product.motherboard" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Motherboard</field>
+        </record>
+        <record id="product.graphics_card" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Graphics Card</field>
+        </record>
+        <record id="product.Memory" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Memory</field>
+        </record>
+        <record id="product.processor" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Processor</field>
+        </record>
+        <record id="product.video_acquisition" model="product.public.category">
+          <field name="parent_id" ref="product.Components"/>
+          <field name="name">Video Acquisition</field>
+        </record>
+
+        <record id="product.devices" model="product.public.category">
+          <field name="parent_id" ref="product.computers"/>
+          <field name="name">Devices</field>
+        </record>
+
+        <record id="product.Screen" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Screen</field>
+        </record>
+        <record id="product.Pen_Drive" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Pen Drive</field>
+        </record>
+        <record id="product.External_Hard_Drive" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">External Hard Drive</field>
+        </record>
+        <record id="product.Keyboard_Mouse" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Keyboard / Mouse</field>
+        </record>
+        <record id="product.printer" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Printer</field>
+        </record>
+        <record id="product.Speakers" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Speakers</field>
+        </record>
+        <record id="product.Headset" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Headset</field>
+        </record>
+        <record id="product.Software" model="product.public.category">
+          <field name="parent_id" ref="product.devices"/>
+          <field name="name">Software</field>
+        </record>
+
+        <record id="product.laptops" model="product.public.category">
+          <field name="parent_id" ref="product.computers"/>
+          <field name="name">Laptops</field>
+        </record>
+
+        <record id="product.sub_computers" model="product.public.category">
+          <field name="parent_id" ref="product.computers"/>
+          <field name="name">Computers</field>
+        </record>
+
+        <record id="product.Computer_all_in_one" model="product.public.category">
+          <field name="parent_id" ref="product.sub_computers"/>
+          <field name="name">Computer all-in-one</field>
+        </record>
+        <record id="product.server" model="product.public.category">
+          <field name="parent_id" ref="product.sub_computers"/>
+          <field name="name">Server</field>
+        </record>
+
+        <record id="product.network" model="product.public.category">
+          <field name="parent_id" ref="product.computers"/>
+          <field name="name">Network</field>
+        </record>
+
+        <record id="product.Switch" model="product.public.category">
+          <field name="parent_id" ref="product.network"/>
+          <field name="name">Switch</field>
+        </record>
+        <record id="product.Modem_Router" model="product.public.category">
+          <field name="parent_id" ref="product.network"/>
+          <field name="name">Modem &amp; Router</field>
+        </record>
+        <record id="product.Switch" model="product.public.category">
+          <field name="parent_id" ref="product.network"/>
+          <field name="name">Switch</field>
+        </record>
+        
+        <record id="product.services" model="product.public.category">
+          <field name="parent_id" ref="product.computers"/>
+          <field name="name">Services</field>
+        </record>
+
+        <record id="product.product_product_1_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.services')])]"/>
+        </record>
+        <record id="product.product_product_2_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.services')])]"/>
+        </record>
+        <record id="product.product_product_3_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+        </record>
+        <record id="product.product_product_4_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Computer_all_in_one')])]"/>
+        </record>
+        <record id="product.product_product_5_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Speakers')])]"/>
+        </record>
+        <record id="product.product_product_6_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Screen')])]"/>
+        </record>
+        <record id="product.product_product_7_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Screen')])]"/>
+        </record>
+        <record id="product.product_product_9_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+        </record>
+        <record id="product.product_product_10_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+        </record>
+        <record id="product.product_product_11_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+        </record>
+        <record id="product.product_product_12_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Keyboard_Mouse')])]"/>
+        </record>
+        <record id="product.product_product_13_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Memory')])]"/>
+        </record>
+        <record id="product.product_product_14_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Memory')])]"/>
+        </record>
+        <record id="product.product_product_15_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Memory')])]"/>
+        </record>
+        <record id="product.product_product_16_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.case')])]"/>
+        </record>
+        <record id="product.product_product_17_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.HDD')])]"/>
+        </record>
+        <record id="product.product_product_18_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.HDD')])]"/>
+        </record>
+        <record id="product.product_product_19_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.HDD')])]"/>
+        </record>
+        <record id="product.product_product_20_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.motherboard')])]"/>
+        </record>
+        <record id="product.product_product_21_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.motherboard')])]"/>
+        </record>
+        <record id="product.product_product_22_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.processor')])]"/>
+        </record>
+        <record id="product.product_product_23_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.processor')])]"/>
+        </record>
+        <record id="product.product_product_24_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.graphics_card')])]"/>
+        </record>
+        <record id="product.product_product_25_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
+        </record>
+        <record id="product.product_product_26_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
+        </record>
+        <record id="product.product_product_27_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.laptops')])]"/>
+        </record>
+        <record id="product.product_product_28_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.External_Hard_Drive')])]"/>
+        </record>
+        <record id="product.product_product_29_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
+        </record>
+        <record id="product.product_product_30_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
+        </record>
+        <record id="product.product_product_31_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Speakers')])]"/>
+        </record>
+        <record id="product.product_product_32_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
+        </record>
+        <record id="product.product_product_33_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Headset')])]"/>
+        </record>
+        <record id="product.product_product_34_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.video_acquisition')])]"/>
+        </record>
+        <record id="product.product_product_37_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
+        </record>
+        <record id="product.product_product_38_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
+        </record>
+        <record id="product.product_product_39_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.printer')])]"/>
+        </record>
+        <record id="product.product_product_40_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
+        </record>
+        <record id="product.product_product_41_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
+        </record>
+        <record id="product.product_product_42_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
+        </record>
+        <record id="product.product_product_43_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
+        </record>
+        <record id="product.product_product_44_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Software')])]"/>
+        </record>
+        <record id="product.product_product_45_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Modem_Router')])]"/>
+        </record>
+        <record id="product.product_product_46_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Pen_Drive')])]"/>
+        </record>
+        <record id="product.product_product_47_product_template" model="product.template">
+            <field name="public_categ_ids" eval="[(6,0,[ref('product.Switch')])]"/>
+        </record>
+
     </data>
 </openerp>

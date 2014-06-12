@@ -10,9 +10,10 @@ class website_hr_recruitment(http.Controller):
     @http.route([
         '/jobs',
         '/jobs/department/<model("hr.department"):department>',
-        '/jobs/office/<string:office>'
+        '/jobs/office/<string:office>',
+        '/jobs/country/<model("res.country"):country>'
         ], type='http', auth="public", website=True)
-    def jobs(self, department=None, office=None):
+    def jobs(self, department=None, office=None, country=None):
         context=dict(request.context, show_address=True, no_tag_br=True)
         cr, uid = request.cr, request.uid
 
@@ -31,10 +32,12 @@ class website_hr_recruitment(http.Controller):
         # Deduce departments and offices of those jobs
         departments = set(j.department_id for j in jobs if j.department_id)
         offices = set(j.address_id for j in jobs if j.address_id)
+        countries = set(o.country_id for o in offices if o.country_id)
 
         # Filter the matching one
         jobs = [j for j in jobs if department==None or j.department_id and j.department_id.id == department.id]
         jobs = [j for j in jobs if office==None or j.address_id and j.address_id.id == office_id]
+        jobs = [j for j in jobs if country==None or j.address_id and j.address_id.country_id and j.address_id.country_id.id == country.id]
 
         # Render page
         return request.website.render("website_hr_recruitment.index", {
@@ -43,6 +46,7 @@ class website_hr_recruitment(http.Controller):
             'offices': offices,
             'department_id': department and department.id,
             'office_id': office_id,
+            'countries': countries
         })
 
     @http.route('/jobs/add', type='http', auth="user", methods=['POST'], website=True)

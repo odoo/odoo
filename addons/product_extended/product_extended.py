@@ -36,7 +36,7 @@ class product_product(osv.osv):
         testdict = {}
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
-            bom_ids = bom_obj.search(cr, uid, [('bom_id', '=', False), ('product_id','=', prod_id), ('bom_lines', '!=', False)], context=context)
+            bom_ids = bom_obj.search(cr, uid, [('product_id','=', prod_id), ('bom_line_ids', '!=', False)], context=context)
             if bom_ids:
                 bom_id = bom_ids[0]
                 # In recursive mode, it will first compute the prices of child boms
@@ -63,9 +63,9 @@ class product_product(osv.osv):
             context={}
         price = 0
         uom_obj = self.pool.get("product.uom")
-        if bom.bom_lines:
-            for sbom in bom.bom_lines:
-                my_qty = sbom.bom_lines and 1.0 or sbom.product_qty
+        if bom.bom_line_ids:
+            for sbom in bom.bom_line_ids:
+                my_qty = sbom.bom_line_ids and 1.0 or sbom.product_qty
                 price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
 
         if bom.routing_id:
@@ -98,7 +98,7 @@ class product_bom(osv.osv):
     _inherit = 'mrp.bom'
             
     _columns = {
-        'standard_price': fields.related('product_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
+        'standard_price': fields.related('product_tmpl_id','standard_price',type="float",relation="product.product",string="Standard Price",store=False)
     }
 
 product_bom()

@@ -8,8 +8,8 @@
     </xpath>
 </template>
 
-<template id="job_footer_custom" inherit_id="website.layout" name="Footer Job Link">
-    <xpath expr="//footer//div[@name='info']/ul" position="inside">
+<template id="job_footer_custom" inherit_id="website.footer_default" name="Footer Job Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
     <li><a href="/jobs">Jobs</a></li>
     </xpath>
 </template>
@@ -122,7 +122,7 @@
                 "fields": ["address"],
                 "no_tag_br": true
                 }'/>
-           e<h5 class="text-center text-muted">
+           <h5 class="text-center text-muted">
                 <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
             </h5>
         </div>
@@ -230,7 +230,7 @@
     </t>
 </template>
 
-<template id="job_departments" inherit_option_id="website_hr_recruitment.index" name="Filter by Departments">
+<template id="job_departments" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Departments">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if department_id else 'active' "><a href="/jobs">All Departments</a></li>
@@ -249,19 +249,21 @@
     </xpath>
 </template>
 
-<template id="job_offices" inherit_option_id="website_hr_recruitment.index" name="Filter by Offices">
+<template id="job_offices" inherit_id="website_hr_recruitment.index" optional="disabled" name="Filter by Offices">
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if office_id else 'active' "><a href="/jobs">All Offices</a></li>
-            <t t-foreach="offices" t-as="thisoffice">
-                <li t-att-class=" 'active' if office_id == thisoffice.id else '' ">
-                    <a t-attf-href="/jobs/office/#{ slug(thisoffice) }" >
-                        <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
-                            <span t-field="thisoffice.country_id.name"/>
-                        </t>
-                    </a>
-                </li>
-            </t>
+            <li t-foreach="countries" t-as="thiscountry"><a t-attf-href="/jobs/country/#{slug(thiscountry)}" t-field="thiscountry.name"/>
+                <ul class="nav nav-pills nav-stacked nav-hierarchy">
+                    <t t-foreach="offices" t-as="thisoffice">
+                        <li t-if="thisoffice.country_id == thiscountry" t-att-class=" 'active' if office_id == thisoffice.id else '' ">
+                            <a t-attf-href="/jobs/office/#{ slug(thisoffice) }" >
+                                <span t-field="thisoffice.city"/>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </li>
         </ul>
     </xpath>
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">

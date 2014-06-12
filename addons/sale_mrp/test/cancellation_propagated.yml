@@ -16,18 +16,19 @@
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
 -
-  I create a bom for this product 
+  I create a bom for this product
 -
   !record {model: mrp.bom, id: mrp_bom_test1}:
     company_id: base.main_company
     name: My BOM
+    product_tmpl_id: product_manu_product_template
     product_id: product_manu
+    product_uom: product.product_uom_unit
     product_qty: 1.0
     type: normal
-    bom_lines:
-      - company_id: base.main_company
-        name: GrapWorks Software
-        product_id: product.product_product_44
+    bom_line_ids:
+      - product_id: product.product_product_44
+        product_uom: product.product_uom_unit
         product_qty: 1.0
 -
   And set routes on product to be MTO and manufacture

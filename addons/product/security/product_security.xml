@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data noupdate="0">
-    <!-- Change name of group for 7.0 users since product variant module doesn't exist anymore
-    DO NOT CHANGE IT IN TRUNK -->
-
-    <record id="group_product_variant" model="res.groups">
-        <field name="name">Manage Product Variants</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="group_product_mono" model="res.groups">
-        <field name="name">Do Not Manage Product Variants</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-    <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('product.group_product_mono'))]"/>
-    </record>
 
     <record id="group_sale_pricelist" model="res.groups">
         <field name="name">Sales Pricelists</field>
