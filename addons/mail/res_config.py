@@ -20,7 +20,8 @@
 ##############################################################################
 
 import urlparse
-
+import datetime
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.osv import osv, fields
 
 
@@ -28,11 +29,19 @@ class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
+        'fail_mail' : fields.integer('Fail Mail',readonly=True),
         'alias_domain': fields.char('Alias Domain',
                                      help="If you have setup a catch-all email domain redirected to "
                                           "the OpenERP server, enter the domain name here."),
     }
-
+    
+    def get_default_mail(self, cr, uid, ids, context=None):
+        previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
+        mail_ids = self.pool.get('mail.mail').search(cr, uid, [('date', '>=', previous_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),('state', '=', 'exception')], context=context)
+        return {
+            'fail_mail': len(mail_ids),
+        }
+    
     def get_default_alias_domain(self, cr, uid, ids, context=None):
         alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", default=None, context=context)
         if alias_domain is None:
