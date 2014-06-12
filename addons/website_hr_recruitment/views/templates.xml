@@ -122,7 +122,7 @@
                 "fields": ["address"],
                 "no_tag_br": true
                 }'/>
-           e<h5 class="text-center text-muted">
+           <h5 class="text-center text-muted">
                 <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
             </h5>
         </div>
@@ -253,15 +253,17 @@
     <xpath expr="//div[@id='jobs_grid_left']" position="inside">
         <ul class="nav nav-pills nav-stacked mb32">
             <li t-att-class=" '' if office_id else 'active' "><a href="/jobs">All Offices</a></li>
-            <t t-foreach="offices" t-as="thisoffice">
-                <li t-att-class=" 'active' if office_id == thisoffice.id else '' ">
-                    <a t-attf-href="/jobs/office/#{ slug(thisoffice) }" >
-                        <span t-field="thisoffice.city"/><t t-if="thisoffice.country_id">,
-                            <span t-field="thisoffice.country_id.name"/>
-                        </t>
-                    </a>
-                </li>
-            </t>
+            <li t-foreach="countries" t-as="thiscountry"><a t-attf-href="/jobs/country/#{slug(thiscountry)}" t-field="thiscountry.name"/>
+                <ul class="nav nav-pills nav-stacked nav-hierarchy">
+                    <t t-foreach="offices" t-as="thisoffice">
+                        <li t-if="thisoffice.country_id == thiscountry" t-att-class=" 'active' if office_id == thisoffice.id else '' ">
+                            <a t-attf-href="/jobs/office/#{ slug(thisoffice) }" >
+                                <span t-field="thisoffice.city"/>
+                            </a>
+                        </li>
+                    </t>
+                </ul>
+            </li>
         </ul>
     </xpath>
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
