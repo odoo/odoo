@@ -31,4 +31,38 @@
         </record>
 
     </data>
-</openerp>
+    <data noupdate="1">
+
+        <record id="mt_lead_accept" model="mail.message.subtype">
+            <field name="name">Partner Accept</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Partner Accept</field>
+        </record>
+        
+        <record id="mt_lead_refused" model="mail.message.subtype">
+            <field name="name">Partner Refused</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Partner Refused</field>
+        </record>
+        
+        <record id="mt_crm_partner_lead_assign" model="mail.message.subtype">
+            <field name="name">Lead Assign</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Lead Assign</field>
+        </record>
+        
+        <record id="mt_partner_lead_assign" model="mail.message.subtype">
+            <field name="name">Lead Assign</field>
+            <field name="res_model">res.partner</field>
+            <field name="default" eval="False"/>
+            <field name="description">Lead Assign</field>
+            <field name="parent_id" eval="ref('mt_crm_partner_lead_assign')"/>
+            <field name="relation_field">partner_assigned_id</field>
+        </record>
+     
+    </data>
+ </openerp>
