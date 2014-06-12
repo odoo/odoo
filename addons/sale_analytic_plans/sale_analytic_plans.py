@@ -20,6 +20,8 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
+import openerp.tools
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
@@ -37,5 +39,23 @@ class sale_order_line(osv.osv):
             i = i + 1
         return create_ids
 
+class sale_order(osv.osv):
+    _inherit = "sale.order"
+    
+    def _check_order_before_confirm(self, cr, uid, order, context=None):
+        super(sale_order, self)._check_order_before_confirm(cr, uid, order, context=context)
+        cr.execute( 'SELECT DISTINCT acc.name '\
+            'FROM account_analytic_account as acc '\
+            'INNER JOIN account_analytic_plan_instance_line as plan_line on (acc.id = plan_line.analytic_account_id) '\
+            'INNER JOIN account_analytic_plan_instance as plan on (plan_line.plan_id = plan.id) '\
+            'INNER JOIN sale_order_line as sale_line on (plan.id = sale_line.analytics_id AND sale_line.order_id = %s) '\
+            'WHERE acc.state in %s', ((tuple([order.id])), ('close','cancelled','pending')))
+        contract_list = [rec[0] for rec in cr.fetchall()]
+        if contract_list:
+            model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'account', 'action_account_analytic_account_form_closed')
+            if action_id:
+                msg = _('''Contract(s) mentioned below %s in "Closed/Cancelled/To Renew" state, please renew %s before confirmation :\n%s.''') % (len(contract_list) > 1 and 'are' or 'is', len(contract_list) > 1 and 'them' or 'it', '-' + '\n- '.join(contract_list))
+                raise openerp.exceptions.RedirectWarning(msg, action_id, _('Modify Contract(s)'))
+        return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

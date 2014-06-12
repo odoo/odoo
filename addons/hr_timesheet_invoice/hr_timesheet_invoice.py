@@ -299,6 +299,18 @@ class account_analytic_line(osv.osv):
 
 class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
+
+    def _check_account_state(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.account_id.state == 'cancelled':
+                return False
+        return True
+
+    _constraints = [
+        (_check_account_state, '\nThe analytic account is in cancel state.\nYou should not work on this account !', ['account_id']), 
+    ]
     def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
         res = {}
         if not account_id:
@@ -312,6 +324,8 @@ class hr_analytic_timesheet(osv.osv):
                 'title': 'Warning',
                 'message': 'The analytic account is in pending state.\nYou should not work on this account !'
             }
+        if acc.state=='cancelled':
+            raise osv.except_osv(_('Warning !!'),_("The analytic account is in cancel state.\nYou should not work on this account !"))
         return res
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
