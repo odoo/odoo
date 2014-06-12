@@ -39,7 +39,7 @@ class survey_stage(osv.Model):
 
     _name = 'survey.stage'
     _description = 'Survey Stage'
-    _order = 'sequence asc'
+    _order = 'sequence,id'
 
     _columns = {
         'name': fields.char(string="Name", required=True, translate=True),
@@ -497,7 +497,7 @@ class survey_page(osv.Model):
     _name = 'survey.page'
     _description = 'Survey Page'
     _rec_name = 'title'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     # Model Fields #
 
@@ -536,7 +536,7 @@ class survey_question(osv.Model):
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     # Model fields #
 
@@ -793,7 +793,7 @@ class survey_label(osv.Model):
     ''' A suggested answer for a question '''
     _name = 'survey.label'
     _rec_name = 'value'
-    _order = 'sequence'
+    _order = 'sequence,id'
     _description = 'Survey Label'
 
     def _check_question_not_empty(self, cr, uid, ids, context=None):
@@ -812,8 +812,8 @@ class survey_label(osv.Model):
             required=True),
         'quizz_mark': fields.float('Score for this answer', help="A positive score indicates a correct answer; a negative or null score indicates a wrong answer"),
     }
-    defaults = {
-        'sequence': 100,
+    _defaults = {
+        'sequence': 10,
     }
     _constraints = [
         (_check_question_not_empty, "A label must be attached to one and only one question", ['question_id', 'question_id_2'])
