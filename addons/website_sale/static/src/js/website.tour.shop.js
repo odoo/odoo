@@ -107,6 +107,8 @@
             },
             {
                 waitFor:   '.js_publish_management button.js_publish_btn.btn-success:visible',
+                element:   '.js_publish_management button.js_publish_btn.btn-success',
+                placement: 'left',
                 title:     _t("Congratulations"),
                 content:   _t("Congratulations! You just created and published your first product."),
                 popover:   { next: _t("Close Tutorial") },

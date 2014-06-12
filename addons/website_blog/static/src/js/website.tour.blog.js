@@ -98,6 +98,8 @@
             },
             {
                 waitFor:   '.js_publish_management button.js_publish_btn.btn-success:visible',
+                element:   'button.btn-success.js_publish_btn',
+                placement: 'left',
                 title:     "Thanks!",
                 content:   _t("This tutorial is finished. To discover more features, improve the content of this page and try the <em>Promote</em> button in the top right menu."),
                 popover:   { next: _t("Close Tutorial") },
