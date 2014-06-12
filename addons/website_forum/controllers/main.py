@@ -444,10 +444,10 @@ class WebsiteForum(http.Controller):
         User = request.registry['res.users']
 
         step = 30
-        tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], count=True, context=context)
+        tag_count = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], count=True, context=context)
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
 
-        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
+        obj_ids = User.search(cr, SUPERUSER_ID, [('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC', context=context)
         # put the users in block of 3 to display them as a table
         users = [[] for i in range(len(obj_ids)/3+1)]
         for index, user in enumerate(User.browse(cr, SUPERUSER_ID, obj_ids, context=context)):
@@ -496,9 +496,9 @@ class WebsiteForum(http.Controller):
         Data = request.registry["ir.model.data"]
 
         user = User.browse(cr, SUPERUSER_ID, user_id, context=context)
-        if not user.exists() or (user_id != request.session.uid and user.karma < 1): 
-            return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-
+        values = self._prepare_forum_values(forum=forum, **post)
+        if not user.exists() or (user_id != request.session.uid and (not user.website_published or user.karma < 1)):
+            return request.website.render("website_forum.private_profile", values)
         # questions and answers by user
         user_questions, user_answers = [], []
         user_post_ids = Post.search(
@@ -549,13 +549,11 @@ class WebsiteForum(http.Controller):
 
         post['users'] = 'True'
 
-        values = self._prepare_forum_values(**post)
         values.update({
             'uid': uid,
             'user': user,
             'main_object': user,
             'searches': post,
-            'forum': forum,
             'questions': user_questions,
             'answers': user_answers,
             'followed': followed,
