@@ -16,8 +16,8 @@
 </template>
 
 <!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
-    <xpath expr="//footer//ul[@name='products']" position="inside">
+<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Events Link">
+    <xpath expr="//ul[@id='products']" position="inside">
         <li><a href="/event">Events</a></li>
     </xpath>
 </template>
@@ -87,7 +87,7 @@
     </t>
 </template>
 
-<template id="event_right_photos" inherit_option_id="website_event.index" name="Photos">
+<template id="event_right_photos" inherit_id="website_event.index" optional="disabled" name="Photos">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16">
@@ -106,7 +106,7 @@
     </xpath>
 </template>
 
-<template id="event_right_quotes" inherit_option_id="website_event.index" name="Quotes">
+<template id="event_right_quotes" inherit_id="website_event.index" optional="disabled" name="Quotes">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16">
@@ -123,7 +123,7 @@
     </xpath>
 </template>
 
-<template id="event_right_country_event" inherit_option_id="website_event.index" name="Country Events">
+<template id="event_right_country_event" inherit_id="website_event.index" optional="disabled" name="Country Events">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
             <div class="col-md-12 mb16 mt16 country_events">
@@ -140,7 +140,7 @@
     </xpath>
 </template>
 
-<template id="event_left_column" inherit_option_id="website_event.index" inherit_id="website_event.index" name="Filters">
+<template id="event_left_column" optional="enabled" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
         <attribute name="class">col-md-6</attribute>
     </xpath>
@@ -159,7 +159,7 @@
     </xpath>
 </template>
 
-<template id="event_category" inherit_option_id="website_event.event_left_column" name="Filter by Category">
+<template id="event_category" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Category">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="types">
@@ -173,7 +173,7 @@
     </xpath>
 </template>
 
-<template id="event_location" inherit_option_id="website_event.event_left_column" name="Filter by Country">
+<template id="event_location" inherit_id="website_event.event_left_column" optional="disabled" name="Filter by Country">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills nav-stacked mt32">
             <t t-foreach="countries">
@@ -346,7 +346,7 @@
                     <div t-if="event.twitter_hashtag" class="mt16">
                         <p><strong>Participate on Twitter</strong></p>
                         <p class="text-muted">
-                            Find out what people see and say about this event, 
+                            Find out what people see and say about this event,
                             and join the conversation.
                         </p>
                         <p><strong>Use this tag:

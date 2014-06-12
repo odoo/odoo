@@ -273,7 +273,7 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-esc="widget.author_id[2]"/></a>
+                    <a t-if="widget.author_id and widget.options.show_link and widget.author_id[0]" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-data-partner="widget.author_id[0]" class="oe_mail_action_author"><t t-esc="widget.author_id[2]"/></a>
                     <span t-if="widget.author_id and (!widget.options.show_link or !widget.author_id[0])"><t t-esc="widget.author_id[2]"/></span>
                     <t t-if="widget.type == 'notification'">
                         updated document
@@ -293,7 +293,7 @@
                     <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and (widget.subtype or widget.partner_ids.length > 0))"
                             t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
                         <span t-attf-class="oe_partner_follower">
-                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-esc="partner[1]"/></a>
+                        <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}" t-att-data-partner="partner[0]" class="oe_mail_action_author"><t t-esc="partner[1]"/></a>
                         <t t-if="!widget.options.show_link" t-esc="partner[1]"/>
                         </span>
                         <t t-if="!partner_last">,</t>

@@ -25,8 +25,6 @@
 					<field name="name"/>
 					<field name="ref" readonly="0"/>
 					<field name="partner_id"/>
-					<field name="type" />
-					<field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
 					<field name="amount"/>
 					<field name="sequence" readonly="0"/>
 				</group>
@@ -46,10 +44,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('type', '&lt;&gt;', 'view')]"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type', '&lt;&gt;', 'view')]"/>
+                    <field name="partner_id"/>
                     <field name="amount"/>
                     <field name="note"/>
                 </tree>
@@ -66,17 +61,14 @@
 				<filter name="credit" string="Credit" domain="[('amount','&lt;',0)]" icon="terp-folder-orange" help="Credit Transactions."/>
 				<field name="statement_id"/>
 				<group expand="0" string="Extended Filters...">
-					<field name="account_id"/>
 					<field name="partner_id"/>
 					<field name="amount"/>
-					<field name="type"/>
 					<field name="note"/>
 				</group>
 				<newline/>
 				<group string="Group By..." expand="0">
 					<filter string="Partner" context="{'group_by':'partner_id'}" icon="terp-folder-green"/>
 					<filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
-					<filter string="Fin.Account" context="{'group_by':'account_id'}" icon="terp-folder-yellow"/>
 				</group>
 			</search>
 			</field>

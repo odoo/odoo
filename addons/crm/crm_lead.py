@@ -376,7 +376,6 @@ class crm_lead(format_address, osv.osv):
 
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0
-            :deprecated: this method will be removed in OpenERP v8.
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):
@@ -397,7 +396,6 @@ class crm_lead(format_address, osv.osv):
 
     def case_mark_won(self, cr, uid, ids, context=None):
         """ Mark the case as won: state=done and probability=100
-            :deprecated: this method will be removed in OpenERP v8.
         """
         stages_leads = {}
         for lead in self.browse(cr, uid, ids, context=context):

@@ -54,33 +54,35 @@ openerp.report = function(instance) {
                 if (action.report_type == 'qweb-html') {
                     window.open(report_url, '_blank', 'height=900,width=1280');
                     instance.web.unblockUI();
-                } else {
+                } else if (action.report_type === 'qweb-pdf') {
                     // Trigger the download of the pdf/controller report
-
-                    if (action.report_type == 'qweb-pdf') {
-                        (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
-                            // Fallback of qweb-pdf if wkhtmltopdf is not installed
-                            if (presence == 'install' && action.report_type == 'qweb-pdf') {
-                                self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
-    system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
-    wkhtmltopdf.org</a>'), true);
-                                report_url = report_url.substring(12)
-                                window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
-                                instance.web.unblockUI();
-                                return;
-                            } else {
-                                if (presence == 'upgrade') {
-                                    self.do_notify(_t('Report'), _t('You should upgrade your version of\
-     Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
-     support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
-     target="_blank">wkhtmltopdf.org</a>'), true);
-                                }
-                            }
-                            return trigger_download(self.session, response, c);
-                        });
-                    } else if (action.report_type == 'controller') {
+                    (wkhtmltopdf_state = wkhtmltopdf_state || openerp.session.rpc('/report/check_wkhtmltopdf')).then(function (presence) {
+                        // Fallback on html if wkhtmltopdf is not installed or if OpenERP is started with one worker
+                        if (presence === 'install') {
+                            self.do_notify(_t('Report'), _t('Unable to find Wkhtmltopdf on this \
+system. The report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">\
+wkhtmltopdf.org</a>'), true);
+                            report_url = report_url.substring(12)
+                            window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
+                            instance.web.unblockUI();
+                            return;
+                        } else if (presence === 'workers') {
+                            self.do_notify(_t('Report'), _t('You need to start OpenERP with at least two \
+workers to print a pdf version of the reports.'), true);
+                            report_url = report_url.substring(12)
+                            window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
+                            instance.web.unblockUI();
+                            return;
+                        } else if (presence === 'upgrade') {
+                            self.do_notify(_t('Report'), _t('You should upgrade your version of\
+ Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
+ support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
+ target="_blank">wkhtmltopdf.org</a>'), true);
+                        }
                         return trigger_download(self.session, response, c);
-                    }
+                    });
+                } else if (action.report_type === 'controller') {
+                    return trigger_download(self.session, response, c);
                 }                     
             } else {
                 return self._super(action, options);

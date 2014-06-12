@@ -269,7 +269,10 @@ class WebRequest(object):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
            be used as response.""" 
-        raise 
+        self._failed = exception # prevent tx commit
+        if isinstance(exception, werkzeug.exceptions.HTTPException):
+            return exception
+        raise
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -456,18 +459,20 @@ class JsonRequest(WebRequest):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
-        _logger.exception("Exception during JSON request handling.")
-        self._failed = exception # prevent tx commit            
-        error = {
-                'code': 200,
-                'message': "OpenERP Server Error",
-                'data': serialize_exception(exception)
-        }
-        if isinstance(exception, AuthenticationError):
-            error['code'] = 100
-            error['message'] = "OpenERP Session Invalid"
-        return self._json_response(error=error)
+           be used as response."""
+        try:
+            return super(JsonRequest, self)._handle_exception(exception)
+        except Exception:
+            _logger.exception("Exception during JSON request handling.")
+            error = {
+                    'code': 200,
+                    'message': "OpenERP Server Error",
+                    'data': serialize_exception(exception)
+            }
+            if isinstance(exception, AuthenticationError):
+                error['code'] = 100
+                error['message'] = "OpenERP Session Invalid"
+            return self._json_response(error=error)
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
@@ -660,35 +665,49 @@ class EndPoint(object):
 
 def routing_map(modules, nodb_only, converters=None):
     routing_map = werkzeug.routing.Map(strict_slashes=False, converters=converters)
+
+    def get_subclasses(klass):
+        def valid(c):
+            return c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules
+        subclasses = klass.__subclasses__()
+        result = []
+        for subclass in subclasses:
+            if valid(subclass):
+                result.extend(get_subclasses(subclass))
+        if not result and valid(klass):
+            result = [klass]
+        return result
+
+    uniq = lambda it: collections.OrderedDict((id(x), x) for x in it).values()
+
     for module in modules:
         if module not in controllers_per_module:
             continue
 
         for _, cls in controllers_per_module[module]:
-            subclasses = cls.__subclasses__()
-            subclasses = [c for c in subclasses if c.__module__.startswith('openerp.addons.') and c.__module__.split(".")[2] in modules]
+            subclasses = uniq(c for c in get_subclasses(cls) if c is not cls)
             if subclasses:
                 name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
                 cls = type(name, tuple(reversed(subclasses)), {})
 
             o = cls()
-            members = inspect.getmembers(o)
-            for mk, mv in members:
-                if inspect.ismethod(mv) and hasattr(mv, 'routing'):
+            members = inspect.getmembers(o, inspect.ismethod)
+            for _, mv in members:
+                if hasattr(mv, 'routing'):
                     routing = dict(type='http', auth='user', methods=None, routes=None)
                     methods_done = list()
-                    routing_type = None
+                    # update routing attributes from subclasses(auth, methods...)
                     for claz in reversed(mv.im_class.mro()):
                         fn = getattr(claz, mv.func_name, None)
                         if fn and hasattr(fn, 'routing') and fn not in methods_done:
                             methods_done.append(fn)
                             routing.update(fn.routing)
-                    if not nodb_only or nodb_only == (routing['auth'] == "none"):
+                    if not nodb_only or routing['auth'] == "none":
                         assert routing['routes'], "Method %r has not route defined" % mv
                         endpoint = EndPoint(mv, routing)
                         for url in routing['routes']:
                             if routing.get("combine", False):
-                                # deprecated
+                                # deprecated v7 declaration
                                 url = o._cp_path.rstrip('/') + '/' + url.lstrip('/')
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
@@ -1268,7 +1287,9 @@ def db_list(force=False, httprequest=None):
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-    d = h.split('.')[0]
+    d, _, r = h.partition('.')
+    if d == "www" and r:
+        d = r.partition('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs

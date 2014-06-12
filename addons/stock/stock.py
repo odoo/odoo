@@ -29,6 +29,7 @@ from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
+from openerp.addons.procurement import procurement
 import logging
 
 
@@ -622,6 +623,12 @@ class stock_picking(osv.osv):
             move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
             move_obj.write(cr, uid, move_ids, {'date_expected': value}, context=context)
 
+    def _set_priority(self, cr, uid, id, field, value, arg, context=None):
+        move_obj = self.pool.get("stock.move")
+        if value:
+            move_ids = [move.id for move in self.browse(cr, uid, id, context=context).move_lines]
+            move_obj.write(cr, uid, move_ids, {'priority': value}, context=context)
+
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds minimum and maximum dates for picking.
         @return: Dictionary of values
@@ -634,16 +641,18 @@ class stock_picking(osv.osv):
         cr.execute("""select
                 picking_id,
                 min(date_expected),
-                max(date_expected)
+                max(date_expected),
+                max(priority)
             from
                 stock_move
             where
                 picking_id IN %s
             group by
                 picking_id""", (tuple(ids),))
-        for pick, dt1, dt2 in cr.fetchall():
+        for pick, dt1, dt2, prio in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
+            res[pick]['priority'] = prio
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -759,7 +768,9 @@ class stock_picking(osv.osv):
                 * Transferred: has been processed, can't be modified or cancelled anymore\n
                 * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
-        'priority': fields.selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Priority', required=True),
+        'priority': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_priority, type='selection', selection=procurement.PROCUREMENT_PRIORITIES, string='Priority',
+                                    store={'stock.move': (_get_pickings, ['priority'], 20)}, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, select=1, help="Priority for this picking. Setting manually a value here would set it as priority for all the moves", 
+                                    track_visibility='onchange', required=True),
         'min_date': fields.function(get_min_max_date, multi="min_max_date", fnct_inv=_set_min_date,
                  store={'stock.move': (_get_pickings, ['date_expected'], 20)}, type='datetime', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, string='Scheduled Date', select=1, help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.", track_visibility='onchange'),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
@@ -1591,7 +1602,7 @@ class stock_move(osv.osv):
 
     _columns = {
         'name': fields.char('Description', required=True, select=True),
-        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
+        'priority': fields.selection(procurement.PROCUREMENT_PRIORITIES, 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Expected Date', states={'done': [('readonly', True)]}, required=True, select=True, help="Scheduled date for the processing of this move"),
@@ -1628,7 +1639,6 @@ class stock_move(osv.osv):
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: previous stock move when chaining them", select=True),
 
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True, states={'done': [('readonly', True)]}),
-        'picking_priority': fields.related('picking_id', 'priority', type='selection', selection=[('0', 'Low'), ('1', 'Normal'), ('2', 'High')], string='Picking Priority', store={'stock.picking': (_get_move_ids, ['priority'], 10)}),
         'note': fields.text('Notes'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
@@ -1774,6 +1784,7 @@ class stock_move(osv.osv):
             'group_id': group_id,
             'route_ids': [(4, x.id) for x in move.route_ids],
             'warehouse_id': move.warehouse_id and move.warehouse_id.id or False,
+            'priority': move.priority,
         }
 
     def _push_apply(self, cr, uid, moves, context=None):
@@ -1981,7 +1992,7 @@ class stock_move(osv.osv):
             values = {
                 'origin': move.origin,
                 'company_id': move.company_id and move.company_id.id or False,
-                'move_type': move.group_id and move.group_id.move_type or 'one',
+                'move_type': move.group_id and move.group_id.move_type or 'direct',
                 'partner_id': move.partner_id.id or False,
                 'picking_type_id': move.picking_type_id and move.picking_type_id.id or False,
             }
@@ -2265,6 +2276,9 @@ class stock_move(osv.osv):
 
             #Check moves that were pushed
             if move.move_dest_id.state in ('waiting', 'confirmed'):
+                # FIXME is opw 607970 still present with new WMS?
+                # (see commits 1ef2c181033bd200906fb1e5ce35e234bf566ac6
+                # and 41c5ceb8ebb95c1b4e98d8dd1f12b8e547a24b1d)
                 other_upstream_move_ids = self.search(cr, uid, [('id', '!=', move.id), ('state', 'not in', ['done', 'cancel']),
                                             ('move_dest_id', '=', move.move_dest_id.id)], context=context)
                 #If no other moves for the move that got pushed:
@@ -2743,7 +2757,7 @@ class stock_warehouse(osv.osv):
 
     _columns = {
         'name': fields.char('Warehouse Name', size=128, required=True, select=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Address'),
         'view_location_id': fields.many2one('stock.location', 'View Location', required=True, domain=[('usage', '=', 'view')]),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
@@ -3615,19 +3629,11 @@ class stock_package(osv.osv):
         return True
 
     def action_print(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        datas = {
-            'ids': context.get('active_id') and [context.get('active_id')] or ids,
-            'model': 'stock.quant.package',
-            'form': self.read(cr, uid, ids)[0]
-        }
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'stock.quant.package.barcode',
-            'datas': datas
-        }
-
+        context = context or {}
+        context['active_ids'] = ids
+        return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode', context=context)
+    
+    
     def unpack(self, cr, uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for package in self.browse(cr, uid, ids, context=context):

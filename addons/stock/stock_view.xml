@@ -23,11 +23,11 @@
             action="product.product_category_action_form" id="menu_product_category_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="0"/>
         <menuitem
-            action="product.product_variant_action" id="menu_product_variant_config_stock"
-            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="2"/>
+            action="product.product_normal_action" id="menu_product_variant_config_stock"
+            parent="stock.menu_product_in_config_stock" sequence="2"/>
         <menuitem
             action="product.product_template_action" id="menu_product_template_config_stock"
-            parent="stock.menu_product_in_config_stock" groups="product.group_product_variant" sequence="1"/>
+            parent="stock.menu_product_in_config_stock" sequence="1"/>
         <menuitem
             action="product.product_ul_form_action" groups="product.group_stock_packaging"
             id="menu_product_packaging_stock_action" parent="stock.menu_product_in_config_stock" sequence="3"/>
@@ -365,7 +365,10 @@
             <field name="arch" type="xml">
                 <form string="Stock Location" version="7.0">
                     <div class="oe_right oe_button_box" name="buttons">
-                        <button string="Current Stock" name="%(location_open_quants)d" type="action"/>
+                        <button string="Current Stock" 
+                                class="oe_stat_button" 
+                                icon="fa-building-o" name="%(location_open_quants)d" type="action"
+                                context="{'search_default_internal_loc': 1}"/>
                     </div>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -560,7 +563,11 @@
                 <form string="Warehouse" version="7.0">
                     <sheet>
                         <div class="oe_right oe_button_box">                        
-                            <button name="view_all_routes_for_wh" string="View Warehouse Routes" type="object"/> 
+                            <button name="view_all_routes_for_wh" 
+                                    string="Routes"
+                                    icon="fa-refresh"
+                                    class="oe_stat_button" 
+                                    type="object"/> 
                         </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -743,6 +750,21 @@
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}"/>
                             <field name="pack_operation_exist" invisible="1"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
+                        </page>
+                        <page string="Operations Done" attrs="{'invisible': ['|', ('state','!=','done'), ('pack_operation_ids','=',[])]}">
+                            <field name="pack_operation_ids">
+                                <tree editable="top">   
+                                    <field name="location_id"/>
+                                    <field name="product_id"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="lot_id" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                    <field name="package_id" groups="stock.group_tracking_lot"/>
+                                    <field name="owner_id" groups="stock.group_tracking_owner"/>
+                                    <field name="product_qty" attrs="{'required': [('product_id', '!=', False)]}"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Additional Info">
                             <group string="General Informations">
@@ -1058,7 +1080,7 @@
                             </group>
                             <group name="main_grp_col2">
                                 <field name="picking_type_id"/>
-                                <field name="picking_priority"/>
+                                <field name="priority"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
                                 <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
@@ -1769,111 +1791,9 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         <record model="ir.actions.act_window" id="product_open_quants">
-            <field name="context">{'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
+            <field name="context">{'search_default_internal_loc': 1, 'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
-        </record>
-
-<!-->
-        <record model="ir.ui.view" id="product_template_form_view_procurement">
-            <field name="name">product.template.procurement</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='standard_price']" position="after" >
-                   <group name="procurement_help" col="1" groups="base.group_user">
-                       <field name="route_ids" widget="many2many_tags"/>
-                   </group>
-                </xpath>
-            </field>
-        </record>-->
-        <record id="product_search_form_view_procurment" model="ir.ui.view">
-            <field name="name">product.search.procurment.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_search_form_view"/>
-            <field name="arch" type="xml">
-                <filter name="consumable" position="before">
-                   <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
-                </filter>
-            </field>
-        </record>
-
-        <record id="view_normal_procurement_locations_form" model="ir.ui.view">
-            <field name="name">product.normal.procurement.locations.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                
-                <xpath expr="//group[@name='procurement_uom']" position="after" >
-                   <newline/>
-                   <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}">
-                       <field name="route_ids" widget="many2many_checkboxes"/>
-                   </group>
-                   <newline/>
-                </xpath>
-                
-                <xpath expr="//div[@name='buttons']" position="inside">
-                   <button string="Current Stock" name="%(product_open_quants)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
-                   <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
-                   <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-pinterest" string="Reordering Rules"/>
-                </xpath>
-                
-                <xpath expr="//group[@string='Sale Conditions']" position="inside">
-                    <label for="sale_delay"/>
-                        <div>
-                            <field name="sale_delay" class="oe_inline"/> days
-                        </div>
-                </xpath>                
-
-                <xpath expr="//group[@name='status']" position="after" version="7.0">
-                    <group name="store" string="Storage Location" attrs="{'invisible':[('type','=','service')]}">
-                        <field name="loc_rack"/>
-                        <field name="loc_row"/>
-                        <field name="loc_case"/>
-                    </group>
-                </xpath>
-                
-                <xpath expr="//group[@name='Weights']" position="before">
-                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
-                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
-                    </group>
-                </xpath>
-
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_form_view_procurement_button">
-            <field name="name">product.product.procurement</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="view_normal_procurement_locations_form"/>
-            <field name="arch" type="xml">
-                <group name="status" position="before" version="7.0">
-                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
-                        <label for="qty_available"/>
-                            <div>
-                                <field name="qty_available" class="oe_inline"/>
-                                <button name="%(action_view_change_product_quantity)d" string="⇒ Update"
-                                    type="action"
-                                    class="oe_link"/>
-                            </div>
-                        <label for="incoming_qty"/>
-                        <div>
-                            <field name="incoming_qty" class="oe_inline"/>
-                            <button string="⇒ Request Procurement" name="%(act_make_procurement)d" type="action" class="oe_link"/>
-                        </div>
-                        <field name="outgoing_qty" class="oe_inline"/>
-                        <field name="virtual_available" class="oe_inline"/>
-                    </group>
-                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
-                        <field name="track_all" groups="stock.group_production_lot"/>
-                        <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                        <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
-                    </group>
-                </group>
-            </field>
         </record>
         
         <record model="ir.ui.view" id="view_quant_package_form">
@@ -2052,17 +1972,6 @@
         
         <menuitem action="action_routes_form" id="menu_stock_routes"
             parent="stock.menu_stock_configuration" sequence="11" />
-
-        <record id="view_product_procurement_rule_form" model="ir.ui.view">
-            <field name="name">product.template.procurement.rule.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='buttons']" position="inside">
-                    <button name="action_view_routes" string="Routes" type="object"  />
-                </xpath>
-            </field>
-        </record>
 
         <record id="do_view_pickings" model="ir.actions.act_window">
             <field name="name">Pickings for Groups</field>

@@ -29,6 +29,7 @@ from openerp import tools
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+import psycopg2
 
 import openerp.addons.decimal_precision as dp
 
@@ -201,6 +202,8 @@ class product_uom(osv.osv):
         return {}
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'category_id' in vals:
             for uom in self.browse(cr, uid, ids, context=context):
                 if uom.category_id.id != vals['category_id']:
@@ -273,7 +276,7 @@ class product_category(osv.osv):
 
 
     _defaults = {
-        'type' : lambda *a : 'normal',
+        'type' : 'normal',
     }
 
     _parent_name = "parent_id"
@@ -316,69 +319,80 @@ class produce_price_history(osv.osv):
     }
 
 
-class product_public_category(osv.osv):
-    _name = "product.public.category"
-    _description = "Public Category"
-    _order = "sequence, name"
+#----------------------------------------------------------
+# Product Attributes
+#----------------------------------------------------------
+class product_attribute(osv.osv):
+    _name = "product.attribute"
+    _description = "Product Attribute"
+    _columns = {
+        'name': fields.char('Name', translate=True, required=True),
+        'value_ids': fields.one2many('product.attribute.value', 'attribute_id', 'Values'),
+    }
 
-    _constraints = [
-        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
-    ]
+class product_attribute_value(osv.osv):
+    _name = "product.attribute.value"
+    _order = 'sequence'
+    def _get_price_extra(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, 0)
+        if not context.get('active_id'):
+            return result
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
+            for price_id in obj.price_ids:
+                if price_id.product_tmpl_id.id == context.get('active_id'):
+                    result[obj.id] = price_id.price_extra
+                    break
         return result
-    
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
+    def _set_price_extra(self, cr, uid, id, name, value, args, context=None):
+        if context is None:
+            context = {}
+        if 'active_id' not in context:
+            return None
+        p_obj = self.pool['product.attribute.price']
+        p_ids = p_obj.search(cr, uid, [('value_id', '=', id), ('product_tmpl_id', '=', context['active_id'])], context=context)
+        if p_ids:
+            p_obj.write(cr, uid, p_ids, {'price_extra': value}, context=context)
+        else:
+            p_obj.create(cr, uid, {
+                    'product_tmpl_id': context['active_id'],
+                    'value_id': id,
+                    'price_extra': value,
+                }, context=context)
 
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('product.public.category','Parent Category', select=True),
-        'child_id': fields.one2many('product.public.category', 'parent_id', string='Children Categories'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
-        
-        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
-        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code.
-        # NOTE2: image: all image fields are base64 encoded and PIL-supported
-        'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
-            store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized image", type="binary", multi="_get_image",
-            store={
-                'product.public.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized image of the category. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
+        'sequence': fields.integer('Sequence', help="Determine the display order"),
+        'name': fields.char('Value', translate=True, required=True),
+        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
+        'product_ids': fields.many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Attribute Price Extra',
+            fnct_inv=_set_price_extra,
+            digits_compute=dp.get_precision('Product Price'),
+            help="Price Extra: Extra price for the variant with this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
+        'price_ids': fields.one2many('product.attribute.price', 'value_id', string='Attribute Prices', readonly=True),
+    }
+    _sql_constraints = [
+        ('value_company_uniq', 'unique (name,attribute_id)', 'This attribute value already exists !')
+    ]
+    _defaults = {
+        'price_extra': 0.0,
+    }
+
+class product_attribute_price(osv.osv):
+    _name = "product.attribute.price"
+    _columns = {
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
+        'value_id': fields.many2one('product.attribute.value', 'Product Attribute Value', required=True),
+        'price_extra': fields.float('Price Extra', digits_compute=dp.get_precision('Product Price')),
+    }
+
+class product_attribute_line(osv.osv):
+    _name = "product.attribute.line"
+    _columns = {
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
+        'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True),
+        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value'),
     }
 
 
@@ -399,6 +413,42 @@ class product_template(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+    def _is_product_variant(self, cr, uid, ids, name, arg, context=None):
+        return self.is_product_variant(cr, uid, ids, name, arg, context=context)
+
+    def is_product_variant(self, cr, uid, ids, name, arg, context=None):
+        prod = self.pool.get('product.product')
+        res = dict.fromkeys(ids, False)
+        ctx = dict(context, active_test=True)
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = prod.search(cr, uid, [('product_tmpl_id','=',product.id)], context=ctx, count=True) == 1
+        return res
+
+
+    def _product_template_price(self, cr, uid, ids, name, arg, context=None):
+        plobj = self.pool.get('product.pricelist')
+        res = {}
+        quantity = context.get('quantity') or 1.0
+        pricelist = context.get('pricelist', False)
+        partner = context.get('partner', False)
+        if pricelist:
+            # Support context pricelists specified as display_name or ID for compatibility
+            if isinstance(pricelist, basestring):
+                pricelist_ids = plobj.name_search(
+                    cr, uid, pricelist, operator='=', context=context, limit=1)
+                pricelist = pricelist_ids[0][0] if pricelist_ids else pricelist
+
+            if isinstance(pricelist, (int, long)):
+                products = self.browse(cr, uid, ids, context=context)
+                qtys = map(lambda x: (x, quantity, partner), products)
+                pl = plobj.browse(cr, uid, pricelist, context=context)
+                price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
+                for id in ids:
+                    res[id] = price.get(id, 0.0)
+        for id in ids:
+            res.setdefault(id, 0.0)
+        return res
+
     def get_history_price(self, cr, uid, product_tmpl, company_id, date=None, context=None):
         if context is None:
             context = {}
@@ -412,6 +462,8 @@ class product_template(osv.osv):
 
     def _set_standard_price(self, cr, uid, product_tmpl_id, value, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
+        if context is None:
+            context = {}
         price_history_obj = self.pool['product.price.history']
         user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         company_id = context.get('force_company', user_company)
@@ -420,6 +472,12 @@ class product_template(osv.osv):
             'cost': value,
             'company_id': company_id,
         }, context=context)
+
+    def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids):
+            res[product.id] = len(product.product_variant_ids)
+        return res
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
@@ -434,9 +492,10 @@ class product_template(osv.osv):
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
         'rental': fields.boolean('Can be Rent'),
-        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'public_categ_id': fields.many2one('product.public.category','Public Category', help="Those categories are used to group similar products for public sales (eg.: point of sale, e-commerce)."),
+        'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
+        'price': fields.function(_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
+        'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders.", 
                                           groups="base.group_user", string="Cost Price"),
@@ -445,6 +504,7 @@ class product_template(osv.osv):
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
+        'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'state': fields.selection([('',''),
             ('draft', 'In Development'),
             ('sellable','Normal'),
@@ -458,13 +518,12 @@ class product_template(osv.osv):
             help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
             help="This field holds the image used as image for the product, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized image", type="binary", multi="_get_image",
+            string="Medium-sized image", type="binary", multi="_get_image", 
             store={
                 'product.template': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
@@ -479,13 +538,64 @@ class product_template(osv.osv):
             help="Small-sized image of the product. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Product Variants', required=True),
+        'packaging_ids': fields.one2many(
+            'product.packaging', 'product_tmpl_id', 'Logistical Units',
+            help="Gives the different ways to package the same product. This has no impact on "
+                 "the picking order and is mainly used if you use the EDI module."),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
+        'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
+            help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'seller_qty': fields.related('seller_ids','qty', type='float', string='Supplier Quantity',
+            help="This is minimum quantity to purchase from Main Supplier."),
+        'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Supplier',
+            help="Main Supplier who has highest priority in Supplier List."),
+
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
+        'color': fields.integer('Color Index'),
+        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Only one product variant'),
+
+        'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
+        'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
+        'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
+
+        # related to display product product information if is_product_variant
+        'ean13': fields.related('product_variant_ids', 'ean13', type='char', string='EAN13 Barcode'),
+        'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
     }
 
+    def _price_get_list_price(self, product):
+        return 0.0
+
+    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
+        if context is None:
+            context = {}
+
+        if 'currency_id' in context:
+            pricetype_obj = self.pool.get('product.price.type')
+            price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
+            price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
+
+        res = {}
+        product_uom_obj = self.pool.get('product.uom')
+        for product in products:
+            res[product.id] = product[ptype] or 0.0
+            if ptype == 'list_price':
+                res[product.id] += product._name == "product.product" and product.price_extra or 0.0
+            if 'uom' in context:
+                uom = product.uom_id or product.uos_id
+                res[product.id] = product_uom_obj._compute_price(cr, uid,
+                        uom.id, res[product.id], context['uom'])
+            # Convert from price_type currency to asked one
+            if 'currency_id' in context:
+                # Take the price_type currency from the product field
+                # This is right cause a field cannot be in more than one currency
+                res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
+                    context['currency_id'], res[product.id],context=context)
+
+        return res
+
     def _get_uom_id(self, cr, uid, *args):
-        cr.execute('select id from product_uom order by id limit 1')
-        res = cr.fetchone()
-        return res and res[0] or False
+        return self.pool["product.uom"].search(cr, uid, [], limit=1, order='id')[0]
 
     def _default_category(self, cr, uid, context=None):
         if context is None:
@@ -505,15 +615,74 @@ class product_template(osv.osv):
             return {'value': {'uom_po_id': uom_id}}
         return {}
 
+    def create_variant_ids(self, cr, uid, ids, context=None):
+        product_obj = self.pool.get("product.product")
+        ctx = context and context.copy() or {}
+
+        if ctx.get("create_product_variant"):
+            return None
+
+        ctx.update(active_test=False, create_product_variant=True)
+
+        tmpl_ids = self.browse(cr, uid, ids, context=ctx)
+        for tmpl_id in tmpl_ids:
+
+            # list of values combination
+            all_variants = [[]]
+            for variant_id in tmpl_id.attribute_line_ids:
+                if len(variant_id.value_ids) > 1:
+                    temp_variants = []
+                    for value_id in variant_id.value_ids:
+                        for variant in all_variants:
+                            temp_variants.append(variant + [int(value_id)])
+                    all_variants = temp_variants
+
+            # check product
+            variant_ids_to_active = []
+            variants_active_ids = []
+            variants_inactive = []
+            for product_id in tmpl_id.product_variant_ids:
+                variants = map(int,product_id.attribute_value_ids)
+                if variants in all_variants:
+                    variants_active_ids.append(product_id.id)
+                    all_variants.pop(all_variants.index(variants))
+                    if not product_id.active:
+                        variant_ids_to_active.append(product_id.id)
+                else:
+                    variants_inactive.append(product_id)
+            if variant_ids_to_active:
+                product_obj.write(cr, uid, variant_ids_to_active, {'active': True}, context=ctx)
+
+            # create new product
+            for variant_ids in all_variants:
+                values = {
+                    'product_tmpl_id': tmpl_id.id,
+                    'attribute_value_ids': [(6, 0, variant_ids)]
+                }
+                id = product_obj.create(cr, uid, values, context=ctx)
+                variants_active_ids.append(id)
+
+            # unlink or inactive product
+            for variant_id in map(int,variants_inactive):
+                try:
+                    with cr.savepoint():
+                        product_obj.unlink(cr, uid, [variant_id], context=ctx)
+                except (psycopg2.Error, osv.except_osv):
+                    product_obj.write(cr, uid, [variant_id], {'active': False}, context=ctx)
+                    pass
+        return True
+
     def create(self, cr, uid, vals, context=None):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
         product_template_id = super(product_template, self).create(cr, uid, vals, context=context)
+        if not context or "create_product_product" not in context:
+            self.create_variant_ids(cr, uid, [product_template_id], context=context)
         self._set_standard_price(cr, uid, product_template_id, vals.get('standard_price', 0.0), context=context)
         return product_template_id
 
     def write(self, cr, uid, ids, vals, context=None):
         ''' Store the standard price change in order to be able to retrieve the cost of a product template for a given date'''
-        if isinstance(id, (int, long)):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         if 'uom_po_id' in vals:
             new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
@@ -524,7 +693,17 @@ class product_template(osv.osv):
         if 'standard_price' in vals:
             for prod_template_id in ids:
                 self._set_standard_price(cr, uid, prod_template_id, vals['standard_price'], context=context)
-        return super(product_template, self).write(cr, uid, ids, vals, context=context)
+        res = super(product_template, self).write(cr, uid, ids, vals, context=context)
+        if 'attribute_line_ids' in vals or vals.get('active'):
+            self.create_variant_ids(cr, uid, ids, context=context)
+        if 'active' in vals and not vals.get('active'):
+            ctx = context and context.copy() or {}
+            ctx.update(active_test=False)
+            product_ids = []
+            for product in self.browse(cr, uid, ids, context=ctx):
+                product_ids = map(int,product.product_variant_ids)
+            self.pool.get("product.product").write(cr, uid, product_ids, {'active': vals.get('active')}, context=ctx)
+        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -544,6 +723,7 @@ class product_template(osv.osv):
         'mes_type': 'fixed',
         'categ_id' : _default_category,
         'type' : 'consu',
+        'active': True,
     }
 
     def _check_uom(self, cursor, user, ids, context=None):
@@ -579,14 +759,6 @@ class product_product(osv.osv):
     _inherit = ['mail.thread']
     _order = 'default_code,name_template'
 
-    def view_header_get(self, cr, uid, view_id, view_type, context=None):
-        if context is None:
-            context = {}
-        res = super(product_product, self).view_header_get(cr, uid, view_id, view_type, context)
-        if (context.get('categ_id', False)):
-            return _('Products: ') + self.pool.get('product.category').browse(cr, uid, context['categ_id'], context=context).name
-        return res
-
     def _product_price(self, cr, uid, ids, name, arg, context=None):
         plobj = self.pool.get('product.pricelist')
         res = {}
@@ -613,11 +785,19 @@ class product_product(osv.osv):
             res.setdefault(id, 0.0)
         return res
 
+    def view_header_get(self, cr, uid, view_id, view_type, context=None):
+        if context is None:
+            context = {}
+        res = super(product_product, self).view_header_get(cr, uid, view_id, view_type, context)
+        if (context.get('categ_id', False)):
+            return _('Products: ') + self.pool.get('product.category').browse(cr, uid, context['categ_id'], context=context).name
+        return res
+
     def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
         res = {}
         product_uom_obj = self.pool.get('product.uom')
-        for id in ids:
-            res.setdefault(id, 0.0)
+        res = dict.fromkeys(ids, 0.0)
+
         for product in self.browse(cr, uid, ids, context=context):
             if 'uom' in context:
                 uom = product.uos_id or product.uom_id
@@ -625,20 +805,17 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+            price_extra = 0.0
+            for variant_id in product.attribute_value_ids:
+                price_extra += variant_id.price_extra
+            res[product.id] =  (res[product.id] or 0.0) + price_extra
         return res
-
-    def _save_product_lst_price(self, cr, uid, product_id, field_name, field_value, arg, context=None):
-        field_value = field_value or 0.0
-        product = self.browse(cr, uid, product_id, context=context)
-        list_price = (field_value - product.price_extra) / (product.price_margin or 1.0)
-        return self.write(cr, uid, [product_id], {'list_price': list_price}, context=context)
 
     def _get_partner_code_name(self, cr, uid, ids, product, partner_id, context=None):
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
-                return {'code': supinfo.product_code or product.default_code, 'name': supinfo.product_name or product.name, 'variants': ''}
-        res = {'code': product.default_code, 'name': product.name, 'variants': product.variants}
+                return {'code': supinfo.product_code or product.default_code, 'name': supinfo.product_name or product.name}
+        res = {'code': product.default_code, 'name': product.name}
         return res
 
     def _product_code(self, cr, uid, ids, name, arg, context=None):
@@ -655,48 +832,15 @@ class product_product(osv.osv):
             context = {}
         for p in self.browse(cr, uid, ids, context=context):
             data = self._get_partner_code_name(cr, uid, [], p, context.get('partner_id', None), context=context)
-            if not data['variants']:
-                data['variants'] = p.variants
             if not data['code']:
                 data['code'] = p.code
             if not data['name']:
                 data['name'] = p.name
-            res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
-                    (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
+            res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + (data['name'] or '')
         return res
 
-    def _is_only_child(self, cr, uid, ids, name, arg, context=None):
-        res = dict.fromkeys(ids, True)
-        for product in self.browse(cr, uid, ids, context=context):
-            if product.product_tmpl_id and len(product.product_tmpl_id.product_variant_ids) > 1:
-                res[product.id] = False
-        return res
-
-    def _get_main_product_supplier(self, cr, uid, product, context=None):
-        """Determines the main (best) product supplier for ``product``,
-        returning the corresponding ``supplierinfo`` record, or False
-        if none were found. The default strategy is to select the
-        supplier with the highest priority (i.e. smallest sequence).
-
-        :param browse_record product: product to supply
-        :rtype: product.supplierinfo browse_record or False
-        """
-        sellers = [(seller_info.sequence, seller_info)
-                       for seller_info in product.seller_ids or []
-                       if seller_info and isinstance(seller_info.sequence, (int, long))]
-        return sellers and sellers[0][1] or False
-
-    def _calc_seller(self, cr, uid, ids, fields, arg, context=None):
-        result = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
-            result[product.id] = {
-                'seller_info_id': main_supplier and main_supplier.id or False,
-                'seller_delay': main_supplier.delay if main_supplier else 1,
-                'seller_qty': main_supplier and main_supplier.qty or 0.0,
-                'seller_id': main_supplier and main_supplier.name.id or False
-            }
-        return result
+    def is_product_variant(self, cr, uid, ids, name, arg, context=None):
+        return dict.fromkeys(ids, True)
 
     def _get_name_template_ids(self, cr, uid, ids, context=None):
         result = set()
@@ -705,39 +849,67 @@ class product_product(osv.osv):
             result.add(el)
         return list(result)
 
+    def _get_image_variant(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.image_variant or getattr(obj.product_tmpl_id, name)
+        return result
+
+    def _set_image_variant(self, cr, uid, id, name, value, args, context=None):
+        image = tools.image_resize_image_big(value)
+        res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
+        product = self.browse(cr, uid, id, context=context)
+        if not product.product_tmpl_id.image:
+            product.write({'image_variant': None}, context=context)
+            product.product_tmpl_id.write({'image': image}, context=context)
+        return res
+
+    def _get_price_extra(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for product in self.browse(cr, uid, ids, context=context):
+            price_extra = 0.0
+            for variant_id in product.attribute_value_ids:
+                for price_id in variant_id.price_ids:
+                    if price_id.product_tmpl_id.id == product.product_tmpl_id.id:
+                        price_extra += price_id.price_extra
+            result[product.id] = price_extra
+        return result
+
     _columns = {
-        'price': fields.function(_product_price, fnct_inv=_save_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
-        'lst_price' : fields.function(_product_lst_price, fnct_inv=_save_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
+        'price': fields.function(_product_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is le sum of the extra price of all attributes"),
+        'lst_price': fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
-        'variants': fields.char('Variants', translate=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True),
-        'is_only_child': fields.function(
-            _is_only_child, type='boolean', string='Sole child of the parent template'),
         'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
-        'packaging': fields.one2many('product.packaging', 'product_id', 'Packaging', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price'), help="Price Extra: Extra price for the variant on sale price. eg. 200 price extra, 1000 + 200 = 1200."),
-        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price'), help="Price Margin: Margin in percentage amount on sale price for the variant. eg. 10 price margin, 1000 * 1.1 = 1100."),
-        'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
         }, select=True),
-        'color': fields.integer('Color Index'),
-        'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", string="Supplier Info", multi="seller_info"),
-        'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.function(_calc_seller, type='float', string='Supplier Quantity', multi="seller_info", help="This is minimum quantity to purchase from Main Supplier."),
-        'seller_id': fields.function(_calc_seller, type='many2one', relation="res.partner", string='Main Supplier', help="Main Supplier who has highest priority in Supplier List.", multi="seller_info"),
+        'attribute_value_ids': fields.many2many('product.attribute.value', id1='prod_id', id2='att_id', string='Attributes', readonly=True),
+
+        # image: all image fields are base64 encoded and PIL-supported
+        'image_variant': fields.binary("Variant Image",
+            help="This field holds the image used as image for the product variant, limited to 1024x1024px."),
+
+        'image': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
+            string="Big-sized image", type="binary",
+            help="Image of the product variant (Big-sized image of product template if false). It is automatically "\
+                 "resized as a 1024x1024px image, with aspect ratio preserved."),
+        'image_small': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
+            string="Small-sized image", type="binary",
+            help="Image of the product variant (Small-sized image of product template if false)."),
+        'image_medium': fields.function(_get_image_variant, fnct_inv=_set_image_variant,
+            string="Medium-sized image", type="binary",
+            help="Image of the product variant (Medium-sized image of product template if false)."),
     }
 
     _defaults = {
-        'active': lambda *a: 1,
-        'price_extra': lambda *a: 0.0,
-        'price_margin': lambda *a: 1.0,
+        'active': 1,
         'color': 0,
-        'is_only_child': True,
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -767,8 +939,9 @@ class product_product(osv.osv):
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
-            res = check_ean(product['ean13'])
-        return res
+            if not check_ean(product['ean13']):
+                return False
+        return True
 
     _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
 
@@ -782,13 +955,12 @@ class product_product(osv.osv):
             ids = [ids]
         if not len(ids):
             return []
+
         def _name_get(d):
             name = d.get('name','')
             code = d.get('default_code',False)
             if code:
                 name = '[%s] %s' % (code,name)
-            if d.get('variants'):
-                name = name + ' - %s' % (d['variants'],)
             return (d['id'], name)
 
         partner_id = context.get('partner_id', False)
@@ -800,6 +972,8 @@ class product_product(osv.osv):
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            variant = ", ".join([v.name for v in product.attribute_value_ids])
+            name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_id:
                 sellers = filter(lambda x: x.name.id == partner_id, product.seller_ids)
@@ -807,17 +981,15 @@ class product_product(osv.osv):
                 for s in sellers:
                     mydict = {
                               'id': product.id,
-                              'name': s.product_name or product.name,
+                              'name': s.product_name or name,
                               'default_code': s.product_code or product.default_code,
-                              'variants': product.variants
                               }
                     result.append(_name_get(mydict))
             else:
                 mydict = {
                           'id': product.id,
-                          'name': product.name,
+                          'name': name,
                           'default_code': product.default_code,
-                          'variants': product.variants
                           }
                 result.append(_name_get(mydict))
         return result
@@ -855,44 +1027,7 @@ class product_product(osv.osv):
     #
     def price_get(self, cr, uid, ids, ptype='list_price', context=None):
         products = self.browse(cr, uid, ids, context=context)
-        return self._price_get(cr, uid, products, ptype=ptype, context=context)
-
-    def _price_get(self, cr, uid, products, ptype='list_price', context=None):
-        if context is None:
-            context = {}
-
-        if 'currency_id' in context:
-            pricetype_obj = self.pool.get('product.price.type')
-            price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
-            price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
-
-        res = {}
-        # standard_price field can only be seen by users in base.group_user
-        # Thus, in order to compute the sale price from the cost price for users not in this group
-        # We fetch the standard price as the superuser
-        for product in products:
-            if ptype != 'standard_price':
-                res[product.id] = product[ptype] or 0.0
-            else: 
-                res[product.id] = self.read(cr, SUPERUSER_ID, product.id, [ptype], context=context)[ptype] or 0.0
-
-        product_uom_obj = self.pool.get('product.uom')
-        for product in products:
-            if ptype == 'list_price':
-                res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
-                        product.price_extra
-            if 'uom' in context:
-                uom = product.uom_id or product.uos_id
-                res[product.id] = product_uom_obj._compute_price(cr, uid,
-                        uom.id, res[product.id], context['uom'])
-            # Convert from price_type currency to asked one
-            if 'currency_id' in context:
-                # Take the price_type currency from the product field
-                # This is right cause a field cannot be in more than one currency
-                res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
-                    context['currency_id'], res[product.id],context=context)
-
-        return res
+        return self.pool.get("product.template")._price_get(cr, uid, products, ptype=ptype, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
@@ -923,6 +1058,12 @@ class product_product(osv.osv):
                 'res_id': product.product_tmpl_id.id,
                 'target': 'new'}
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        ctx = dict(context or {}, create_product_product=True)
+        return super(product_product, self).create(cr, uid, vals, context=ctx)
+
 
 class product_packaging(osv.osv):
     _name = "product.packaging"
@@ -939,7 +1080,7 @@ class product_packaging(osv.osv):
         'ul_container': fields.many2one('product.ul', 'Pallet Logistic Unit'),
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
-        'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),
+        'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
         'ean' : fields.char('EAN', size=14, help="The EAN code of the package unit."),
         'code' : fields.char('Code', help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
@@ -948,8 +1089,9 @@ class product_packaging(osv.osv):
 
     def _check_ean_key(self, cr, uid, ids, context=None):
         for pack in self.browse(cr, uid, ids, context=context):
-            res = check_ean(pack.ean)
-        return res
+            if not check_ean(pack.ean):
+                return False
+        return True
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean'])]
 
@@ -969,8 +1111,8 @@ class product_packaging(osv.osv):
         return (res and res[0]) or False
 
     _defaults = {
-        'rows' : lambda *a : 3,
-        'sequence' : lambda *a : 1,
+        'rows' : 3,
+        'sequence' : 1,
         'ul' : _get_1st_ul,
     }
 
@@ -1010,9 +1152,9 @@ class product_supplierinfo(osv.osv):
         'company_id':fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
-        'qty': lambda *a: 0.0,
-        'sequence': lambda *a: 1,
-        'delay': lambda *a: 1,
+        'min_qty': 0.0,
+        'sequence': 1,
+        'delay': 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
     }
     def price_get(self, cr, uid, supplier_ids, product_id, product_qty=1, context=None):

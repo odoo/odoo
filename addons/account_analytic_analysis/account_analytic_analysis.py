@@ -69,7 +69,7 @@ class account_analytic_invoice_line(osv.osv):
         if partner_id:
             part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=local_context)
             if part.lang:
-                context.update({'lang': part.lang})
+                local_context.update({'lang': part.lang})
 
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=local_context)
@@ -77,9 +77,14 @@ class account_analytic_invoice_line(osv.osv):
             price = price_unit
         elif pricelist_id:
             price = res.price
-        else:
+        if price is False:
             price = res.list_price
-        result.update({'name': name or res.description or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
+        if not name:
+            name = self.pool.get('product.product').name_get(cr, uid, [res.id], context=local_context)[0][1]
+            if res.description_sale:
+                name += '\n'+res.description_sale
+
+        result.update({'name': name or False,'uom_id': uom_id or res.uom_id.id or False, 'price_unit': price})
 
         res_final = {'value':result}
         if result['uom_id'] != res.uom_id.id:
@@ -548,18 +553,17 @@ class account_analytic_account(osv.osv):
             'nodestroy': True,
         }
 
-    def on_change_template(self, cr, uid, ids, template_id, date_start=False, fix_price_invoices=False, invoice_on_timesheets=False, recurring_invoices=False, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
         if not template_id:
             return {}
-        obj_analytic_line = self.pool.get('account.analytic.invoice.line')
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
 
         template = self.browse(cr, uid, template_id, context=context)
         
-        if not fix_price_invoices:
+        if not ids:
             res['value']['fix_price_invoices'] = template.fix_price_invoices
             res['value']['amount_max'] = template.amount_max
-        if not invoice_on_timesheets:
+        if not ids:
             res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
             res['value']['hours_qtt_est'] = template.hours_qtt_est
         
@@ -567,7 +571,7 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = template.to_invoice.id
         if template.pricelist_id.id:
             res['value']['pricelist_id'] = template.pricelist_id.id
-        if not recurring_invoices:
+        if not ids:
             invoice_line_ids = []
             for x in template.recurring_invoice_line_ids:
                 invoice_line_ids.append((0, 0, {

@@ -4,6 +4,40 @@
     var website = openerp.website;
 
     website.Tour.register({
+        id:   'shop_customize',
+        name: "Customize the page and search a product",
+        path: '/shop',
+        mode: 'test',
+        steps: [
+            {
+                title:     "open customize menu",
+                element:   '#customize-menu-button',
+            },
+            {
+                title:     "click on 'Product Attribute's Filters'",
+                element:   "#customize-menu a:contains(Product Attribute's Filters)",
+            },
+            {
+                title:     "select product attribute memory 16 Go",
+                element:   'form.js_attributes label:contains(16 Go) input:not(:checked)',
+            },
+            {
+                title:     "check the selection",
+                waitFor:   'form.js_attributes label:contains(16 Go) input:checked',
+            },
+            {
+                title:     "select ipod",
+                waitNot:   '.oe_website_sale .oe_product_cart:eq(2)',
+                element:   '.oe_product_cart a:contains("iPod")',
+            },
+            {
+                title:     "finish",
+                waitFor:   'form[action="/shop/cart/update"] label:contains(32 Go) input',
+            }
+        ]
+    });
+
+    website.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",
         path: '/shop',
@@ -15,11 +49,12 @@
             },
             {
                 title:     "select ipod 32Go",
-                element:   'input[name="product_id"]:not([checked])',
+                waitFor:   '#product_detail',
+                element:   'label:contains(32 Go) input',
             },
             {
                 title:     "click on add to cart",
-                waitFor:   'input[name="product_id"]:eq(1)[checked]',
+                waitFor:   'label:contains(32 Go) input[checked]',
                 element:   'form[action="/shop/cart/update"] .btn',
             },
             {
@@ -30,11 +65,11 @@
             {
                 title:     "add one more iPod",
                 waitFor:   '.my_cart_quantity:contains(2)',
-                element:   '#cart_products tr:contains("iPod - 32 Gb") a.js_add_cart_json:eq(1)',
+                element:   '#cart_products tr:contains("32 Go") a.js_add_cart_json:eq(1)',
             },
             {
                 title:     "remove Headphones",
-                waitFor:   '#cart_products tr:contains("iPod - 32 Gb") input.js_quantity[value=2]',
+                waitFor:   '#cart_products tr:contains("32 Go") input.js_quantity[value=2]',
                 element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
             },
             {
@@ -78,7 +113,7 @@
             {
                 title:     "Pay Now",
                 waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
-                element:   '.oe_sale_acquirer_button .btn[name="submit"]:visible',
+                element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
             },
             {
                 title:     "finish",
