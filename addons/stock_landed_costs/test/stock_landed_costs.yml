@@ -1,0 +1,101 @@
+
+-
+   Create a user as 'Stock Manager'
+-
+  !record {model: res.users, id: res_users_stock_manager, view: False}:
+    company_id: base.main_company
+    name: Stock Manager
+    login: sam
+    password: sam
+    email: stockmanager@yourcompany.com
+-
+  I added groups for Stock Manager.
+-
+  !record {model: res.users, id: res_users_stock_manager}:
+    groups_id:
+      - stock.group_stock_manager
+-
+  Test the data with Stock manager,
+-
+  !context
+    uid: 'res_users_stock_manager'
+
+-
+  In order to test process of the Landed Cost, I create Landed Cost record
+
+-
+  !record {model: stock.landed.cost, id: stock_landed_cost1}:
+      account_journal_id: stock_account.stock_journal
+      cost_lines:
+        - product_id: stock_landed_costs.product_product_50
+-
+  I verify that the onchange was correctly triggered
+-
+  !assert {model: stock.landed.cost, id: stock_landed_costs.stock_landed_cost1, string: The onchange function of product was not correctly triggered}:
+    - cost_lines[0].name == u'Insurance'
+    - cost_lines[0].price_unit == 100
+    - cost_lines[0].split_method == u'by_current_cost_price'
+
+-
+ creating move for valuation adjustment lines
+-
+  !record {model: stock.move, id: move_test}:
+    name: Move Products
+    product_id: product_product_55
+    product_uom: product.product_uom_unit
+    product_uom_qty: 45.0
+    product_uos_qty: 45.0
+    product_uos: product.product_uom_unit
+    location_id: stock.stock_location_shop0
+    location_dest_id: stock.stock_location_customers
+
+-
+  I confirm the move to be processed in the future
+-
+  !python {model: stock.move}: |
+    self.action_confirm(cr, uid, [ref('move_test')], context=context)
+
+-
+  I validate the move
+-
+  !python {model: stock.move}: |
+    self.action_done(cr, uid, [ref('move_test')], context=context)
+-
+ creating valuation adjustment lines
+-
+  !python {model: stock.valuation.adjustment.lines}: |
+    move_rec = self.pool.get('stock.move').browse(cr, uid, ref('move_test'))
+    total_cost = move_rec.quant_ids[0].cost
+    weight = 0.0
+    volume = 0.0
+    total_qty = 1.0
+    former_cost = total_cost * total_qty
+    vals = {
+      'cost_id': ref('stock_landed_cost1'), 
+      'product_id': ref('product_product_55'),        
+      'quantity': total_qty,
+      'former_cost': former_cost,
+      'weight': weight * total_qty,
+      'volume': volume * total_qty,
+      'flag': 'original',
+      'move_id': ref('move_test'),
+    }
+    line_id = self.create(cr, uid, vals, context=context)
+    record = self.browse(cr, uid, line_id, context=context)
+    assert record.move_id, "Stock Move is not created"
+    assert record.move_id.quant_ids, "Quant is not associated with move"
+    assert record.move_id.quant_ids[0].cost == former_cost, "Former Cost and Cost Of Quant Differs"
+-
+ !python {model: stock.landed.cost}: |
+    self.button_validate(cr, uid, [ref('stock_landed_cost1')], context=context)
+    stock_landed_cost = self.browse(cr, uid, [ref('stock_landed_cost1')], context=context)
+    assert stock_landed_cost[0].valuation_adjustment_lines,'Valuation Adjustment Lines do not exists'
+    cost = stock_landed_cost[0].valuation_adjustment_lines[0].move_id.quant_ids[0].cost
+    assert stock_landed_cost[0].valuation_adjustment_lines[0].former_cost == cost, "Former Cost and Cost Of Quant Differs After Validating Stock Landed Cost"
+    assert stock_landed_cost[0].account_move_id, "Journal Entry is not created"
+    expense_account = stock_landed_cost[0].valuation_adjustment_lines[0].product_id.property_account_expense.id or stock_landed_cost[0].valuation_adjustment_lines[0].product_id.categ_id.property_account_expense_categ.id or False
+    stock_valuation_account = stock_landed_cost[0].valuation_adjustment_lines[0].product_id.categ_id.property_stock_valuation_account_id.id or False
+    assert stock_landed_cost[0].account_move_id.line_id[0].account_id.id == expense_account, 'Wrong Journal Entry of Accounts'
+    assert stock_landed_cost[0].account_move_id.line_id[1].account_id.id == stock_valuation_account, 'Wrong Journal Entry of Accounts'
+
+
