@@ -95,11 +95,11 @@ class crm_case_section(osv.osv):
 
     _columns = {
         'invoiced_forecast': fields.integer(string='Invoice Forecast',
-            help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+            help="Forecast of the invoice revenu    e for the current month. This is the amount the sales \n"
                     "team should invoice this month. It is used to compute the progression ratio \n"
                     " of the current and forecast revenue on the kanban view."),
         'invoiced_target': fields.integer(string='Invoice Target',
-            help="Target of invoice revenue for the current month. This is the amount the sales \n"
+            help="Target of revenue for the current month. This is the amount the sales \n"
                     "team estimates to be able to invoice this month."),
         'monthly_quoted': fields.function(_get_sale_orders_data,
             type='string', readonly=True, multi='_get_sale_orders_data',
