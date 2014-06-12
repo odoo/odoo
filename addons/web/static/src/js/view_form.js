@@ -5501,9 +5501,13 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
+        var self= this;
+        this.$el.find('#edit_icon').click(function(event){
+            self.$el.find('input.oe_form_binary_file').click();
+        });
         this.$el.find('input.oe_form_binary_file').change(this.on_file_change);
         this.$el.find('button.oe_form_binary_file_save').click(this.on_save_as);
-        this.$el.find('.oe_form_binary_file_clear').click(this.on_clear);
+        this.$el.find('#remove_icon').click(this.on_clear);
     },
     on_file_change: function(e) {
         var self = this;
@@ -5671,8 +5675,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
                 return;
             $img.css("max-width", "" + self.options.size[0] + "px");
             $img.css("max-height", "" + self.options.size[1] + "px");
-            $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
-            $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
         });
         $img.on('error', function() {
             $img.attr('src', self.placeholder);
