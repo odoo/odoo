@@ -59,7 +59,7 @@
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Sales Receipt" version="7.0">
+                <form string="Sales Receipt">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Validate Payment" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
@@ -208,7 +208,7 @@
             <field name="name">account.voucher.purchase.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Purchase Voucher" version="7.0">
+                <form string="Purchase Voucher">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>

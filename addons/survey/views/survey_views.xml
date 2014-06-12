@@ -27,7 +27,7 @@
             <field name="name">survey_user_input_form</field>
             <field name="model">survey.user_input</field>
             <field name="arch" type="xml">
-                <form string="Survey User inputs" version="7.0" create="false">
+                <form string="Survey User inputs" create="false">
                     <header>
                         <button name="action_survey_resent" string="Sent Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('type','=','manually'), ('state', '=', 'done')]}"/>
                         <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
@@ -70,7 +70,7 @@
             <field name="name">survey_user_input_tree</field>
             <field name="model">survey.user_input</field>
             <field name="arch" type="xml">
-                <tree string="Survey User inputs" version="7.0" colors="lightgrey:test_entry == True" create="false">
+                <tree string="Survey User inputs" colors="lightgrey:test_entry == True" create="false">
                     <field name="survey_id"/>
                     <field name="date_create"/>
                     <field name="deadline"/>
@@ -112,7 +112,7 @@
             <field name="name">Form view for survey</field>
             <field name="model">survey.survey</field>
             <field name="arch" type="xml">
-                <form string="Survey" version="7.0">
+                <form string="Survey">
                     <header groups="base.group_survey_manager">
                         <button name="action_test_survey" string="Test Survey" type="object"/>
                         <button name="action_print_survey" string="Print Survey" type="object"/>
@@ -234,7 +234,7 @@
             <field name="name">Form view for survey page</field>
             <field name="model">survey.page</field>
             <field name="arch" type="xml">
-                <form string="Survey Page" version="7.0" create="false">
+                <form string="Survey Page" create="false">
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
                             <label for="title" class="oe_edit_only"/>
@@ -293,7 +293,7 @@
             <field name="name">Form view for survey question</field>
             <field name="model">survey.question</field>
             <field name="arch" type="xml">
-                <form string="Survey Question" version="7.0" create="false">
+                <form string="Survey Question" create="false">
                     <sheet>
                         <div class="oe_title" style="width: 100%;">
                             <label for="question" string="Question name" class="oe_edit_only"/>
@@ -437,7 +437,7 @@
             <field name="name">survey_user_input_line_form</field>
             <field name="model">survey.user_input_line</field>
             <field name="arch" type="xml">
-                <form string="User input line details" version="7.0" create="false">
+                <form string="User input line details" create="false">
                     <sheet>
                         <group col="4">
                             <field name="question_id"/>

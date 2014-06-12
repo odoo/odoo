@@ -18,7 +18,7 @@
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <form string="Employee" version="7.0">
+                <form string="Employee">
                     <sheet>
                         <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
@@ -270,7 +270,7 @@
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
             <field name="arch" type="xml">
-                <form string="Employee Category" version="7.0">
+                <form string="Employee Category">
                     <group>
                         <field name="name"/>
                         <field name="parent_id"/>
@@ -332,7 +332,7 @@
             <field name="name">hr.job.form</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <form string="Job" version="7.0">
+                <form string="Job">
                     <header>
                         <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
@@ -433,7 +433,7 @@
             <field name="name">hr.department.form</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <form string="department" version="7.0">
+                <form string="department">
                     <sheet>
                         <group col="4">
                             <field name="name"/>

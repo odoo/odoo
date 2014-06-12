@@ -106,7 +106,7 @@
             <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-                <form string="Contact List" version="7.0">
+                <form string="Contact List">
                     <sheet>
                         <div class="oe_right oe_button_box" name="buttons">
                             <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
@@ -183,7 +183,7 @@
             <field name="name">mail.mass_mailing.form</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing" version="7.0">
+                <form string="Mass Mailing">
                     <header>
                         <button name="action_test_mailing" type="object"
                             class="oe_highlight" string="Test Mailing"
@@ -449,7 +449,7 @@
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-                <form string="Mass Mailing Campaign" version="7.0">
+                <form string="Mass Mailing Campaign">
                     <header>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
@@ -602,7 +602,7 @@
             <field name="name">mail.mail.statistics.form</field>
             <field name="model">mail.mail.statistics</field>
             <field name="arch" type="xml">
-                <form string="Mail Statistics" version="7.0">
+                <form string="Mail Statistics">
                     <group>
                         <group>
                             <field name="mail_mail_id"/>

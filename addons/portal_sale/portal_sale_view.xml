@@ -8,7 +8,7 @@
                 <field name="model">sale.order</field>
                 <field name="inherit_id" ref="sale.view_order_form"/>
                 <field name="arch" type="xml">
-                    <notebook version="7.0" position="before">
+                    <notebook position="before">
                         <field name="portal_payment_options" groups="portal_sale.group_payment_options" class="view_portal_payment_options"/>
                     </notebook>
                 </field>
@@ -18,7 +18,7 @@
                 <field name="model">account.invoice</field>
                 <field name="inherit_id" ref="account.invoice_form"/>
                 <field name="arch" type="xml">
-                    <notebook version="7.0" position="before">
+                    <notebook position="before">
                         <field name="portal_payment_options" groups="portal_sale.group_payment_options" class="view_portal_payment_options"/>
                     </notebook>
                 </field>

@@ -90,7 +90,7 @@
         <field name="name">CRM - Leads Form</field>
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
-            <form string="Leads Form" version="7.0">
+            <form string="Leads Form">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
@@ -380,7 +380,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Opportunities" version="7.0">
+                <form string="Opportunities">
                     <header>
                         <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>

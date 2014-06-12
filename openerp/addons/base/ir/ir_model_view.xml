@@ -7,7 +7,7 @@
             <field name="name">Create Menu</field>
             <field name="model">wizard.ir.model.menu.create</field>
             <field name="arch" type="xml">
-                <form string="Create Menu" version="7.0">
+                <form string="Create Menu">
                     <group>
                         <field name="name"/>
                         <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
@@ -26,7 +26,7 @@
         <record id="view_model_form" model="ir.ui.view">
             <field name="model">ir.model</field>
             <field name="arch" type="xml">
-                <form string="Model Description" version="7.0">
+                <form string="Model Description">
                   <sheet>
                     <group>
                         <group>
@@ -51,7 +51,7 @@
                                     <field name="select_level"/>
                                     <field name="state"/>
                                 </tree>
-                                <form string="Fields Description" version="7.0">
+                                <form string="Fields Description">
                                     <group col="4">
                                         <field name="name"/>
                                         <field name="state"/>
@@ -152,7 +152,7 @@
         <record id="view_model_fields_form" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <form string="Fields" version="7.0">
+                <form string="Fields">
                   <sheet>
                     <group>
                         <group>
@@ -240,7 +240,7 @@
         <record model="ir.ui.view" id="view_model_data_form">
             <field name="model">ir.model.data</field>
             <field name="arch" type="xml">
-                <form string="External Identifiers" version="7.0">
+                <form string="External Identifiers">
                   <group>
                     <group>
                         <field name="complete_name"/>
@@ -386,7 +386,7 @@
         <record id="ir_access_view_form" model="ir.ui.view">
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
-                <form string="Access Controls" version="7.0">
+                <form string="Access Controls">
                    <sheet>
                     <group col="4">
                         <field name="name"/>
