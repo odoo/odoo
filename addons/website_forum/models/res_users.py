@@ -35,7 +35,6 @@ class Users(osv.Model):
 
     _defaults = {
         'karma': 0,
-        'website_published': False,
     }
 
     def add_karma(self, cr, uid, ids, karma, context=None):
