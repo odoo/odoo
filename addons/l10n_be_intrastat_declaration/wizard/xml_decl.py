@@ -239,7 +239,7 @@ class xml_decl(osv.TransientModel):
                             exreg = region_mod.browse(cr, uid, region_id).code
             elif invoiceline.invoice_id.type in ('out_invoice', 'out_refund'):
                 #comes from sales
-                if invoiceline.invoice_id.origin
+                if invoiceline.invoice_id.origin:
                     so_ids = saleorder_mod.search(cr, uid, ([('company_id', '=', company.id), ('name', '=', invoiceline.invoice_id.origin)]))
                     if so_ids and so_ids[0]:
                         saleorder = saleorder_mod.browse(cr, uid, so_ids[0])
