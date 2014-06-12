@@ -1,0 +1,79 @@
+-
+  In order to check Inter-Company Rule of creating Supplier invoice from Customer invoice
+  make 'Create Invoices/Refunds when encoding invoices/refunds made' true.
+-
+  !record {model: res.company, id: company_a}:
+    so_from_po: 0
+    po_from_so: 0
+    auto_generate_invoices: 1
+-
+  !record {model: res.company, id: company_b}:
+    so_from_po: 0
+    po_from_so: 0
+    auto_generate_invoices: 1
+-
+  I apply account user group to Company A user.
+-
+  !record {model: res.users, id: res_users_company_a}:
+    groups_id:
+      - account.group_account_user
+- 
+  I will create customer invoice with account user.
+-
+  !context
+    uid: 'res_users_company_a'
+-
+  !record {model: account.account, id: account_expense_company_a}:
+    name: Expenses
+    code: X1000
+    type: other
+    user_type: account.data_account_type_expense
+    company_id: company_a
+-
+  Create an invoice for the partner of company B with amount 450.0
+-
+  !record {model: account.invoice, id: account_invoice_0}:
+    company_id: company_a
+    partner_id: partner_company_b
+    currency_id: base.EUR
+    invoice_line:
+      - product_id: product_consultant
+        price_unit: 450.0
+        account_id: account_expense_company_a
+        quantity: 1.0
+-
+  I check that the customer invoice is in draft state.
+-
+  !assert {model: account.invoice, id: account_invoice_0}:
+    - state == 'draft'
+-
+  I validate the invoice.
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_0}
+-
+  Now apply account user group to User B and test with that user.
+-
+ !record {model: res.users, id: res_users_company_b}:
+    groups_id:
+      - account.group_account_user
+- 
+  !context
+    uid: 'res_users_company_b'
+-
+  I check that the supplier invoice is created with proper data.
+-
+  !python {model: account.invoice}: |
+    supplier_invoices = self.search(cr, uid, [('type','=','in_invoice')], context=context)
+    supplier_invoice = self.browse(cr, uid, supplier_invoices[0], context=context)
+    
+    #check invoice line is created with proper data
+    assert supplier_invoice.invoice_line[0].quantity == 1, "Quantity in invoice line is incorrect."
+    assert supplier_invoice.invoice_line[0].product_id.id == ref("product_consultant"), "Product in line is incorrect."
+    assert supplier_invoice.invoice_line[0].price_unit == 450, "Unit Price in invoice line is incorrect."
+    assert supplier_invoice.invoice_line[0].account_id.company_id.id == ref("company_b"), "Applied account in created invoice line is not relevant to company."
+    
+    assert supplier_invoice.state == "draft", "invoice should be in draft state."
+    assert supplier_invoice.amount_total == 450.0, "Total amount is incorrect."
+    assert supplier_invoice.company_id.id == ref("company_b"), "Applied company in created invoice is incorrect."
+    assert supplier_invoice.account_id.company_id.id == ref("company_b"), "Applied account in created invoice is not relevant to company."
+
