@@ -53,7 +53,7 @@
             var self = this;
             this._super.apply(this, arguments);
 
-            this.$el.append(openerp.qweb.render('website.editorbar.edit'));
+            this.$el.append(openerp.qweb.render('website.editorbar.edit.not_edit_mode'));
             var $topview = this.$el.find('#website-top-view');
             
             if (website.MobilePreview) $topview.append(openerp.qweb.render('website.editorbar.menu.mobile_preview'));
@@ -62,9 +62,6 @@
             if (website.EditorBarCustomize) new website.EditorBarCustomize(this).appendTo($topview);
             if (website.EditorBarHelp) new website.EditorBarHelp(this).appendTo($topview);
             
-            // Active the 'Website' menu item
-            // this.$el.find('[data-menu="113"]').parent().addClass('active');
-
             $(window).on('resize', function() {
                 self.reflow();
                 if (parseInt(self.$el.css('width')) < 768 ) {
@@ -77,7 +74,7 @@
     website.ready().done(function () {
         var self = this;
         self.menu = new website.Menu(self);
-        self.menu.setElement($('#navbar_edit'));
+        self.menu.setElement($('#oe_main_menu_placeholder'));
         self.menu.start();
         if (parseInt(self.menu.$el.css('width')) >= 768 ) {
             self.menu.reflow();

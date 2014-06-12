@@ -432,7 +432,7 @@
 
 <template id="backend_integration" inherit_id="website.layout" groups="base.group_user">
     <xpath expr="//body/div['id=wrawrap']" position="before">
-        <nav id="backend_menu" class="navbar navbar-inverse" role="navigation">
+        <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
@@ -441,7 +441,7 @@
                 </button>    
             </div>
 
-            <div class="navbar-collapse collapse" id="navbar_edit">
+            <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
                 <t t-call="web.menu"/>
             </div>
         </nav>

@@ -1227,13 +1227,13 @@ instance.web.WebClient = instance.web.Client.extend({
 
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
-        var $backend_menu = this.$el.parents().find('#backend_menu')
-        self.menu.setElement($backend_menu);
+        var $oe_main_menu_navbar = this.$el.parents().find('#oe_main_menu_navbar')
+        self.menu.setElement($oe_main_menu_navbar);
         self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
         
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.appendTo($backend_menu.find('.oe_user_menu_placeholder'));
+        self.user_menu.appendTo($oe_main_menu_navbar.find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();

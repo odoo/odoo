@@ -80,7 +80,7 @@
             });
         },
         calc_box: function() {
-            var $topbar = window.$('#backend_menu'); // .oe_topbar is replaced with .navbar of bootstrap3
+            var $topbar = window.$('#oe_main_menu_navbar'); // .oe_topbar is replaced with .navbar of bootstrap3
             var top = $topbar.offset().top + $topbar.height();
             top = Math.max(top - $(window).scrollTop(), 0);
             this.$el.css("top", top);
