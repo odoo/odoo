@@ -15,6 +15,27 @@
             <div class="oe_linkedin_pop_p"></div>
             <h2>Companies</h2>
             <div class="oe_linkedin_pop_c"></div>
+            <div style="display:inline-block" class="oe_linkedin_pop_company_p" id="linkedin_pop_company_p"/>
+            <center><ul class="pagination" id="employee_page"></ul></center>
+        </div>
+    </t>
+     <t t-name="Linkedin.company_info">
+        <h2>Employee of <t t-esc="data.name"/></h2>
+        <div>
+            <h4>Select employee to get import in company. OR </h4>
+            <button class="oe_highlight" id="import_all">Import All</button>
+        </div>
+     </t>
+    <t t-name="Linkedin.company_employee">
+        <div class="oe_content_employee oe_linkedin_entity oe_left" style="margin-top: 30px; width:18%">
+            <div>
+                <img t-if="data.image" t-attf-src="data:image/png;base64,#{data.image}"/>
+                <img t-if="!data.image" src="/web/static/src/img/placeholder.png"/>
+            </div>
+            <button t-if="!data.current_company or !data.id" t-att-name="data.name" class="oe_highlight" style="margin-top: 10px">Import</button>
+            <button t-if="data.id and data.current_company" t-att-id="data.id" style="margin-top: 10px">Upgrade</button>
+            <h3><t t-esc="data.name"/></h3>
+            <div class="oe_linkedin_entity_headline"><t t-esc="data.function"/></div>
         </div>
     </t>
     <t t-name="Linkedin.EntityWidget">
@@ -37,7 +58,10 @@
         </div>
     </t>
     <t t-name="LinkedIn.loginInformation">
-        <div class="oe_linkedin_authentified">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account, <a class="oe_linkedin_logout">please click here to logout</a>.</div>
+        <div>
+            <button class="btn oe_highlight" data-dismiss="modal">Close</button>
+            <span class="oe_right">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account, <a class="oe_linkedin_logout">please click here to logout</a>.</span>
+        </div>
     </t>
     <t t-name="LinkedIn.AdvancedSearch">
         <t t-raw="title"/>
