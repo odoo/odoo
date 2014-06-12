@@ -75,7 +75,6 @@ class PostgreSQLHandler(logging.Handler):
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
-        ct_uid = getattr(ct, 'uid', None)
         dbname = tools.config['log_db'] or ct_db
         if not dbname:
             return
@@ -88,10 +87,10 @@ class PostgreSQLHandler(logging.Handler):
                 msg = "%s\n%s" % (msg, traceback)
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
-            val = (ct_uid, ct_uid, 'server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
+            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
             cr.execute("""
-                INSERT INTO ir_logging(create_date, write_date, create_uid, write_uid, type, dbname, name, level, message, path, line, func)
-                VALUES (NOW() at time zone 'UTC', NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
+                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)

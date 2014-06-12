@@ -13,7 +13,7 @@
       <field name="name">workflow.form</field>
       <field name="model">workflow</field>
       <field name="arch" type="xml">
-          <form string="Workflow" version="7.0">
+          <form string="Workflow">
               <group col="4">
                   <field name="name"/>
                   <field name="osv"/>
@@ -87,7 +87,7 @@
       <field name="name">workflow.activity.form</field>
       <field name="model">workflow.activity</field>
       <field name="arch" type="xml">
-        <form string="Activity" version="7.0">
+        <form string="Activity">
            <sheet>
             <group>
                 <group>
@@ -165,7 +165,7 @@
                 <field name="wkf_id"/>
                 <field name="action_id"/>
                 <field name="kind"/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Workflow" icon="terp-stage" domain="[]" context="{'group_by':'wkf_id'}"/>
                 </group>
             </search>
@@ -192,7 +192,7 @@
       <field name="name">workflow.transition.form</field>
       <field name="model">workflow.transition</field>
       <field name="arch" type="xml">
-        <form string="Transition" version="7.0">
+        <form string="Transition">
           <sheet>
             <group>
                 <group>
@@ -255,7 +255,7 @@
       <field name="name">workflow.instance.form</field>
       <field name="model">workflow.instance</field>
       <field name="arch" type="xml">
-        <form string="Workflow Instances" version="7.0">
+        <form string="Workflow Instances">
          <sheet>
           <group col="4">
               <field name="wkf_id"/>
@@ -313,7 +313,7 @@
       <field name="name">workflow.workitem.form</field>
       <field name="model">workflow.workitem</field>
       <field name="arch" type="xml">
-        <form string="Workflow Workitems" version="7.0">
+        <form string="Workflow Workitems">
          <sheet>
           <group col="4">
               <field name="wkf_id"/>

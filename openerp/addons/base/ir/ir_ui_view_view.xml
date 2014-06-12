@@ -5,7 +5,7 @@
         <record id="view_view_form" model="ir.ui.view">
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
-                <form string="Views" version="7.0">
+                <form string="Views">
                    <sheet>
                     <group>
                         <group>
@@ -60,7 +60,7 @@
                     <field name="inherit_id"/>
                     <field name="type"/>
                     <field name="arch"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
@@ -81,7 +81,7 @@
         <record id="view_view_custom_form" model="ir.ui.view">
             <field name="model">ir.ui.view.custom</field>
             <field name="arch" type="xml">
-                <form string="Customized Views" version="7.0">
+                <form string="Customized Views">
                   <sheet>
                     <group col="4">
                         <field name="user_id"/>

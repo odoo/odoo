@@ -7,13 +7,15 @@
             <field name="model">report.analytic.account.close</field>
             <field name="arch" type="xml">
                 <form string="Expired analytic accounts">
-                    <field name="name" groups="analytic.group_analytic_accounting"/>
-                    <field name="partner_id"/>
-                    <field name="quantity"/>
-                    <field name="state"/>
-                    <field name="quantity_max"/>
-                    <field name="date_deadline"/>
-                    <field name="balance"/>
+                    <group col="4">
+                        <field name="name" groups="analytic.group_analytic_accounting"/>
+                        <field name="partner_id"/>
+                        <field name="quantity"/>
+                        <field name="state"/>
+                        <field name="quantity_max"/>
+                        <field name="date_deadline"/>
+                        <field name="balance"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -60,15 +62,17 @@
             <field name="model">report.account.analytic.line.to.invoice</field>
             <field name="arch" type="xml">
                 <form string="Analytic Lines to Invoice">
-                    <field name="name"/>
-                    <field name="month"/>
-                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                    <newline/>
-                    <field name="product_id"/>
-                    <field name="product_uom_id"/>
-                    <newline/>
-                    <field colspan="1" name="amount"/>
-                    <field colspan="1" name="unit_amount"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <newline/>
+                        <field name="product_id"/>
+                        <field name="product_uom_id"/>
+                        <newline/>
+                        <field colspan="1" name="amount"/>
+                        <field colspan="1" name="unit_amount"/>
+                    </group>
                 </form>
             </field>
         </record>

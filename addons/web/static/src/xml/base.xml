@@ -440,14 +440,20 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
-                <a class="oe_logo" t-attf-href="/web?#{debug}">
-                    <span class="oe_logo_edit">Edit Company data</span>
-                    <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
-                </a>
-                <div class="oe_secondary_menus_container"/>
-                <div class="oe_footer">
-                    Powered by <a href="https://www.odoo.com" target="_blank"><span>Odoo</span></a>
+                <div>
+                    <t t-set="debug" t-value="__debug__ ? '&amp;debug' : ''"/>
+                    <a class="oe_logo" t-attf-href="/web?#{debug}">
+                        <span class="oe_logo_edit">Edit Company data</span>
+                        <img t-att-src='widget.session.url("/web/binary/company_logo")'/>
+                    </a>
+                    <div>
+                        <div>
+                            <div class="oe_secondary_menus_container"/>
+                        </div>
+                    </div>
+                    <div class="oe_footer">
+                        Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
+                    </div>
                 </div>
             </td>
             <td class="oe_application">
@@ -520,10 +526,15 @@
             </tr>
         </table>
 
-        <div class="oe_view_manager_body">
-            <t t-foreach="widget.views_src" t-as="view">
-                <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
-            </t>
+    <div class="oe_view_manager_wrapper">
+        <div>
+            <div class="oe_view_manager_body">
+                <div class="oe_searchview_drawer_container"/>
+                    <t t-foreach="widget.views_src" t-as="view">
+                        <div t-attf-class="oe_view_manager_view_#{view.view_type}"/>
+                    </t>
+                </div>
+            </div>
         </div>
     </div>
 </t>
@@ -1504,8 +1515,9 @@
     <t t-if="! widget.options.disable_multiple_selection">
         <button type="button" class="oe_button oe_selectcreatepopup-search-select oe_highlight" disabled="disabled">Select</button>
     </t>
+    <t t-if="!widget.options.no_create">
     <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
-    or <a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+    or </t><a class="oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! readonly">
@@ -1555,9 +1567,13 @@
     <div class="oe_searchview_facets"/>
     <div class="oe_searchview_clear"/>
     <div class="oe_searchview_unfold_drawer" title="Advanced Search..."/>
-    <div class="oe_searchview_drawer"/>
     <button type="button" class="oe_searchview_search"
             title="Search Again">Search</button>
+</div>
+
+<div t-name="SearchViewDrawer" class="oe_searchview_drawer" style="display:none;">
+    <div class="col-md-7"></div>
+    <div class="col-md-5"></div>
 </div>
 
 <div t-name="SearchView.InputView"
@@ -1716,24 +1732,27 @@
 <div t-name="SearchView.Filters" class="oe_searchview_filters oe_searchview_section">
 
 </div>
-<div t-name="SearchView.CustomFilters" class="oe_searchview_custom oe_searchview_section">
-    <div>
-        <h3><span class="oe_i">M</span> Custom Filters</h3>
-        <ul class="oe_searchview_custom_list"/>
-        <div class="oe_searchview_custom">
-            <h4>Save current filter</h4>
-            <form class="oe_form">
-                <p class="oe_form_required"><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
-                <p>
-                    <input id="oe_searchview_custom_public" type="checkbox"/>
-                    <label for="oe_searchview_custom_public">Share with all users</label>
-                    <input id="oe_searchview_custom_default" type="checkbox"/>
-                    <label for="oe_searchview_custom_default">Use by default</label>
-                </p>
-                <button>Save</button>
-            </form>
-        </div>
-    </div>
+
+
+<div t-name="SearchView.CustomReports" class="oe_searchview_custom oe_searchview_section">
+    <dl class="dl-horizontal">
+        <dt><span class="oe_i">M</span> Custom Reports</dt>
+        <dd><ul class="oe_searchview_custom_list"/></dd>
+    </dl>
+</div>
+
+ <div t-name="SearchView.SaveFilter" class="oe_searchview_savefilter">
+    <h4>Save current filter</h4>
+    <form class="oe_form">
+        <p class="oe_form_required"><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+        <p>
+            <input id="oe_searchview_custom_public" type="checkbox"/>
+            <label for="oe_searchview_custom_public">Share with all users</label>
+            <input id="oe_searchview_custom_default" type="checkbox"/>
+            <label for="oe_searchview_custom_default">Use by default</label>
+        </p>
+        <button>Save</button>
+    </form>
 </div>
 
 <div t-name="SearchView.advanced" class="oe_searchview_advanced">

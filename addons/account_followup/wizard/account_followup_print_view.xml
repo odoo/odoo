@@ -6,7 +6,7 @@
             <field name="name">account.followup.print.form</field>
             <field name="model">account_followup.print</field>
             <field name="arch" type="xml">
-            <form string="Send follow-ups" version="7.0">
+            <form string="Send follow-ups">
                 <group col="4">
                     <field name="followup_id" groups="base.group_multi_company"/>
                     <field name="date" groups="base.group_no_one"/>
@@ -72,7 +72,7 @@
             <field name="name">account_followup.sending.results.form</field>
             <field name="model">account_followup.sending.results</field>
             <field name="arch" type="xml">
-            <form string="Summary of actions" version="7.0">
+            <form string="Summary of actions">
                 <header>
                     <field name="description" widget="html" class="oe_view_only"/>
                 </header>

@@ -18,7 +18,7 @@
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
             <field name="arch" type="xml">
-                <form string="Issue Version" version="7.0">
+                <form string="Issue Version">
                     <group col="2">
                         <field name="name"/>
                         <field name="active"/>
@@ -46,7 +46,7 @@
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <form string="Issue" version="7.0">
+                <form string="Issue">
                 <header>
                     <field name="stage_id" widget="statusbar" clickable="True"
                         options="{'fold_field': 'fold'}"/>
@@ -151,7 +151,7 @@
                     <field name="project_id"/>
                     <field name="categ_ids"/>
                     <field name="stage_id" domain="[]"/>
-                    <group expand="0" string="Group By..." >
+                    <group expand="0" string="Group By" >
                         <filter string="Responsible" name="group_user_id" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="group_partner_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>

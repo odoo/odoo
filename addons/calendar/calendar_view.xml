@@ -29,7 +29,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <form string="Meetings" version="7.0">
+            <form string="Meetings">
                 <sheet>
                     <field name="state" invisible="1"/>
                     <field name="is_attendee" invisible="1"/>
@@ -170,7 +170,7 @@
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <form string="Meetings" version="7.0">
+            <form string="Meetings">
                 <field name="state" invisible="1"/>
                 <field name="is_attendee" invisible="1"/>
                 <field name="attendee_status" invisible="1"/>
@@ -260,7 +260,7 @@
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
                     <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>                    
