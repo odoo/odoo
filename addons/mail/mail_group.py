@@ -211,3 +211,16 @@ class mail_group(osv.Model):
             return []
         else:
             return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
+
+    def message_get_email_values(self, cr, uid, id, notif_mail=None, context=None):
+        res = super(mail_group, self).message_get_email_values(cr, uid, id, notif_mail=notif_mail, context=context)
+        group = self.browse(cr, uid, id, context=context)
+        res.update({
+            'headers': {
+                'Precedence': 'list',
+            }
+        })
+        if group.alias_domain:
+            res['headers']['List-Id'] = '%s.%s' % (group.alias_name, group.alias_domain)
+            res['headers']['List-Post'] = '<mailto:%s@%s>' % (group.alias_name, group.alias_domain)
+        return res

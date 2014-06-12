@@ -346,10 +346,10 @@ class WebsiteForum(http.Controller):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
-        if post.parent_id.create_uid.id != uid:
-            return {'error': 'own_post'}
+        if post.parent_id.create_uid.id != uid and user.karma < request.registry['forum.forum']._karma_answer_accept_all:
+            return {'error': 'not_enough_karma', 'karma': request.registry['forum.forum']._karma_answer_accept_all}
         if post.create_uid.id == user.id and user.karma < request.registry['forum.forum']._karma_answer_accept_own:
-            return {'error': 'not_enough_karma', 'karma': 20}
+            return {'error': 'not_enough_karma', 'karma': request.registry['forum.forum']._karma_answer_accept_own}
 
         # set all answers to False, only one can be accepted
         request.registry['forum.post'].write(cr, uid, [c.id for c in post.parent_id.child_ids], {'is_correct': False}, context=context)
