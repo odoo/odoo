@@ -98,7 +98,7 @@ class stock_quant(osv.osv):
 
 
 class product_product(osv.osv):
-    _inherit = 'product.product'
+    _inherit = 'product.template'
     _columns = {
         'life_time': fields.integer('Product Life Time',
             help='When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed.'),

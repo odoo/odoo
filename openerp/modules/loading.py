@@ -148,6 +148,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
+        new_install = package.installed_version is None
+        if new_install:
+            py_module = sys.modules['openerp.addons.%s' % (module_name,)]
+            pre_init = package.info.get('pre_init_hook')
+            if pre_init:
+                getattr(py_module, pre_init)(cr)
+
         models = registry.load(cr, package)
 
         loaded_modules.append(package.name)
@@ -180,6 +187,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
             migrations.migrate_module(package, 'post')
+
+            if new_install:
+                post_init = package.info.get('post_init_hook')
+                if post_init:
+                    getattr(py_module, post_init)(cr, registry)
 
             registry._init_modules.add(package.name)
             # validate all the views at a whole
@@ -401,10 +413,17 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if update_module:
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
-            cr.execute("SELECT id FROM ir_module_module WHERE state=%s", ('to remove',))
-            mod_ids_to_remove = [x[0] for x in cr.fetchall()]
-            if mod_ids_to_remove:
-                registry['ir.module.module'].module_uninstall(cr, SUPERUSER_ID, mod_ids_to_remove)
+            cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
+            modules_to_remove = dict(cr.fetchall())
+            if modules_to_remove:
+                pkgs = reversed([p for p in graph if p.name in modules_to_remove])
+                for pkg in pkgs:
+                    uninstall_hook = pkg.info.get('uninstall_hook')
+                    if uninstall_hook:
+                        py_module = sys.modules['openerp.addons.%s' % (pkg.name,)]
+                        getattr(py_module, uninstall_hook)(cr, registry)
+
+                registry['ir.module.module'].module_uninstall(cr, SUPERUSER_ID, modules_to_remove.values())
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()

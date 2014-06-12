@@ -65,6 +65,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'wizard/account_period_close_view.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
+        'wizard/account_statement_from_invoice_view.xml',
         'account_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',
@@ -144,6 +145,7 @@ for a particular financial year and for preparation of vouchers there is a modul
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",
         "static/src/xml/account_move_line_quickadd.xml",
+        "static/src/xml/account_bank_statement_reconciliation.xml",
     ],
     'demo': [
         'demo/account_demo.xml',
@@ -151,6 +153,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'demo/account_invoice_demo.xml',
+        'demo/account_bank_statement.xml',
         'account_unit_test.xml',
     ],
     'test': [

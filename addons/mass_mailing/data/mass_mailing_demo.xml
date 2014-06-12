@@ -9,7 +9,7 @@
         </record>
 
         <!-- Create mailing lists -->
-        <record id="mass_mail_list_1" model="mail.mass_mailing.list">
+        <record id="mass_mail_list_2" model="mail.mass_mailing.list">
             <field name="name">Imported Contacts</field>
         </record>
 
@@ -17,18 +17,75 @@
         <record id="mass_mail_contact_1" model="mail.mass_mailing.contact">
             <field name="name">Aristide Antario</field>
             <field name="email">aa@example.com</field>
-            <field name="list_id" ref="mass_mailing.mass_mail_list_1"/>
+            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
         </record>
         <record id="mass_mail_contact_2" model="mail.mass_mailing.contact">
             <field name="name">Beverly Bridge</field>
             <field name="email">bb@example.com</field>
-            <field name="list_id" ref="mass_mailing.mass_mail_list_1"/>
+            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
         </record>
         <record id="mass_mail_contact_3" model="mail.mass_mailing.contact">
             <field name="name">Carol Cartridge</field>
             <field name="email">cc@example.com</field>
-            <field name="list_id" ref="mass_mailing.mass_mail_list_1"/>
+            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
             <field name="opt_out" eval="True"/>
+        </record>
+
+        <!-- Demo newsletter template -->
+       <!--Email template -->
+        <record id="newsletter_template" model="email.template">
+            <field name="name">Newsletter</field>
+            <field name="subject">Newsletter</field>
+            <field name="model_id" ref="mass_mailing.model_mail_mass_mailing_contact"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[<div data-snippet-id="big-picture" style="padding:0px; margin:0px">
+<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+    <tbody>
+        <tr>
+            <td style="width:600px" valign="top">
+            <h2 style="text-align: center; padding:0px 5px">A Punchy Headline</h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:600px" valign="top"><img src="/website/static/src/img/big_picture.png" style="display:block;border:none;min-height:250px;margin:0 auto;" width="500"></td>
+        </tr>
+        <tr>
+            <td style="width:600px" valign="top">
+            <p style="text-align: center; overflow:hidden"></p>
+
+            <h3 style="text-align: center; padding:0px 5px">A Small Subtitle for ${object.name}</h3>
+
+            <p></p>
+
+            <p style="text-align: center; overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div data-snippet-id="three-columns" style="padding:0px; margin:0px">
+<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+    <tbody>
+        <tr>
+            <td style="width:300px" valign="top"><img src="/website/static/src/img/desert_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
+            <td style="width:300px" valign="top"><img src="/website/static/src/img/deers_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
+        </tr>
+        <tr>
+            <td style="width:300px" valign="top">
+            <h3 style="text-align: center; padding:0px 5px">Feature One</h3>
+
+            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+            <td style="width:300px" valign="top">
+            <h3 style="text-align: center; padding:0px 5px">Feature Two</h3>
+
+            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>]]></field>
         </record>
 
         <!-- Create campaign and mailings -->

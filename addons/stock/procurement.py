@@ -188,6 +188,7 @@ class procurement_order(osv.osv):
             'date': newdate,
             'date_expected': newdate,
             'propagate': procurement.rule_id.propagate,
+            'priority': procurement.priority,
         }
         return vals
 
@@ -270,7 +271,8 @@ class procurement_order(osv.osv):
         @param cr: The current row, from the database cursor,
         @param uid: The current user ID for security checks
         @param ids: List of selected IDs
-        @param use_new_cursor: False or the dbname
+        @param use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
+            This is appropriate for batch jobs only.
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
@@ -279,7 +281,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp.registry(use_new_cursor).cursor()
+                cr = openerp.registry(cr.dbname).cursor()
 
             move_obj = self.pool.get('stock.move')
 
@@ -288,7 +290,7 @@ class procurement_order(osv.osv):
             self._procure_orderpoint_confirm(cr, SUPERUSER_ID, use_new_cursor=False, company_id=company.id, context=context)
 
             #Search all confirmed stock_moves and try to assign them
-            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='picking_priority desc, date_expected asc', context=context)
+            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc', context=context)
             for x in xrange(0, len(confirmed_ids), 100):
                 move_obj.action_assign(cr, uid, confirmed_ids[x:x + 100], context=context)
                 if use_new_cursor:
@@ -332,15 +334,14 @@ class procurement_order(osv.osv):
     def _procure_orderpoint_confirm(self, cr, uid, use_new_cursor=False, company_id=False, context=None):
         '''
         Create procurement based on Orderpoint
-        use_new_cursor: False or the dbname
 
-        @return:  Dictionary of values
-        """
+        :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
+            This is appropriate for batch jobs only.
         '''
         if context is None:
             context = {}
         if use_new_cursor:
-            cr = openerp.registry(use_new_cursor).db.cursor()
+            cr = openerp.registry(cr.dbname).db.cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
 
         procurement_obj = self.pool.get('procurement.order')

@@ -392,8 +392,8 @@ class purchase_order_line(osv.osv):
         return self.pool.get('purchase.requisition').generate_po(cr, uid, [tender_id], context=context)
 
 
-class product_product(osv.osv):
-    _inherit = 'product.product'
+class product_template(osv.osv):
+    _inherit = 'product.template'
 
     _columns = {
         'purchase_requisition': fields.boolean('Call for Bids', help="Check this box to generate Call for Bids instead of generating requests for quotation from procurement.")
