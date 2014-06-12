@@ -5306,8 +5306,12 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         if (this.searchview) {
             this.searchview.destroy();
         }
+        if (this.searchview_drawer) {
+            this.searchview_drawer.destroy();
+        }
         this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults);
+        this.searchview_drawer = new instance.web.SearchViewDrawer(this, this.searchview);
         this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -5353,7 +5357,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_search", self.$el));
+        this.searchview.appendTo(this.$(".oe_popup_search"));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;

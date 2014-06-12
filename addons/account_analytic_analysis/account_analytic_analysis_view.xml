@@ -236,7 +236,7 @@
                     <filter string="Customer Contracts" help="Contracts assigned to a customer." name="has_partner" domain="[('partner_id', '!=', False)]"/>
                     <filter string="Contracts not assigned" help="Contracts that are not assigned to an account manager." domain="[('manager_id', '=', False)]"/>
                     <separator/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Account Manager" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>

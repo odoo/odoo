@@ -12,7 +12,7 @@
                     <field name="name" string="Payment Mode"/>
                     <field name="journal"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
                     </group>
                 </search>
@@ -177,7 +177,7 @@
                     <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
                     <field name="mode"/>
                     <field name="state"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Payment Mode" context="{'group_by': 'mode'}" icon="terp-dolar"/>
                         <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>

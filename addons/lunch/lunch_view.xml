@@ -21,7 +21,7 @@
                     <separator/>
                     <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
                         <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Supplier Order by Month"/>
                     </group>
@@ -52,7 +52,7 @@
                 <search string="lunch cashmove">
                     <field name="description"/>
                     <field name="user_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
                     </group>
                 </search>

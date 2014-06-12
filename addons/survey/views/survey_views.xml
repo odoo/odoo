@@ -15,7 +15,7 @@
                     <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
                     <filter string="New" domain="[('state', '=', 'new')]"/>
                     <filter string="Test" domain="[('state','=', 'test')]"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
                         <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
                         <filter string="Partner" domain="[]" context="{'group_by': ['partner_id']}"/>
@@ -271,7 +271,7 @@
                 <search string="Search Page">
                     <field name="title" string="Page"/>
                     <field name="survey_id" string="Survey"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
                 </search>
@@ -380,7 +380,7 @@
                     <field name="survey_id" string="Survey"/>
                     <field name="page_id" string="Page"/>
                     <field name="type" string="Type"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter name="group_by_page" string="Page" domain="[]"  context="{'group_by':'page_id'}"/>
                         <filter name="group_by_type" string="Type" domain="[]"  context="{'group_by':'type'}"/>
                     </group>
@@ -481,7 +481,7 @@
                 <search string="Search User input lines">
                     <field name="user_input_id"/>
                     <field name="survey_id"/>
-                    <group expand="1" string="Group By...">
+                    <group expand="1" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]"  context="{'group_by':'survey_id'}"/>
                         <filter name="group_by_user_input" string="User Input" domain="[]"  context="{'group_by':'user_input_id'}"/>
                     </group>

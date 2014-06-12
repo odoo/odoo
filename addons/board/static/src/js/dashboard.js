@@ -366,15 +366,13 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
     },
     add_dashboard: function(){
         var self = this;
-        var getParent = this.getParent();
-        var view_parent = this.getParent().getParent();
-        if (! view_parent.action || ! this.$el.find("select").val()) {
+        if (! this.view.view_manager.action || ! this.$el.find("select").val()) {
             this.do_warn("Can't find dashboard action");
             return;
         }
-        var data = getParent.build_search_data();
-        var context = new instance.web.CompoundContext(getParent.dataset.get_context() || []);
-        var domain = new instance.web.CompoundDomain(getParent.dataset.get_domain() || []);
+        var data = this.view.build_search_data();
+        var context = new instance.web.CompoundContext(this.view.dataset.get_context() || []);
+        var domain = new instance.web.CompoundDomain(this.view.dataset.get_domain() || []);
         _.each(data.contexts, context.add, context);
         _.each(data.domains, domain.add, domain);
 
@@ -394,10 +392,10 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
 
         this.rpc('/board/add_to_dashboard', {
             menu_id: this.$el.find("select").val(),
-            action_id: view_parent.action.id,
+            action_id: this.view.view_manager.action.id,
             context_to_save: c,
             domain: d,
-            view_mode: view_parent.active_view,
+            view_mode: this.view.view_manager.active_view,
             name: this.$el.find("input").val()
         }).done(function(r) {
             if (r === false) {
@@ -412,12 +410,12 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         this.$el.toggleClass('oe_opened');
         if (! this.$el.hasClass('oe_opened'))
             return;
-        this.$("input").val(this.getParent().fields_view.name || "" );
+        this.$("input").val(this.view.fields_view.name || "" );
     }
 });
 
 
-instance.web.SearchView.include({
+instance.web.SearchViewDrawer.include({
     add_common_inputs: function() {
         this._super();
         var vm = this.getParent().getParent();
