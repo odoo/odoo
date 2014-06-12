@@ -472,6 +472,7 @@ openerp.mail = function (session) {
             this.$('.oe_compact_inbox').on('click', self.on_toggle_quick_composer);
             this.$('.oe_compose_post').on('click', self.on_toggle_quick_composer);
             this.$('.oe_compose_log').on('click', self.on_toggle_quick_composer);
+            this.$('.mark_all_read').on('click', _.bind(self.mark_all_read, this));
             this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this));
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this));
             this.$('.oe_post').on('click', self.on_message_post);
@@ -491,6 +492,12 @@ openerp.mail = function (session) {
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
 
             this.$(".oe_recipients").on('change', 'input', this.on_checked_recipient);
+        },
+
+        mark_all_read: function(){
+            _.each(this.parent_thread.messages, function(thread){
+                 thread.on_message_read_unread(true);
+            });
         },
 
         on_compose_fullmail: function (default_composition_mode) {
