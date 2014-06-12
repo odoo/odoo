@@ -24,6 +24,7 @@ class intrastat_regions(osv.osv):
     _name = 'l10n_be_intrastat_declaration.regions'
     _columns = {
         'code': fields.char('Code', required=True),
+        'country_id': fields.many2one('res.country', 'Country'),
         'name': fields.char('Name', translate=True),
         'description': fields.char('Description'),
     }

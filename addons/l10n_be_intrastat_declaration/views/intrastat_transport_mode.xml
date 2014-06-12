@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- Form -->
+		<record model="ir.ui.view" id="intra_view_transport_mode_form">
+			<field name="name">intra.view.transport_mode_form</field>
+			<field name="model">l10n_be_intrastat_declaration.transport_mode</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<form string="Intrastat transpartation mode form">
+                    <group>
+					<field name="code" readonly="1"/>
+					<field name="name" readonly="1"/>
+                </group>
+				</form>
+			</field>
+		</record>
+
+		<!-- List -->
+		<record model="ir.ui.view" id="intra_view_transport_mode_tree">
+			<field name="name">intra.view.transport_mode_tree</field>
+			<field name="model">l10n_be_intrastat_declaration.transport_mode</field>
+			<field name="priority" eval="16"/>
+			<field name="arch" type="xml">
+				<tree string="Intrastat transportation modes">
+					<field name="code"/>
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+	</data>
+</openerp>

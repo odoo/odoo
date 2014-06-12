@@ -8,12 +8,12 @@
 			<field name="inherit_id" ref="account.invoice_supplier_form"/>
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='payment_term']" position="after">
-					<field name="incoterm_id"/>
+					<field name="incoterm_id" groups="l10n_be_intrastat_xml.intrastat_extended"/>
 				</xpath>
         		<xpath expr="//field[@name='period_id']" position="after">
-					<field name="intrastat_transaction_id"/>
-            		<field name="transport_mode_id"/>
-					<field name="intrastat_country_id"/>
+					<field name="intrastat_transaction_id" groups="l10n_be_intrastat_xml.intrastat_base,l10n_be_intrastat_xml.intrastat_extended"/>
+            		<field name="transport_mode_id" groups="l10n_be_intrastat_xml.intrastat_extended"/>
+					<field name="intrastat_country_id" groups="l10n_be_intrastat_xml.intrastat_base,l10n_be_intrastat_xml.intrastat_extended"/>
 				</xpath>
 			</field>
 
