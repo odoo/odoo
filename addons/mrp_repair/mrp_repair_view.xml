@@ -24,7 +24,7 @@
         <field name="name">mrp.repair.form</field>
         <field name="model">mrp.repair</field>
         <field name="arch" type="xml">
-            <form string="Repair Order" version="7.0">
+            <form string="Repair Order">
                <header>
                    <button name="repair_confirm" states="draft" string="Confirm Repair" class="oe_highlight"/>
                    <button name="repair_ready" states="confirmed,ready" string="Start Repair" class="oe_highlight"/>
@@ -63,7 +63,7 @@
                 <notebook>
                     <page string="Operations">
                         <field name="operations" context="{'default_product_uom_qty': product_qty}">
-                            <form string="Operations" version="7.0">
+                            <form string="Operations">
                                 <notebook>
                                     <page string="Repair Line">
                                         <group col="4">
@@ -131,7 +131,7 @@
                         <!-- <field name="invoice_id"/> -->
                         <separator string="Fees"/>
                         <field name="fees_lines" attrs="{'readonly': [('invoice_method','=', 'none')]}">
-                            <form string="Fees" version="7.0">
+                            <form string="Fees">
                                 <label for="name" class="oe_edit_only"/>
                                 <h2>
                                     <field name="name"/>

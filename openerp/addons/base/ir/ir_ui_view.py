@@ -39,6 +39,7 @@ from openerp import tools
 from openerp.http import request
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
+from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
@@ -210,7 +211,8 @@ class view(osv.osv):
                     view_docs = view_docs[0]
                 validator = self._relaxng()
                 for view_arch in view_docs:
-                    if (view_arch.get('version') < '7.0') and validator and not validator.validate(view_arch):
+                    version = view_arch.get('version', '7.0')
+                    if parse_version(version) < parse_version('7.0') and validator and not validator.validate(view_arch):
                         for error in validator.error_log:
                             _logger.error(tools.ustr(error))
                         return False

@@ -47,10 +47,12 @@
             <field name="model">crm.claim.stage</field>
             <field name="arch" type="xml">
                 <form string="Claim Stage">
-                    <field name="name"/>
-                    <field name="case_default"/>
-                    <field name="sequence"/>
-                    <field name="fold"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="case_default"/>
+                        <field name="sequence"/>
+                        <field name="fold"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -96,7 +98,7 @@
             <field name="name">CRM - Claims Form</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
-                <form string="Claim" version="7.0">
+                <form string="Claim">
                 <header>
                     <field name="stage_id" widget="statusbar" clickable="True"/>
                 </header>

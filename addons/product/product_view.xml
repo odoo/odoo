@@ -44,7 +44,7 @@
             <field name="name">product.template.product.form</field>
             <field name="model">product.template</field>
             <field name="arch" type="xml">
-                <form string="Product" version="7.0">
+                <form string="Product">
                     <field name="is_product_variant" invisible="1"/>
                     <sheet>
                         <field name="id" invisible="True"/>
@@ -410,7 +410,7 @@
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
             <field name="arch" type="xml">
-                <form string="Product Categories" version="7.0">
+                <form string="Product Categories">
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -514,7 +514,7 @@
             <field name="name">product.uom.form</field>
             <field name="model">product.uom</field>
             <field name="arch" type="xml">
-                <form string="Units of Measure" version="7.0">
+                <form string="Units of Measure">
                     <group>
                         <group>
                             <field name="name"/>
@@ -562,7 +562,7 @@
             <field name="name">product.uom.categ.form</field>
             <field name="model">product.uom.categ</field>
             <field name="arch" type="xml">
-                <form string="Units of Measure categories" version="7.0">
+                <form string="Units of Measure categories">
                     <group>
                         <field name="name"/>
                     </group>
@@ -592,7 +592,7 @@
             <field name="name">product.ul.form.view</field>
             <field name="model">product.ul</field>
             <field name="arch" type="xml">
-                <form string="Logistic Units" version="7.0">
+                <form string="Logistic Units">
                     <sheet>
                     <group>
                         <field name="name"/>
@@ -655,7 +655,7 @@
             <field name="name">product.packaging.form.view</field>
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
-                <form string="Packaging" version="7.0">
+                <form string="Packaging">
                     <group col="4">
                         <field name="product_tmpl_id"/>
                         <newline/>
@@ -680,7 +680,7 @@
             <field name="name">product.supplierinfo.form.view</field>
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
-                <form string="Supplier Information" version="7.0">
+                <form string="Supplier Information">
                     <group col="4">
                         <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                         <field name="sequence"/>
@@ -697,7 +697,7 @@
                             <field name="min_quantity"/>
                             <field name="price"/>
                         </tree>
-                        <form version="7.0">
+                        <form>
                             <group>
                                 <field name="min_quantity"/>
                                 <field name="price"/>

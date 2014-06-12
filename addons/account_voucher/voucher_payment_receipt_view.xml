@@ -54,7 +54,7 @@
             <field name="model">account.voucher</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <form string="Bill Payment" version="7.0">
+                <form string="Bill Payment">
                     <group col="6">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Supplier" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'invoice_currency': currency_id}"/>
                         <field name="state" invisible="1"/>
@@ -127,7 +127,7 @@
             <field name="name">account.voucher.payment.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Voucher Payment" version="7.0">
+                <form string="Voucher Payment">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma"  invisible="context.get('line_type', False)"/>
@@ -296,7 +296,7 @@
             <field name="model">account.voucher</field>
             <field name="priority">30</field>
             <field name="arch" type="xml">
-                <form string="Payment" version="7.0">
+                <form string="Payment">
                     <group>
                         <group>
                             <field name="state" invisible="1"/>
@@ -407,7 +407,7 @@
             <field name="name">account.voucher.receipt.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Receipt" version="7.0">
+                <form string="Receipt">
                 <header invisible="context.get('line_type', False)">
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="cancel_voucher" string="Cancel Receipt" states="draft,proforma"/>

@@ -186,7 +186,7 @@
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order" version="7.0">
+                <form string="Purchase Order">
                 <header>
                     <button name="bid_received" states="sent" string="Bid Received" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
@@ -422,7 +422,7 @@
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0">
+                <form string="Purchase Order Line">
                     <sheet>
                         <group>
                             <group>
@@ -479,7 +479,7 @@
             <field name="model">purchase.order.line</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0" create="false">
+                <form string="Purchase Order Line" create="false">
                     <sheet>
                         <label for="order_id" class="oe_edit_only"/>
                         <h1>

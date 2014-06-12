@@ -62,7 +62,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
-            <form string="Production Workcenter" version="7.0">
+            <form string="Production Workcenter">
             <header>
                 <button name="button_start_working" string="Start" states="draft" class="oe_highlight"/>
                 <button name="button_resume" string="Resume" states="pause" class="oe_highlight"/>
@@ -287,7 +287,7 @@
         <field name="name">mrp.production.code.form</field>
         <field name="model">mrp_operations.operation.code</field>
         <field name="arch" type="xml">
-            <form string="Production Operation Code" version="7.0">
+            <form string="Production Operation Code">
                 <group col="4">
                     <field name="name"/>
                     <field name="code"/>
