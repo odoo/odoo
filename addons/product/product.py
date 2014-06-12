@@ -995,12 +995,24 @@ class product_product(osv.osv):
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if context is None:
+            context = {}
         if not args:
             args = []
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+            ids = []
+            if context.get('partner_id', False):
+                supplierinfo_obj = self.pool.get('product.supplierinfo')
+                supplier_ids = supplierinfo_obj.search(cr, user,
+                                                        [('name', '=', context.get('partner_id')),
+                                                        '|', ('product_code', operator, name),
+                                                        ('product_name', operator, name)], context=context)
+                if supplier_ids:
+                    prod_tmpl_ids = [supplier.product_tmpl_id.id for supplier in supplierinfo_obj.browse(cr, user, supplier_ids, context=context)]
+                    ids = self.search(cr, user, [('product_tmpl_id', 'in', prod_tmpl_ids)], context=context)
+            ids += self.search(cr, user, [('default_code', '=', name)]+ args, limit=limit, context=context)
             if not ids:
-                ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, user, [('ean13', '=', name)]+ args, limit=limit, context=context)
             if not ids:
                 # Do not merge the 2 next lines into one single search, SQL search performance would be abysmal
                 # on a database with thousands of matching products, due to the huge merge+unique needed for the
