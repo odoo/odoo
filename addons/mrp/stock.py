@@ -93,6 +93,7 @@ class StockMove(osv.osv):
                     'name': line['name'],
                 }
                 mid = move_obj.copy(cr, uid, move.id, default=valdef)
+                move_obj.write(cr, uid, mid, {'purchase_line_id': move.purchase_line_id.id if move.purchase_line_id else False})
                 to_explode_again_ids.append(mid)
 
             #delete the move with original product which is not relevant anymore
