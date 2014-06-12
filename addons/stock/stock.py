@@ -1377,7 +1377,7 @@ class stock_picking(osv.osv):
                     op = operation
                     if (operation.qty_done < operation.product_qty):
                         new_operation = stock_operation_obj.copy(cr, uid, operation.id, {'product_qty': operation.qty_done,'qty_done': operation.qty_done}, context=context)
-                        stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0}, context=context)
+                        stock_operation_obj.write(cr, uid, operation.id, {'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0, 'lot_id': False}, context=context)
                         op = stock_operation_obj.browse(cr, uid, new_operation, context=context)
                     pack_operation_ids.append(op.id)
                     for record in op.linked_move_operation_ids:
@@ -3823,8 +3823,8 @@ class stock_pack_operation(osv.osv):
             if pack_op.qty_done < pack_op.product_qty:
                 # we split the operation in two
                 op = self.copy(cr, uid, pack_op.id, {'product_qty': pack_op.qty_done, 'qty_done': pack_op.qty_done}, context=context)
-                self.write(cr, uid, ids, {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0}, context=context)
-            processed_ids.append(op)      
+                self.write(cr, uid, ids, {'product_qty': pack_op.product_qty - pack_op.qty_done, 'qty_done': 0, 'lot_id': False}, context=context)
+            processed_ids.append(op)
         self.write(cr, uid, processed_ids, {'processed': 'true'}, context=context)
 
     def create_and_assign_lot(self, cr, uid, id, name, context=None):
