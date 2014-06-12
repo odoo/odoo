@@ -841,7 +841,11 @@ openerp.web_calendar = function(instance) {
             if (! this.open_popup_action) {
                 var index = this.dataset.get_id_index(id);
                 this.dataset.index = index;
-                this.do_switch_view('form', null, { mode: "edit" });
+                if(this.$el.find('.oe_cannot_create')){
+                    this.do_switch_view('form', null, { mode: "view" });
+                } else {
+                    this.do_switch_view('form', null, { mode: "edit" });
+                }
             }
             else {
                 var pop = new instance.web.form.FormOpenPopup(this);
