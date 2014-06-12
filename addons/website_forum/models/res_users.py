@@ -31,7 +31,6 @@ class Users(osv.Model):
         'gold_badge': fields.function(_get_user_badge_level, string="Number of gold badges", type='integer', multi='badge_level'),
         'silver_badge': fields.function(_get_user_badge_level, string="Number of silver badges", type='integer', multi='badge_level'),
         'bronze_badge': fields.function(_get_user_badge_level, string="Number of bronze badges", type='integer', multi='badge_level'),
-        'website_published': fields.boolean('Publish', help="Publish user on the website."),
     }
 
     _defaults = {
