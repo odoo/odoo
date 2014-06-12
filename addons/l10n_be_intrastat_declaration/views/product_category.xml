@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="l10n_be_intrastat_xml_decl_product_category_view"
+    model="ir.ui.view">
+            <field name="name">l10n_be_intrastat_xml.productcategory_form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='parent']" position="inside">
+                    <group string="Intrastat" colspan="2">
+                        <field name="intrastat_id"/>
+                </group>
+                </xpath>
+            </field>
+
+        </record>
+    </data>
+</openerp>
