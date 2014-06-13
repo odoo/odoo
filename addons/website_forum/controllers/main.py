@@ -120,7 +120,7 @@ class WebsiteForum(http.Controller):
 
         question_count = Post.search(cr, uid, domain, count=True, context=context)
         if tag:
-            url = "/forum/%s/%s/questions" % (slug(forum), slug(tag))
+            url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
         else:
             url = "/forum/%s" % slug(forum)
 
