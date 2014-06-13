@@ -169,7 +169,7 @@ class website_sale(http.Controller):
 
         values = {
             'search': search,
-            'category': category and int(category),
+            'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'pager': pager,
