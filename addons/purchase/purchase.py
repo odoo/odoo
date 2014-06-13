@@ -681,6 +681,11 @@ class purchase_order(osv.osv):
         if order.currency_id.id != order.company_id.currency_id.id:
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
+        
+        picking_type_id = order.picking_type_id.id
+        if order.dest_address_id:
+            picking_type_id = self._get_picking_out(cr, uid, context=context)
+
         res = []
         move_template = {
             'name': order_line.name or '',
@@ -698,7 +703,7 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': price_unit,
-            'picking_type_id': order.picking_type_id.id,
+            'picking_type_id': picking_type_id,
             'group_id': group_id,
             'procurement_id': False,
             'origin': order.name,
