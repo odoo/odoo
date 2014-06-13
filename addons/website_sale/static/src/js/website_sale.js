@@ -126,6 +126,19 @@ $(document).ready(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
+    $('#modal_optional_products').on('show.bs.modal', function () {
+        var $confirm = $('#product_confirmation .js_attributes');
+        if (!$confirm.size()) return;
+        $confirm.empty();
+        $('.js_add_cart_variants:first ul:first > li').each(function () {
+            var $li = $(this);
+            var $span = $("<div><span></span>: <span></span></div>");
+            $span.children().first().text($li.children().first().text());
+            $span.children().last().text($li.find("label:has(input:checked) span:first").text());
+            $confirm.append($span);
+        });
+    });
+
     $("a.js_add, a.js_remove").click(function (event) {
         event.preventDefault();
         var $parent = $(this).parents('.js_product:first');

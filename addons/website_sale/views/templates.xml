@@ -543,13 +543,16 @@
     </t>
   </xpath>
   <xpath expr="//t[@t-set='option_inc'][@t-value='0']" position="before">
-    <tr>
+    <tr id="product_confirmation">
       <td width="100">
         <span t-field="product.image_medium" t-field-options='{"widget": "image" }'/>
       </td>
       <td>
         <strong t-field="product.name"/>
-        <div class="text-muted" t-field="product.description_sale"/>
+        <div class="text-muted">
+          <div t-field="product.description_sale"/>
+          <div class="js_attributes"></div>
+        </div>
       </td>
       <td>
         <t t-if="product.lst_price != product.price">
