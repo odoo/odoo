@@ -88,7 +88,14 @@ class pos_config(osv.osv):
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True), 
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'barcode_product':  fields.char('Product Barcodes', size=64, help='The pattern that identifies product barcodes'),
+        'barcode_cashier':  fields.char('Cashier Barcodes', size=64, help='The pattern that identifies cashier login barcodes'),
+        'barcode_customer': fields.char('Customer Barcodes',size=64, help='The pattern that identifies customer\'s client card barcodes'),
+        'barcode_price':    fields.char('Price Barcodes',   size=64, help='The pattern that identifies a product with a barcode encoded price'),
+        'barcode_weight':   fields.char('Weight Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded weight'),
+        'barcode_discount': fields.char('Discount Barcodes',  size=64, help='The pattern that identifies a product with a barcode encoded discount'),
+        'fidelity_id': fields.many2one('pos.fidelity','Fidelity Card', help='The type of fidelity card available for this point_of_sale'),
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -156,6 +163,12 @@ class pos_config(osv.osv):
         'iface_invoicing': True,
         'stock_location_id': _get_default_location,
         'company_id': _get_default_company,
+        'barcode_product': '*', 
+        'barcode_cashier': '041*', 
+        'barcode_customer':'042*', 
+        'barcode_weight':  '21xxxxxNNDDD', 
+        'barcode_discount':'22xxxxxxxxNN', 
+        'barcode_price':   '23xxxxxNNNDD', 
     }
 
     def onchange_picking_type_id(self, cr, uid, ids, picking_type_id, context=None):
@@ -190,6 +203,23 @@ class pos_config(osv.osv):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
+
+class pos_fidelity(osv.osv):
+    _name = 'pos.fidelity'
+
+    _columns = {
+        'name' : fields.char('Fidelity Card Name', size=32, select=1,
+             required=True, help="An internal identification for the fidelity card configuration"),
+        'fidpoints_currency': fields.float('Points per paid currency',help="How many fidelity points are given to the customer by sold currency"),
+        'fidpoints_product':  fields.float('Points per sold product',help="How many fidelity points are given to the customer by product sold"),
+        'fidpoints_sale':     fields.float('Points per sale',help="How many fidelity points are given to the customer for each sale"),
+    }
+
+    _defaults = {
+        'fidpoints_currency': 0,
+        'fidpoints_product':  0,
+        'fidpoints_sale':     0,
+    }
 
 class pos_session(osv.osv):
     _name = 'pos.session'
@@ -241,6 +271,8 @@ class pos_session(osv.osv):
         'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
+        
+        'sequence_number': fields.integer('Order Sequence Number'),
 
         'cash_control' : fields.function(_compute_cash_all,
                                          multi='cash',
@@ -303,6 +335,7 @@ class pos_session(osv.osv):
         'name' : '/',
         'user_id' : lambda obj, cr, uid, context: uid,
         'state' : 'opening_control',
+        'sequence_number': 1,
     }
 
     _sql_constraints = [
@@ -523,6 +556,26 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "id desc"
 
+    def _order_fields(self,ui_order):
+        return {
+            'name':         ui_order['name'],
+            'user_id':      ui_order['user_id'] or False,
+            'session_id':   ui_order['pos_session_id'],
+            'lines':        ui_order['lines'],
+            'pos_reference':ui_order['name'],
+            'partner_id':   ui_order['partner_id'] or False,
+            'fidpoints':    ui_order['fidpoints'],
+        }
+
+    def _payment_fields(self,ui_paymentline):
+        return {
+            'amount':       ui_paymentline['amount'] or 0.0,
+            'payment_date': ui_paymentline['name'],
+            'statement_id': ui_paymentline['statement_id'],
+            'payment_name': ui_paymentline.get('note',False),
+            'journal':      ui_paymentline['journal_id'],
+        }
+
     def create_from_ui(self, cr, uid, orders, context=None):
         # Keep only new orders
         submitted_references = [o['data']['name'] for o in orders]
@@ -535,27 +588,21 @@ class pos_order(osv.osv):
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
+            order_id = self.create(cr, uid, self._order_fields(order),context)
 
-            order_id = self.create(cr, uid, {
-                'name': order['name'],
-                'user_id': order['user_id'] or False,
-                'session_id': order['pos_session_id'],
-                'lines': order['lines'],
-                'pos_reference':order['name'],
-                'partner_id': order['partner_id'] or False
-            }, context)
             for payments in order['statement_ids']:
-                payment = payments[2]
-                self.add_payment(cr, uid, order_id, {
-                    'amount': payment['amount'] or 0.0,
-                    'payment_date': payment['name'],
-                    'statement_id': payment['statement_id'],
-                    'payment_name': payment.get('note', False),
-                    'journal': payment['journal_id']
-                }, context=context)
+                self.add_payment(cr, uid, order_id, self._payment_fields(payments[2]), context=context)
+
+            session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+            if session.sequence_number <= order['sequence_number']:
+                session.write({'sequence_number': order['sequence_number'] + 1})
+                session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+
+            if order['fidpoints'] and order['partner_id']:
+                partner = self.pool.get('res.partner').browse(cr, uid, order['partner_id'], context=context)
+                partner.write({'fidpoints': partner['fidpoints'] + order['fidpoints']})
 
             if order['amount_return']:
-                session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
                 cash_journal = session.cash_journal_id
                 if not cash_journal:
                     cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
@@ -662,6 +709,8 @@ class pos_order(osv.osv):
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
+        'sequence_number': fields.integer('Sequence Number', help='A session-unique sequence number for the order'),
+        'fidpoints':    fields.integer('Won Fidelity Points ', help='The Fidelity Points the client won with this order'),
 
         'session_id' : fields.many2one('pos.session', 'Session', 
                                         #required=True,
@@ -710,6 +759,8 @@ class pos_order(osv.osv):
         'name': '/', 
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'nb_print': 0,
+        'sequence_number': 1,
+        'fidpoints': 0,
         'session_id': _default_session,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'pricelist_id': _default_pricelist,
