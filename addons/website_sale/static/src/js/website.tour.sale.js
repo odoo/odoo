@@ -19,6 +19,7 @@
             },
             {
                 title:     "select product attribute memory 16 Go",
+                waitNot:   '#customize-menu:visible',
                 element:   'form.js_attributes label:contains(16 Go) input:not(:checked)',
             },
             {
@@ -31,9 +32,27 @@
                 element:   '.oe_product_cart a:contains("iPod")',
             },
             {
+                title:     "open customize menu 2",
+                waitFor:   'form[action^="/shop/cart/update"] label:contains(32 Go) input',
+                element:   '#customize-menu-button',
+            },
+            {
+                title:     "click on 'Confirm: Add To Cart'",
+                element:   "#customize-menu a:contains(Confirm: Add To Cart)",
+            },
+            {
+                title:     "click on 'Add to Cart' button",
+                waitNot:   '#customize-menu:visible',
+                element:   "a[data-toggle='modal']:contains(Add to Cart)",
+            },
+            {
+                title:     "click in modal on 'Proceed to checkout' button",
+                element:   '.modal a:contains("Proceed to checkout")',
+            },
+            {
                 title:     "finish",
-                waitFor:   'form[action="/shop/cart/update"] label:contains(32 Go) input',
-            }
+                waitFor:   '#cart_products',
+            },
         ]
     });
 
