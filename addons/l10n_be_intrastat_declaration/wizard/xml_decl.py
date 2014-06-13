@@ -184,7 +184,6 @@ class xml_decl(osv.TransientModel):
         intrastatkey = namedtuple("intrastatkey", ['EXTRF','EXCNT','EXTTA','EXREG','EXGO','EXTPC','EXDELTRM'])
         entries = {}
 
-
         sqlreq = """
             select
                 distinct inv_line.id
@@ -194,9 +193,11 @@ class xml_decl(osv.TransientModel):
                 left join res_country on res_country.id = inv.intrastat_country_id
                 left join res_partner on res_partner.id = inv.partner_id
                 left join res_country countrypartner on countrypartner.id = res_partner.country_id
+                inner join product_product on inv_line.product_id=product_product.id
+                inner join product_template on product_product.product_tmpl_id=product_template.id
             where
                 inv.state in ('open','paid')
-                and inv_line.product_id is not null
+                and not product_template.type='service'
                 and (res_country.intrastat=true or (inv.intrastat_country_id is null and countrypartner.intrastat=true))
                 and ((res_country.code is not null and not res_country.code=%s) or (res_country.code is null and countrypartner.code is not null and not countrypartner.code=%s))
                 and inv.type in (%s, %s)
