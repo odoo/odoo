@@ -110,11 +110,11 @@ $(document).ready(function () {
         });
 
         if (product_id) {
-            $parent.removeClass("oe_not_available");
+            $parent.removeClass("css_not_available");
             $porduct_id.val(product_id);
             $parent.find(".js_check_product").removeAttr("disabled");
         } else {
-            $parent.addClass("oe_not_available");
+            $parent.addClass("css_not_available");
             $porduct_id.val(0);
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }

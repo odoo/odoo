@@ -518,6 +518,9 @@
                     </span>
                 </div>
               </div>
+              <div class="col-xs-4">
+                <p class="css_not_available_msg bg-danger" style="padding: 15px;">Product not available</p>
+              </div>
             </div>
           </div>
 
@@ -568,7 +571,7 @@
 
           <t t-call="website_sale.product_price"/>
 
-          <p class="hidden oe_not_available bg-danger" style="padding: 15px;">Product not available</p>
+          <p class="css_not_available_msg bg-danger" style="padding: 15px;">Product not available</p>
 
           <a t-if="not optional_product_ids" class="btn btn-primary btn-lg mt8 a-submit js_check_product">Add to Cart</a>
           <a t-if="optional_product_ids" class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
