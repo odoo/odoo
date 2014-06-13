@@ -898,6 +898,14 @@ form: module.record_id""" % (xml_id,)
         if el.attrib.pop('page', None) == 'True':
             record.append(Field(name="page", eval="True"))
         if el.get('primary') == 'True':
+            # Pseudo clone mode, we'll set the t-name to the full canonical xmlid
+            el.append(
+                builder.E.xpath(
+                    builder.E.attribute(full_tpl_id, name='t-name'),
+                    expr=".",
+                    position="attributes",
+                )
+            )
             record.append(Field('primary', name='mode'))
         if el.get('optional'):
             record.append(Field(el.get('optional'), name='application'))

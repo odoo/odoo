@@ -158,7 +158,7 @@ in a row (no automatic line wrapping), and only use the following attributes:
 
 .. code-block:: xml
 
-    <group expand="1" string="Group By...">
+    <group expand="1" string="Group By">
        <filter string="Users" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
        <separator orientation="vertical"/>

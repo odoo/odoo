@@ -7,7 +7,7 @@
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
         <field name="arch" type="xml">
-            <form string="Directories" col="4" version="7.0">
+            <form string="Directories" col="4">
                 <group col="4">
                     <field name="name"/>
                     <field name="parent_id"/>
@@ -110,7 +110,7 @@
                 <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="user_id" />
-                <group expand="0" string="Group By...">
+                <group expand="0" string="Group By">
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

@@ -8,7 +8,7 @@
       <field name="name">statement.line.global.form</field>
       <field name="model">account.bank.statement.line.global</field>
       <field name="arch" type="xml">
-        <form string="Batch Payment Info" version="7.0">
+        <form string="Batch Payment Info">
             <group col="4">
                 <field name="name"/>
                 <field name="amount"/>
@@ -78,7 +78,7 @@
       <field name="name">bank.statement.line.form</field>
       <field name="model">account.bank.statement.line</field>
       <field name="arch" type="xml">
-        <form string="Statement Line" version="7.0">
+        <form string="Statement Line">
           <group col="4">
               <field name="statement_id"/>
               <field name="journal_id"/>
@@ -119,7 +119,7 @@
                     <field name="globalisation_amount" string="Glob. Amount"/>
                     <field name="note"/>
                 </group>
-                <group string="Group By..." expand="1">
+                <group string="Group By" expand="1">
                     <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-green"/>
                     <filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
                 </group>

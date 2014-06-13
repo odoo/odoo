@@ -1287,7 +1287,9 @@ def db_list(force=False, httprequest=None):
 def db_filter(dbs, httprequest=None):
     httprequest = httprequest or request.httprequest
     h = httprequest.environ.get('HTTP_HOST', '').split(':')[0]
-    d = h.split('.')[0]
+    d, _, r = h.partition('.')
+    if d == "www" and r:
+        d = r.partition('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs

@@ -39,7 +39,7 @@
             <field name="model">sale.quote.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sale Quotation Template" version="7.0">
+                <form string="Sale Quotation Template">
                     <sheet>
                         <button string="Edit Template" type="object" name="open_template" class="oe_link oe_right"/>
                         <div class="oe_title">
@@ -59,7 +59,7 @@
                         <notebook>
                             <page string="Lines">
                             <field name="quote_line">
-                                <form string="Sales Quote Template Lines" version="7.0">
+                                <form string="Sales Quote Template Lines">
                                     <group>
                                         <group>
                                             <field name="product_id" on_change="on_change_product_id(product_id)"/>

@@ -16,8 +16,8 @@
 </template>
 
 <!-- Layout add nav and footer -->
-<template id="header_footer_custom" inherit_id="website.layout" name="Footer Events Link">
-    <xpath expr="//footer//ul[@name='products']" position="inside">
+<template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Events Link">
+    <xpath expr="//ul[@id='products']" position="inside">
         <li><a href="/event">Events</a></li>
     </xpath>
 </template>
@@ -346,7 +346,7 @@
                     <div t-if="event.twitter_hashtag" class="mt16">
                         <p><strong>Participate on Twitter</strong></p>
                         <p class="text-muted">
-                            Find out what people see and say about this event, 
+                            Find out what people see and say about this event,
                             and join the conversation.
                         </p>
                         <p><strong>Use this tag:

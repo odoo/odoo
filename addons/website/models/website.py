@@ -27,6 +27,7 @@ except ImportError:
 
 import openerp
 from openerp.osv import orm, osv, fields
+from openerp.tools import html_escape as escape
 from openerp.tools.safe_eval import safe_eval
 from openerp.addons.web.http import request
 
@@ -710,7 +711,7 @@ class ir_attachment(osv.osv):
         for attachment in self.browse(cr, uid, ids, context=context):
             # in-document URLs are html-escaped, a straight search will not
             # find them
-            url = werkzeug.utils.escape(attachment.website_url)
+            url = escape(attachment.website_url)
             ids = Views.search(cr, uid, ["|", ('arch', 'like', '"%s"' % url), ('arch', 'like', "'%s'" % url)], context=context)
 
             if ids:

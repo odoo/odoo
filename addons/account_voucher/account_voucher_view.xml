@@ -23,7 +23,7 @@
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
             <field name="arch" type="xml">
-                <form string="Voucher Lines" version="7.0">
+                <form string="Voucher Lines">
                     <group col="4">
                         <field name="name"/>
                         <field name="account_id"/>
@@ -40,7 +40,7 @@
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Accounting Voucher" version="7.0">
+                <form string="Accounting Voucher">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to unreconcile this record?"/>
@@ -132,7 +132,7 @@
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <field name="period_id"/>
-                    <group expand="0" string="Group By...">
+                    <group expand="0" string="Group By">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>

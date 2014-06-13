@@ -18,7 +18,7 @@
 			<field name="model">account.bank.statement.line</field>
 			<field name="priority">10</field>
 			<field name="arch" type="xml">
-			<form string="CODA Statement Line" version="7.0" create="false">
+			<form string="CODA Statement Line" create="false">
 				<group col="4">
 					<field name="statement_id"/>
 					<field name="date"/>
@@ -66,7 +66,7 @@
 					<field name="note"/>
 				</group>
 				<newline/>
-				<group string="Group By..." expand="0">
+				<group string="Group By" expand="0">
 					<filter string="Partner" context="{'group_by':'partner_id'}" icon="terp-folder-green"/>
 					<filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
 				</group>

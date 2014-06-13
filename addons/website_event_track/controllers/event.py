@@ -24,9 +24,9 @@ import datetime
 import re
 
 import pytz
-import werkzeug.utils
 
 import openerp
+import openerp.tools
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 
@@ -150,7 +150,7 @@ class website_event(http.Controller):
             if post.get('tag_'+str(tag.id)):
                 tags.append(tag.id)
 
-        e = werkzeug.utils.escape
+        e = openerp.tools.escape
         track_description = '''<section data-snippet-id="text-block">
     <div class="container">
         <div class="row">

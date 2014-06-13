@@ -123,7 +123,6 @@ $(document).ready(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
-
     $("a.js_add, a.js_remove").click(function (event) {
         event.preventDefault();
         var $parent = $(this).parents('.js_product:first');

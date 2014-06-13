@@ -86,7 +86,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     get_search_fields: function () {
         var self = this;
 
-        var groupbygroups = _(this.search_view.inputs).select(function (g) {
+        var groupbygroups = _(this.search_view.drawer.inputs).select(function (g) {
             return g instanceof openerp.web.search.GroupbyGroup;
         });
 
@@ -320,8 +320,8 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         this.dropdown = $(QWeb.render('field_selection', {fields:fields, header_id:id}));
         $(event.target).after(this.dropdown);
         this.dropdown.css({position:'absolute',
-                           left:event.pageX,
-                           top:event.pageY});
+                           left:event.originalEvent.layerX,
+                           top:event.originalEvent.layerY});
         this.$('.field-selection').next('.dropdown-menu').toggle();
         
         
