@@ -12,7 +12,7 @@
             this.$(".dropdown:has(.oe_content_menu)").removeClass("hidden");
             return res;
         },
-        events: _.extend({}, website.EditorBar.prototype.events, {
+        events: _.extend({}, website.Menu.prototype.events, {
             'click a[data-action=new_product]': function (ev) {
                 ev.preventDefault();
                 website.prompt({
