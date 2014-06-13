@@ -8,7 +8,7 @@ $(document).ready(function () {
     });
 
     // change for css
-    $(document).on('mouseup', '.js_publish', function (ev) {
+    $(document).on('mouseup touchend', '.js_publish', function (ev) {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
@@ -55,7 +55,7 @@ $(document).ready(function () {
     });
 
     // change price when they are variants
-    $('form.js_add_cart_json label').on('mouseup', function (ev) {
+    $('form.js_add_cart_json label').on('mouseup touchend', function (ev) {
         var $label = $(this);
         var $price = $label.parents("form:first").find(".oe_price .oe_currency_value");
         if (!$price.data("price")) {
