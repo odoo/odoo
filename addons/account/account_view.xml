@@ -2042,7 +2042,7 @@
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax Template"/>
-                    <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
+                    <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales "/>
                     <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                     <field name="chart_template_id"/>
                 </search>
