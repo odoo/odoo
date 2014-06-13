@@ -33,6 +33,7 @@ import pytz
 import socket
 import time
 import xmlrpclib
+import re
 from email.message import Message
 
 from openerp import tools
@@ -45,6 +46,8 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
+mail_header_msgid_re = re.compile('<[^<>]+>')
 
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, filter(None, message.get_all(header, []))))
@@ -1264,11 +1267,7 @@ class mail_thread(osv.AbstractModel):
                 msg_dict['parent_id'] = parent_ids[0]
 
         if message.get('References') and 'parent_id' not in msg_dict:
-            msg_list =  decode(message['References']).split()
-            # some mail server or clients use comma as separator for References - opw 608919
-            if len(msg_list) == 1:
-                msg_list = msg_list[0].split(',')
-
+            msg_list =  mail_header_msgid_re.findall(decode(message['References']))
             parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in', [x.strip() for x in msg_list])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
