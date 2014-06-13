@@ -596,7 +596,7 @@ class pos_order(osv.osv):
             session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
             if session.sequence_number <= order['sequence_number']:
                 session.write({'sequence_number': order['sequence_number'] + 1})
-                session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+                session.refresh()
 
             if order['fidpoints'] and order['partner_id']:
                 partner = self.pool.get('res.partner').browse(cr, uid, order['partner_id'], context=context)
