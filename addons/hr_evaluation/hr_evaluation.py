@@ -36,7 +36,7 @@ class hr_evaluation_plan(osv.Model):
         'name': fields.char("Appraisal Plan", size=64, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'phase_ids': fields.one2many('hr_evaluation.plan.phase', 'plan_id', 'Appraisal Phases'),
-        'month_first': fields.integer('First Appraisal in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan. "),
+        'month_first': fields.integer('First Appraisal in (months)', help="This number of months will be used to schedule the first evaluation date of the employee when selecting an evaluation plan."),
         'month_next': fields.integer('Periodicity of Appraisal (months)', help="The number of month that depicts the delay between each evaluation of this plan (after the first one)."),
         'active': fields.boolean('Active')
     }
