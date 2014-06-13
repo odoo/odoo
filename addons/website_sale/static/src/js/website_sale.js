@@ -38,8 +38,11 @@ $(document).ready(function () {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var $input = $link.parent().parent().find("input");
+        var min = parseFloat($input.data("min") || 0);
+        var max = parseFloat($input.data("max") || Infinity);
         var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
-        $input.val(quantity > 0 ? quantity : 0);
+        $input.val(quantity > min ? (quantity < max ? quantity : max) : min);
+        $('input[name="'+$input.attr("name")+'"]').val(quantity > min ? (quantity < max ? quantity : max) : min);
         $input.change();
         return false;
     });
@@ -134,7 +137,7 @@ $(document).ready(function () {
         event.preventDefault();
         var $link = $(this);
         var $form = $link.parents("form:first");
-        var quantity = parseInt($('input[name="add_qty"]').val() || 1, 10);
+        var quantity = parseInt($('input[name="add_qty"]:last').val() || 1, 10);
         var defs = [];
         $link.attr('disabled', 'disabled');
         $('.js_product', $form).each(function () {

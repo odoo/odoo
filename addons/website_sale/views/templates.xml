@@ -533,12 +533,14 @@
   </t>
 </template>
 
-<template id="product_confirmation" inherit_id="website_sale.product" optional="enabled" name="Confirm: Add To Cart">
+<template id="product_confirmation" inherit_id="website_sale.product" optional="disabled" name="Confirm: Add To Cart">
   <xpath expr="//div[@id='modal_optional_products']" position="attributes">
     <attribute name="t-if">True</attribute>
   </xpath>
   <xpath expr="//t[@t-placeholder='button']" position="replace">
-    <a class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
+    <t t-placeholder="button">
+      <a class="btn btn-primary btn-lg mt8 js_check_product" href="#" data-toggle="modal" data-target="#modal_optional_products">Add to Cart</a>
+    </t>
   </xpath>
   <xpath expr="//t[@t-set='option_inc'][@t-value='0']" position="before">
     <tr>
@@ -572,7 +574,7 @@
                     <i class="fa fa-minus"></i>
                 </a>
             </span>
-            <input type="text" class="js_quantity form-control" name="add_qty" value="1"/>
+            <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
             <span class="input-group-addon">
                 <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
                     <i class="fa fa-plus"></i>
@@ -581,6 +583,24 @@
         </div>
       </td>
     </tr>
+  </xpath>
+</template>
+
+<template id="product_quantity" inherit_id="website_sale.product" optional="enabled" name="Select Quantity">
+  <xpath expr="//t[@t-placeholder='button']" position="before">
+    <div class="input-group" style="width: 108px;">
+        <span class="input-group-addon">
+            <a t-attf-href="#" class="mb8 js_add_cart_json">
+                <i class="fa fa-minus"></i>
+            </a>
+        </span>
+        <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
+        <span class="input-group-addon">
+            <a t-attf-href="#" class="mb8 float_left js_add_cart_json">
+                <i class="fa fa-plus"></i>
+            </a>
+        </span>
+    </div>
   </xpath>
 </template>
 
