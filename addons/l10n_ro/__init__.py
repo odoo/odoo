@@ -1,8 +1,11 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2012 TOTAL PC SYSTEMS (<http://www.erpsystems.ro>). All Rights Reserved
+#        @author -  Fekete Mihai <feketemihai@gmail.com>
+#    Copyright (C) 2011-2013 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro). 
+#       Update of filsys module 2012 (<http://www.erpsystems.ro>).
+#       Modules for V5 and V6 developed by Fil System.
+#    Copyright (C) 2009 (<http://www.filsystem.ro>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

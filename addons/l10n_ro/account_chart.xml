@@ -2,43 +2,17 @@
 <openerp>
 <data noupdate="0">
 
-	<!-- Account Types -->
-	
-	    <record model="account.account.type" id="account_type_active" >
-	      <field name="name">Active</field>
-	      <field name="code">active</field>
-	      <field name="close_method">balance</field>
-	    </record>
-
-	   <record model="account.account.type" id="account_type_passive" >
-	      <field name="name">Passive</field>
-	      <field name="code">passive</field>
-	      <field name="close_method">balance</field>
-	    </record>
-
-	    <record model="account.account.type" id="account_type_bifunctional" >
-	      <field name="name">Bifunctional</field>
-	      <field name="code">bifunctional</field>
-	      <field name="close_method">balance</field>
-	    </record>
-	    
-        <record model="account.account.type" id="account_type_special">
-              <field name="name">Special</field>
-              <field name="code">special</field>
-              <field name="close_method">none</field>
-            </record>
-	    
 	<!-- Account Templates -->
 
     <record id="pcg_0" model="account.account.template">
-      <field name="name">Plan de conturi general</field>
+      <field name="name">PLAN DE CONTURI GENERAL</field>
       <field name="code">0</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
     </record>
 
     <record id="pcg_1financiare" model="account.account.template">
-      <field name="name">Conturi financiare</field>
+      <field name="name">CONTURI FINANCIARE</field>
       <field name="code">Clasele 1-7</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -46,7 +20,7 @@
     </record>
 
     <record id="pcg_8extrabilant" model="account.account.template">
-      <field name="name">Conturi in afara bilantului</field>
+      <field name="name">CONTURI IN AFARA BILANTULUI</field>
       <field name="code">Clasele 8-9</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -54,7 +28,7 @@
     </record>
 
     <record id="pcg_Clasele_1_5" model="account.account.template">
-      <field name="name">Conturi de bilant</field>
+      <field name="name">CONTURI DE BILANT</field>
       <field name="code">Clasele 1-5</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -62,7 +36,7 @@
     </record>
 
     <record id="pcg_Clasa_1" model="account.account.template">
-      <field name="name">Conturi de capitaluri</field>
+      <field name="name">CONTURI DE CAPITALURI</field>
       <field name="code">Clasa 1</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -71,7 +45,7 @@
     </record>
 
     <record id="pcg_10" model="account.account.template">
-      <field name="name">Capital si rezerve</field>
+      <field name="name">CAPITAL SI REZERVER</field>
       <field name="code">10</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -91,7 +65,7 @@
       <field name="name">Capital subscris nevarsat</field>
       <field name="code">1011</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_101"/>
     </record>
 
@@ -99,7 +73,7 @@
       <field name="name">Capital subscris varsat</field>
       <field name="code">1012</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_101"/>
     </record>
 
@@ -107,7 +81,7 @@
       <field name="name">Patrimoniul regiei</field>
       <field name="code">1015</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_101"/>
     </record>
 
@@ -115,7 +89,7 @@
       <field name="name">Patrimoniul public</field>
       <field name="code">1016</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_101"/>
     </record>
 
@@ -131,7 +105,7 @@
       <field name="name">Prime de emisiune</field>
       <field name="code">1041</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_104"/>
     </record>
 
@@ -139,7 +113,7 @@
       <field name="name">Prime de fuziune/divizare</field>
       <field name="code">1042</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_104"/>
     </record>
 
@@ -147,7 +121,7 @@
       <field name="name">Prime de aport</field>
       <field name="code">1043</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_104"/>
     </record>
 
@@ -155,7 +129,7 @@
       <field name="name">Prime de conversie a obligatiunilor in actiuni</field>
       <field name="code">1044</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_104"/>
     </record>
 
@@ -163,7 +137,7 @@
       <field name="name">Rezerve din reevaluare</field>
       <field name="code">105</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_10"/>
     </record>
 
@@ -179,7 +153,7 @@
       <field name="name">Rezerve legale</field>
       <field name="code">1061</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_106"/>
     </record>
 
@@ -187,7 +161,7 @@
       <field name="name">Rezerve statutare sau contractuale</field>
       <field name="code">1063</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_106"/>
     </record>
 
@@ -195,7 +169,7 @@
       <field name="name">Rezerve de valoare justa</field>
       <field name="code">1064</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
       <field name="parent_id" ref="pcg_106"/>
     </record>
@@ -204,7 +178,7 @@
       <field name="name">Rezerve reprezentand surplusul realizat din rezerve din reevaluare</field>
       <field name="code">1065</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_106"/>
     </record>
 
@@ -212,7 +186,7 @@
       <field name="name">Rezerve din diferente de curs valutar in relatie cu investitia neta intr-o entitate straina</field>
       <field name="code">1067</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_106"/>
     </record>
     
@@ -220,7 +194,7 @@
       <field name="name">Alte rezerve</field>
       <field name="code">1068</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_106"/>
     </record>
 
@@ -228,7 +202,7 @@
       <field name="name">Rezerve din conversie</field>
       <field name="code">107</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
       <field name="parent_id" ref="pcg_10"/>
     </record>
@@ -246,7 +220,7 @@
       <field name="name">Interese care nu controleaza - rezultatul exercitiului financiar</field>
       <field name="code">1081</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_108"/>
     </record>
 
@@ -254,7 +228,7 @@
       <field name="name">Interese care nu controleaza - alte capitaluri proprii</field>
       <field name="code">1082</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_108"/>
     </record>
 
@@ -270,7 +244,7 @@
       <field name="name">Actiuni proprii detinute pe termen scurt</field>
       <field name="code">1091</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_109"/>
     </record>
 
@@ -278,7 +252,7 @@
       <field name="name">Actiuni proprii detinute pe termen lung</field>
       <field name="code">1092</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_109"/>
     </record>
 
@@ -302,7 +276,7 @@
       <field name="name">Rezultatul reportat reprezentand profitul nerepartizat sau pierderea neacoperita</field>
       <field name="code">1171</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_117"/>
     </record>
 
@@ -310,7 +284,7 @@
       <field name="name">Rezultatul reportat provenit din adoptarea pentru prima data a IAS, mai puþin IAS 29</field>
       <field name="code">1172</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="note">Acest cont apare doar la agentii economici care au aplicat Reglementarile contabile aprobate prin OMFP nr. 94/2001 si panã la inchiderea soldului acestui cont</field>
       <field name="parent_id" ref="pcg_117"/>
     </record>
@@ -319,7 +293,7 @@
       <field name="name">Rezultatul reportat provenit din corectarea erorilor contabile</field>
       <field name="code">1174</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_117"/>
     </record>
 
@@ -327,7 +301,7 @@
       <field name="name">Rezultatul reportat provenit din trecerea la aplicarea Reglementarilor contabile conforme cu Directiva a patra a Comunitatilor Economice Europene</field>
       <field name="code">1176</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_117"/>
     </record>
 
@@ -344,7 +318,7 @@
       <field name="name">Profit sau pierdere</field>
       <field name="code">121</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_12"/>
     </record>
 
@@ -352,7 +326,7 @@
       <field name="name">Repartizarea profitului</field>
       <field name="code">129</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_12"/>
     </record>
 
@@ -368,7 +342,7 @@
       <field name="name">Castiguri legate de vanzarea sau anularea instrumentelor de capitaluri proprii.</field>
       <field name="code">141</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_14"/>
     </record>
 
@@ -376,7 +350,7 @@
       <field name="name">Pierderi legate de emiterea, rascumpararea, vanzarea, cedarea cu titlu gratuit sau anularea instrumentelor de capitaluri proprii.</field>
       <field name="code">149</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_14"/>
     </record>
 
@@ -401,7 +375,7 @@
       <field name="name">Provizioane pentru litigii</field>
       <field name="code">1511</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_151"/>
     </record>
 
@@ -409,7 +383,7 @@
       <field name="name">Provizioane pentru garantii acordate clientilor</field>
       <field name="code">1512</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_151"/>
     </record>
 
@@ -417,7 +391,7 @@
       <field name="name">Provizioane pentru dezafectare imobilizari corporale si alte actiuni legate de acestea</field>
       <field name="code">1513</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="note">Acest cont apare doar la agentii economici care au aplicat Reglementarile contabile aprobate prin OMFP nr. 94/2001 si pana la scoaterea din evidenta a imobilizarilor corporale in valoarea carora au fost incluse aceste provizioane. Ca urmare, aceste provizioane nu se mai pot constitui in baza prezentelor reglementari.</field>
       <field name="parent_id" ref="pcg_151"/>
     </record>
@@ -426,7 +400,7 @@
       <field name="name">Provizioane pentru restructurare</field>
       <field name="code">1514</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_151"/>
     </record>
 
@@ -434,7 +408,7 @@
       <field name="name">Provizioane pentru pensii si obligatii similare</field>
       <field name="code">1515</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_151"/>
     </record>
 
@@ -442,7 +416,7 @@
       <field name="name">Provizioane pentru impozite</field>
       <field name="code">1516</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_151"/>
     </record>
 
@@ -450,7 +424,7 @@
       <field name="name">Alte provizioane</field>
       <field name="code">1518</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_151"/>
     </record>
 
@@ -474,7 +448,7 @@
       <field name="name">Imprumuturi externe din emisiuni de obligatiuni garantate de stat</field>
       <field name="code">1614</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_161"/>
     </record>
 
@@ -482,7 +456,7 @@
       <field name="name">Imprumuturi externe din emisiuni de obligatiuni garantate de banci</field>
       <field name="code">1615</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_161"/>
     </record>
 
@@ -490,7 +464,7 @@
       <field name="name">Imprumuturi interne din emisiuni de obligatiuni garantate de stat</field>
       <field name="code">1617</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_161"/>
     </record>
 
@@ -498,7 +472,7 @@
       <field name="name">Alte imprumuturi din emisiuni de obligatiuni</field>
       <field name="code">1618</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_161"/>
     </record>
 
@@ -514,7 +488,7 @@
       <field name="name">Credite bancare pe termen lung</field>
       <field name="code">1621</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -522,7 +496,7 @@
       <field name="name">Credite bancare pe termen lung nerambursate la scadenta</field>
       <field name="code">1622</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -530,7 +504,7 @@
       <field name="name">Credite externe guvernamentale</field>
       <field name="code">1623</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -538,7 +512,7 @@
       <field name="name">Credite bancare externe garantate de stat</field>
       <field name="code">1624</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -546,7 +520,7 @@
       <field name="name">Credite bancare externe garantate de banci</field>
       <field name="code">1625</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -554,7 +528,7 @@
       <field name="name">Credite de la trezoreria statului</field>
       <field name="code">1626</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -562,7 +536,7 @@
       <field name="name">Credite bancare interne garantate de stat</field>
       <field name="code">1627</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_162"/>
     </record>
 
@@ -578,7 +552,7 @@
       <field name="name">Datorii fata de entitatile afiliate</field>
       <field name="code">1661</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_166"/>
     </record>
 
@@ -586,7 +560,7 @@
       <field name="name">Datorii fata de entitatile de care compania este legata prin interese de participare</field>
       <field name="code">1663</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_166"/>
     </record>
 
@@ -594,7 +568,7 @@
       <field name="name">Alte imprumuturi si datorii asimilate</field>
       <field name="code">167</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_16"/>
     </record>
 
@@ -610,7 +584,7 @@
       <field name="name">Dobanzi aferente imprumuturilor din emisiunile de obligatiuni</field>
       <field name="code">1681</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_168"/>
     </record>
 
@@ -618,7 +592,7 @@
       <field name="name">Dobanzi aferente creditelor bancare pe termen lung</field>
       <field name="code">1682</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_168"/>
     </record>
 
@@ -626,7 +600,7 @@
       <field name="name">Dobanzi aferente datoriilor fata de entitatile afiliate</field>
       <field name="code">1685</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_168"/>
     </record>
 
@@ -634,7 +608,7 @@
       <field name="name">Dobanzi aferente datoriilor fata de entitatile de care compania este legata prin interese de participare</field>
       <field name="code">1686</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_168"/>
     </record>
 
@@ -642,7 +616,7 @@
       <field name="name">Dobanzi aferente altor imprumuturi si datorii asimilate</field>
       <field name="code">1687</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_168"/>
     </record>
 
@@ -650,7 +624,7 @@
       <field name="name">Prime privind rambursarea obligatiunilor</field>
       <field name="code">169</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_16"/>
     </record>
 
@@ -675,7 +649,7 @@
       <field name="name">Cheltuieli de constituire</field>
       <field name="code">201</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_20"/>
     </record>
 
@@ -683,7 +657,7 @@
       <field name="name">Cheltuieli de dezvoltare</field>
       <field name="code">203</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_20"/>
     </record>
 
@@ -691,15 +665,15 @@
       <field name="name">Concesiuni, brevete, licente, marci comerciale, drepturi si active similare</field>
       <field name="code">205</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_20"/>
     </record>
 
     <record id="pcg_207" model="account.account.template">
       <field name="name">Fond comercial</field>
       <field name="code">207</field>
-      <field name="type">view</field>
-      <field name="user_type" ref="account.data_account_type_view"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_20"/>
     </record>
 
@@ -707,7 +681,7 @@
       <field name="name">Fond comercial pozitiv</field>
       <field name="code">2071</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="note">Acest cont apare, de regula, in situatiile financiare anuale consolidate</field>
       <field name="parent_id" ref="pcg_207"/>
     </record>
@@ -716,8 +690,8 @@
       <field name="name">Fond comercial negativ</field>
       <field name="code">2075</field>
       <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
-      <field name="user_type" ref="account_type_passive"/>
       <field name="parent_id" ref="pcg_207"/>
     </record>
 
@@ -725,7 +699,7 @@
       <field name="name">Alte imobilizari necorporale</field>
       <field name="code">208</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_20"/>
     </record>
     
@@ -750,7 +724,7 @@
       <field name="name">Terenuri</field>
       <field name="code">2111</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_211"/>
     </record>
 
@@ -758,7 +732,7 @@
       <field name="name">Amenajari de terenuri</field>
       <field name="code">2112</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_211"/>
     </record>
 
@@ -766,7 +740,7 @@
       <field name="name">Constructii</field>
       <field name="code">212</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_21"/>
     </record>
 
@@ -782,7 +756,7 @@
       <field name="name">Echipamente tehnologice (masini, utilaje si instalatii de lucru)</field>
       <field name="code">2131</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_213"/>
     </record>
 
@@ -790,7 +764,7 @@
       <field name="name">Aparate si instalatii de masurare, control si reglare</field>
       <field name="code">2132</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_213"/>
     </record>
 
@@ -798,7 +772,7 @@
       <field name="name">Mijloace de transport</field>
       <field name="code">2133</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_213"/>
     </record>
 
@@ -806,7 +780,7 @@
       <field name="name">Animale si plantatii</field>
       <field name="code">2134</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_213"/>
     </record>
 
@@ -814,7 +788,7 @@
       <field name="name">Mobilier, aparatura birotica, echipamente de protectie a valorilor umane si materiale si alte active corporale</field>
       <field name="code">214</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_21"/>
     </record>
 
@@ -830,7 +804,7 @@
       <field name="name">Instalatii tehnice, mijloace de transport, animale si plantatii in curs de aprovizionare</field>
       <field name="code">223</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_22"/>
     </record>
     
@@ -838,7 +812,7 @@
       <field name="name">Mobilier, aparatura birotica, echipamente de protectie a valorilor umane si materiale si alte active corporale in curs de aprovizionare</field>
       <field name="code">224</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_22"/>
     </record>
     
@@ -854,7 +828,7 @@
       <field name="name">Imobilizari corporale in curs de executie</field>
       <field name="code">231</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_23"/>
     </record>
 
@@ -862,7 +836,7 @@
       <field name="name">Avansuri acordate pentru imobilizari corporale</field>
       <field name="code">232</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_23"/>
     </record>
 
@@ -870,7 +844,7 @@
       <field name="name">Imobilizari necorporale in curs de executie</field>
       <field name="code">233</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_23"/>
     </record>
 
@@ -878,7 +852,7 @@
       <field name="name">Avansuri acordate pentru imobilizari necorporale</field>
       <field name="code">234</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_23"/>
     </record>
 
@@ -894,7 +868,7 @@
       <field name="name">Actiuni detinute la entitatile afiliate</field>
       <field name="code">261</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_26"/>
     </record>
 
@@ -902,7 +876,7 @@
       <field name="name">Interse de participare</field>
       <field name="code">263</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_26"/>
     </record>
 
@@ -910,7 +884,7 @@
       <field name="name">Titluri puse in echivalenta</field>
       <field name="code">264</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="note">Acest cont apare numai in situatiile financiare anuale consolidate</field>
       <field name="parent_id" ref="pcg_26"/>
     </record>
@@ -919,7 +893,7 @@
       <field name="name">Alte titluri imobilizate</field>
       <field name="code">265</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_26"/>
     </record>
  
@@ -935,7 +909,7 @@
       <field name="name">Sume datorate de entitatile afiliate</field>
       <field name="code">2671</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -943,7 +917,7 @@
       <field name="name">Dobanda aferenta sumelor datorate de entitatile afiliate</field>
       <field name="code">2672</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -951,7 +925,7 @@
       <field name="name">Creante legate de interesele de participare</field>
       <field name="code">2673</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -959,7 +933,7 @@
       <field name="name">Dobanda aferenta creantelor legate de interesele de participare</field>
       <field name="code">2674</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -967,7 +941,7 @@
       <field name="name">Imprumuturi acordate pe termen lung</field>
       <field name="code">2675</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -975,7 +949,7 @@
       <field name="name">Dobanda aferenta imprumuturilor acordate pe termen lung</field>
       <field name="code">2676</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -983,7 +957,7 @@
       <field name="name">Alte creante imobilizate</field>
       <field name="code">2678</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -991,7 +965,7 @@
       <field name="name">Dobânzi aferente altor creante imobilizate</field>
       <field name="code">2679</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_267"/>
     </record>
 
@@ -1007,7 +981,7 @@
       <field name="name">Varsaminte de efectuat privind actiunile detinute la entitatile afiliate</field>
       <field name="code">2691</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_269"/>
     </record>
 
@@ -1015,7 +989,7 @@
       <field name="name">Varsaminte de efectuat privind interesele de participare</field>
       <field name="code">2692</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_269"/>
     </record>
 
@@ -1023,7 +997,7 @@
       <field name="name">Varsaminte de efectuat pentru alte imobilizari financiare</field>
       <field name="code">2693</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_269"/>
     </record>
 
@@ -1047,7 +1021,7 @@
       <field name="name">Amortizarea cheltuielilor de constituire</field>
       <field name="code">2801</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_280"/>
     </record>
 
@@ -1055,7 +1029,7 @@
       <field name="name">Amortizarea cheltuielilor de dezvoltare</field>
       <field name="code">2803</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_280"/>
     </record>
 
@@ -1063,7 +1037,7 @@
       <field name="name">Amortizarea concesiunilor, brevetelor, licentelor, marcilor comerciale, drepturilor si activelor similare</field>
       <field name="code">2805</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_280"/>
     </record>
 
@@ -1071,7 +1045,7 @@
       <field name="name">Amortizarea fondului comercial</field>
       <field name="code">2807</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="note">Acest cont apare, de regula, in situatiile financiare anuale consolidate</field>
       <field name="parent_id" ref="pcg_280"/>
     </record>
@@ -1080,7 +1054,7 @@
       <field name="name">Amortizarea altor imobilizari necorporale</field>
       <field name="code">2808</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_280"/>
     </record>
 
@@ -1096,7 +1070,7 @@
       <field name="name">Amortizarea amenajarilor de terenuri</field>
       <field name="code">2811</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_281"/>
     </record>
 
@@ -1104,7 +1078,7 @@
       <field name="name">Amortizarea constructiilor</field>
       <field name="code">2812</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_281"/>
     </record>
 
@@ -1112,7 +1086,7 @@
       <field name="name">Amortizarea instalatiilor, mijloacelor de transport, animalelor si plantatiilor</field>
       <field name="code">2813</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_281"/>
     </record>
 
@@ -1120,7 +1094,7 @@
       <field name="name">Amortizarea altor imobilizari corporale</field>
       <field name="code">2814</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_281"/>
     </record>
 
@@ -1144,7 +1118,7 @@
       <field name="name">Ajustari pentru deprecierea cheltuielilor de dezvoltare</field>
       <field name="code">2903</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_290"/>
     </record>
 
@@ -1152,7 +1126,7 @@
       <field name="name">Ajustari pentru deprecierea concesiunilor, brevetelor, licentelor, marcilor comerciale, drepturilor si activelor similare</field>
       <field name="code">2905</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_290"/>
     </record>
 
@@ -1160,7 +1134,7 @@
       <field name="name">Ajustari pentru deprecierea fondului comercial</field>
       <field name="code">2907</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_290"/>
     </record>
 
@@ -1168,7 +1142,7 @@
       <field name="name">Ajustari pentru deprecierea altor imobilizari necorporale</field>
       <field name="code">2908</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_290"/>
     </record>
 
@@ -1184,7 +1158,7 @@
       <field name="name">Ajustari pentru deprecierea terenurilor si amenajarilor de terenuri</field>
       <field name="code">2911</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_291"/>
     </record>
 
@@ -1192,7 +1166,7 @@
       <field name="name">Ajustari pentru deprecierea constructiilor</field>
       <field name="code">2912</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_291"/>
     </record>
 
@@ -1200,7 +1174,7 @@
       <field name="name">Ajustari pentru deprecierea instalatiilor, mijloacelor de transport, animalelor si plantatiilor</field>
       <field name="code">2913</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_291"/>
     </record>
 
@@ -1208,7 +1182,7 @@
       <field name="name">Ajustari pentru deprecierea altor imobilizari corporale</field>
       <field name="code">2914</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_291"/>
     </record>
 
@@ -1224,7 +1198,7 @@
       <field name="name">Ajustari pentru deprecierea imobilizarilor corporale in curs de executie</field>
       <field name="code">2931</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_293"/>
     </record>
 
@@ -1232,7 +1206,7 @@
       <field name="name">Ajustari pentru deprecierea imobilizarilor necorporale in curs de executie</field>
       <field name="code">2933</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_293"/>
     </record>
 
@@ -1248,7 +1222,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a actiunilor detinute la entitatile afiliate</field>
       <field name="code">2961</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1256,7 +1230,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a intereselor de participare</field>
       <field name="code">2962</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1264,7 +1238,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a altor titluri imobilizate</field>
       <field name="code">2963</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1272,7 +1246,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a sumelor datorate entitatilor afiliate</field>
       <field name="code">2964</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1280,7 +1254,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a creantelor legate de interesele de participare</field>
       <field name="code">2965</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1288,7 +1262,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a imprumuturilor pe termen lung</field>
       <field name="code">2966</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1296,7 +1270,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a altor creante imobilizate</field>
       <field name="code">2968</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_296"/>
     </record>
 
@@ -1320,7 +1294,7 @@
       <field name="name">Materii prime</field>
       <field name="code">301</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_30"/>
     </record>
 
@@ -1336,7 +1310,7 @@
       <field name="name">Materiale auxiliare</field>
       <field name="code">3021</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1344,7 +1318,7 @@
       <field name="name">Combustibili</field>
       <field name="code">3022</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1352,7 +1326,7 @@
       <field name="name">Materiale pentru ambalat</field>
       <field name="code">3023</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1360,7 +1334,7 @@
       <field name="name">Piese de schimb</field>
       <field name="code">3024</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1368,7 +1342,7 @@
       <field name="name">Seminte si materiale de plantat</field>
       <field name="code">3025</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1376,7 +1350,7 @@
       <field name="name">Furaje</field>
       <field name="code">3026</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1384,7 +1358,7 @@
       <field name="name">Alte materiale consumabile</field>
       <field name="code">3028</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_302"/>
     </record>
 
@@ -1392,7 +1366,7 @@
       <field name="name">Materiale de natura obiectelor de inventar</field>
       <field name="code">303</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_30"/>
     </record>
 
@@ -1400,7 +1374,7 @@
       <field name="name">Diferente de pret la materii prime si materiale</field>
       <field name="code">308</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_30"/>
     </record>
 
@@ -1416,7 +1390,7 @@
       <field name="name">Materii prime in curs de aprovizionare</field>
       <field name="code">321</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_32"/>
     </record>
     
@@ -1424,7 +1398,7 @@
       <field name="name">Materiale consumabile in curs de aprovizionare</field>
       <field name="code">322</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_32"/>
     </record>
     
@@ -1432,7 +1406,7 @@
       <field name="name">Materiale de natura obiectelor de inventar in curs de aprovizionare</field>
       <field name="code">323</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_32"/>
     </record>
     
@@ -1440,7 +1414,7 @@
       <field name="name">Animale in curs de aprovizionare</field>
       <field name="code">326</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_32"/>
     </record>
     
@@ -1448,7 +1422,7 @@
       <field name="name">Marfuri in curs de aprovizionare</field>
       <field name="code">327</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_32"/>
     </record>
     
@@ -1456,7 +1430,7 @@
       <field name="name">Ambalaje in curs de aprovizionare</field>
       <field name="code">328</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_32"/>
     </record>
     
@@ -1472,7 +1446,7 @@
       <field name="name">Produse in curs de executie</field>
       <field name="code">331</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_33"/>
     </record>
 
@@ -1480,7 +1454,7 @@
       <field name="name">Servicii in curs de executie</field>
       <field name="code">332</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_33"/>
     </record>
 
@@ -1496,7 +1470,7 @@
       <field name="name">Semifabricate</field>
       <field name="code">341</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_34"/>
     </record>
 
@@ -1504,7 +1478,7 @@
       <field name="name">Produse finite</field>
       <field name="code">345</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_34"/>
     </record>
 
@@ -1512,7 +1486,7 @@
       <field name="name">Produse reziduale</field>
       <field name="code">346</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_34"/>
     </record>
 
@@ -1520,7 +1494,7 @@
       <field name="name">Diferente de pret la produse</field>
       <field name="code">348</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_34"/>
     </record>
 
@@ -1536,7 +1510,7 @@
       <field name="name">Materii si materiale aflate la terti</field>
       <field name="code">351</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_35"/>
     </record>
 
@@ -1544,7 +1518,7 @@
       <field name="name">Produse aflate la terti</field>
       <field name="code">354</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_35"/>
     </record>
 
@@ -1552,7 +1526,7 @@
       <field name="name">Animale aflate la terti</field>
       <field name="code">356</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_35"/>
     </record>
 
@@ -1560,7 +1534,7 @@
       <field name="name">Marfuri aflate la terti</field>
       <field name="code">357</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_35"/>
     </record>
 
@@ -1568,7 +1542,7 @@
       <field name="name">Ambalaje aflate la terti</field>
       <field name="code">358</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_35"/>
     </record>
 
@@ -1584,7 +1558,7 @@
       <field name="name">Animale si pasari</field>
       <field name="code">361</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_36"/>
     </record>
 
@@ -1592,7 +1566,7 @@
       <field name="name">Diferente de pret la animale si pasari</field>
       <field name="code">368</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_36"/>
     </record>
 
@@ -1608,7 +1582,7 @@
       <field name="name">Marfuri</field>
       <field name="code">371</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_37"/>
     </record>
 
@@ -1616,7 +1590,7 @@
       <field name="name">Diferente de pret la marfuri</field>
       <field name="code">378</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_37"/>
     </record>
 
@@ -1632,7 +1606,7 @@
       <field name="name">Ambalaje</field>
       <field name="code">381</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_38"/>
     </record>
 
@@ -1640,7 +1614,7 @@
       <field name="name">Diferente de pret la ambalaje</field>
       <field name="code">388</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_38"/>
     </record>
 
@@ -1656,7 +1630,7 @@
       <field name="name">Ajustari pentru deprecierea materiilor prime</field>
       <field name="code">391</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_39"/>
     </record>
 
@@ -1672,7 +1646,7 @@
       <field name="name">Ajustari pentru deprecierea materialelor consumabile</field>
       <field name="code">3921</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_392"/>
     </record>
 
@@ -1680,7 +1654,7 @@
       <field name="name">Ajustari pentru deprecierea materialelor de natura obiectelor de inventar</field>
       <field name="code">3922</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_392"/>
     </record>
 
@@ -1688,7 +1662,7 @@
       <field name="name">Ajustari pentru deprecierea productiei in curs de executie</field>
       <field name="code">393</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_39"/>
     </record>
 
@@ -1704,7 +1678,7 @@
       <field name="name">Ajustari pentru deprecierea semifabricatelor</field>
       <field name="code">3941</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_394"/>
     </record>
 
@@ -1712,7 +1686,7 @@
       <field name="name">Ajustari pentru deprecierea produselor finite</field>
       <field name="code">3945</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_394"/>
     </record>
 
@@ -1720,7 +1694,7 @@
       <field name="name">Ajustari pentru deprecierea produselor reziduale</field>
       <field name="code">3946</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_394"/>
     </record>
 
@@ -1736,7 +1710,7 @@
       <field name="name">Ajustari pentru deprecierea materiilor prime si materialelor aflate la terti</field>
       <field name="code">3951</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1744,7 +1718,7 @@
       <field name="name">Ajustari pentru deprecierea semifabricatelor aflate la terti</field>
       <field name="code">3952</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1752,7 +1726,7 @@
       <field name="name">Ajustari pentru deprecierea produselor finite aflate la terti</field>
       <field name="code">3953</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1760,7 +1734,7 @@
       <field name="name">Ajustari pentru deprecierea produselor reziduale aflate la terti</field>
       <field name="code">3954</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1768,7 +1742,7 @@
       <field name="name">Ajustari pentru deprecierea animalelor aflate la terti</field>
       <field name="code">3956</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1776,7 +1750,7 @@
       <field name="name">Ajustari pentru deprecierea marfurilor aflate la terti</field>
       <field name="code">3957</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1784,7 +1758,7 @@
       <field name="name">Ajustari pentru deprecierea ambalajelor aflate la terti</field>
       <field name="code">3958</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_395"/>
     </record>
 
@@ -1792,7 +1766,7 @@
       <field name="name">Ajustari pentru deprecierea animalelor</field>
       <field name="code">396</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_39"/>
     </record>
 
@@ -1800,7 +1774,7 @@
       <field name="name">Ajustari pentru deprecierea marfurilor</field>
       <field name="code">397</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_39"/>
     </record>
 
@@ -1808,7 +1782,7 @@
       <field name="name">Ajustari pentru deprecierea ambalajelor</field>
       <field name="code">398</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive" />
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_39"/>
     </record>
 
@@ -1886,8 +1860,8 @@
     <record id="pcg_4091" model="account.account.template">
       <field name="name">Furnizori - debitori pentru cumparari de bunuri de natura stocurilor</field>
       <field name="code">4091</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable" />
       <field name="parent_id" ref="pcg_409"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -1895,8 +1869,8 @@
     <record id="pcg_4092" model="account.account.template">
       <field name="name">Furnizori - debitori pentru prestari de servicii</field>
       <field name="code">4092</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_active" />
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable" />
       <field name="parent_id" ref="pcg_409"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -1958,8 +1932,8 @@
     <record id="pcg_419" model="account.account.template">
       <field name="name">Clienti creditori</field>
       <field name="code">419</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="type">receivable</field>
+      <field name="user_type" ref="account.data_account_type_receivable"/>
       <field name="parent_id" ref="pcg_41"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -1975,8 +1949,8 @@
     <record id="pcg_421" model="account.account.template">
       <field name="name">Personal - salarii datorate</field>
       <field name="code">421</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="parent_id" ref="pcg_42"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -1985,7 +1959,7 @@
       <field name="name">Personal - ajutoare materiale datorate</field>
       <field name="code">423</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_42"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -1994,7 +1968,7 @@
       <field name="name">Prime privind participarea personalului la profit</field>
       <field name="code">424</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="note">Se utilizeaza atunci cand exista baza legala pentru acordarea acestora</field>
       <field name="parent_id" ref="pcg_42"/>
       <field name="reconcile" eval="True"/>
@@ -2013,7 +1987,7 @@
       <field name="name">Drepturi de personal neridicate</field>
       <field name="code">426</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_42"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2022,7 +1996,7 @@
       <field name="name">Retineri din salarii datorate tertilor</field>
       <field name="code">427</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_42"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2040,7 +2014,7 @@
       <field name="name">Alte datorii in legatura cu personalul</field>
       <field name="code">4281</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_428"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2048,8 +2022,8 @@
     <record id="pcg_4282" model="account.account.template">
       <field name="name">Alte creante in legatura cu personalul</field>
       <field name="code">4282</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_428"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2075,7 +2049,7 @@
       <field name="name">Contributia unitatii la asigurarile sociale</field>
       <field name="code">4311</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_431"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2084,7 +2058,7 @@
       <field name="name">Contributia personalului la asigurarile sociale</field>
       <field name="code">4312</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_431"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2093,7 +2067,7 @@
       <field name="name">Contributia angajatorului pentru asigurarile sociale de sanatate</field>
       <field name="code">4313</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_431"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2102,7 +2076,7 @@
       <field name="name">Contributia angajatilor pentru asigurarile sociale de sanatate</field>
       <field name="code">4314</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_431"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2111,7 +2085,7 @@
       <field name="name">Contributia angajatorilor la fondul pentru concedii si indemnizatii</field>
       <field name="code">4315</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_431"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2120,7 +2094,7 @@
       <field name="name">Contributia angajatorilor la fondul de asigurare pentru accidente de munca si boli profesionale</field>
       <field name="code">4316</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_431"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2139,7 +2113,7 @@
       <field name="name">Contributia unitatii la fondul de somaj</field>
       <field name="code">4371</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_437"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2148,7 +2122,7 @@
       <field name="name">Contributia personalului la fondul de somaj</field>
       <field name="code">4372</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_437"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2157,7 +2131,7 @@
       <field name="name">Contributia unitatii la fondul de garantare pentru plata creantelor salariale</field>
       <field name="code">4373</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_437"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2175,7 +2149,7 @@
       <field name="name">Alte datorii sociale</field>
       <field name="code">4381</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_438"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2210,7 +2184,7 @@
       <field name="name">Impozitul pe profit</field>
       <field name="code">4411</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_441"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2219,7 +2193,7 @@
       <field name="name">Impozitul pe venit</field>
       <field name="code">4418</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_441"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2237,7 +2211,7 @@
       <field name="name">TVA de plata</field>
       <field name="code">4423</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_442"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2246,7 +2220,7 @@
       <field name="name">TVA de recuperat</field>
       <field name="code">4424</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_442"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2255,7 +2229,7 @@
       <field name="name">TVA deductibila</field>
       <field name="code">4426</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_442"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2264,7 +2238,7 @@
       <field name="name">TVA colectata</field>
       <field name="code">4427</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_442"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2272,7 +2246,7 @@
       <field name="name">TVA neexigibila</field>
       <field name="code">4428</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_442"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2281,7 +2255,7 @@
       <field name="name">Impozitul pe venituri de natura salariilor</field>
       <field name="code">444</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_44"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2307,8 +2281,8 @@
     <record id="pcg_4452" model="account.account.template">
       <field name="name">Imprumuturi nerambursabile cu caracter de subventii</field>
       <field name="code">4452</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_445"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2316,8 +2290,8 @@
     <record id="pcg_4458" model="account.account.template">
       <field name="name">Alte sume primite cu caracter de subventii</field>
       <field name="code">4458</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_445"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2326,7 +2300,7 @@
       <field name="name">Alte impozite,taxe si varsaminte asimilate</field>
       <field name="code">446</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_44"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2335,7 +2309,7 @@
       <field name="name">Fonduri speciale - taxe si varsaminte asimilate</field>
       <field name="code">447</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_44"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2353,7 +2327,7 @@
       <field name="name">Alte datorii fata de bugetul statului</field>
       <field name="code">4481</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_448"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2362,7 +2336,7 @@
       <field name="name">Alte creante privind bugetul statului</field>
       <field name="code">4482</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_448"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2388,7 +2362,7 @@
       <field name="name">Decontari intre entitatile afiliate</field>
       <field name="code">4511</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_451"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2397,7 +2371,7 @@
       <field name="name">Dobanzi aferente decontarilor intre entitatile afiliate</field>
       <field name="code">4518</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_451"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2415,7 +2389,7 @@
       <field name="name">Decontari privind interesele de participare</field>
       <field name="code">4531</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_451"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2424,7 +2398,7 @@
       <field name="name">Dobanzi aferente decontarilor privind interesele de participare</field>
       <field name="code">4538</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_451"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2441,17 +2415,17 @@
     <record id="pcg_4551" model="account.account.template">
       <field name="name">Actionari/asociati - conturi curente</field>
       <field name="code">4551</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="parent_id" ref="pcg_455"/>
       <field name="reconcile" eval="True"/>
     </record>
 
     <record id="pcg_4558" model="account.account.template">
       <field name="name">Actionari/asociati dobanzi la conturi curente</field>
-      <field name="type">receivable</field>
+      <field name="type">payable</field>
       <field name="code">4558</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="parent_id" ref="pcg_455"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2460,7 +2434,7 @@
       <field name="name">Decontari cu actionarii/asociatii privind capitalul</field>
       <field name="code">456</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_45"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2469,7 +2443,7 @@
       <field name="name">Dividende de plata</field>
       <field name="code">457</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_45"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2486,8 +2460,8 @@
     <record id="pcg_4581" model="account.account.template">
       <field name="name">Decontari din operatii in participare - activ</field>
       <field name="code">4581</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_458"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2495,8 +2469,8 @@
     <record id="pcg_4582" model="account.account.template">
       <field name="name">Decontari din operatii in participare - pasiv</field>
       <field name="code">4582</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_458"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2521,8 +2495,8 @@
     <record id="pcg_462" model="account.account.template">
       <field name="name">Creditori diversi</field>
       <field name="code">462</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="parent_id" ref="pcg_46"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2538,8 +2512,8 @@
     <record id="pcg_471" model="account.account.template">
       <field name="name">Cheltuieli integistrate in avans</field>
       <field name="code">471</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_47"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2548,7 +2522,7 @@
       <field name="name">Venituri inregistrate in avans</field>
       <field name="code">472</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_47"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2557,7 +2531,7 @@
       <field name="name">Decontari din operatiuni in curs de clarificare</field>
       <field name="code">473</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_47"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2574,7 +2548,7 @@
       <field name="name">Subventii guvernamentale pentru investitii</field>
       <field name="code">4751</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_475"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2583,7 +2557,7 @@
       <field name="name">Imprumuturi nerambursabile cu caracter de subventii pentru investitii</field>
       <field name="code">4752</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_475"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2592,7 +2566,7 @@
       <field name="name">Donatii pentru investitii</field>
       <field name="code">4753</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_475"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2601,7 +2575,7 @@
       <field name="name">Plusuri de inventar de natura imobilizarilor</field>
       <field name="code">4754</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_475"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2610,7 +2584,7 @@
       <field name="name">Alte sume primite cu caracter de subventii pentru investitii</field>
       <field name="code">4758</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_475"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2627,7 +2601,7 @@
       <field name="name">Decontari intre unitati si subunitati</field>
       <field name="code">481</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_48"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2636,7 +2610,7 @@
       <field name="name">Decontari intre subunitati</field>
       <field name="code">482</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_48"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2654,7 +2628,7 @@
       <field name="name">Ajustari pentru deprecierea creantelor - clienti</field>
       <field name="code">491</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_49"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2663,7 +2637,7 @@
       <field name="name">Ajustari pentru deprecierea creantelor - decontari in cadrul grupului si cu actionarii/asociatii</field>
       <field name="code">495</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_49"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2671,8 +2645,8 @@
     <record id="pcg_496" model="account.account.template">
       <field name="name">Ajustari pentru deprecierea creantelor - debitori diversi</field>
       <field name="code">496</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_liability"/>
       <field name="parent_id" ref="pcg_49"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -2697,7 +2671,7 @@
       <field name="name">Actiuni detinute la entitatile afiliate</field>
       <field name="code">501</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_50"/>
     </record>
 
@@ -2705,7 +2679,7 @@
       <field name="name">Obligatiuni emise si rascumparate</field>
       <field name="code">505</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_50"/>
     </record>
 
@@ -2713,7 +2687,7 @@
       <field name="name">Obligatiuni</field>
       <field name="code">506</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_50"/>
     </record>
 
@@ -2729,7 +2703,7 @@
       <field name="name">Alte titluri de plasament</field>
       <field name="code">5081</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_508"/>
     </record>
 
@@ -2737,7 +2711,7 @@
       <field name="name">Dobanzi la obligatiuni si alte titluri de plasament</field>
       <field name="code">5088</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_508"/>
     </record>
 
@@ -2753,7 +2727,7 @@
       <field name="name">Varsaminte de efctuat pentru actiunile detinute la institutiile afiliate</field>
       <field name="code">5091</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_509"/>
     </record>
 
@@ -2761,7 +2735,7 @@
       <field name="name">Varsaminte de efctuat pentru alte investitii pe termen scurt</field>
       <field name="code">5092</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_509"/>
     </record>
 
@@ -2785,7 +2759,7 @@
       <field name="name">Cecuri de incasat</field>
       <field name="code">5112</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_511"/>
     </record>
 
@@ -2793,7 +2767,7 @@
       <field name="name">Efecte de incasat</field>
       <field name="code">5113</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_511"/>
     </record>
 
@@ -2801,7 +2775,7 @@
       <field name="name">Efecte remise spre scontare</field>
       <field name="code">5114</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_511"/>
     </record>
 
@@ -2818,8 +2792,8 @@
     <record id="pcg_5121" model="account.account.template">
       <field name="name">Conturi la banci in lei</field>
       <field name="code">5121</field>
-      <field name="type">view</field>
-      <field name="user_type" ref="account.data_account_type_view"/>
+      <field name="type">other</field>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="ro_pcg_cash"/>
     </record>
 
@@ -2828,7 +2802,7 @@
       <field name="name">Conturi la banci in valuta</field>
       <field name="code">5124</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="ro_pcg_cash"/>
     </record>
 
@@ -2836,7 +2810,7 @@
       <field name="name">Sume in curs de decontare</field>
       <field name="code">5125</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="ro_pcg_cash"/>
     </record>
 
@@ -2852,7 +2826,7 @@
       <field name="name">Dobanzi de platit</field>
       <field name="code">5186</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_518"/>
     </record>
 
@@ -2860,7 +2834,7 @@
       <field name="name">Dobanzi de incasat</field>
       <field name="code">5187</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_518"/>
     </record>
 
@@ -2876,7 +2850,7 @@
       <field name="name">Credite bancare pe termen scurt</field>
       <field name="code">5191</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2884,7 +2858,7 @@
       <field name="name">Credite bancare pe termen scurt nerambursate la scadenta</field>
       <field name="code">5192</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2892,7 +2866,7 @@
       <field name="name">Credite externe guvernamentale</field>
       <field name="code">5193</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2900,7 +2874,7 @@
       <field name="name">Credite externe garantate de stat</field>
       <field name="code">5194</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2908,7 +2882,7 @@
       <field name="name">Credite externe garantate de banci</field>
       <field name="code">5195</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2916,7 +2890,7 @@
       <field name="name">Credite de la trezoreria statului</field>
       <field name="code">5196</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2924,7 +2898,7 @@
       <field name="name">Credite interne garantate de stat</field>
       <field name="code">5197</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2932,7 +2906,7 @@
       <field name="name">Dobanzi aferente creditelor pe termen scurt</field>
       <field name="code">5198</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_519"/>
     </record>
 
@@ -2955,16 +2929,16 @@
     <record id="pcg_5311" model="account.account.template">
       <field name="name">Casa in lei</field>
       <field name="code">5311</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="type">liquidity</field>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_531"/>
     </record>
 
     <record id="pcg_5314" model="account.account.template">
       <field name="name">Casa in valuta</field>
       <field name="code">5314</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="type">liquidity</field>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_531"/>
     </record>
 
@@ -2980,7 +2954,7 @@
       <field name="name">Timbre fiscale si postale</field>
       <field name="code">5321</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_532"/>
     </record>
 
@@ -2988,7 +2962,7 @@
       <field name="name">Bilete de tratament si odihna</field>
       <field name="code">5322</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_532"/>
     </record>
 
@@ -2996,7 +2970,7 @@
       <field name="name">Tichete si bilete de calatorie</field>
       <field name="code">5323</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_532"/>
     </record>
 
@@ -3004,7 +2978,7 @@
       <field name="name">Alte valori</field>
       <field name="code">5328</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_532"/>
     </record>
 
@@ -3028,7 +3002,7 @@
       <field name="name">Acreditive in lei</field>
       <field name="code">5411</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_541"/>
     </record>
 
@@ -3036,15 +3010,15 @@
       <field name="name">Acreditive in valuta</field>
       <field name="code">5412</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_541"/>
     </record>
 
     <record id="pcg_542" model="account.account.template">
       <field name="name">Avansuri de trezorerie</field>
       <field name="code">542</field>
-      <field name="type">other</field>
-      <field name="user_type" ref="account_type_active"/>
+      <field name="type">receivable</field>
+      <field name="user_type" ref="account.data_account_type_receivable"/>
       <field name="parent_id" ref="pcg_54"/>
       <field name="note">in acest cont vor fi evidentiate si sumele acordate prin sistemul de carduri</field>
     </record>
@@ -3062,7 +3036,7 @@
       <field name="name">Viramente interne</field>
       <field name="code">581</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_bifunctional"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_58"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -3079,7 +3053,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a actiunilor detinute la entitatile afiliate</field>
       <field name="code">591</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_59"/>
     </record>
 
@@ -3087,7 +3061,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a obligatiunilor emise si recuperate</field>
       <field name="code">595</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_59"/>
     </record>
 
@@ -3095,7 +3069,7 @@
       <field name="name">Ajustari pentru pierderea de valoare a obligatiunilor</field>
       <field name="code">596</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_59"/>
     </record>
 
@@ -3103,12 +3077,12 @@
       <field name="name">Ajustari pentru pierderea de valoare a altor invesitii pe termen scurt si creante asimilate</field>
       <field name="code">598</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_passive"/>
+      <field name="user_type" ref="account.data_account_type_cash"/>
       <field name="parent_id" ref="pcg_59"/>
     </record>
 
     <record id="pcg_Clasele_6_si_7" model="account.account.template">
-      <field name="name">Conturile de venituri si cheltuieli</field>
+      <field name="name">CONTURI DE VENITURI SI CHELTUIELI</field>
       <field name="code">Clasele 6 si 7</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -3373,7 +3347,7 @@
     </record>
 
     <record id="pcg_63" model="account.account.template">
-      <field name="name">Cheltuieli cu alte impozite, taxe si varsaminte asimilate</field>
+      <field name="name">CHELTUIELI CU ALTE IMPOZITE, TAXE SO VARSAMINTE ASIMILATE</field>
       <field name="code">63</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -3501,7 +3475,7 @@
     </record>
 
     <record id="pcg_65" model="account.account.template">
-      <field name="name">Alte cheltuieli de exploatare</field>
+      <field name="name">ALTE CHELTUIELI DE EXPLOATARE</field>
       <field name="code">65</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -3847,7 +3821,7 @@
     </record>
 
     <record id="pcg_71" model="account.account.template">
-      <field name="name">Venituri aferente costului productiei in curs de executie</field>
+      <field name="name">VENITURI AFERENTE COSTULUI PRODUCTIEI IN CURS DE EXECUTIE</field>
       <field name="code">71</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -3871,7 +3845,7 @@
     </record>
 
     <record id="pcg_72" model="account.account.template">
-      <field name="name">Venituri din productia de imobilizari</field>
+      <field name="name">VENITURI DIN PRODUCTIA DE IMOBILIZARI</field>
       <field name="code">72</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -4261,7 +4235,7 @@
       <field name="name">Giruri si garantii acordate</field>
       <field name="code">8011</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_801"/>
     </record>
 
@@ -4269,7 +4243,7 @@
       <field name="name">Alte angajamente acordate </field>
       <field name="code">8018</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_801"/>
     </record>
 
@@ -4285,7 +4259,7 @@
       <field name="name">Giruri si garantii primite</field>
       <field name="code">8021</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_802"/>
     </record>
 
@@ -4293,7 +4267,7 @@
       <field name="name">Alte angajamente primite</field>
       <field name="code">8028</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_802"/>
     </record>
 
@@ -4309,7 +4283,7 @@
       <field name="name">Imobilizari corporale luate cu chirie</field>
       <field name="code">8031</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4317,7 +4291,7 @@
       <field name="name">Valori materiale primite spre prelucrare sau reparare</field>
       <field name="code">8032</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4325,7 +4299,7 @@
       <field name="name">Valori materiale primite in pastrare sau custodie</field>
       <field name="code">8033</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4333,7 +4307,7 @@
       <field name="name">Debitori scosi din activ, urmariti in continuare</field>
       <field name="code">8034</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4341,7 +4315,7 @@
       <field name="name">Stocuri de natura obiectelor de inventar date in folosinta</field>
       <field name="code">8035</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4349,7 +4323,7 @@
       <field name="name">Redevente, locatii de gestiune, chirii si alte datorii asimilate</field>
       <field name="code">8036</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4357,7 +4331,7 @@
       <field name="name">Efecte scontate neajunse la scadenta</field>
       <field name="code">8037</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4365,7 +4339,7 @@
       <field name="name">Bunuri publice primite in administrare, concesiune si cu chirie</field>
       <field name="code">8038</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4373,7 +4347,7 @@
       <field name="name">Alte valori in afara bilantului</field>
       <field name="code">8039</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_803"/>
     </record>
 
@@ -4389,7 +4363,7 @@
       <field name="name">Amortizarea aferenta gradului de neutilizare a mijloacelor fixe </field>
       <field name="code">8045</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_804"/>
     </record>
 
@@ -4405,7 +4379,7 @@
       <field name="name">Dobanzi de platit</field>
       <field name="code">8051</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_805"/>
     </record>
 
@@ -4413,7 +4387,7 @@
       <field name="name">Dobanzi de incasat</field>
       <field name="code">8052</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_805"/>
     </record>
 
@@ -4421,7 +4395,7 @@
       <field name="name">Certificate de emisii de gaze cu efect de sera</field>
       <field name="code">806</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_80"/>
     </record>
 
@@ -4429,7 +4403,7 @@
       <field name="name">Active contingente</field>
       <field name="code">807</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_80"/>
     </record>
 
@@ -4437,12 +4411,12 @@
       <field name="name">Datorii contingente</field>
       <field name="code">808</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_80"/>
     </record>
 
     <record id="pcg_89" model="account.account.template">
-      <field name="name">Bilant</field>
+      <field name="name">BILANT</field>
       <field name="code">89</field>
       <field name="type">view</field>
       <field name="user_type" ref="account.data_account_type_view"/>
@@ -4453,7 +4427,7 @@
       <field name="name">Bilant de deschidere</field>
       <field name="code">891</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_89"/>
     </record>
 
@@ -4461,7 +4435,7 @@
       <field name="name">Bilant de inchidere</field>
       <field name="code">892</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_89"/>
     </record>
 	
@@ -4485,7 +4459,7 @@
       <field name="name">Decontari interne privind cheltuielile</field>
       <field name="code">901</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_90"/>
     </record>
     
@@ -4493,7 +4467,7 @@
       <field name="name">Decontari interne privind productia obtinuta</field>
       <field name="code">902</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_90"/>
     </record>
     
@@ -4501,7 +4475,7 @@
       <field name="name">Decontari interne privind diferentele de pret</field>
       <field name="code">903</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_90"/>
     </record>
     
@@ -4517,7 +4491,7 @@
       <field name="name">Cheltuielile activitatii de baza</field>
       <field name="code">921</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_92"/>
     </record>
     
@@ -4525,7 +4499,7 @@
       <field name="name">Cheltuielile activitatilor auxiliare</field>
       <field name="code">922</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_92"/>
     </record>
     
@@ -4533,7 +4507,7 @@
       <field name="name">Cheltuieli indirecte de productie</field>
       <field name="code">923</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_92"/>
     </record>
     
@@ -4541,7 +4515,7 @@
       <field name="name">Cheltuieli generale de administratie</field>
       <field name="code">924</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_92"/>
     </record>
     
@@ -4549,7 +4523,7 @@
       <field name="name">Cheltuieli de desfacere</field>
       <field name="code">925</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_92"/>
     </record>
     
@@ -4565,7 +4539,7 @@
       <field name="name">Costul productiei obtinute</field>
       <field name="code">931</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_93"/>
     </record>
     
@@ -4573,21 +4547,10 @@
       <field name="name">Costul productiei de executie</field>
       <field name="code">933</field>
       <field name="type">other</field>
-      <field name="user_type" ref="account_type_special"/>
+      <field name="user_type" ref="account.data_account_type_asset"/>
       <field name="parent_id" ref="pcg_93"/>
     </record>
     
-    	<!-- Chart template -->
-		<record id="romania_chart_template" model="account.chart.template">
-		<field name="name">Romania - Chart of Accounts</field>
-		<field name="account_root_id" ref="pcg_0"/>
-		<field name="tax_code_root_id" ref="vat_code_tax"/>
-		<field name="bank_account_view_id" ref="ro_pcg_cash"/>
-		<field name="property_account_receivable" ref="ro_pcg_recv"/> <!-- 4111 -->
-	    <field name="property_account_payable" ref="ro_pcg_pay"/> <!-- 4011 -->
-	    <field name="property_account_expense_categ" ref="ro_pcg_expense"/> <!-- 607 --> 
-        <field name="property_account_income_categ" ref="ro_pcg_sale"/> <!-- 707 -->
-        <field name="currency_id" ref="base.ROL"/>
-		</record>
+    	
 </data>
 </openerp>

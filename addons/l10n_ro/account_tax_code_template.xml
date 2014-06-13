@@ -36,12 +36,6 @@
 		<field name="parent_id" ref="vat_code_tvac_tva"/>
 	</record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
-		<field name="name">TVA Taxare inversa</field>
-		<field name="code">TVA</field>
-		<field name="parent_id" ref="vat_code_tvac_tva"/>
-	</record>
-
 	<record model="account.tax.code.template" id="vat_code_tvac_tva00">
 		<field name="name">TVA 0%</field>
 		<field name="code">TVA colectata 0%</field>
@@ -74,18 +68,11 @@
 		<field name="parent_id" ref="vat_code_tvac_baza"/>
 	</record>
 
-	<record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
-		<field name="name">Baza TVA Taxare inversa</field>
-		<field name="code">Baza</field>
-		<field name="parent_id" ref="vat_code_tvac_baza"/>
-	</record>
-
 	<record model="account.tax.code.template" id="vat_code_tvac_baza00">
 		<field name="name">Baza TVA 0%</field>
 		<field name="code">TVA colectata 0%(Baza)</field>
 		<field name="parent_id" ref="vat_code_tvac_baza"/>
 	</record>
-
 
 	<record model="account.tax.code.template" id="vat_code_tvad_tva">
 		<field name="name">TVA DEDUCTIBILA</field>
@@ -150,37 +137,128 @@
 		<field name="parent_id" ref="vat_code_tvad_baza"/>
 	</record>
 	
-	<record model="account.tax.code.template" id="vat_code_tvaneex_baza">
-		<field name="name">BAZA TVA NEEXIGIBIL</field>
+	<record model="account.tax.code.template" id="vat_code_tvati_baza">
+		<field name="name">BAZA TVA TAXARE INVERSA</field>
 		<field name="code">e)</field>
 		<field name="parent_id" ref="vat_code_tax"/>
 	</record>
-	<record model="account.tax.code.template" id="vat_code_tvaneexc_baza">
-		<field name="name">Baza TVA neexigibil - colectat</field>
-		<field name="code">TVA neexigibil - colectat (Baza)</field>
-		<field name="parent_id" ref="vat_code_tvaneex_baza"/>
+	<record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
+		<field name="name">Baza TVA Taxare inversa</field>
+		<field name="code">Baza TVA Taxare inversa</field>
+		<field name="parent_id" ref="vat_code_tvati_baza"/>
 	</record>
-	<record model="account.tax.code.template" id="vat_code_tvaneexd_baza">
-		<field name="name">Baza TVA neexigibil - deductibil</field>
-		<field name="code">TVA neexigibil - deductibil (Baza)</field>
-		<field name="parent_id" ref="vat_code_tvaneex_baza"/>
-	</record>
-	<record model="account.tax.code.template" id="vat_code_tvaneex">
-		<field name="name">TVA NEEXIGIBIL</field>
+    
+    <record model="account.tax.code.template" id="vat_code_tvati">
+		<field name="name">TVA TAXARE INVERSA</field>
 		<field name="code">f)</field>
 		<field name="parent_id" ref="vat_code_tax"/>
 	</record>
-	<record model="account.tax.code.template" id="vat_code_tvaneexc">
-		<field name="name">TVA neexigibil - colectat</field>
-		<field name="code">TVA neexigibil - colectat</field>
-		<field name="parent_id" ref="vat_code_tvaneex"/>
+	
+	<record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
+		<field name="name">TVA Taxare inversa</field>
+		<field name="code">TVA Taxare inversa</field>
+		<field name="parent_id" ref="vat_code_tvati"/>
 	</record>
-	<record model="account.tax.code.template" id="vat_code_tvaneexd">
-		<field name="name">TVA neexigibil - deductibil</field>
-		<field name="code">TVA neexigibil - deductibil</field>
-		<field name="parent_id" ref="vat_code_tvaneex"/>
+
+	<record model="account.tax.code.template" id="vat_code_tvati_baza">
+		<field name="name">BAZA TVA TAXARE INVERSA</field>
+		<field name="code">e)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	<record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
+		<field name="name">Baza TVA Taxare inversa</field>
+		<field name="code">Baza TVA Taxare inversa</field>
+		<field name="parent_id" ref="vat_code_tvati_baza"/>
+	</record>
+    
+    <record model="account.tax.code.template" id="vat_code_tvati">
+		<field name="name">TVA TAXARE INVERSA</field>
+		<field name="code">f)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
 	</record>
 	
-
+	<record model="account.tax.code.template" id="vat_code_tvac_tvaTI">
+		<field name="name">TVA Taxare inversa</field>
+		<field name="code">TVA Taxare inversa</field>
+		<field name="parent_id" ref="vat_code_tvati"/>
+	</record>
+	<record model="account.tax.code.template" id="vat_code_tvanex_baza">
+		<field name="name">BAZA TVA NEEXIGIBILA</field>
+		<field name="code">g)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	<record model="account.tax.code.template" id="vat_code_tvac_nex_baza">
+		<field name="name">Baza TVA Neexigibil Colectat</field>
+		<field name="code">Baza TVA Neexigibil Colectat</field>
+		<field name="parent_id" ref="vat_code_tvanex_baza"/>
+	</record>
+    <record model="account.tax.code.template" id="vat_code_tvad_nex_baza">
+		<field name="name">Baza TVA Neexigibil Deductibil</field>
+		<field name="code">Baza TVA Neexigibil Deductibil</field>
+		<field name="parent_id" ref="vat_code_tvanex_baza"/>
+	</record>
+    
+    <record model="account.tax.code.template" id="vat_code_tvanex">
+		<field name="name">TVA NEEXIGIBILA</field>
+		<field name="code">h)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	<record model="account.tax.code.template" id="vat_code_tvac_nex">
+		<field name="name">TVA Neexigibil Colectat</field>
+		<field name="code">TVA Neexigibil Colectat</field>
+		<field name="parent_id" ref="vat_code_tvanex"/>
+	</record>
+    <record model="account.tax.code.template" id="vat_code_tvad_nex">
+		<field name="name">TVA Neexigibil Deductibil</field>
+		<field name="code">TVA Neexigibil Deductibil</field>
+		<field name="parent_id" ref="vat_code_tvanex"/>
+	</record>
+	
+	<record model="account.tax.code.template" id="vat_code_tvatisc_baza">
+		<field name="name">BAZA TVA TAXARE INTRACOMUNITARA SCUTITA</field>
+		<field name="code">i)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	<record model="account.tax.code.template" id="vat_code_tvac_bazaTISC">
+		<field name="name">Baza TVA Taxare intracomunitara scutita</field>
+		<field name="code">Baza TVA Taxare intracomunitara scutita</field>
+		<field name="parent_id" ref="vat_code_tvatisc_baza"/>
+	</record>
+    
+    <record model="account.tax.code.template" id="vat_code_tvatisc">
+		<field name="name">TVA TAXARE INTRACOMUNITARA SCUTITA</field>
+		<field name="code">j)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	
+	<record model="account.tax.code.template" id="vat_code_tvac_tvaTISC">
+		<field name="name">TVA Taxare intracomunitara scutita</field>
+		<field name="code">TVA Taxare intracomunitara scutita</field>
+		<field name="parent_id" ref="vat_code_tvatisc"/>
+	</record>
+	
+	<record model="account.tax.code.template" id="vat_code_tvatine_baza">
+		<field name="name">BAZA TVA TAXARE INTRACOMUNITARA NEIMPOZABILA</field>
+		<field name="code">k)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	<record model="account.tax.code.template" id="vat_code_tvac_bazaTINE">
+		<field name="name">Baza TVA Taxare intracomunitara neimpozabila</field>
+		<field name="code">Baza TVA Taxare intracomunitara neimpozabila</field>
+		<field name="parent_id" ref="vat_code_tvatine_baza"/>
+	</record>
+    
+    <record model="account.tax.code.template" id="vat_code_tvatine">
+		<field name="name">TVA TAXARE INTRACOMUNITARA NEIMPOZABILA</field>
+		<field name="code">l)</field>
+		<field name="parent_id" ref="vat_code_tax"/>
+	</record>
+	
+	<record model="account.tax.code.template" id="vat_code_tvac_tvaTINE">
+		<field name="name">TVA Taxare intracomunitara neimpozabila</field>
+		<field name="code">TVA Taxare intracomunitara neimpozabila</field>
+		<field name="parent_id" ref="vat_code_tvatine"/>
+	</record>
+    
 </data>
 </openerp>
