@@ -123,24 +123,39 @@ $(document).ready(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
+
+    $("a.js_add, a.js_remove").click(function (event) {
+        event.preventDefault();
+        var $parent = $(this).parents('.js_product:first');
+        $parent.find("a.js_add, span.js_remove").toggleClass("hidden");
+        $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
+    });
+
     $('#product_detail form[action^="/shop/cart/update"] .a-submit').off("click").click(function (event) {
         event.preventDefault();
         var $link = $(this);
         var $form = $link.parents("form:first");
+        var quantity = parseInt($('input[name="add_qty"]').val() || 1, 10);
         var defs = [];
         $link.attr('disabled', 'disabled');
         $('.js_product', $form).each(function () {
             var product_id = parseInt($('input.optional_product_id', this).val(),10);
-            var quantity = parseInt($('input.js_quantity', this).val(),10);
-            if (product_id && quantity) {
+            var qty = parseInt($('input.js_quantity', this).val(),10);
+            if($('input.js_optional_same_quantity', this).val() !== '0') {
+                qty = quantity;
+            }
+            if (product_id && qty) {
                 defs.push(openerp.jsonRpc("/shop/cart/update_json", 'call', {
                     'line_id': null,
                     'product_id': product_id,
-                    'add_qty': quantity,
+                    'add_qty': qty,
                     'display': false}));
             }
         });
         $.when.apply($.when, defs).then(function () {
+            if ($link.hasClass("js_goto_shop")) {
+                $form.prepend('<input type="hidden" name="goto_shop" value="1"/>');
+            }
             $form.submit();
         });
         return false;

@@ -259,12 +259,9 @@
 
 .css_not_available_msg
     display: none
-.css_not_available
-    .row
-        > div:nth-child(3), > div:nth-child(4)
-            display: none
-        > div:last-child
-            display: block
+.css_not_available.js_product
+    > *:nth-child(3) > *, *:nth-child(4) > *
+        display: none
     .product_price
         display: none
     .css_not_available_msg

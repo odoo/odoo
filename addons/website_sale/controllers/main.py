@@ -90,6 +90,7 @@ class QueryURL(object):
         for k,v in kw.items():
             if v:
                 if isinstance(v, list) or isinstance(v, set):
+                    print k, v
                     l.append(werkzeug.url_encode([(k,i) for i in v]))
                 else:
                     l.append(werkzeug.url_encode([(k,v)]))
@@ -126,6 +127,8 @@ class website_sale(http.Controller):
             domain += [('product_variant_ids.public_categ_ids', 'child_of', int(category))]
 
         attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
+        attrib_set = set([v[1] for v in attrib_values])
+
         if attrib_values:
             attrib = None
             ids = []
@@ -142,8 +145,8 @@ class website_sale(http.Controller):
             if attrib:
                 domain += [('attribute_line_ids.value_ids', 'in', ids)]
 
-        attrib_set = set([v[1] for v in attrib_values])
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_set)
+        attrib_query = set(["%s,%s" % (v[0],v[1]) for v in attrib_values])
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_query)
 
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
@@ -201,7 +204,8 @@ class website_sale(http.Controller):
         attrib_values = [map(int,v.split(",")) for v in request.httprequest.args.getlist('attrib') if v]
         attrib_set = set([v[1] for v in attrib_values])
 
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_set)
+        attrib_query = set(["%s,%s" % (v[0],v[1]) for v in attrib_values])
+        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_query)
 
         category_ids = category_obj.search(cr, uid, [], context=context)
         category_list = category_obj.name_get(cr, uid, category_ids, context=context)
@@ -260,12 +264,25 @@ class website_sale(http.Controller):
         return request.website.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
-    def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
+    def cart_update(self, product_id, add_qty=1, set_qty=0, goto_shop=None, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         order = request.website.sale_get_order(force_create=1)
         if add_qty or set_qty:
             order._cart_update(product_id=int(product_id), add_qty=int(add_qty), set_qty=int(set_qty))
-        return request.redirect("/shop/cart")
+        if goto_shop:
+            path = "/shop"
+            l = list()
+            for k,v in kw.items():
+                if v and k in ["category", "search", "attrib"]:
+                    if isinstance(v, list) or isinstance(v, set):
+                        l.append(werkzeug.url_encode([(k,i) for i in v]))
+                    else:
+                        l.append(werkzeug.url_encode([(k,v)]))
+            if l:
+                path += '?' + '&'.join(l)
+            return request.redirect(path)
+        else:
+            return request.redirect("/shop/cart")
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
