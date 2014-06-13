@@ -64,8 +64,17 @@
                 element:   "#customize-menu a:contains(Confirm: Add To Cart)",
             },
             {
-                title:     "finish",
+                title:     "click on 'My Cart'",
                 waitFor:   "a.a-submit:contains(Add to Cart)",
+                element:   "a[href='/shop/cart']",
+            },
+            {
+                title:     "remove ipad from cart",
+                element:   '#cart_products a.js_add_cart_json:first',
+            },
+            {
+                title:     "finish",
+                waitFor:   '.my_cart_quantity:contains(1)',
             },
         ]
     });
