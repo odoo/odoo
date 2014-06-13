@@ -31,6 +31,10 @@ class res_partner(osv.osv):
         'name' : fields.char('Name', size=256, required=True, select=True),
         'nrc' : fields.char('NRC', size=16, help='Registration number at the Registry of Commerce'),
     }
+    
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['nrc']
+        
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
