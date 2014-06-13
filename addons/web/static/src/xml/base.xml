@@ -968,7 +968,7 @@
                 </a>
             </a>
         </t>
-        <ul class="dropdown-menu state" role="menu">
+        <ul class="dropdown-menu" role="menu">
             <t t-foreach="widget.states" t-as="rec">
                 <t t-if="widget.get('value') !== rec.name">
                     <li class="oe_legend" t-att-data-value="rec.name" ><a href="#">
