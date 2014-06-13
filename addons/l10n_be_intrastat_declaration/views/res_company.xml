@@ -9,8 +9,8 @@
 			<field name="arch" type="xml">
 				<xpath expr="//field[@name='company_registry']" position="after">
 					<field name="region_id" attrs="{'required': [('country_id', '=', %(base.be)d )]}" domain="[('country_id','=',country_id)]"/>
-            		<field name="transport_mode_id" groups="l10n_be_intrastat_xml.intrastat_extended"/>
-            		<field name="incoterm_id" groups="l10n_be_intrastat_xml.intrastat_extended"/>
+            		<field name="transport_mode_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
+            		<field name="incoterm_id" groups="l10n_be_intrastat_declaration.intrastat_extended"/>
 				</xpath>
 			</field>
 		</record>
