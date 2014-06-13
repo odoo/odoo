@@ -762,11 +762,15 @@ instance.web.Menu =  instance.web.Widget.extend({
         var self = this;
         this.$secondary_menus = this.$el.parents().find('.oe_secondary_menus_container')
 
-        // var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        // instance.web.bus.on('resize', this, function() {
-        //     self.$el.height(0);
-        //     lazyreflow();
-        // });
+        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
+        instance.web.bus.on('resize', this, function() {
+            if (parseInt(self.$el.parent().css('width')) < 768 ) {
+                lazyreflow('all_outside');
+            } else {
+                lazyreflow();
+            }
+        });
+
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
@@ -775,6 +779,13 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.trigger('menu_loaded');
         this.has_been_loaded.resolve();
+
+        // FIXME: duplicate
+        if (parseInt(self.$el.parent().css('width')) < 768 ) {
+            lazyreflow('all_outside');
+        } else {
+            lazyreflow();
+        }
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
@@ -801,30 +812,44 @@ instance.web.Menu =  instance.web.Widget.extend({
      * Reflow the menu items and dock overflowing items into a "More" menu item.
      * Automatically called when 'menu_loaded' event is triggered and on window resizing.
      */
-    reflow: function() {
+    reflow: function(behavior) {
         var self = this;
-        // this.$el.height('auto').show();
-        // var $more_container = this.$('#menu_more_container').hide();
-        // var $more = this.$('#menu_more');
-        // $more.children('li').insertBefore($more_container);
-        // var $toplevel_items = this.$el.children('li').not($more_container).hide();
-        // $toplevel_items.each(function() {
-        //     var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
-        //     self.$el.parent().children(':visible').each(function() {
-        //         remaining_space -= $(this).outerWidth();
-        //     });
-        //     if ($(this).width() > remaining_space) {
-        //         return false;
-        //     }
-        //     $(this).show();
-        // });
-        // $more.append($toplevel_items.filter(':hidden').show());
-        // $more_container.toggle(!!$more.children().length);
-        // // Hide toplevel item if there is only one
-        // var $toplevel = this.$el.children("li:visible");
-        // if ($toplevel.length === 1) {
-        //     $toplevel.hide();
-        // }
+        var $more_container = this.$('#menu_more_container').hide();
+        var $more = this.$('#menu_more');
+        var $systray = this.$el.parents().find('.oe_systray');
+
+        $more.children('li').insertBefore($more_container);  // Pull all the items out the more menu
+        
+        // All outside more displau all the items, hide the more menu and exit
+        if (behavior === 'all_outside') {
+            this.$el.find('li').show();
+            $more_container.hide();
+            return;
+        }
+
+        var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
+        $toplevel_items.each(function() {
+            // In all inside mode, we do not compute to know if we must hide the items, we hide them all
+            if (behavior === 'all_inside') {
+                return false;
+            }
+            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
+            self.$el.parent().children(':visible').each(function() {
+                remaining_space -= $(this).outerWidth();
+            });
+
+            if ($(this).width() > remaining_space) {
+                return false;
+            }
+            $(this).show();
+        });
+        $more.append($toplevel_items.filter(':hidden').show());
+        $more_container.toggle(!!$more.children().length || behavior === 'all_inside');
+        // Hide toplevel item if there is only one
+        var $toplevel = this.$el.children("li:visible");
+        if ($toplevel.length === 1 && behavior != 'all_inside') {
+            $toplevel.hide();
+        }
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand
@@ -1227,13 +1252,11 @@ instance.web.WebClient = instance.web.Client.extend({
 
         // Menu is rendered server-side thus we don't want the widget to create any dom
         self.menu = new instance.web.Menu(self);
-        var $oe_main_menu_navbar = this.$el.parents().find('#oe_main_menu_navbar')
-        self.menu.setElement($oe_main_menu_navbar);
+        self.menu.setElement(this.$el.parents().find('.oe_application_menu_placeholder'));
         self.menu.start();
         self.menu.on('menu_click', this, this.on_menu_action);
-        
         self.user_menu = new instance.web.UserMenu(self);
-        self.user_menu.appendTo($oe_main_menu_navbar.find('.oe_user_menu_placeholder'));
+        self.user_menu.appendTo(this.$el.parents().find('.oe_user_menu_placeholder'));
         self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();

@@ -134,7 +134,7 @@
         </template>
 
         <template id="web.menu">
-            <ul class="nav navbar-nav navbar-left">
+            <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder">
                 <li t-foreach="menu_data['children']" t-as="menu">
                     <t t-call="web.menu_link"/>
                 </li>
@@ -215,7 +215,7 @@
                             <span class="icon-bar"></span>
                         </button>    
                     </div>
-                    <div class="navbar-collapse collapse">
+                    <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
                         <t t-call="web.menu"/>
                     </div>
                 </nav>
