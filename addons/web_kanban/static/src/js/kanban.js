@@ -62,6 +62,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     load_kanban: function(data) {
         this.fields_view = data;
+
+        // use default order if defined in xml description
+        var default_order = this.fields_view.arch.attrs.order,
+            unsorted = !this.dataset._sort.length;
+        if (unsorted && default_order) {
+            this.dataset.sort(default_order);
+        }
+
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
         if (this.options.$buttons) {
